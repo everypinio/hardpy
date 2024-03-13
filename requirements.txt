@@ -1,0 +1,2 @@
+# Install the package and deps
+--editable .[dev,build]

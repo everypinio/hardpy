@@ -1,0 +1,88 @@
+[flake8]
+format = wemake
+show-source = True
+
+# See all codes at
+# https://wemake-python-styleguide.readthedocs.io/en/latest/pages/usage/violations/index.html
+
+ignore =
+    E203,
+    Q0,
+    WPS326,
+    C812,
+    WPS305,
+    WPS115,
+    W503,
+    WPS317,
+    RST301,
+    RST201,
+    WPS412,
+    I002,
+    WPS436,
+    WPS339,
+    WPS122,
+    N812,
+    WPS430,
+    WPS110,
+    WPS462,
+    WPS428,
+    WPS213,
+    WPS226,
+    WPS322,
+    # Missing docstring in __init__
+    D107,
+    # Missing docstring in public module
+    D100,
+    # Allow acronym
+    N817
+
+per-file-ignores =
+  __init__.py:
+    # Allow `__all__`
+    WPS410,
+    # Allow importing protected modules
+    WPS436
+  tests/*:
+    D100,
+    D101,
+    D102,
+    D103,
+    S101,
+    WPS450,
+    S311,
+    WPS432,
+    WPS437,
+    B011,
+    WPS444,
+    WPS217,
+    WPS218,
+    WPS235,
+    # Found too long name
+    WPS118,
+  environment.py:
+    # Allow magic numbers
+    WPS432,
+    # Allow missing docstring in public module
+    D100
+  schema.py:
+    E501,
+    RST203,
+  examples/*:
+    # Allow assert in examples
+    S101
+
+max-returns = 8
+max-arguments = 5
+max-line-length = 88
+max-local-variables = 10
+max-methods = 20
+max-try-body-length = 32
+min-name-length = 1
+max-module-members = 30
+
+exclude =
+  .git
+  __pycache__
+  .venv
+  .eggs
+  *.egg

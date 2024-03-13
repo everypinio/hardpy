@@ -1,0 +1,88 @@
+# Copyright (c) 2024 Everypin
+# GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+[project]
+    name = "hardpy"
+    version = "0.1.0"
+    description = "HardPy library for device testing"
+    authors = [{ name = "Everypin" }]
+    readme = "README.md"
+    classifiers = [
+        "Development Status :: 4 - Beta",
+        "Framework :: Pytest",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3 :: Only",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Topic :: Software Development :: Libraries",
+        "Topic :: Software Development :: Testing",
+        "Topic :: Software Development :: Testing :: Acceptance",
+        "Topic :: Utilities",
+    ]
+    requires-python = ">=3.10, <4"
+    dependencies = [
+        "pycouchdb>=1.14.2",
+        "glom>=23.3.0",
+        "pydantic>=2.4.0",
+        "natsort>=8.4.0",
+
+        # Frontend
+        "fastapi>=0.100.1",
+        "uvicorn>=0.23.2",
+
+        "pytest>7, <9",
+    ]
+
+    [project.optional-dependencies]
+        dev = [
+            "wemake-python-styleguide", #
+            "mypy",                     #
+            "black",                    #
+        ]
+        build = [
+            "build==1.0.3",
+        ]
+
+    [project.urls]
+        repository = "https://github.com/everypindevices/hardpy"
+
+    [project.scripts]
+        # Provide `hardpy-panel` executable
+        hardpy-panel = "hardpy.hardpy_panel.runner:run"
+
+    [project.entry-points.pytest11]
+        pytest_hardpy = "hardpy.pytest_hardpy.plugin"
+
+[build-system]
+    requires = ["hatchling==1.21.1"]
+    build-backend = "hatchling.build"
+
+[tool.hatch.build]
+    # Do not package non python related filed
+    only-packages = true
+
+    # Hatch exclude by default everything pointed
+    # in root .gitignore
+    # Add non root items here
+    exclude = [
+        "**/frontend/dist",
+        "**/frontend/node_modules",
+    ]
+
+    # Despite excluded files keep build app artifact
+    artifacts = [
+        "**/frontend/dist",
+    ]
+
+[tool.hatch.build.targets.wheel]
+    packages = ["hardpy"]
+
+# Custom build hook for sdist source package.
+# It additionally runs `yarn` and `yarn build`
+# in React app folder to bundle prod build
+[tool.hatch.build.targets.sdist.hooks.custom]
+    path = "scripts/hatch_build.py"
