@@ -1,0 +1,20 @@
+mkdocs==1.5.3
+mkdocs-print-site-plugin==2.3.6
+mkdocs-exclude==1.0.2
+mkdocs-git-revision-date-localized-plugin==1.2.1
+mkdocs-custom-tags-attributes==0.3.1
+
+# Wikilinks support
+mkdocs-roamlinks-plugin>=0.3.2
+
+# Material theme
+mkdocs-material==9.5.10
+
+# Navigation order
+mkdocs-awesome-pages-plugin==2.6.1
+
+# Unicode slugify for unicode heading anchors
+pymdown-extensions>=10.3.1
+
+# Ability to align images, add captions to images
+mkdocs-glightbox==0.3.7
