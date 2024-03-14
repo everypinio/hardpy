@@ -1,0 +1,46 @@
+from pytest import Pytester
+
+from conftest import hardpy_connect_db, hardpy_dbh
+
+mark_test_header = """
+        import pytest
+
+        from hardpy import get_current_report
+        from hardpy.pytest_hardpy.utils import NodeInfo
+
+        module_name = "Markers"
+        case_name = "Case name"
+        pytestmark = pytest.mark.module_name(module_name)
+        """
+
+
+def test_module_name(hardpy_init, pytester: Pytester):
+    pytester.makepyfile(
+        f"""
+        {mark_test_header}
+        @pytest.mark.case_name("Module name")
+        def test_written_module_name(request):
+            node = NodeInfo(request.node)
+            report = get_current_report()
+            read_module_name = report.modules[node.module_id].name
+            assert module_name == read_module_name
+    """
+    )
+    result = pytester.runpytest(hardpy_dbh(), hardpy_connect_db())
+    result.assert_outcomes(passed=1)
+
+
+def test_case_name(hardpy_init, pytester: Pytester):
+    pytester.makepyfile(
+        f"""
+        {mark_test_header}
+        @pytest.mark.case_name(case_name)
+        def test_written_test_name(request):
+            node = NodeInfo(request.node)
+            report = get_current_report()
+            name = report.modules[node.module_id].cases[node.case_id].name
+            assert case_name == name
+    """
+    )
+    result = pytester.runpytest(hardpy_dbh(), hardpy_connect_db())
+    result.assert_outcomes(passed=1)
