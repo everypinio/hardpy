@@ -1,0 +1,30 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "jsx": true,
+        "useJSXTextNode": true
+    },
+    "plugins": [
+        "@typescript-eslint",
+        "react-hooks"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "prettier"
+    ],
+    "rules": {
+        "@typescript-eslint/no-unused-vars": [
+            2,
+            {
+                "args": "after-used",
+                "argsIgnorePattern": "^_"
+            }
+        ],
+        "curly": [2],
+        "no-var": "error"
+    }
+}

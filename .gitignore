@@ -1,0 +1,13 @@
+env/
+.env/
+venv/
+.venv/
+dist
+*.pyc
+*.couch
+.pytest_cache
+.mypy_cache
+__pycache__/
+node_modules/
+.vscode
+conda.yaml

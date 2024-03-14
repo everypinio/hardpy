@@ -1,0 +1,92 @@
+{
+  "name": "hardpy",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ant-design/icons": "^5.2.6",
+    "@babel/core": "^7.23.2",
+    "@babel/plugin-syntax-flow": "^7.22.5",
+    "@babel/plugin-transform-private-property-in-object": "^7.22.11",
+    "@babel/plugin-transform-react-jsx": "^7.22.15",
+    "@babel/runtime": "^7.23.9",
+    "@blueprintjs/core": "^5.5.1",
+    "@blueprintjs/icons": "^5.7.0",
+    "@blueprintjs/popover2": "^2.0.16",
+    "@blueprintjs/table": "^5.0.16",
+    "@types/common-tags": "^1.8.3",
+    "@types/jest": "^29.5.6",
+    "@types/lodash": "^4.14.200",
+    "@types/node": "^20.8.8",
+    "@types/pouchdb-browser": "^6.1.4",
+    "@types/react": "^18.2.31",
+    "@types/react-dom": "^18.2.14",
+    "ajv": "^8.12.0",
+    "antd": "^5.10.2",
+    "common-tags": "^1.8.2",
+    "copy-to-clipboard": "^3.3.3",
+    "dayjs": "^1.11.10",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-react": "^7.33.2",
+    "events": "^3.3.0",
+    "lodash": "^4.17.21",
+    "normalize.css": "^8.0.1",
+    "pouchdb-browser": "^8.0.1",
+    "pouchdb-selector-core": "^8.0.1",
+    "prettier": "^3.0.3",
+    "react": "^18.2.0",
+    "react-data-table-component": "^7.5.4",
+    "react-dom": "^18.2.0",
+    "react-is": "^18.2.0",
+    "react-scripts": "^5.0.1",
+    "styled-components": "v5.3.3",
+    "tone": "14.7.77",
+    "ts-pattern": "^5.0.5",
+    "typescript": "^5.2.2",
+    "use-pouchdb": "^2.0.2",
+    "web-vitals": "^3.5.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "start-dev": "REACT_APP_API_URL=http://localhost:8080/ws react-scripts start",
+    "build": "BUILD_PATH='dist' react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "optimizeDeps": {
+    "allowNodeBuiltins": [
+      "pouchdb-browser",
+      "pouchdb-utils"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "7.21.11",
+    "@testing-library/dom": "^9.3.3",
+    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.5.1",
+    "@types/events": "^3",
+    "@types/react-is": "^18",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "eslint": "^8.52.0",
+    "eslint-plugin-react-hooks": "^4.6.0"
+  }
+}
