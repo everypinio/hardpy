@@ -1,0 +1,97 @@
+site_name: HardPy
+site_dir: public
+docs_dir: ./docs
+
+theme:
+  name: material
+  logo: img/logo192.png
+  favicon: img/logo192.png
+  palette:
+    scheme: default
+    primary: indigo
+    accent: indigo
+  features:
+    - announce.dismiss
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.tooltips
+    - navigation.path
+    - navigation.top
+    - navigation.expand
+    - navigation.footer
+    - navigation.indexes
+    - navigation.instant
+    - navigation.sections
+    - navigation.tabs
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+
+  navigation:
+    position: top
+
+nav:
+  - HardPy: index.md
+  - Features: features/features.md
+  - Documentation:
+    - Structure: documentation/structure.md
+    - Database: documentation/database.md
+    - Pytest-hardpy: documentation/pytest_hardpy.md
+    - HardPy panel: documentation/hardpy_panel.md
+  - Examples:
+    - Hello HardPy: examples/hello_hardpy.md
+    - CouchDB load: examples/couchdb_load.md
+    - Minute parity: examples/minute_parity.md
+    - Multiple stands: examples/multiple_stands.md
+    - Skip test: examples/skip_test.md
+    - CouchDB in RAM: examples/db_in_ram.md
+  - About:
+    - Development: about/development.md
+  - Changelog: changelog.md
+
+markdown_extensions:
+  - footnotes
+  - attr_list
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.magiclink
+  - pymdownx.tasklist
+  - pymdownx.emoji
+  - pymdownx.tilde
+  - admonition
+  - footnotes
+  - tables
+  - md_in_html
+  - toc:
+      permalink: true
+      title: Contents
+      baselevel: 1
+
+
+      # Fixes unicode chars in heading anchors. Refs:
+      # https://github.com/mkdocs/mkdocs/issues/212#issuecomment-286035214
+      # https://facelessuser.github.io/pymdown-extensions/extras/slugs/
+      # https://facelessuser.github.io/pymdown-extensions/faq/#function-references-in-yaml
+      slugify: !!python/object/apply:pymdownx.slugs.slugify {kwds: {case: lower}}
+
+plugins:
+  - search
+  - roamlinks
+  - custom-attributes
+  - awesome-pages
+  - glightbox
+  - tags
+
+  - exclude:
+      glob:
+        - _unpublished/*
+        - "*.tmp"
+        - "*.pdf"
+
+  - print-site
