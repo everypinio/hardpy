@@ -14,6 +14,7 @@ from hardpy.pytest_hardpy.db import (
     ResultRunStore,
     RunStore,
 )
+from hardpy.pytest_hardpy.utils import DuplicateSerialNumberError
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 
 
@@ -59,9 +60,14 @@ def set_dut_serial_number(serial_number: str):
 
     Args:
         serial_number (str): DUT serial number
+
+    Raises:
+        DuplicateSerialNumberError: if serial number is already set
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.DUT, DF.SERIAL_NUMBER)
+    if reporter.get_field(key):
+        raise DuplicateSerialNumberError
     reporter.set_db_value(key, serial_number)
 
 

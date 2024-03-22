@@ -17,6 +17,8 @@ def test_dut_serial_number(hardpy_init, pytester: Pytester):
     pytester.makepyfile(
         f"""
         {func_test_header}
+        from hardpy import DuplicateSerialNumberError
+
         def test_dut_serial_number():
             report = hardpy.get_current_report()
             assert (
@@ -27,6 +29,10 @@ def test_dut_serial_number(hardpy_init, pytester: Pytester):
             hardpy.set_dut_serial_number(serial_number)
             report = hardpy.get_current_report()
             assert serial_number == report.dut.serial_number
+
+            second_serial_number = "incorrect serial number"
+            with pytest.raises(DuplicateSerialNumberError):
+                hardpy.set_dut_serial_number(second_serial_number)
     """
     )
 
