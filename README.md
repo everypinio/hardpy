@@ -14,9 +14,9 @@ HardPy is a python library for creating a test bench for devices.
 
 HardPy allows you to:
 
-* Create test benches for devices using pytest;
-* Use a browser to view, run and stop tests;
-* Store the test result to the [CouchDB](https://couchdb.apache.org/) database.
+* Create test benches for devices using [pytest](https://docs.pytest.org/);
+* Use a browser to view, run, and stop tests;
+* Store test results in the [CouchDB](https://couchdb.apache.org/) database.
 
 ## To Install
 
@@ -26,7 +26,7 @@ pip3 install hardpy
 
 ## Examples
 
-In the `examples` folder you can find examples of using the **HardPy**.
+Find examples of using the **HardPy** in the `examples` folder.
 
 ## Getting Started
 
@@ -52,7 +52,7 @@ Run the Docker container from folder with couchdb.ini file:
 docker run --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3
 ```
 
-#### Create tests
+#### Test steps
 
 Add simple test to `tests` folder
 
@@ -83,7 +83,7 @@ Launch `hardpy-panel` from tests folder or launch `hardpy-panel tests` and open 
 
 #### Test report
 
-The last test report stores in **runstore** database, document - **current**.
+The last test report is stored in **runstore** database, document - **current**.
 You can view the CouchDB instance through Fauxton web interface: http://127.0.0.1:5984/_utils
 
 <h1 align="center">
