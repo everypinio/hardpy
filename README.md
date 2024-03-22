@@ -70,7 +70,7 @@ def pytest_configure(config: pytest.Config):
 import pytest
 
 def test_one():
-    assert 42 == 42
+    assert True
 ```
 #### Operator panel
 
