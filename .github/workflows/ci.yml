@@ -1,0 +1,19 @@
+name: Continous Integration
+
+on:
+  workflow_dispatch: # allow manual trigger
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: Lint
+    uses: ./.github/workflows/lint.yml
+  test:
+    name: Test
+    uses: ./.github/workflows/test.yml
+  build:
+    name: Build
+    uses: ./.github/workflows/build.yml
+
