@@ -1,0 +1,15 @@
+name: Lint
+
+on:
+  workflow_call:  # allow this workflow to be called from other workflows
+  workflow_dispatch: # allow manual trigger
+
+jobs:
+  flake8_py3:
+    name: Flake8
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: TrueBrain/actions-flake8@v2
+        with:
+          only_warn: 1

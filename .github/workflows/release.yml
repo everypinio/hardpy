@@ -1,0 +1,138 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  git-tag-check:
+    name: Git Tag Check
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      # This is the version of the action for setting up Python, not the Python version.
+      uses: actions/setup-python@v5
+      with:
+        # Semantic version range syntax or exact version of a Python version
+        python-version: '3.x'
+        # Optional - x64 or x8
+        architecture: 'x64'
+        cache: 'pip' # caching pip dependencies
+    - name: Install dependencies
+      run: python -m pip install toml
+    - name: Check Git Tag
+      run: |
+        python <<HEREDOC
+        from pathlib import Path
+        import toml
+        import sys
+
+        if '${{ github.ref_type }}' != 'tag':
+          sys.exit(f"Not on a tag")
+        
+        gitversion = '${{ github.ref_name }}'
+        version = "unknown"
+
+        pyproject_toml_file = Path(__file__).parent / "pyproject.toml"
+        if pyproject_toml_file.exists() and pyproject_toml_file.is_file():
+            data = toml.load(pyproject_toml_file)
+            if "project" in data and "version" in data["project"]:
+                version = data["project"]["version"]
+
+        if version != gitversion:
+          sys.exit(f"Git Tag '{gitversion}' doesn't match package version '{version}'")
+        HEREDOC
+
+  test:
+    name: Test
+    needs: [git-tag-check]
+    uses: ./.github/workflows/test.yml
+
+  build:
+    name: Build
+    needs: [test]
+    uses: ./.github/workflows/build.yml  # use the callable tests job to run tests
+
+  github-release:
+    needs: [build]  # require tests to pass before deploy runs
+    name: GitHub Upload
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # IMPORTANT: mandatory for making GitHub Releases
+      id-token: write  # IMPORTANT: mandatory for sigstore
+
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+    - name: Sign the dists with Sigstore
+      uses: sigstore/gh-action-sigstore-python@v1.2.3
+      with:
+        inputs: >-
+          ./dist/*.tar.gz
+          ./dist/*.whl
+    - name: Create GitHub Release
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: >-
+        gh release create
+        '${{ github.ref_name }}'
+        --repo '${{ github.repository }}'
+        --notes ""
+    - name: Upload artifact signatures to GitHub Release
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      # Upload to GitHub Release using the `gh` CLI.
+      # `dist/` contains the built packages, and the
+      # sigstore-produced signatures and certificates.
+      run: >-
+        gh release upload
+        '${{ github.ref_name }}' dist/**
+        --repo '${{ github.repository }}'
+
+  publish-to-testpypi:
+    name: Publish to TestPyPi
+    if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
+    needs:
+    - build
+    runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/hardpy
+    permissions:
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+    - name: Publish distribution 📦 to TestPyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
+
+  publish-to-pypi:
+    name: Publish to PyPI
+    if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
+    needs:
+    - publish-to-testpypi
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/hardpy
+    permissions:
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
+    steps:
+      - name: Download all the dists
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Publish distribution 📦 to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
