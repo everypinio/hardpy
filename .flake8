@@ -1,5 +1,6 @@
 [flake8]
-format = wemake
+# Brakes GitHub annotations
+; format = wemake
 show-source = True
 
 # See all codes at
