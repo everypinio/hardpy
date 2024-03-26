@@ -1,0 +1,19 @@
+name: Docs
+
+on:
+  workflow_dispatch: # allow manual trigger
+  push:
+    branches:
+      - main
+
+jobs:
+  docs: 
+    name: Build MkDocs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy docs
+        uses: mhausenblas/mkdocs-deploy-gh-pages@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REQUIREMENTS: requirements-doc.txt
