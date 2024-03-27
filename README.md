@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img src="docs/img/logo512.png" alt="HardPy" style="width:200px;">
+    <img src="https://everypinio.github.io/hardpy/img/logo512.png" alt="HardPy" style="width:200px;">
 </h1>
 
 <h1 align="center">
@@ -9,6 +9,14 @@
 <p align="center">
 HardPy is a python library for creating a test bench for devices.
 </p>
+
+---
+
+**Documentation**: <a href=https://everypinio.github.io/hardpy/ target="_blank">https://everypinio.github.io/hardpy/</a>
+
+**Source Code**: <a href=https://github.com/everypinio/hardpy target="_blank">https://github.com/everypinio/hardpy</a>
+
+---
 
 ## Overview
 
@@ -77,16 +85,16 @@ def test_one():
 Launch `hardpy-panel` from tests folder or launch `hardpy-panel tests` and open page http://localhost:8000/ in browser.
 
 <h1 align="center">
-    <img src="docs/img/hardpy_operator_panel_hello_hardpy.png"
+    <img src="https://everypinio.github.io/hardpy/img/hardpy_operator_panel_hello_hardpy.png"
     alt="hardpy operator panel" style="width:600px;">
 </h1>
 
 #### Test report
 
 The last test report is stored in **runstore** database, document - **current**.
-You can view the CouchDB instance through Fauxton web interface: http://127.0.0.1:5984/_utils
+You can view the CouchDB instance through Fauxton web interface: http://localhost:5984/_utils
 
 <h1 align="center">
-    <img src="docs/img/runstore_hello_hardpy.png"
+    <img src="https://everypinio.github.io/hardpy/img/runstore_hello_hardpy.png"
     alt="hardpy runstore" style="width:600px;">
 </h1>
