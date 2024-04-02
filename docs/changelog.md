@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Removed the ability to access the HardpyPlugin. Users can now only register through the ini file.
+
 ## HardPy 0.1.0
 
 * Add pytest-hardpy and hardpy panel into one package.

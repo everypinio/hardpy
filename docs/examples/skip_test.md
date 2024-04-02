@@ -10,23 +10,15 @@ on another test and skipping tests.
 3. Specify the dependency in the file `pyproject.toml`
 4. Launch `hardpy-panel <dir_name>`.
 
-### conftest.py
+### pytest.ini
 
-Contains settings and fixtures for all tests:
+Enable the pytest-hardpy plugin.
 
-- Registering the **HardPy** plugin in pytest_configure;
-
-```python
-import pytest
-
-from hardpy import (
-    HardpyPlugin,
-)
-
-def pytest_configure(config: pytest.Config):
-    config.pluginmanager.register(HardpyPlugin())
+```ini
+# pytest.ini
+[pytest]
+addopts = --hardpy-pt
 ```
-
 
 ### pytest-dependency
 

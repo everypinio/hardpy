@@ -16,6 +16,8 @@ HardPy is a python library for creating a test bench for devices.
 
 **Source Code**: <a href=https://github.com/everypinio/hardpy target="_blank">https://github.com/everypinio/hardpy</a>
 
+**PyPi**: <a href=https://pypi.org/project/hardpy/ target="_blank">https://pypi.org/project/hardpy/</a>
+
 ---
 
 ## Overview
@@ -57,21 +59,12 @@ headers = accept, authorization, content-type, origin, referer, x-csrf-token
 Run the Docker container from folder with couchdb.ini file:
 
 ```bash
-docker run --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3
+docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3
 ```
 
 #### Test steps
 
 Add simple test to `tests` folder
-
-```python
-# conftest.py
-import pytest
-import hardpy
-
-def pytest_configure(config: pytest.Config):
-    config.pluginmanager.register(hardpy.HardpyPlugin())
-```
 
 ```python
 # test_1.py

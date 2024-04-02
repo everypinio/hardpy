@@ -39,8 +39,10 @@ headers = accept, authorization, content-type, origin, referer, x-csrf-token
 2. Run the Docker container (from the folder with the couchdb.ini file):
 
 ```bash
-docker run --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3
+docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3
 ```
+
+The container will be deleted after use.
 
 ### Running CouchDB with Docker Compose
 

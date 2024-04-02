@@ -38,21 +38,12 @@ headers = accept, authorization, content-type, origin, referer, x-csrf-token
 Run the Docker container from folder with couchdb.ini file:
 
 ```bash
-docker run --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3
+docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3
 ```
 
 #### Create tests
 
 Add simple test to `tests` folder
-
-```python
-# conftest.py
-import pytest
-import hardpy
-
-def pytest_configure(config: pytest.Config):
-    config.pluginmanager.register(hardpy.HardpyPlugin())
-```
 
 ```python
 # test_1.py

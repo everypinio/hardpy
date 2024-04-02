@@ -1,7 +1,5 @@
 from pytest import Pytester
 
-from conftest import hardpy_connect_db, hardpy_dbh
-
 
 status_test_header = """
         import pytest
@@ -12,7 +10,8 @@ status_test_header = """
         """
 
 
-def test_ready_status(hardpy_init, pytester: Pytester):
+
+def test_ready_status(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {status_test_header}
@@ -35,11 +34,11 @@ def test_ready_status(hardpy_init, pytester: Pytester):
             assert Status.PASSED == read_status
     """
     )
-    result = pytester.runpytest(hardpy_dbh(), hardpy_connect_db())
+    result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=3)
 
 
-def test_fail_status(hardpy_init, pytester: Pytester):
+def test_fail_status(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {status_test_header}
@@ -54,11 +53,11 @@ def test_fail_status(hardpy_init, pytester: Pytester):
             assert True
     """
     )
-    result = pytester.runpytest(hardpy_dbh(), hardpy_connect_db())
+    result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1, passed=1)
 
 
-def test_run_status(hardpy_init, pytester: Pytester):
+def test_run_status(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {status_test_header}
@@ -68,5 +67,5 @@ def test_run_status(hardpy_init, pytester: Pytester):
             assert Status.RUN == read_status
     """
     )
-    result = pytester.runpytest(hardpy_dbh(), hardpy_connect_db())
+    result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)

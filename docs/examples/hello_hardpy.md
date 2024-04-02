@@ -8,18 +8,6 @@ This is the simplest example of using **HardPy**.
 2. Create a directory `<dir_name>` with the files described below.
 3. Launch `hardpy-panel <dir_name>`.
 
-### conftest.py
-
-Registering the HardPy plugin in pytest_configure.
-
-```python
-import pytest
-from hardpy import HardpyPlugin
-
-def pytest_configure(config: pytest.Config):
-    config.pluginmanager.register(HardpyPlugin())
-```
-
 ### test_simple.py
 
 Contains the simplest example of a valid test.

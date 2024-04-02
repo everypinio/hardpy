@@ -46,6 +46,7 @@ class PyTestWrapper(object):
                     self.config.db_user,
                     "--hardpy-dbpw",
                     self.config.db_pswd,
+                    "--hardpy-pt",
                 ],
                 cwd=self.config.tests_dir.absolute(),
             )
@@ -63,6 +64,7 @@ class PyTestWrapper(object):
                     self.config.db_user,
                     "--hardpy-dbpw",
                     self.config.db_pswd,
+                    "--hardpy-pt",
                 ],
                 cwd=self.config.tests_dir.absolute(),
                 creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
@@ -107,6 +109,7 @@ class PyTestWrapper(object):
                 self.config.db_user,
                 "--hardpy-dbpw",
                 self.config.db_pswd,
+                "--hardpy-pt",
             ],
             cwd=self.config.tests_dir.absolute(),
         )

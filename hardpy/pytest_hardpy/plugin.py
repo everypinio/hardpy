@@ -37,7 +37,14 @@ def pytest_addoption(parser: Parser):
     parser.addoption("--hardpy-dbpw", action="store", default=config_data.db_pswd, help="database user password")  # noqa: E501
     parser.addoption("--hardpy-dbp", action="store", default=config_data.db_port, help="database port number")  # noqa: E501
     parser.addoption("--hardpy-dbh", action="store", default=config_data.db_host, help="database hostname")  # noqa: E501
+    parser.addoption("--hardpy-pt", action="store_true", default=False, help="enable pytest-hardpy plugin")  # noqa: E501
     # fmt: on
+
+# Bootstrapping hooks
+def pytest_load_initial_conftests(early_config, parser, args):
+    if "--hardpy-pt" in args:
+        plugin = HardpyPlugin()
+        early_config.pluginmanager.register(plugin)
 
 
 class HardpyPlugin(object):
@@ -56,6 +63,7 @@ class HardpyPlugin(object):
         elif system() == "Windows":
             signal.signal(signal.SIGBREAK, self._stop_handler)
         self._log = getLogger(__name__)
+
 
     # Initialization hooks
 
