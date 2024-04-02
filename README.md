@@ -67,15 +67,6 @@ docker run --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=d
 Add simple test to `tests` folder
 
 ```python
-# conftest.py
-import pytest
-import hardpy
-
-def pytest_configure(config: pytest.Config):
-    config.pluginmanager.register(hardpy.HardpyPlugin())
-```
-
-```python
 # test_1.py
 import pytest
 

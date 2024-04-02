@@ -1,7 +1,5 @@
 from pytest import Pytester
 
-from conftest import hardpy_connect_db, hardpy_dbh
-
 mark_test_header = """
         import pytest
 
@@ -21,7 +19,7 @@ test_default_header = """
         """
 
 
-def test_module_name(hardpy_init, pytester: Pytester):
+def test_module_name(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {mark_test_header}
@@ -33,11 +31,11 @@ def test_module_name(hardpy_init, pytester: Pytester):
             assert module_name == read_module_name
     """
     )
-    result = pytester.runpytest(hardpy_dbh(), hardpy_connect_db())
+    result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_case_name(hardpy_init, pytester: Pytester):
+def test_case_name(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {mark_test_header}
@@ -49,11 +47,11 @@ def test_case_name(hardpy_init, pytester: Pytester):
             assert case_name == name
     """
     )
-    result = pytester.runpytest(hardpy_dbh(), hardpy_connect_db())
+    result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_default_case_name(hardpy_init, pytester: Pytester):
+def test_default_case_name(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {test_default_header}
@@ -64,11 +62,12 @@ def test_default_case_name(hardpy_init, pytester: Pytester):
             assert name == "test_check_default_case_name"
     """
     )
-    result = pytester.runpytest(hardpy_dbh(), hardpy_connect_db())
+    result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_default_module_name(hardpy_init, pytester: Pytester):
+
+def test_default_module_name(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {test_default_header}
@@ -79,5 +78,5 @@ def test_default_module_name(hardpy_init, pytester: Pytester):
             assert read_module_name == "test_default_module_name"
     """
     )
-    result = pytester.runpytest(hardpy_dbh(), hardpy_connect_db())
+    result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)

@@ -1,7 +1,5 @@
 from pytest import Pytester
 
-from conftest import hardpy_connect_db, hardpy_dbh
-
 
 func_test_header = """
         from uuid import uuid4
@@ -13,7 +11,8 @@ func_test_header = """
         """
 
 
-def test_dut_serial_number(hardpy_init, pytester: Pytester):
+
+def test_dut_serial_number(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -36,11 +35,11 @@ def test_dut_serial_number(hardpy_init, pytester: Pytester):
     """
     )
 
-    result = pytester.runpytest(hardpy_dbh(), hardpy_connect_db())
+    result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_dut_info(hardpy_init, pytester: Pytester):
+def test_dut_info(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -60,11 +59,11 @@ def test_dut_info(hardpy_init, pytester: Pytester):
             assert info_before_write == report.dut.info
     """
     )
-    result = pytester.runpytest(hardpy_dbh(), hardpy_connect_db())
+    result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_stand_info(hardpy_init, pytester: Pytester):
+def test_stand_info(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -84,11 +83,11 @@ def test_stand_info(hardpy_init, pytester: Pytester):
             assert stand_info_before_write == report.test_stand
     """
     )
-    result = pytester.runpytest(hardpy_dbh(), hardpy_connect_db())
+    result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_drivers(hardpy_init, pytester: Pytester):
+def test_drivers(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -113,11 +112,11 @@ def test_drivers(hardpy_init, pytester: Pytester):
             assert drivers_before_write == report.drivers
     """
     )
-    result = pytester.runpytest(hardpy_dbh(), hardpy_connect_db())
+    result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_module_artifact(hardpy_init, pytester: Pytester):
+def test_module_artifact(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -144,11 +143,11 @@ def test_module_artifact(hardpy_init, pytester: Pytester):
             assert read_artifact == artifact_before_write
     """
     )
-    result = pytester.runpytest(hardpy_dbh(), hardpy_connect_db())
+    result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_case_artifact(hardpy_init, pytester: Pytester):
+def test_case_artifact(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -175,11 +174,11 @@ def test_case_artifact(hardpy_init, pytester: Pytester):
             assert read_artifact == artifact_before_write
     """
     )
-    result = pytester.runpytest(hardpy_dbh(), hardpy_connect_db())
+    result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_run_artifact(hardpy_init, pytester: Pytester):
+def test_run_artifact(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -204,11 +203,11 @@ def test_run_artifact(hardpy_init, pytester: Pytester):
             assert read_artifact == artifact_before_write
     """
     )
-    result = pytester.runpytest(hardpy_dbh(), hardpy_connect_db())
+    result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_case_message(hardpy_init, pytester: Pytester):
+def test_case_message(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -249,5 +248,5 @@ def test_case_message(hardpy_init, pytester: Pytester):
 
     """
     )
-    result = pytester.runpytest(hardpy_dbh(), hardpy_connect_db())
+    result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
