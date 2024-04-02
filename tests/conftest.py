@@ -14,4 +14,4 @@ def hardpy_opts():
         "--hardpy-dbh",
         config_data.db_host if db_host is None else db_host,
         "--hardpy-pt"
-    ]    
+    ]

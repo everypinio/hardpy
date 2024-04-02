@@ -15,7 +15,7 @@ def run():
     config = ConfigData()
     parser = ArgumentParser(description="Usage: hardpy-panel [OPTION]... [PATH]")
     # fmt: off
-    parser.add_argument("-dbu", "--db_user", default=config.db_user, help="database user")
+    parser.add_argument("-dbu", "--db_user", default=config.db_user, help="database user")  # noqa: E501
     parser.add_argument("-dbpw", "--db_pswd", default=config.db_pswd, help="database user password")  # noqa: E501
     parser.add_argument("-dbp", "--db_port", type=int, default=config.db_port, help="database port number")  # noqa: E501
     parser.add_argument("-dbh", "--db_host", type=str, default=config.db_host, help="database hostname")  # noqa: E501

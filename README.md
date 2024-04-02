@@ -42,6 +42,10 @@ Find examples of using the **HardPy** in the `examples` folder.
 
 #### CouchDB
 
+This is a simple instruction for Linux.
+For Windows, follow the instructions from the
+[documentation](https://everypinio.github.io/hardpy/documentation/database/#couchdb-instance).
+
 Launch CouchDB with Docker.
 Create `couchdb.ini` file:
 
