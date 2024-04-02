@@ -3,16 +3,11 @@ import logging
 import pytest
 
 from hardpy import (
-    HardpyPlugin,
     CouchdbLoader,
     CouchdbConfig,
     get_current_report,
 )
 from driver_example import DriverExample
-
-
-def pytest_configure(config: pytest.Config):
-    config.pluginmanager.register(HardpyPlugin())
 
 
 @pytest.fixture(scope="module")

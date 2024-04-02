@@ -1,15 +1,10 @@
 import pytest
 
 from hardpy import (
-    HardpyPlugin,
     CouchdbLoader,
     CouchdbConfig,
     get_current_report,
 )
-
-
-def pytest_configure(config: pytest.Config):
-    config.pluginmanager.register(HardpyPlugin())
 
 
 def save_report_to_couchdb():
