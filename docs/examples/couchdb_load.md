@@ -11,7 +11,8 @@ Test reports are written to the **report** database at the end of the testing pr
 
 ### pytest.ini
 
-It is a file of built-in configuration options that determine how live logging works.
+It is a file of built-in configuration options that determine how live logging works and 
+enable **pytest-hardpy** plugin for launching via pytest.
 
 ```ini
 [pytest]
@@ -19,13 +20,13 @@ log_cli = true
 log_cli_level = INFO
 log_cli_format = %(asctime)s [%(levelname)s] %(message)s
 log_cli_date_format = %H:%M:%S
+addopts = --hardpy-pt
 ```
 
 ### conftest.py
 
 Contains settings and fixtures for all tests:
 
-- Registering the HardPy plugin in pytest_configure;
 - The function of generating a report and recording it in the database `save_report_to_couchdb`;
 - The list of actions that will be performed after testing is filled in function `fill_actions_after_test`;
 
@@ -33,14 +34,10 @@ Contains settings and fixtures for all tests:
 import pytest
 
 from hardpy import (
-    HardpyPlugin,
     CouchdbLoader,
     CouchdbConfig,
     get_current_report,
 )
-
-def pytest_configure(config: pytest.Config):
-    config.pluginmanager.register(HardpyPlugin())
 
 def save_report_to_couchdb():
     report = get_current_report()

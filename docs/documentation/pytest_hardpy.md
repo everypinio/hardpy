@@ -5,17 +5,24 @@ database for test reporting and viewing test data in the web interface.
 
 ## Plugin registration
 
-To use the **pytest-hardpy** you need to register **HardpyPlugin**.
-You can register it via the `contest.py` file.
+To use the **pytest-hardpy** you need to enable it.
+You can do this via the `pytest.ini` file.
 
 **Example:**
 
-```python
-from hardpy import HardpyPlugin
-
-def pytest_configure(config: Config):
-    config.pluginmanager.register(HardpyPlugin())
+```ini
+# pytest.ini
+[pytest]
+addopts = --hardpy-pt
 ```
+
+Another way to enable a plugin without `pytest.ini` file is to run tests with the option `--hardpy-pt`.
+
+```bash
+pytest --hardpy-pt tests
+```
+
+If tests are run via [hardpy-panel](hardpy_panel.md), then the pytest-hardpy plugin will be enabled for tests by default.
 
 ## Functions
 
@@ -263,6 +270,14 @@ pytestmark = pytest.mark.module_name("Module 1")
 ## Options
 
 **pytest-hardpy** has several options to run:
+
+#### hardpy_pt
+
+Option to enable the **pytest-hardpy** plugin.
+
+```bash
+--hardpy-pt
+```
 
 #### db_user
 

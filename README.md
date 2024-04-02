@@ -16,6 +16,8 @@ HardPy is a python library for creating a test bench for devices.
 
 **Source Code**: <a href=https://github.com/everypinio/hardpy target="_blank">https://github.com/everypinio/hardpy</a>
 
+**PyPi**: <a href=https://pypi.org/project/hardpy/ target="_blank">https://pypi.org/project/hardpy/</a>
+
 ---
 
 ## Overview

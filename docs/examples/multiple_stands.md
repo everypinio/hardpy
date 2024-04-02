@@ -6,13 +6,10 @@ This is an example of running multiple stands on one PC.
 
 Create 2 separate projects. Add a simple test to the `tests` folder of each project.
 
-```python
-# conftest.py
-import pytest
-import hardpy
-
-def pytest_configure(config: pytest.Config):
-    config.pluginmanager.register(hardpy.HardpyPlugin())
+```ini
+# pytest.ini
+[pytest]
+addopts = --hardpy-pt
 ```
 
 ```python

@@ -10,7 +10,8 @@ This is an example of using **pytest-hardpy** functions, storing the result to C
 
 ### pytest.ini
 
-It is a file of built-in configuration options that determine how live logging works.
+It is a file of built-in configuration options that determine how live logging works and 
+enable **pytest-hardpy** plugin for launching via pytest.
 
 ```ini
 [pytest]
@@ -18,13 +19,13 @@ log_cli = true
 log_cli_level = INFO
 log_cli_format = %(asctime)s [%(levelname)s] %(message)s
 log_cli_date_format = %H:%M:%S
+addopts = --hardpy-pt
 ```
 
 ### conftest.py
 
 Contains settings and fixtures for all tests:
 
-- Registering the HardPy plugin in pytest_configure;
 - The function of generating a report and recording it in the database `finish_executing`;
 - The example of devices used as a fixture in `driver_example`;
 - The list of actions that will be performed after testing is filled in function `fill_actions_after_test`;
@@ -35,15 +36,11 @@ import logging
 import pytest
 
 from hardpy import (
-    HardpyPlugin,
     CouchdbLoader,
     CouchdbConfig,
     get_current_report,
 )
 from driver_example import DriverExample
-
-def pytest_configure(config: pytest.Config):
-    config.pluginmanager.register(HardpyPlugin())
 
 @pytest.fixture(scope="module")
 def module_log(request):
