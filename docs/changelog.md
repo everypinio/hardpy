@@ -2,7 +2,10 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
-* Removed the ability to access the HardpyPlugin. Users can now only register through the ini file.
+## HardPy 0.2.0
+
+* Add documentation site.
+* Remove the ability to access the HardpyPlugin. Users can now only register through the ini file.
 
 ## HardPy 0.1.0
 
