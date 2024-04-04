@@ -66,6 +66,12 @@ Run the Docker container from folder with couchdb.ini file:
 docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3
 ```
 
+Command for Windows:
+
+```bash
+docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v .\couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3.2
+```
+
 #### Test steps
 
 Add simple test to `tests` folder
