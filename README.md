@@ -47,6 +47,7 @@ For Windows, follow the instructions from the
 [documentation](https://everypinio.github.io/hardpy/documentation/database/#couchdb-instance).
 
 Launch CouchDB with Docker.
+The Docker version must be 24.0.0 or higher.
 Create `couchdb.ini` file:
 
 ```ini

@@ -36,7 +36,7 @@ methods = GET, PUT, POST, HEAD, DELETE
 credentials = true
 headers = accept, authorization, content-type, origin, referer, x-csrf-token
 ```
-2. Run the Docker container (from the folder with the couchdb.ini file):
+2. The Docker version must be 24.0.0 or higher. Run the Docker container (from the folder with the couchdb.ini file):
 
 ```bash
 docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3
