@@ -29,12 +29,11 @@ If a test that a test depends on fails or is skipped, the dependent test will al
 To use:
 
 - Install `pytest-dependency` package.
-- Add the line `@pytest.mark.dependency()` before undependent tests.
+- Add the line `@pytest.mark.dependency()` before independent tests.
 - Add the line `@pytest.mark.dependency(depends=["test_one"])` before the dependent test,
 if a test that a test depends on is in the same file.
 - Add the line `@pytest.mark.dependency(depends=["test_a.py::test_one"], scope='session')`
 before the dependent test, if a test that a test depends on is in the other file.
-Instead of `<project_dir>` paste the path to the tests folder relative to the project.
 - Specify the file path regardless of the launch method.
 
 Test/module name formats:
