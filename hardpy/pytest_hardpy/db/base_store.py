@@ -36,8 +36,27 @@ class BaseStore(BaseConnector):
         """
         return glom(self._doc, key)
 
+    def update_doc(self, key: str, value):
+        """Update document in the database.
+
+        Update document without database by key and value.
+        """
+        assign(self._doc, key, value)
+
+    def update_db(self):
+        """Update database by current document."""
+        try:
+            self._doc = self._db.save(self._doc)
+        except Conflict as exc:
+            self._log.error(
+                f"Error while saving runner document: {exc} "
+                "Current document will be changed by "
+                "document from database."
+            )
+            self._doc = self._db.get(self._doc_id)
+
     def set_value(self, key: str, value):
-        """Set a value in the state store."""
+        """Set a value in the database."""
         assign(self._doc, key, value)
         try:
             self._doc = self._db.save(self._doc)

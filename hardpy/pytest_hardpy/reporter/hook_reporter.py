@@ -100,8 +100,8 @@ class HookReporter(BaseReporter):
             is_use_artifact=True,
         )
 
-        self.set_db_value(key, new_item_statestore, is_runstore=False)
-        self.set_db_value(key, new_item_runstore, is_statestore=False)
+        self.update_doc(key, new_item_statestore, is_runstore=False)
+        self.update_doc(key, new_item_runstore, is_statestore=False)
 
     def set_case_status(self, module_id: str, case_id: str, status: TestStatus):
         """Set test case status.
@@ -176,6 +176,10 @@ class HookReporter(BaseReporter):
         updated_case_order = self._update_case_order(rm_outdated_nodes, nodes)
         updated_module_order = self._update_module_order(updated_case_order)
         self.set_db_value(key, updated_module_order, is_runstore=False)
+
+    def update_database(self):
+        """Update database."""
+        self.update_db()
 
     def _set_time(self, key: str):
         current_time = self._statestore.get_field(key)
