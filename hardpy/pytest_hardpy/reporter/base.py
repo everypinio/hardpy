@@ -14,44 +14,39 @@ class BaseReporter(object):
         self._runstore = RunStore()
         self._log = getLogger(__name__)
 
-    def update_doc(self, key: str, value, is_statestore=True, is_runstore=True):
-        """Update document in the database.
+    def set_doc_value(
+        self, key: str, value, runstore_only=False, statestore_only=False
+    ):
+        """Set value to the document.
 
-        Update document without database by key and value.
+        Update a document without writing to the database.
 
         Args:
             key (str): document key
             value: document value
-            is_statestore (bool, optional): indicates whether data should
-                                             be written to StateStore. Defaults to True.
-            is_runstore (bool, optional): indicates whether data should
-                                            be written to RunStore. Defaults to True.
-        """
-        if is_statestore:
-            self._statestore.update_doc(key, value)
-        if is_runstore:
-            self._runstore.update_doc(key, value)
+            runstore_only (bool, optional): indicates whether data should
+                                             be written to RunStore. Defaults to True.
+            statestore_only (bool, optional): indicates whether data should
+                                            be written to StateStore. Defaults to True.
 
-    def update_db(self):
+        Raises:
+            ValueError: if both runstore_only and statestore_only are True
+        """
+        if runstore_only and statestore_only:
+            raise ValueError("Both runstore_only and statestore_only cannot be True")
+        if runstore_only:
+            self._runstore.update_doc(key, value)
+            return
+        if statestore_only:
+            self._statestore.update_doc(key, value)
+            return
+        self._runstore.update_doc(key, value)
+        self._statestore.update_doc(key, value)
+
+    def update_db_by_doc(self):
         """Update database by current document."""
         self._statestore.update_db()
         self._runstore.update_db()
-
-    def set_db_value(self, key: str, value, is_statestore=True, is_runstore=True):
-        """Set value to database.
-
-        Args:
-            key (str): database key
-            value: database value
-            is_statestore (bool, optional): indicates whether data should
-                                             be written to StateStore. Defaults to True.
-            is_runstore (bool, optional): indicates whether data should
-                                            be written to RunStore. Defaults to True.
-        """
-        if is_statestore:
-            self._statestore.set_value(key, value)
-        if is_runstore:
-            self._runstore.set_value(key, value)
 
     def generate_key(self, *args) -> str:
         """Generate key for database.
