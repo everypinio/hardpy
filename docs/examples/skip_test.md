@@ -79,7 +79,7 @@ If a test/module that a test depends on fails or is skipped, the dependent test/
 
 To use:
 
-- - Install `pytest-depends` package (e.g. pytest-depends==1.0.1).
+- Install `pytest-depends` package (e.g. pytest-depends==1.0.1).
 - Add the line `@pytest.mark.depends(on=['test_name'])` before the dependent test,
 or `pytestmark = pytest.mark.depends(on="test_name")` at the beginning of the module.
 - Specify the file path relative to the root folder regardless of the launch method.
