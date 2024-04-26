@@ -112,8 +112,8 @@ def test_two():
 import pytest
 
 pytestmark = [
-    pytest.mark.depends(on="<project_dir>/test_a.py::test_two"),
-] # <project_dir> - the path to the tests folder relative to the project
+    pytest.mark.depends(on="test_a.py::test_two"),
+]
 
 def test_one():
     assert True
