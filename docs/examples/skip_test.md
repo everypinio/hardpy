@@ -28,14 +28,13 @@ If a test that a test depends on fails or is skipped, the dependent test will al
 
 To use:
 
-- Install `pytest-dependency` package.
-- Add the line `@pytest.mark.dependency()` before all tests.
+- Install `pytest-dependency` package (e.g. pytest-dependency==0.6.0).
+- Add the line `@pytest.mark.dependency()` before independent tests.
 - Add the line `@pytest.mark.dependency(depends=["test_one"])` before the dependent test,
 if a test that a test depends on is in the same file.
-- Add the line `@pytest.mark.dependency(depends=["<project_dir>/test_a.py::test_one"], scope='session')`
+- Add the line `@pytest.mark.dependency(depends=["test_a.py::test_one"], scope='session')`
 before the dependent test, if a test that a test depends on is in the other file.
-Instead of `<project_dir>` paste the path to the tests folder relative to the project.
-- Specify the file path relative to the root folder regardless of the launch method.
+- Specify the file path regardless of the launch method.
 
 Test/module name formats:
 
@@ -63,7 +62,7 @@ def test_one():
 import pytest
 
 @pytest.mark.dependency(
-    depends=["<project_dir>/test_a.py::test_one"],
+    depends=["test_a.py::test_one"],
     scope='session'
 )
 def test_one():
@@ -80,7 +79,7 @@ If a test/module that a test depends on fails or is skipped, the dependent test/
 
 To use:
 
-- Specify the dependency in the file `pyproject.toml`: `pytest-depends==1.0.1`
+- Install `pytest-depends` package (e.g. pytest-depends==1.0.1).
 - Add the line `@pytest.mark.depends(on=['test_name'])` before the dependent test,
 or `pytestmark = pytest.mark.depends(on="test_name")` at the beginning of the module.
 - Specify the file path relative to the root folder regardless of the launch method.
@@ -113,7 +112,7 @@ def test_two():
 import pytest
 
 pytestmark = [
-    pytest.mark.depends(on="<project_dir>/test_a.py::test_two"),
+    pytest.mark.depends(on="test_a.py::test_two"),
 ]
 
 def test_one():
