@@ -36,19 +36,29 @@ class BaseStore(BaseConnector):
         """
         return glom(self._doc, key)
 
-    def set_value(self, key: str, value):
-        """Set a value in the state store."""
-        assign(self._doc, key, value)
+    def update_doc(self, key: str, value):
+        """Update document.
+
+        HardPy collecting uses a simple key without dots.
+        Assign is used to update a document.
+        Assign is a longer function.
+
+        Args:
+            key (str): document key
+            value: document value
+        """
+        if "." in key:
+            assign(self._doc, key, value)
+        else:
+            self._doc[key] = value
+
+    def update_db(self):
+        """Update database by current document."""
         try:
             self._doc = self._db.save(self._doc)
-        except Conflict as exc:
-            self._log.error(
-                f"Error while saving runner document: {exc} "
-                f"when trying to save key={key}, value={value}. "
-                "Current document will be changed by "
-                "document from database."
-            )
-            self._doc = self._db.get(self._doc_id)
+        except Conflict:
+            self._doc["_rev"] = self._db.get(self._doc_id)["_rev"]
+            self._doc = self._db.save(self._doc)
 
     def get_document(self) -> ModelMetaclass:
         """Get document by schema.

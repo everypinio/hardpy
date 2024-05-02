@@ -25,23 +25,23 @@ class HookReporter(BaseReporter):
         Args:
             doc_name (str): test run name
         """
-        self.set_db_value(DF.NAME, doc_name)
-        self.set_db_value(DF.STATUS, TestStatus.READY)
-        self.set_db_value(DF.START_TIME, None)
-        self.set_db_value(DF.TIMEZONE, None)
-        self.set_db_value(DF.STOP_TIME, None)
-        self.set_db_value(DF.PROGRESS, 0)
-        self.set_db_value(DF.DRIVERS, {})
-        self.set_db_value(DF.ARTIFACT, {}, is_statestore=False)
+        self.set_doc_value(DF.NAME, doc_name)
+        self.set_doc_value(DF.STATUS, TestStatus.READY)
+        self.set_doc_value(DF.START_TIME, None)
+        self.set_doc_value(DF.TIMEZONE, None)
+        self.set_doc_value(DF.STOP_TIME, None)
+        self.set_doc_value(DF.PROGRESS, 0)
+        self.set_doc_value(DF.DRIVERS, {})
+        self.set_doc_value(DF.ARTIFACT, {}, runstore_only=True)
 
     def start(self):
         """Start test."""
         self._log.debug("Starting test run.")
         start_time = int(time())
-        self.set_db_value(DF.START_TIME, start_time)
-        self.set_db_value(DF.STATUS, TestStatus.RUN)
-        self.set_db_value(DF.TIMEZONE, tzname)  # noqa: WPS432
-        self.set_db_value(DF.PROGRESS, 0)
+        self.set_doc_value(DF.START_TIME, start_time)
+        self.set_doc_value(DF.STATUS, TestStatus.RUN)
+        self.set_doc_value(DF.TIMEZONE, tzname)  # noqa: WPS432
+        self.set_doc_value(DF.PROGRESS, 0)
 
     def finish(self, status: RunStatus):
         """Finish test.
@@ -50,15 +50,11 @@ class HookReporter(BaseReporter):
         """
         self._log.debug("Finishing test run.")
         stop_time = int(time())
-        self.set_db_value(DF.STOP_TIME, stop_time)
-        self.set_db_value(DF.STATUS, status)
+        self.set_doc_value(DF.STOP_TIME, stop_time)
+        self.set_doc_value(DF.STATUS, status)
 
-        if self._statestore.get_document():
-            self._log.debug("Report StateStore has been successfully validated.")
-
-        if self._runstore.get_document():
-            self._log.debug("Report RunStore has been successfully validated.")
-
+    def compact_all(self):
+        """Compact all databases"""
         self._statestore.compact()
         self._runstore.compact()
 
@@ -68,7 +64,7 @@ class HookReporter(BaseReporter):
         Args:
             progress (int): test progress
         """
-        self.set_db_value(DF.PROGRESS, progress)
+        self.set_doc_value(DF.PROGRESS, progress)
 
     def set_assertion_msg(self, module_id: str, case_id: str, msg: str | None):
         """Set case assertion message.
@@ -81,7 +77,7 @@ class HookReporter(BaseReporter):
         key = self.generate_key(
             DF.MODULES, module_id, DF.CASES, case_id, DF.ASSERTION_MSG
         )
-        self.set_db_value(key, msg)
+        self.set_doc_value(key, msg)
 
     def add_case(self, node_info: NodeInfo):
         """Add test case to document.
@@ -90,18 +86,15 @@ class HookReporter(BaseReporter):
             node_info (NodeInfo): node info
         """
         key = DF.MODULES
+
         item_statestore = self._statestore.get_field(key)
         item_runstore = self._runstore.get_field(key)
 
-        new_item_statestore = self._init_case(item_statestore, node_info)
-        new_item_runstore = self._init_case(
-            item_runstore,
-            node_info,
-            is_use_artifact=True,
-        )
+        self._init_case(item_statestore, node_info)
+        self._init_case(item_runstore, node_info, is_use_artifact=True)
 
-        self.set_db_value(key, new_item_statestore, is_runstore=False)
-        self.set_db_value(key, new_item_runstore, is_statestore=False)
+        self.set_doc_value(key, item_statestore, statestore_only=True)
+        self.set_doc_value(key, item_runstore, runstore_only=True)
 
     def set_case_status(self, module_id: str, case_id: str, status: TestStatus):
         """Set test case status.
@@ -112,7 +105,7 @@ class HookReporter(BaseReporter):
             status (TestStatus): test case status
         """
         key = self.generate_key(DF.MODULES, module_id, DF.CASES, case_id, DF.STATUS)
-        self.set_db_value(key, status)
+        self.set_doc_value(key, status)
 
     def set_case_start_time(self, module_id: str, case_id: str):
         """Set test case start_time.
@@ -142,7 +135,7 @@ class HookReporter(BaseReporter):
             status (TestStatus): test module status
         """
         key = self.generate_key(DF.MODULES, module_id, DF.STATUS)
-        self.set_db_value(key, status)
+        self.set_doc_value(key, status)
 
     def set_module_start_time(self, module_id: str):
         """Set test module status.
@@ -175,16 +168,16 @@ class HookReporter(BaseReporter):
         rm_outdated_nodes = self._remove_outdate_node(old_modules, modules_copy, nodes)
         updated_case_order = self._update_case_order(rm_outdated_nodes, nodes)
         updated_module_order = self._update_module_order(updated_case_order)
-        self.set_db_value(key, updated_module_order, is_runstore=False)
+        self.set_doc_value(key, updated_module_order, statestore_only=True)
 
     def _set_time(self, key: str):
         current_time = self._statestore.get_field(key)
         if current_time is None:
-            self.set_db_value(key, int(time()))
+            self.set_doc_value(key, int(time()))
 
     def _init_case(
         self, item: dict, node_info: NodeInfo, is_use_artifact: bool = False
-    ) -> dict:
+    ):
         module_default = {  # noqa: WPS204
             DF.STATUS: TestStatus.READY,
             DF.NAME: self._get_module_name(node_info),
@@ -215,8 +208,6 @@ class HookReporter(BaseReporter):
         if is_use_artifact:
             case_default[DF.ARTIFACT] = {}
         item[node_info.module_id][DF.CASES][node_info.case_id] = case_default
-
-        return item
 
     def _remove_outdate_node(
         self, old_modules: dict, new_modules: dict, nodes: dict

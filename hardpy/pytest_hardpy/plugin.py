@@ -40,6 +40,7 @@ def pytest_addoption(parser: Parser):
     parser.addoption("--hardpy-pt", action="store_true", default=False, help="enable pytest-hardpy plugin")  # noqa: E501
     # fmt: on
 
+
 # Bootstrapping hooks
 def pytest_load_initial_conftests(early_config, parser, args):
     if "--hardpy-pt" in args:
@@ -63,7 +64,6 @@ class HardpyPlugin(object):
         elif system() == "Windows":
             signal.signal(signal.SIGBREAK, self._stop_handler)
         self._log = getLogger(__name__)
-
 
     # Initialization hooks
 
@@ -92,6 +92,8 @@ class HardpyPlugin(object):
             return
         status = self._get_run_status(exitstatus)
         self._reporter.finish(status)
+        self._reporter.update_db_by_doc()
+        self._reporter.compact_all()
 
         # call post run methods
         if self._post_run_functions:
@@ -107,6 +109,7 @@ class HardpyPlugin(object):
         self._reporter.init_doc(str(PurePath(config.rootpath).name))
 
         nodes = {}
+        modules = set()
 
         session.items = natsorted(
             session.items,
@@ -118,15 +121,17 @@ class HardpyPlugin(object):
             node_info = NodeInfo(item)
 
             self._init_case_result(node_info.module_id, node_info.case_id)
-
             if node_info.module_id not in nodes:
                 nodes[node_info.module_id] = [node_info.case_id]
             else:
                 nodes[node_info.module_id].append(node_info.case_id)
 
             self._reporter.add_case(node_info)
-            self._reporter.set_module_status(node_info.module_id, TestStatus.READY)
+            modules.add(node_info.module_id)
+        for module_id in modules:
+            self._reporter.set_module_status(module_id, TestStatus.READY)
         self._reporter.update_node_order(nodes)
+        self._reporter.update_db_by_doc()
 
     # Test running (runtest) hooks
 
@@ -139,6 +144,7 @@ class HardpyPlugin(object):
 
         # testrun entrypoint
         self._reporter.start()
+        self._reporter.update_db_by_doc()
 
     def pytest_runtest_setup(self, item: Item):
         """Call before each test setup phase."""
@@ -159,6 +165,7 @@ class HardpyPlugin(object):
             node_info.module_id,
             node_info.case_id,
         )
+        self._reporter.update_db_by_doc()
 
     # Reporting hooks
 
@@ -188,6 +195,7 @@ class HardpyPlugin(object):
 
         if None not in self._results[module_id].values():
             self._collect_module_result(module_id)
+        self._reporter.update_db_by_doc()
 
     # Fixture
 

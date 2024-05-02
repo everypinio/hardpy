@@ -52,7 +52,8 @@ def set_dut_info(info: dict):
     reporter = RunnerReporter()
     for dut_key, dut_value in info.items():
         key = reporter.generate_key(DF.DUT, DF.INFO, dut_key)
-        reporter.set_db_value(key, dut_value)
+        reporter.set_doc_value(key, dut_value)
+    reporter.update_db_by_doc()
 
 
 def set_dut_serial_number(serial_number: str):
@@ -68,7 +69,8 @@ def set_dut_serial_number(serial_number: str):
     key = reporter.generate_key(DF.DUT, DF.SERIAL_NUMBER)
     if reporter.get_field(key):
         raise DuplicateSerialNumberError
-    reporter.set_db_value(key, serial_number)
+    reporter.set_doc_value(key, serial_number)
+    reporter.update_db_by_doc()
 
 
 def set_stand_info(info: dict):
@@ -80,7 +82,8 @@ def set_stand_info(info: dict):
     reporter = RunnerReporter()
     for stand_key, stand_value in info.items():
         key = reporter.generate_key(DF.TEST_STAND, stand_key)
-        reporter.set_db_value(key, stand_value)
+        reporter.set_doc_value(key, stand_value)
+    reporter.update_db_by_doc()
 
 
 def set_message(msg: str, msg_key: Optional[str] = None) -> None:
@@ -111,7 +114,8 @@ def set_message(msg: str, msg_key: Optional[str] = None) -> None:
 
     msgs[msg_key] = msg
 
-    reporter.set_db_value(key, msgs)
+    reporter.set_doc_value(key, msgs)
+    reporter.update_db_by_doc()
 
 
 def set_case_artifact(data: dict):
@@ -134,7 +138,8 @@ def set_case_artifact(data: dict):
             DF.ARTIFACT,
             stand_key,
         )
-        reporter.set_db_value(key, stand_value, is_statestore=False)
+        reporter.set_doc_value(key, stand_value, runstore_only=True)
+    reporter.update_db_by_doc()
 
 
 def set_module_artifact(data: dict):
@@ -155,7 +160,8 @@ def set_module_artifact(data: dict):
             DF.ARTIFACT,
             artifact_key,
         )
-        reporter.set_db_value(key, artifact_value, is_statestore=False)
+        reporter.set_doc_value(key, artifact_value, runstore_only=True)
+    reporter.update_db_by_doc()
 
 
 def set_run_artifact(data: dict):
@@ -173,7 +179,8 @@ def set_run_artifact(data: dict):
             DF.ARTIFACT,
             artifact_key,
         )
-        reporter.set_db_value(key, artifact_value, is_statestore=False)
+        reporter.set_doc_value(key, artifact_value, runstore_only=True)
+    reporter.update_db_by_doc()
 
 
 def set_driver_info(drivers: dict) -> None:
@@ -192,7 +199,8 @@ def set_driver_info(drivers: dict) -> None:
             DF.DRIVERS,
             driver_name,
         )
-        reporter.set_db_value(key, driver_data)
+        reporter.set_doc_value(key, driver_data)
+    reporter.update_db_by_doc()
 
 
 def _get_current_test() -> CurrentTestInfo:

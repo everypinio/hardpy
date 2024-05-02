@@ -2,6 +2,9 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Reduce the number of database calls.
+* Speed up test collection.
+
 ## HardPy 0.2.0
 
 * Add documentation site.

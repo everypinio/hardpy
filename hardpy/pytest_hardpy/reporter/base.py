@@ -14,21 +14,39 @@ class BaseReporter(object):
         self._runstore = RunStore()
         self._log = getLogger(__name__)
 
-    def set_db_value(self, key: str, value, is_statestore=True, is_runstore=True):
-        """Set value to database.
+    def set_doc_value(
+        self, key: str, value, runstore_only=False, statestore_only=False
+    ):
+        """Set value to the document.
+
+        Update a document without writing to the database.
 
         Args:
-            key (str): database key
-            value (_type_): database value
-            is_statestore (bool, optional): indicates whether data should
-                                             be written to StateStore. Defaults to True.
-            is_runstore (bool, optional): indicates whether data should
-                                            be written to RunStore. Defaults to True.
+            key (str): document key
+            value: document value
+            runstore_only (bool, optional): indicates whether data should
+                                             be written to RunStore. Defaults to True.
+            statestore_only (bool, optional): indicates whether data should
+                                            be written to StateStore. Defaults to True.
+
+        Raises:
+            ValueError: if both runstore_only and statestore_only are True
         """
-        if is_statestore:
-            self._statestore.set_value(key, value)
-        if is_runstore:
-            self._runstore.set_value(key, value)
+        if runstore_only and statestore_only:
+            raise ValueError("Both runstore_only and statestore_only cannot be True")
+        if runstore_only:
+            self._runstore.update_doc(key, value)
+            return
+        if statestore_only:
+            self._statestore.update_doc(key, value)
+            return
+        self._runstore.update_doc(key, value)
+        self._statestore.update_doc(key, value)
+
+    def update_db_by_doc(self):
+        """Update database by current document."""
+        self._statestore.update_db()
+        self._runstore.update_db()
 
     def generate_key(self, *args) -> str:
         """Generate key for database.
