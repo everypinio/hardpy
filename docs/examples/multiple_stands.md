@@ -64,13 +64,91 @@ hardpy-panel -dbp 5985 -wp 8001 tests
 
 ### storing reports
 
-We can use the **reports** database, as in the example [CouchDB Load](couchdb_load.md).
-A separate database is required to store the list of reports.
-By default, reports are saved to the default database on port 5984, but you can assign another port.
-Configure database on port 5986 for storing reports in `conftest.py` in the test folder:
+We can use the database to store a list of reports. This will require a separate database.
 
-```python
-loader = CouchdbLoader(CouchdbConfig(port=5986))
+We can use the **reports** database, as in the example [CouchDB Load](couchdb_load.md).
+
+
+#### pytest.ini
+
+Create in the folder of each stand `pytest.ini` file.
+
+It is a file of built-in configuration options that determine how live logging works and enable pytest-hardpy plugin for launching via pytest.
+
+```bash
+[pytest]
+log_cli = true
+log_cli_level = INFO
+log_cli_format = %(asctime)s [%(levelname)s] %(message)s
+log_cli_date_format = %H:%M:%S
+addopts = --hardpy-pt
+```
+
+#### conftest.py
+
+Create in the folder of each stand `conftest.py` file.
+
+Contains settings and fixtures for all tests:
+
+* The function of generating a report and recording it in the database save_report_to_couchdb;
+* The list of actions that will be performed after testing is filled in function fill_actions_after_test;
+
+To store reports from all booths in one database, set the port number 
+of this database to a file `conftest.py ` in the folder of each stand.
+
+```bash
+import pytest
+
+from hardpy import (
+    CouchdbLoader,
+    CouchdbConfig,
+    get_current_report,
+)
+
+def save_report_to_couchdb():
+    report = get_current_report()
+    if report:
+        loader = CouchdbLoader(CouchdbConfig(port=5986))
+        loader.load(report)
+
+@pytest.fixture(scope="session", autouse=True)
+def fill_actions_after_test(post_run_functions: list):
+    post_run_functions.append(save_report_to_couchdb)
+    yield
 ```
 
 * `5986` - port of the database with reports
+
+
+#### Running CouchDB with Docker
+
+1. Create couchdb.ini file.
+
+```bash
+[chttpd]
+enable_cors=true
+
+[cors]
+origins = *
+methods = GET, PUT, POST, HEAD, DELETE
+credentials = true
+headers = accept, authorization, content-type, origin, referer, x-csrf-token
+```
+
+2. The Docker version must be 24.0.0 or higher. Run the Docker container (from the folder with the couchdb.ini file).
+
+    Command for Linux:
+
+    ```bash
+    docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3
+    ```
+
+    Command for Windows:
+
+    ```bash
+    docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v .\couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3.2
+    ```
+
+    The container will be deleted after use.
+
+
