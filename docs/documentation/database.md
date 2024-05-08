@@ -113,7 +113,7 @@ Open it.
 8. First of all, in the `User Management` section in the `Create Admins` tab, create a user with the login `dev` and password `dev`
 9. In the `Config` choose `CORS` and appoint `Enable CORS` with `All domains`
 
-## To disable the CouchDB service:
+#### To disable the CouchDB service:
 
 Remove packages:
 ```bash
