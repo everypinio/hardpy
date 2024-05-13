@@ -75,9 +75,9 @@ docker compose down
 
 ## windows
 
-### ram disc creation
+### virtual hard disk creation
 
-You need to create a ram disk on which the database will be saved.
+You need to create a virtual hard disk on which the database will be saved.
 
 - Open the command prompt using `Win+R`, type `diskmgmt.msc`, and press `Enter`.
 - Click Action > Create Virtual Hard Disk.
