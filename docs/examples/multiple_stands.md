@@ -5,8 +5,7 @@ This is an example of running multiple stands on one PC.
 The example implements the launch of two stands and three CouchDB Instances. 
 
 Each stand will record reports on the conducted testing in the CouchDB Instance assigned to it in the **runstore** and **statestore** databases.
-
-The third CouchDB Instance is needed to store reports in the **repot** database on each conducted test of each stand.
+The third CouchDB Instance is needed to store reports in the **report** database on each conducted test of each stand.
 
 You can learn more about storing reports here [Couchdb instance](../documentation/database.md#couchdb-instance).
 
@@ -39,7 +38,7 @@ To create a CouchDB Instance use [CouchDH instance](../documentation/database.md
 * Launch the next script from the folder with the `couchdb.ini` file:
 
 ```bash
-docker run --name tests_hardpy  -p 5984:5984  -e COUCHDB_USER=dev  -e COUCHDB_PASSWORD=dev  -v ./couchdb.ini:/opt/couchdb/etc/local.ini  couchdb:3.3
+docker run 6--name tests_hardpy -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini  couchdb:3.3
 ```
 Where:
 
@@ -49,8 +48,15 @@ Where:
 * `-e COUCHDB_PASSWORD=dev` - password
 
 For example, run a second database on port 5985:
+
 ```bash
-docker run --name tests_hardpy_2  -p 5985:5984  -e COUCHDB_USER=dev  -e COUCHDB_PASSWORD=dev  -v ./couchdb.ini:/opt/couchdb/etc/local.ini  couchdb:3.3
+docker run --name tests_hardpy_2 -p 5985:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini  couchdb:3.3
+```
+
+For example, run a third database on port 5986:
+
+```bash
+docker run --name tests_hardpy_3 -p 5986:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini  couchdb:3.3
 ```
 
 #### conftest.py
@@ -61,7 +67,7 @@ Contains settings and fixtures for all tests:
 * The function of generating a report and recording it in the database `save_report_to_couchdb`;
 * The list of actions that will be performed after testing is filled in function `fill_actions_after_test`;
 
-To store reports from all booths in the third CouchDB Instance, specify the port numbers of this CouchDB Instance in the file `conftest.py ` in the folder of each stand.
+To store reports from all booths in the third CouchDB Instance, specify the port numbers of this CouchDB Instance in the file `conftest.py` in the folder of each stand.
 
 ```bash
 import pytest
@@ -93,12 +99,12 @@ In projects with tests, configure a connection to its own database for storing s
 To launch project with connection to database use script:
 
 ```bash
-hardpy-panel -dbp 5984 -wp 8000 .../tests
+hardpy-panel -dbp 5984 -wp 8000 <dir_name>/tests
 ```
 
 * `5984` - port of database
 * `8000` - operator-panel port (frontend)
-* `.../tests` - the path to the folder with the tests
+* `<dir_name>/tests` - the path to the folder with the tests
 
 For another project, use different ports:
 
