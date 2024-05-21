@@ -183,6 +183,7 @@ class HookReporter(BaseReporter):
             DF.NAME: self._get_module_name(node_info),
             DF.START_TIME: None,
             DF.STOP_TIME: None,
+            DF.DEPENDENCY: self._get_dependency_status(node_info),
             DF.CASES: {},
         }
         case_default = {
@@ -190,6 +191,7 @@ class HookReporter(BaseReporter):
             DF.NAME: self._get_case_name(node_info),
             DF.START_TIME: None,
             DF.STOP_TIME: None,
+            DF.DEPENDENCY: self._get_dependency_status(node_info),
             DF.ASSERTION_MSG: None,
             DF.MSG: None,
         }
@@ -203,6 +205,7 @@ class HookReporter(BaseReporter):
             item[node_info.module_id][DF.NAME] = self._get_module_name(node_info)
             item[node_info.module_id][DF.START_TIME] = None
             item[node_info.module_id][DF.STOP_TIME] = None
+            item[node_info.module_id][DF.DEPENDENCY] = self._get_dependency_status(node_info)
         item[node_info.module_id][DF.NAME] = self._get_module_name(node_info)
 
         if is_use_artifact:
@@ -296,3 +299,14 @@ class HookReporter(BaseReporter):
             str: case name
         """
         return node_info.case_name if node_info.case_name else node_info.case_id
+
+    def _get_dependency_status(self, node_info: NodeInfo) -> str | None:
+        """Get dependency status from markers.
+
+        Args:
+            node_info (NodeInfo): node info
+
+        Returns:
+            str: dependency status
+        """
+        return node_info.dependency if node_info.dependency else None

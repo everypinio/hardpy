@@ -77,6 +77,7 @@ class HardpyPlugin(object):
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
+        config.addinivalue_line("markers", "dependency")
 
         # must be init after config data is set
         self._reporter = HookReporter()

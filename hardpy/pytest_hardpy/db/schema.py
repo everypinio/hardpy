@@ -32,7 +32,7 @@ class CaseStateStore(IBaseResult):
         "msg": null
     }
     """
-
+    artifact: Optional[dict] = {}
     assertion_msg: str | None = None
     msg: dict | None = None
 
@@ -48,13 +48,15 @@ class CaseRunStore(IBaseResult):
         "stop_time": 1695817189,
         "assertion_msg": null,
         "msg": null,
-        "artifact": {}
+        "artifact": {},
+        "dependency": {}
     }
     """
 
     assertion_msg: str | None = None
     msg: dict | None = None
     artifact: Optional[dict] = {}
+    dependency: Optional[dict] = {}
 
 
 class ModuleStateStore(IBaseResult):
@@ -66,6 +68,7 @@ class ModuleStateStore(IBaseResult):
       "name": "Module 2",
       "start_time": 1695816886,
       "stop_time": 1695817016,
+      "dependency": {},
       "cases": {
         "test_one": {
           "status": "passed",
@@ -78,7 +81,7 @@ class ModuleStateStore(IBaseResult):
       }
     }
     """
-
+    dependency: Optional[dict] = {}
     cases: dict[str, CaseStateStore] = {}
 
 
@@ -92,6 +95,7 @@ class ModuleRunStore(IBaseResult):
       "start_time": 1695816886,
       "stop_time": 1695817016,
       "artifact": {},
+      "dependency": {},
       "cases": {
         "test_one": {
           "status": "passed",
@@ -105,7 +109,7 @@ class ModuleRunStore(IBaseResult):
       }
     }
     """
-
+    dependency: Optional[dict] = {}
     cases: dict[str, CaseRunStore] = {}
     artifact: Optional[dict] = {}
 
@@ -168,6 +172,7 @@ class ResultStateStore(IBaseResult):
           "name": "Module 1",
           "start_time": 1695816884,
           "stop_time": 1695817265,
+          "dependency": {},
           "cases": {
             "test_dut_info": {
               "status": "passed",
@@ -175,7 +180,8 @@ class ResultStateStore(IBaseResult):
               "start_time": 1695817263,
               "stop_time": 1695817264,
               "assertion_msg": null,
-              "msg": null
+              "msg": null,
+              "dependency": {},
             },
             "test_minute_parity": {
               "status": "failed",
@@ -185,7 +191,8 @@ class ResultStateStore(IBaseResult):
               "assertion_msg": "The test failed because minute 21 is odd! Try again!",
               "msg": [
                 "Current minute 21"
-              ]
+              ],
+              "dependency": {},
             },
           }
         },
@@ -246,6 +253,7 @@ class ResultRunStore(IBaseResult):
           "start_time": 1695816884,
           "stop_time": 1695817265,
           "artifact": {},
+          "dependency": {},
           "cases": {
             "test_dut_info": {
               "status": "passed",
@@ -254,7 +262,8 @@ class ResultRunStore(IBaseResult):
               "stop_time": 1695817264,
               "assertion_msg": null,
               "msg": null,
-              "artifact": {}
+              "artifact": {},
+              "dependency": {},
             },
             "test_minute_parity": {
               "status": "failed",
@@ -265,6 +274,7 @@ class ResultRunStore(IBaseResult):
               "msg": [
                 "Current minute 21"
               ],
+              "dependency": {},
               "artifact": {
                 "data_str": "123DATA",
                 "data_int": 12345,

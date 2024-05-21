@@ -24,6 +24,7 @@ interface Case {
     assertion_msg: string | null
     msg: string[] | null
     artifact: Record<string, unknown>
+    dependency: string
 }
 
 type Cases = Dictionary<Case>
@@ -34,6 +35,7 @@ export interface TestItem {
     start_time: number,
     stop_time: number,
     artifact: Record<string, unknown>,
+    dependency: string
     cases: Cases
 }
 
