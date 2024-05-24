@@ -195,7 +195,6 @@ class HookReporter(BaseReporter):
             DF.ASSERTION_MSG: None,
             DF.MSG: None,
         }
-
         if item.get(node_info.module_id) is None:  # noqa: WPS204
             if is_use_artifact:
                 module_default[DF.ARTIFACT] = {}
@@ -205,7 +204,9 @@ class HookReporter(BaseReporter):
             item[node_info.module_id][DF.NAME] = self._get_module_name(node_info)
             item[node_info.module_id][DF.START_TIME] = None
             item[node_info.module_id][DF.STOP_TIME] = None
-            item[node_info.module_id][DF.DEPENDENCY] = self._get_dependency_status(node_info)
+            item[node_info.module_id][DF.DEPENDENCY] = self._get_dependency_status(
+                node_info
+            )
         item[node_info.module_id][DF.NAME] = self._get_module_name(node_info)
 
         if is_use_artifact:
@@ -309,4 +310,9 @@ class HookReporter(BaseReporter):
         Returns:
             str: dependency status
         """
-        return node_info.dependency if node_info.dependency else None
+        if node_info.case_dependency:
+            return node_info.case_dependency
+        elif node_info.module_dependency:
+            return node_info.module_dependency
+        else:
+            return None

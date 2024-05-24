@@ -2,6 +2,8 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import signal
+import pytest
+import re
 from typing import Any, Callable
 from logging import getLogger
 from pathlib import Path, PurePath
@@ -19,7 +21,8 @@ from pytest import (
     ExitCode,
 )
 
-from hardpy.pytest_hardpy.reporter import HookReporter
+from hardpy.pytest_hardpy.db import DatabaseField as DF
+from hardpy.pytest_hardpy.reporter import HookReporter, RunnerReporter
 from hardpy.pytest_hardpy.utils import (
     TestStatus,
     RunStatus,
@@ -58,6 +61,7 @@ class HardpyPlugin(object):
         self._progress = ProgressCalculator()
         self._results = {}
         self._post_run_functions: list[Callable] = []
+        self._dependencies = {}
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -77,7 +81,8 @@ class HardpyPlugin(object):
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
-        config.addinivalue_line("markers", "dependency")
+        config.addinivalue_line("markers", "case_dependency")
+        config.addinivalue_line("markers", "module_dependency")
 
         # must be init after config data is set
         self._reporter = HookReporter()
@@ -91,6 +96,7 @@ class HardpyPlugin(object):
         """
         if "--collect-only" in session.config.invocation_params.args:
             return
+        self._log.info(self._dependencies)
         status = self._get_run_status(exitstatus)
         self._reporter.finish(status)
         self._reporter.update_db_by_doc()
@@ -128,6 +134,26 @@ class HardpyPlugin(object):
                 nodes[node_info.module_id].append(node_info.case_id)
 
             self._reporter.add_case(node_info)
+            self._log.info(node_info.case_dependency)
+            self._log.info(node_info.module_dependency)
+
+            if (
+                node_info.case_dependency is not None
+                and node_info.case_dependency != ""
+                and node_info.case_dependency != {None}
+            ):
+                self._dependencies[f"{node_info.module_id}::{node_info.case_id}"] = (
+                    node_info.case_dependency
+                )
+
+            if (
+                node_info.module_dependency is not None
+                and node_info.module_dependency != ""
+                and node_info.module_dependency != {None}
+            ):
+                self._dependencies[f"{node_info.module_id}"] = (
+                    node_info.module_dependency
+                )
             modules.add(node_info.module_id)
         for module_id in modules:
             self._reporter.set_module_status(module_id, TestStatus.READY)
@@ -142,6 +168,34 @@ class HardpyPlugin(object):
         if session.config.option.collectonly:
             # ignore collect only mode
             return True
+
+        for item in session.items:
+            self._log.info(f"item{item}")
+            node_info = NodeInfo(item)
+            self._log.info(f"node_info {node_info}")
+            self._log.info(f"node_info.module_id {node_info.module_id}")
+            # if str(node_info.module_id) in self._dependencies:
+            #     self._log.info(f"WE MUST SKIP IT")
+            # pytest.skip(f"Модуль пропущен"
+
+            if f"{node_info.module_id}::{node_info.case_id}" in self._dependencies:
+                dependency_test = self._dependencies[
+                    f"{node_info.module_id}::{node_info.case_id}"
+                ]
+                pattern = r"(\w+)::(.+)"
+                string = dependency_test
+                match_kva = re.search(pattern, string)
+                if match_kva:
+                    module_id, case_id = match_kva.groups()
+                    dependency_test_status = self._results[module_id][case_id]
+                    self._log.info(f"dependency_test_status {dependency_test_status}")
+                    self._log.info(f"WE MUST SKIP IT?")
+                    if dependency_test_status in (
+                        TestStatus.FAILED,
+                        TestStatus.SKIPPED,
+                    ):
+                        self._log.info(f"WE MUST SKIP IT")
+                        pytest.skip(f"Тест пропущен")
 
         # testrun entrypoint
         self._reporter.start()

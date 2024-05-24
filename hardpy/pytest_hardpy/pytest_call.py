@@ -202,46 +202,44 @@ def set_driver_info(drivers: dict) -> None:
         reporter.set_doc_value(key, driver_data)
     reporter.update_db_by_doc()
 
-def set_case_dependency(data: dict):
-  """
-  Add dependency data to current test case.
+def set_case_dependency(data: str):
+    """
+    Add dependency data to current test case.
 
-  Args:
-      data (dict): Data containing dependency information.
-  """
-  current_test = _get_current_test()
-  reporter = RunnerReporter()
-  for dependency_key, dependency_value in data.items():
+    Args:
+        data (dict): Data containing dependency information.
+    """
+    current_test = _get_current_test()
+    reporter = RunnerReporter()
     key = reporter.generate_key(
         DF.MODULES,
         current_test.module_id,
         DF.CASES,
         current_test.case_id,
         DF.DEPENDENCY,
-        dependency_key,
     )
-    reporter.set_doc_value(key, dependency_value)
-  reporter.update_db_by_doc()
+
+    reporter.set_doc_value(key, data)
+    reporter.update_db_by_doc()
 
 
-def set_module_dependency(data: dict):
-  """
-  Add dependency data to current test module.
+def set_module_dependency(data: str):
+    """
+    Add dependency data to current test module.
 
-  Args:
-      data (dict): Data containing dependency information.
-  """
-  current_test = _get_current_test()
-  reporter = RunnerReporter()
-  for dependency_key, dependency_value in data.items():
+    Args:
+        data (dict): Data containing dependency information.
+    """
+    current_test = _get_current_test()
+    reporter = RunnerReporter()
     key = reporter.generate_key(
         DF.MODULES,
         current_test.module_id,
         DF.DEPENDENCY,
-        dependency_key,
     )
-    reporter.set_doc_value(key, dependency_value)
-  reporter.update_db_by_doc()
+    reporter.set_doc_value(key, data)
+    reporter.update_db_by_doc()
+
 
 def _get_current_test() -> CurrentTestInfo:
     current_node = environ.get("PYTEST_CURRENT_TEST")
