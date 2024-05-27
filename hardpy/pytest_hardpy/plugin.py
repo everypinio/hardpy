@@ -173,22 +173,7 @@ class HardpyPlugin(object):
 
         node_info = NodeInfo(item)
 
-        dependency_test = self._dependencies.get(
-            str(node_info.module_id)
-        ) or self._dependencies.get(f"{node_info.module_id}::{node_info.case_id}")
-        if dependency_test:
-            dependency_data = re.search(r"(\w+)::(.+)", dependency_test)
-            if dependency_data:
-                module_id, case_id = dependency_data.groups()
-                dependency_test_status = self._results[module_id][case_id]
-                if dependency_test_status in (TestStatus.FAILED, TestStatus.SKIPPED):
-                    self._log.info(
-                        f"Skipping test due to dependency: {dependency_test}"
-                    )
-                    self._results[node_info.module_id][
-                        "module_status"
-                    ] = TestStatus.SKIPPED
-                    pytest.skip(f"Тест пропущен")
+        self._handle_dependencies(node_info)
 
         self._reporter.set_module_status(node_info.module_id, TestStatus.RUN)
         self._reporter.set_module_start_time(node_info.module_id)
@@ -294,3 +279,22 @@ class HardpyPlugin(object):
             index = report.find("\nE")
             return report[:index]
         return None
+
+    def _handle_dependencies(self, node_info: NodeInfo):
+        dependency_test = self._dependencies.get(
+            str(node_info.module_id)
+        ) or self._dependencies.get(f"{node_info.module_id}::{node_info.case_id}")
+
+        if dependency_test:
+            dependency_data = re.search(r"(\w+)::(.+)", dependency_test)
+            if dependency_data:
+                module_id, case_id = dependency_data.groups()
+                dependency_test_status = self._results[module_id][case_id]
+                if dependency_test_status in (TestStatus.FAILED, TestStatus.SKIPPED):
+                    self._log.info(
+                        f"Skipping test due to dependency: {dependency_test}"
+                    )
+                    self._results[node_info.module_id][
+                        "module_status"
+                    ] = TestStatus.SKIPPED
+                    pytest.skip(f"Test is skipped")

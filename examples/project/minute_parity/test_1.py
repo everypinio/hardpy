@@ -18,7 +18,7 @@ def test_dut_info(module_log: logging.Logger):
         "board_rev": "rev_1",
     }
     hardpy.set_dut_info(info)
-    assert True
+    assert False
 
 
 @pytest.mark.case_name("Test stand info")
