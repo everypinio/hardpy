@@ -14,8 +14,6 @@ from hardpy.pytest_hardpy.pytest_call import (
     set_run_artifact,
     set_message,
     set_driver_info,
-    set_case_dependency,
-    set_module_dependency
 )
 
 __all__ = [
@@ -31,6 +29,4 @@ __all__ = [
     "set_run_artifact",
     "set_message",
     "set_driver_info",
-    "set_case_dependency",
-    "set_module_dependency"
 ]

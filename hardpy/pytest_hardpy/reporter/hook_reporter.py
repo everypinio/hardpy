@@ -183,7 +183,6 @@ class HookReporter(BaseReporter):
             DF.NAME: self._get_module_name(node_info),
             DF.START_TIME: None,
             DF.STOP_TIME: None,
-            DF.DEPENDENCY: self._get_dependency_status(node_info),
             DF.CASES: {},
         }
         case_default = {
@@ -191,7 +190,6 @@ class HookReporter(BaseReporter):
             DF.NAME: self._get_case_name(node_info),
             DF.START_TIME: None,
             DF.STOP_TIME: None,
-            DF.DEPENDENCY: self._get_dependency_status(node_info),
             DF.ASSERTION_MSG: None,
             DF.MSG: None,
         }
@@ -204,9 +202,6 @@ class HookReporter(BaseReporter):
             item[node_info.module_id][DF.NAME] = self._get_module_name(node_info)
             item[node_info.module_id][DF.START_TIME] = None
             item[node_info.module_id][DF.STOP_TIME] = None
-            item[node_info.module_id][DF.DEPENDENCY] = self._get_dependency_status(
-                node_info
-            )
         item[node_info.module_id][DF.NAME] = self._get_module_name(node_info)
 
         if is_use_artifact:

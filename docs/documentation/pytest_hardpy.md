@@ -267,14 +267,24 @@ Sets a text name for the test module (file) (default: module name)
 pytestmark = pytest.mark.module_name("Module 1")
 ```
 
-#### dependency
+#### case_dependency
 
-Skips the test if the main test fails/skipped
+Skips the test case if the main test fails/skipped
 
 **Example:**
 
 ```python
-pytestmark = pytest.mark.dependency("test_a.py::test_one")
+@pytest.mark.case_dependency("test_a::test_one")
+```
+
+#### module_dependency
+
+Skips the test module if the main test fails/skipped
+
+**Example:**
+
+```python
+pytestmark = pytest.mark.module_dependency("test_a::test_one")
 ```
 
 ## Options
