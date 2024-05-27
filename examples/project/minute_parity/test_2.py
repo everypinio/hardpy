@@ -6,12 +6,10 @@ from driver_example import DriverExample
 
 pytestmark = [
     pytest.mark.module_name("Main tests"),
-    pytest.mark.module_dependency("test_1::test_dut_info"),
 ]
 
 
 @pytest.mark.case_name("Minute check")
-# @pytest.mark.case_dependency("test_1::test_dut_info")
 def test_minute_parity(driver_example: DriverExample):
     minute = driver_example.current_minute
     hardpy.set_message(f"Current minute {minute}")
