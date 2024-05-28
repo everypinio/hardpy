@@ -3,10 +3,7 @@ from time import sleep
 import pytest
 import hardpy
 
-pytestmark = [
-    pytest.mark.module_name("End of testing"),
-    pytest.mark.module_dependency("test_1::test_dut_info"),
-]
+pytestmark = pytest.mark.module_name("End of testing")
 
 
 @pytest.mark.case_name("Final case")
