@@ -295,6 +295,6 @@ class HardpyPlugin(object):
                         f"Skipping test due to dependency: {dependency_test}"
                     )
                     self._results[node_info.module_id][
-                        "module_status"
+                        node_info.case_id
                     ] = TestStatus.SKIPPED
                     pytest.skip(f"Test is skipped")
