@@ -96,7 +96,6 @@ class HardpyPlugin(object):
         """
         if "--collect-only" in session.config.invocation_params.args:
             return
-        self._log.info(self._dependencies)
         status = self._get_run_status(exitstatus)
         self._reporter.finish(status)
         self._reporter.update_db_by_doc()
@@ -134,8 +133,6 @@ class HardpyPlugin(object):
                 nodes[node_info.module_id].append(node_info.case_id)
 
             self._reporter.add_case(node_info)
-            self._log.info(node_info.case_dependency)
-            self._log.info(node_info.module_dependency)
 
             if node_info.case_dependency != "":
                 self._dependencies[f"{node_info.module_id}::{node_info.case_id}"] = (
