@@ -22,6 +22,15 @@ class NodeInfo(object):
             item.parent.own_markers,
             "module_name",
         )
+        self._case_dependency = self._get_human_name(
+            item.own_markers,
+            "case_dependency",
+        )
+
+        self._module_dependency = self._get_human_name(
+            item.parent.own_markers,
+            "module_dependency",
+        )
         self._module_id = Path(item.parent.nodeid).stem
         self._case_id = item.name
 
@@ -40,6 +49,14 @@ class NodeInfo(object):
     @property
     def case_name(self):
         return self._case_name
+
+    @property
+    def case_dependency(self):
+        return self._case_dependency
+
+    @property
+    def module_dependency(self):
+        return self._module_dependency
 
     def _get_human_name(self, markers: list[Mark], marker_name: str) -> str:
         """Get human name from markers.
