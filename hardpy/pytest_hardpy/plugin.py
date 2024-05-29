@@ -280,24 +280,19 @@ class HardpyPlugin(object):
         dependency_test = self._dependencies.get(
             str(node_info.module_id)
         ) or self._dependencies.get(f"{node_info.module_id}::{node_info.case_id}")
-        try:
-            if dependency_test:
-                dependency_data = re.search(r"(\w+)::(.+)", dependency_test)
-                if dependency_data:
-                    module_id, case_id = dependency_data.groups()
-                    dependency_test_status = self._results[module_id][case_id]
-                    if dependency_test_status in (
-                        TestStatus.FAILED,
-                        TestStatus.SKIPPED,
-                    ):
-                        self._log.info(
-                            f"Skipping test due to dependency: {dependency_test}"
-                        )
-                        self._results[node_info.module_id][
-                            node_info.case_id
-                        ] = TestStatus.SKIPPED
-                        pytest.skip(f"Test is skipped")
-        except KeyError:
-            self._log.warning(
-                f"Dependency test '{dependency_test}' not found in results. The test will not be skipped."
-            )
+        if dependency_test:
+            dependency_data = re.search(r"(\w+)::(.+)", dependency_test)
+            if dependency_data:
+                module_id, case_id = dependency_data.groups()
+                dependency_test_status = self._results[module_id][case_id]
+                if dependency_test_status in (
+                    TestStatus.FAILED,
+                    TestStatus.SKIPPED,
+                ):
+                    self._log.info(
+                        f"Skipping test due to dependency: {dependency_test}"
+                    )
+                    self._results[node_info.module_id][
+                        node_info.case_id
+                    ] = TestStatus.SKIPPED
+                    pytest.skip(f"Test is skipped")
