@@ -295,19 +295,3 @@ class HookReporter(BaseReporter):
             str: case name
         """
         return node_info.case_name if node_info.case_name else node_info.case_id
-
-    def _get_dependency_status(self, node_info: NodeInfo) -> str | None:
-        """Get dependency status from markers.
-
-        Args:
-            node_info (NodeInfo): node info
-
-        Returns:
-            str: dependency status
-        """
-        if node_info.case_dependency:
-            return node_info.case_dependency
-        elif node_info.module_dependency:
-            return node_info.module_dependency
-        else:
-            return None

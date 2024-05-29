@@ -2,8 +2,8 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import signal
-import pytest
 import re
+import pytest
 from typing import Any, Callable
 from logging import getLogger
 from pathlib import Path, PurePath
@@ -21,8 +21,7 @@ from pytest import (
     ExitCode,
 )
 
-from hardpy.pytest_hardpy.db import DatabaseField as DF
-from hardpy.pytest_hardpy.reporter import HookReporter, RunnerReporter
+from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import (
     TestStatus,
     RunStatus,

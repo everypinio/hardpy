@@ -46,7 +46,7 @@ export interface TestRunI {
     stop_time?: number,
     progress?: number,
     drivers?: DriversInfo,
-    artifact?: Record<string, unknown>
+    artifact?: Record<string, unknown>,
 }
 
 /**

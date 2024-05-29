@@ -33,7 +33,6 @@ class CaseStateStore(IBaseResult):
     }
     """
 
-    artifact: Optional[dict] = {}
     assertion_msg: str | None = None
     msg: dict | None = None
 
