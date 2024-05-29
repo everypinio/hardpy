@@ -193,6 +193,7 @@ class HookReporter(BaseReporter):
             DF.ASSERTION_MSG: None,
             DF.MSG: None,
         }
+
         if item.get(node_info.module_id) is None:  # noqa: WPS204
             if is_use_artifact:
                 module_default[DF.ARTIFACT] = {}
