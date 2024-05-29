@@ -175,7 +175,7 @@ class ResultStateStore(IBaseResult):
               "start_time": 1695817263,
               "stop_time": 1695817264,
               "assertion_msg": null,
-              "msg": null,
+              "msg": null
             },
             "test_minute_parity": {
               "status": "failed",
