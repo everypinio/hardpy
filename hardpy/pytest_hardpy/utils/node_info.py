@@ -4,8 +4,14 @@
 import re
 from logging import getLogger
 from pathlib import Path
+from typing import NamedTuple
 
 from pytest import Item, Mark
+
+
+class TestInfo(NamedTuple):
+    module_id: str
+    case_id: str
 
 
 class NodeInfo(object):
@@ -57,7 +63,9 @@ class NodeInfo(object):
             data = re.search(r"(\w+)::(.+)", self._case_dependency)
             if data:
                 dependency_module_id, dependency_case_id = data.groups()
-                return dependency_module_id, dependency_case_id
+                return TestInfo(
+                    module_id=dependency_module_id, case_id=dependency_case_id
+                )
         except AttributeError:
             self._log.error("Incorrect dependency!")
 
@@ -66,8 +74,10 @@ class NodeInfo(object):
         try:
             data = re.search(r"(\w+)::(.+)", self._module_dependency)
             if data:
-                module_id, case_id = data.groups()
-                return module_id, case_id
+                dependency_module_id, dependency_case_id = data.groups()
+                return TestInfo(
+                    module_id=dependency_module_id, case_id=dependency_case_id
+                )
         except AttributeError:
             self._log.error("Incorrect dependency!")
 
