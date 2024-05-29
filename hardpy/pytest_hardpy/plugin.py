@@ -2,7 +2,6 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import signal
-import re
 import pytest
 from typing import Any, Callable
 from logging import getLogger
@@ -133,12 +132,12 @@ class HardpyPlugin(object):
 
             self._reporter.add_case(node_info)
 
-            if node_info.case_dependency != "":
-                self._dependencies[f"{node_info.module_id}::{node_info.case_id}"] = (
+            if node_info.case_dependency is not None:
+                self._dependencies[f"{node_info.module_id}, {node_info.case_id}"] = (
                     node_info.case_dependency
                 )
 
-            if node_info.module_dependency != "":
+            if node_info.module_dependency is not None:
                 self._dependencies[f"{node_info.module_id}"] = (
                     node_info.module_dependency
                 )
@@ -277,22 +276,19 @@ class HardpyPlugin(object):
         return None
 
     def _handle_dependencies(self, node_info: NodeInfo):
+        self._log.info(self._dependencies)
         dependency_test = self._dependencies.get(
             str(node_info.module_id)
-        ) or self._dependencies.get(f"{node_info.module_id}::{node_info.case_id}")
+        ) or self._dependencies.get(f"{node_info.module_id}, {node_info.case_id}")
         if dependency_test:
-            dependency_data = re.search(r"(\w+)::(.+)", dependency_test)
-            if dependency_data:
-                module_id, case_id = dependency_data.groups()
-                dependency_test_status = self._results[module_id][case_id]
-                if dependency_test_status in (
-                    TestStatus.FAILED,
-                    TestStatus.SKIPPED,
-                ):
-                    self._log.info(
-                        f"Skipping test due to dependency: {dependency_test}"
-                    )
-                    self._results[node_info.module_id][
-                        node_info.case_id
-                    ] = TestStatus.SKIPPED
-                    pytest.skip(f"Test is skipped")
+            module_id, case_id = dependency_test[0], dependency_test[1]
+            dependency_test_status = self._results[module_id][case_id]
+            if dependency_test_status in (
+                TestStatus.FAILED,
+                TestStatus.SKIPPED,
+            ):
+                self._log.debug(f"Skipping test due to dependency: {dependency_test}")
+                self._results[node_info.module_id][
+                    node_info.case_id
+                ] = TestStatus.SKIPPED
+                pytest.skip(f"Test is skipped")
