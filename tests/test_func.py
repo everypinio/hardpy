@@ -11,7 +11,6 @@ func_test_header = """
         """
 
 
-
 def test_dut_serial_number(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
