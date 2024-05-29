@@ -22,6 +22,7 @@ def test_dut_info(module_log: logging.Logger):
 
 
 @pytest.mark.case_name("Test stand info")
+@pytest.mark.case_dependency("test_1::test_dut_info")
 def test_stand_info(module_log: logging.Logger):
     test_stand_name = "Stand 1"
     module_log.info(f"Stand name: {test_stand_name}")

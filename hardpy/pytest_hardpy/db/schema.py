@@ -33,7 +33,6 @@ class CaseStateStore(IBaseResult):
     }
     """
 
-    artifact: Optional[dict] = {}
     assertion_msg: str | None = None
     msg: dict | None = None
 
@@ -176,7 +175,7 @@ class ResultStateStore(IBaseResult):
               "start_time": 1695817263,
               "stop_time": 1695817264,
               "assertion_msg": null,
-              "msg": null,
+              "msg": null
             },
             "test_minute_parity": {
               "status": "failed",
@@ -186,7 +185,7 @@ class ResultStateStore(IBaseResult):
               "assertion_msg": "The test failed because minute 21 is odd! Try again!",
               "msg": [
                 "Current minute 21"
-              ],
+              ]
             },
           }
         },
@@ -255,7 +254,7 @@ class ResultRunStore(IBaseResult):
               "stop_time": 1695817264,
               "assertion_msg": null,
               "msg": null,
-              "artifact": {},
+              "artifact": {}
             },
             "test_minute_parity": {
               "status": "failed",

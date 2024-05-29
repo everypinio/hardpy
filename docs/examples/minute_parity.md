@@ -95,6 +95,7 @@ Contains tests related to preparation for the testing process:
 - The name of the test cases for the web interface is set to `pytest.mark.case_name`;
 - The device under test (DUT) info is stored in the database in `test_dut_info`;
 - The test stand info is store in the database in `test_stand_info`;
+- Test `test_stand_info` depends on test `test_dut_info`, dependency is set to `pytest.mark.case_dependency`
 
 ```python
 import logging
@@ -110,15 +111,21 @@ def test_dut_info(module_log: logging.Logger):
     serial_number = str(uuid4())[:6]
     module_log.info(f"DUT serial number {serial_number}")
     hardpy.set_dut_serial_number(serial_number)
-    info = {"batch": "test_batch", "board_rev": "rev_1"}
+    info = {
+        "batch": "test_batch",
+        "board_rev": "rev_1",
+    }
     hardpy.set_dut_info(info)
     assert True
 
 @pytest.mark.case_name("Test stand info")
+@pytest.mark.case_dependency("test_1::test_dut_info")
 def test_stand_info(module_log: logging.Logger):
     test_stand_name = "Stand 1"
     module_log.info(f"Stand name: {test_stand_name}")
-    info = {"name": "Test stand 1"}
+    info = {
+        "name": "Test stand 1",
+    }
     hardpy.set_stand_info(info)
     assert True
 ```
@@ -157,6 +164,7 @@ Contains the final tests of the testing process:
 - The name of the test module for the web interface is set to `pytest.mark.module_name`;
 - The name of the test cases for the web interface is set to `pytest.mark.case_name`;
 - An example of setting and updating a message for a web interface using `set_message`;
+- `test_3` depends on `test_minute_parity` from `test_2`. Dependency is set to `pytest.mark.module_dependency`
 
 ```python
 from time import sleep
@@ -164,13 +172,16 @@ from time import sleep
 import pytest
 import hardpy
 
-pytestmark = pytest.mark.module_name("End of testing")
+pytestmark = [
+    pytest.mark.module_name("End of testing"),
+    pytest.mark.module_dependency("test_2::test_minute_parity"),
+]
 
 @pytest.mark.case_name("Final case")
 def test_one():
     for i in range(5, 0, -1):
         hardpy.set_message(f"Time left until testing ends {i} s", "updated_status")
         sleep(1)
-    hardpy.set_message(f"Testing ended", "updated_status")
+    hardpy.set_message("Testing ended", "updated_status")
     assert True
 ```
