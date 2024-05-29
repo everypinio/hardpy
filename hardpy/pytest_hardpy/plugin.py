@@ -299,5 +299,5 @@ class HardpyPlugin(object):
                         pytest.skip(f"Test is skipped")
         except KeyError:
             self._log.warning(
-                f"Dependency test '{dependency_test}' not found in results. The test will not be missed."
+                f"Dependency test '{dependency_test}' not found in results. The test will not be skipped."
             )
