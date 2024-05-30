@@ -275,7 +275,6 @@ class HardpyPlugin(object):
         return None
 
     def _handle_dependencies(self, node_info: NodeInfo):
-        self._log.info(self._dependencies)
         dependency_test = self._dependencies.get(
             node_info.module_id
         ) or self._dependencies.get(
