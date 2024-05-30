@@ -81,11 +81,13 @@ class NodeInfo(object):
                 return TestInfo(
                     module_id=dependency_module_id, case_id=dependency_case_id
                 )
-            elif re.search(r"(\w+)", self._module_dependency):
-                dependency_module_id = re.search(r"(\w+)", self._module_dependency)
+            elif re.search(r"^\w+$", self._module_dependency):
+                dependency_module_id = self._module_dependency
                 return dependency_module_id
             else:
                 return self._module_dependency
+        else:
+            return None
 
     def _get_human_name(self, markers: list[Mark], marker_name: str) -> str:
         """Get human name from markers.

@@ -275,20 +275,28 @@ class HardpyPlugin(object):
         return None
 
     def _handle_dependencies(self, node_info: NodeInfo):
-        dependency_test = self._dependencies.get(node_info.module_id)
-        if not dependency_test:
-            dependency_test = self._dependencies.get(
-                TestInfo(module_id=node_info.module_id, case_id=node_info.case_id)
-            )
-        if dependency_test:
-            module_id, case_id = dependency_test
-            dependency_test_status = self._results[module_id][case_id]
-            if dependency_test_status in (
+        dependency = self._get_dependency(node_info)
+        if dependency and self._is_dependency_failed(dependency):
+            self._log.debug(f"Skipping test due to dependency: {dependency}")
+            self._results[node_info.module_id][node_info.case_id] = TestStatus.SKIPPED
+            skip(f"Test is skipped")
+
+    def _get_dependency(self, node_info: NodeInfo) -> TestInfo | str | None:
+        return self._dependencies.get(node_info.module_id) or self._dependencies.get(
+            TestInfo(module_id=node_info.module_id, case_id=node_info.case_id)
+        )
+
+    def _is_dependency_failed(self, dependency) -> bool:
+        if isinstance(dependency, TestInfo):
+            module_id, case_id = dependency
+            return self._results[module_id][case_id] in (
                 TestStatus.FAILED,
                 TestStatus.SKIPPED,
-            ):
-                self._log.debug(f"Skipping test due to dependency: {dependency_test}")
-                self._results[node_info.module_id][
-                    node_info.case_id
-                ] = TestStatus.SKIPPED
-                skip(f"Test is skipped")
+            )
+        elif dependency:
+            module_id = dependency
+            return any(
+                status in (TestStatus.FAILED, TestStatus.SKIPPED)
+                for status in self._results[module_id].values()
+            )
+        return False

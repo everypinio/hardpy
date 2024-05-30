@@ -210,13 +210,57 @@ def test_case_dependency_from_module(pytester: Pytester, hardpy_opts):
         test_1="""
         import pytest
 
-        @pytest.mark.case_dependency("test_1")
+        def test_one():
+            assert False
+    """
+    )
+    pytester.makepyfile(
+        test_2="""
+        import pytest
+
+        pytestmark = pytest.mark.module_dependency("test_1")
+
         def test_one():
             assert True
     """
     )
     result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(errors=1)
+    result.assert_outcomes(failed=1, skipped=1)
+
+
+def test_case_dependency_from_big_module(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        test_1="""
+        import pytest
+
+        def test_one():
+            assert False
+        
+        def test_two():
+            assert True
+
+        def test_three():
+            assert True
+    """
+    )
+    pytester.makepyfile(
+        test_2="""
+        import pytest
+
+        pytestmark = pytest.mark.module_dependency("test_1")
+
+        def test_one():
+            assert True
+
+        def test_two():
+            assert True
+
+        def test_three():
+            assert True
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=2, failed=1, skipped=3)
 
 
 def test_module_dependency_from_failed(pytester: Pytester, hardpy_opts):
