@@ -60,26 +60,32 @@ class NodeInfo(object):
     @property
     def case_dependency(self):
         if self._case_dependency:
-            data = re.search(r"(\w+)::(.+)", self._case_dependency)
+            data = re.search(r"(\w+)::(\w+)", self._case_dependency)
             if data:
                 dependency_module_id, dependency_case_id = data.groups()
                 return TestInfo(
                     module_id=dependency_module_id, case_id=dependency_case_id
                 )
+            elif re.search(r"(\w+)", self._case_dependency):
+                dependency_module_id = re.search(r"(\w+)", self._case_dependency)
+                return dependency_module_id
             else:
-                raise ValueError(f"Wrong case dependency: {self._case_dependency}")
+                return self._case_dependency
 
     @property
     def module_dependency(self):
         if self._module_dependency:
-            data = re.search(r"(\w+)::(.+)", self._module_dependency)
+            data = re.search(r"(\w+)::(\w+)", self._module_dependency)
             if data:
                 dependency_module_id, dependency_case_id = data.groups()
                 return TestInfo(
                     module_id=dependency_module_id, case_id=dependency_case_id
                 )
+            elif re.search(r"(\w+)", self._module_dependency):
+                dependency_module_id = re.search(r"(\w+)", self._module_dependency)
+                return dependency_module_id
             else:
-                raise ValueError(f"Wrong module dependency: {self._module_dependency}")
+                return self._module_dependency
 
     def _get_human_name(self, markers: list[Mark], marker_name: str) -> str:
         """Get human name from markers.
