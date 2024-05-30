@@ -67,7 +67,10 @@ class NodeInfo(object):
                     module_id=dependency_module_id, case_id=dependency_case_id
                 )
         except AttributeError:
-            self._log.error("Incorrect dependency!")
+            pass
+        except Exception as e:
+            self._log.error(f"Invalid case_dependency: {e}")
+            return None
 
     @property
     def module_dependency(self):
@@ -79,7 +82,10 @@ class NodeInfo(object):
                     module_id=dependency_module_id, case_id=dependency_case_id
                 )
         except AttributeError:
-            self._log.error("Incorrect dependency!")
+            pass
+        except Exception as e:
+            self._log.error(f"Invalid module_dependency: {e}")
+            return None
 
     def _get_human_name(self, markers: list[Mark], marker_name: str) -> str:
         """Get human name from markers.
