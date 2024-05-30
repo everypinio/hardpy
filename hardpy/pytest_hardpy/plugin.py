@@ -275,11 +275,11 @@ class HardpyPlugin(object):
         return None
 
     def _handle_dependencies(self, node_info: NodeInfo):
-        dependency_test = self._dependencies.get(
-            node_info.module_id
-        ) or self._dependencies.get(
-            TestInfo(module_id=node_info.module_id, case_id=node_info.case_id)
-        )
+        dependency_test = self._dependencies.get(node_info.module_id)
+        if not dependency_test:
+            dependency_test = self._dependencies.get(
+                TestInfo(module_id=node_info.module_id, case_id=node_info.case_id)
+            )
         if dependency_test:
             module_id, case_id = dependency_test
             dependency_test_status = self._results[module_id][case_id]
