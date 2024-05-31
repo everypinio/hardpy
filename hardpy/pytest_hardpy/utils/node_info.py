@@ -53,8 +53,7 @@ class NodeInfo(object):
 
     @property
     def module_id(self):
-        """
-        Get module id.
+        """Get module id.
 
         Returns:
             str: module id
@@ -63,8 +62,7 @@ class NodeInfo(object):
 
     @property
     def case_id(self):
-        """
-        Get case id.
+        """Get case id.
 
         Returns:
             str: case id
@@ -73,8 +71,7 @@ class NodeInfo(object):
 
     @property
     def module_name(self):
-        """
-        Get module name.
+        """Get module name.
 
         Returns:
             str: module name
@@ -83,8 +80,7 @@ class NodeInfo(object):
 
     @property
     def case_name(self):
-        """
-        Get case name.
+        """Get case name.
 
         Returns:
             str: case name
@@ -93,8 +89,7 @@ class NodeInfo(object):
 
     @property
     def case_dependency(self):
-        """
-        Get case dependency info.
+        """Get case dependency info.
 
         Returns:
             TestDependencyInfo | str: Parsed dependency information.
@@ -103,8 +98,7 @@ class NodeInfo(object):
 
     @property
     def module_dependency(self):
-        """
-        Get module dependency info.
+        """Get module dependency info.
 
         Returns:
             TestDependencyInfo | str: Parsed dependency information.
@@ -131,8 +125,7 @@ class NodeInfo(object):
     def _get_dependency_info(
         self, markers: list[Mark], marker_name: str
     ) -> TestDependencyInfo | str:
-        """
-        Extract and parse dependency information.
+        """Extract and parse dependency information.
 
         Args:
             markers (list[Mark]): item markers list
