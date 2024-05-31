@@ -9,7 +9,9 @@ from typing import NamedTuple
 from pytest import Item, Mark
 
 
-class TestInfo(NamedTuple):
+class TestDependencyInfo(NamedTuple):
+    """Test info."""
+
     module_id: str
     case_id: str
 
@@ -38,6 +40,14 @@ class NodeInfo(object):
             item.parent.own_markers,
             "module_dependency",
         )
+
+        self._case_dependency_info = self._get_dependency_info(
+            item.own_markers, "case_dependency"
+        )
+        self._module_dependency_info = self._get_dependency_info(
+            item.parent.own_markers, "module_dependency"
+        )
+
         self._module_id = Path(item.parent.nodeid).stem
         self._case_id = item.name
 
@@ -59,33 +69,23 @@ class NodeInfo(object):
 
     @property
     def case_dependency(self):
-        if self._case_dependency:
-            data = re.search(r"(\w+)::(\w+)", self._case_dependency)
-            if data:
-                dependency_module_id, dependency_case_id = data.groups()
-                return TestInfo(
-                    module_id=dependency_module_id, case_id=dependency_case_id
-                )
-            elif re.search(r"(\w+)", self._case_dependency):
-                dependency_module_id = re.search(r"(\w+)", self._case_dependency)
-                return dependency_module_id
-            else:
-                return self._case_dependency
+        """
+        Get case dependency info.
+
+        Returns:
+            TestDependencyInfo | str: Parsed dependency information.
+        """
+        return self._case_dependency_info
 
     @property
     def module_dependency(self):
-        if self._module_dependency:
-            data = re.search(r"(\w+)::(\w+)", self._module_dependency)
-            if data:
-                dependency_module_id, dependency_case_id = data.groups()
-                return TestInfo(
-                    module_id=dependency_module_id, case_id=dependency_case_id
-                )
-            elif re.search(r"(\w+)", self._module_dependency):
-                dependency_module_id = re.search(r"(\w+)", self._module_dependency)
-                return dependency_module_id
-            else:
-                return self._module_dependency
+        """
+        Get module dependency info.
+
+        Returns:
+            TestDependencyInfo | str: Parsed dependency information.
+        """
+        return self._module_dependency_info
 
     def _get_human_name(self, markers: list[Mark], marker_name: str) -> str:
         """Get human name from markers.
@@ -103,3 +103,27 @@ class NodeInfo(object):
                     return marker.args[0]
 
         return ""
+
+    def _get_dependency_info(
+        self, markers: list[Mark], marker_name: str
+    ) -> TestDependencyInfo | str:
+        """
+        Extract and parse dependency information.
+
+        Args:
+            markers (list[Mark]): item markers list
+            marker_name (str): marker name
+
+        Returns:
+            TestDependencyInfo | str | None: Parsed dependency information.
+        """
+        dependency_value = self._get_human_name(markers, marker_name)
+        data = re.search(r"(\w+)::(\w+)", dependency_value)
+        if data:
+            dependency_module_id, dependency_case_id = data.groups()
+            return TestDependencyInfo(
+                module_id=dependency_module_id, case_id=dependency_case_id
+            )
+        elif re.search(r"^\w+$", dependency_value):
+            return dependency_value
+        return dependency_value
