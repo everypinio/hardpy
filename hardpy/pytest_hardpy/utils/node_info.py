@@ -53,18 +53,42 @@ class NodeInfo(object):
 
     @property
     def module_id(self):
+        """
+        Get module id.
+
+        Returns:
+            str: module id
+        """
         return self._module_id
 
     @property
     def case_id(self):
+        """
+        Get case id.
+
+        Returns:
+            str: case id
+        """
         return self._case_id
 
     @property
     def module_name(self):
+        """
+        Get module name.
+
+        Returns:
+            str: module name
+        """
         return self._module_name
 
     @property
     def case_name(self):
+        """
+        Get case name.
+
+        Returns:
+            str: case name
+        """
         return self._case_name
 
     @property
