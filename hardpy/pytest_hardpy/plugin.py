@@ -28,7 +28,7 @@ from hardpy.pytest_hardpy.utils import (
     ProgressCalculator,
     ConfigData,
 )
-from hardpy.pytest_hardpy.utils.node_info import TestInfo
+from hardpy.pytest_hardpy.utils.node_info import TestDependencyInfo
 
 
 def pytest_addoption(parser: Parser):
@@ -135,7 +135,9 @@ class HardpyPlugin(object):
 
             if node_info.case_dependency is not None:
                 self._dependencies[
-                    TestInfo(module_id=node_info.module_id, case_id=node_info.case_id)
+                    TestDependencyInfo(
+                        module_id=node_info.module_id, case_id=node_info.case_id
+                    )
                 ] = node_info.case_dependency
 
             if node_info.module_dependency is not None:
@@ -279,15 +281,15 @@ class HardpyPlugin(object):
         if dependency and self._is_dependency_failed(dependency):
             self._log.debug(f"Skipping test due to dependency: {dependency}")
             self._results[node_info.module_id][node_info.case_id] = TestStatus.SKIPPED
-            skip(f"Test is skipped")
+            skip(f"Test {node_info.module_id}::{node_info.case_id}is skipped")
 
-    def _get_dependency(self, node_info: NodeInfo) -> TestInfo | str | None:
+    def _get_dependency(self, node_info: NodeInfo) -> TestDependencyInfo | str | None:
         return self._dependencies.get(node_info.module_id) or self._dependencies.get(
-            TestInfo(module_id=node_info.module_id, case_id=node_info.case_id)
+            TestDependencyInfo(module_id=node_info.module_id, case_id=node_info.case_id)
         )
 
     def _is_dependency_failed(self, dependency) -> bool:
-        if isinstance(dependency, TestInfo):
+        if isinstance(dependency, TestDependencyInfo):
             module_id, case_id = dependency
             return self._results[module_id][case_id] in (
                 TestStatus.FAILED,
@@ -296,7 +298,7 @@ class HardpyPlugin(object):
         elif dependency:
             module_id = dependency
             return any(
-                status in (TestStatus.FAILED, TestStatus.SKIPPED)
-                for status in self._results[module_id].values()
+                status in {TestStatus.FAILED, TestStatus.SKIPPED}
+                for status in set(self._results[module_id].values())
             )
         return False
