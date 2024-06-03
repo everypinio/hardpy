@@ -13,7 +13,7 @@ class TestDependencyInfo(NamedTuple):
     """Test info."""
 
     module_id: str
-    case_id: str
+    case_id: str | None
 
 
 class NodeInfo(object):
@@ -142,7 +142,8 @@ class NodeInfo(object):
                 module_id=dependency_module_id, case_id=dependency_case_id
             )
         elif re.search(r"^\w+$", dependency_value):
-            return dependency_value
+            dependency_module_id = dependency_value
+            return TestDependencyInfo(module_id=dependency_module_id, case_id=None)
         elif data is None and dependency_value == "":
             return ""
         raise ValueError

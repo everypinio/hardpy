@@ -276,26 +276,26 @@ class HardpyPlugin(object):
         if dependency and self._is_dependency_failed(dependency):
             self._log.debug(f"Skipping test due to dependency: {dependency}")
             self._results[node_info.module_id][node_info.case_id] = TestStatus.SKIPPED
-            skip(f"Test {node_info.module_id}::{node_info.case_id}is skipped")
+            skip(f"Test {node_info.module_id}::{node_info.case_id} is skipped")
 
     def _get_dependency(self, node_info: NodeInfo) -> TestDependencyInfo | str | None:
-        return self._dependencies.get(node_info.module_id) or self._dependencies.get(
+        return self._dependencies.get(
             TestDependencyInfo(module_id=node_info.module_id, case_id=node_info.case_id)
         )
 
     def _is_dependency_failed(self, dependency) -> bool:
         if isinstance(dependency, TestDependencyInfo):
             module_id, case_id = dependency
-            return self._results[module_id][case_id] in (
-                TestStatus.FAILED,
-                TestStatus.SKIPPED,
-            )
-        elif dependency:
-            module_id = dependency
-            return any(
-                status in {TestStatus.FAILED, TestStatus.SKIPPED}
-                for status in set(self._results[module_id].values())
-            )
+            if case_id is not None:
+                return self._results[module_id][case_id] in (
+                    TestStatus.FAILED,
+                    TestStatus.SKIPPED,
+                )
+            else:
+                return any(
+                    status in {TestStatus.FAILED, TestStatus.SKIPPED}
+                    for status in set(self._results[module_id].values())
+                )
         return False
 
     def _check_and_add_dependency(self, node_info, nodes):
@@ -303,20 +303,11 @@ class HardpyPlugin(object):
         if dependency is None or dependency == "":
             return
         else:
-            if isinstance(dependency, str):
-                if dependency not in nodes:
-                    error_message = (
-                        f"Error: Module dependency '{dependency}' not found."
-                    )
-                    exit(error_message, 1)
-                self._dependencies[node_info.module_id] = node_info.module_dependency
-                return
-
             module_id, case_id = dependency
             if module_id not in nodes:
                 error_message = f"Error: Module dependency '{dependency}' not found."
                 exit(error_message, 1)
-            elif case_id not in nodes[module_id]:
+            elif case_id not in nodes[module_id] and case_id is not None:
                 error_message = f"Error: Case dependency '{dependency}' not found."
                 exit(error_message, 1)
 
