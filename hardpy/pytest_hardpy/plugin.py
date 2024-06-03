@@ -123,7 +123,10 @@ class HardpyPlugin(object):
         for item in session.items:
             if item.parent is None:
                 continue
-            node_info = NodeInfo(item)
+            try:
+                node_info = NodeInfo(item)
+            except ValueError as exc:
+                exit(f"Error: {exc}", 1)
 
             self._init_case_result(node_info.module_id, node_info.case_id)
             if node_info.module_id not in nodes:
@@ -133,15 +136,7 @@ class HardpyPlugin(object):
 
             self._reporter.add_case(node_info)
 
-            if node_info.case_dependency is not None:
-                self._dependencies[
-                    TestDependencyInfo(
-                        module_id=node_info.module_id, case_id=node_info.case_id
-                    )
-                ] = node_info.case_dependency
-
-            if node_info.module_dependency is not None:
-                self._dependencies[node_info.module_id] = node_info.module_dependency
+            self._check_and_add_dependency(node_info, nodes)
             modules.add(node_info.module_id)
         for module_id in modules:
             self._reporter.set_module_status(module_id, TestStatus.READY)
@@ -302,3 +297,31 @@ class HardpyPlugin(object):
                 for status in set(self._results[module_id].values())
             )
         return False
+
+    def _check_and_add_dependency(self, node_info, nodes):
+        dependency = node_info.case_dependency or node_info.module_dependency
+        if dependency is None or dependency == "":
+            return
+        else:
+            if isinstance(dependency, str):
+                if dependency not in nodes:
+                    error_message = (
+                        f"Error: Module dependency '{dependency}' not found."
+                    )
+                    exit(error_message, 1)
+                self._dependencies[node_info.module_id] = node_info.module_dependency
+                return
+
+            module_id, case_id = dependency
+            if module_id not in nodes:
+                error_message = f"Error: Module dependency '{dependency}' not found."
+                exit(error_message, 1)
+            elif case_id not in nodes[module_id]:
+                error_message = f"Error: Case dependency '{dependency}' not found."
+                exit(error_message, 1)
+
+            self._dependencies[
+                TestDependencyInfo(
+                    module_id=node_info.module_id, case_id=node_info.case_id
+                )
+            ] = dependency

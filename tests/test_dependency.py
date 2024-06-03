@@ -34,7 +34,7 @@ def test_case_dependency_from_incorrect_1(pytester: Pytester, hardpy_opts):
     """
     )
     result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(errors=1)
+    result.assert_outcomes()
 
 
 def test_case_dependency_from_incorrect_2(pytester: Pytester, hardpy_opts):
@@ -48,7 +48,7 @@ def test_case_dependency_from_incorrect_2(pytester: Pytester, hardpy_opts):
     """
     )
     result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(errors=1)
+    result.assert_outcomes()
 
 
 def test_case_dependency_from_incorrect_3(pytester: Pytester, hardpy_opts):
@@ -62,7 +62,7 @@ def test_case_dependency_from_incorrect_3(pytester: Pytester, hardpy_opts):
     """
     )
     result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(errors=1)
+    result.assert_outcomes()
 
 
 def test_case_dependency_from_failed(pytester: Pytester, hardpy_opts):
@@ -96,7 +96,7 @@ def test_case_dependency_from_skipped(pytester: Pytester, hardpy_opts):
 
         @pytest.mark.case_dependency("test_1::test_two")
         def test_three():
-            assert True 
+            assert True
     """
     )
     result = pytester.runpytest(*hardpy_opts)
@@ -117,7 +117,7 @@ def test_case_dependency_from_not_skipped(pytester: Pytester, hardpy_opts):
 
         @pytest.mark.case_dependency("test_1::test_two")
         def test_five():
-            assert True 
+            assert True
     """
     )
     result = pytester.runpytest(*hardpy_opts)
@@ -145,7 +145,7 @@ def test_case_dependency(pytester: Pytester, hardpy_opts):
 
         @pytest.mark.case_dependency("test_1::test_four")
         def test_five():
-            assert True 
+            assert True
     """
     )
     result = pytester.runpytest(*hardpy_opts)
@@ -187,7 +187,7 @@ def test_module_dependency_from_incorrect_1(pytester: Pytester, hardpy_opts):
     """
     )
     result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(errors=1)
+    result.assert_outcomes()
 
 
 def test_module_dependency_from_incorrect_2(pytester: Pytester, hardpy_opts):
@@ -202,7 +202,76 @@ def test_module_dependency_from_incorrect_2(pytester: Pytester, hardpy_opts):
     """
     )
     result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(errors=1)
+    result.assert_outcomes()
+
+
+def test_module_dependency_from_incorrect_3(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        test_1="""
+        import pytest
+
+        def test_one():
+            assert True
+    """
+    )
+    pytester.makepyfile(
+        test_2="""
+        import pytest
+
+        pytestmark = pytest.mark.module_dependency("test_1::fghdjshfj")
+
+        def test_one():
+            assert True
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes()
+
+
+def test_module_dependency_from_incorrect_4(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        test_1="""
+        import pytest
+
+        def test_one():
+            assert True
+    """
+    )
+    pytester.makepyfile(
+        test_2="""
+        import pytest
+
+        pytestmark = pytest.mark.module_dependency(":::")
+
+        def test_one():
+            assert True
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes()
+
+
+def test_module_dependency_from_incorrect_5(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        test_1="""
+        import pytest
+
+        def test_one():
+            assert True
+    """
+    )
+    pytester.makepyfile(
+        test_2="""
+        import pytest
+
+        pytestmark = pytest.mark.module_dependency("asfddaa::test_one")
+
+        def test_one():
+            assert True
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes()
 
 
 def test_case_dependency_from_module(pytester: Pytester, hardpy_opts):
@@ -235,7 +304,7 @@ def test_case_dependency_from_big_module(pytester: Pytester, hardpy_opts):
 
         def test_one():
             assert False
-        
+
         def test_two():
             assert True
 
@@ -373,7 +442,7 @@ def test_module_dependency(pytester: Pytester, hardpy_opts):
 
         @pytest.mark.case_dependency("test_1::test_four")
         def test_five():
-            assert True 
+            assert True
     """
     )
     pytester.makepyfile(

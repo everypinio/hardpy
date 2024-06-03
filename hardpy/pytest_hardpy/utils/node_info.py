@@ -143,4 +143,6 @@ class NodeInfo(object):
             )
         elif re.search(r"^\w+$", dependency_value):
             return dependency_value
-        return dependency_value
+        elif data is None and dependency_value == "":
+            return ""
+        raise ValueError
