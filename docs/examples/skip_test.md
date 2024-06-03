@@ -24,6 +24,8 @@ addopts = --hardpy-pt
 
 If a test case/module that a test case/module depends on fails or is skipped, the dependent test case/module will also be skipped.
 A module is considered passed only if all module tests passed.
+If these dependencies are incorrect, the tests will not run.
+
 
 To use:
 
