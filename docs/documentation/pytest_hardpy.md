@@ -269,7 +269,7 @@ pytestmark = pytest.mark.module_name("Module 1")
 
 #### case_dependency
 
-Skips the test case if the main test fails/skipped
+Skips the test case if the main test fails/skipped/errored
 
 **Example:**
 
@@ -279,7 +279,7 @@ Skips the test case if the main test fails/skipped
 
 #### module_dependency
 
-Skips the test module if the main test fails/skipped
+Skips the test module if the main test fails/skipped/errored
 
 **Example:**
 
