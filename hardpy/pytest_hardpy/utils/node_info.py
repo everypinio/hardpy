@@ -12,6 +12,9 @@ from pytest import Item, Mark
 class TestDependencyInfo(NamedTuple):
     """Test info."""
 
+    def __repr__(self) -> str:
+        return f"Dependency: {self.module_id}::{self.case_id}"
+
     module_id: str
     case_id: str | None
 
@@ -31,20 +34,11 @@ class NodeInfo(object):
             item.parent.own_markers,
             "module_name",
         )
-        self._case_dependency = self._get_human_name(
-            item.own_markers,
-            "case_dependency",
-        )
 
-        self._module_dependency = self._get_human_name(
-            item.parent.own_markers,
-            "module_dependency",
-        )
-
-        self._case_dependency_info = self._get_dependency_info(
+        self._case_dependency = self._get_dependency_info(
             item.own_markers, "case_dependency"
         )
-        self._module_dependency_info = self._get_dependency_info(
+        self._module_dependency = self._get_dependency_info(
             item.parent.own_markers, "module_dependency"
         )
 
@@ -94,7 +88,7 @@ class NodeInfo(object):
         Returns:
             TestDependencyInfo | str: Parsed dependency information.
         """
-        return self._case_dependency_info
+        return self._case_dependency
 
     @property
     def module_dependency(self):
@@ -103,7 +97,7 @@ class NodeInfo(object):
         Returns:
             TestDependencyInfo | str: Parsed dependency information.
         """
-        return self._module_dependency_info
+        return self._module_dependency
 
     def _get_human_name(self, markers: list[Mark], marker_name: str) -> str:
         """Get human name from markers.
@@ -135,15 +129,11 @@ class NodeInfo(object):
             TestDependencyInfo | str | None: Parsed dependency information.
         """
         dependency_value = self._get_human_name(markers, marker_name)
-        data = re.search(r"(\w+)::(\w+)", dependency_value)
-        if data:
-            dependency_module_id, dependency_case_id = data.groups()
-            return TestDependencyInfo(
-                module_id=dependency_module_id, case_id=dependency_case_id
-            )
+        dependency_data = re.search(r"(\w+)::(\w+)", dependency_value)
+        if dependency_data:
+            return TestDependencyInfo(*dependency_data.groups())
         elif re.search(r"^\w+$", dependency_value):
-            dependency_module_id = dependency_value
-            return TestDependencyInfo(module_id=dependency_module_id, case_id=None)
-        elif data is None and dependency_value == "":
+            return TestDependencyInfo(dependency_value, None)
+        elif dependency_data is None and dependency_value == "":
             return ""
         raise ValueError

@@ -125,8 +125,9 @@ class HardpyPlugin(object):
                 continue
             try:
                 node_info = NodeInfo(item)
-            except ValueError as exc:
-                exit(f"Error: {exc}", 1)
+            except ValueError:
+                error_msg = f"Error creating NodeInfo for item: {item}\n"
+                exit(error_msg, 1)
 
             self._init_case_result(node_info.module_id, node_info.case_id)
             if node_info.module_id not in nodes:
@@ -306,18 +307,14 @@ class HardpyPlugin(object):
         dependency = node_info.case_dependency or node_info.module_dependency
         if dependency is None or dependency == "":
             return
-        else:
-            module_id, case_id = dependency
-            if module_id not in nodes:
-                error_message = f"Error: Module dependency '{dependency}' not found."
-                exit(error_message, 1)
-            elif case_id not in nodes[module_id] and case_id is not None:
-                error_message = f"Error: Case dependency '{dependency}' not found."
-                exit(error_message, 1)
+        module_id, case_id = dependency
+        if module_id not in nodes:
+            error_message = f"Error: Module dependency '{dependency}' not found."
+            exit(error_message, 1)
+        elif case_id not in nodes[module_id] and case_id is not None:
+            error_message = f"Error: Case dependency '{dependency}' not found."
+            exit(error_message, 1)
 
-            self._dependencies[
-                TestDependencyInfo(
-                    module_id=node_info.module_id,
-                    case_id=node_info.case_id,
-                )
-            ] = dependency
+        self._dependencies[
+            TestDependencyInfo(node_info.module_id, node_info.case_id)
+        ] = dependency
