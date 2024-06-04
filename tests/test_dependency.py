@@ -23,7 +23,9 @@ def test_case_dependency_from_passed(pytester: Pytester, hardpy_opts):
     result.assert_outcomes(passed=2)
 
 
-def test_case_dependency_from_incorrect_1(pytester: Pytester, hardpy_opts):
+def test_case_dependency_with_incorrect_module_and_case(
+    pytester: Pytester, hardpy_opts
+):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -37,7 +39,7 @@ def test_case_dependency_from_incorrect_1(pytester: Pytester, hardpy_opts):
     result.assert_outcomes()
 
 
-def test_case_dependency_from_incorrect_2(pytester: Pytester, hardpy_opts):
+def test_case_dependency_with_incorrect_module(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -51,7 +53,7 @@ def test_case_dependency_from_incorrect_2(pytester: Pytester, hardpy_opts):
     result.assert_outcomes()
 
 
-def test_case_dependency_from_incorrect_3(pytester: Pytester, hardpy_opts):
+def test_case_dependency_with_incorrect_data(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -124,7 +126,7 @@ def test_case_dependency_from_not_skipped(pytester: Pytester, hardpy_opts):
     result.assert_outcomes(passed=3)
 
 
-def test_case_dependency(pytester: Pytester, hardpy_opts):
+def test_case_dependency_in_different_cases(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -152,7 +154,7 @@ def test_case_dependency(pytester: Pytester, hardpy_opts):
     result.assert_outcomes(passed=2, failed=1, skipped=2)
 
 
-def test_module_dependency_from_passed(pytester: Pytester, hardpy_opts):
+def test_module_dependency_from_passed_case(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -175,7 +177,9 @@ def test_module_dependency_from_passed(pytester: Pytester, hardpy_opts):
     result.assert_outcomes(passed=2)
 
 
-def test_module_dependency_from_incorrect_1(pytester: Pytester, hardpy_opts):
+def test_module_dependency_with_incorrect_module_and_case(
+    pytester: Pytester, hardpy_opts
+):
     pytester.makepyfile(
         test_2="""
         import pytest
@@ -190,7 +194,7 @@ def test_module_dependency_from_incorrect_1(pytester: Pytester, hardpy_opts):
     result.assert_outcomes()
 
 
-def test_module_dependency_from_incorrect_2(pytester: Pytester, hardpy_opts):
+def test_module_dependency_with_incorrect_module(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         test_2="""
         import pytest
@@ -205,7 +209,7 @@ def test_module_dependency_from_incorrect_2(pytester: Pytester, hardpy_opts):
     result.assert_outcomes()
 
 
-def test_module_dependency_from_incorrect_3(pytester: Pytester, hardpy_opts):
+def test_module_dependency_with_incorrect_case(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -228,7 +232,7 @@ def test_module_dependency_from_incorrect_3(pytester: Pytester, hardpy_opts):
     result.assert_outcomes()
 
 
-def test_module_dependency_from_incorrect_4(pytester: Pytester, hardpy_opts):
+def test_module_dependency_with_incorrect_data(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -251,7 +255,9 @@ def test_module_dependency_from_incorrect_4(pytester: Pytester, hardpy_opts):
     result.assert_outcomes()
 
 
-def test_module_dependency_from_incorrect_5(pytester: Pytester, hardpy_opts):
+def test_module_dependency_with_incorrect_module_and_correct_case(
+    pytester: Pytester, hardpy_opts
+):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -332,7 +338,7 @@ def test_case_dependency_from_big_module(pytester: Pytester, hardpy_opts):
     result.assert_outcomes(passed=2, failed=1, skipped=3)
 
 
-def test_module_dependency_from_failed(pytester: Pytester, hardpy_opts):
+def test_module_dependency_from_failed_case(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -355,7 +361,7 @@ def test_module_dependency_from_failed(pytester: Pytester, hardpy_opts):
     result.assert_outcomes(failed=1, skipped=1)
 
 
-def test_module_dependency_from_skipped(pytester: Pytester, hardpy_opts):
+def test_module_dependency_from_skipped_case(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -388,7 +394,7 @@ def test_module_dependency_from_skipped(pytester: Pytester, hardpy_opts):
     result.assert_outcomes(failed=1, skipped=2)
 
 
-def test_module_dependency_from_not_skipped(pytester: Pytester, hardpy_opts):
+def test_module_dependency_from_not_skipped_case(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -421,7 +427,7 @@ def test_module_dependency_from_not_skipped(pytester: Pytester, hardpy_opts):
     result.assert_outcomes(passed=3)
 
 
-def test_module_dependency(pytester: Pytester, hardpy_opts):
+def test_module_dependency_with_different_situations(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         test_1="""
         import pytest
