@@ -20,7 +20,7 @@ Enable the pytest-hardpy plugin.
 addopts = --hardpy-pt
 ```
 
-### pytest-dependency
+### description
 
 If a test case/module that a test case/module depends on fails or is skipped, the dependent test case/module will also be skipped.
 A module is considered passed only if all module tests passed.
@@ -40,11 +40,25 @@ Test/module name formats:
 - `test_1` - if depends on the test module
 - `test_1::test_one` - if depends on the test case
 
-In our example, the tests depend on each other as follows:
+#### Example of case by case dependence
 
-- If test A fails, skip test B.
+```python
+import pytest
 
-#### test_a.py
+def test_one():
+    assert False
+
+@pytest.mark.case_dependency("test_1::test_one")
+def test_two():
+    assert False
+```
+
+`test_one` is marked as a dependency for `test_two` using `@pytest.mark.case_dependency("test_1::test_one")`.
+If `test_one`, then `test_two` will be skipped.
+
+#### Example of module by module dependence
+
+##### test_1.py
 
 ```python
 import pytest
@@ -53,12 +67,16 @@ def test_one():
     assert False
 ```
 
-#### test_b.py
+##### test_2.py
 
 ```python
 import pytest
 
-@pytest.mark.dependency("test_a::test_one")
+pytestmark = pytest.mark.module_dependency("test_1")
+
 def test_one():
     assert True
 ```
+
+Module `test_2` depends on module `test_1`.
+If an error occurs in module `test_1`, all tests in module `test_2` will be skipped.
