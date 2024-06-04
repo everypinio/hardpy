@@ -280,22 +280,26 @@ class HardpyPlugin(object):
 
     def _get_dependency(self, node_info: NodeInfo) -> TestDependencyInfo | str | None:
         return self._dependencies.get(
-            TestDependencyInfo(module_id=node_info.module_id, case_id=node_info.case_id)
+            TestDependencyInfo(
+                node_info.module_id,
+                node_info.case_id,
+            )
         )
 
     def _is_dependency_failed(self, dependency) -> bool:
         if isinstance(dependency, TestDependencyInfo):
+            incorrect_status = {
+                TestStatus.FAILED,
+                TestStatus.SKIPPED,
+                TestStatus.ERROR,
+            }
             module_id, case_id = dependency
             if case_id is not None:
-                return self._results[module_id][case_id] in (
-                    TestStatus.FAILED,
-                    TestStatus.SKIPPED,
-                )
-            else:
-                return any(
-                    status in {TestStatus.FAILED, TestStatus.SKIPPED}
-                    for status in set(self._results[module_id].values())
-                )
+                return self._results[module_id][case_id] in incorrect_status
+            return any(
+                status in incorrect_status
+                for status in set(self._results[module_id].values())
+            )
         return False
 
     def _check_and_add_dependency(self, node_info, nodes):
@@ -313,6 +317,7 @@ class HardpyPlugin(object):
 
             self._dependencies[
                 TestDependencyInfo(
-                    module_id=node_info.module_id, case_id=node_info.case_id
+                    module_id=node_info.module_id,
+                    case_id=node_info.case_id,
                 )
             ] = dependency
