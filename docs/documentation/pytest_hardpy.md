@@ -274,6 +274,7 @@ Skips the test case/module if the main test fails/skipped/errored.
 **Example:**
 
 ```python
+#test_1.py
 def test_one():
     assert False
 
