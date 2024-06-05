@@ -38,6 +38,29 @@ def test_dut_serial_number(pytester: Pytester, hardpy_opts):
     result.assert_outcomes(passed=1)
 
 
+def test_dut_empty_serial_number(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        from hardpy import DuplicateSerialNumberError
+
+        def test_dut_serial_number():
+            report = hardpy.get_current_report()
+            assert (
+                report.dut.serial_number is None
+            ), "Serial number is not empty before start."
+
+            serial_number = str(uuid4())[:6]
+            hardpy.set_dut_serial_number(serial_number)
+            report = hardpy.get_current_report()
+            assert serial_number == report.dut.serial_number
+    """
+    )
+
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
 def test_dut_info(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
