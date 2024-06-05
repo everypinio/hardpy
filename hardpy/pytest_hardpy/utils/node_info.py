@@ -35,11 +35,8 @@ class NodeInfo(object):
             "module_name",
         )
 
-        self._case_dependency = self._get_dependency_info(
-            item.own_markers, "case_dependency"
-        )
-        self._module_dependency = self._get_dependency_info(
-            item.parent.own_markers, "module_dependency"
+        self._dependency = self._get_dependency_info(
+            item.own_markers + item.parent.own_markers
         )
 
         self._module_id = Path(item.parent.nodeid).stem
@@ -82,22 +79,13 @@ class NodeInfo(object):
         return self._case_name
 
     @property
-    def case_dependency(self):
-        """Get case dependency info.
+    def dependency(self):
+        """Get dependency information.
 
         Returns:
             TestDependencyInfo | str: Parsed dependency information.
         """
-        return self._case_dependency
-
-    @property
-    def module_dependency(self):
-        """Get module dependency info.
-
-        Returns:
-            TestDependencyInfo | str: Parsed dependency information.
-        """
-        return self._module_dependency
+        return self._dependency
 
     def _get_human_name(self, markers: list[Mark], marker_name: str) -> str:
         """Get human name from markers.
@@ -116,9 +104,7 @@ class NodeInfo(object):
 
         return ""
 
-    def _get_dependency_info(
-        self, markers: list[Mark], marker_name: str
-    ) -> TestDependencyInfo | str:
+    def _get_dependency_info(self, markers: list[Mark]) -> TestDependencyInfo | str:
         """Extract and parse dependency information.
 
         Args:
@@ -128,7 +114,7 @@ class NodeInfo(object):
         Returns:
             TestDependencyInfo | str | None: Parsed dependency information.
         """
-        dependency_value = self._get_human_name(markers, marker_name)
+        dependency_value = self._get_human_name(markers, "dependency")
         dependency_data = re.search(r"(\w+)::(\w+)", dependency_value)
         if dependency_data:
             return TestDependencyInfo(*dependency_data.groups())

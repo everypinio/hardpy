@@ -80,8 +80,7 @@ class HardpyPlugin(object):
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
-        config.addinivalue_line("markers", "case_dependency")
-        config.addinivalue_line("markers", "module_dependency")
+        config.addinivalue_line("markers", "dependency")
 
         # must be init after config data is set
         self._reporter = HookReporter()
@@ -304,7 +303,7 @@ class HardpyPlugin(object):
         return False
 
     def _check_and_add_dependency(self, node_info, nodes):
-        dependency = node_info.case_dependency or node_info.module_dependency
+        dependency = node_info.dependency
         if dependency is None or dependency == "":
             return
         module_id, case_id = dependency

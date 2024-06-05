@@ -5,7 +5,7 @@ import hardpy
 
 pytestmark = [
     pytest.mark.module_name("End of testing"),
-    pytest.mark.module_dependency("test_2::test_minute_parity"),
+    pytest.mark.dependency("test_2::test_minute_parity"),
 ]
 
 

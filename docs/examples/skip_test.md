@@ -48,12 +48,12 @@ import pytest
 def test_one():
     assert False
 
-@pytest.mark.case_dependency("test_1::test_one")
+@pytest.mark.dependency("test_1::test_one")
 def test_two():
     assert False
 ```
 
-`test_one` is marked as a dependency for `test_two` using `@pytest.mark.case_dependency("test_1::test_one")`.
+`test_one` is marked as a dependency for `test_two` using `@pytest.mark.dependency("test_1::test_one")`.
 If `test_one`, then `test_two` will be skipped.
 
 #### Example of module by module dependence
@@ -72,7 +72,7 @@ def test_one():
 ```python
 import pytest
 
-pytestmark = pytest.mark.module_dependency("test_1")
+pytestmark = pytest.mark.dependency("test_1")
 
 def test_one():
     assert True

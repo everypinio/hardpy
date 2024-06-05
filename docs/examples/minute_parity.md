@@ -110,7 +110,7 @@ def test_dut_info(module_log: logging.Logger):
     serial_number = str(uuid4())[:6]
     module_log.info(f"DUT serial number {serial_number}")
     hardpy.set_dut_serial_number(serial_number)
-    info = {"batch": "test_batch", "board_rev": "rev_1",}
+    info = {"batch": "test_batch", "board_rev": "rev_1"}
     hardpy.set_dut_info(info)
     assert True
 
@@ -157,7 +157,8 @@ Contains the final tests of the testing process:
 - The name of the test module for the web interface is set to `pytest.mark.module_name`;
 - The name of the test cases for the web interface is set to `pytest.mark.case_name`;
 - An example of setting and updating a message for a web interface using `set_message`;
-- `test_3` depends on `test_minute_parity` from `test_2`. Dependency is set to `pytest.mark.module_dependency`. 
+- `test_3` depends on `test_minute_parity` from `test_2`. 
+Dependency is set to `pytest.mark.dependency`. 
 If `test_2::test_minute_parity` fails, `test_3` will be skipped
 
 ```python
@@ -168,7 +169,7 @@ import hardpy
 
 pytestmark = [
     pytest.mark.module_name("End of testing"),
-    pytest.mark.module_dependency("test_2::test_minute_parity"),
+    pytest.mark.dependency("test_2::test_minute_parity"),
 ]
 
 @pytest.mark.case_name("Final case")
