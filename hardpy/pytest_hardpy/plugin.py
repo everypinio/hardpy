@@ -9,6 +9,7 @@ from platform import system
 
 from natsort import natsorted
 from pytest import (
+    skip,
     exit,
     TestReport,
     Item,
@@ -27,6 +28,7 @@ from hardpy.pytest_hardpy.utils import (
     ProgressCalculator,
     ConfigData,
 )
+from hardpy.pytest_hardpy.utils.node_info import TestDependencyInfo
 
 
 def pytest_addoption(parser: Parser):
@@ -58,6 +60,7 @@ class HardpyPlugin(object):
         self._progress = ProgressCalculator()
         self._results = {}
         self._post_run_functions: list[Callable] = []
+        self._dependencies = {}
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -77,6 +80,7 @@ class HardpyPlugin(object):
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
+        config.addinivalue_line("markers", "dependency")
 
         # must be init after config data is set
         self._reporter = HookReporter()
@@ -118,7 +122,11 @@ class HardpyPlugin(object):
         for item in session.items:
             if item.parent is None:
                 continue
-            node_info = NodeInfo(item)
+            try:
+                node_info = NodeInfo(item)
+            except ValueError:
+                error_msg = f"Error creating NodeInfo for item: {item}\n"
+                exit(error_msg, 1)
 
             self._init_case_result(node_info.module_id, node_info.case_id)
             if node_info.module_id not in nodes:
@@ -127,6 +135,8 @@ class HardpyPlugin(object):
                 nodes[node_info.module_id].append(node_info.case_id)
 
             self._reporter.add_case(node_info)
+
+            self._add_dependency(node_info, nodes)
             modules.add(node_info.module_id)
         for module_id in modules:
             self._reporter.set_module_status(module_id, TestStatus.READY)
@@ -153,6 +163,8 @@ class HardpyPlugin(object):
             return
 
         node_info = NodeInfo(item)
+
+        self._handle_dependency(node_info)
 
         self._reporter.set_module_status(node_info.module_id, TestStatus.RUN)
         self._reporter.set_module_start_time(node_info.module_id)
@@ -258,3 +270,47 @@ class HardpyPlugin(object):
             index = report.find("\nE")
             return report[:index]
         return None
+
+    def _handle_dependency(self, node_info: NodeInfo):
+        dependency = self._dependencies.get(
+            TestDependencyInfo(
+                node_info.module_id,
+                node_info.case_id,
+            )
+        )
+        if dependency and self._is_dependency_failed(dependency):
+            self._log.debug(f"Skipping test due to dependency: {dependency}")
+            self._results[node_info.module_id][node_info.case_id] = TestStatus.SKIPPED
+            skip(f"Test {node_info.module_id}::{node_info.case_id} is skipped")
+
+    def _is_dependency_failed(self, dependency) -> bool:
+        if isinstance(dependency, TestDependencyInfo):
+            incorrect_status = {
+                TestStatus.FAILED,
+                TestStatus.SKIPPED,
+                TestStatus.ERROR,
+            }
+            module_id, case_id = dependency
+            if case_id is not None:
+                return self._results[module_id][case_id] in incorrect_status
+            return any(
+                status in incorrect_status
+                for status in set(self._results[module_id].values())
+            )
+        return False
+
+    def _add_dependency(self, node_info, nodes):
+        dependency = node_info.dependency
+        if dependency is None or dependency == "":
+            return
+        module_id, case_id = dependency
+        if module_id not in nodes:
+            error_message = f"Error: Module dependency '{dependency}' not found."
+            exit(error_message, 1)
+        elif case_id not in nodes[module_id] and case_id is not None:
+            error_message = f"Error: Case dependency '{dependency}' not found."
+            exit(error_message, 1)
+
+        self._dependencies[
+            TestDependencyInfo(node_info.module_id, node_info.case_id)
+        ] = dependency

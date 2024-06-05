@@ -267,6 +267,22 @@ Sets a text name for the test module (file) (default: module name)
 pytestmark = pytest.mark.module_name("Module 1")
 ```
 
+#### dependency
+
+Skips the test case/module if the main test fails/skipped/errored.
+
+**Example:**
+
+```python
+#test_1.py
+def test_one():
+    assert False
+
+@pytest.mark.dependency("test_1::test_one")
+def test_two():
+    assert True
+```
+
 ## Options
 
 **pytest-hardpy** has several options to run:
