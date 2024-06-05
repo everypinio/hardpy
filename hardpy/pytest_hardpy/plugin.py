@@ -136,7 +136,7 @@ class HardpyPlugin(object):
 
             self._reporter.add_case(node_info)
 
-            self._check_and_add_dependency(node_info, nodes)
+            self._add_dependency(node_info, nodes)
             modules.add(node_info.module_id)
         for module_id in modules:
             self._reporter.set_module_status(module_id, TestStatus.READY)
@@ -164,7 +164,7 @@ class HardpyPlugin(object):
 
         node_info = NodeInfo(item)
 
-        self._handle_dependencies(node_info)
+        self._handle_dependency(node_info)
 
         self._reporter.set_module_status(node_info.module_id, TestStatus.RUN)
         self._reporter.set_module_start_time(node_info.module_id)
@@ -271,20 +271,17 @@ class HardpyPlugin(object):
             return report[:index]
         return None
 
-    def _handle_dependencies(self, node_info: NodeInfo):
-        dependency = self._get_dependency(node_info)
-        if dependency and self._is_dependency_failed(dependency):
-            self._log.debug(f"Skipping test due to dependency: {dependency}")
-            self._results[node_info.module_id][node_info.case_id] = TestStatus.SKIPPED
-            skip(f"Test {node_info.module_id}::{node_info.case_id} is skipped")
-
-    def _get_dependency(self, node_info: NodeInfo) -> TestDependencyInfo | str | None:
-        return self._dependencies.get(
+    def _handle_dependency(self, node_info: NodeInfo):
+        dependency = self._dependencies.get(
             TestDependencyInfo(
                 node_info.module_id,
                 node_info.case_id,
             )
         )
+        if dependency and self._is_dependency_failed(dependency):
+            self._log.debug(f"Skipping test due to dependency: {dependency}")
+            self._results[node_info.module_id][node_info.case_id] = TestStatus.SKIPPED
+            skip(f"Test {node_info.module_id}::{node_info.case_id} is skipped")
 
     def _is_dependency_failed(self, dependency) -> bool:
         if isinstance(dependency, TestDependencyInfo):
@@ -302,7 +299,7 @@ class HardpyPlugin(object):
             )
         return False
 
-    def _check_and_add_dependency(self, node_info, nodes):
+    def _add_dependency(self, node_info, nodes):
         dependency = node_info.dependency
         if dependency is None or dependency == "":
             return
