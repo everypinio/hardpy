@@ -3,7 +3,10 @@ from time import sleep
 import pytest
 import hardpy
 
-pytestmark = pytest.mark.module_name("End of testing")
+pytestmark = [
+    pytest.mark.module_name("End of testing"),
+    pytest.mark.dependency("test_2::test_minute_parity"),
+]
 
 
 @pytest.mark.case_name("Final case")

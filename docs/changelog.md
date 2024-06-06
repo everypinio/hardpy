@@ -2,6 +2,7 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add implementation of test dependencies without using third party plugins.
 * Reduce the number of database calls.
 * Speed up test collection.
 
