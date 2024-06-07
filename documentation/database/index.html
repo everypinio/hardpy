@@ -1,0 +1,1653 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Everypin">
+      
+      
+        <link rel="canonical" href="https://everypinio.github.io/hardpy/documentation/database/">
+      
+      
+        <link rel="prev" href="../structure/">
+      
+      
+        <link rel="next" href="../pytest_hardpy/">
+      
+      
+      <link rel="icon" href="../../img/logo192.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.10">
+    
+    
+      
+        <title>Database - HardPy</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e359304.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings1.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings2.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings3.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings4.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings5.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings6.css">
+    
+      <link rel="stylesheet" href="../../css/print-site.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-material.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#database" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="HardPy" class="md-header__button md-logo" aria-label="HardPy" data-md-component="logo">
+      
+  <img src="../../img/logo192.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            HardPy
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Database
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/everypinio/hardpy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    everypinio/hardpy
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  HardPy
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../features/features/" class="md-tabs__link">
+        
+  
+    
+  
+  Features
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../structure/" class="md-tabs__link">
+          
+  
+    
+  
+  Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/hello_hardpy/" class="md-tabs__link">
+          
+  
+    
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../about/development/" class="md-tabs__link">
+          
+  
+    
+  
+  About
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../changelog/" class="md-tabs__link">
+        
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="HardPy" class="md-nav__button md-logo" aria-label="HardPy" data-md-component="logo">
+      
+  <img src="../../img/logo192.png" alt="logo">
+
+    </a>
+    HardPy
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/everypinio/hardpy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    everypinio/hardpy
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HardPy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/features/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Features
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Documentation
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../structure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Structure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Database
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Database
+  </span>
+  
+
+      </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="Contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#about" class="md-nav__link">
+    <span class="md-ellipsis">
+      About
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#couchdb-instance" class="md-nav__link">
+    <span class="md-ellipsis">
+      CouchDB instance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CouchDB instance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#running-couchdb-with-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running CouchDB with Docker
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-couchdb-with-docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running CouchDB with Docker Compose
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-couchdb-with-binary-packages-in-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running CouchDB with binary packages in Linux
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Running CouchDB with binary packages in Linux">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#to-disable-the-couchdb-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      To disable the CouchDB service:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-couchdb-with-binary-packages-in-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running CouchDB with binary packages in Windows
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-in-pytest-hardpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database in pytest-hardpy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database in pytest-hardpy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description-of-databases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description of databases
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statestore-scheme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Statestore scheme
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#runstore-scheme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Runstore scheme
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pytest_hardpy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pytest-hardpy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardpy_panel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HardPy panel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Examples
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/hello_hardpy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hello HardPy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/couchdb_load/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CouchDB load
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/minute_parity/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Minute parity
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/multiple_stands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multiple stands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/skip_test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skip test
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/db_in_ram/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CouchDB in RAM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            About
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/development/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Development
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="Contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#about" class="md-nav__link">
+    <span class="md-ellipsis">
+      About
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#couchdb-instance" class="md-nav__link">
+    <span class="md-ellipsis">
+      CouchDB instance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CouchDB instance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#running-couchdb-with-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running CouchDB with Docker
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-couchdb-with-docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running CouchDB with Docker Compose
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-couchdb-with-binary-packages-in-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running CouchDB with binary packages in Linux
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Running CouchDB with binary packages in Linux">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#to-disable-the-couchdb-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      To disable the CouchDB service:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-couchdb-with-binary-packages-in-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running CouchDB with binary packages in Windows
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-in-pytest-hardpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database in pytest-hardpy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database in pytest-hardpy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description-of-databases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description of databases
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statestore-scheme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Statestore scheme
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#runstore-scheme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Runstore scheme
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/everypinio/hardpy/edit/master/docs/documentation/database.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/everypinio/hardpy/raw/master/docs/documentation/database.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
+    </a>
+  
+
+
+<h1 id="database">Database<a class="headerlink" href="#database" title="Permanent link">&para;</a></h1>
+<h2 id="about">About<a class="headerlink" href="#about" title="Permanent link">&para;</a></h2>
+<p>We use CouchDB because it's a simple document-oriented NoSQL database.
+The database has two main purposes:</p>
+<ul>
+<li>Saving test report;</li>
+<li>Data synchronization with the web interface.
+Data synchronization uses the replication mechanism of CouchDB and PouchDB.</li>
+</ul>
+<p>The CouchDB version must be equal to or greater than the 3.2 version.</p>
+<h2 id="couchdb-instance">CouchDB instance<a class="headerlink" href="#couchdb-instance" title="Permanent link">&para;</a></h2>
+<p>This section explains how to launch and manage a CouchDB instance.
+After launching the database, it becomes available at the following address:</p>
+<blockquote>
+<p><a href="http://127.0.0.1:5984/_utils/">http://127.0.0.1:5984/_utils/</a></p>
+</blockquote>
+<p>The internal settings of the database are contained in the <strong>couchDB.ini</strong> configuration file.
+It contains settings that define the behavior and operating parameters of the database.
+The username is set via the <code>COUCHDB_USER</code>variable, the password via <code>COUCHDB_PASSWORD</code>, and the port number via the <code>ports</code> section.</p>
+<h3 id="running-couchdb-with-docker">Running CouchDB with Docker<a class="headerlink" href="#running-couchdb-with-docker" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Create <code>couchdb.ini</code> file.</li>
+</ol>
+<p><div class="highlight"><pre><span></span><code><span class="k">[chttpd]</span>
+<span class="na">enable_cors</span><span class="o">=</span><span class="s">true</span>
+
+<span class="k">[cors]</span>
+<span class="na">origins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">*</span>
+<span class="na">methods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">GET, PUT, POST, HEAD, DELETE</span>
+<span class="na">credentials</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
+<span class="na">headers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">accept, authorization, content-type, origin, referer, x-csrf-token</span>
+</code></pre></div>
+2. The Docker version must be 24.0.0 or higher. Run the Docker container (from the folder with the couchdb.ini file):</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>--name<span class="w"> </span>couchdb<span class="w"> </span>-p<span class="w"> </span><span class="m">5984</span>:5984<span class="w"> </span>-e<span class="w"> </span><span class="nv">COUCHDB_USER</span><span class="o">=</span>dev<span class="w"> </span>-e<span class="w"> </span><span class="nv">COUCHDB_PASSWORD</span><span class="o">=</span>dev<span class="w"> </span>-v<span class="w"> </span>./couchdb.ini:/opt/couchdb/etc/local.ini<span class="w"> </span>couchdb:3.3
+</code></pre></div>
+<p>Command for Windows:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>--name<span class="w"> </span>couchdb<span class="w"> </span>-p<span class="w"> </span><span class="m">5984</span>:5984<span class="w"> </span>-e<span class="w"> </span><span class="nv">COUCHDB_USER</span><span class="o">=</span>dev<span class="w"> </span>-e<span class="w"> </span><span class="nv">COUCHDB_PASSWORD</span><span class="o">=</span>dev<span class="w"> </span>-v<span class="w"> </span>.<span class="se">\c</span>ouchdb.ini:/opt/couchdb/etc/local.ini<span class="w"> </span>couchdb:3.3.2
+</code></pre></div>
+<p>The container will be deleted after use.</p>
+<h3 id="running-couchdb-with-docker-compose">Running CouchDB with Docker Compose<a class="headerlink" href="#running-couchdb-with-docker-compose" title="Permanent link">&para;</a></h3>
+<p>An example configuration for running CouchDB via Docker Compose is located in the <code>example/database/couchdb</code> folder.
+A shortened version of the instructions is described below.</p>
+<ol>
+<li>Create a <code>docker</code> directory in the project's root directory.</li>
+<li>Create a <code>couchdb.ini</code> file in the <code>docker</code> directory.</li>
+</ol>
+<p><div class="highlight"><pre><span></span><code><span class="k">[chttpd]</span>
+<span class="na">enable_cors</span><span class="o">=</span><span class="s">true</span>
+
+<span class="k">[cors]</span>
+<span class="na">origins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">*</span>
+<span class="na">methods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">GET, PUT, POST, HEAD, DELETE</span>
+<span class="na">credentials</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
+<span class="na">headers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">accept, authorization, content-type, origin, referer, x-csrf-token</span>
+</code></pre></div>
+3. Create a <code>docker-compose.yaml</code> file in project's root directory.</p>
+<p><div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.8&quot;</span>
+
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">couchserver</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">couchdb:3.3.2</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;5984:5984&quot;</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">COUCHDB_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dev</span>
+<span class="w">      </span><span class="nt">COUCHDB_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dev</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./docker/dbdata:/opt/couchdb/data</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./docker/couchdb.ini:/opt/couchdb/etc/local.ini</span>
+</code></pre></div>
+4. Run <strong>docker compose</strong> in the root directory.</p>
+<p><div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up
+</code></pre></div>
+5. To stop the database, run the command:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>down
+</code></pre></div>
+<h3 id="running-couchdb-with-binary-packages-in-linux">Running CouchDB with binary packages in Linux<a class="headerlink" href="#running-couchdb-with-binary-packages-in-linux" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Use this <a href="https://docs.couchdb.org/en/stable/install/unix.html#installation-using-the-apache-couchdb-convenience-binary-packages">instruction</a> to install CouchDB </li>
+<li>The installer asks you if you want to install CouchDB as a standalone application or in a clustered configuration.
+Select <code>Standalone</code> and press Enter.</li>
+<li>You are prompted to enter the Erlang Node Name. 
+You can ask it in Terminal with the command <code>hostname -f</code></li>
+<li>Set the Erlang Magic Cookie. 
+This is a unique identifier, for example, <code>test1234</code></li>
+<li>Configure the network interfaces on which CouchDB will be bound.
+<code>127.0.0.1</code> is fine.</li>
+<li>Enter an admin password of your choice for CouchDB, press <code>Enter</code>, re-type the password and press <code>Enter</code> again to continue the installation.</li>
+<li>After launching the database, it becomes available at the following address <a href="http://127.0.0.1:5984/_utils/">http://127.0.0.1:5984/_utils/</a>.
+Open it.</li>
+<li>First of all, in the <code>User Management</code> section in the <code>Create Admins</code> tab, create a user with the login <code>dev</code> and password <code>dev</code></li>
+<li>In the <code>Config</code> choose <code>CORS</code> and appoint <code>Enable CORS</code> with <code>All domains</code></li>
+</ol>
+<h4 id="to-disable-the-couchdb-service">To disable the CouchDB service:<a class="headerlink" href="#to-disable-the-couchdb-service" title="Permanent link">&para;</a></h4>
+<p>Remove packages:
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>remove<span class="w"> </span>--purge<span class="w"> </span>couchdb
+</code></pre></div>
+Remove GPG keys and repository:
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>rm<span class="w"> </span>/usr/share/keyrings/couchdb-archive-keyring.gpg
+sudo<span class="w"> </span>rm<span class="w"> </span>/etc/apt/sources.list.d/couchdb.list
+</code></pre></div>
+Clean APT cache:
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>clean
+</code></pre></div>
+Disable service:
+<div class="highlight"><pre><span></span><code>systemctl<span class="w"> </span>stop<span class="w"> </span>couchdb.service
+systemctl<span class="w"> </span>disable<span class="w"> </span>couchdb.service
+systemctl<span class="w"> </span>daemon-reload
+systemctl<span class="w"> </span>reset-failed
+</code></pre></div></p>
+<h3 id="running-couchdb-with-binary-packages-in-windows">Running CouchDB with binary packages in Windows<a class="headerlink" href="#running-couchdb-with-binary-packages-in-windows" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Use this <a href="https://docs.couchdb.org/en/stable/install/windows.html#installation-on-windows">instruction</a> to install CouchDB </li>
+<li>Be sure to install CouchDB to a path with no spaces, such as <code>C:\CouchDB</code>.</li>
+<li>Create a user with the login <code>dev</code> and password <code>dev</code> during the installation steps. Validate Credentials.</li>
+<li>Generate Random Cookie.</li>
+<li>After launching the database, it becomes available at the following address <a href="http://127.0.0.1:5984/_utils/">http://127.0.0.1:5984/_utils/</a>.
+Open it.</li>
+<li>In the <code>Config</code> choose <code>CORS</code> and appoint <code>Enable CORS</code> with <code>All domains</code></li>
+</ol>
+<h2 id="database-in-pytest-hardpy">Database in pytest-hardpy<a class="headerlink" href="#database-in-pytest-hardpy" title="Permanent link">&para;</a></h2>
+<h3 id="description-of-databases">Description of databases<a class="headerlink" href="#description-of-databases" title="Permanent link">&para;</a></h3>
+<p>The pytest plugin has 2 databases: <strong>statestore</strong> and <strong>runstore</strong>.</p>
+<ul>
+<li>The <strong>statestore</strong> database contains the document <strong>current</strong>, which is a JSON object that stores the current state of the test run without artifacts.
+The plugin updates the document as testing progresses using the <strong>StateStore</strong> class.</li>
+<li>The <strong>runstore</strong> database contains the document <strong>current</strong>, which is a JSON object that stores the current state of the test run with artifacts - a report on the current test run.</li>
+<li>The plugin updates the document as testing progresses using the <strong>RunStore</strong> class.</li>
+</ul>
+<p>A separate database is required to store the list of reports.
+The <strong>report</strong> database is used as an example of storing reports on past testing runs.
+It can be launched in the same instance as the <strong>statestore</strong>, <strong>runstore</strong> database, or in a different one.
+The database is accessed through the <strong>CouchdbLoader</strong> class, which can be called at the end of each launch.
+To read the current report, use the <code>get_current_report()</code> function.</p>
+<p>Sample code for saving a report at the end of testing:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># conftest.py</span>
+<span class="k">def</span> <span class="nf">save_report_to_couchdb</span><span class="p">():</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="n">get_current_report</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">report</span><span class="p">:</span>
+        <span class="n">loader</span> <span class="o">=</span> <span class="n">CouchdbLoader</span><span class="p">(</span><span class="n">CouchdbConfig</span><span class="p">())</span>
+        <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">fill_actions_after_test</span><span class="p">(</span><span class="n">post_run_functions</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+    <span class="n">post_run_functions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">save_report_to_couchdb</span><span class="p">)</span>
+    <span class="k">yield</span>
+</code></pre></div>
+<p><strong>HardPy</strong> users have the flexibility to choose their preferred database.
+They can write custom classes to record reports at the end of testing.</p>
+<h3 id="statestore-scheme">Statestore scheme<a class="headerlink" href="#statestore-scheme" title="Permanent link">&para;</a></h3>
+<p>The <strong>current</strong> document of the <strong>statestore</strong> database contains the following fields:</p>
+<ul>
+<li><strong>_rev</strong>: current document revision;</li>
+<li><strong>_id</strong>: unique document identifier;</li>
+<li><strong>progress</strong>: test progress;</li>
+<li><strong>stop_time</strong>: end time of testing in Unix seconds;</li>
+<li><strong>timezone</strong>: timezone as a list of strings;</li>
+<li><strong>start_time</strong>: testing start time in Unix seconds;</li>
+<li><strong>status</strong>: test execution status;</li>
+<li><strong>name</strong>: test suite name;</li>
+<li><strong>dut</strong>: DUT information containing the serial number and additional information;</li>
+<li><strong>test_stand</strong>: information about the test stand in the form of a dictionary.;</li>
+<li><strong>modules</strong>: module information;</li>
+<li><strong>drivers</strong>: information about drivers in the form of a dictionary.</li>
+</ul>
+<p>The <strong>dut</strong> block contains the following fields:</p>
+<ul>
+<li><strong>serial_number</strong>: DUT serial number;</li>
+<li><strong>info</strong>: A dictionary containing additional information about the DUT, such as batch, board revision, etc.</li>
+</ul>
+<p>The <strong>modules</strong> block contains the following fields:</p>
+<ul>
+<li><strong>test_{module_name}</strong>: an object containing information about a specific module. Contains the following fields:<ul>
+<li><strong>status</strong>: module test execution status;</li>
+<li><strong>name</strong>: module name, by default the same as module_id;</li>
+<li><strong>start_time</strong>: module testing start time in Unix seconds;</li>
+<li><strong>stop_time</strong>: end time of module testing in Unix seconds;</li>
+<li><strong>cases</strong>: an object containing information about each test case within the module. Contains the following fields:</li>
+<li><strong>test_{test_name}</strong>: an object containing information about the test. Contains the following fields:<ul>
+<li><strong>status</strong>: test execution status;</li>
+<li><strong>name</strong>: test name, by default the same as case_id;</li>
+<li><strong>start_time</strong>: test start time in Unix seconds;</li>
+<li><strong>stop_time</strong>: test end time in Unix second;</li>
+<li><strong>assertion_msg</strong>: error message if the test fails;</li>
+<li><strong>msg</strong>: additional message</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Example of a <strong>current</strong> document:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;_rev&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;44867-3888ae85c19c428cc46685845953b483&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;current&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;progress&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;stop_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1695817266</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;timezone&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;CET&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CET&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;start_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1695817263</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hardpy-stand&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;dut&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;serial_number&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;92c5a4bb-ecb0-42c5-89ac-e0caca0919fd&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;info&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;batch&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;test_batch&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;board_rev&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rev_1&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;test_stand&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Test stand 1&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;drivers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;driver_1&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;driver info&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;driver_2&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;active&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;modules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;test_1_a&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Module 1&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;start_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1695816884</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;stop_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1695817265</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;cases&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;test_dut_info&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;passed&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Obtaining information about DUT&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;start_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1695817263</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;stop_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1695817264</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;assertion_msg&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;msg&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;test_minute_parity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Test 1&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;start_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1695817264</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;stop_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1695817264</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;assertion_msg&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The test failed because minute 21 is odd! Try again!&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;msg&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="s2">&quot;Current minute 21&quot;</span>
+<span class="w">              </span><span class="p">],</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+<h3 id="runstore-scheme">Runstore scheme<a class="headerlink" href="#runstore-scheme" title="Permanent link">&para;</a></h3>
+<p>The <strong>runstore</strong> database contains all the fields about the <strong>statestore</strong> database
+plus artifact fields for the test run, module, and case.
+The <strong>current</strong> document of <strong>runstore</strong> database contains the following fields:</p>
+<ul>
+<li><strong>_rev</strong>: current document revision;</li>
+<li><strong>_id</strong>: unique document identifier;</li>
+<li><strong>progress</strong>: test progress;</li>
+<li><strong>stop_time</strong>: end time of testing in Unix seconds;</li>
+<li><strong>timezone</strong>: timezone as a list of strings;</li>
+<li><strong>start_time</strong>: testing start time in Unix seconds;</li>
+<li><strong>status</strong>: test execution status;</li>
+<li><strong>name</strong>: test suite name;</li>
+<li><strong>dut</strong>: DUT information containing the serial number and additional information;</li>
+<li><strong>test_stand</strong>: information about the test stand in the form of a dictionary;</li>
+<li><strong>drivers</strong>: information about drivers in the form of a dictionary;</li>
+<li><strong>artifact</strong>: an object containing information about artifacts created during the test run;</li>
+<li><strong>modules</strong>: module information.</li>
+</ul>
+<p>The <strong>dut</strong> block contains the following fields:</p>
+<ul>
+<li><strong>serial_number</strong>: DUT serial number;</li>
+<li><strong>info</strong>: A dictionary containing additional information about the DUT, such as batch, board revision, etc.</li>
+</ul>
+<p>The <strong>modules</strong> block contains the following fields:</p>
+<ul>
+<li><strong>test_{module_name}</strong>: an object containing information about a specific module. Contains the following fields:<ul>
+<li><strong>status</strong>: module test execution status;</li>
+<li><strong>name</strong>: module name, by default the same as module_id;</li>
+<li><strong>start_time</strong>: module testing start time in Unix seconds;</li>
+<li><strong>stop_time</strong>: end time of module testing in Unix seconds;</li>
+<li><strong>artifact</strong>: an object containing information about artifacts created during the test module process;</li>
+<li><strong>cases</strong>: an object containing information about each test within the module. Contains the following fields:</li>
+<li><strong>test_{test_name}</strong>: an object containing information about the test. Contains the following fields:<ul>
+<li><strong>status</strong>: test execution status;</li>
+<li><strong>name</strong>: test name, by default the same as case_id;</li>
+<li><strong>start_time</strong>: test start time in Unix seconds;</li>
+<li><strong>stop_time</strong>: test end time in Unix second;</li>
+<li><strong>assertion_msg</strong>: error message if the test fails;</li>
+<li><strong>msg</strong>: additional message;</li>
+<li><strong>artifact</strong>: an object containing information about artifacts created during the test case process.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Example of a <strong>current</strong> document:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;_rev&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;44867-3888ae85c19c428cc46685845953b483&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;current&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;progress&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;stop_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1695817266</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;timezone&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;CET&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CET&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;start_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1695817263</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hardpy-stand&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;dut&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;serial_number&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;92c5a4bb-ecb0-42c5-89ac-e0caca0919fd&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;info&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;batch&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;test_batch&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;board_rev&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rev_1&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;test_stand&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Test stand 1&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;drivers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;driver_1&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;driver info&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;driver_2&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;active&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;artifact&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;data_str&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;456DATA&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;data_int&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12345</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;data_dict&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;test_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;456DATA&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;modules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;test_1_a&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Module 1&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;start_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1695816884</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;stop_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1695817265</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;artifact&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">          </span><span class="nt">&quot;cases&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;test_dut_info&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;passed&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Obtaining information about DUT&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;start_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1695817263</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;stop_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1695817264</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;assertion_msg&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;msg&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;artifact&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;data_str&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;456DATA&quot;</span><span class="p">}</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;test_minute_parity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Test 1&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;start_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1695817264</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;stop_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1695817264</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;assertion_msg&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The test failed because minute 21 is odd! Try again!&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;msg&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="s2">&quot;Current minute 21&quot;</span>
+<span class="w">              </span><span class="p">],</span>
+<span class="w">              </span><span class="nt">&quot;artifact&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;data_str&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123DATA&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;data_int&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12345</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;data_dict&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                  </span><span class="nt">&quot;test_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;456DATA&quot;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">              </span><span class="p">}</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../structure/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Structure">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Structure
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../pytest_hardpy/" class="md-footer__link md-footer__link--next" aria-label="Next: Pytest-hardpy">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Pytest-hardpy
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.path", "navigation.top", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.8fd75fb4.min.js"></script>
+      
+        <script src="../../js/print-site.js"></script>
+      
+    
+  <script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
+</html>
