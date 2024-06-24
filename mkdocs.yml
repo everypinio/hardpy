@@ -1,6 +1,13 @@
+# Project information
 site_name: HardPy
+site_url: https://everypinio.github.io/hardpy/
+site_author: Everypin
 site_dir: public
 docs_dir: ./docs
+
+# Repository
+repo_name: everypinio/hardpy
+repo_url: https://github.com/everypinio/hardpy
 
 theme:
   name: material
