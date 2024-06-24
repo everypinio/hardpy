@@ -38,19 +38,19 @@ def test_dut_serial_number(pytester: Pytester, hardpy_opts):
     result.assert_outcomes(passed=1)
 
 
-def test_dut_empty_serial_number(pytester: Pytester, hardpy_opts):
+def test_empty_dut_serial_number(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {func_test_header}
         from hardpy import DuplicateSerialNumberError
 
-        def test_dut_serial_number():
+        def test_empty_dut_serial_number():
             report = hardpy.get_current_report()
             assert (
                 report.dut.serial_number is None
             ), "Serial number is not empty before start."
 
-            serial_number = str(uuid4())[:6]
+            serial_number = None
             hardpy.set_dut_serial_number(serial_number)
             report = hardpy.get_current_report()
             assert serial_number == report.dut.serial_number
@@ -58,7 +58,30 @@ def test_dut_empty_serial_number(pytester: Pytester, hardpy_opts):
     )
 
     result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(passed=1)
+    result.assert_outcomes(failed=1)
+
+
+def test_incorrect_sdut_erial_number(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        from hardpy import DuplicateSerialNumberError
+
+        def test_incorrect_dut_serial_number():
+            report = hardpy.get_current_report()
+            assert (
+                report.dut.serial_number is None
+            ), "Serial number is not empty before start."
+
+            serial_number = 'qiuwgdiwg'
+            hardpy.set_dut_serial_number(serial_number)
+            report = hardpy.get_current_report()
+            assert serial_number == report.dut.serial_number
+    """
+    )
+
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(failed=1)
 
 
 def test_dut_info(pytester: Pytester, hardpy_opts):
@@ -85,6 +108,30 @@ def test_dut_info(pytester: Pytester, hardpy_opts):
     result.assert_outcomes(passed=1)
 
 
+def test_empty_dut_info(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_empty_dut_info():
+            report = hardpy.get_current_report()
+            assert report.dut.info == dict(), "The dut info is not empty."
+
+            info = {{}}
+            hardpy.set_dut_info(info)
+            report = hardpy.get_current_report()
+            assert info == report.dut.info
+
+            info = {{}}
+            info_before_write = report.dut.info | info
+            hardpy.set_dut_info(info)
+            report = hardpy.get_current_report()
+            assert info_before_write == report.dut.info
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(failed=1)
+
+
 def test_stand_info(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
@@ -93,12 +140,12 @@ def test_stand_info(pytester: Pytester, hardpy_opts):
             report = hardpy.get_current_report()
             assert report.test_stand == dict(), "The test stand info is not empty."
 
-            info = {{"name": "Test stand 1"}}
+            info = {{"adssf"}}
             hardpy.set_stand_info(info)
             report = hardpy.get_current_report()
             assert info == report.test_stand
 
-            info = {{"driver_1": "driver A"}}
+            info = {{"sgdfssgd"}}
             stand_info_before_write = report.test_stand | info
             hardpy.set_stand_info(info)
             report = hardpy.get_current_report()
@@ -106,7 +153,7 @@ def test_stand_info(pytester: Pytester, hardpy_opts):
     """
     )
     result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(passed=1)
+    result.assert_outcomes(failed=1)
 
 
 def test_drivers(pytester: Pytester, hardpy_opts):
@@ -136,6 +183,60 @@ def test_drivers(pytester: Pytester, hardpy_opts):
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
+
+
+def test_empty_drivers_data(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_empty_drivers_data():
+            report = hardpy.get_current_report()
+            assert report.drivers == dict(), "The drivers data is not empty."
+
+            drivers = {{}}
+            hardpy.set_driver_info(drivers)
+            report = hardpy.get_current_report()
+            assert drivers == report.drivers
+
+            drivers = {{
+                "driver_2": {{
+                }}
+            }}
+            drivers_before_write = report.drivers | drivers
+            hardpy.set_driver_info(drivers)
+            report = hardpy.get_current_report()
+            assert drivers_before_write == report.drivers
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_incorrect_drivers_data(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_incorrect_drivers_data():
+            report = hardpy.get_current_report()
+            assert report.drivers == dict(), "The drivers data is not empty."
+
+            drivers = {{"sdfdkjshfkjs"}}
+            hardpy.set_driver_info(drivers)
+            report = hardpy.get_current_report()
+            assert drivers == report.drivers
+
+            drivers = {{
+                "driver_2": {{"dfkjhgdkhkjgf"
+                }}
+            }}
+            drivers_before_write = report.drivers | drivers
+            hardpy.set_driver_info(drivers)
+            report = hardpy.get_current_report()
+            assert drivers_before_write == report.drivers
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(failed=1)
 
 
 def test_module_artifact(pytester: Pytester, hardpy_opts):
@@ -169,6 +270,64 @@ def test_module_artifact(pytester: Pytester, hardpy_opts):
     result.assert_outcomes(passed=1)
 
 
+def test_empty_module_artifact_data(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_empty_module_artifact_data(request):
+            node = NodeInfo(request.node)
+
+            report = hardpy.get_current_report()
+            empty_artifact = report.modules[node.module_id].artifact
+            assert empty_artifact == dict(), "The test module artifact is not empty."
+
+            artifact_data = {{}}
+            hardpy.set_module_artifact(artifact_data)
+            report = hardpy.get_current_report()
+            read_artifact = report.modules[node.module_id].artifact
+            assert artifact_data == read_artifact
+
+            artifact_data = {{}}
+            artifact_before_write = read_artifact | artifact_data
+            hardpy.set_module_artifact(artifact_data)
+            report = hardpy.get_current_report()
+            read_artifact = report.modules[node.module_id].artifact
+            assert read_artifact == artifact_before_write
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_incorrect_module_artifact_data(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_incorrect_module_artifact_data(request):
+            node = NodeInfo(request.node)
+
+            report = hardpy.get_current_report()
+            empty_artifact = report.modules[node.module_id].artifact
+            assert empty_artifact == dict(), "The test module artifact is not empty."
+
+            artifact_data = {{"ashdgajghj"}}
+            hardpy.set_module_artifact(artifact_data)
+            report = hardpy.get_current_report()
+            read_artifact = report.modules[node.module_id].artifact
+            assert artifact_data == read_artifact
+
+            artifact_data = {{"ashdgajghj"}}
+            artifact_before_write = read_artifact | artifact_data
+            hardpy.set_module_artifact(artifact_data)
+            report = hardpy.get_current_report()
+            read_artifact = report.modules[node.module_id].artifact
+            assert read_artifact == artifact_before_write
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(failed=1)
+
+
 def test_case_artifact(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
@@ -200,6 +359,66 @@ def test_case_artifact(pytester: Pytester, hardpy_opts):
     result.assert_outcomes(passed=1)
 
 
+def test_empty_case_artifact_data(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_empty_case_artifact_data(request):
+            node = NodeInfo(request.node)
+
+            report = hardpy.get_current_report()
+            empty_artifact = report.modules[node.module_id].cases[node.case_id].artifact
+            assert empty_artifact == dict(), "The test case artifact is not empty."
+
+            artifact_data = {{}}
+            hardpy.set_case_artifact(artifact_data)
+            report = hardpy.get_current_report()
+            read_artifact = report.modules[node.module_id].cases[node.case_id].artifact
+            assert artifact_data == read_artifact
+
+            artifact_data = {{}}
+            artifact_before_write = read_artifact | artifact_data
+            hardpy.set_case_artifact(artifact_data)
+            report = hardpy.get_current_report()
+            read_artifact = report.modules[node.module_id].cases[node.case_id].artifact
+            assert read_artifact == artifact_before_write
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_incorrect_case_artifact_data(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_incorrect_case_artifact_data(request):
+            node = NodeInfo(request.node)
+
+            report = hardpy.get_current_report()
+            empty_artifact = report.modules[node.module_id].cases[node.case_id].artifact
+            assert empty_artifact == dict(), "The test case artifact is not empty."
+
+            artifact_data = {{"kjfdhgskjsfd"}}
+            hardpy.set_case_artifact(artifact_data)
+            report = hardpy.get_current_report()
+            read_artifact = report.modules[node.module_id].cases[node.case_id].artifact
+            assert artifact_data == read_artifact
+
+            artifact_data = {{
+                "dsjfdkshlajlk"
+            }}
+            artifact_before_write = read_artifact | artifact_data
+            hardpy.set_case_artifact(artifact_data)
+            report = hardpy.get_current_report()
+            read_artifact = report.modules[node.module_id].cases[node.case_id].artifact
+            assert read_artifact == artifact_before_write
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(failed=1)
+
+
 def test_run_artifact(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
@@ -227,6 +446,62 @@ def test_run_artifact(pytester: Pytester, hardpy_opts):
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
+
+
+def test_empty_run_artifact_data(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_empty_run_artifact_data(request):
+            report = hardpy.get_current_report()
+            empty_artifact = report.artifact
+            assert empty_artifact == dict(), "The test run artifact is not empty."
+
+            artifact_data = {{}}
+            hardpy.set_run_artifact(artifact_data)
+            report = hardpy.get_current_report()
+            read_artifact = report.artifact
+            assert artifact_data == read_artifact
+
+            artifact_data = {{}}
+            artifact_before_write = read_artifact | artifact_data
+            hardpy.set_run_artifact(artifact_data)
+            report = hardpy.get_current_report()
+            read_artifact = report.artifact
+            assert read_artifact == artifact_before_write
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_incorrect_run_artifact_data(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_run_artifact(request):
+            report = hardpy.get_current_report()
+            empty_artifact = report.artifact
+            assert empty_artifact == dict(), "The test run artifact is not empty."
+
+            artifact_data = {{"ghvdfjsshkj"}}
+            hardpy.set_run_artifact(artifact_data)
+            report = hardpy.get_current_report()
+            read_artifact = report.artifact
+            assert artifact_data == read_artifact
+
+            artifact_data = {{
+                "dsjfdkshlajlk"
+            }}
+            artifact_before_write = read_artifact | artifact_data
+            hardpy.set_run_artifact(artifact_data)
+            report = hardpy.get_current_report()
+            read_artifact = report.artifact
+            assert read_artifact == artifact_before_write
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(failed=1)
 
 
 def test_case_message(pytester: Pytester, hardpy_opts):
@@ -268,6 +543,28 @@ def test_case_message(pytester: Pytester, hardpy_opts):
             assert msg_1 and msg_2 and msg_4 in msgs.values()
             assert len(msgs.values()) == 3
 
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_empty_case_message(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_message(request):
+            node = NodeInfo(request.node)
+
+            report = hardpy.get_current_report()
+            empty_msg = report.modules[node.module_id].cases[node.case_id].msg
+            assert empty_msg is None, "The case message is not empty."
+
+            msg_1 = None
+            hardpy.set_message(msg_1)
+            report = hardpy.get_current_report()
+            msgs = report.modules[node.module_id].cases[node.case_id].msg
+            assert msg_1 in msgs.values()
     """
     )
     result = pytester.runpytest(*hardpy_opts)
