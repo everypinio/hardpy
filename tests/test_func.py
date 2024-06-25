@@ -569,3 +569,45 @@ def test_empty_case_message(pytester: Pytester, hardpy_opts):
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
+
+
+def test_incorrect_configdata(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_incorrect_configdata():
+            config = ConfigData(
+                db_host="test-db",
+                db_user="test-user",
+                db_pswd="test-password",
+                db_port=1234,
+                web_host="test-host",
+                web_port=5678,
+                tests_dir="/path/to/tests",
+            )
+            report = hardpy.get_current_report()
+            assert report
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(failed=1)
+
+
+def test_incorrect_couchdbconfig_data(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_incorrect_couchdbconfig_data():
+            config = CouchdbConfig(
+                db_name="my_database",
+                user="my_user",
+                password="my_password",
+                host="my_host",
+                port=12345,
+            )
+            report = hardpy.get_current_report()
+            assert report
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(failed=1)
