@@ -192,6 +192,7 @@ class HookReporter(BaseReporter):
             DF.STOP_TIME: None,
             DF.ASSERTION_MSG: None,
             DF.MSG: None,
+            DF.DIALOG_BOX: {},
         }
 
         if item.get(node_info.module_id) is None:  # noqa: WPS204

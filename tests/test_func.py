@@ -249,3 +249,25 @@ def test_case_message(pytester: Pytester, hardpy_opts):
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
+
+
+def test_dialog_box(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        from hardpy import DialogBoxData, DialogBoxWidgetInfo
+        def test_dialog_box():
+            report = hardpy.get_current_report()
+            assert report.dut.info == dict(), "The dut info is not empty."
+
+            info = {{DialogBoxData(
+                title_bar="Заголовок диалогового окна",
+                dialog_text="Текст диалогового окна",
+                widget_info=DialogBoxWidgetInfo(label="Текст виджета", value="Значение виджета")
+            )}}
+            response = hardpy.run_dialog_box(info)
+            assert response == "ok"
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)

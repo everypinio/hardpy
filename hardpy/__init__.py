@@ -14,6 +14,10 @@ from hardpy.pytest_hardpy.pytest_call import (
     set_run_artifact,
     set_message,
     set_driver_info,
+    run_dialog_box,
+    DialogBoxData,
+    DialogBoxWidget,
+    DialogBoxWidgetType,
 )
 
 __all__ = [
@@ -29,4 +33,8 @@ __all__ = [
     "set_run_artifact",
     "set_message",
     "set_driver_info",
+    "run_dialog_box",
+    "DialogBoxData",
+    "DialogBoxWidget",
+    "DialogBoxWidgetType",
 ]
