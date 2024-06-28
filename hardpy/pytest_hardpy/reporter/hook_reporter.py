@@ -90,7 +90,7 @@ class HookReporter(BaseReporter):
         item_statestore = self._statestore.get_field(key)
         item_runstore = self._runstore.get_field(key)
 
-        self._init_case(item_statestore, node_info)
+        self._init_case(item_statestore, node_info, is_use_dialog_box=True)
         self._init_case(item_runstore, node_info, is_use_artifact=True)
 
         self.set_doc_value(key, item_statestore, statestore_only=True)
@@ -176,7 +176,11 @@ class HookReporter(BaseReporter):
             self.set_doc_value(key, int(time()))
 
     def _init_case(
-        self, item: dict, node_info: NodeInfo, is_use_artifact: bool = False
+        self,
+        item: dict,
+        node_info: NodeInfo,
+        is_use_artifact: bool = False,
+        is_use_dialog_box: bool = False,
     ):
         module_default = {  # noqa: WPS204
             DF.STATUS: TestStatus.READY,
@@ -192,7 +196,6 @@ class HookReporter(BaseReporter):
             DF.STOP_TIME: None,
             DF.ASSERTION_MSG: None,
             DF.MSG: None,
-            DF.DIALOG_BOX: {},
         }
 
         if item.get(node_info.module_id) is None:  # noqa: WPS204
@@ -208,6 +211,9 @@ class HookReporter(BaseReporter):
 
         if is_use_artifact:
             case_default[DF.ARTIFACT] = {}
+
+        if is_use_dialog_box:
+            case_default[DF.DIALOG_BOX] = {}
         item[node_info.module_id][DF.CASES][node_info.case_id] = case_default
 
     def _remove_outdate_node(

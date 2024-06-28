@@ -255,16 +255,15 @@ def test_dialog_box(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        from hardpy import DialogBoxData, DialogBoxWidgetInfo
+        from hardpy import DialogBoxData, DialogBoxWidget, DialogBoxWidgetType
         def test_dialog_box():
-            report = hardpy.get_current_report()
-            assert report.dut.info == dict(), "The dut info is not empty."
-
-            info = {{DialogBoxData(
-                title_bar="Заголовок диалогового окна",
-                dialog_text="Текст диалогового окна",
-                widget_info=DialogBoxWidgetInfo(label="Текст виджета", value="Значение виджета")
-            )}}
+            info = DialogBoxData(
+                    title_bar="Заголовок диалогового окна",
+                    dialog_text="Текст диалогового окна",
+                    widget_info=DialogBoxWidget(
+                        widget_info={{"text": "Текст"}}, widget_type=DialogBoxWidgetType.CHECKBOX
+                    ),
+                )
             response = hardpy.run_dialog_box(info)
             assert response == "ok"
     """

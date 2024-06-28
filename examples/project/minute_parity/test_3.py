@@ -2,6 +2,8 @@ from time import sleep
 
 import pytest
 import hardpy
+from hardpy import DialogBoxData, DialogBoxWidget, DialogBoxWidgetType
+from hardpy.pytest_hardpy.utils import NodeInfo
 
 pytestmark = [
     pytest.mark.module_name("End of testing"),
@@ -16,3 +18,17 @@ def test_one():
         sleep(1)
     hardpy.set_message("Testing ended", "updated_status")
     assert True
+
+
+def test_dialog_box():
+    info = [
+        DialogBoxData(
+            title_bar="Заголовок диалогового окна",
+            dialog_text="Текст диалогового окна",
+            widget_info=DialogBoxWidget(
+                widget_info={"text": "Текст"}, widget_type=DialogBoxWidgetType.CHECKBOX
+            ),
+        )
+    ]
+    response = hardpy.run_dialog_box(info)
+    assert response == "ok"

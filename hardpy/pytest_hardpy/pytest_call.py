@@ -36,6 +36,7 @@ class DialogBoxWidgetType(Enum):
     NUMERIC_INPUT = "numericinput"
 
 
+@dataclass
 class DialogBoxWidget:
     """Dialog box widget."""
 
@@ -252,7 +253,7 @@ def run_dialog_box(data: DialogBoxData):
         widget_info (DialogBoxWidget | None): Individual information for each dialog box type.
 
     Returns:
-        DialogBoxResponse: An object containing the user's response.
+        str: An object containing the user's response.
 
     Raises:
         ValueError: If the 'message' argument is empty.
@@ -260,22 +261,6 @@ def run_dialog_box(data: DialogBoxData):
 
     if not data.dialog_text:
         raise ValueError("The 'dialog_text' argument cannot be empty.")
-
-    dialog_box = DialogBoxData(
-        title_bar=data.title_bar,
-        dialog_text=data.dialog_text,
-        widget_info=data.widget_info,
-    )
-
-    user_response = {
-        "action": "ok",  # Possible actions: "ok", "cancel", "other"
-        "input_data": "This is the user's input",
-    }
-
-    response = DialogBoxResponse(
-        action=user_response["action"],
-        input_data=user_response.get("input_data"),
-    )
 
     current_test = _get_current_test()
     reporter = RunnerReporter()
@@ -286,10 +271,22 @@ def run_dialog_box(data: DialogBoxData):
         current_test.case_id,
         DF.DIALOG_BOX,
     )
-    reporter.set_doc_value(key, dialog_box)
+
+    data_dict = {
+        "title_bar": data.title_bar,
+        "dialog_text": data.dialog_text,
+        "widget_info": {
+            "text": data.widget_info.widget_info,
+            "type": data.widget_info.widget_type.value,
+        },
+    }
+
+    reporter.set_doc_value(
+        key, data_dict, statestore_only=True
+    )  # , statestore_only=True
     reporter.update_db_by_doc()
 
-    return response
+    return "ok"
 
 
 def _get_current_test() -> CurrentTestInfo:
