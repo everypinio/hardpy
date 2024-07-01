@@ -35,6 +35,7 @@ class CaseStateStore(IBaseResult):
 
     assertion_msg: str | None = None
     msg: dict | None = None
+    dialog_box: dict = {}
 
 
 class CaseRunStore(IBaseResult):

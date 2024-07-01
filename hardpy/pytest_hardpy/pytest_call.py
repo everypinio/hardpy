@@ -1,6 +1,7 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+from enum import Enum
 from os import environ
 from dataclasses import dataclass
 from typing import Optional
@@ -24,6 +25,46 @@ class CurrentTestInfo(object):
 
     module_id: str
     case_id: str
+
+
+class DialogBoxWidgetType(Enum):
+    """Dialog box widget type."""
+
+    RADIOBUTTON = "radiobutton"
+    CHECKBOX = "checkbox"
+    TEXT_INPUT = "textinput"
+    NUMERIC_INPUT = "numericinput"
+
+
+@dataclass
+class DialogBoxWidget:
+    """Dialog box widget."""
+
+    widget_type: DialogBoxWidgetType
+    widget_info: dict | tuple
+
+
+@dataclass
+class DialogBoxData:
+    """Dialog box data.
+
+    Args:
+        title_bar (str): title bar
+        dialog_text (str): dialog text
+        widget_info (DialogBoxWidget | None): widget info
+    """
+
+    title_bar: str
+    dialog_text: str
+    widget_info: DialogBoxWidget | None
+
+
+class DialogBoxResponse:
+    """Represents the response from a dialog box."""
+
+    def __init__(self, action: str, input_data: str | None = None):
+        self.action = action
+        self.input_data = input_data
 
 
 def get_current_report() -> ResultRunStore | None:
@@ -201,6 +242,49 @@ def set_driver_info(drivers: dict) -> None:
         )
         reporter.set_doc_value(key, driver_data)
     reporter.update_db_by_doc()
+
+
+def run_dialog_box(data: DialogBoxData):
+    """Displays a dialog box and updates the 'dialog_box' field in the statestore database.
+
+    Args:
+        title_bar (str): The title of the dialog box.
+        dialog_text (str): The main text of the dialog box, which the operator will read.
+        widget_info (DialogBoxWidget | None): Individual information for each dialog box type.
+
+    Returns:
+        str: An object containing the user's response.
+
+    Raises:
+        ValueError: If the 'message' argument is empty.
+    """
+
+    if not data.dialog_text:
+        raise ValueError("The 'dialog_text' argument cannot be empty.")
+
+    current_test = _get_current_test()
+    reporter = RunnerReporter()
+    key = reporter.generate_key(
+        DF.MODULES,
+        current_test.module_id,
+        DF.CASES,
+        current_test.case_id,
+        DF.DIALOG_BOX,
+    )
+
+    data_dict = {
+        "title_bar": data.title_bar,
+        "dialog_text": data.dialog_text,
+        "widget_info": {
+            "text": data.widget_info.widget_info,
+            "type": data.widget_info.widget_type.value,
+        },
+    }
+
+    reporter.set_doc_value(key, data_dict, statestore_only=True)
+    reporter.update_db_by_doc()
+
+    return "ok"
 
 
 def _get_current_test() -> CurrentTestInfo:

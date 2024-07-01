@@ -249,3 +249,24 @@ def test_case_message(pytester: Pytester, hardpy_opts):
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
+
+
+def test_dialog_box(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        from hardpy import DialogBoxData, DialogBoxWidget, DialogBoxWidgetType
+        def test_dialog_box():
+            info = DialogBoxData(
+                    title_bar="Dialog box title",
+                    dialog_text="Doalog box text",
+                    widget_info=DialogBoxWidget(
+                        widget_info={{"text": "Text"}}, widget_type=DialogBoxWidgetType.CHECKBOX
+                    ),
+                )
+            response = hardpy.run_dialog_box(info)
+            assert response == "ok"
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
