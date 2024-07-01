@@ -90,8 +90,8 @@ class HookReporter(BaseReporter):
         item_statestore = self._statestore.get_field(key)
         item_runstore = self._runstore.get_field(key)
 
-        self._init_case(item_statestore, node_info, is_use_dialog_box=True)
-        self._init_case(item_runstore, node_info, is_use_artifact=True)
+        self._init_case(item_statestore, node_info, is_only_statestore=True)
+        self._init_case(item_runstore, node_info, is_only_runstore=True)
 
         self.set_doc_value(key, item_statestore, statestore_only=True)
         self.set_doc_value(key, item_runstore, runstore_only=True)
@@ -179,8 +179,8 @@ class HookReporter(BaseReporter):
         self,
         item: dict,
         node_info: NodeInfo,
-        is_use_artifact: bool = False,
-        is_use_dialog_box: bool = False,
+        is_only_runstore: bool = False,
+        is_only_statestore: bool = False,
     ):
         module_default = {  # noqa: WPS204
             DF.STATUS: TestStatus.READY,
@@ -199,7 +199,7 @@ class HookReporter(BaseReporter):
         }
 
         if item.get(node_info.module_id) is None:  # noqa: WPS204
-            if is_use_artifact:
+            if is_only_runstore:
                 module_default[DF.ARTIFACT] = {}
             item[node_info.module_id] = module_default  # noqa: WPS204
         else:
@@ -209,10 +209,10 @@ class HookReporter(BaseReporter):
             item[node_info.module_id][DF.STOP_TIME] = None
         item[node_info.module_id][DF.NAME] = self._get_module_name(node_info)
 
-        if is_use_artifact:
+        if is_only_runstore:
             case_default[DF.ARTIFACT] = {}
 
-        if is_use_dialog_box:
+        if is_only_statestore:
             case_default[DF.DIALOG_BOX] = {}
         item[node_info.module_id][DF.CASES][node_info.case_id] = case_default
 

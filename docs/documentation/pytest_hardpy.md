@@ -178,6 +178,51 @@ def test_message():
     set_message("Update message 2", "msg_upd")
 ```
 
+#### run_dialog_box
+
+Displays a dialog box and updates the 'dialog_box' field in the statestore database.
+
+    Args:
+        title_bar (str): The title of the dialog box.
+        dialog_text (str): The main text of the dialog box, which the operator will read.
+        widget_info (DialogBoxWidget | None): Individual information for each dialog box type.
+
+    Returns:
+        str: An object containing the user's response.
+
+    Raises:
+        ValueError: If the 'message' argument is empty.
+
+**Arguments:**
+
+- `title_bar` *(str)*: The title of the dialog box.
+- `dialog_text` *(str)*: The main text of the dialog box, which the operator will read.
+- `widget_info` *(DialogBoxWidget | None)*: Individual information for each dialog box type.
+
+**Returns:**
+
+- *(str)*: An object containing the user's response.
+
+**Raises**
+
+- `ValueError`: If the 'message' argument is empty.
+
+**Example:**
+
+```python
+from hardpy import DialogBoxData, DialogBoxWidget, DialogBoxWidgetType
+def test_dialog_box():
+    info = DialogBoxData(
+            title_bar="Dialog box title",
+            dialog_text="Dialog box text",
+            widget_info=DialogBoxWidget(
+                widget_info={{"text": "Text"}}, widget_type=DialogBoxWidgetType.CHECKBOX
+            ),
+        )
+    response = hardpy.run_dialog_box(info)
+    assert response == "ok"
+```
+
 #### get_current_report
 
 Returns the current report from the database **runstore**.

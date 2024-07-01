@@ -258,10 +258,10 @@ def test_dialog_box(pytester: Pytester, hardpy_opts):
         from hardpy import DialogBoxData, DialogBoxWidget, DialogBoxWidgetType
         def test_dialog_box():
             info = DialogBoxData(
-                    title_bar="Заголовок диалогового окна",
-                    dialog_text="Текст диалогового окна",
+                    title_bar="Dialog box title",
+                    dialog_text="Doalog box text",
                     widget_info=DialogBoxWidget(
-                        widget_info={{"text": "Текст"}}, widget_type=DialogBoxWidgetType.CHECKBOX
+                        widget_info={{"text": "Text"}}, widget_type=DialogBoxWidgetType.CHECKBOX
                     ),
                 )
             response = hardpy.run_dialog_box(info)

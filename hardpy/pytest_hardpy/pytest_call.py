@@ -281,9 +281,7 @@ def run_dialog_box(data: DialogBoxData):
         },
     }
 
-    reporter.set_doc_value(
-        key, data_dict, statestore_only=True
-    )  # , statestore_only=True
+    reporter.set_doc_value(key, data_dict, statestore_only=True)
     reporter.update_db_by_doc()
 
     return "ok"
