@@ -3,6 +3,11 @@ from uuid import uuid4
 
 import pytest
 import hardpy
+from hardpy.pytest_hardpy.pytest_call import (
+    DialogBoxData,
+    DialogBoxWidget,
+    DialogBoxWidgetType,
+)
 
 
 pytestmark = pytest.mark.module_name("Testing preparation")
@@ -30,3 +35,15 @@ def test_stand_info(module_log: logging.Logger):
     }
     hardpy.set_stand_info(info)
     assert True
+
+
+def test_1_dialog_box():
+    info = DialogBoxData(
+        title_bar="Dialog box title",
+        dialog_text="Doalog box text",
+        widget_info=DialogBoxWidget(
+            widget_info={"text": "Text"}, widget_type=DialogBoxWidgetType.CHECKBOX
+        ),
+    )
+    response = hardpy.run_dialog_box(info)
+    assert response == "ok"

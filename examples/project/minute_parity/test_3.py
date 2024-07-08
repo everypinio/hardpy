@@ -20,15 +20,13 @@ def test_one():
     assert True
 
 
-def test_dialog_box():
-    info = [
-        DialogBoxData(
-            title_bar="Заголовок диалогового окна",
-            dialog_text="Текст диалогового окна",
-            widget_info=DialogBoxWidget(
-                widget_info={"text": "Текст"}, widget_type=DialogBoxWidgetType.CHECKBOX
-            ),
-        )
-    ]
+def test_1_dialog_box():
+    info = DialogBoxData(
+        title_bar="Dialog box title",
+        dialog_text="Doalog box text",
+        widget_info=DialogBoxWidget(
+            widget_info={"text": "Text"}, widget_type=DialogBoxWidgetType.CHECKBOX
+        ),
+    )
     response = hardpy.run_dialog_box(info)
     assert response == "ok"
