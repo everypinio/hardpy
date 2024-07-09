@@ -18,16 +18,3 @@ def test_one():
         sleep(1)
     hardpy.set_message("Testing ended", "updated_status")
     assert True
-
-
-@pytest.mark.case_name("Test dialog box")
-def test_1_dialog_box():
-    info = DialogBoxData(
-        title_bar="Second dialog box",
-        dialog_text="Enjoy the finished dialog box again",
-        widget_info=DialogBoxWidget(
-            widget_info={"text": "Text"}, widget_type=DialogBoxWidgetType.CHECKBOX
-        ),
-    )
-    response = hardpy.run_dialog_box(info)
-    assert response == "ok"
