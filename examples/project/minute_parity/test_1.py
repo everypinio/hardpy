@@ -37,10 +37,11 @@ def test_stand_info(module_log: logging.Logger):
     assert True
 
 
+@pytest.mark.case_name("Test dialog box")
 def test_1_dialog_box():
     info = DialogBoxData(
-        title_bar="Dialog box title",
-        dialog_text="Doalog box text",
+        title_bar="First dialog box",
+        dialog_text="Enjoy the finished dialog box",
         widget_info=DialogBoxWidget(
             widget_info={"text": "Text"}, widget_type=DialogBoxWidgetType.CHECKBOX
         ),

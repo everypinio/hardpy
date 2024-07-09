@@ -1,34 +1,47 @@
 import React, { useState } from 'react';
-import { Classes, Dialog } from '@blueprintjs/core';
+import { Button, Classes, Dialog } from '@blueprintjs/core';
 
-interface DialogBoxProps {
+interface Props {
     title_bar: string;
     dialog_text: string;
-    widget_info?: {
-      text: { text: string };
-      type: string;
-    }
+    onConfirm?: () => void;
+    width?: string;
 }
 
-export function StartConfirmationDialog(props: DialogBoxProps) {
+export function StartConfirmationDialog(props: Props) {
 
     const [dialogOpen, setDialogOpen] = useState(true);
-  
+
+    const handleClose = () => {
+        setDialogOpen(false);
+    };
+
+    const handleConfirm = () => {
+        setDialogOpen(false);
+        if (props.onConfirm) {
+            props.onConfirm();
+        }
+    };
+
+    const defaultWidth = '500px';
+    const dialogWidth = props.width || defaultWidth;
+
     return (
-      <div style={{ display: 'block', width: 400, padding: 30 }}>
-        <h4>ReactJS Blueprint Dialog Component</h4>
         <Dialog
-          title="Dialog Title"
-          icon="info-sign"
-          isOpen={dialogOpen}
-          onClose={() => setDialogOpen(false)}
+            title={props.title_bar}
+            icon="info-sign"
+            isOpen={dialogOpen}
+            onClose={handleClose}
+            style={{ width: dialogWidth }}
         >
-          <div className={Classes.DIALOG_BODY}>
-            <p>Sample Dialog Content to display!</p>
-          </div>
+            <div className={Classes.DIALOG_BODY}>
+                <p>{props.dialog_text}</p>
+            </div>
+            <div className={Classes.DIALOG_FOOTER}>
+                <Button intent="primary" onClick={handleConfirm}>Confirm</Button>
+            </div>
         </Dialog>
-      </div>
     );
-  }
+}
 
 export default StartConfirmationDialog

@@ -26,10 +26,6 @@ interface DialogBoxProps {
     }
   }
 
-interface StartConfirmationDialogProps extends DialogBoxProps {
-    dialog_box_data: DialogBoxProps;
-}
-
 interface Case {
     status: string,
     name: string,
@@ -266,15 +262,24 @@ export class TestSuite extends React.Component<Props, State> {
     private cellRendererStatus(test_topics: Case[], row_: string, rowIndex: number) {
         const test = test_topics[rowIndex];
         const isRunningTest = test.status === 'run' && this.props.commonTestTunStatus === 'run';
-
+      
         return this.commonCellRender(
-            <div style={{ marginTop: '0.2em', marginBottom: '0.2em' }}>
-                {isRunningTest && <StartConfirmationDialog {...test.dialog_box} />}
-                <TestStatus status={(this.props.commonTestTunStatus != 'run' && (test.status == 'run' || test.status == 'ready')) ? "stucked" : test.status} />,
-                </div>,
-            `status_${rowIndex}_${row_}`
+          <div style={{ marginTop: '0.2em', marginBottom: '0.2em' }}>
+            {test.dialog_box.title_bar && (
+              <StartConfirmationDialog title_bar={test.dialog_box.title_bar} dialog_text={test.dialog_box.dialog_text}/>
+            )}
+            <TestStatus
+              status={
+                (this.props.commonTestTunStatus !== 'run' &&
+                  (test.status === 'run' || test.status === 'ready'))
+                  ? "stucked"
+                  : test.status
+              }
+            />
+          </div>,
+          `status_${rowIndex}_${row_}`
         );
-    }
+      }
 
     private handleClick = () => this.setState((state: State) => ({ isOpen: !state.isOpen }));
 }
