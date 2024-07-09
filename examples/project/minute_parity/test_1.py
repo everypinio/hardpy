@@ -35,16 +35,3 @@ def test_stand_info(module_log: logging.Logger):
     }
     hardpy.set_stand_info(info)
     assert True
-
-
-@pytest.mark.case_name("Test dialog box")
-def test_1_dialog_box():
-    info = DialogBoxData(
-        title_bar="First dialog box",
-        dialog_text="Enjoy the finished dialog box",
-        widget_info=DialogBoxWidget(
-            widget_info={"text": "Text"}, widget_type=DialogBoxWidgetType.CHECKBOX
-        ),
-    )
-    response = hardpy.run_dialog_box(info)
-    assert response == "ok"
