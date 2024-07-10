@@ -50,6 +50,14 @@ export function StartConfirmationDialog(props: Props) {
             placeholder={inputPlaceholder}
           />
         )}
+        {widgetType === "numericinput" && (
+          <InputGroup
+            type="number"
+            value={inputText}
+            onChange={(event) => setInputText(event.target.value)}
+            placeholder={inputPlaceholder}
+          />
+        )}
       </div>
       <div className={Classes.DIALOG_FOOTER}>
         <Button intent="primary" onClick={handleConfirm}>
