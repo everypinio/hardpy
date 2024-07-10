@@ -17,13 +17,15 @@ import RunTimer from './RunTimer';
 import './TestSuite.css';
 import { Spin } from 'antd';
 
+interface WidgetInfo{
+    info: string;
+    type: WidgetType;
+}
+
 interface DialogBoxProps {
     title_bar: string;
     dialog_text: string;
-    widget_info?: {
-      info: string;
-      type: WidgetType;
-    }
+    widget_info?: WidgetInfo
   }
 
 interface Case {
