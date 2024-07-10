@@ -289,16 +289,7 @@ Example of a **current** document:
               "msg": [
                 "Current minute 21"
               ],
-              "dialog_box": {
-                "title_bar": "Dialog box title",
-                "dialog_text": "Dialog box text",
-                "widget_info": {
-                  "text": {
-                    "text": "Text"
-                  },
-                  "type": "checkbox"
-                }
-              }
+              "dialog_box": {}
             },
           }
         },
@@ -308,8 +299,10 @@ Example of a **current** document:
 
 ### Runstore scheme
 
-The **runstore** database contains all the fields about the **statestore** database
-plus artifact fields for the test run, module, and case and without dialog box info..
+The **runstore** database is similar to **statestore** database, but there are differences:
+- **runstore** contains the **artifact** field for test run, module, and case;
+- **runstore** does not contain **dialog_box** filed.
+
 The **current** document of **runstore** database contains the following fields:
 
 - **_rev**: current document revision;

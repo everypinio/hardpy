@@ -41,7 +41,7 @@ class DialogBoxWidget:
     """Dialog box widget."""
 
     widget_type: DialogBoxWidgetType
-    widget_info: dict | tuple
+    widget_info: str | dict | float
 
 
 @dataclass
@@ -272,14 +272,21 @@ def run_dialog_box(data: DialogBoxData):
         DF.DIALOG_BOX,
     )
 
-    data_dict = {
-        "title_bar": data.title_bar,
-        "dialog_text": data.dialog_text,
-        "widget_info": {
-            "text": data.widget_info.widget_info,
-            "type": data.widget_info.widget_type.value,
-        },
-    }
+    if data.widget_info is not None:
+        data_dict = {
+            "title_bar": data.title_bar,
+            "dialog_text": data.dialog_text,
+            "widget_info": {
+                "text": data.widget_info.widget_info,
+                "type": data.widget_info.widget_type.value,
+            },
+        }
+    else:
+        data_dict = {
+            "title_bar": data.title_bar,
+            "dialog_text": data.dialog_text,
+            "widget_info": None,
+        }
 
     reporter.set_doc_value(key, data_dict, statestore_only=True)
     reporter.update_db_by_doc()
