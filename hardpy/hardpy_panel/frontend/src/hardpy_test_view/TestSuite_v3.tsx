@@ -6,7 +6,7 @@ import { Callout, Collapse, Button, H4, Classes, Icon, Tag } from '@blueprintjs/
 import _, { Dictionary } from 'lodash';
 import DataTable, { TableColumn } from 'react-data-table-component';
 import { LoadingOutlined } from '@ant-design/icons';
-import { StartConfirmationDialog } from 'hardpy_test_view/DialogBox';
+import { StartConfirmationDialog, WidgetType } from 'hardpy_test_view/DialogBox';
 
 import { TestNumber } from './TestNumber';
 import { TestName } from './TestName';
@@ -21,8 +21,8 @@ interface DialogBoxProps {
     title_bar: string;
     dialog_text: string;
     widget_info?: {
-      text: { text: string };
-      type: string;
+      info: string;
+      type: WidgetType;
     }
   }
 
@@ -266,7 +266,12 @@ export class TestSuite extends React.Component<Props, State> {
         return this.commonCellRender(
           <div style={{ marginTop: '0.2em', marginBottom: '0.2em' }}>
             {test.dialog_box.title_bar && (
-              <StartConfirmationDialog title_bar={test.dialog_box.title_bar} dialog_text={test.dialog_box.dialog_text}/>
+              <StartConfirmationDialog 
+                title_bar={test.dialog_box.title_bar} 
+                dialog_text={test.dialog_box.dialog_text}
+                widget_text={test.dialog_box.widget_info && test.dialog_box.widget_info.info}
+                widget_type={test.dialog_box.widget_info && test.dialog_box.widget_info.type}
+                />
             )}
             <TestStatus
               status={
