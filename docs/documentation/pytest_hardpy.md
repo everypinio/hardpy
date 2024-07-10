@@ -180,7 +180,7 @@ def test_message():
 
 #### run_dialog_box
 
-Displays a dialog box and updates the 'dialog_box' field in the statestore database.
+Displays a dialog box and updates the 'dialog_box' field in the **statestore** database.
 
     Args:
         title_bar (str): The title of the dialog box.
