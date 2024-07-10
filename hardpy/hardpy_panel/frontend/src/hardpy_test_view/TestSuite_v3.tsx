@@ -264,6 +264,8 @@ export class TestSuite extends React.Component<Props, State> {
     private cellRendererStatus(test_topics: Case[], row_: string, rowIndex: number) {
         const test = test_topics[rowIndex];
         const isRunningTest = test.status === 'run' && this.props.commonTestTunStatus === 'run';
+        const { info: widget_text, type: widget_type } = test.dialog_box.widget_info || {};
+
       
         return this.commonCellRender(
           <div style={{ marginTop: '0.2em', marginBottom: '0.2em' }}>
@@ -271,8 +273,8 @@ export class TestSuite extends React.Component<Props, State> {
               <StartConfirmationDialog 
                 title_bar={test.dialog_box.title_bar} 
                 dialog_text={test.dialog_box.dialog_text}
-                widget_text={test.dialog_box.widget_info && test.dialog_box.widget_info.info}
-                widget_type={test.dialog_box.widget_info && test.dialog_box.widget_info.type}
+                widget_text={widget_text}
+                widget_type={widget_type}
                 />
             )}
             <TestStatus
