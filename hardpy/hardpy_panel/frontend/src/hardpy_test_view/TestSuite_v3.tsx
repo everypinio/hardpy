@@ -261,7 +261,6 @@ export class TestSuite extends React.Component<Props, State> {
 
     private cellRendererStatus(test_topics: Case[], row_: string, rowIndex: number) {
         const test = test_topics[rowIndex];
-        const isRunningTest = test.status === 'run' && this.props.commonTestTunStatus === 'run';
       
         return this.commonCellRender(
           <div style={{ marginTop: '0.2em', marginBottom: '0.2em' }}>
