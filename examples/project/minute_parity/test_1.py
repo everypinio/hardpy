@@ -3,12 +3,6 @@ from uuid import uuid4
 
 import pytest
 import hardpy
-from hardpy.pytest_hardpy.pytest_call import (
-    DialogBoxData,
-    DialogBoxWidget,
-    DialogBoxWidgetType,
-)
-
 
 pytestmark = pytest.mark.module_name("Testing preparation")
 
