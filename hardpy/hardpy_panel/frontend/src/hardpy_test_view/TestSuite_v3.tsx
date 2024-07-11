@@ -18,7 +18,7 @@ import './TestSuite.css';
 import { Spin } from 'antd';
 
 interface WidgetInfo{
-    info: string;
+    text: string;
     type: WidgetType;
 }
 
@@ -264,7 +264,7 @@ export class TestSuite extends React.Component<Props, State> {
     private cellRendererStatus(test_topics: Case[], row_: string, rowIndex: number) {
         const test = test_topics[rowIndex];
         const isRunningTest = test.status === 'run' && this.props.commonTestTunStatus === 'run';
-        const { info: widget_text, type: widget_type } = test.dialog_box.widget_info || {};
+        const { text: widget_text, type: widget_type } = test.dialog_box.widget_info || {};
 
       
         return this.commonCellRender(
