@@ -216,7 +216,7 @@ def test_dialog_box():
             title_bar="Dialog box title",
             dialog_text="Dialog box text",
             widget_info=DialogBoxWidget(
-                widget_info={{"text": "Text"}}, widget_type=DialogBoxWidgetType.CHECKBOX
+                widget_info={{"text"}}, widget_type=DialogBoxWidgetType.INPUT_TEXT
             ),
         )
     response = hardpy.run_dialog_box(info)

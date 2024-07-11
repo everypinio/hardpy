@@ -2,8 +2,6 @@ from time import sleep
 
 import pytest
 import hardpy
-from hardpy import DialogBoxData, DialogBoxWidget, DialogBoxWidgetType
-from hardpy.pytest_hardpy.utils import NodeInfo
 
 pytestmark = [
     pytest.mark.module_name("End of testing"),

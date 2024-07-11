@@ -265,7 +265,6 @@ export class TestSuite extends React.Component<Props, State> {
         const test = test_topics[rowIndex];
         const { text: widget_text, type: widget_type } = test.dialog_box.widget_info || {};
 
-      
         return this.commonCellRender(
           <div style={{ marginTop: '0.2em', marginBottom: '0.2em' }}>
             {test.dialog_box.title_bar && (

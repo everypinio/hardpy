@@ -7,6 +7,7 @@ The **hardpy panel** or operator panel is a web interface that displays and cont
 **HardPy panel** allows you to:
 
 - Start and stop testing.
+- Interact with the dialog boxes during testing.
 - Browse:
     - Test run name.
     - Test run status.
@@ -86,3 +87,18 @@ The default is *8000*.
 ```bash
 -wp WEB_PORT, --web_port WEB_PORT
 ```
+
+### Dialog boxes
+
+Available dialog box types:
+#### Basic dialog box without widget
+The user reads the text and performs actions not related to passing information to the test plan.
+
+#### Text input widget
+The user enters text.
+The run_dialog_box function must return the entered text in UTF-8 encoding.
+
+#### Number input widget
+The user enters a number.
+The user cannot enter any character except a number.
+The run_dialog_box function must return the entered number.
