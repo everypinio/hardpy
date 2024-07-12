@@ -1,10 +1,6 @@
 import pytest
 import hardpy
-from hardpy.pytest_hardpy.pytest_call import (
-    DialogBoxData,
-    DialogBoxWidget,
-    DialogBoxWidgetType,
-)
+from hardpy import DialogBoxData, DialogBoxWidget, DialogBoxWidgetType
 
 
 @pytest.mark.case_name("Test base dialog box")

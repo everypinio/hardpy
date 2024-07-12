@@ -212,9 +212,7 @@ def run_dialog_box(data: DialogBoxData):
     """Displays a dialog box and updates the 'dialog_box' field in the statestore database.
 
     Args:
-        title_bar (str): The title of the dialog box.
-        dialog_text (str): The main text of the dialog box, which the operator will read.
-        widget_info (DialogBoxWidget | None): Individual information for each dialog box type.
+        data (DialogBoxData): Data for the dialog box.
 
     Returns:
         str: An object containing the user's response.
