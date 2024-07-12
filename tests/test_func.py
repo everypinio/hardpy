@@ -255,13 +255,13 @@ def test_dialog_box(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        from hardpy import DialogBoxData, DialogBoxWidget, DialogBoxWidgetType
+        from hardpy import dialog_box
         def test_dialog_box():
-            info = DialogBoxData(
+            info = dialog_box.DialogBoxData(
                     title_bar="Dialog box title",
                     dialog_text="Doalog box text",
-                    widget_info=DialogBoxWidget(
-                        widget_info={{"text": "Text"}}, widget_type=DialogBoxWidgetType.CHECKBOX
+                    widget_info=dialog_box.DialogBoxWidget(
+                        widget_info={{"text": "Text"}}, widget_type=dialog_box.DialogBoxWidgetType.CHECKBOX
                     ),
                 )
             response = hardpy.run_dialog_box(info)
