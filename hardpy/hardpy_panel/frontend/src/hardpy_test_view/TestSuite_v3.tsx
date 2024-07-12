@@ -18,12 +18,12 @@ import './TestSuite.css';
 import { Spin } from 'antd';
 
 interface WidgetInfo{
-    text: string;
+    info: Record<string, unknown>;
     type: WidgetType;
 }
 
 interface DialogBoxProps {
-    title_bar: string;
+    title_bar?: string;
     dialog_text: string;
     widget_info?: WidgetInfo
   }
@@ -263,15 +263,15 @@ export class TestSuite extends React.Component<Props, State> {
 
     private cellRendererStatus(test_topics: Case[], row_: string, rowIndex: number) {
         const test = test_topics[rowIndex];
-        const { text: widget_text, type: widget_type } = test.dialog_box.widget_info || {};
+        const { info: widget_info, type: widget_type } = test.dialog_box.widget_info || {};
 
         return this.commonCellRender(
           <div style={{ marginTop: '0.2em', marginBottom: '0.2em' }}>
-            {test.dialog_box.title_bar && (
+            {test.dialog_box.dialog_text && (
               <StartConfirmationDialog 
-                title_bar={test.dialog_box.title_bar} 
+                title_bar={test.dialog_box.title_bar || test.name}
                 dialog_text={test.dialog_box.dialog_text}
-                widget_text={widget_text}
+                widget_info={widget_info}
                 widget_type={widget_type}
                 />
             )}

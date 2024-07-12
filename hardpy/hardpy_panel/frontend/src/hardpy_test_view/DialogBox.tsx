@@ -7,7 +7,7 @@ interface Props {
   onConfirm?: (inputText: string) => void; 
   width?: string;
   widget_type?: WidgetType;
-  widget_text?: string;
+  widget_info?: Record<string, unknown>;
 }
 
 export type WidgetType = "base" | "textinput" | "radiobutton" | "checkbox" | "numericinput";
@@ -31,7 +31,7 @@ export function StartConfirmationDialog(props: Props) {
   const dialogWidth = props.width || defaultWidth;
 
   const widgetType = props.widget_type || "base";
-  const inputPlaceholder = props.widget_text || "enter answer";
+  const inputPlaceholder = "enter answer";
 
   return (
     <Dialog
