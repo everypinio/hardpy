@@ -1,7 +1,6 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from enum import Enum
 from os import environ
 from dataclasses import dataclass
 from typing import Optional
@@ -15,7 +14,12 @@ from hardpy.pytest_hardpy.db import (
     ResultRunStore,
     RunStore,
 )
-from hardpy.pytest_hardpy.utils import DuplicateSerialNumberError
+from hardpy.pytest_hardpy.utils import (
+    DuplicateSerialNumberError,
+    DialogBoxData,
+    DialogBoxWidget,
+    DialogBoxWidgetType,
+)
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 
 
@@ -25,46 +29,6 @@ class CurrentTestInfo(object):
 
     module_id: str
     case_id: str
-
-
-class DialogBoxWidgetType(Enum):
-    """Dialog box widget type."""
-
-    RADIOBUTTON = "radiobutton"
-    CHECKBOX = "checkbox"
-    TEXT_INPUT = "textinput"
-    NUMERIC_INPUT = "numericinput"
-
-
-@dataclass
-class DialogBoxWidget:
-    """Dialog box widget."""
-
-    widget_type: DialogBoxWidgetType
-    widget_info: dict
-
-
-@dataclass
-class DialogBoxData:
-    """Dialog box data.
-
-    Args:
-        title_bar (str): title bar
-        dialog_text (str): dialog text
-        widget_info (DialogBoxWidget | None): widget info
-    """
-
-    title_bar: str | None
-    dialog_text: str
-    widget_info: DialogBoxWidget | None
-
-
-class DialogBoxResponse:
-    """Represents the response from a dialog box."""
-
-    def __init__(self, action: str, input_data: str | None = None):
-        self.action = action
-        self.input_data = input_data
 
 
 def get_current_report() -> ResultRunStore | None:
