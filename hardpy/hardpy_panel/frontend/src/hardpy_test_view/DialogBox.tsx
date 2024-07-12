@@ -31,7 +31,7 @@ export function StartConfirmationDialog(props: Props) {
   const dialogWidth = props.width || defaultWidth;
 
   const widgetType = props.widget_type || "base";
-  const inputPlaceholder = props.widget_text || "widget_text опять не передан";
+  const inputPlaceholder = props.widget_text || "enter answer";
 
   return (
     <Dialog
@@ -56,6 +56,7 @@ export function StartConfirmationDialog(props: Props) {
             value={inputText}
             onChange={(event) => setInputText(event.target.value)}
             placeholder={inputPlaceholder}
+            step="0.01"
           />
         )}
       </div>
