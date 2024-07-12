@@ -1,10 +1,6 @@
 import pytest
 import hardpy
-from hardpy.pytest_hardpy.pytest_call import (
-    DialogBoxData,
-    DialogBoxWidget,
-    DialogBoxWidgetType,
-)
+from hardpy import DialogBoxData, DialogBoxWidget, DialogBoxWidgetType
 
 
 @pytest.mark.case_name("Test base dialog box")
@@ -24,7 +20,8 @@ def test_dialog_box_with_text_input():
         title_bar="Example of text input",
         dialog_text="Type some text and press the Confirm button",
         widget_info=DialogBoxWidget(
-            widget_type=DialogBoxWidgetType.TEXT_INPUT, widget_info="some text"
+            widget_type=DialogBoxWidgetType.TEXT_INPUT,
+            widget_info={"text": "some text"},
         ),
     )
     response = hardpy.run_dialog_box(info)
@@ -38,7 +35,7 @@ def test_dialog_box_with_num_input():
         dialog_text="Enter the number 5 and press the Confirm button",
         widget_info=DialogBoxWidget(
             widget_type=DialogBoxWidgetType.NUMERIC_INPUT,
-            widget_info="enter the number",
+            widget_info={"text": "enter the number"},
         ),
     )
     response = hardpy.run_dialog_box(info)

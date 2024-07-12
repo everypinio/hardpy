@@ -7,6 +7,11 @@ from hardpy.pytest_hardpy.utils.const import TestStatus, RunStatus
 from hardpy.pytest_hardpy.utils.singleton import Singleton
 from hardpy.pytest_hardpy.utils.config_data import ConfigData
 from hardpy.pytest_hardpy.utils.exception import DuplicateSerialNumberError
+from hardpy.pytest_hardpy.utils.dialog_box import (
+    DialogBoxData,
+    DialogBoxWidget,
+    DialogBoxWidgetType,
+)
 
 __all__ = [
     "NodeInfo",
@@ -16,4 +21,9 @@ __all__ = [
     "Singleton",
     "ConfigData",
     "DuplicateSerialNumberError",
+    "DialogBoxData",
+    "ConfigData",
+    "DialogBoxData",
+    "DialogBoxWidget",
+    "DialogBoxWidgetType",
 ]
