@@ -22,8 +22,6 @@ __all__ = [
     "ConfigData",
     "DuplicateSerialNumberError",
     "DialogBoxData",
-    "ConfigData",
-    "DialogBoxData",
     "DialogBoxWidget",
     "DialogBoxWidgetType",
 ]
