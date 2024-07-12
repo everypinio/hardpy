@@ -41,7 +41,7 @@ class DialogBoxWidget:
     """Dialog box widget."""
 
     widget_type: DialogBoxWidgetType
-    widget_info: str | dict | float
+    widget_info: dict
 
 
 @dataclass
@@ -54,7 +54,7 @@ class DialogBoxData:
         widget_info (DialogBoxWidget | None): widget info
     """
 
-    title_bar: str
+    title_bar: str | None
     dialog_text: str
     widget_info: DialogBoxWidget | None
 
@@ -277,7 +277,9 @@ def run_dialog_box(data: DialogBoxData):
             "title_bar": data.title_bar,
             "dialog_text": data.dialog_text,
             "widget_info": {
-                "text": data.widget_info.widget_info,
+                "info": {
+                    "text": data.widget_info.widget_info,
+                },
                 "type": data.widget_info.widget_type.value,
             },
         }
