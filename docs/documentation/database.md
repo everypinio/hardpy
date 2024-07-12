@@ -221,7 +221,12 @@ The **modules** block contains the following fields:
         - **stop_time**: test end time in Unix second;
         - **assertion_msg**: error message if the test fails;
         - **msg**: additional message;
-        - **dialog_box**: information about dialog box
+        - **dialog_box**: information about dialog box;
+          - **title_bar**: title bar of the dialog box;
+          - **dialog_text**: text displayed in the dialog box;
+          - **widget_info**: information about the widget;
+            - **info**: information about the widget;
+            - **type**: type of the widget (e.g., radiobutton, checkbox, textinput, numericinput)
 
 Example of a **current** document:
 
@@ -273,7 +278,7 @@ Example of a **current** document:
                 "title_bar": "Dialog box title",
                 "dialog_text": "Dialog box text",
                 "widget_info": {
-                  "text": {
+                  "info": {
                     "text": "Text"
                   },
                   "type": "checkbox"
