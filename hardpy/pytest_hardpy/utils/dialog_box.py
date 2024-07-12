@@ -13,7 +13,12 @@ class DialogBoxWidgetType(Enum):
 
 @dataclass
 class DialogBoxWidget:
-    """Dialog box widget."""
+    """Dialog box widget.
+
+    Args:
+        widget_type (DialogBoxWidgetType): widget type
+        widget_info (dict): widget info
+    """
 
     widget_type: DialogBoxWidgetType
     widget_info: dict
@@ -24,7 +29,7 @@ class DialogBoxData:
     """Dialog box data.
 
     Args:
-        title_bar (str): title bar
+        title_bar (str | None): title bar
         dialog_text (str): dialog text
         widget_info (DialogBoxWidget | None): widget info
     """

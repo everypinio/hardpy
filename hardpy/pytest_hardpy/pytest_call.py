@@ -17,8 +17,6 @@ from hardpy.pytest_hardpy.db import (
 from hardpy.pytest_hardpy.utils import (
     DuplicateSerialNumberError,
     DialogBoxData,
-    DialogBoxWidget,
-    DialogBoxWidgetType,
 )
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 
@@ -239,9 +237,7 @@ def run_dialog_box(data: DialogBoxData):
             "title_bar": data.title_bar,
             "dialog_text": data.dialog_text,
             "widget_info": {
-                "info": {
-                    "text": data.widget_info.widget_info,
-                },
+                "info": data.widget_info.widget_info,
                 "type": data.widget_info.widget_type.value,
             },
         }
