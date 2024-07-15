@@ -220,7 +220,13 @@ The **modules** block contains the following fields:
         - **start_time**: test start time in Unix seconds;
         - **stop_time**: test end time in Unix second;
         - **assertion_msg**: error message if the test fails;
-        - **msg**: additional message
+        - **msg**: additional message;
+        - **dialog_box**: information about dialog box;
+          - **title_bar**: title bar of the dialog box;
+          - **dialog_text**: text displayed in the dialog box;
+          - **widget_info**: information about the widget;
+            - **info**: information about the widget;
+            - **type**: type of the widget (e.g., radiobutton, checkbox, textinput, numericinput)
 
 Example of a **current** document:
 
@@ -267,7 +273,17 @@ Example of a **current** document:
               "start_time": 1695817263,
               "stop_time": 1695817264,
               "assertion_msg": null,
-              "msg": null
+              "msg": null,
+              "dialog_box": {
+                "title_bar": "Dialog box title",
+                "dialog_text": "Dialog box text",
+                "widget_info": {
+                  "info": {
+                    "text": "Text"
+                  },
+                  "type": "checkbox"
+                }
+              }
             },
             "test_minute_parity": {
               "status": "failed",
@@ -278,6 +294,7 @@ Example of a **current** document:
               "msg": [
                 "Current minute 21"
               ],
+              "dialog_box": {}
             },
           }
         },
@@ -287,8 +304,10 @@ Example of a **current** document:
 
 ### Runstore scheme
 
-The **runstore** database contains all the fields about the **statestore** database
-plus artifact fields for the test run, module, and case.
+The **runstore** database is similar to **statestore** database, but there are differences:
+- **runstore** contains the **artifact** field for test run, module, and case;
+- **runstore** does not contain **dialog_box** filed.
+
 The **current** document of **runstore** database contains the following fields:
 
 - **_rev**: current document revision;

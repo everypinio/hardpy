@@ -24,6 +24,7 @@ interface Case {
     assertion_msg: string | null
     msg: string[] | null
     artifact: Record<string, unknown>
+    dialog_box: Record<string, unknown>
 }
 
 type Cases = Dictionary<Case>

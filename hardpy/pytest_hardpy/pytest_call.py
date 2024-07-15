@@ -14,7 +14,10 @@ from hardpy.pytest_hardpy.db import (
     ResultRunStore,
     RunStore,
 )
-from hardpy.pytest_hardpy.utils import DuplicateSerialNumberError
+from hardpy.pytest_hardpy.utils import (
+    DuplicateSerialNumberError,
+    DialogBoxData,
+)
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 
 
@@ -201,6 +204,54 @@ def set_driver_info(drivers: dict) -> None:
         )
         reporter.set_doc_value(key, driver_data)
     reporter.update_db_by_doc()
+
+
+def run_dialog_box(data: DialogBoxData):
+    """Displays a dialog box and updates the 'dialog_box' field in the statestore database.
+
+    Args:
+        data (DialogBoxData): Data for the dialog box.
+
+    Returns:
+        str: An object containing the user's response.
+
+    Raises:
+        ValueError: If the 'message' argument is empty.
+    """
+
+    if not data.dialog_text:
+        raise ValueError("The 'dialog_text' argument cannot be empty.")
+
+    current_test = _get_current_test()
+    reporter = RunnerReporter()
+    key = reporter.generate_key(
+        DF.MODULES,
+        current_test.module_id,
+        DF.CASES,
+        current_test.case_id,
+        DF.DIALOG_BOX,
+    )
+
+    if data.widget_info is not None:
+        data_dict = {
+            "title_bar": data.title_bar,
+            "dialog_text": data.dialog_text,
+            "widget_info": {
+                "info": data.widget_info.widget_info,
+                "type": data.widget_info.widget_type.value,
+            },
+        }
+    else:
+        data_dict = {
+            "title_bar": data.title_bar,
+            "dialog_text": data.dialog_text,
+            "widget_info": None,
+        }
+
+    reporter.set_doc_value(key, data_dict, statestore_only=True)
+    reporter.update_db_by_doc()
+
+    return "ok"
 
 
 def _get_current_test() -> CurrentTestInfo:
