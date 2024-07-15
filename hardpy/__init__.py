@@ -4,6 +4,7 @@
 from hardpy.pytest_hardpy.result import CouchdbLoader
 from hardpy.pytest_hardpy.utils import DuplicateSerialNumberError
 from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig
+from hardpy.pytest_hardpy.utils import dialog_box
 from hardpy.pytest_hardpy.pytest_call import (
     get_current_report,
     set_dut_info,
@@ -14,6 +15,7 @@ from hardpy.pytest_hardpy.pytest_call import (
     set_run_artifact,
     set_message,
     set_driver_info,
+    run_dialog_box,
 )
 
 __all__ = [
@@ -29,4 +31,6 @@ __all__ = [
     "set_run_artifact",
     "set_message",
     "set_driver_info",
+    "run_dialog_box",
+    "dialog_box",
 ]
