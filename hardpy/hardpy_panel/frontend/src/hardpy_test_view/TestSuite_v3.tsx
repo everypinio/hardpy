@@ -6,6 +6,7 @@ import { Callout, Collapse, Button, H4, Classes, Icon, Tag } from '@blueprintjs/
 import _, { Dictionary } from 'lodash';
 import DataTable, { TableColumn } from 'react-data-table-component';
 import { LoadingOutlined } from '@ant-design/icons';
+import { StartConfirmationDialog } from 'hardpy_test_view/DialogBox';
 
 import { TestNumber } from './TestNumber';
 import { TestName } from './TestName';
@@ -16,6 +17,15 @@ import RunTimer from './RunTimer';
 import './TestSuite.css';
 import { Spin } from 'antd';
 
+interface DialogBoxProps {
+    title_bar: string;
+    dialog_text: string;
+    widget_info?: {
+      text: { text: string };
+      type: string;
+    }
+  }
+
 interface Case {
     status: string,
     name: string,
@@ -24,7 +34,7 @@ interface Case {
     assertion_msg: string | null
     msg: string[] | null
     artifact: Record<string, unknown>
-    dialog_box: Record<string, unknown>
+    dialog_box: DialogBoxProps
 }
 
 type Cases = Dictionary<Case>
@@ -104,7 +114,7 @@ export class TestSuite extends React.Component<Props, State> {
         super(props);
 
         this.state = {
-            isOpen: props.defaultOpen,
+            isOpen: props.defaultOpen
         };
 
         this.handleClick = this.handleClick.bind(this);
@@ -251,11 +261,24 @@ export class TestSuite extends React.Component<Props, State> {
 
     private cellRendererStatus(test_topics: Case[], row_: string, rowIndex: number) {
         const test = test_topics[rowIndex];
+      
         return this.commonCellRender(
-            <TestStatus status={(this.props.commonTestTunStatus != 'run' && (test.status == 'run' || test.status == 'ready')) ? "stucked" : test.status} />,
-            `status_${rowIndex}_${row_}`
+          <div style={{ marginTop: '0.2em', marginBottom: '0.2em' }}>
+            {test.dialog_box.title_bar && (
+              <StartConfirmationDialog title_bar={test.dialog_box.title_bar} dialog_text={test.dialog_box.dialog_text}/>
+            )}
+            <TestStatus
+              status={
+                (this.props.commonTestTunStatus !== 'run' &&
+                  (test.status === 'run' || test.status === 'ready'))
+                  ? "stucked"
+                  : test.status
+              }
+            />
+          </div>,
+          `status_${rowIndex}_${row_}`
         );
-    }
+      }
 
     private handleClick = () => this.setState((state: State) => ({ isOpen: !state.isOpen }));
 }

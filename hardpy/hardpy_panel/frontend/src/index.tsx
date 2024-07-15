@@ -14,25 +14,34 @@ import reportWebVitals from './reportWebVitals';
 function getSyncURL() {
   return fetch("/api/couch")
     .then(response => response.json())
-    .then(data => `${data.connection_str}/statestore`);
+    .then(data => `${data.connection_str}/statestore`)
+    .catch(error => {
+      console.error(error);
+      undefined
+    });
 }
 
-getSyncURL()
-  .then(syncURL => {
-    const db = new PouchDB(syncURL);
-    const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
-    root.render(
-      <StrictMode>
-        <Provider pouchdb={db}>
-          <App />
-        </Provider>
-      </StrictMode>
-    );
-  })
-  .catch(error => {
-    console.error(error);
-  });
+const syncURL = await getSyncURL();
+if (syncURL !== undefined) {
+  const db = new PouchDB(syncURL);
+
+  root.render(
+    <StrictMode>
+      <Provider pouchdb={db}>
+        <App />
+      </Provider>
+    </StrictMode>
+  );
+} else {
+  root.render(
+    <>
+        <h1>No PouchDB sync URL</h1>
+        <p>Getting the URL from a backend was failed</p>
+    </>
+  );
+}
 
 
 if (process.env.NODE_ENV !== 'development') {
