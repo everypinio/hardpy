@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { Button, Classes, Dialog, InputGroup } from '@blueprintjs/core';
+
 
 interface Props {
   title_bar: string;
@@ -20,10 +22,25 @@ export function StartConfirmationDialog(props: Props) {
     setDialogOpen(false);
   };
 
-  const handleConfirm = () => {
+  // const handleConfirm = () => {
+  //   setDialogOpen(false);
+  //   if (props.onConfirm) {
+  //     props.onConfirm(inputText);
+  //   }
+  // };
+
+  const handleConfirm = async () => {
     setDialogOpen(false);
+    const textToSend = (props.widget_type === "textinput" || props.widget_type === "numericinput") ? inputText : 'ok';
+
     if (props.onConfirm) {
-      props.onConfirm(inputText);
+      props.onConfirm(textToSend);
+    }
+    try {
+      const response = await axios.post(`/api/confirm_dialog_box/${textToSend}`);
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error confirming dialog box:', error);
     }
   };
 
