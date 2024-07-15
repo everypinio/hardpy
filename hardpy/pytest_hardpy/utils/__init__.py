@@ -11,6 +11,8 @@ from hardpy.pytest_hardpy.utils.dialog_box import (
     DialogBoxData,
     DialogBoxWidget,
     DialogBoxWidgetType,
+    generate_dialog_box_dict,
+    get_dialog_box_data,
 )
 
 __all__ = [
@@ -24,4 +26,6 @@ __all__ = [
     "DialogBoxData",
     "DialogBoxWidget",
     "DialogBoxWidgetType",
+    "generate_dialog_box_dict",
+    "get_dialog_box_data",
 ]

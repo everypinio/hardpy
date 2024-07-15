@@ -17,6 +17,7 @@ class ConfigData(Singleton):
             self.web_host: str = "0.0.0.0"
             self.web_port: int = 8000
             self.tests_dir = Path.cwd()
+            self.internal_socket_port: int = 6525
             self._initialized = True
 
     @property

@@ -3,7 +3,8 @@
 
 from os import environ
 from dataclasses import dataclass
-from typing import Optional
+from socket import socket, gethostname
+from typing import Optional, Any
 from uuid import uuid4
 
 from pycouchdb.exceptions import NotFound
@@ -17,6 +18,9 @@ from hardpy.pytest_hardpy.db import (
 from hardpy.pytest_hardpy.utils import (
     DuplicateSerialNumberError,
     DialogBoxData,
+    ConfigData,
+    generate_dialog_box_dict,
+    get_dialog_box_data,
 )
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 
@@ -187,7 +191,7 @@ def set_run_artifact(data: dict):
 
 
 def set_driver_info(drivers: dict) -> None:
-    """Adds or updates drivers data.
+    """Add or update drivers data.
 
     Driver data is stored in both StateStore and RunStore databases.
 
@@ -206,20 +210,19 @@ def set_driver_info(drivers: dict) -> None:
     reporter.update_db_by_doc()
 
 
-def run_dialog_box(data: DialogBoxData):
-    """Displays a dialog box and updates the 'dialog_box' field in the statestore database.
+def run_dialog_box(dialog_box_data: DialogBoxData) -> Any:
+    """Display a dialog box.
 
     Args:
-        data (DialogBoxData): Data for the dialog box.
+        dialog_box_data (DialogBoxData): Data for creating the dialog box.
 
     Returns:
-        str: An object containing the user's response.
+        Any: An object containing the user's response.
 
     Raises:
         ValueError: If the 'message' argument is empty.
     """
-
-    if not data.dialog_text:
+    if not dialog_box_data.dialog_text:
         raise ValueError("The 'dialog_text' argument cannot be empty.")
 
     current_test = _get_current_test()
@@ -232,26 +235,14 @@ def run_dialog_box(data: DialogBoxData):
         DF.DIALOG_BOX,
     )
 
-    if data.widget_info is not None:
-        data_dict = {
-            "title_bar": data.title_bar,
-            "dialog_text": data.dialog_text,
-            "widget_info": {
-                "info": data.widget_info.widget_info,
-                "type": data.widget_info.widget_type.value,
-            },
-        }
-    else:
-        data_dict = {
-            "title_bar": data.title_bar,
-            "dialog_text": data.dialog_text,
-            "widget_info": None,
-        }
+    data_dict = generate_dialog_box_dict(dialog_box_data)
 
     reporter.set_doc_value(key, data_dict, statestore_only=True)
     reporter.update_db_by_doc()
 
-    return "ok"
+    dialog_raw_data = _get_socket_raw_data()
+
+    return get_dialog_box_data(dialog_raw_data, dialog_box_data.widget_info)
 
 
 def _get_current_test() -> CurrentTestInfo:
@@ -275,3 +266,22 @@ def _get_current_test() -> CurrentTestInfo:
     case_id = case_with_stage[:case_id_end_index]
 
     return CurrentTestInfo(module_id=module_id, case_id=case_id)
+
+
+def _get_socket_raw_data() -> str:
+    # create socket connection
+    server = socket()
+    config_data = ConfigData()
+    server.bind((gethostname(), config_data.internal_socket_port))
+    server.listen(1)
+    client, _ = server.accept()
+
+    # receive data
+    max_input_data_len = 1024
+    socket_data = client.recv(max_input_data_len).decode("utf-8")
+
+    # close connection
+    client.close()
+    server.close()
+
+    return socket_data
