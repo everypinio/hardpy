@@ -64,6 +64,21 @@ def couch_connection():
     }
 
 
+@app.post("/api/confirm_dialog_box/{dialog_box_output}")
+def confirm_dialog_box(dialog_box_output: str):
+    """Confirm dialog box.
+
+    Args:
+        dialog_box_output (str): output data from dialog box.
+
+    Returns:
+        dict[str, RunStatus]: run status
+    """
+    if app.state.pytest_wrp.confirm_dialog_box(dialog_box_output):
+        return {"status": Status.BUSY}
+    return {"status": Status.ERROR}
+
+
 # app.mount(
 #     "/",
 #     StaticFiles(directory=(os.path.dirname(__file__)) + "/frontend/dist", html=True),
