@@ -21,6 +21,8 @@ def run():
     parser.add_argument("-dbh", "--db_host", type=str, default=config.db_host, help="database hostname")  # noqa: E501
     parser.add_argument("-wh", "--web_host", type=str, default=config.web_host, help="web operator panel hostname")  # noqa: E501
     parser.add_argument("-wp", "--web_port", type=str, default=config.web_port, help="web operator panel port")  # noqa: E501
+    parser.add_argument("-sp", "--sck_port", type=int, default=config.socket_port, help="internal socket port")  # noqa: E501
+    parser.add_argument("-sa", "--sck_addr", type=int, default=config.socket_port, help="internal socket address")  # noqa: E501
     parser.add_argument("path", type=str, nargs='?', help="path to test directory")
     # fmt: on
 
