@@ -98,12 +98,12 @@ docker compose down
 
 ### Running CouchDB with binary packages in Linux
 
-1. Use this [instruction](https://docs.couchdb.org/en/stable/install/unix.html#installation-using-the-apache-couchdb-convenience-binary-packages) to install CouchDB 
+1. Use this [instruction](https://docs.couchdb.org/en/stable/install/unix.html#installation-using-the-apache-couchdb-convenience-binary-packages) to install CouchDB
 2. The installer asks you if you want to install CouchDB as a standalone application or in a clustered configuration.
 Select `Standalone` and press Enter.
-3. You are prompted to enter the Erlang Node Name. 
+3. You are prompted to enter the Erlang Node Name.
 You can ask it in Terminal with the command `hostname -f`
-4. Set the Erlang Magic Cookie. 
+4. Set the Erlang Magic Cookie.
 This is a unique identifier, for example, `test1234`
 5. Configure the network interfaces on which CouchDB will be bound.
 `127.0.0.1` is fine.
@@ -138,7 +138,7 @@ systemctl reset-failed
 
 ### Running CouchDB with binary packages in Windows
 
-1. Use this [instruction](https://docs.couchdb.org/en/stable/install/windows.html#installation-on-windows) to install CouchDB 
+1. Use this [instruction](https://docs.couchdb.org/en/stable/install/windows.html#installation-on-windows) to install CouchDB
 2. Be sure to install CouchDB to a path with no spaces, such as `C:\CouchDB`.
 3. Create a user with the login `dev` and password `dev` during the installation steps. Validate Credentials.
 4. Generate Random Cookie.
@@ -224,8 +224,8 @@ The **modules** block contains the following fields:
         - **dialog_box**: information about dialog box;
           - **title_bar**: title bar of the dialog box;
           - **dialog_text**: text displayed in the dialog box;
-          - **widget_info**: information about the widget;
-            - **info**: information about the widget;
+          - **widget**: information about the widget;
+            - **info**: widget additional information;
             - **type**: type of the widget (e.g., radiobutton, checkbox, textinput, numericinput)
 
 Example of a **current** document:
@@ -277,7 +277,7 @@ Example of a **current** document:
               "dialog_box": {
                 "title_bar": "Dialog box title",
                 "dialog_text": "Dialog box text",
-                "widget_info": {
+                "widget": {
                   "info": {
                     "text": "Text"
                   },

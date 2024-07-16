@@ -33,7 +33,7 @@ class CaseStateStore(IBaseResult):
         "dialog_box": {
           "title_bar": "Example of text input",
           "dialog_text": "Type some text and press the Confirm button",
-          "widget_info": {
+          "widget": {
             "info": {
               "text": "some text"
             },
@@ -190,7 +190,7 @@ class ResultStateStore(IBaseResult):
               "dialog_box": {
                 "title_bar": "Example of text input",
                 "dialog_text": "Type some text and press the Confirm button",
-                "widget_info": {
+                "widget": {
                   "info": {
                     "text": "some text"
                   },

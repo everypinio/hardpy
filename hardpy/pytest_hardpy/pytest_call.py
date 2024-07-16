@@ -242,7 +242,7 @@ def run_dialog_box(dialog_box_data: DialogBoxData) -> Any:
 
     dialog_raw_data = _get_socket_raw_data()
 
-    return get_dialog_box_data(dialog_raw_data, dialog_box_data.widget_info)
+    return get_dialog_box_data(dialog_raw_data, dialog_box_data.widget)
 
 
 def _get_current_test() -> CurrentTestInfo:
