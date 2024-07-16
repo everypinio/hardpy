@@ -1,8 +1,10 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from hardpy.pytest_hardpy.utils.singleton import Singleton
+from socket import gethostname
 from pathlib import Path
+
+from hardpy.pytest_hardpy.utils.singleton import Singleton
 
 
 class ConfigData(Singleton):
@@ -17,7 +19,8 @@ class ConfigData(Singleton):
             self.web_host: str = "0.0.0.0"
             self.web_port: int = 8000
             self.tests_dir = Path.cwd()
-            self.internal_socket_port: int = 6525
+            self.socket_port: int = 6525
+            self.socket_addr: str = gethostname()
             self._initialized = True
 
     @property

@@ -3,7 +3,7 @@
 
 from os import environ
 from dataclasses import dataclass
-from socket import socket, gethostname
+from socket import socket
 from typing import Optional, Any
 from uuid import uuid4
 
@@ -272,7 +272,7 @@ def _get_socket_raw_data() -> str:
     # create socket connection
     server = socket()
     config_data = ConfigData()
-    server.bind((gethostname(), config_data.internal_socket_port))
+    server.bind((config_data.socket_addr, config_data.socket_port))
     server.listen(1)
     client, _ = server.accept()
 

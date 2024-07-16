@@ -2,10 +2,12 @@
 
 This is an example of running multiple stands on one PC.
 
-The example implements the launch of two stands and three CouchDB Instances. 
+The example implements the launch of two stands and three CouchDB Instances.
 
-Each stand will record reports on the conducted testing in the CouchDB Instance assigned to it in the **runstore** and **statestore** databases.
-The third CouchDB Instance is needed to store reports in the **report** database on each conducted test of each stand.
+Each stand will record reports on the conducted testing in the CouchDB Instance
+assigned to it in the **runstore** and **statestore** databases.
+The third CouchDB Instance is needed to store reports in the **report**
+database on each conducted test of each stand.
 
 You can learn more about storing reports here [Couchdb instance](../documentation/database.md#couchdb-instance).
 
@@ -67,7 +69,8 @@ Contains settings and fixtures for all tests:
 * The function of generating a report and recording it in the database `save_report_to_couchdb`;
 * The list of actions that will be performed after testing is filled in function `fill_actions_after_test`;
 
-To store reports from all booths in the third CouchDB Instance, specify the port numbers of this CouchDB Instance in the file `conftest.py` in the folder of each stand.
+To store reports from all booths in the third CouchDB Instance, specify the
+port numbers of this CouchDB Instance in the file `conftest.py` in the folder of each stand.
 
 ```bash
 import pytest
@@ -95,7 +98,8 @@ def fill_actions_after_test(post_run_functions: list):
 
 ### operator panels
 
-In projects with tests, configure a connection to its own database for storing state and to its own operator panel.
+In projects with tests, configure a connection to its own database for storing
+state and to its own operator panel.
 To launch project with connection to database use script:
 
 ```bash
@@ -110,4 +114,18 @@ For another project, use different ports:
 
 ```bash
 hardpy-panel -dbp 5985 -wp 8001 tests
+```
+
+### dialog box
+
+If you want to use the dialog box in multiple stands on the same computer, you need
+to pass a [socket port](https://everypinio.github.io/hardpy/documentation/hardpy_panel/#sck_port)
+to `hardpy-panel`.
+By default, hardpy uses port *6525* to pass data to the running pytest.
+But if you run multiple stands, the *6525* socket port will be busy.
+
+Example:
+
+```bash
+hardpy-panel -dbp 5985 -wp 8001 -sp 6526 tests
 ```

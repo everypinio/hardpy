@@ -17,7 +17,8 @@ The **hardpy panel** or operator panel is a web interface that displays and cont
     - Test case name.
     - Test case message.
     - Test case status.
-- Browse current [statestore](database.md#statestore-scheme) state in debug mode.
+- Browse current [statestore](database.md#statestore-scheme) state in debug mode;
+- Browse dialog box (TODO: Add ref).
 
 ## Usage
 
@@ -86,4 +87,22 @@ The default is *8000*.
 
 ```bash
 -wp WEB_PORT, --web_port WEB_PORT
+```
+
+#### sck_port
+
+Internal socket port for passing backend data (such as a dialog box) to running pytest tests.
+The default is *6525*.
+
+```bash
+-sp SCK_PORT, --sck_port SCK_PORT
+```
+
+#### sck_addr
+
+Internal socket address for passing backend data (such as a dialog box) to running pytest tests.
+The default is *localhost*.
+
+```bash
+-sa SCK_ADDR, --sck_addr SCK_ADDR
 ```

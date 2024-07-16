@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add a socket mechanism to transfer data from the uvicorn server to the pytest subprocess.
+
 ## HardPy 0.3.0
 
 * Add implementation of test dependencies without using third party plugins.

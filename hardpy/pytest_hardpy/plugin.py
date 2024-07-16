@@ -40,6 +40,8 @@ def pytest_addoption(parser: Parser):
     parser.addoption("--hardpy-dbp", action="store", default=config_data.db_port, help="database port number")  # noqa: E501
     parser.addoption("--hardpy-dbh", action="store", default=config_data.db_host, help="database hostname")  # noqa: E501
     parser.addoption("--hardpy-pt", action="store_true", default=False, help="enable pytest-hardpy plugin")  # noqa: E501
+    parser.addoption("--hardpy-sp", action="store", default=config_data.socket_port, help="internal socket port")  # noqa: E501
+    parser.addoption("--hardpy-sa", action="store", default=config_data.socket_addr, help="internal socket address")  # noqa: E501
     # fmt: on
 
 
@@ -77,6 +79,8 @@ class HardpyPlugin(object):
         config_data.db_host = config.getoption("--hardpy-dbh")
         config_data.db_pswd = config.getoption("--hardpy-dbpw")
         config_data.db_port = config.getoption("--hardpy-dbp")
+        config_data.socket_port = config.getoption("--hardpy-sp")
+        config_data.socket_addr = config.getoption("--hardpy-sa")
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
