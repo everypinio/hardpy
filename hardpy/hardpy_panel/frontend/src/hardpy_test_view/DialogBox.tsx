@@ -101,4 +101,4 @@ export function StartConfirmationDialog(props: Props) {
   );
 }
 
-export default StartConfirmationDialog;
+export default StartConfirmationDialog
