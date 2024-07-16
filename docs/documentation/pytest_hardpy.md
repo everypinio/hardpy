@@ -200,18 +200,11 @@ Displays a dialog box and updates the 'dialog_box' field in the **statestore** d
 from hardpy import dialog_box
 def test_dialog_box():
     info = dialog_box.DialogBoxData(
-<<<<<<< HEAD
-            title_bar="Dialog box",
-            dialog_text="Write ok",
-            widget_info=dialog_box.DialogBoxWidget(
-                widget_info={{"text": "Text"}}, widget_type=dialog_box.DialogBoxWidgetType.TEXT_INPUT
-=======
             title_bar="Dialog box title",
             dialog_text="Dialog box text",
             widget=dialog_box.DialogBoxWidget(
                 info={{"text": "Text"}},
                 type=dialog_box.DialogBoxWidgetType.TEXT_INPUT
->>>>>>> upstream/feature/dialog_box
             ),
         )
     response = hardpy.run_dialog_box(info)
