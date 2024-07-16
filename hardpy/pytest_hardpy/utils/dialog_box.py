@@ -20,12 +20,12 @@ class DialogBoxWidget:
     """Dialog box widget.
 
     Args:
-        widget_type (DialogBoxWidgetType): widget type
-        widget_info (dict): widget info
+        type (DialogBoxWidgetType): widget type
+        info (dict): widget info
     """
 
-    widget_type: DialogBoxWidgetType
-    widget_info: dict
+    type: DialogBoxWidgetType
+    info: dict
 
 
 @dataclass
@@ -35,12 +35,12 @@ class DialogBoxData:
     Args:
         dialog_text (str): dialog text
         title_bar (str | None): title bar
-        widget_info (DialogBoxWidget | None): widget info
+        widget (DialogBoxWidget | None): widget info
     """
 
     dialog_text: str
     title_bar: str | None = None
-    widget_info: DialogBoxWidget | None = None
+    widget: DialogBoxWidget | None = None
 
 
 def generate_dialog_box_dict(dialog_box_data: DialogBoxData) -> dict:
@@ -52,43 +52,43 @@ def generate_dialog_box_dict(dialog_box_data: DialogBoxData) -> dict:
     Returns:
         dict: dialog box dictionary
     """
-    if dialog_box_data.widget_info is None:
+    if dialog_box_data.widget is None:
         data_dict = {
             "title_bar": dialog_box_data.title_bar,
             "dialog_text": dialog_box_data.dialog_text,
-            "widget_info": None,
+            "widget": None,
         }
     else:
         data_dict = {
             "title_bar": dialog_box_data.title_bar,
             "dialog_text": dialog_box_data.dialog_text,
-            "widget_info": {
-                "info": dialog_box_data.widget_info.widget_info,
-                "type": dialog_box_data.widget_info.widget_type.value,
+            "widget": {
+                "info": dialog_box_data.widget.info,
+                "type": dialog_box_data.widget.type.value,
             },
         }
     return data_dict
 
 
 def get_dialog_box_data(
-    input_data: str, widget_info: DialogBoxWidget | None
+    input_data: str, widget: DialogBoxWidget | None
 ) -> Any:
     """Get the dialog box data in the correct format.
 
     Args:
         input_data (str): input string
-        widget_info (DialogBoxWidget | None): widget info
+        widget (DialogBoxWidget | None): widget info
 
     Returns:
         Any: Dialog box data in the correct format
     """
-    if widget_info is None:
+    if widget is None:
         return None
 
-    if widget_info.widget_type is None:
+    if widget.type is None:
         raise ValueError("Widget type is `None`, but widget data is not empty")
 
-    match widget_info.widget_type:
+    match widget.type:
         case DialogBoxWidgetType.NUMERIC_INPUT:
             try:
                 return float(input_data)
