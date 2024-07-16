@@ -8,7 +8,7 @@
 **HardPy** allows you to:
 
 * Create test benches for devices using pytest;
-* Use a browser to view, run and stop tests;
+* Use a browser to view, start, stop, and interact with tests;
 * Store the test result to the [CouchDB](https://couchdb.apache.org/) database.
 
 ## To Install
