@@ -61,7 +61,7 @@ def test_empty_dut_serial_number(pytester: Pytester, hardpy_opts):
     result.assert_outcomes(failed=1)
 
 
-def test_incorrect_sdut_erial_number(pytester: Pytester, hardpy_opts):
+def test_incorrect_dut_serial_number(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
         {func_test_header}
