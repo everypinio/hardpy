@@ -1,7 +1,10 @@
+// Copyright (c) 2024 Everypin
+// GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Button, Classes, Dialog, InputGroup } from '@blueprintjs/core';
-
+import { notification } from 'antd';
 
 interface Props {
   title_bar: string;
@@ -20,16 +23,28 @@ export function StartConfirmationDialog(props: Props) {
 
   const handleClose = () => {
     setDialogOpen(false);
+    fetch('api/stop')
+      .then(response => {
+          if (response.ok) {
+              return response.text();
+          } else {
+              console.log("Request failed. Status: " + response.status);
+          }
+      })
+      .catch(error => {
+          console.log("Request failed. Error: " + error);
+      });
+    notification.error({
+      message: 'Notification',
+      description: 'The window was closed. Tests stopped.',
+    });
   };
 
-  // const handleConfirm = () => {
-  //   setDialogOpen(false);
-  //   if (props.onConfirm) {
-  //     props.onConfirm(inputText);
-  //   }
-  // };
-
   const handleConfirm = async () => {
+    if ((props.widget_type === "textinput" || props.widget_type === "numericinput") && inputText.trim() === '') {
+      alert('The field must not be empty');
+      return;
+    }
     setDialogOpen(false);
     const textToSend = (props.widget_type === "textinput" || props.widget_type === "numericinput") ? inputText : 'ok';
 
