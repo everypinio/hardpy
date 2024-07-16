@@ -114,7 +114,7 @@ export class TestSuite extends React.Component<Props, State> {
         super(props);
 
         this.state = {
-            isOpen: props.defaultOpen
+            isOpen: props.defaultOpen,
         };
 
         this.handleClick = this.handleClick.bind(this);
