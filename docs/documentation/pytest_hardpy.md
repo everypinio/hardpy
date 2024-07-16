@@ -362,3 +362,21 @@ The default is *localhost*.
 ```bash
 --hardpy-dbh DB_HOST
 ```
+
+#### socket_port
+
+Internal socket port for passing backend data (such as a dialog box) to running pytest tests.
+The default is *6525*.
+
+```bash
+--hardpy-sp SOCKET_PORT
+```
+
+#### socket_addr
+
+Internal socket address for passing backend data (such as a dialog box) to running pytest tests.
+The default is *localhost*.
+
+```bash
+--hardpy-sa SOCKET_ADDR
+```
