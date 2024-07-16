@@ -184,11 +184,11 @@ Displays a dialog box and updates the 'dialog_box' field in the **statestore** d
 
 **Arguments:**
 
-- `data` *(DialogBoxData)*: Data for the dialog box.
+- `dialog_box_data` *(DialogBoxData)*: Data for the dialog box.
 
 **Returns:**
 
-- *(str)*: An object containing the user's response.
+- *(Any)*: An object containing the user's response.
 
 **Raises**
 
@@ -200,8 +200,8 @@ Displays a dialog box and updates the 'dialog_box' field in the **statestore** d
 from hardpy import dialog_box
 def test_dialog_box():
     info = dialog_box.DialogBoxData(
-            title_bar="Dialog box title",
-            dialog_text="Dialog box text",
+            title_bar="Dialog box",
+            dialog_text="Write ok",
             widget_info=dialog_box.DialogBoxWidget(
                 widget_info={{"text": "Text"}}, widget_type=dialog_box.DialogBoxWidgetType.TEXT_INPUT
             ),
