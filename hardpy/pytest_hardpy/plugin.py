@@ -79,7 +79,7 @@ class HardpyPlugin(object):
         config_data.db_host = config.getoption("--hardpy-dbh")
         config_data.db_pswd = config.getoption("--hardpy-dbpw")
         config_data.db_port = config.getoption("--hardpy-dbp")
-        config_data.socket_port = config.getoption("--hardpy-sp")
+        config_data.socket_port = int(config.getoption("--hardpy-sp"))
         config_data.socket_addr = config.getoption("--hardpy-sa")
 
         config.addinivalue_line("markers", "case_name")
