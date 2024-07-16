@@ -79,8 +79,8 @@ def confirm_dialog_box(dialog_box_output: str):
     return {"status": Status.ERROR}
 
 
-# app.mount(
-#     "/",
-#     StaticFiles(directory=(os.path.dirname(__file__)) + "/frontend/dist", html=True),
-#     name="static",
-# )
+app.mount(
+    "/",
+    StaticFiles(directory=(os.path.dirname(__file__)) + "/frontend/dist", html=True),
+    name="static",
+)
