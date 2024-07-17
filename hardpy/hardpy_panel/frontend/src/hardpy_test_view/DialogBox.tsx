@@ -9,7 +9,7 @@ import { notification } from 'antd';
 interface Props {
   title_bar: string;
   dialog_text: string;
-  onConfirm?: (inputText: string) => void; 
+  onConfirm?: (inputText: string) => void;
   width?: string;
   widget_type?: WidgetType;
   widget_info?: Record<string, unknown>;
@@ -25,14 +25,14 @@ export function StartConfirmationDialog(props: Props) {
     setDialogOpen(false);
     fetch('api/stop')
       .then(response => {
-          if (response.ok) {
-              return response.text();
-          } else {
-              console.log("Request failed. Status: " + response.status);
-          }
+        if (response.ok) {
+          return response.text();
+        } else {
+          console.log("Request failed. Status: " + response.status);
+        }
       })
       .catch(error => {
-          console.log("Request failed. Error: " + error);
+        console.log("Request failed. Error: " + error);
       });
     notification.error({
       message: 'Notification',

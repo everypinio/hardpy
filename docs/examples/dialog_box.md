@@ -1,7 +1,6 @@
 # Dialog Box
 
 This is an example of testing dialog boxes using the **HardPy** library.
-Test reports are written to the **report** database at the end of the testing process via **CouchdbLoader**.
 
 ### how to start
 
@@ -21,43 +20,6 @@ log_cli_level = INFO
 log_cli_format = %(asctime)s [%(levelname)s] %(message)s
 log_cli_date_format = %H:%M:%S
 addopts = --hardpy-pt
-```
-
-### conftest.py
-
-- The function of generating a report and recording it in the database `finish_executing`;
-- The list of actions that will be performed after testing is filled in function `fill_actions_after_test`;
-- The module log is created in fixture `module_log`;
-
-```python
-import logging
-
-import pytest
-
-from hardpy import (
-    CouchdbLoader,
-    CouchdbConfig,
-    get_current_report,
-)
-
-
-@pytest.fixture(scope="module")
-def module_log(request):
-    log_name = request.module.__name__
-    yield logging.getLogger(log_name)
-
-
-def finish_executing():
-    report = get_current_report()
-    if report:
-        loader = CouchdbLoader(CouchdbConfig())
-        loader.load(report)
-
-
-@pytest.fixture(scope="session", autouse=True)
-def fill_actions_after_test(post_run_functions: list):
-    post_run_functions.append(finish_executing)
-    yield
 ```
 
 ### test_dialog_box.py
@@ -122,7 +84,8 @@ info = hardpy.dialog_box.DialogBoxData(
 )
 ```
 **User Output:**
-A dialog box with the title "Operator check", the text "If you are not sleeping, press the Confirm button" and "Confirm" button. The user needs to press the "Confirm" button.
+A dialog box with the title "Operator check", the text "If you are not sleeping, press the Confirm button" and "Confirm" button. 
+The user needs to press the "Confirm" button.
 
 ### Test dialog box with text input
 
@@ -141,7 +104,8 @@ info = hardpy.dialog_box.DialogBoxData(
 )
 ```
 **User Output:**
-A dialog box with the title "Example of text input", the text "Type 'ok' and press the Confirm button", text input field and "Confirm" button. The user needs to type "ok" and press the "Confirm" button.
+A dialog box with the title "Example of text input", the text "Type 'ok' and press the Confirm button", text input field and "Confirm" button. 
+The user needs to type "ok" and press the "Confirm" button.
 
 ### Test dialog box with num input
 
@@ -160,4 +124,5 @@ info = hardpy.dialog_box.DialogBoxData(
 )
 ```
 **User Output:**
-A dialog box with the title "Example of entering a number"б the text "Enter the number 123 and press the Confirm button", тгьиук input field and "Confirm" button. The user needs to enter "123" and press the "Confirm" button.
+A dialog box with the title "Example of entering a number", the text "Enter the number 123 and press the Confirm button", number input field and "Confirm" button. 
+The user needs to enter "123" and press the "Confirm" button.

@@ -31,36 +31,41 @@ the pytest launcher (in a terminal or from another application).
 
 For user interaction with the test, it is possible to use dialog boxes.
 
+An example of usage can be seen in the example [dialog box](../examples/dialog_box.md).
+
 Currently, there are three types of dialog boxes:
 
-- **Basic dialog box**
+#### Basic dialog box
 
-Contains an instruction or question and a `confirm` button for confirmation
+Contains an instruction or question and a `confirm` button for confirmation.
 
 ![base_dialog_box](../img/base_dialog_box.jpg)
 
-- **Dialog box with a text input field**
+#### Dialog box with a text input field
 
-Contains an instruction or question, a text input field, and a `confirm` button for confirmation
+Contains an instruction or question, a text input field, and a `confirm` button for confirmation.
 
 ![text_input_dialog_box](../img/text_input_dialog_box.jpg)
 
-- **Dialog box with a number input field**
+#### Dialog box with a number input field
 
-Contains an instruction or question, a text input field, and a `confirm` button for confirmation. Allows entering only numbers with a period separator, allows entering numbers using `e`. The entered numbers will be converted to float
+Contains an instruction or question, a number input field, and a `confirm` button for confirmation. 
+Allows entering only numbers with a period separator, allows entering numbers using `e`. 
+The entered numbers will be converted to float.
 
 ![num_input_dialog_box](../img/num_input_dialog_box.jpg)
 
+#### warning window
 
 If the user clicks `confirm` without entering anything, a warning window will be displayed.
 
 ![alert](../img/alert.jpeg)
 
+#### error notification
+
 If the user closes the dialog box (using the cross in the upper right corner), the tests will be stopped, an error message will be displayed.
 
 ![notification](../img/notification.jpeg)
-
-An example of usage can be seen in the example [dialog box](../examples/dialog_box.md)
 
 ### Options
 
