@@ -25,7 +25,7 @@ interface WidgetInfo{
 interface DialogBoxProps {
     title_bar?: string;
     dialog_text: string;
-    widget_info?: WidgetInfo
+    widget?: WidgetInfo
   }
 
 interface Case {
@@ -263,7 +263,7 @@ export class TestSuite extends React.Component<Props, State> {
 
     private cellRendererStatus(test_topics: Case[], row_: string, rowIndex: number) {
         const test = test_topics[rowIndex];
-        const { info: widget_info, type: widget_type } = test.dialog_box.widget_info || {};
+        const { info: widget_info, type: widget_type } = test.dialog_box.widget || {};
 
         return this.commonCellRender(
           <div style={{ marginTop: '0.2em', marginBottom: '0.2em' }}>
