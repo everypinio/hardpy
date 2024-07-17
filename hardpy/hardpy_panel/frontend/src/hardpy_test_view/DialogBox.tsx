@@ -15,7 +15,13 @@ interface Props {
   widget_info?: Record<string, unknown>;
 }
 
-export type WidgetType = "base" | "textinput" | "radiobutton" | "checkbox" | "numericinput";
+export enum WidgetType {
+  Base = "base",
+  TextInput = "textinput",
+  RadioButton = "radiobutton",
+  Checkbox = "checkbox",
+  NumericInput = "numericinput"
+}
 
 export function StartConfirmationDialog(props: Props) {
   const [dialogOpen, setDialogOpen] = useState(true);
@@ -41,12 +47,12 @@ export function StartConfirmationDialog(props: Props) {
   };
 
   const handleConfirm = async () => {
-    if ((props.widget_type === "textinput" || props.widget_type === "numericinput") && inputText.trim() === '') {
+    if ((props.widget_type === WidgetType.TextInput || props.widget_type === WidgetType.NumericInput) && inputText.trim() === '') {
       alert('The field must not be empty');
       return;
     }
     setDialogOpen(false);
-    const textToSend = (props.widget_type === "textinput" || props.widget_type === "numericinput") ? inputText : 'ok';
+    const textToSend = (props.widget_type === WidgetType.TextInput || props.widget_type === WidgetType.NumericInput) ? inputText : 'ok';
 
     if (props.onConfirm) {
       props.onConfirm(textToSend);
@@ -62,7 +68,7 @@ export function StartConfirmationDialog(props: Props) {
   const defaultWidth = '500px';
   const dialogWidth = props.width || defaultWidth;
 
-  const widgetType = props.widget_type || "base";
+  const widgetType = props.widget_type || WidgetType.Base;
   const inputPlaceholder = "enter answer";
 
   return (
@@ -99,6 +105,6 @@ export function StartConfirmationDialog(props: Props) {
       </div>
     </Dialog>
   );
-}
 
-export default StartConfirmationDialog
+  export default StartConfirmationDialog
+
