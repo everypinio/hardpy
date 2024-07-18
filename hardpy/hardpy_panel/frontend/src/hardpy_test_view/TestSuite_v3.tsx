@@ -6,6 +6,7 @@ import { Callout, Collapse, Button, H4, Classes, Icon, Tag } from '@blueprintjs/
 import _, { Dictionary } from 'lodash';
 import DataTable, { TableColumn } from 'react-data-table-component';
 import { LoadingOutlined } from '@ant-design/icons';
+import { StartConfirmationDialog, WidgetType } from 'hardpy_test_view/DialogBox';
 
 import { TestNumber } from './TestNumber';
 import { TestName } from './TestName';
@@ -16,6 +17,17 @@ import RunTimer from './RunTimer';
 import './TestSuite.css';
 import { Spin } from 'antd';
 
+interface WidgetInfo {
+    info: Record<string, unknown>;
+    type: WidgetType;
+}
+
+interface DialogBoxProps {
+    title_bar?: string;
+    dialog_text: string;
+    widget?: WidgetInfo
+}
+
 interface Case {
     status: string,
     name: string,
@@ -24,7 +36,7 @@ interface Case {
     assertion_msg: string | null
     msg: string[] | null
     artifact: Record<string, unknown>
-    dialog_box: Record<string, unknown>
+    dialog_box: DialogBoxProps
 }
 
 type Cases = Dictionary<Case>
@@ -74,16 +86,16 @@ export class TestSuite extends React.Component<Props, State> {
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <TestStatus
                                     status={(
-                                            this.props.commonTestTunStatus != 'run'
-                                            && (this.props.test.status == 'run' || this.props.test.status == 'ready')
-                                        ) ? "stucked" : this.props.test.status
+                                        this.props.commonTestTunStatus != 'run'
+                                        && (this.props.test.status == 'run' || this.props.test.status == 'ready')
+                                    ) ? "stucked" : this.props.test.status
                                     }
                                 />
                                 <Icon
                                     style={{ marginRight: '10px', marginLeft: '10px' }}
                                     icon={this.state.isOpen ? 'chevron-down' : 'chevron-right'}
                                 ></Icon>
-                                <span>{this.renderName(this.props.test.name, this.props.index+1)}</span>
+                                <span>{this.renderName(this.props.test.name, this.props.index + 1)}</span>
                             </div>
                         </Button>
                     </div>
@@ -116,16 +128,15 @@ export class TestSuite extends React.Component<Props, State> {
         return (
             <H4 className={`test-suite-name ${is_loading ? Classes.SKELETON : ""}`}>
                 {<span className={Classes.TEXT_DISABLED}>{test_number}</span>}
-                {<span style={{marginLeft: '0.5em'}}>{is_loading ? SUITE_NAME_STUB : name}</span>}
+                {<span style={{ marginLeft: '0.5em' }}>{is_loading ? SUITE_NAME_STUB : name}</span>}
             </H4>
         );
     }
 
     private renderTests(test_topics: Cases) {
-        let case_names : string[] = []
+        let case_names: string[] = []
 
-        if (test_topics)
-        {
+        if (test_topics) {
             case_names = Object.keys(test_topics)
         }
 
@@ -195,13 +206,13 @@ export class TestSuite extends React.Component<Props, State> {
 
                 <Tag minimal={true} style={{ margin: '2px', minWidth: '30px' }}>
                     {
-                    ('ready' != test_topics.status) &&
-                    (
-                        <RunTimer
-                            status={test_topics.status}
-                            commonTestTunStatus={this.props.commonTestTunStatus}
-                        />
-                    )}
+                        ('ready' != test_topics.status) &&
+                        (
+                            <RunTimer
+                                status={test_topics.status}
+                                commonTestTunStatus={this.props.commonTestTunStatus}
+                            />
+                        )}
                 </Tag>
             </div>
         );
@@ -222,7 +233,7 @@ export class TestSuite extends React.Component<Props, State> {
     private cellRendererNumber(test_topics: Case[], row_: string, rowIndex: number) {
         return this.commonCellRender(
             <div style={{ marginTop: '0.2em', marginBottom: '0.2em' }}>
-                <TestNumber val={rowIndex+1} />
+                <TestNumber val={rowIndex + 1} />
             </div>,
             `number_${rowIndex}_${row_}}`,
         );
@@ -234,7 +245,7 @@ export class TestSuite extends React.Component<Props, State> {
             <div style={{ marginTop: '0.2em', marginBottom: '0.2em' }}>
                 <TestName name={test.name} />
             </div>,
-             `name_${rowIndex}_${row_}`
+            `name_${rowIndex}_${row_}`
         );
     }
 
@@ -251,8 +262,27 @@ export class TestSuite extends React.Component<Props, State> {
 
     private cellRendererStatus(test_topics: Case[], row_: string, rowIndex: number) {
         const test = test_topics[rowIndex];
+        const { info: widget_info, type: widget_type } = test.dialog_box.widget || {};
+
         return this.commonCellRender(
-            <TestStatus status={(this.props.commonTestTunStatus != 'run' && (test.status == 'run' || test.status == 'ready')) ? "stucked" : test.status} />,
+            <div style={{ marginTop: '0.2em', marginBottom: '0.2em' }}>
+                {test.dialog_box.dialog_text && (
+                    <StartConfirmationDialog
+                        title_bar={test.dialog_box.title_bar || test.name}
+                        dialog_text={test.dialog_box.dialog_text}
+                        widget_info={widget_info}
+                        widget_type={widget_type}
+                    />
+                )}
+                <TestStatus
+                    status={
+                        (this.props.commonTestTunStatus !== 'run' &&
+                            (test.status === 'run' || test.status === 'ready'))
+                            ? "stucked"
+                            : test.status
+                    }
+                />
+            </div>,
             `status_${rowIndex}_${row_}`
         );
     }

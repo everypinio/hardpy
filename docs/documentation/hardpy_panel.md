@@ -7,6 +7,7 @@ The **hardpy panel** or operator panel is a web interface that displays and cont
 **HardPy panel** allows you to:
 
 - Start and stop testing.
+- Interact with [dialog box](hardpy_panel.md#dialog-box) during testing.
 - Browse:
     - Test run name.
     - Test run status.
@@ -17,7 +18,6 @@ The **hardpy panel** or operator panel is a web interface that displays and cont
     - Test case message.
     - Test case status.
 - Browse current [statestore](database.md#statestore-scheme) state in debug mode;
-- Browse dialog box (TODO: Add ref).
 
 ## Usage
 
@@ -26,6 +26,46 @@ After this open page http://localhost:8000/ in the browser.
 
 When the operator panel is running, you can run tests through the web interface or through
 the pytest launcher (in a terminal or from another application).
+
+### Dialog box
+
+For user interaction with the test, it is possible to use dialog boxes.
+
+An example of usage can be seen in the example [dialog box](../examples/dialog_box.md).
+
+Currently, there are three types of dialog boxes:
+
+#### Basic dialog box
+
+Contains an instruction or question and a `confirm` button for confirmation.
+
+![base_dialog_box](../img/dialog_box/base_dialog_box.jpg)
+
+#### Dialog box with a text input field
+
+Contains an instruction or question, a text input field, and a `confirm` button for confirmation.
+
+![text_input_dialog_box](../img/dialog_box/text_input_dialog_box.jpg)
+
+#### Dialog box with a number input field
+
+Contains an instruction or question, a number input field, and a `confirm` button for confirmation. 
+Allows entering only numbers with a period separator, allows entering numbers using `e`. 
+The entered numbers will be converted to float.
+
+![num_input_dialog_box](../img/dialog_box/num_input_dialog_box.jpg)
+
+#### warning window
+
+If the user clicks `confirm` without entering anything, a warning window will be displayed.
+
+![alert](../img/dialog_box/alert.jpeg)
+
+#### error notification
+
+If the user closes the dialog box (using the cross in the upper right corner), the tests will be stopped, an error message will be displayed.
+
+![notification](../img/dialog_box/notification.jpeg)
 
 ### Options
 

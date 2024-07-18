@@ -54,6 +54,7 @@ nav:
     - Hello HardPy: examples/hello_hardpy.md
     - CouchDB load: examples/couchdb_load.md
     - Minute parity: examples/minute_parity.md
+    - Dialog box: examples/dialog_box.md
     - Multiple stands: examples/multiple_stands.md
     - Skip test: examples/skip_test.md
     - CouchDB in RAM: examples/db_in_ram.md

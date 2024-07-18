@@ -10,7 +10,7 @@ def test_base_dialog_box():
         dialog_text="If you are not sleeping, press the Confirm button",
     )
     response = hardpy.run_dialog_box(info)
-    assert response == "ok"
+    assert response is None 
 
 
 @pytest.mark.case_name("Test dialog box with text input")
@@ -21,7 +21,7 @@ def test_dialog_box_with_text_input():
     )
 
     info = hardpy.dialog_box.DialogBoxData(
-        dialog_text="Type some text and press the Confirm button",
+        dialog_text="Type 'ok' and press the Confirm button",
         title_bar="Example of text input",
         widget=widget,
     )
@@ -31,15 +31,16 @@ def test_dialog_box_with_text_input():
 
 @pytest.mark.case_name("Test dialog box with num input")
 def test_dialog_box_with_num_input():
+    TEST_NUM = 123
     widget = hardpy.dialog_box.DialogBoxWidget(
         type=hardpy.dialog_box.DialogBoxWidgetType.NUMERIC_INPUT,
         info={"text": "Enter the number"},
     )
 
     info = hardpy.dialog_box.DialogBoxData(
-        dialog_text="Enter the number 5 and press the Confirm button",
+        dialog_text=f"Enter the number {TEST_NUM} and press the Confirm button",
         title_bar="Example of entering a number",
         widget=widget,
     )
-    response = hardpy.run_dialog_box(info)
-    assert response == "ok"
+    response = int(hardpy.run_dialog_box(info))
+    assert response == TEST_NUM

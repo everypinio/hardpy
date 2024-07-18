@@ -184,11 +184,11 @@ Displays a dialog box and updates the 'dialog_box' field in the **statestore** d
 
 **Arguments:**
 
-- `data` *(DialogBoxData)*: Data for the dialog box.
+- `dialog_box_data` *(DialogBoxData)*: Data for the dialog box.
 
 **Returns:**
 
-- *(str)*: An object containing the user's response.
+- *(Any)*: An object containing the user's response.
 
 **Raises**
 
