@@ -12,15 +12,17 @@ interface Props {
   onConfirm?: (inputText: string) => void;
   width?: string;
   widget_type?: WidgetType;
-  widget_info?: Record<string, unknown>;
+  widget_info?: WidgetInfo;
 }
 
 export enum WidgetType {
   Base = "base",
   TextInput = "textinput",
-  RadioButton = "radiobutton",
-  Checkbox = "checkbox",
   NumericInput = "numericinput"
+}
+
+interface WidgetInfo {
+  text?: string;
 }
 
 export function StartConfirmationDialog(props: Props) {
@@ -47,12 +49,22 @@ export function StartConfirmationDialog(props: Props) {
   };
 
   const handleConfirm = async () => {
-    if ((props.widget_type === WidgetType.TextInput || props.widget_type === WidgetType.NumericInput) && inputText.trim() === '') {
+    if (props.widget_type && inputText.trim() === '') {
       alert('The field must not be empty');
       return;
     }
     setDialogOpen(false);
-    const textToSend = (props.widget_type === WidgetType.TextInput || props.widget_type === WidgetType.NumericInput) ? inputText : 'ok';
+    let textToSend = '';
+
+    switch (props.widget_type) {
+      case WidgetType.TextInput:
+      case WidgetType.NumericInput:
+        textToSend = inputText;
+        break;
+      default:
+        textToSend = 'ok';
+        break;
+    }
 
     if (props.onConfirm) {
       props.onConfirm(textToSend);
@@ -81,20 +93,20 @@ export function StartConfirmationDialog(props: Props) {
     >
       <div className={Classes.DIALOG_BODY}>
         <p>{props.dialog_text}</p>
-        {widgetType === "textinput" && (
+        {widgetType === WidgetType.TextInput && (
           <InputGroup
             value={inputText}
             onChange={(event) => setInputText(event.target.value)}
             placeholder={inputPlaceholder}
+            type="text"
           />
         )}
-        {widgetType === "numericinput" && (
+        {widgetType === WidgetType.NumericInput && (
           <InputGroup
-            type="number"
             value={inputText}
             onChange={(event) => setInputText(event.target.value)}
             placeholder={inputPlaceholder}
-            step="0.01"
+            type="number"
           />
         )}
       </div>
@@ -105,6 +117,6 @@ export function StartConfirmationDialog(props: Props) {
       </div>
     </Dialog>
   );
+}
 
-  export default StartConfirmationDialog
-
+export default StartConfirmationDialog;
