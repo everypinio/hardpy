@@ -39,13 +39,13 @@ Currently, there are three types of dialog boxes:
 
 Contains an instruction or question and a `confirm` button for confirmation.
 
-![base_dialog_box](../img/base_dialog_box.jpg)
+![base_dialog_box](../img/dialog_box/base_dialog_box.jpg)
 
 #### Dialog box with a text input field
 
 Contains an instruction or question, a text input field, and a `confirm` button for confirmation.
 
-![text_input_dialog_box](../img/text_input_dialog_box.jpg)
+![text_input_dialog_box](../img/dialog_box/text_input_dialog_box.jpg)
 
 #### Dialog box with a number input field
 
@@ -53,19 +53,19 @@ Contains an instruction or question, a number input field, and a `confirm` butto
 Allows entering only numbers with a period separator, allows entering numbers using `e`. 
 The entered numbers will be converted to float.
 
-![num_input_dialog_box](../img/num_input_dialog_box.jpg)
+![num_input_dialog_box](../img/dialog_box/num_input_dialog_box.jpg)
 
 #### warning window
 
 If the user clicks `confirm` without entering anything, a warning window will be displayed.
 
-![alert](../img/alert.jpeg)
+![alert](../img/dialog_box/alert.jpeg)
 
 #### error notification
 
 If the user closes the dialog box (using the cross in the upper right corner), the tests will be stopped, an error message will be displayed.
 
-![notification](../img/notification.jpeg)
+![notification](../img/dialog_box/notification.jpeg)
 
 ### Options
 
