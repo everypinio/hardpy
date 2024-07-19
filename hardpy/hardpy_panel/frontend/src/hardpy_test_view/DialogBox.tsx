@@ -77,6 +77,12 @@ export function StartConfirmationDialog(props: Props) {
     }
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleConfirm();
+    }
+  };
+
   const defaultWidth = '500px';
   const dialogWidth = props.width || defaultWidth;
 
@@ -97,6 +103,7 @@ export function StartConfirmationDialog(props: Props) {
           <InputGroup
             value={inputText}
             onChange={(event) => setInputText(event.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder={inputPlaceholder}
             type="text"
           />
@@ -105,13 +112,17 @@ export function StartConfirmationDialog(props: Props) {
           <InputGroup
             value={inputText}
             onChange={(event) => setInputText(event.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder={inputPlaceholder}
             type="number"
           />
         )}
       </div>
       <div className={Classes.DIALOG_FOOTER}>
-        <Button intent="primary" onClick={handleConfirm}>
+        <Button
+          intent="primary"
+          onClick={handleConfirm}
+        >
           Confirm
         </Button>
       </div>
