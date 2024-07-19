@@ -1,9 +1,9 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+import socket
 from os import environ
 from dataclasses import dataclass
-from socket import socket
 from typing import Optional, Any
 from uuid import uuid4
 
@@ -216,8 +216,20 @@ def run_dialog_box(dialog_box_data: DialogBoxData) -> Any:
     Args:
         dialog_box_data (DialogBoxData): Data for creating the dialog box.
 
+        DialogBoxData attributes:
+
+        - dialog_text (str): The text of the dialog box.
+        - title_bar (str | None): The title bar of the dialog box.
+        - widget (DialogBoxWidget | None): Widget information.
+
     Returns:
         Any: An object containing the user's response.
+
+        The type of the return value depends on the widget type:
+
+        - Without widget: None.
+        - TEXT_INPUT: str.
+        - NUMERIC_INPUT: float.
 
     Raises:
         ValueError: If the 'message' argument is empty.
@@ -270,9 +282,13 @@ def _get_current_test() -> CurrentTestInfo:
 
 def _get_socket_raw_data() -> str:
     # create socket connection
-    server = socket()
+    server = socket.socket()
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     config_data = ConfigData()
-    server.bind((config_data.socket_addr, config_data.socket_port))
+    try:
+        server.bind((config_data.socket_addr, config_data.socket_port))
+    except socket.error as exc:
+        raise RuntimeError(f"Error creating socket: {exc}")
     server.listen(1)
     client, _ = server.accept()
 
