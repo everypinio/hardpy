@@ -18,6 +18,28 @@ test_default_header = """
         from hardpy.pytest_hardpy.utils import NodeInfo
         """
 
+mark_test_header_with_incorrect_data = """
+        import pytest
+
+        from hardpy import get_current_report
+        from hardpy.pytest_hardpy.utils import NodeInfo
+
+        module_name = "%$#&^^@&*@"
+        case_name = "%^&*@(()@)"
+        pytestmark = pytest.mark.module_name(module_name)
+        """
+
+mark_test_header_with_empty_data = """
+        import pytest
+
+        from hardpy import get_current_report
+        from hardpy.pytest_hardpy.utils import NodeInfo
+
+        module_name = ""
+        case_name = ""
+        pytestmark = pytest.mark.module_name(module_name)
+        """
+
 
 def test_module_name(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
@@ -66,7 +88,6 @@ def test_default_case_name(pytester: Pytester, hardpy_opts):
     result.assert_outcomes(passed=1)
 
 
-
 def test_default_module_name(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
@@ -80,3 +101,35 @@ def test_default_module_name(pytester: Pytester, hardpy_opts):
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
+
+
+def test_incorrect_markers(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {mark_test_header_with_incorrect_data}
+        @pytest.mark.case_name(case_name)
+        def test_incorrect_markers():
+            node = NodeInfo(request.node)
+            report = get_current_report()
+            name = report.modules[node.module_id].cases[node.case_id].name
+            assert case_name == name
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(failed=1)
+
+
+def test_empty_case_marker(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {mark_test_header_with_empty_data}
+        @pytest.mark.case_name(case_name)
+        def test_empty_case_marker():
+            node = NodeInfo(request.node)
+            report = get_current_report()
+            name = report.modules[node.module_id].cases[node.case_id].name
+            assert case_name == name
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(failed=1)
