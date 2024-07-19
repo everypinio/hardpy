@@ -6,8 +6,8 @@ The **hardpy panel** or operator panel is a web interface that displays and cont
 
 **HardPy panel** allows you to:
 
-- Start and stop testing.
-- Interact with [dialog box](hardpy_panel.md#dialog-box) during testing.
+- Start and stop testing;
+- Interact with [dialog box](hardpy_panel.md#dialog-box) during testing;
 - Browse:
     - Test run name.
     - Test run status.
@@ -17,7 +17,7 @@ The **hardpy panel** or operator panel is a web interface that displays and cont
     - Test case name.
     - Test case message.
     - Test case status.
-- Browse current [statestore](database.md#statestore-scheme) state in debug mode;
+- Browse current [statestore](database.md#statestore-scheme) state in debug mode.
 
 ## Usage
 
@@ -30,27 +30,25 @@ the pytest launcher (in a terminal or from another application).
 ### Dialog box
 
 For user interaction with the test, it is possible to use dialog boxes.
-
 An example of usage can be seen in the example [dialog box](../examples/dialog_box.md).
+Currently, there are some types of dialog boxes.
 
-Currently, there are three types of dialog boxes:
-
-#### Basic dialog box
+#### basic dialog box
 
 Contains an instruction or question and a `confirm` button for confirmation.
 
 ![base_dialog_box](../img/dialog_box/base_dialog_box.jpg)
 
-#### Dialog box with a text input field
+#### text input field
 
 Contains an instruction or question, a text input field, and a `confirm` button for confirmation.
 
 ![text_input_dialog_box](../img/dialog_box/text_input_dialog_box.jpg)
 
-#### Dialog box with a number input field
+#### number input field
 
-Contains an instruction or question, a number input field, and a `confirm` button for confirmation. 
-Allows entering only numbers with a period separator, allows entering numbers using `e`. 
+Contains an instruction or question, a number input field, and a `confirm` button for confirmation.
+Allows entering only numbers with a period separator, allows entering numbers using `e`.
 The entered numbers will be converted to float.
 
 ![num_input_dialog_box](../img/dialog_box/num_input_dialog_box.jpg)
@@ -63,7 +61,8 @@ If the user clicks `confirm` without entering anything, a warning window will be
 
 #### error notification
 
-If the user closes the dialog box (using the cross in the upper right corner), the tests will be stopped, an error message will be displayed.
+If the user closes the dialog box (using the cross in the upper right corner),
+the tests will be stopped, an error message will be displayed.
 
 ![notification](../img/dialog_box/notification.jpeg)
 
