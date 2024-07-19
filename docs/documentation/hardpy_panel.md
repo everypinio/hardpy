@@ -49,8 +49,11 @@ The text is transmitted in UTF-8 encoding.
 #### number input field
 
 Contains an instruction or question, a number input field, and a `confirm` button for confirmation.
-Allows entering only numbers with a period separator, allows entering numbers using `e`.
-The entered numbers will be converted to float.
+
+* Allows float numbers with a dot separator.
+* Allows negative numbers.
+* Allows numbers to be entered using **E notation** with `e`, e.g. `2e3`.
+* The entered numbers will be converted to float.
 
 ![num_input_dialog_box](../img/dialog_box/num_input_dialog_box.jpg)
 
