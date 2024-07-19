@@ -2,8 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
-* Add dialog boxes
-- Add base dialog box, dialog box with text input and dialog box with num input.
+* Add base dialog box, text input and numeric input.
+* Add dialog box invocation functionality.
 * Add a socket mechanism to transfer data from the uvicorn server to the pytest subprocess.
 
 ## HardPy 0.3.0
