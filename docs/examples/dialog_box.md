@@ -31,44 +31,44 @@ import pytest
 import hardpy
 
 @pytest.mark.case_name("Test base dialog box")
-def test_base_dialog_box():
-    info = hardpy.dialog_box.DialogBoxData(
+def test_base():
+    dbx = hardpy.dialog_box.DialogBoxData(
         title_bar="Operator check",
         dialog_text="If you are not sleeping, press the Confirm button",
     )
-    response = hardpy.run_dialog_box(info)
+    response = hardpy.run_dialog_box(dbx)
     assert response == None
 
 
 @pytest.mark.case_name("Test dialog box with text input")
-def test_dialog_box_with_text_input():
+def test_text_input():
     widget = hardpy.dialog_box.DialogBoxWidget(
         type=hardpy.dialog_box.DialogBoxWidgetType.TEXT_INPUT,
         info={"text": "Some text"},
     )
 
-    info = hardpy.dialog_box.DialogBoxData(
+    dbx = hardpy.dialog_box.DialogBoxData(
         dialog_text="Type 'ok' and press the Confirm button",
         title_bar="Example of text input",
         widget=widget,
     )
-    response = hardpy.run_dialog_box(info)
+    response = hardpy.run_dialog_box(dbx)
     assert response == "ok"
 
 
 @pytest.mark.case_name("Test dialog box with num input")
-def test_dialog_box_with_num_input():
+def test_num_input():
     widget = hardpy.dialog_box.DialogBoxWidget(
         type=hardpy.dialog_box.DialogBoxWidgetType.NUMERIC_INPUT,
         info={"text": "Enter the number"},
     )
 
-    info = hardpy.dialog_box.DialogBoxData(
+    dbx = hardpy.dialog_box.DialogBoxData(
         dialog_text="Enter the number 123 and press the Confirm button",
         title_bar="Example of entering a number",
         widget=widget,
     )
-    response = hardpy.run_dialog_box(info)
+    response = hardpy.run_dialog_box(dbx)
     assert response == 123.0
 ```
 
@@ -84,7 +84,8 @@ info = hardpy.dialog_box.DialogBoxData(
 )
 ```
 **User Output:**
-A dialog box with the title "Operator check", the text "If you are not sleeping, press the Confirm button" and "Confirm" button. 
+A dialog box with the title "Operator check", the text "If you are not sleeping,
+press the Confirm button" and "Confirm" button.
 The user needs to press the "Confirm" button.
 
 ### Test dialog box with text input
@@ -97,14 +98,15 @@ widget = hardpy.dialog_box.DialogBoxWidget(
     type=hardpy.dialog_box.DialogBoxWidgetType.TEXT_INPUT,
     info={"text": "Some text"},
 )
-info = hardpy.dialog_box.DialogBoxData(
+dbx = hardpy.dialog_box.DialogBoxData(
     dialog_text="Type 'ok' and press the Confirm button",
     title_bar="Example of text input",
     widget=widget,
 )
 ```
 **User Output:**
-A dialog box with the title "Example of text input", the text "Type 'ok' and press the Confirm button", text input field and "Confirm" button. 
+A dialog box with the title "Example of text input", the text "Type 'ok' and
+press the Confirm button", text input field and "Confirm" button.
 The user needs to type "ok" and press the "Confirm" button.
 
 ### Test dialog box with num input
@@ -117,12 +119,13 @@ widget = hardpy.dialog_box.DialogBoxWidget(
     type=hardpy.dialog_box.DialogBoxWidgetType.NUMERIC_INPUT,
     info={"text": "Enter the number"},
 )
-info = hardpy.dialog_box.DialogBoxData(
+dbx = hardpy.dialog_box.DialogBoxData(
     dialog_text="Enter the number 123 and press the Confirm button",
     title_bar="Example of entering a number",
     widget=widget,
 )
 ```
 **User Output:**
-A dialog box with the title "Example of entering a number", the text "Enter the number 123 and press the Confirm button", number input field and "Confirm" button. 
+A dialog box with the title "Example of entering a number", the text "Enter the number 123 and
+press the Confirm button", number input field and "Confirm" button.
 The user needs to enter "123" and press the "Confirm" button.

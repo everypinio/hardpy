@@ -181,14 +181,27 @@ def test_message():
 #### run_dialog_box
 
 Displays a dialog box and updates the 'dialog_box' field in the **statestore** database.
+Only one dialog box can be invoked per test case.
 
 **Arguments:**
 
 - `dialog_box_data` *(DialogBoxData)*: Data for the dialog box.
 
+DialogBoxData attributes:
+
+- dialog_text (str): The text of the dialog box.
+- title_bar (str | None): The title bar of the dialog box.
+- widget (DialogBoxWidget | None): Widget information.
+
 **Returns:**
 
 - *(Any)*: An object containing the user's response.
+
+The type of the return value depends on the widget type:
+
+- Without widget: None.
+- NUMERIC_INPUT: float.
+- TEXT_INPUT: str.
 
 **Raises**
 
