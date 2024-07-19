@@ -42,6 +42,7 @@ Contains an instruction or question and a `confirm` button for confirmation.
 #### text input field
 
 Contains an instruction or question, a text input field, and a `confirm` button for confirmation.
+The text is transmitted in UTF-8 encoding.
 
 ![text_input_dialog_box](../img/dialog_box/text_input_dialog_box.jpg)
 
