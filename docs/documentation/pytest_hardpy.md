@@ -185,9 +185,9 @@ Only one dialog box can be invoked per test case.
 
 **Arguments:**
 
-- `dialog_box_data` *(DialogBoxData)*: Data for the dialog box.
+- `dialog_box_data` *(DialogBox)*: Data for the dialog box.
 
-DialogBoxData attributes:
+DialogBox attributes:
 
 - dialog_text (str): The text of the dialog box.
 - title_bar (str | None): The title bar of the dialog box.
@@ -212,15 +212,14 @@ The type of the return value depends on the widget type:
 ```python
 from hardpy import dialog_box
 def test_dialog_box():
-    info = dialog_box.DialogBoxData(
+    dbx = dialog_box.DialogBox(
             title_bar="Dialog box title",
             dialog_text="Dialog box text",
             widget=dialog_box.DialogBoxWidget(
-                info={{"text": "Text"}},
                 type=dialog_box.DialogBoxWidgetType.TEXT_INPUT
             ),
         )
-    response = hardpy.run_dialog_box(info)
+    response = hardpy.run_dialog_box(dbx)
     assert response == "ok"
 ```
 

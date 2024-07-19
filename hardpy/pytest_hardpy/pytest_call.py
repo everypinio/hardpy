@@ -17,7 +17,7 @@ from hardpy.pytest_hardpy.db import (
 )
 from hardpy.pytest_hardpy.utils import (
     DuplicateSerialNumberError,
-    DialogBoxData,
+    DialogBox,
     ConfigData,
     generate_dialog_box_dict,
     get_dialog_box_data,
@@ -210,13 +210,13 @@ def set_driver_info(drivers: dict) -> None:
     reporter.update_db_by_doc()
 
 
-def run_dialog_box(dialog_box_data: DialogBoxData) -> Any:
+def run_dialog_box(dialog_box_data: DialogBox) -> Any:
     """Display a dialog box.
 
     Args:
-        dialog_box_data (DialogBoxData): Data for creating the dialog box.
+        dialog_box_data (DialogBox): Data for creating the dialog box.
 
-        DialogBoxData attributes:
+        DialogBox attributes:
 
         - dialog_text (str): The text of the dialog box.
         - title_bar (str | None): The title bar of the dialog box.

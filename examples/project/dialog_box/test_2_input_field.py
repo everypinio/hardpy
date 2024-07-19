@@ -1,6 +1,11 @@
 import pytest
 
-from hardpy import dialog_box, run_dialog_box, set_message
+from hardpy import run_dialog_box, set_message
+from hardpy.pytest_hardpy.utils.dialog_box import (
+    DialogBoxWidget,
+    DialogBoxWidgetType,
+    DialogBox,
+)
 
 
 pytestmark = pytest.mark.module_name("Input field dialog boxes")
@@ -8,15 +13,10 @@ pytestmark = pytest.mark.module_name("Input field dialog boxes")
 
 @pytest.mark.case_name("Text input")
 def test_text_input():
-    widget = dialog_box.DialogBoxWidget(
-        type=dialog_box.DialogBoxWidgetType.TEXT_INPUT,
-        info={"text": "Some text"},
-    )
-
-    dbx = dialog_box.DialogBoxData(
+    dbx = DialogBox(
         dialog_text="Type 'ok' and press the Confirm button",
         title_bar="Example of text input",
-        widget=widget,
+        widget=DialogBoxWidget(DialogBoxWidgetType.TEXT_INPUT),
     )
     response = run_dialog_box(dbx)
     set_message(f"Entered text {response}")
@@ -26,15 +26,10 @@ def test_text_input():
 @pytest.mark.case_name("Numeric input")
 def test_num_input():
     TEST_NUM = 123
-    widget = dialog_box.DialogBoxWidget(
-        type=dialog_box.DialogBoxWidgetType.NUMERIC_INPUT,
-        info={"text": "Enter the number"},
-    )
-
-    dbx = dialog_box.DialogBoxData(
+    dbx = DialogBox(
         dialog_text=f"Enter the number {TEST_NUM} and press the Confirm button",
         title_bar="Example of entering a number",
-        widget=widget,
+        widget=DialogBoxWidget(DialogBoxWidgetType.NUMERIC_INPUT),
     )
     response = int(run_dialog_box(dbx))
     set_message(f"Entered number {response}")

@@ -32,7 +32,7 @@ import hardpy
 
 @pytest.mark.case_name("Test base dialog box")
 def test_base():
-    dbx = hardpy.dialog_box.DialogBoxData(
+    dbx = hardpy.dialog_box.DialogBox(
         title_bar="Operator check",
         dialog_text="If you are not sleeping, press the Confirm button",
     )
@@ -44,10 +44,9 @@ def test_base():
 def test_text_input():
     widget = hardpy.dialog_box.DialogBoxWidget(
         type=hardpy.dialog_box.DialogBoxWidgetType.TEXT_INPUT,
-        info={"text": "Some text"},
     )
 
-    dbx = hardpy.dialog_box.DialogBoxData(
+    dbx = hardpy.dialog_box.DialogBox(
         dialog_text="Type 'ok' and press the Confirm button",
         title_bar="Example of text input",
         widget=widget,
@@ -60,10 +59,9 @@ def test_text_input():
 def test_num_input():
     widget = hardpy.dialog_box.DialogBoxWidget(
         type=hardpy.dialog_box.DialogBoxWidgetType.NUMERIC_INPUT,
-        info={"text": "Enter the number"},
     )
 
-    dbx = hardpy.dialog_box.DialogBoxData(
+    dbx = hardpy.dialog_box.DialogBox(
         dialog_text="Enter the number 123 and press the Confirm button",
         title_bar="Example of entering a number",
         widget=widget,

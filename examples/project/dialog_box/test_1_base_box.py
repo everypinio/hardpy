@@ -1,6 +1,7 @@
 import pytest
 
-from hardpy import dialog_box, run_dialog_box
+from hardpy import run_dialog_box
+from hardpy.pytest_hardpy.utils import DialogBox
 
 
 pytestmark = pytest.mark.module_name("Base dialog box")
@@ -13,7 +14,7 @@ def test_before():
 
 @pytest.mark.case_name("Base dialog box")
 def test_base_dialog_box():
-    dbx = dialog_box.DialogBoxData(
+    dbx = DialogBox(
         title_bar="Operator check",
         dialog_text="Press the Confirm button",
     )

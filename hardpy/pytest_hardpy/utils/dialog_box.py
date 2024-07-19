@@ -21,15 +21,15 @@ class DialogBoxWidget:
 
     Args:
         type (DialogBoxWidgetType): widget type
-        info (dict): widget info
+        info (dict | None): widget info
     """
 
     type: DialogBoxWidgetType
-    info: dict
+    info: dict | None = None
 
 
 @dataclass
-class DialogBoxData:
+class DialogBox:
     """Dialog box data.
 
     Args:
@@ -43,11 +43,11 @@ class DialogBoxData:
     widget: DialogBoxWidget | None = None
 
 
-def generate_dialog_box_dict(dialog_box_data: DialogBoxData) -> dict:
+def generate_dialog_box_dict(dialog_box_data: DialogBox) -> dict:
     """Generate dialog box dictionary.
 
     Args:
-        dialog_box_data (DialogBoxData): dialog box data
+        dialog_box_data (DialogBox): dialog box data
 
     Returns:
         dict: dialog box dictionary
