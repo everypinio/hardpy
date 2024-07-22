@@ -17,6 +17,7 @@ from hardpy.pytest_hardpy.db import (
 )
 from hardpy.pytest_hardpy.utils import (
     DuplicateSerialNumberError,
+    DuplicateDialogBoxError,
     DialogBox,
     ConfigData,
     generate_dialog_box_dict,
@@ -233,6 +234,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
 
     Raises:
         ValueError: If the 'message' argument is empty.
+        DuplicateDialogBoxError: If the dialog box is already caused.
     """
     if not dialog_box_data.dialog_text:
         raise ValueError("The 'dialog_text' argument cannot be empty.")
@@ -246,7 +248,8 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
         current_test.case_id,
         DF.DIALOG_BOX,
     )
-
+    if reporter.get_field(key):
+        raise DuplicateDialogBoxError
     data_dict = generate_dialog_box_dict(dialog_box_data)
 
     reporter.set_doc_value(key, data_dict, statestore_only=True)
