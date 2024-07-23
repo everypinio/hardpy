@@ -221,6 +221,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
 
         - dialog_text (str): The text of the dialog box.
         - title_bar (str | None): The title bar of the dialog box.
+        If the title_bar field is missing, it is the case name.
         - widget (DialogBoxWidget | None): Widget information.
 
     Returns:

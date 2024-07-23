@@ -190,7 +190,8 @@ Only one dialog box can be invoked per test case.
 DialogBox attributes:
 
 - dialog_text (str): The text of the dialog box.
-- title_bar (str | None): The title bar of the dialog box.
+- title_bar (str | None): The title bar of the dialog box. 
+If the title_bar field is missing, it is the case name.
 - widget (DialogBoxWidget | None): Widget information.
 
 **Returns:**
@@ -206,6 +207,7 @@ The type of the return value depends on the widget type:
 **Raises**
 
 - `ValueError`: If the 'message' argument is empty.
+- `DuplicateDialogBoxError`: If the dialog box is already caused.
 
 **Example:**
 
