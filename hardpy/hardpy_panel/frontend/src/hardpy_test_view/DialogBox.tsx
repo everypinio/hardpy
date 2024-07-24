@@ -91,7 +91,7 @@ export function StartConfirmationDialog(props: Props) {
         textToSend = selectedRadioButton;
         break;
       case WidgetType.Checkbox:
-        textToSend = selectedCheckboxes.join(',');
+        textToSend = JSON.stringify(selectedCheckboxes);
         break;
       default:
         textToSend = 'ok';

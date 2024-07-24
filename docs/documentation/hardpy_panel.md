@@ -57,6 +57,24 @@ Contains an instruction or question, a number input field, and a `confirm` butto
 
 ![num_input_dialog_box](../img/dialog_box/num_input_dialog_box.jpg)
 
+#### radiobutton
+
+Contains radiobutton widget.
+
+* The user selects one option from several possible ones.
+* Returns the contents of the selected item as a string.
+
+![radiobutton_dialog_box](../img/dialog_box/radiobutton_dialog_box.jpg)
+
+#### checkbox
+
+Contains checkbox widget.
+
+* The user selects several options from several possible ones.
+* Returns a list with the contents of the selected items converted to a string.
+
+![checkbox_dialog_box](../img/dialog_box/checkbox_dialog_box.jpg)
+
 #### warning window
 
 If the user clicks `confirm` without entering anything, a warning window will be displayed.

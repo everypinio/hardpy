@@ -2,6 +2,7 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add dialog box with radiobutton and checkbox.
 * Add base dialog box, text input and numeric input.
 * Add dialog box invocation functionality.
 * Add a socket mechanism to transfer data from the uvicorn server to the pytest subprocess.
