@@ -106,6 +106,7 @@ export function StartConfirmationDialog(props: Props) {
             onKeyDown={handleKeyDown}
             placeholder={inputPlaceholder}
             type="text"
+            autoFocus={true}
           />
         )}
         {widgetType === WidgetType.NumericInput && (
@@ -115,6 +116,7 @@ export function StartConfirmationDialog(props: Props) {
             onKeyDown={handleKeyDown}
             placeholder={inputPlaceholder}
             type="number"
+            autoFocus={true}
           />
         )}
       </div>
@@ -122,6 +124,7 @@ export function StartConfirmationDialog(props: Props) {
         <Button
           intent="primary"
           onClick={handleConfirm}
+          autoFocus={widgetType === WidgetType.Base}
         >
           Confirm
         </Button>
