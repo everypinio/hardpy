@@ -6,7 +6,8 @@ The **hardpy panel** or operator panel is a web interface that displays and cont
 
 **HardPy panel** allows you to:
 
-- Start and stop testing.
+- Start and stop testing;
+- Interact with [dialog box](hardpy_panel.md#dialog-box) during testing;
 - Browse:
     - Test run name.
     - Test run status.
@@ -25,6 +26,49 @@ After this open page http://localhost:8000/ in the browser.
 
 When the operator panel is running, you can run tests through the web interface or through
 the pytest launcher (in a terminal or from another application).
+
+### Dialog box
+
+For user interaction with the test, it is possible to use dialog boxes.
+An example of usage can be seen in the example [dialog box](../examples/dialog_box.md).
+Currently, there are some types of dialog boxes.
+
+#### basic dialog box
+
+Contains an instruction or question and a `confirm` button for confirmation.
+
+![base_dialog_box](../img/dialog_box/base_dialog_box.jpg)
+
+#### text input field
+
+Contains an instruction or question, a text input field, and a `confirm` button for confirmation.
+The text is transmitted in UTF-8 encoding.
+
+![text_input_dialog_box](../img/dialog_box/text_input_dialog_box.jpg)
+
+#### number input field
+
+Contains an instruction or question, a number input field, and a `confirm` button for confirmation.
+
+* Allows float numbers with a dot separator.
+* Allows negative numbers.
+* Allows numbers to be entered using **E notation** with `e`, e.g. `2e3`.
+* The entered numbers will be converted to float.
+
+![num_input_dialog_box](../img/dialog_box/num_input_dialog_box.jpg)
+
+#### warning window
+
+If the user clicks `confirm` without entering anything, a warning window will be displayed.
+
+![alert](../img/dialog_box/alert.jpeg)
+
+#### error notification
+
+If the user closes the dialog box (using the cross in the upper right corner),
+the tests will be stopped, an error message will be displayed.
+
+![notification](../img/dialog_box/notification.jpeg)
 
 ### Options
 
@@ -85,4 +129,22 @@ The default is *8000*.
 
 ```bash
 -wp WEB_PORT, --web_port WEB_PORT
+```
+
+#### sck_port
+
+Internal socket port for passing backend data (such as a dialog box) to running pytest tests.
+The default is *6525*.
+
+```bash
+-sp SCK_PORT, --sck_port SCK_PORT
+```
+
+#### sck_addr
+
+Internal socket address for passing backend data (such as a dialog box) to running pytest tests.
+The default is *localhost*.
+
+```bash
+-sa SCK_ADDR, --sck_addr SCK_ADDR
 ```

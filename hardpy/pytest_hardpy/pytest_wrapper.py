@@ -4,6 +4,7 @@
 import sys
 import signal
 import subprocess
+from socket import socket
 from platform import system
 
 from hardpy.pytest_hardpy.utils.config_data import ConfigData
@@ -46,6 +47,10 @@ class PyTestWrapper(object):
                     self.config.db_user,
                     "--hardpy-dbpw",
                     self.config.db_pswd,
+                    "--hardpy-sp",
+                    str(self.config.socket_port),
+                    "--hardpy-sa",
+                    self.config.socket_addr,
                     "--hardpy-pt",
                 ],
                 cwd=self.config.tests_dir.absolute(),
@@ -64,6 +69,10 @@ class PyTestWrapper(object):
                     self.config.db_user,
                     "--hardpy-dbpw",
                     self.config.db_pswd,
+                    "--hardpy-sp",
+                    str(self.config.socket_port),
+                    "--hardpy-sa",
+                    self.config.socket_addr,
                     "--hardpy-pt",
                 ],
                 cwd=self.config.tests_dir.absolute(),
@@ -113,6 +122,26 @@ class PyTestWrapper(object):
             ],
             cwd=self.config.tests_dir.absolute(),
         )
+        return True
+
+    def confirm_dialog_box(self, dialog_box_output: str):
+        """Set dialog box data to pytest subprocess.
+
+        Args:
+            dialog_box_output (str): dialog box output data
+
+        Returns:
+            bool: True if dialog box was confirmed, else False
+        """
+        config_data = ConfigData()
+
+        try:
+            client = socket()
+            client.connect((config_data.socket_addr, config_data.socket_port))
+            client.sendall(dialog_box_output.encode("utf-8"))
+            client.close()
+        except Exception:
+            return False
         return True
 
     def is_running(self) -> bool | None:

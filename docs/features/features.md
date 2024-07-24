@@ -17,7 +17,7 @@ By default **HardPy** allows you to store all reports in **CouchDB**.
 ## Tests view in browser
 
 **HardPy** includes a **React** application - **HardPy operator panel**.
-It allows you to use a browser to view your tests and write test results to a database.
+It allows you to use a browser to view and interact with your tests and write test results to a database.
 
 ## Modern python
 

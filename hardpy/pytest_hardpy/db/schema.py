@@ -29,12 +29,23 @@ class CaseStateStore(IBaseResult):
         "start_time": 1695817188,
         "stop_time": 1695817189,
         "assertion_msg": null,
-        "msg": null
+        "msg": null,
+        "dialog_box": {
+          "title_bar": "Example of text input",
+          "dialog_text": "Type some text and press the Confirm button",
+          "widget": {
+            "info": {
+              "text": "some text"
+            },
+            "type": "textinput"
+          }
+        }
     }
     """
 
     assertion_msg: str | None = None
     msg: dict | None = None
+    dialog_box: dict = {}
 
 
 class CaseRunStore(IBaseResult):
@@ -175,7 +186,17 @@ class ResultStateStore(IBaseResult):
               "start_time": 1695817263,
               "stop_time": 1695817264,
               "assertion_msg": null,
-              "msg": null
+              "msg": null,
+              "dialog_box": {
+                "title_bar": "Example of text input",
+                "dialog_text": "Type some text and press the Confirm button",
+                "widget": {
+                  "info": {
+                    "text": "some text"
+                  },
+                  "type": "textinput"
+                }
+              }
             },
             "test_minute_parity": {
               "status": "failed",

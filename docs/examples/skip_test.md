@@ -40,7 +40,7 @@ Test/module name formats:
 - `test_1` - if depends on the test module
 - `test_1::test_one` - if depends on the test case
 
-#### Example of case by case dependence
+#### case by case dependence
 
 ```python
 import pytest
@@ -56,7 +56,7 @@ def test_two():
 `test_one` is marked as a dependency for `test_two` using `@pytest.mark.dependency("test_1::test_one")`.
 If `test_one`, then `test_two` will be skipped.
 
-#### Example of module by module dependence
+#### module by module dependence
 
 ##### test_1.py
 
