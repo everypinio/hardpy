@@ -124,7 +124,7 @@ export class SuiteList extends React.Component<Props> {
             index={index}
             test={suite.test}
             defaultOpen={(this.elements_count < 5) && (this.props.defaultClose == false)}
-            commonTestTunStatus={(this.props.db_state.status)}
+            commonTestRunStatus={(this.props.db_state.status)}
         />
     }
 }
