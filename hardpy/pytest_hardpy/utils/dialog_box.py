@@ -70,9 +70,7 @@ def generate_dialog_box_dict(dialog_box_data: DialogBox) -> dict:
     return data_dict
 
 
-def get_dialog_box_data(
-    input_data: str, widget: DialogBoxWidget | None
-) -> Any:
+def get_dialog_box_data(input_data: str, widget: DialogBoxWidget | None) -> Any:
     """Get the dialog box data in the correct format.
 
     Args:
@@ -96,5 +94,15 @@ def get_dialog_box_data(
                 return None
         case DialogBoxWidgetType.TEXT_INPUT:
             return input_data
+        case DialogBoxWidgetType.RADIOBUTTON:
+            try:
+                return input_data
+            except ValueError:
+                return None
+        case DialogBoxWidgetType.CHECKBOX:
+            try:
+                return input_data
+            except ValueError:
+                return None
         case _:
             return None
