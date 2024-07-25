@@ -266,7 +266,7 @@ export class TestSuite extends React.Component<Props, State> {
 
         return this.commonCellRender(
             <div style={{ marginTop: '0.2em', marginBottom: '0.2em' }}>
-                {test.dialog_box.dialog_text && test.status === 'run' && (
+                {test.dialog_box.dialog_text && test.status === 'run' && this.props.commonTestTunStatus === 'run' && (
                     <StartConfirmationDialog
                         title_bar={test.dialog_box.title_bar || test.name}
                         dialog_text={test.dialog_box.dialog_text}
