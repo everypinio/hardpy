@@ -13,6 +13,7 @@ class DialogBoxWidgetType(Enum):
     CHECKBOX = "checkbox"
     TEXT_INPUT = "textinput"
     NUMERIC_INPUT = "numericinput"
+    IMAGE = "image"
 
 
 @dataclass

@@ -2,6 +2,7 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add dialog box with image.
 * Add dialog box with radiobutton and checkbox.
 
 ## HardPy 0.4.0

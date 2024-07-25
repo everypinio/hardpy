@@ -75,6 +75,10 @@ Contains checkbox widget.
 
 ![checkbox_dialog_box](../img/dialog_box/checkbox_dialog_box.jpg)
 
+#### image
+
+Contains image.
+
 #### warning window
 
 If the user clicks `confirm` without entering anything, a warning window will be displayed.
