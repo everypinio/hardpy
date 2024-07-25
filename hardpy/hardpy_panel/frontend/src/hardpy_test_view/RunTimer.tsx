@@ -4,7 +4,7 @@
 import * as React from 'react';
 
 type Props = {
-    commonTestTunStatus: string | undefined
+    commonTestRunStatus: string | undefined
     status: string
 };
 
@@ -57,7 +57,7 @@ export class RunTimer extends React.Component<Props, State> {
     private updateClock() {
         const now = new Date();
 
-        if (this.props.status == 'run' && this.props.commonTestTunStatus == 'run')
+        if (this.props.status == 'run' && this.props.commonTestRunStatus == 'run')
         {
             this.setState({ elapsedTime: now.getTime() - this.startTime })
         } else {

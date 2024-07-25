@@ -55,7 +55,7 @@ type Props = {
     index: number
     test: TestItem
     defaultOpen: boolean
-    commonTestTunStatus: string | undefined
+    commonTestRunStatus: string | undefined
 };
 
 type State = {
@@ -86,7 +86,7 @@ export class TestSuite extends React.Component<Props, State> {
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <TestStatus
                                     status={(
-                                        this.props.commonTestTunStatus != 'run'
+                                        this.props.commonTestRunStatus != 'run'
                                         && (this.props.test.status == 'run' || this.props.test.status == 'ready')
                                     ) ? "stucked" : this.props.test.status
                                     }
@@ -210,7 +210,7 @@ export class TestSuite extends React.Component<Props, State> {
                         (
                             <RunTimer
                                 status={test_topics.status}
-                                commonTestTunStatus={this.props.commonTestTunStatus}
+                                commonTestRunStatus={this.props.commonTestRunStatus}
                             />
                         )}
                 </Tag>
@@ -266,7 +266,7 @@ export class TestSuite extends React.Component<Props, State> {
 
         return this.commonCellRender(
             <div style={{ marginTop: '0.2em', marginBottom: '0.2em' }}>
-                {test.dialog_box.dialog_text && test.status === 'run' && this.props.commonTestTunStatus === 'run' && (
+                {test.dialog_box.dialog_text && test.status === 'run' && this.props.commonTestRunStatus === 'run' && (
                     <StartConfirmationDialog
                         title_bar={test.dialog_box.title_bar || test.name}
                         dialog_text={test.dialog_box.dialog_text}
@@ -276,7 +276,7 @@ export class TestSuite extends React.Component<Props, State> {
                 )}
                 <TestStatus
                     status={
-                        (this.props.commonTestTunStatus !== 'run' &&
+                        (this.props.commonTestRunStatus !== 'run' &&
                             (test.status === 'run' || test.status === 'ready'))
                             ? "stucked"
                             : test.status
