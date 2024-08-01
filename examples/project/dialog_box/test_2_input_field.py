@@ -1,4 +1,5 @@
 import pytest
+import requests
 
 from hardpy import run_dialog_box, set_message
 from hardpy.pytest_hardpy.utils.dialog_box import (
@@ -63,17 +64,3 @@ def test_checkbox():
     response = run_dialog_box(dbx)
     set_message(f"Selected item {response}")
     assert response == '["one"]', "The answer is not correct"
-
-
-@pytest.mark.case_name("Image")
-def test_image():
-    dbx = DialogBox(
-        dialog_text=f"Test image",
-        title_bar="Image example",
-        widget=DialogBoxWidget(
-            DialogBoxWidgetType.IMAGE,
-            {"imageUrl": "/text_input_dialog_box.jpg"},
-        ),
-    )
-    response = run_dialog_box(dbx)
-    assert response is None
