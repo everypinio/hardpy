@@ -250,8 +250,9 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
         raise ValueError("The 'dialog_text' argument cannot be empty.")
 
     if dialog_box_data.widget and dialog_box_data.widget.type == DialogBoxWidgetType.IMAGE:
-        PORT = 8600
-        directory = os.path.join(os.getcwd(), 'assets')
+        PORT = dialog_box_data.widget.info.port if dialog_box_data.widget.info.port else 8600
+        FOLDER = dialog_box_data.widget.info.folder if dialog_box_data.widget.info.folder else 'assets'
+        directory = os.path.join(os.getcwd(), FOLDER)
         os.chdir(directory) 
         handler = http.server.SimpleHTTPRequestHandler
 
