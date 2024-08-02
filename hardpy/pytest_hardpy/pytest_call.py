@@ -263,9 +263,6 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
         stop_event = threading.Event()
         server_thread = threading.Thread(target=run_server, args=(stop_event,))
         server_thread.start()
-        time.sleep(3)
-        stop_event.set()
-        server_thread.join()
 
     current_test = _get_current_test()
     reporter = RunnerReporter()
@@ -284,6 +281,9 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
     reporter.update_db_by_doc()
 
     dialog_raw_data = _get_socket_raw_data()
+    if dialog_box_data.widget and dialog_box_data.widget.type == DialogBoxWidgetType.IMAGE:
+        while not stop_event.is_set():
+            break
 
     return get_dialog_box_data(dialog_raw_data, dialog_box_data.widget)
 
