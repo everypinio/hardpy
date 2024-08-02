@@ -27,7 +27,8 @@ export enum WidgetType {
 interface WidgetInfo {
   options?: string[];
   text?: string;
-  imageUrl?: string;
+  image_base64?: string;
+  image_format?: string;
 }
 
 export function StartConfirmationDialog(props: Props) {
@@ -184,7 +185,7 @@ export function StartConfirmationDialog(props: Props) {
           </>
         )}
         {widgetType === WidgetType.Image && (
-          <img src={props.widget_info?.imageUrl} alt="Image" style={{ width: '100%' }} />
+          <img src={`data:image/${props.widget_info?.image_format};base64,${props.widget_info?.image_base64}`} alt="Image" style={{ width: '100%' }} />
         )}
       </div>
       <div className={Classes.DIALOG_FOOTER}>

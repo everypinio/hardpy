@@ -9,10 +9,10 @@ from typing import Any
 class DialogBoxWidgetType(Enum):
     """Dialog box widget type."""
 
-    RADIOBUTTON = "radiobutton"
-    CHECKBOX = "checkbox"
     TEXT_INPUT = "textinput"
     NUMERIC_INPUT = "numericinput"
+    RADIOBUTTON = "radiobutton"
+    CHECKBOX = "checkbox"
     IMAGE = "image"
 
 

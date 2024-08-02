@@ -1,14 +1,10 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-import http.server
-import os
 import socket
+import base64
 from os import environ
 from dataclasses import dataclass
-import socketserver
-import threading
-import time
 from typing import Optional, Any
 from uuid import uuid4
 
@@ -250,20 +246,13 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
         raise ValueError("The 'dialog_text' argument cannot be empty.")
 
     if dialog_box_data.widget and dialog_box_data.widget.type == DialogBoxWidgetType.IMAGE:
-        PORT = dialog_box_data.widget.info.port if dialog_box_data.widget.info.port else 8600
-        FOLDER = dialog_box_data.widget.info.folder if dialog_box_data.widget.info.folder else 'assets'
-        directory = os.path.join(os.getcwd(), FOLDER)
-        os.chdir(directory) 
-        handler = http.server.SimpleHTTPRequestHandler
-
-        def run_server(stop_event):
-            with socketserver.TCPServer(("", PORT), handler) as httpd:
-                print("serving at port", PORT)
-                while not stop_event.is_set():
-                    httpd.handle_request()
-        stop_event = threading.Event()
-        server_thread = threading.Thread(target=run_server, args=(stop_event,))
-        server_thread.start()
+        def file_to_base64(file_path):
+            with open(file_path, 'rb') as file:
+                file_data = file.read()
+                base64_data = base64.b64encode(file_data)
+                return base64_data.decode('utf-8')
+        base64_string = file_to_base64(dialog_box_data.widget.info["image_address"] if dialog_box_data.widget.info else 'assets/test.jpg')
+        dialog_box_data.widget.info = {"image_base64": base64_string, "image_format": "jpeg"}
 
     current_test = _get_current_test()
     reporter = RunnerReporter()
@@ -282,9 +271,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
     reporter.update_db_by_doc()
 
     dialog_raw_data = _get_socket_raw_data()
-    if dialog_box_data.widget and dialog_box_data.widget.type == DialogBoxWidgetType.IMAGE:
-        while not stop_event.is_set():
-            break
+
 
     return get_dialog_box_data(dialog_raw_data, dialog_box_data.widget)
 

@@ -6,13 +6,12 @@ from hardpy.pytest_hardpy.utils.dialog_box import (
     DialogBox,
 )
 
-
 def test_upload_image():
     dbx = DialogBox(
         dialog_text=f"Test image",
         widget=DialogBoxWidget(
             DialogBoxWidgetType.IMAGE,
-            {"imageUrl": "http://localhost:8600/test_1.jpg"},
+            {"image_address": 'assets/test.jpg'},
         ),
     )
     response = run_dialog_box(dbx)
