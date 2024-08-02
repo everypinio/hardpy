@@ -1,9 +1,14 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+import http.server
+import os
 import socket
 from os import environ
 from dataclasses import dataclass
+import socketserver
+import threading
+import time
 from typing import Optional, Any
 from uuid import uuid4
 
@@ -24,6 +29,7 @@ from hardpy.pytest_hardpy.utils import (
     get_dialog_box_data,
 )
 from hardpy.pytest_hardpy.reporter import RunnerReporter
+from hardpy.pytest_hardpy.utils.dialog_box import DialogBoxWidgetType
 
 
 @dataclass
@@ -242,6 +248,24 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
     """
     if not dialog_box_data.dialog_text:
         raise ValueError("The 'dialog_text' argument cannot be empty.")
+
+    if dialog_box_data.widget and dialog_box_data.widget.type == DialogBoxWidgetType.IMAGE:
+        PORT = 8600
+        directory = os.path.join(os.getcwd(), 'assets')
+        os.chdir(directory) 
+        handler = http.server.SimpleHTTPRequestHandler
+
+        def run_server(stop_event):
+            with socketserver.TCPServer(("", PORT), handler) as httpd:
+                print("serving at port", PORT)
+                while not stop_event.is_set():
+                    httpd.handle_request()
+        stop_event = threading.Event()
+        server_thread = threading.Thread(target=run_server, args=(stop_event,))
+        server_thread.start()
+        time.sleep(3)
+        stop_event.set()
+        server_thread.join()
 
     current_test = _get_current_test()
     reporter = RunnerReporter()
