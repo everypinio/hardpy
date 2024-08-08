@@ -70,10 +70,10 @@ def test_num_input():
     assert response == 123.0
 
 
-@pytest.mark.case_name("Radiobutton")
+@pytest.mark.case_name("Test dialog box with radiobutton")
 def test_radiobutton():
     dbx = DialogBox(
-        dialog_text=f"Select one item (1) from several and click the Confirm button",
+        dialog_text="Select items \"one\" out of several and click Confirm.",
         title_bar="Radiobutton example",
         widget=DialogBoxWidget(
             DialogBoxWidgetType.RADIOBUTTON,
@@ -85,10 +85,10 @@ def test_radiobutton():
     assert response == "one", "The answer is not correct"
 
 
-@pytest.mark.case_name("Checkbox")
+@pytest.mark.case_name("Test dialog box with checkbox")
 def test_checkbox():
     dbx = DialogBox(
-        dialog_text=f"Select one or more items (1) and click the Confirm button",
+        dialog_text="Select one or more items \"one\" and \"two\"  and click the Confirm button",
         title_bar="Checkbox example",
         widget=DialogBoxWidget(
             DialogBoxWidgetType.CHECKBOX, {"options": ["one", "two", "three"]}
@@ -96,6 +96,6 @@ def test_checkbox():
     )
     response = run_dialog_box(dbx)
     set_message(f"Selected item {response}")
-    assert response == '["one"]', "The answer is not correct"
+    assert response == '["one", "two"]', "The answer is not correct"
 ```
 
