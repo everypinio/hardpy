@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, Classes, Dialog, InputGroup } from '@blueprintjs/core';
+import { Button, Classes, Dialog, InputGroup, Radio, Checkbox } from '@blueprintjs/core';
 import { notification } from 'antd';
 
 interface Props {
@@ -18,16 +18,24 @@ interface Props {
 export enum WidgetType {
   Base = "base",
   TextInput = "textinput",
-  NumericInput = "numericinput"
+  NumericInput = "numericinput",
+  RadioButton = "radiobutton",
+  Checkbox = "checkbox",
+  Image = "image"
 }
 
 interface WidgetInfo {
+  options?: string[];
   text?: string;
+  image_base64?: string;
+  image_format?: string;
 }
 
 export function StartConfirmationDialog(props: Props) {
   const [dialogOpen, setDialogOpen] = useState(true);
   const [inputText, setInputText] = useState('');
+  const [selectedRadioButton, setSelectedRadioButton] = useState('');
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
 
   const handleClose = () => {
     setDialogOpen(false);
@@ -49,9 +57,30 @@ export function StartConfirmationDialog(props: Props) {
   };
 
   const handleConfirm = async () => {
-    if (props.widget_type && inputText.trim() === '') {
-      alert('The field must not be empty');
-      return;
+    if (props.widget_type) {
+      switch (props.widget_type) {
+        case WidgetType.TextInput:
+        case WidgetType.NumericInput:
+          if (inputText.trim() === '') {
+            alert('The field must not be empty');
+            return;
+          }
+          break;
+        case WidgetType.RadioButton:
+          if (selectedRadioButton === '') {
+            alert('The field must not be empty');
+            return;
+          }
+          break;
+        case WidgetType.Checkbox:
+          if (selectedCheckboxes.length === 0) {
+            alert('The field must not be empty');
+            return;
+          }
+          break;
+        default:
+          break;
+      }
     }
     setDialogOpen(false);
     let textToSend = '';
@@ -60,6 +89,12 @@ export function StartConfirmationDialog(props: Props) {
       case WidgetType.TextInput:
       case WidgetType.NumericInput:
         textToSend = inputText;
+        break;
+      case WidgetType.RadioButton:
+        textToSend = selectedRadioButton;
+        break;
+      case WidgetType.Checkbox:
+        textToSend = JSON.stringify(selectedCheckboxes);
         break;
       default:
         textToSend = 'ok';
@@ -118,6 +153,39 @@ export function StartConfirmationDialog(props: Props) {
             type="number"
             autoFocus={true}
           />
+        )}
+        {widgetType === WidgetType.RadioButton && (
+          <>
+            {props.widget_info && props.widget_info.options && props.widget_info.options.map((option: string) => (
+              <Radio
+                key={option}
+                label={option}
+                checked={selectedRadioButton === option}
+                onChange={() => setSelectedRadioButton(option)}
+              />
+            ))}
+          </>
+        )}
+        {widgetType === WidgetType.Checkbox && (
+          <>
+            {props.widget_info && props.widget_info.options && props.widget_info.options.map((option: string) => (
+              <Checkbox
+                key={option}
+                label={option}
+                checked={selectedCheckboxes.includes(option)}
+                onChange={() => {
+                  if (selectedCheckboxes.includes(option)) {
+                    setSelectedCheckboxes(selectedCheckboxes.filter(item => item !== option));
+                  } else {
+                    setSelectedCheckboxes([...selectedCheckboxes, option]);
+                  }
+                }}
+              />
+            ))}
+          </>
+        )}
+        {widgetType === WidgetType.Image && (
+          <img src={`data:image/${props.widget_info?.image_format};base64,${props.widget_info?.image_base64}`} alt="Image" style={{ width: '100%' }} />
         )}
       </div>
       <div className={Classes.DIALOG_FOOTER}>

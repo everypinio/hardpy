@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import socket
+import base64
 from os import environ
 from dataclasses import dataclass
 from typing import Optional, Any
@@ -24,6 +25,7 @@ from hardpy.pytest_hardpy.utils import (
     get_dialog_box_data,
 )
 from hardpy.pytest_hardpy.reporter import RunnerReporter
+from hardpy.pytest_hardpy.utils.dialog_box import DialogBoxWidgetType
 
 
 @dataclass
@@ -232,6 +234,9 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
         - Without widget: None.
         - TEXT_INPUT: str.
         - NUMERIC_INPUT: float.
+        - RADIOBUTTON: str.
+        - CHECKBOX: str.
+        - IMAGE: str.
 
     Raises:
         ValueError: If the 'message' argument is empty.
@@ -239,6 +244,15 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
     """
     if not dialog_box_data.dialog_text:
         raise ValueError("The 'dialog_text' argument cannot be empty.")
+
+    if dialog_box_data.widget and dialog_box_data.widget.type == DialogBoxWidgetType.IMAGE:
+        def file_to_base64(file_path):
+            with open(file_path, 'rb') as file:
+                file_data = file.read()
+                base64_data = base64.b64encode(file_data)
+                return base64_data.decode('utf-8')
+        base64_string = file_to_base64(dialog_box_data.widget.info["image_address"] if dialog_box_data.widget.info else 'assets/test.jpg')
+        dialog_box_data.widget.info = {"image_base64": base64_string, "image_format": "jpeg"}
 
     current_test = _get_current_test()
     reporter = RunnerReporter()
@@ -257,6 +271,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
     reporter.update_db_by_doc()
 
     dialog_raw_data = _get_socket_raw_data()
+
 
     return get_dialog_box_data(dialog_raw_data, dialog_box_data.widget)
 

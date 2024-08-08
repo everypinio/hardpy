@@ -203,6 +203,9 @@ The type of the return value depends on the widget type:
 - Without widget: None.
 - NUMERIC_INPUT: float.
 - TEXT_INPUT: str.
+- RADIOBUTTON: str.
+- CHECKBOX: str.
+- IMAGE: None.
 
 **Raises**
 
