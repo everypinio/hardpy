@@ -1,5 +1,4 @@
-import os
-from hardpy import run_dialog_box, set_message
+from hardpy import run_dialog_box
 from hardpy.pytest_hardpy.utils.dialog_box import (
     DialogBoxWidget,
     DialogBoxWidgetType,

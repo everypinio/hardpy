@@ -97,5 +97,17 @@ def test_checkbox():
     response = run_dialog_box(dbx)
     set_message(f"Selected item {response}")
     assert response == '["one"]', "The answer is not correct"
+
+@pytest.mark.case_name("Image")
+def test_image():
+    dbx = DialogBox(
+        dialog_text=f"Test image",
+        widget=DialogBoxWidget(
+            DialogBoxWidgetType.IMAGE,
+            {"image_address": 'assets/test.jpg'},
+        ),
+    )
+    response = run_dialog_box(dbx)
+    assert response is None
 ```
 

@@ -77,7 +77,10 @@ Contains checkbox widget.
 
 #### image
 
-Contains image.
+Contains an instruction or question with image and a `confirm` button for confirmation.
+
+![dialog_box_with_image](../img/dialog_box/dialog_box_with_image.jpg)
+
 
 #### warning window
 
