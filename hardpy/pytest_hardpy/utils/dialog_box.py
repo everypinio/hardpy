@@ -79,6 +79,9 @@ def get_dialog_box_data(input_data: str, widget: DialogBoxWidget | None) -> Any:
 
     Returns:
         Any: Dialog box data in the correct format
+
+    Raises:
+        ValueError: If the widget.type is empty.
     """
     if widget is None:
         return None
@@ -86,23 +89,21 @@ def get_dialog_box_data(input_data: str, widget: DialogBoxWidget | None) -> Any:
     if widget.type is None:
         raise ValueError("Widget type is `None`, but widget data is not empty")
 
+    dbx_answer = None
+
     match widget.type:
         case DialogBoxWidgetType.NUMERIC_INPUT:
             try:
-                return float(input_data)
+                dbx_answer = float(input_data)
             except ValueError:
-                return None
+                dbx_answer = None
         case DialogBoxWidgetType.TEXT_INPUT:
-            return input_data
+            dbx_answer = input_data
         case DialogBoxWidgetType.RADIOBUTTON:
-            try:
-                return input_data
-            except ValueError:
-                return None
+            dbx_answer = input_data
         case DialogBoxWidgetType.CHECKBOX:
-            try:
-                return input_data
-            except ValueError:
-                return None
+            dbx_answer = input_data
         case _:
-            return None
+            pass  # noqa: WPS420
+
+    return dbx_answer
