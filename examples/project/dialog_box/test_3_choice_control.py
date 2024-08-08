@@ -5,6 +5,8 @@ from hardpy.pytest_hardpy.utils.dialog_box import (
     DialogBoxWidget,
     DialogBoxWidgetType,
     DialogBox,
+    RadiobuttonInfo,
+    CheckboxInfo,
 )
 
 
@@ -17,7 +19,7 @@ def test_radiobutton():
         title_bar="Radiobutton example",
         widget=DialogBoxWidget(
             DialogBoxWidgetType.RADIOBUTTON,
-            {"options": ["one", "two", "three"]},
+            RadiobuttonInfo(fields=["one", "two", "three"]),
         ),
     )
     response = run_dialog_box(dbx)
@@ -31,7 +33,7 @@ def test_checkbox():
         dialog_text=f"Select one or more items (1) and click the Confirm button",
         title_bar="Checkbox example",
         widget=DialogBoxWidget(
-            DialogBoxWidgetType.CHECKBOX, {"options": ["one", "two", "three"]}
+            DialogBoxWidgetType.CHECKBOX, CheckboxInfo(fields=["one", "two", "three"]),
         ),
     )
     response = run_dialog_box(dbx)

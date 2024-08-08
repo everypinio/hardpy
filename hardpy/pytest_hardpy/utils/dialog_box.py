@@ -3,7 +3,7 @@
 
 from enum import Enum
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, List, Optional, Union
 
 
 class DialogBoxWidgetType(Enum):
@@ -16,16 +16,23 @@ class DialogBoxWidgetType(Enum):
 
 
 @dataclass
+class RadiobuttonInfo:
+    fields: List[Union[str, int, float]]
+
+@dataclass
+class CheckboxInfo:
+    fields: List[Union[str, int, float]]
+
+@dataclass
 class DialogBoxWidget:
     """Dialog box widget.
 
     Args:
         type (DialogBoxWidgetType): widget type
-        info (dict | None): widget info
+        info (Union[RadiobuttonInfo, CheckboxInfo, None]): widget info
     """
-
     type: DialogBoxWidgetType
-    info: dict | None = None
+    info: Optional[Union[RadiobuttonInfo, CheckboxInfo]] = None
 
 
 @dataclass
