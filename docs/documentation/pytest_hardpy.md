@@ -204,7 +204,7 @@ The type of the return value depends on the widget type:
 - NUMERIC_INPUT: float.
 - TEXT_INPUT: str.
 - RADIOBUTTON: str.
-- CHECKBOX: str.
+- CHECKBOX: List(str).
 
 **Raises**
 
