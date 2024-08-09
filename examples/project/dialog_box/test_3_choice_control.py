@@ -12,10 +12,11 @@ from hardpy.pytest_hardpy.utils.dialog_box import (
 
 pytestmark = pytest.mark.module_name("Choice control dialog boxes")
 
+
 @pytest.mark.case_name("Test dialog box with radiobutton")
 def test_radiobutton():
     dbx = DialogBox(
-        dialog_text="Select item \"one\" out of several and click Confirm.",
+        dialog_text='Select item "one" out of several and click Confirm.',
         title_bar="Radiobutton example",
         widget=DialogBoxWidget(
             DialogBoxWidgetType.RADIOBUTTON,
@@ -30,10 +31,11 @@ def test_radiobutton():
 @pytest.mark.case_name("Test dialog box with checkbox")
 def test_checkbox():
     dbx = DialogBox(
-        dialog_text="Select items \"one\" and \"two\" and click the Confirm button",
+        dialog_text='Select items "one" and "two" and click the Confirm button',
         title_bar="Checkbox example",
         widget=DialogBoxWidget(
-            DialogBoxWidgetType.CHECKBOX, CheckboxInfo(fields=["one", "two", "three"]),
+            DialogBoxWidgetType.CHECKBOX,
+            CheckboxInfo(fields=["one", "two", "three"]),
         ),
     )
     response = run_dialog_box(dbx)
