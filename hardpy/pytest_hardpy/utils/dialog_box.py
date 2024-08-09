@@ -17,11 +17,11 @@ class DialogBoxWidgetType(Enum):
 
 @dataclass
 class RadiobuttonInfo:
-    fields: List[Union[str, int, float]]
+    fields: List[str]
 
 @dataclass
 class CheckboxInfo:
-    fields: List[Union[str, int, float]]
+    fields: List[str]
 
 @dataclass
 class DialogBoxWidget:
@@ -65,6 +65,19 @@ def generate_dialog_box_dict(dialog_box_data: DialogBox) -> dict:
             "dialog_text": dialog_box_data.dialog_text,
             "widget": None,
         }
+    elif dialog_box_data.widget.info and dialog_box_data.widget.info.fields:
+        widget_info = dialog_box_data.widget.info
+        widget_data = {
+            "info": {
+                "fields": [str(field) for field in widget_info.fields],
+            },
+            "type": dialog_box_data.widget.type.value,
+        }
+        data_dict = {
+            "title_bar": dialog_box_data.title_bar,
+            "dialog_text": dialog_box_data.dialog_text,
+            "widget": widget_data,
+        }        
     else:
         data_dict = {
             "title_bar": dialog_box_data.title_bar,

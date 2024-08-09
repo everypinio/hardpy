@@ -24,7 +24,7 @@ export enum WidgetType {
 }
 
 interface WidgetInfo {
-  options?: string[];
+  fields?: string[];
   text?: string;
 }
 
@@ -153,7 +153,7 @@ export function StartConfirmationDialog(props: Props) {
         )}
         {widgetType === WidgetType.RadioButton && (
           <>
-            {props.widget_info && props.widget_info.options && props.widget_info.options.map((option: string) => (
+            {props.widget_info && props.widget_info.fields && props.widget_info.fields.map((option: string) => (
               <Radio
                 key={option}
                 label={option}
@@ -165,7 +165,7 @@ export function StartConfirmationDialog(props: Props) {
         )}
         {widgetType === WidgetType.Checkbox && (
           <>
-            {props.widget_info && props.widget_info.options && props.widget_info.options.map((option: string) => (
+            {props.widget_info && props.widget_info.fields && props.widget_info.fields.map((option: string) => (
               <Checkbox
                 key={option}
                 label={option}
