@@ -5,6 +5,8 @@ from enum import Enum
 from dataclasses import dataclass
 from typing import Any, List, Optional, Union
 
+from hardpy.pytest_hardpy.utils.exception import WidgetInfoError
+
 
 class DialogBoxWidgetType(Enum):
     """Dialog box widget type."""
@@ -62,35 +64,57 @@ def generate_dialog_box_dict(dialog_box_data: DialogBox) -> dict:
     Returns:
         dict: dialog box dictionary
     """
-    if dialog_box_data.widget is None:
-        data_dict = {
-            "title_bar": dialog_box_data.title_bar,
-            "dialog_text": dialog_box_data.dialog_text,
-            "widget": None,
-        }
-    elif dialog_box_data.widget.info and dialog_box_data.widget.info.fields:
-        widget_info = dialog_box_data.widget.info
-        widget_data = {
-            "info": {
-                "fields": [str(field) for field in widget_info.fields],
-            },
-            "type": dialog_box_data.widget.type.value,
-        }
-        data_dict = {
-            "title_bar": dialog_box_data.title_bar,
-            "dialog_text": dialog_box_data.dialog_text,
-            "widget": widget_data,
-        }
-    else:
-        data_dict = {
-            "title_bar": dialog_box_data.title_bar,
-            "dialog_text": dialog_box_data.dialog_text,
-            "widget": {
-                "info": dialog_box_data.widget.info,
+
+    def _validate_dialog_box_data(db_data):
+        if db_data.widget is None:
+            return True
+        if db_data.widget.type in [
+            DialogBoxWidgetType.NUMERIC_INPUT,
+            DialogBoxWidgetType.TEXT_INPUT,
+        ]:
+            return True
+        if (
+            db_data.widget.type
+            in [
+                DialogBoxWidgetType.RADIOBUTTON,
+                DialogBoxWidgetType.CHECKBOX,
+            ]
+            and db_data.widget.info is not None
+            and db_data.widget.info.fields is not None
+        ):
+            return True
+        raise WidgetInfoError
+
+    if _validate_dialog_box_data(dialog_box_data):
+        if dialog_box_data.widget is None:
+            data_dict = {
+                "title_bar": dialog_box_data.title_bar,
+                "dialog_text": dialog_box_data.dialog_text,
+                "widget": None,
+            }
+        elif dialog_box_data.widget.info and dialog_box_data.widget.info.fields:
+            widget_info = dialog_box_data.widget.info
+            widget_data = {
+                "info": {
+                    "fields": [str(field) for field in widget_info.fields],
+                },
                 "type": dialog_box_data.widget.type.value,
-            },
-        }
-    return data_dict
+            }
+            data_dict = {
+                "title_bar": dialog_box_data.title_bar,
+                "dialog_text": dialog_box_data.dialog_text,
+                "widget": widget_data,
+            }
+        else:
+            data_dict = {
+                "title_bar": dialog_box_data.title_bar,
+                "dialog_text": dialog_box_data.dialog_text,
+                "widget": {
+                    "info": dialog_box_data.widget.info,
+                    "type": dialog_box_data.widget.type.value,
+                },
+            }
+        return data_dict
 
 
 def get_dialog_box_data(input_data: str, widget: DialogBoxWidget | None) -> Any:

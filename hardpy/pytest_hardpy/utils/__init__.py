@@ -9,6 +9,7 @@ from hardpy.pytest_hardpy.utils.config_data import ConfigData
 from hardpy.pytest_hardpy.utils.exception import (
     DuplicateSerialNumberError,
     DuplicateDialogBoxError,
+    WidgetInfoError
 )
 from hardpy.pytest_hardpy.utils.dialog_box import (
     DialogBox,
@@ -27,6 +28,7 @@ __all__ = [
     "ConfigData",
     "DuplicateSerialNumberError",
     "DuplicateDialogBoxError",
+    "WidgetInfoError",
     "DialogBox",
     "DialogBoxWidget",
     "DialogBoxWidgetType",

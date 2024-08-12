@@ -21,3 +21,10 @@ class DuplicateDialogBoxError(HardpyError):
 
     def __init__(self):
         super().__init__(self.__doc__)  # type: ignore
+
+
+class WidgetInfoError(HardpyError):
+    """The widget info is not correct."""
+
+    def __init__(self):
+        super().__init__(self.__doc__)  # type: ignore
