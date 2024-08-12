@@ -64,35 +64,30 @@ def generate_dialog_box_dict(dialog_box_data: DialogBox) -> dict:
     Returns:
         dict: dialog box dictionary
     """
-
-    def _validate_dialog_box_data(db_data):
-        if db_data.widget is None:
-            return True
-        if db_data.widget.type in [
-            DialogBoxWidgetType.NUMERIC_INPUT,
-            DialogBoxWidgetType.TEXT_INPUT,
-        ]:
-            return True
-        if (
-            db_data.widget.type
-            in [
-                DialogBoxWidgetType.RADIOBUTTON,
-                DialogBoxWidgetType.CHECKBOX,
-            ]
-            and db_data.widget.info is not None
-            and db_data.widget.info.fields is not None
-        ):
-            return True
-        raise WidgetInfoError
-
-    if _validate_dialog_box_data(dialog_box_data):
+    try:
         if dialog_box_data.widget is None:
             data_dict = {
                 "title_bar": dialog_box_data.title_bar,
                 "dialog_text": dialog_box_data.dialog_text,
                 "widget": None,
             }
-        elif dialog_box_data.widget.info and dialog_box_data.widget.info.fields:
+        elif dialog_box_data.widget.type in [
+            DialogBoxWidgetType.NUMERIC_INPUT,
+            DialogBoxWidgetType.TEXT_INPUT,
+        ]:
+            data_dict = {
+                "title_bar": dialog_box_data.title_bar,
+                "dialog_text": dialog_box_data.dialog_text,
+                "widget": {
+                    "info": dialog_box_data.widget.info,
+                    "type": dialog_box_data.widget.type.value,
+                },
+            }
+        elif (
+            dialog_box_data.widget.type == DialogBoxWidgetType.RADIOBUTTON
+            and type(dialog_box_data.widget.info) is RadiobuttonInfo
+            and dialog_box_data.widget.info.fields is not None
+        ):
             widget_info = dialog_box_data.widget.info
             widget_data = {
                 "info": {
@@ -105,16 +100,27 @@ def generate_dialog_box_dict(dialog_box_data: DialogBox) -> dict:
                 "dialog_text": dialog_box_data.dialog_text,
                 "widget": widget_data,
             }
-        else:
+        elif (
+            dialog_box_data.widget.type == DialogBoxWidgetType.CHECKBOX
+            and type(dialog_box_data.widget.info) is CheckboxInfo
+            and dialog_box_data.widget.info.fields is not None
+        ):
+            widget_info = dialog_box_data.widget.info
+            widget_data = {
+                "info": {
+                    "fields": [str(field) for field in widget_info.fields],
+                },
+                "type": dialog_box_data.widget.type.value,
+            }
             data_dict = {
                 "title_bar": dialog_box_data.title_bar,
                 "dialog_text": dialog_box_data.dialog_text,
-                "widget": {
-                    "info": dialog_box_data.widget.info,
-                    "type": dialog_box_data.widget.type.value,
-                },
+                "widget": widget_data,
             }
         return data_dict
+
+    except WidgetInfoError:
+        raise ValueError("Widget info is not correct")
 
 
 def get_dialog_box_data(input_data: str, widget: DialogBoxWidget | None) -> Any:
