@@ -67,47 +67,43 @@ def generate_dialog_box_dict(dialog_box_data: DialogBox) -> dict:
     Raises:
         WidgetInfoError: If the widget info is not correct.
     """
-    try:
-        if dialog_box_data.widget is None:
-            data_dict = {
-                "title_bar": dialog_box_data.title_bar,
-                "dialog_text": dialog_box_data.dialog_text,
-                "widget": None,
-            }
-            return data_dict
-        _validate_widget_info(dialog_box_data.widget)
-        if dialog_box_data.widget.type in [
-            DialogBoxWidgetType.NUMERIC_INPUT,
-            DialogBoxWidgetType.TEXT_INPUT,
-        ]:
-            data_dict = {
-                "title_bar": dialog_box_data.title_bar,
-                "dialog_text": dialog_box_data.dialog_text,
-                "widget": {
-                    "info": dialog_box_data.widget.info,
-                    "type": dialog_box_data.widget.type.value,
-                },
-            }
-        elif dialog_box_data.widget.type in [
-            DialogBoxWidgetType.RADIOBUTTON,
-            DialogBoxWidgetType.CHECKBOX,
-        ]:
-            widget_info = dialog_box_data.widget.info
-            widget_data = {
-                "info": {
-                    "fields": [str(field) for field in widget_info.fields],
-                },
-                "type": dialog_box_data.widget.type.value,
-            }
-            data_dict = {
-                "title_bar": dialog_box_data.title_bar,
-                "dialog_text": dialog_box_data.dialog_text,
-                "widget": widget_data,
-            }
+    if dialog_box_data.widget is None:
+        data_dict = {
+            "title_bar": dialog_box_data.title_bar,
+            "dialog_text": dialog_box_data.dialog_text,
+            "widget": None,
+        }
         return data_dict
-
-    except (WidgetInfoError, ValueError) as e:
-        raise WidgetInfoError(f"Invalid dialog box data: {e}")
+    _validate_widget_info(dialog_box_data.widget)
+    if dialog_box_data.widget.type in [
+        DialogBoxWidgetType.NUMERIC_INPUT,
+        DialogBoxWidgetType.TEXT_INPUT,
+    ]:
+        data_dict = {
+            "title_bar": dialog_box_data.title_bar,
+            "dialog_text": dialog_box_data.dialog_text,
+            "widget": {
+                "info": dialog_box_data.widget.info,
+                "type": dialog_box_data.widget.type.value,
+            },
+        }
+    elif dialog_box_data.widget.type in [
+        DialogBoxWidgetType.RADIOBUTTON,
+        DialogBoxWidgetType.CHECKBOX,
+    ]:
+        widget_info = dialog_box_data.widget.info
+        widget_data = {
+            "info": {
+                "fields": [str(field) for field in widget_info.fields],
+            },
+            "type": dialog_box_data.widget.type.value,
+        }
+        data_dict = {
+            "title_bar": dialog_box_data.title_bar,
+            "dialog_text": dialog_box_data.dialog_text,
+            "widget": widget_data,
+        }
+    return data_dict
 
 
 def get_dialog_box_data(input_data: str, widget: DialogBoxWidget | None) -> Any:
@@ -160,7 +156,7 @@ def _validate_widget_info(widget: DialogBoxWidget) -> None:
         WidgetInfoError: If the widget type is not supported or the info object
             is not of the expected type for the widget type.
     """
-    match widget.type:        
+    match widget.type:
         case DialogBoxWidgetType.TEXT_INPUT:
             if widget.info:
                 raise WidgetInfoError("Expected None for widget info")
@@ -168,10 +164,10 @@ def _validate_widget_info(widget: DialogBoxWidget) -> None:
             if widget.info:
                 raise WidgetInfoError("Expected None for widget info")
         case DialogBoxWidgetType.RADIOBUTTON:
-            if not isinstance(widget.info, RadiobuttonInfo):
+            if not isinstance(widget.info, RadiobuttonInfo) or len(widget.info.fields) == 0:
                 raise WidgetInfoError("Expected RadiobuttonInfo for widget info")
         case DialogBoxWidgetType.CHECKBOX:
-            if not isinstance(widget.info, CheckboxInfo):
+            if not isinstance(widget.info, CheckboxInfo) or len(widget.info.fields) == 0:
                 raise WidgetInfoError("Expected CheckboxInfo for widget info")
         case _:
             raise WidgetInfoError(f"Unsupported widget type: {widget.type}")
