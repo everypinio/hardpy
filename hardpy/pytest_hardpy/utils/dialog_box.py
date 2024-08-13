@@ -168,8 +168,10 @@ def _validate_widget_info(widget: DialogBoxWidget) -> None:
             if not isinstance(widget.info, CheckboxInfo):
                 raise WidgetInfoError("Expected CheckboxInfo for widget info")
         case DialogBoxWidgetType.TEXT_INPUT:
-            pass
+            if widget.info:
+                raise WidgetInfoError("Expected None for widget info")
         case DialogBoxWidgetType.NUMERIC_INPUT:
-            pass
+            if widget.info:
+                raise WidgetInfoError("Expected None for widget info")
         case _:
             raise WidgetInfoError(f"Unsupported widget type: {widget.type}")
