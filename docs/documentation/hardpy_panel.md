@@ -79,7 +79,7 @@ Contains checkbox widget.
 
 Contains an instruction or question with image and a `confirm` button for confirmation.
 
-![dialog_box_with_image](../img/dialog_box/dialog_box_with_image.jpg)
+![dialog_box_with_image](../img/dialog_box/dialog_box_with_image.png)
 
 
 #### warning window

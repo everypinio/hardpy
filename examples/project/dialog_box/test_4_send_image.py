@@ -3,6 +3,7 @@ from hardpy.pytest_hardpy.utils.dialog_box import (
     DialogBoxWidget,
     DialogBoxWidgetType,
     DialogBox,
+    ImageInfo,
 )
 
 def test_upload_image():
@@ -10,7 +11,7 @@ def test_upload_image():
         dialog_text=f"Test image",
         widget=DialogBoxWidget(
             DialogBoxWidgetType.IMAGE,
-            {"image_address": 'assets/test.jpg'},
+            ImageInfo(image_address='assets/test.jpg'),
         ),
     )
     response = run_dialog_box(dbx)

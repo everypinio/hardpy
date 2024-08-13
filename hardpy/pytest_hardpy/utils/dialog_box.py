@@ -2,6 +2,8 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from enum import Enum
+import base64
+import re
 from dataclasses import dataclass
 from typing import Any, List, Optional, Union
 
@@ -29,16 +31,21 @@ class CheckboxInfo:
 
 
 @dataclass
+class ImageInfo:
+    image_address: str
+
+
+@dataclass
 class DialogBoxWidget:
     """Dialog box widget.
 
     Args:
         type (DialogBoxWidgetType): widget type
-        info (Union[RadiobuttonInfo, CheckboxInfo, None]): widget info
+        info (Union[RadiobuttonInfo, CheckboxInfo, ImageInfo, None]): widget info
     """
 
     type: DialogBoxWidgetType
-    info: Optional[Union[RadiobuttonInfo, CheckboxInfo]] = None
+    info: Optional[Union[RadiobuttonInfo, CheckboxInfo, ImageInfo]] = None
 
 
 @dataclass
@@ -84,7 +91,7 @@ def generate_dialog_box_dict(dialog_box_data: DialogBox) -> dict:
             "title_bar": dialog_box_data.title_bar,
             "dialog_text": dialog_box_data.dialog_text,
             "widget": {
-                "info": dialog_box_data.widget.info,
+                "info": None,
                 "type": dialog_box_data.widget.type.value,
             },
         }
@@ -96,6 +103,34 @@ def generate_dialog_box_dict(dialog_box_data: DialogBox) -> dict:
         widget_data = {
             "info": {
                 "fields": [str(field) for field in widget_info.fields],
+            },
+            "type": dialog_box_data.widget.type.value,
+        }
+        data_dict = {
+            "title_bar": dialog_box_data.title_bar,
+            "dialog_text": dialog_box_data.dialog_text,
+            "widget": widget_data,
+        }
+    elif dialog_box_data.widget.type == DialogBoxWidgetType.IMAGE:
+        widget_info = dialog_box_data.widget.info
+        default_image_path = "assets/test.jpg"
+
+        try:
+            with open(
+                widget_info.image_address if widget_info else default_image_path, "rb"
+            ) as file:
+                file_data = file.read()
+                base64_data = base64.b64encode(file_data)
+                base64_string = base64_data.decode("utf-8")
+        except FileNotFoundError:
+            raise WidgetInfoError("The image address is invalid")
+
+        match = re.search(r".+\.(\w+)", base64_string)
+        image_format = match.group(1) if match else "jpg"
+        widget_data = {
+            "info": {
+                "image_data": base64_string,
+                "image_format": image_format,
             },
             "type": dialog_box_data.widget.type.value,
         }
@@ -165,10 +200,19 @@ def _validate_widget_info(widget: DialogBoxWidget) -> None:
             if widget.info:
                 raise WidgetInfoError("Expected None for widget info")
         case DialogBoxWidgetType.RADIOBUTTON:
-            if not isinstance(widget.info, RadiobuttonInfo) or len(widget.info.fields) == 0:
+            if (
+                not isinstance(widget.info, RadiobuttonInfo)
+                or len(widget.info.fields) == 0
+            ):
                 raise WidgetInfoError("Expected RadiobuttonInfo for widget info")
         case DialogBoxWidgetType.CHECKBOX:
-            if not isinstance(widget.info, CheckboxInfo) or len(widget.info.fields) == 0:
+            if (
+                not isinstance(widget.info, CheckboxInfo)
+                or len(widget.info.fields) == 0
+            ):
                 raise WidgetInfoError("Expected CheckboxInfo for widget info")
+        case DialogBoxWidgetType.IMAGE:
+            if not isinstance(widget.info, ImageInfo):
+                raise WidgetInfoError("Expected ImageInfo for widget info")
         case _:
             raise WidgetInfoError(f"Unsupported widget type: {widget.type}")

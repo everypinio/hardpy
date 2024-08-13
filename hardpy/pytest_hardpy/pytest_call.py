@@ -2,7 +2,6 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import socket
-import base64
 from os import environ
 from dataclasses import dataclass
 from typing import Optional, Any
@@ -246,15 +245,6 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
     if not dialog_box_data.dialog_text:
         raise ValueError("The 'dialog_text' argument cannot be empty.")
 
-    if dialog_box_data.widget and dialog_box_data.widget.type == DialogBoxWidgetType.IMAGE:
-        def file_to_base64(file_path):
-            with open(file_path, 'rb') as file:
-                file_data = file.read()
-                base64_data = base64.b64encode(file_data)
-                return base64_data.decode('utf-8')
-        base64_string = file_to_base64(dialog_box_data.widget.info["image_address"] if dialog_box_data.widget.info else 'assets/test.jpg')
-        dialog_box_data.widget.info = {"image_base64": base64_string, "image_format": "jpeg"}
-
     current_test = _get_current_test()
     reporter = RunnerReporter()
     key = reporter.generate_key(
@@ -266,14 +256,13 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
     )
     if reporter.get_field(key):
         raise DuplicateDialogBoxError
-    
+
     data_dict = generate_dialog_box_dict(dialog_box_data)
 
     reporter.set_doc_value(key, data_dict, statestore_only=True)
     reporter.update_db_by_doc()
 
     dialog_raw_data = _get_socket_raw_data()
-
 
     return get_dialog_box_data(dialog_raw_data, dialog_box_data.widget)
 
@@ -322,3 +311,6 @@ def _get_socket_raw_data() -> str:
     server.close()
 
     return socket_data
+
+
+
