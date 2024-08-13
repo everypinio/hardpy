@@ -37,14 +37,14 @@ Currently, there are some types of dialog boxes.
 
 Contains an instruction or question and a `confirm` button for confirmation.
 
-![base_dialog_box](../img/dialog_box/base_dialog_box.jpg)
+![base_dialog_box](../img/dialog_box/base_dialog_box.png)
 
 #### text input field
 
 Contains an instruction or question, a text input field, and a `confirm` button for confirmation.
 The text is transmitted in UTF-8 encoding.
 
-![text_input_dialog_box](../img/dialog_box/text_input_dialog_box.jpg)
+![text_input_dialog_box](../img/dialog_box/text_input_dialog_box.png)
 
 #### number input field
 
@@ -55,7 +55,7 @@ Contains an instruction or question, a number input field, and a `confirm` butto
 * Allows numbers to be entered using **E notation** with `e`, e.g. `2e3`.
 * The entered numbers will be converted to float.
 
-![num_input_dialog_box](../img/dialog_box/num_input_dialog_box.jpg)
+![num_input_dialog_box](../img/dialog_box/num_input_dialog_box.png)
 
 #### radiobutton
 
@@ -64,7 +64,7 @@ Contains radiobutton widget.
 * The user selects one option from several possible ones.
 * Returns the contents of the selected item as a string.
 
-![radiobutton_dialog_box](../img/dialog_box/radiobutton_dialog_box.jpg)
+![radiobutton_dialog_box](../img/dialog_box/radiobutton_dialog_box.png)
 
 #### checkbox
 
@@ -73,7 +73,7 @@ Contains checkbox widget.
 * The user selects several options from several possible ones.
 * Returns a list with the contents of the selected items converted to a string.
 
-![checkbox_dialog_box](../img/dialog_box/checkbox_dialog_box.jpg)
+![checkbox_dialog_box](../img/dialog_box/checkbox_dialog_box.png)
 
 #### image
 
@@ -83,14 +83,14 @@ Contains image.
 
 If the user clicks `confirm` without entering anything, a warning window will be displayed.
 
-![alert](../img/dialog_box/alert.jpeg)
+![alert](../img/dialog_box/alert.png)
 
 #### error notification
 
 If the user closes the dialog box (using the cross in the upper right corner),
 the tests will be stopped, an error message will be displayed.
 
-![notification](../img/dialog_box/notification.jpeg)
+![notification](../img/dialog_box/notification.png)
 
 ### Options
 
