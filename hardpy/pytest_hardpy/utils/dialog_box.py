@@ -160,9 +160,6 @@ def _validate_widget_info(widget: DialogBoxWidget) -> None:
         WidgetInfoError: If the widget type is not supported or the info object
             is not of the expected type for the widget type.
     """
-    if widget.type not in DialogBoxWidgetType:
-        raise WidgetInfoError(f"Unsupported widget type: {widget.type}")
-
     match widget.type:
         case DialogBoxWidgetType.RADIOBUTTON:
             if not isinstance(widget.info, RadiobuttonInfo):
@@ -170,9 +167,9 @@ def _validate_widget_info(widget: DialogBoxWidget) -> None:
         case DialogBoxWidgetType.CHECKBOX:
             if not isinstance(widget.info, CheckboxInfo):
                 raise WidgetInfoError("Expected CheckboxInfo for widget info")
-        case _:
+        case DialogBoxWidgetType.TEXT_INPUT:
             pass
-
-    if widget.type in [DialogBoxWidgetType.RADIOBUTTON, DialogBoxWidgetType.CHECKBOX]:
-        if widget.info is None or widget.info.fields is None:
-            raise WidgetInfoError(f"Missing fields for widget type {widget.type}")
+        case DialogBoxWidgetType.NUMERIC_INPUT:
+            pass
+        case _:
+            raise WidgetInfoError(f"Unsupported widget type: {widget.type}")
