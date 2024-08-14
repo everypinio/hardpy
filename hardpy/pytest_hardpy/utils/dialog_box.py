@@ -26,7 +26,6 @@ class RadiobuttonInfo:
             raise ValueError("RadiobuttonInfo must have at least one field")
 
 
-
 @dataclass
 class CheckboxInfo:
     fields: List[str]
@@ -34,8 +33,6 @@ class CheckboxInfo:
     def __post_init__(self):
         if not self.fields:
             raise ValueError("CheckboxInfo must have at least one field")
-
-
 
 
 @dataclass

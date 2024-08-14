@@ -253,7 +253,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
     )
     if reporter.get_field(key):
         raise DuplicateDialogBoxError
-    
+
     data_dict = generate_dialog_box_dict(dialog_box_data)
 
     reporter.set_doc_value(key, data_dict, statestore_only=True)

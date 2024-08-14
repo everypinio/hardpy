@@ -34,6 +34,3 @@ def test_num_input():
     response = int(run_dialog_box(dbx))
     set_message(f"Entered number {response}")
     assert response == TEST_NUM, "The entered number is not correct"
-
-
-
