@@ -19,6 +19,13 @@ from pytest import (
     fixture,
     ExitCode,
 )
+from _pytest._code.code import (
+    ExceptionRepr,
+    ReprFileLocation,
+    ExceptionInfo,
+    ReprExceptionInfo,
+    TerminalRepr,
+)
 
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import (
@@ -204,7 +211,7 @@ class HardpyPlugin(object):
             case_id,
         )
 
-        assertion_msg = self._decode_assertion_msg(report.longreprtext)
+        assertion_msg = self._decode_assertion_msg(report.longrepr)
         self._reporter.set_assertion_msg(module_id, case_id, assertion_msg)
         self._reporter.set_progress(self._progress.calculate(report.nodeid))
         self._results[module_id][case_id] = report.outcome  # noqa: WPS204
@@ -265,15 +272,37 @@ class HardpyPlugin(object):
             case _:
                 return RunStatus.ERROR
 
-    def _decode_assertion_msg(self, msg: str) -> str | None:
-        assertion_str = "AssertionError: "
+    def _decode_assertion_msg(
+        self,
+        error: (  # noqa: WPS320
+            ExceptionInfo[BaseException]  # noqa: DAR101,DAR201
+            | tuple[str, int, str]
+            | str
+            | TerminalRepr
+            | None
+        ),
+    ) -> str | None:
+        """Parse pytest assertion error message."""
+        if error is None:
+            return None
 
-        if assertion_str in msg:
-            index = msg.find(assertion_str)
-            report = msg[index + len(assertion_str) :]
-            index = report.find("\nE")
-            return report[:index]
-        return None
+        match error:
+            case str():
+                return error
+            case tuple() if len(error) == 3:
+                return error[2]
+            case ExceptionInfo():
+                error_repr = error.getrepr()
+                if isinstance(error_repr, ReprExceptionInfo) and error_repr.reprcrash:
+                    return error_repr.reprcrash.message
+            case TerminalRepr():
+                if isinstance(error, ExceptionRepr) and isinstance(  # noqa: WPS337
+                    error.reprcrash, ReprFileLocation
+                ):
+                    return error.reprcrash.message
+                return str(error)
+            case _:
+                return None
 
     def _handle_dependency(self, node_info: NodeInfo):
         dependency = self._dependencies.get(

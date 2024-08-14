@@ -1,0 +1,55 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Pytest",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+            "args": ["${workspaceFolder}/tests"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Current file",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Example Hello HardPy",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.hardpy_panel.runner",
+            "console": "integratedTerminal",
+            "args": ["examples/project/hello_hardpy"]
+        },
+        {
+            "name": "Python: Example CouchDB load",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.hardpy_panel.runner",
+            "console": "integratedTerminal",
+            "args": ["examples/project/couchdb_load"]
+        },
+        {
+            "name": "Python: Example Minute parity",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.hardpy_panel.runner",
+            "console": "integratedTerminal",
+            "args": ["examples/project/minute_parity"]
+        },
+        {
+            "name": "Python: Example Dialog box",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.hardpy_panel.runner",
+            "console": "integratedTerminal",
+            "args": ["examples/project/dialog_box"]
+        }
+    ]
+}
