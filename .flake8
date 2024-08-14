@@ -74,7 +74,8 @@ per-file-ignores =
 
 max-returns = 8
 max-arguments = 5
-max-line-length = 88
+# Allow license headers
+max-line-length = 91
 max-local-variables = 10
 max-methods = 20
 max-try-body-length = 32
