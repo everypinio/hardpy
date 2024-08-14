@@ -2,7 +2,18 @@
 
 When using one of the methods below, the database data will be saved to a folder in temporary storage, and after the computer is turned off, the data will be deleted.
 
-## linux with binary packages
+Here are instructions for saving the database in RAM for different methods of launching the database:
+
+- in linux with binary packages
+- in linux with docker-compose.yaml
+- in windows with binary packages
+- in windows with docker-compose.yaml
+
+## linux
+
+### binary packages
+
+Start the database according to the [instructions](https://everypinio.github.io/hardpy/documentation/database/#running-couchdb-with-binary-packages-in-linux)
 
 - Create a CouchDB folder in the temporary file storage:
 
@@ -29,7 +40,9 @@ database_dir = ./../../dev/shm/couchdb
 sudo service couchdb restart
 ```
 
-## linux with docker-compose.yaml
+### docker
+
+Start the database according to the [instructions](https://everypinio.github.io/hardpy/documentation/database/#running-couchdb-with-docker-compose) (steps 1-3)
 
 Example of `docker-compose.yaml` file with saving files in RAM:
 
@@ -49,9 +62,22 @@ services:
       - ./docker/couchdb.ini:/opt/couchdb/etc/local.ini
 ```
 
+Run **docker compose** in the root directory to launch DB.
+
+```bash
+docker compose up
+```
+To stop the database, run the command:
+
+```bash
+docker compose down
+```
+
 ## windows
 
-### ram disc creation
+### virtual hard disk
+
+You need to create a virtual hard disk on which the database will be saved.
 
 - Open the command prompt using `Win+R`, type `diskmgmt.msc`, and press `Enter`.
 - Click Action > Create Virtual Hard Disk.
@@ -60,7 +86,9 @@ services:
 - Right-click the created disk (right pane), select New Simple Volume, Assign drive letter (e.g., `K`), click Next twice, then Finish.
 - Create a folder named `couchdb` in the created drive (`K` in our case) using File Explorer.
 
-### database_dir in binary couchdb settings
+### binary packages
+
+Start the database according to the [instructions](https://everypinio.github.io/hardpy/documentation/database/#running-couchdb-with-binary-packages-in-windows)
 
 - Open the file located at `C:/CouchDB/etc/default.ini` as administrator.
 - Set the value of the database_dir parameter to `K:/couchdb`.
@@ -68,7 +96,9 @@ services:
 - Open the Services console using `Win+R`, type `services.msc`, and press `Enter`.
 - Locate the Apache CouchDB service and restart it.
 
-### database_dir in docker compose couchdb settings
+### docker
+
+Start the database according to the [instructions](https://everypinio.github.io/hardpy/documentation/database/#running-couchdb-with-docker-compose) (steps 1-3)
 
 In `docker-compose.yaml` file in `volumes` find the string:
 
@@ -80,4 +110,15 @@ Replace this string with next value:
 
 ```yaml
 K:/couchdb:/opt/couchdb/data
+```
+
+Run **docker compose** in the root directory to launch DB.
+
+```bash
+docker compose up
+```
+To stop the database, run the command:
+
+```bash
+docker compose down
 ```

@@ -1,9 +1,10 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+import socket
 from os import environ
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Any
 from uuid import uuid4
 
 from pycouchdb.exceptions import NotFound
@@ -14,7 +15,14 @@ from hardpy.pytest_hardpy.db import (
     ResultRunStore,
     RunStore,
 )
-from hardpy.pytest_hardpy.utils import DuplicateSerialNumberError
+from hardpy.pytest_hardpy.utils import (
+    DuplicateSerialNumberError,
+    DuplicateDialogBoxError,
+    DialogBox,
+    ConfigData,
+    generate_dialog_box_dict,
+    get_dialog_box_data,
+)
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 
 
@@ -184,7 +192,7 @@ def set_run_artifact(data: dict):
 
 
 def set_driver_info(drivers: dict) -> None:
-    """Adds or updates drivers data.
+    """Add or update drivers data.
 
     Driver data is stored in both StateStore and RunStore databases.
 
@@ -201,6 +209,59 @@ def set_driver_info(drivers: dict) -> None:
         )
         reporter.set_doc_value(key, driver_data)
     reporter.update_db_by_doc()
+
+
+def run_dialog_box(dialog_box_data: DialogBox) -> Any:
+    """Display a dialog box.
+
+    Args:
+        dialog_box_data (DialogBox): Data for creating the dialog box.
+
+        DialogBox attributes:
+
+        - dialog_text (str): The text of the dialog box.
+        - title_bar (str | None): The title bar of the dialog box.
+        If the title_bar field is missing, it is the case name.
+        - widget (DialogBoxWidget | None): Widget information.
+
+    Returns:
+        Any: An object containing the user's response.
+
+        The type of the return value depends on the widget type:
+
+        - Without widget: None.
+        - TEXT_INPUT: str.
+        - NUMERIC_INPUT: float.
+        - RADIOBUTTON: str.
+        - CHECKBOX: list[str].
+
+    Raises:
+        ValueError: If the 'message' argument is empty.
+        DuplicateDialogBoxError: If the dialog box is already caused.
+    """
+    if not dialog_box_data.dialog_text:
+        raise ValueError("The 'dialog_text' argument cannot be empty.")
+
+    current_test = _get_current_test()
+    reporter = RunnerReporter()
+    key = reporter.generate_key(
+        DF.MODULES,
+        current_test.module_id,
+        DF.CASES,
+        current_test.case_id,
+        DF.DIALOG_BOX,
+    )
+    if reporter.get_field(key):
+        raise DuplicateDialogBoxError
+
+    data_dict = generate_dialog_box_dict(dialog_box_data)
+
+    reporter.set_doc_value(key, data_dict, statestore_only=True)
+    reporter.update_db_by_doc()
+
+    dialog_raw_data = _get_socket_raw_data()
+
+    return get_dialog_box_data(dialog_raw_data, dialog_box_data.widget)
 
 
 def _get_current_test() -> CurrentTestInfo:
@@ -224,3 +285,26 @@ def _get_current_test() -> CurrentTestInfo:
     case_id = case_with_stage[:case_id_end_index]
 
     return CurrentTestInfo(module_id=module_id, case_id=case_id)
+
+
+def _get_socket_raw_data() -> str:
+    # create socket connection
+    server = socket.socket()
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    config_data = ConfigData()
+    try:
+        server.bind((config_data.socket_addr, config_data.socket_port))
+    except socket.error as exc:
+        raise RuntimeError(f"Error creating socket: {exc}")
+    server.listen(1)
+    client, _ = server.accept()
+
+    # receive data
+    max_input_data_len = 1024
+    socket_data = client.recv(max_input_data_len).decode("utf-8")
+
+    # close connection
+    client.close()
+    server.close()
+
+    return socket_data

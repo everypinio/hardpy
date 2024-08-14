@@ -25,7 +25,7 @@ HardPy is a python library for creating a test bench for devices.
 HardPy allows you to:
 
 * Create test benches for devices using [pytest](https://docs.pytest.org/);
-* Use a browser to view, run, and stop tests;
+* Use a browser to view, start, stop, and interact with tests;
 * Store test results in the [CouchDB](https://couchdb.apache.org/) database.
 
 ## To Install

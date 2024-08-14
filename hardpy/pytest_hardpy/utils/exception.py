@@ -14,3 +14,17 @@ class DuplicateSerialNumberError(HardpyError):
 
     def __init__(self):
         super().__init__(self.__doc__)  # type: ignore
+
+
+class DuplicateDialogBoxError(HardpyError):
+    """The dialog box has already been determined."""
+
+    def __init__(self):
+        super().__init__(self.__doc__)  # type: ignore
+
+
+class WidgetInfoError(HardpyError):
+    """The widget info is not correct."""
+
+    def __init__(self, message):
+        super().__init__(message)

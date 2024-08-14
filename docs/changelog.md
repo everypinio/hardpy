@@ -2,6 +2,17 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add dialog box with radiobutton and checkbox.
+
+## HardPy 0.4.0
+
+* Add base dialog box, text input and numeric input.
+* Add dialog box invocation functionality.
+* Add a socket mechanism to transfer data from the uvicorn server to the pytest subprocess.
+
+## HardPy 0.3.0
+
+* Add implementation of test dependencies without using third party plugins.
 * Reduce the number of database calls.
 * Speed up test collection.
 

@@ -178,6 +178,55 @@ def test_message():
     set_message("Update message 2", "msg_upd")
 ```
 
+#### run_dialog_box
+
+Displays a dialog box and updates the 'dialog_box' field in the **statestore** database.
+Only one dialog box can be invoked per test case.
+
+**Arguments:**
+
+- `dialog_box_data` *(DialogBox)*: Data for the dialog box.
+
+DialogBox attributes:
+
+- dialog_text (str): The text of the dialog box.
+- title_bar (str | None): The title bar of the dialog box. 
+If the title_bar field is missing, it is the case name.
+- widget (DialogBoxWidget | None): Widget information.
+
+**Returns:**
+
+- *(Any)*: An object containing the user's response.
+
+The type of the return value depends on the widget type:
+
+- Without widget: None.
+- NUMERIC_INPUT: float.
+- TEXT_INPUT: str.
+- RADIOBUTTON: str.
+- CHECKBOX: List(str).
+
+**Raises**
+
+- `ValueError`: If the 'message' argument is empty.
+- `DuplicateDialogBoxError`: If the dialog box is already caused.
+
+**Example:**
+
+```python
+from hardpy import dialog_box
+def test_dialog_box():
+    dbx = dialog_box.DialogBox(
+            title_bar="Dialog box title",
+            dialog_text="Dialog box text",
+            widget=dialog_box.DialogBoxWidget(
+                type=dialog_box.DialogBoxWidgetType.TEXT_INPUT
+            ),
+        )
+    response = hardpy.run_dialog_box(dbx)
+    assert response == "ok"
+```
+
 #### get_current_report
 
 Returns the current report from the database **runstore**.
@@ -267,6 +316,22 @@ Sets a text name for the test module (file) (default: module name)
 pytestmark = pytest.mark.module_name("Module 1")
 ```
 
+#### dependency
+
+Skips the test case/module if the main test fails/skipped/errored.
+
+**Example:**
+
+```python
+#test_1.py
+def test_one():
+    assert False
+
+@pytest.mark.dependency("test_1::test_one")
+def test_two():
+    assert True
+```
+
 ## Options
 
 **pytest-hardpy** has several options to run:
@@ -313,4 +378,22 @@ The default is *localhost*.
 
 ```bash
 --hardpy-dbh DB_HOST
+```
+
+#### socket_port
+
+Internal socket port for passing backend data (such as a dialog box) to running pytest tests.
+The default is *6525*.
+
+```bash
+--hardpy-sp SOCKET_PORT
+```
+
+#### socket_addr
+
+Internal socket address for passing backend data (such as a dialog box) to running pytest tests.
+The default is *localhost*.
+
+```bash
+--hardpy-sa SOCKET_ADDR
 ```
