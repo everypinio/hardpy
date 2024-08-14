@@ -24,7 +24,7 @@ addopts = --hardpy-pt
 
 ### test_dialog_box.py
 
-Contains six examples of valid tests for dialog boxes.
+Contains some examples of valid tests for dialog boxes.
 
 ```python
 import pytest

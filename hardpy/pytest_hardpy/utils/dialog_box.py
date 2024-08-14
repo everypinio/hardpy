@@ -4,7 +4,7 @@
 from enum import Enum
 import base64
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from typing import Any, List, Optional, Union
 
 from hardpy.pytest_hardpy.utils.exception import WidgetInfoError
@@ -24,10 +24,18 @@ class DialogBoxWidgetType(Enum):
 class RadiobuttonInfo:
     fields: List[str]
 
+    def __post_init__(self):
+        if not self.fields:
+            raise ValueError("RadiobuttonInfo must have at least one field")
+
 
 @dataclass
 class CheckboxInfo:
     fields: List[str]
+
+    def __post_init__(self):
+        if not self.fields:
+            raise ValueError("CheckboxInfo must have at least one field")
 
 
 @dataclass
@@ -71,17 +79,9 @@ def generate_dialog_box_dict(dialog_box_data: DialogBox) -> dict:
 
     Returns:
         dict: dialog box dictionary
-
-    Raises:
-        WidgetInfoError: If the widget info is not correct.
     """
     if dialog_box_data.widget is None:
-        data_dict = {
-            "title_bar": dialog_box_data.title_bar,
-            "dialog_text": dialog_box_data.dialog_text,
-            "widget": None,
-        }
-        return data_dict
+        return asdict(dialog_box_data)
     _validate_widget_info(dialog_box_data.widget)
     if dialog_box_data.widget.type in [
         DialogBoxWidgetType.NUMERIC_INPUT,
@@ -140,6 +140,16 @@ def generate_dialog_box_dict(dialog_box_data: DialogBox) -> dict:
             "widget": widget_data,
         }
     return data_dict
+
+    # def _enum_to_value(data):
+    #     def convert_value(obj):
+    #         if isinstance(obj, Enum):
+    #             return obj.value
+    #         return obj
+
+    #     return {k: convert_value(v) for k, v in data}
+
+    # return asdict(dialog_box_data, dict_factory=_enum_to_value)
 
 
 def get_dialog_box_data(input_data: str, widget: DialogBoxWidget | None) -> Any:
@@ -200,16 +210,10 @@ def _validate_widget_info(widget: DialogBoxWidget) -> None:
             if widget.info:
                 raise WidgetInfoError("Expected None for widget info")
         case DialogBoxWidgetType.RADIOBUTTON:
-            if (
-                not isinstance(widget.info, RadiobuttonInfo)
-                or len(widget.info.fields) == 0
-            ):
+            if not isinstance(widget.info, RadiobuttonInfo):
                 raise WidgetInfoError("Expected RadiobuttonInfo for widget info")
         case DialogBoxWidgetType.CHECKBOX:
-            if (
-                not isinstance(widget.info, CheckboxInfo)
-                or len(widget.info.fields) == 0
-            ):
+            if not isinstance(widget.info, CheckboxInfo):
                 raise WidgetInfoError("Expected CheckboxInfo for widget info")
         case DialogBoxWidgetType.IMAGE:
             if not isinstance(widget.info, ImageInfo):
