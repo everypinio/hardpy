@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Fix capturing exceptions and displaying them in the operator panel.
+
 ## HardPy 0.4.0
 
 * Add base dialog box, text input and numeric input.
