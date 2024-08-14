@@ -10,7 +10,6 @@ status_test_header = """
         """
 
 
-
 def test_ready_status(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
