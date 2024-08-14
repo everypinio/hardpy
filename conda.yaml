@@ -1,0 +1,12 @@
+name: hardpy
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip>=22
+  - nodejs=20
+  - yarn=4.0.1
+  - pip:
+      - -r requirements.txt
+      - -r requirements-doc.txt
