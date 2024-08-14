@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "ms-python.python",
+        "njpwerner.autodocstring",
+        "lextudio.restructuredtext",
+        "bungcip.better-toml",
+    ]
+}
