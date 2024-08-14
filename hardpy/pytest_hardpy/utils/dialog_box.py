@@ -44,6 +44,12 @@ class ImageInfo:
 
 
 @dataclass
+class ImageInfoAfterEncode:
+    image_data: str
+    image_format: str
+
+
+@dataclass
 class DialogBoxWidget:
     """Dialog box widget.
 
@@ -83,35 +89,7 @@ def generate_dialog_box_dict(dialog_box_data: DialogBox) -> dict:
     if dialog_box_data.widget is None:
         return asdict(dialog_box_data)
     _validate_widget_info(dialog_box_data.widget)
-    if dialog_box_data.widget.type in [
-        DialogBoxWidgetType.NUMERIC_INPUT,
-        DialogBoxWidgetType.TEXT_INPUT,
-    ]:
-        data_dict = {
-            "title_bar": dialog_box_data.title_bar,
-            "dialog_text": dialog_box_data.dialog_text,
-            "widget": {
-                "info": None,
-                "type": dialog_box_data.widget.type.value,
-            },
-        }
-    elif dialog_box_data.widget.type in [
-        DialogBoxWidgetType.RADIOBUTTON,
-        DialogBoxWidgetType.CHECKBOX,
-    ]:
-        widget_info = dialog_box_data.widget.info
-        widget_data = {
-            "info": {
-                "fields": [str(field) for field in widget_info.fields],
-            },
-            "type": dialog_box_data.widget.type.value,
-        }
-        data_dict = {
-            "title_bar": dialog_box_data.title_bar,
-            "dialog_text": dialog_box_data.dialog_text,
-            "widget": widget_data,
-        }
-    elif dialog_box_data.widget.type == DialogBoxWidgetType.IMAGE:
+    if dialog_box_data.widget.type == DialogBoxWidgetType.IMAGE:
         widget_info = dialog_box_data.widget.info
         default_image_path = "assets/test.jpg"
 
@@ -127,29 +105,19 @@ def generate_dialog_box_dict(dialog_box_data: DialogBox) -> dict:
 
         match = re.search(r".+\.(\w+)", base64_string)
         image_format = match.group(1) if match else "jpg"
-        widget_data = {
-            "info": {
-                "image_data": base64_string,
-                "image_format": image_format,
-            },
-            "type": dialog_box_data.widget.type.value,
-        }
-        data_dict = {
-            "title_bar": dialog_box_data.title_bar,
-            "dialog_text": dialog_box_data.dialog_text,
-            "widget": widget_data,
-        }
-    return data_dict
+        widget_info = ImageInfoAfterEncode(
+            image_data=base64_string, image_format=image_format
+        )
 
-    # def _enum_to_value(data):
-    #     def convert_value(obj):
-    #         if isinstance(obj, Enum):
-    #             return obj.value
-    #         return obj
+    def _enum_to_value(data):
+        def convert_value(obj):
+            if isinstance(obj, Enum):
+                return obj.value
+            return obj
 
-    #     return {k: convert_value(v) for k, v in data}
+        return {k: convert_value(v) for k, v in data}
 
-    # return asdict(dialog_box_data, dict_factory=_enum_to_value)
+    return asdict(dialog_box_data, dict_factory=_enum_to_value)
 
 
 def get_dialog_box_data(input_data: str, widget: DialogBoxWidget | None) -> Any:
