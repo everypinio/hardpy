@@ -118,7 +118,7 @@ class DialogBoxWidget:
 
     Args:
         type (DialogBoxWidgetType): widget type
-        info (Union[RadiobuttonInfo, CheckboxInfo, ImageInfo, None]): widget info
+        info (IWidgetInfo | None): widget info
     """
 
     type: DialogBoxWidgetType
