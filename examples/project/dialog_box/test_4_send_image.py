@@ -11,7 +11,7 @@ def test_upload_image():
         dialog_text=f"Test image",
         widget=DialogBoxWidget(
             DialogBoxWidgetType.IMAGE,
-            ImageInfo(image_address='assets/test.jpg'),
+            ImageInfo(image_address='assets/test.png'),
         ),
     )
     response = run_dialog_box(dbx)

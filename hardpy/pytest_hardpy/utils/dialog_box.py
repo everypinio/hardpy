@@ -45,7 +45,7 @@ class ImageInfo:
 
 @dataclass
 class ImageInfoAfterEncode:
-    image_data: str
+    image_base64: str
     image_format: str
 
 
@@ -91,7 +91,7 @@ def generate_dialog_box_dict(dialog_box_data: DialogBox) -> dict:
     _validate_widget_info(dialog_box_data.widget)
     if dialog_box_data.widget.type == DialogBoxWidgetType.IMAGE:
         widget_info = dialog_box_data.widget.info
-        default_image_path = "assets/test.jpg"
+        default_image_path = "assets/test.png"
 
         try:
             with open(
@@ -101,9 +101,9 @@ def generate_dialog_box_dict(dialog_box_data: DialogBox) -> dict:
                 base64_data = base64.b64encode(file_data)
                 base64_string = base64_data.decode("utf-8")
             match = re.search(r".+\.(\w+)", base64_string)
-            image_format = match.group(1) if match else "jpg"
+            image_format = match.group(1) if match else "png"
             dialog_box_data.widget.info = ImageInfoAfterEncode(
-                image_data=base64_string, image_format=image_format
+                image_base64=base64_string, image_format=image_format
             )
         except FileNotFoundError:
             raise WidgetInfoError("The image address is invalid")
