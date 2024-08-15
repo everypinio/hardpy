@@ -3,7 +3,6 @@
 
 from enum import Enum
 import base64
-import re
 from dataclasses import dataclass, asdict
 from typing import Any, List, Optional, Union
 
@@ -56,7 +55,6 @@ class ImageInfo:
         base64_data = base64.b64encode(file_data)
         base64_string = base64_data.decode("utf-8")
         self.image_base64 = base64_string
-
 
 
 @dataclass

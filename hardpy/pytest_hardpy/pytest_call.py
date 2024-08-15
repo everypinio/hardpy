@@ -237,7 +237,6 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
         - CHECKBOX: list[str].
         - IMAGE: str.
 
-
     Raises:
         ValueError: If the 'message' argument is empty.
         DuplicateDialogBoxError: If the dialog box is already caused.
@@ -311,6 +310,3 @@ def _get_socket_raw_data() -> str:
     server.close()
 
     return socket_data
-
-
-
