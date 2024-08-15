@@ -24,7 +24,6 @@ from hardpy.pytest_hardpy.utils import (
     get_dialog_box_data,
 )
 from hardpy.pytest_hardpy.reporter import RunnerReporter
-from hardpy.pytest_hardpy.utils.dialog_box import DialogBoxWidgetType
 
 
 @dataclass

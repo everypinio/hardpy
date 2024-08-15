@@ -45,8 +45,12 @@ class ImageInfo:
     image_base64: str | None = None
 
     def __post_init__(self):
-        if (self.image_address and self.image_base64) or (not self.image_address and not self.image_base64):
-            raise WidgetInfoError("Either image_address or image_base64 must be specified, but not both.")
+        if (self.image_address and self.image_base64) or (
+            not self.image_address and not self.image_base64
+        ):
+            raise WidgetInfoError(
+                "Either image_address or image_base64 must be specified, but not both."
+            )
         try:
             with open(self.image_address, "rb") as file:
                 file_data = file.read()

@@ -7,13 +7,14 @@ from hardpy.pytest_hardpy.utils.dialog_box import (
     ImageInfo,
 )
 
+
 @pytest.mark.case_name("Image")
 def test_upload_image():
     dbx = DialogBox(
-        dialog_text=f"Test image",
+        dialog_text="Test image",
         widget=DialogBoxWidget(
             DialogBoxWidgetType.IMAGE,
-            ImageInfo(image_address='assets/test.png'),
+            ImageInfo(image_address="assets/test.png"),
         ),
     )
     response = run_dialog_box(dbx)
