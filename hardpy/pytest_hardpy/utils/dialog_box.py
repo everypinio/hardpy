@@ -55,11 +55,11 @@ class DialogBoxWidget:
 
     Args:
         type (DialogBoxWidgetType): widget type
-        info (Union[RadiobuttonInfo, CheckboxInfo, ImageInfo, None]): widget info
+        info (Union[RadiobuttonInfo, CheckboxInfo, ImageInfo, ImageInfoAfterEncode, None]): widget info
     """
 
     type: DialogBoxWidgetType
-    info: Optional[Union[RadiobuttonInfo, CheckboxInfo, ImageInfo]] = None
+    info: Optional[Union[RadiobuttonInfo, CheckboxInfo, ImageInfo, ImageInfoAfterEncode]] = None
 
 
 @dataclass
@@ -100,14 +100,13 @@ def generate_dialog_box_dict(dialog_box_data: DialogBox) -> dict:
                 file_data = file.read()
                 base64_data = base64.b64encode(file_data)
                 base64_string = base64_data.decode("utf-8")
+            match = re.search(r".+\.(\w+)", base64_string)
+            image_format = match.group(1) if match else "jpg"
+            dialog_box_data.widget.info = ImageInfoAfterEncode(
+                image_data=base64_string, image_format=image_format
+            )
         except FileNotFoundError:
             raise WidgetInfoError("The image address is invalid")
-
-        match = re.search(r".+\.(\w+)", base64_string)
-        image_format = match.group(1) if match else "jpg"
-        widget_info = ImageInfoAfterEncode(
-            image_data=base64_string, image_format=image_format
-        )
 
     def _enum_to_value(data):
         def convert_value(obj):
