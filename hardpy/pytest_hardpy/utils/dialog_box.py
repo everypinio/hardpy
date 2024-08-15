@@ -1,10 +1,10 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from enum import Enum
 import base64
 from dataclasses import dataclass, asdict
-from typing import Any, List, Optional, Union
+from enum import Enum
+from typing import Any
 
 from hardpy.pytest_hardpy.utils.exception import WidgetInfoError
 
@@ -20,45 +20,96 @@ class DialogBoxWidgetType(Enum):
 
 
 @dataclass
-class RadiobuttonInfo:
-    fields: List[str]
+class IWidgetInfo:
+    """Widget info interface."""
+
+    ...  # noqa: WPS604
+
+
+@dataclass
+class RadiobuttonInfo(IWidgetInfo):
+    """Radiobutton info.
+
+    Args:
+        fields (list[str]): list of radiobutton fields.
+    """
+
+    fields: list[str]
 
     def __post_init__(self):
+        """Validate the fields.
+
+        Raises:
+            ValueError: If the fields list is empty.
+        """
         if not self.fields:
             raise ValueError("RadiobuttonInfo must have at least one field")
 
 
 @dataclass
-class CheckboxInfo:
-    fields: List[str]
+class CheckboxInfo(IWidgetInfo):
+    """Checkbox info.
+
+    Args:
+        fields (list[str]): list of checkbox fields.
+    """
+
+    fields: list[str]
 
     def __post_init__(self):
+        """Validate the fields.
+
+        Raises:
+            ValueError: If the fields list is empty.
+        """
         if not self.fields:
             raise ValueError("CheckboxInfo must have at least one field")
 
 
 @dataclass
-class ImageInfo:
-    image_address: str
-    image_format: str = "image"
-    image_width: int = 100
-    image_base64: str | None = None
+class ImageInfo(IWidgetInfo):
+    """Image info.
+
+    Args:
+        address (str): image address
+        format (str): image format
+        width (int): image width
+        base64 (str | None): image base64
+
+    Raises:
+        WidgetInfoError: If both address and base64 are specified.
+        WidgetInfoError: If the width is not positive.
+
+    Notes:
+        The base64 field is optional. If it is not specified, the image is read
+        from the file at the specified address.
+    """
+
+    address: str
+    format: str = "image"
+    width: int = 100
+    base64: str | None = None
 
     def __post_init__(self):
-        if (self.image_address and self.image_base64) or (
-            not self.image_address and not self.image_base64
-        ):
+        """Validate the image fields and defines the base64 if it does not exist.
+
+        Raises:
+            WidgetInfoError: If both address and base64 are specified.
+        """
+        if self.address and self.base64:
             raise WidgetInfoError(
-                "Either image_address or image_base64 must be specified, but not both."
+                "Either address or base64 must be specified, but not both"
             )
+        if self.width < 1:
+            raise WidgetInfoError("Width must be positive")
+        if self.base64:
+            return
         try:
-            with open(self.image_address, "rb") as file:
+            with open(self.address, "rb") as file:
                 file_data = file.read()
         except FileNotFoundError:
             raise WidgetInfoError("The image address is invalid")
-        base64_data = base64.b64encode(file_data)
-        base64_string = base64_data.decode("utf-8")
-        self.image_base64 = base64_string
+        self.base64 = base64.b64encode(file_data).decode("utf-8")  # noqa: WPS601
 
 
 @dataclass
@@ -71,7 +122,7 @@ class DialogBoxWidget:
     """
 
     type: DialogBoxWidgetType
-    info: Optional[Union[RadiobuttonInfo, CheckboxInfo, ImageInfo]] = None
+    info: IWidgetInfo | None = None
 
 
 @dataclass
@@ -163,21 +214,21 @@ def _validate_widget_info(widget: DialogBoxWidget) -> None:
         WidgetInfoError: If the widget type is not supported or the info object
             is not of the expected type for the widget type.
     """
-    match widget.type:
-        case DialogBoxWidgetType.TEXT_INPUT:
-            if widget.info:
-                raise WidgetInfoError("Expected None for widget info")
-        case DialogBoxWidgetType.NUMERIC_INPUT:
-            if widget.info:
-                raise WidgetInfoError("Expected None for widget info")
-        case DialogBoxWidgetType.RADIOBUTTON:
-            if not isinstance(widget.info, RadiobuttonInfo):
-                raise WidgetInfoError("Expected RadiobuttonInfo for widget info")
-        case DialogBoxWidgetType.CHECKBOX:
-            if not isinstance(widget.info, CheckboxInfo):
-                raise WidgetInfoError("Expected CheckboxInfo for widget info")
-        case DialogBoxWidgetType.IMAGE:
-            if not isinstance(widget.info, ImageInfo):
-                raise WidgetInfoError("Expected ImageInfo for widget info")
-        case _:
-            raise WidgetInfoError(f"Unsupported widget type: {widget.type}")
+    widget_type_to_info = {
+        DialogBoxWidgetType.TEXT_INPUT: None,
+        DialogBoxWidgetType.NUMERIC_INPUT: None,
+        DialogBoxWidgetType.RADIOBUTTON: RadiobuttonInfo,
+        DialogBoxWidgetType.CHECKBOX: CheckboxInfo,
+        DialogBoxWidgetType.IMAGE: ImageInfo,
+    }
+
+    if widget.type not in widget_type_to_info:
+        raise WidgetInfoError(f"Unsupported widget type: {widget.type}")
+
+    expected_info = widget_type_to_info[widget.type]
+
+    if expected_info is not None and not isinstance(widget.info, expected_info):
+        raise WidgetInfoError(f"Expected {expected_info.__name__} for widget info")
+    elif expected_info is None and widget.info is not None:
+        raise WidgetInfoError("Expected None for widget info")
+
