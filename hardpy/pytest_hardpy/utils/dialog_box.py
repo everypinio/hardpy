@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from enum import Enum
+import base64
 from dataclasses import dataclass, asdict
 from typing import Any, List, Optional, Union
 
@@ -11,10 +12,11 @@ from hardpy.pytest_hardpy.utils.exception import WidgetInfoError
 class DialogBoxWidgetType(Enum):
     """Dialog box widget type."""
 
-    RADIOBUTTON = "radiobutton"
-    CHECKBOX = "checkbox"
     TEXT_INPUT = "textinput"
     NUMERIC_INPUT = "numericinput"
+    RADIOBUTTON = "radiobutton"
+    CHECKBOX = "checkbox"
+    IMAGE = "image"
 
 
 @dataclass
@@ -36,16 +38,40 @@ class CheckboxInfo:
 
 
 @dataclass
+class ImageInfo:
+    image_address: str
+    image_format: str = "image"
+    image_width: int = 100
+    image_base64: str | None = None
+
+    def __post_init__(self):
+        if (self.image_address and self.image_base64) or (
+            not self.image_address and not self.image_base64
+        ):
+            raise WidgetInfoError(
+                "Either image_address or image_base64 must be specified, but not both."
+            )
+        try:
+            with open(self.image_address, "rb") as file:
+                file_data = file.read()
+        except FileNotFoundError:
+            raise WidgetInfoError("The image address is invalid")
+        base64_data = base64.b64encode(file_data)
+        base64_string = base64_data.decode("utf-8")
+        self.image_base64 = base64_string
+
+
+@dataclass
 class DialogBoxWidget:
     """Dialog box widget.
 
     Args:
         type (DialogBoxWidgetType): widget type
-        info (Union[RadiobuttonInfo, CheckboxInfo, None]): widget info
+        info (Union[RadiobuttonInfo, CheckboxInfo, ImageInfo, None]): widget info
     """
 
     type: DialogBoxWidgetType
-    info: Optional[Union[RadiobuttonInfo, CheckboxInfo]] = None
+    info: Optional[Union[RadiobuttonInfo, CheckboxInfo, ImageInfo]] = None
 
 
 @dataclass
@@ -150,5 +176,8 @@ def _validate_widget_info(widget: DialogBoxWidget) -> None:
         case DialogBoxWidgetType.CHECKBOX:
             if not isinstance(widget.info, CheckboxInfo):
                 raise WidgetInfoError("Expected CheckboxInfo for widget info")
+        case DialogBoxWidgetType.IMAGE:
+            if not isinstance(widget.info, ImageInfo):
+                raise WidgetInfoError("Expected ImageInfo for widget info")
         case _:
             raise WidgetInfoError(f"Unsupported widget type: {widget.type}")

@@ -21,11 +21,15 @@ export enum WidgetType {
   NumericInput = "numericinput",
   RadioButton = "radiobutton",
   Checkbox = "checkbox",
+  Image = "image"
 }
 
 interface WidgetInfo {
   fields?: string[];
   text?: string;
+  image_base64?: string;
+  image_format?: string;
+  image_width?: number;
 }
 
 export function StartConfirmationDialog(props: Props) {
@@ -180,6 +184,10 @@ export function StartConfirmationDialog(props: Props) {
               />
             ))}
           </>
+        )}
+        {widgetType === WidgetType.Image && (
+          <img src={`data:image/${props.widget_info?.image_format};base64,${props.widget_info?.image_base64}`}
+            alt="Image" style={{ width: `${props.widget_info?.image_width}%` }} />
         )}
       </div>
       <div className={Classes.DIALOG_FOOTER}>
