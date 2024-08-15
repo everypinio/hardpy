@@ -41,12 +41,22 @@ class CheckboxInfo:
 @dataclass
 class ImageInfo:
     image_address: str
+    image_format: str = "image"
+    image_width: int = 100
+    image_base64: str | None = None
 
+    def __post_init__(self):
+        if (self.image_address and self.image_base64) or (not self.image_address and not self.image_base64):
+            raise WidgetInfoError("Either image_address or image_base64 must be specified, but not both.")
+        try:
+            with open(self.image_address, "rb") as file:
+                file_data = file.read()
+        except FileNotFoundError:
+            raise WidgetInfoError("The image address is invalid")
+        base64_data = base64.b64encode(file_data)
+        base64_string = base64_data.decode("utf-8")
+        self.image_base64 = base64_string
 
-@dataclass
-class ImageInfoAfterEncode:
-    image_base64: str
-    image_format: str
 
 
 @dataclass
@@ -55,11 +65,11 @@ class DialogBoxWidget:
 
     Args:
         type (DialogBoxWidgetType): widget type
-        info (Union[RadiobuttonInfo, CheckboxInfo, ImageInfo, ImageInfoAfterEncode, None]): widget info
+        info (Union[RadiobuttonInfo, CheckboxInfo, ImageInfo, None]): widget info
     """
 
     type: DialogBoxWidgetType
-    info: Optional[Union[RadiobuttonInfo, CheckboxInfo, ImageInfo, ImageInfoAfterEncode]] = None
+    info: Optional[Union[RadiobuttonInfo, CheckboxInfo, ImageInfo]] = None
 
 
 @dataclass
@@ -89,24 +99,6 @@ def generate_dialog_box_dict(dialog_box_data: DialogBox) -> dict:
     if dialog_box_data.widget is None:
         return asdict(dialog_box_data)
     _validate_widget_info(dialog_box_data.widget)
-    if dialog_box_data.widget.type == DialogBoxWidgetType.IMAGE:
-        widget_info = dialog_box_data.widget.info
-        default_image_path = "assets/test.png"
-
-        try:
-            with open(
-                widget_info.image_address if widget_info else default_image_path, "rb"
-            ) as file:
-                file_data = file.read()
-                base64_data = base64.b64encode(file_data)
-                base64_string = base64_data.decode("utf-8")
-            match = re.search(r".+\.(\w+)", base64_string)
-            image_format = match.group(1) if match else "png"
-            dialog_box_data.widget.info = ImageInfoAfterEncode(
-                image_base64=base64_string, image_format=image_format
-            )
-        except FileNotFoundError:
-            raise WidgetInfoError("The image address is invalid")
 
     def _enum_to_value(data):
         def convert_value(obj):

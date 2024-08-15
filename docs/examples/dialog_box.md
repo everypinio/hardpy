@@ -100,12 +100,12 @@ def test_checkbox():
     assert response == '["one","two"]', "The answer is not correct"
 
 @pytest.mark.case_name("Image")
-def test_image():
+def test_upload_image():
     dbx = DialogBox(
         dialog_text=f"Test image",
         widget=DialogBoxWidget(
             DialogBoxWidgetType.IMAGE,
-            {"image_address": 'assets/test.jpg'},
+            ImageInfo(image_address='assets/test.png'),
         ),
     )
     response = run_dialog_box(dbx)

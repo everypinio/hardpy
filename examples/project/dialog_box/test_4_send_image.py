@@ -1,3 +1,4 @@
+import pytest
 from hardpy import run_dialog_box
 from hardpy.pytest_hardpy.utils.dialog_box import (
     DialogBoxWidget,
@@ -6,6 +7,7 @@ from hardpy.pytest_hardpy.utils.dialog_box import (
     ImageInfo,
 )
 
+@pytest.mark.case_name("Image")
 def test_upload_image():
     dbx = DialogBox(
         dialog_text=f"Test image",

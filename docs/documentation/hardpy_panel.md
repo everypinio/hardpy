@@ -79,6 +79,8 @@ Contains checkbox widget.
 
 Contains an instruction or question with image and a `confirm` button for confirmation.
 
+* Allows change width through `image_width` parameter.
+
 ![dialog_box_with_image](../img/dialog_box/dialog_box_with_image.png)
 
 

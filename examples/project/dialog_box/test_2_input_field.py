@@ -1,5 +1,4 @@
 import pytest
-import requests
 
 from hardpy import run_dialog_box, set_message
 from hardpy.pytest_hardpy.utils.dialog_box import (

@@ -207,7 +207,6 @@ The type of the return value depends on the widget type:
 - CHECKBOX: List(str).
 - IMAGE: None.
 
-
 **Raises**
 
 - `ValueError`: If the 'message' argument is empty.
