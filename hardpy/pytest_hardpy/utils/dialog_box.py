@@ -17,6 +17,7 @@ class DialogBoxWidgetType(Enum):
     RADIOBUTTON = "radiobutton"
     CHECKBOX = "checkbox"
     IMAGE = "image"
+    MULTISTEP = "multistep"
 
 
 @dataclass
@@ -111,6 +112,26 @@ class ImageInfo(IWidgetInfo):
             raise WidgetInfoError("The image address is invalid")
         self.base64 = base64.b64encode(file_data).decode("utf-8")  # noqa: WPS601
 
+
+@dataclass
+class MultistepInfo(IWidgetInfo):
+    """Multistep info.
+
+    Args:
+        fields (list[str]): list of multistep fields.
+    """
+
+    fields: list[str]
+
+    def __post_init__(self):
+        """Validate the fields.
+
+        Raises:
+            ValueError: If the fields list is empty.
+        """
+        if not self.fields:
+            raise ValueError("MultistepInfo must have at least one field")
+        
 
 @dataclass
 class DialogBoxWidget:

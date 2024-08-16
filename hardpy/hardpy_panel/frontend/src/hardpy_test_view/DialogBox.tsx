@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, Classes, Dialog, InputGroup, Radio, Checkbox } from '@blueprintjs/core';
+import { Button, Classes, Dialog, InputGroup, Radio, Checkbox, MultistepDialog } from '@blueprintjs/core';
 import { notification } from 'antd';
 
 interface Props {
@@ -21,7 +21,8 @@ export enum WidgetType {
   NumericInput = "numericinput",
   RadioButton = "radiobutton",
   Checkbox = "checkbox",
-  Image = "image"
+  Image = "image",
+  Multistep = "multistep",
 }
 
 interface WidgetInfo {
@@ -188,6 +189,17 @@ export function StartConfirmationDialog(props: Props) {
         {widgetType === WidgetType.Image && (
           <img src={`data:image/${props.widget_info?.format};base64,${props.widget_info?.base64}`}
             alt="Image" style={{ width: `${props.widget_info?.width}%` }} />
+        )}
+        {widgetType === WidgetType.MultiStepDialog && (
+          <Multistep
+              title_bar="Многошаговая форма"
+              fields={{
+                  step1: "Первый шаг",
+                  step2: "Второй шаг",
+                  step3: "Третий шаг"
+              }}
+              onConfirm={() => console.log('Форма отправлена')}
+          />
         )}
       </div>
       <div className={Classes.DIALOG_FOOTER}>

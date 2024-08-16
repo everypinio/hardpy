@@ -206,6 +206,7 @@ The type of the return value depends on the widget type:
 - RADIOBUTTON: str.
 - CHECKBOX: List(str).
 - IMAGE: None.
+- MULTISTEP: None.
 
 **Raises**
 

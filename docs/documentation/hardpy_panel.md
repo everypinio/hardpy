@@ -83,6 +83,11 @@ Contains an instruction or question with image and a `confirm` button for confir
 
 ![dialog_box_with_image](../img/dialog_box/dialog_box_with_image.png)
 
+#### multiple steps
+
+Contains an instruction with multiple steps and `confirm` button for confirmation.
+
+![dialog_box_with_multiple_steps](../img/dialog_box/dialog_box_with_multiple_steps.png)
 
 #### warning window
 

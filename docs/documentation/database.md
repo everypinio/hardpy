@@ -226,7 +226,7 @@ The **modules** block contains the following fields:
           - **dialog_text**: text displayed in the dialog box;
           - **widget**: information about the widget;
             - **info**: widget additional information;
-            - **type**: type of the widget (e.g., radiobutton, checkbox, textinput, numericinput)
+            - **type**: type of the widget (e.g., textinput, numericinput, radiobutton, checkbox, image, multiple steps)
 
 Example of a **current** document:
 

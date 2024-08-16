@@ -235,6 +235,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
         - RADIOBUTTON: str.
         - CHECKBOX: list[str].
         - IMAGE: None.
+        - MULTISTEP: None.
 
     Raises:
         ValueError: If the 'message' argument is empty.
