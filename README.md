@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img src="https://everypinio.github.io/hardpy/img/logo512.png" alt="HardPy" style="width:200px;">
+    <img src="https://everypinio.github.io/hardpy/img/logo256.png" alt="HardPy" style="width:200px;">
 </h1>
 
 <h1 align="center">
