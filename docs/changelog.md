@@ -2,6 +2,7 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* upscale HardPy logo pictures
 * Add dialog box with radiobutton and checkbox.
 
 ## HardPy 0.4.0
