@@ -241,6 +241,7 @@ def _validate_widget_info(widget: DialogBoxWidget) -> None:
         DialogBoxWidgetType.RADIOBUTTON: RadiobuttonInfo,
         DialogBoxWidgetType.CHECKBOX: CheckboxInfo,
         DialogBoxWidgetType.IMAGE: ImageInfo,
+        DialogBoxWidgetType.MULTISTEP: MultistepInfo,
     }
 
     if widget.type not in widget_type_to_info:

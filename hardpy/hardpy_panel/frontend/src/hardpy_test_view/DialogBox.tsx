@@ -3,8 +3,8 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, Classes, Dialog, InputGroup, Radio, Checkbox, MultistepDialog } from '@blueprintjs/core';
-import { notification } from 'antd';
+import { Button, Classes, Dialog, InputGroup, Radio, Checkbox } from '@blueprintjs/core';
+import { notification, Steps } from 'antd';
 
 interface Props {
   title_bar: string;
@@ -125,6 +125,12 @@ export function StartConfirmationDialog(props: Props) {
 
   const widgetType = props.widget_type || WidgetType.Base;
   const inputPlaceholder = "enter answer";
+  const description = 'You can hover on the dot.';
+  const [current, setCurrent] = useState(0);
+  const onChange = (value: number) => {
+    console.log('onChange:', value);
+    setCurrent(value);
+  };
 
   return (
     <Dialog
@@ -191,14 +197,23 @@ export function StartConfirmationDialog(props: Props) {
             alt="Image" style={{ width: `${props.widget_info?.width}%` }} />
         )}
         {widgetType === WidgetType.Multistep && (
-          <MultistepDialog
-              title_bar="Многошаговая форма"
-              fields={{
-                  step1: "Первый шаг",
-                  step2: "Второй шаг",
-                  step3: "Третий шаг"
-              }}
-              onConfirm={() => console.log('Форма отправлена')}
+          <Steps
+            current={current}
+            onChange={onChange}
+            items={[
+              {
+                title: 'Step 1',
+                description,
+              },
+              {
+                title: 'Step 2',
+                description,
+              },
+              {
+                title: 'Step 3',
+                description,
+              },
+            ]}
           />
         )}
       </div>
