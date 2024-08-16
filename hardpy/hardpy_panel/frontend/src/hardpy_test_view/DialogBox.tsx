@@ -190,8 +190,8 @@ export function StartConfirmationDialog(props: Props) {
           <img src={`data:image/${props.widget_info?.format};base64,${props.widget_info?.base64}`}
             alt="Image" style={{ width: `${props.widget_info?.width}%` }} />
         )}
-        {widgetType === WidgetType.MultiStepDialog && (
-          <Multistep
+        {widgetType === WidgetType.Multistep && (
+          <MultistepDialog
               title_bar="Многошаговая форма"
               fields={{
                   step1: "Первый шаг",
