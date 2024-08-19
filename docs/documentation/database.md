@@ -278,10 +278,14 @@ Example of a **current** document:
                 "title_bar": "Dialog box title",
                 "dialog_text": "Dialog box text",
                 "widget": {
+                  "type": "checkbox",
                   "info": {
-                    "text": "Text"
-                  },
-                  "type": "checkbox"
+                    "fields": [
+                      "one",
+                      "two",
+                      "three"
+                    ]
+                  }
                 }
               }
             },
