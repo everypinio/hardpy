@@ -25,49 +25,45 @@ addopts = --hardpy-pt
 ### test_dialog_box.py
 
 Contains some examples of valid tests for dialog boxes.
+To test images, create an `assets` folder in the `tests` folder with the image `test.png`.
 
 ```python
 import pytest
 import hardpy
 
-@pytest.mark.case_name("Test base dialog box")
-def test_base():
-    dbx = hardpy.dialog_box.DialogBox(
+@pytest.mark.case_name("Base dialog box")
+def test_base_dialog_box():
+    dbx = DialogBox(
         title_bar="Operator check",
-        dialog_text="If you are not sleeping, press the Confirm button",
+        dialog_text="Press the Confirm button",
     )
-    response = hardpy.run_dialog_box(dbx)
-    assert response == None
+    response = run_dialog_box(dbx)
+    assert response
 
 
-@pytest.mark.case_name("Test dialog box with text input")
+@pytest.mark.case_name("Text input")
 def test_text_input():
-    widget = hardpy.dialog_box.DialogBoxWidget(
-        type=hardpy.dialog_box.DialogBoxWidgetType.TEXT_INPUT,
-    )
-
-    dbx = hardpy.dialog_box.DialogBox(
+    dbx = DialogBox(
         dialog_text="Type 'ok' and press the Confirm button",
         title_bar="Example of text input",
-        widget=widget,
+        widget=TextInputWidget(),
     )
-    response = hardpy.run_dialog_box(dbx)
-    assert response == "ok"
+    response = run_dialog_box(dbx)
+    set_message(f"Entered text {response}")
+    assert response == "ok", "The entered text is not correct"
 
 
-@pytest.mark.case_name("Test dialog box with num input")
+@pytest.mark.case_name("Numeric input")
 def test_num_input():
-    widget = hardpy.dialog_box.DialogBoxWidget(
-        type=hardpy.dialog_box.DialogBoxWidgetType.NUMERIC_INPUT,
-    )
-
-    dbx = hardpy.dialog_box.DialogBox(
-        dialog_text="Enter the number 123 and press the Confirm button",
+    test_num = 123
+    dbx = DialogBox(
+        dialog_text=f"Enter the number {test_num} and press the Confirm button",
         title_bar="Example of entering a number",
-        widget=widget,
+        widget=NumericInputWidget(),
     )
-    response = hardpy.run_dialog_box(dbx)
-    assert response == 123.0
+    response = int(run_dialog_box(dbx))
+    set_message(f"Entered number {response}")
+    assert response == test_num, "The entered number is not correct"
 
 
 @pytest.mark.case_name("Test dialog box with radiobutton")
@@ -75,10 +71,7 @@ def test_radiobutton():
     dbx = DialogBox(
         dialog_text='Select item "one" out of several and click Confirm.',
         title_bar="Radiobutton example",
-        widget=DialogBoxWidget(
-            DialogBoxWidgetType.RADIOBUTTON,
-            RadiobuttonInfo(fields=["one", "two", "three"]),
-        ),
+        widget=RadiobuttonWidget(fields=["one", "two", "three"]),
     )
     response = run_dialog_box(dbx)
     set_message(f"Selected item {response}")
@@ -90,13 +83,19 @@ def test_checkbox():
     dbx = DialogBox(
         dialog_text='Select items "one" and "two" and click the Confirm button',
         title_bar="Checkbox example",
-        widget=DialogBoxWidget(
-            DialogBoxWidgetType.CHECKBOX,
-            CheckboxInfo(fields=["one", "two", "three"]),
-        ),
+        widget=CheckboxWidget(fields=["one", "two", "three"]),
     )
     response = run_dialog_box(dbx)
     set_message(f"Selected item {response}")
-    assert response == '["one","two"]', "The answer is not correct"
-```
+    correct_answer = {"one", "two"}
+    assert set(response) == correct_answer, "The answer is not correct"
 
+@pytest.mark.case_name("Image")
+def test_upload_image():
+    dbx = DialogBox(
+        dialog_text="Test image",
+        widget=ImageWidget(address="assets/test.png"),
+    )
+    response = run_dialog_box(dbx)
+    assert response
+```

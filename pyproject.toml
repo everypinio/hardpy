@@ -29,12 +29,11 @@
         "glom>=23.3.0",
         "pydantic>=2.4.0",
         "natsort>=8.4.0",
+        "pytest>7, <9",
 
         # Frontend
         "fastapi>=0.100.1",
         "uvicorn>=0.23.2",
-
-        "pytest>7, <9",
     ]
 
     [project.optional-dependencies]
@@ -48,7 +47,10 @@
         ]
 
     [project.urls]
-        repository = "https://github.com/everypindevices/hardpy"
+        Homepage = "https://github.com/everypinio/hardpy/"
+        Documentation = "https://everypinio.github.io/hardpy/"
+        Repository = "https://github.com/everypinio/hardpy/"
+        Changelog = "https://everypinio.github.io/hardpy/changelog/"
 
     [project.scripts]
         # Provide `hardpy-panel` executable

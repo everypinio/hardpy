@@ -20,8 +20,6 @@ from hardpy.pytest_hardpy.utils import (
     DuplicateDialogBoxError,
     DialogBox,
     ConfigData,
-    generate_dialog_box_dict,
-    get_dialog_box_data,
 )
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 
@@ -221,7 +219,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
 
         - dialog_text (str): The text of the dialog box.
         - title_bar (str | None): The title bar of the dialog box.
-        If the title_bar field is missing, it is the case name.
+          If the title_bar field is missing, it is the case name.
         - widget (DialogBoxWidget | None): Widget information.
 
     Returns:
@@ -229,11 +227,12 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
 
         The type of the return value depends on the widget type:
 
-        - Without widget: None.
+        - BASE: bool.
         - TEXT_INPUT: str.
         - NUMERIC_INPUT: float.
         - RADIOBUTTON: str.
         - CHECKBOX: list[str].
+        - IMAGE: bool.
 
     Raises:
         ValueError: If the 'message' argument is empty.
@@ -254,14 +253,11 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
     if reporter.get_field(key):
         raise DuplicateDialogBoxError
 
-    data_dict = generate_dialog_box_dict(dialog_box_data)
-
-    reporter.set_doc_value(key, data_dict, statestore_only=True)
+    reporter.set_doc_value(key, dialog_box_data.to_dict(), statestore_only=True)
     reporter.update_db_by_doc()
 
-    dialog_raw_data = _get_socket_raw_data()
-
-    return get_dialog_box_data(dialog_raw_data, dialog_box_data.widget)
+    input_dbx_data = _get_socket_raw_data()
+    return dialog_box_data.widget.convert_data(input_dbx_data)
 
 
 def _get_current_test() -> CurrentTestInfo:

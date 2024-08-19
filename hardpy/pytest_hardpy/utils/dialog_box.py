@@ -1,51 +1,208 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+import base64
+from abc import ABC, abstractmethod
+from ast import literal_eval
+from copy import deepcopy
+from dataclasses import dataclass
 from enum import Enum
-from dataclasses import dataclass, asdict
-from typing import Any, List, Optional, Union
+from typing import Any, Final
 
 from hardpy.pytest_hardpy.utils.exception import WidgetInfoError
 
 
-class DialogBoxWidgetType(Enum):
+class WidgetType(Enum):
     """Dialog box widget type."""
 
-    RADIOBUTTON = "radiobutton"
-    CHECKBOX = "checkbox"
+    BASE = "base"
     TEXT_INPUT = "textinput"
     NUMERIC_INPUT = "numericinput"
+    RADIOBUTTON = "radiobutton"
+    CHECKBOX = "checkbox"
+    IMAGE = "image"
 
 
-@dataclass
-class RadiobuttonInfo:
-    fields: List[str]
+class IWidget(ABC):
+    """Dialog box widget interface."""
 
-    def __post_init__(self):
-        if not self.fields:
-            raise ValueError("RadiobuttonInfo must have at least one field")
+    def __init__(self, widget_type: WidgetType):
+        self.type: Final[str] = widget_type.value
+        self.info: dict = {}
+
+    @abstractmethod
+    def convert_data(self, input_data: str | None) -> Any | None:
+        """Get the widget data in the correct format.
+
+        Args:
+            input_data (str | None): input string or nothing.
+
+        Returns:
+            Any: Widget data in the correct format
+        """
+        raise NotImplementedError
 
 
-@dataclass
-class CheckboxInfo:
-    fields: List[str]
+class BaseWidget(IWidget):
+    """Widget info interface."""
 
-    def __post_init__(self):
-        if not self.fields:
-            raise ValueError("CheckboxInfo must have at least one field")
+    def __init__(self, widget_type: WidgetType = WidgetType.BASE):
+        super().__init__(WidgetType.BASE)
+
+    def convert_data(self, input_data: str | None = None) -> bool:  # noqa: WPS324
+        """Get base widget data, i.e. None.
+
+        Args:
+            input_data (str): input string
+
+        Returns:
+            bool: True if confirm button is pressed
+        """
+        return True
 
 
-@dataclass
-class DialogBoxWidget:
-    """Dialog box widget.
+class TextInputWidget(IWidget):
+    """Text input widget."""
 
-    Args:
-        type (DialogBoxWidgetType): widget type
-        info (Union[RadiobuttonInfo, CheckboxInfo, None]): widget info
-    """
+    def __init__(self):
+        """Initialize the TextInputWidget."""
+        super().__init__(WidgetType.TEXT_INPUT)
 
-    type: DialogBoxWidgetType
-    info: Optional[Union[RadiobuttonInfo, CheckboxInfo]] = None
+    def convert_data(self, input_data: str) -> str:
+        """Get the text input data in the string format.
+
+        Args:
+            input_data (str): input string
+
+        Returns:
+            str: Text input string data
+        """
+        return input_data
+
+
+class NumericInputWidget(IWidget):
+    """Numeric input widget."""
+
+    def __init__(self):
+        """Initialize the NumericInputWidget."""
+        super().__init__(WidgetType.NUMERIC_INPUT)
+
+    def convert_data(self, input_data: str) -> float | None:
+        """Get the numeric widget data in the correct format.
+
+        Args:
+            input_data (str): input string
+
+        Returns:
+            float | None: Numeric data or None if the input is not a number
+        """
+        try:
+            return float(input_data)
+        except ValueError:
+            return None
+
+
+class RadiobuttonWidget(IWidget):
+    """Radiobutton widget."""
+
+    def __init__(self, fields: list[str]):
+        """Initialize the RadiobuttonWidget.
+
+        Args:
+            fields (list[str]): Radiobutton fields.
+
+        Raises:
+            ValueError: If the fields list is empty.
+        """
+        super().__init__(WidgetType.RADIOBUTTON)
+        if not fields:
+            raise ValueError("RadiobuttonWidget must have at least one field")
+        self.info["fields"] = fields
+
+    def convert_data(self, input_data: str) -> str:
+        """Get the radiobutton widget data in the correct format.
+
+        Args:
+            input_data (str): input string
+
+        Returns:
+            str: Radiobutton string data
+        """
+        return input_data
+
+
+class CheckboxWidget(IWidget):
+    """Checkbox widget."""
+
+    def __init__(self, fields: list[str]):
+        """Initialize the CheckboxWidget.
+
+        Args:
+            fields (list[str]): Checkbox fields.
+
+        Raises:
+            ValueError: If the fields list is empty.
+        """
+        super().__init__(WidgetType.CHECKBOX)
+        if not fields:
+            raise ValueError("RadiobuttonWidget must have at least one field")
+        self.info["fields"] = fields
+
+    def convert_data(self, input_data: str) -> list[str] | None:
+        """Get the checkbox widget data in the correct format.
+
+        Args:
+            input_data (str): input string
+
+        Returns:
+            (list[str] | None): Checkbox string data or None if the input is not a list
+        """
+        try:
+            return literal_eval(input_data)
+        except ValueError:
+            return None
+
+
+class ImageWidget(IWidget):
+    """Image widget."""
+
+    def __init__(self, address: str, format: str = "image", width: int = 100):
+        """Validate the image fields and defines the base64 if it does not exist.
+
+        Args:
+            address (str): image address
+            format (str): image format
+            width (int): image width
+
+        Raises:
+            WidgetInfoError: If both address and base64 are specified.
+        """
+        super().__init__(WidgetType.IMAGE)
+
+        if width < 1:
+            raise WidgetInfoError("Width must be positive")
+
+        self.info["address"] = address
+        self.info["format"] = format
+        self.info["width"] = width
+
+        try:
+            with open(address, "rb") as file:
+                file_data = file.read()
+        except FileNotFoundError:
+            raise WidgetInfoError("The image address is invalid")
+        self.info["base64"] = base64.b64encode(file_data).decode("utf-8")
+
+    def convert_data(self, input_data: str | None = None) -> bool:
+        """Get the image widget data, i.e. None.
+
+        Args:
+            input_data (str | None): input string or nothing.
+
+        Returns:
+            bool: True if confirm button is pressed
+        """
+        return True
 
 
 @dataclass
@@ -55,100 +212,25 @@ class DialogBox:
     Args:
         dialog_text (str): dialog text
         title_bar (str | None): title bar
-        widget (DialogBoxWidget | None): widget info
+        widget (IWidget | None): widget info
     """
 
-    dialog_text: str
-    title_bar: str | None = None
-    widget: DialogBoxWidget | None = None
+    def __init__(
+        self,
+        dialog_text: str,
+        title_bar: str | None = None,
+        widget: IWidget | None = None,
+    ):
+        self.widget: IWidget = BaseWidget() if widget is None else widget
+        self.dialog_text: str = dialog_text
+        self.title_bar: str | None = title_bar
 
+    def to_dict(self) -> dict:
+        """Convert DialogBox to dictionary.
 
-def generate_dialog_box_dict(dialog_box_data: DialogBox) -> dict:
-    """Generate dialog box dictionary.
-
-    Args:
-        dialog_box_data (DialogBox): dialog box data
-
-    Returns:
-        dict: dialog box dictionary
-    """
-    if dialog_box_data.widget is None:
-        return asdict(dialog_box_data)
-    _validate_widget_info(dialog_box_data.widget)
-
-    def _enum_to_value(data):
-        def convert_value(obj):
-            if isinstance(obj, Enum):
-                return obj.value
-            return obj
-
-        return {k: convert_value(v) for k, v in data}
-
-    return asdict(dialog_box_data, dict_factory=_enum_to_value)
-
-
-def get_dialog_box_data(input_data: str, widget: DialogBoxWidget | None) -> Any:
-    """Get the dialog box data in the correct format.
-
-    Args:
-        input_data (str): input string
-        widget (DialogBoxWidget | None): widget info
-
-    Returns:
-        Any: Dialog box data in the correct format
-
-    Raises:
-        ValueError: If the widget.type is empty.
-    """
-    if widget is None:
-        return None
-
-    if widget.type is None:
-        raise ValueError("Widget type is `None`, but widget data is not empty")
-
-    dbx_answer = None
-
-    match widget.type:
-        case DialogBoxWidgetType.NUMERIC_INPUT:
-            try:
-                dbx_answer = float(input_data)
-            except ValueError:
-                dbx_answer = None
-        case DialogBoxWidgetType.TEXT_INPUT:
-            dbx_answer = input_data
-        case DialogBoxWidgetType.RADIOBUTTON:
-            dbx_answer = input_data
-        case DialogBoxWidgetType.CHECKBOX:
-            dbx_answer = input_data
-        case _:
-            pass  # noqa: WPS420
-
-    return dbx_answer
-
-
-def _validate_widget_info(widget: DialogBoxWidget) -> None:
-    """
-    Validate the information associated with the given widget.
-
-    Args:
-        widget (DialogBoxWidget): The widget to validate.
-
-    Raises:
-        WidgetInfoError: If the widget type is not supported or the info object
-            is not of the expected type for the widget type.
-    """
-    match widget.type:
-        case DialogBoxWidgetType.TEXT_INPUT:
-            if widget.info:
-                raise WidgetInfoError("Expected None for widget info")
-        case DialogBoxWidgetType.NUMERIC_INPUT:
-            if widget.info:
-                raise WidgetInfoError("Expected None for widget info")
-        case DialogBoxWidgetType.RADIOBUTTON:
-            if not isinstance(widget.info, RadiobuttonInfo):
-                raise WidgetInfoError("Expected RadiobuttonInfo for widget info")
-        case DialogBoxWidgetType.CHECKBOX:
-            if not isinstance(widget.info, CheckboxInfo):
-                raise WidgetInfoError("Expected CheckboxInfo for widget info")
-        case _:
-            raise WidgetInfoError(f"Unsupported widget type: {widget.type}")
+        Returns:
+            dict: DialogBox dictionary.
+        """
+        dbx_dict = deepcopy(self.__dict__)
+        dbx_dict["widget"] = deepcopy(self.widget.__dict__)
+        return dbx_dict

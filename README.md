@@ -31,7 +31,7 @@ HardPy allows you to:
 ## To Install
 
 ```bash
-pip3 install hardpy
+pip install hardpy
 ```
 
 ## Examples

@@ -1,5 +1,5 @@
 #!/bin/bash
 
 cd ..
-pip3 install -r requirements.txt
-python3 -m build
+pip install -r requirements.txt
+python -m build

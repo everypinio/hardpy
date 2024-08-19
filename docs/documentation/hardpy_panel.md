@@ -75,6 +75,15 @@ Contains checkbox widget.
 
 ![checkbox_dialog_box](../img/dialog_box/checkbox_dialog_box.png)
 
+#### image
+
+Contains an instruction or question with image and a `confirm` button for confirmation.
+
+* Allows change width through `width` parameter.
+
+![dialog_box_with_image](../img/dialog_box/dialog_box_with_image.png)
+
+
 #### warning window
 
 If the user clicks `confirm` without entering anything, a warning window will be displayed.

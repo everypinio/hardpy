@@ -60,6 +60,24 @@ per-file-ignores =
     WPS235,
     # Found too long name
     WPS118,
+  examples/*:
+    D100,
+    D101,
+    D102,
+    D103,
+    S101,
+    WPS450,
+    S311,
+    WPS432,
+    WPS437,
+    B011,
+    WPS444,
+    WPS217,
+    WPS218,
+    WPS235,
+    WPS114,
+    F401,
+    I004,
   environment.py:
     # Allow magic numbers
     WPS432,
@@ -74,7 +92,8 @@ per-file-ignores =
 
 max-returns = 8
 max-arguments = 5
-max-line-length = 88
+# Allow license headers
+max-line-length = 91
 max-local-variables = 10
 max-methods = 20
 max-try-body-length = 32

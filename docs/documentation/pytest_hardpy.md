@@ -190,9 +190,18 @@ Only one dialog box can be invoked per test case.
 DialogBox attributes:
 
 - dialog_text (str): The text of the dialog box.
-- title_bar (str | None): The title bar of the dialog box. 
+- title_bar (str | None): The title bar of the dialog box.
 If the title_bar field is missing, it is the case name.
-- widget (DialogBoxWidget | None): Widget information.
+- widget (IWidget | None): Widget information.
+
+Widget list:
+
+- Base, only dialog text;
+- Text input, `TextInputWidget`;
+- Numeric input, `NumericInputWidget`;
+- Radiobutton, `RadiobuttonWidget`;
+- Checkbox, `CheckboxWidget`;
+- Image demonstration, `ImageWidget`;
 
 **Returns:**
 
@@ -200,11 +209,12 @@ If the title_bar field is missing, it is the case name.
 
 The type of the return value depends on the widget type:
 
-- Without widget: None.
+- Without widget (BASE): bool.
 - NUMERIC_INPUT: float.
 - TEXT_INPUT: str.
 - RADIOBUTTON: str.
 - CHECKBOX: List(str).
+- IMAGE: bool.
 
 **Raises**
 
@@ -215,16 +225,15 @@ The type of the return value depends on the widget type:
 
 ```python
 from hardpy import dialog_box
-def test_dialog_box():
-    dbx = dialog_box.DialogBox(
-            title_bar="Dialog box title",
-            dialog_text="Dialog box text",
-            widget=dialog_box.DialogBoxWidget(
-                type=dialog_box.DialogBoxWidgetType.TEXT_INPUT
-            ),
-        )
-    response = hardpy.run_dialog_box(dbx)
-    assert response == "ok"
+def test_text_input():
+    dbx = DialogBox(
+        dialog_text="Type 'ok' and press the Confirm button",
+        title_bar="Example of text input",
+        widget=TextInputWidget(),
+    )
+    response = run_dialog_box(dbx)
+    set_message(f"Entered text {response}")
+    assert response == "ok", "The entered text is not correct"
 ```
 
 #### get_current_report
