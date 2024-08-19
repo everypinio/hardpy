@@ -197,23 +197,15 @@ export function StartConfirmationDialog(props: Props) {
             alt="Image" style={{ width: `${props.widget_info?.width}%` }} />
         )}
         {widgetType === WidgetType.Multistep && (
-          <Steps
+          <Steps size="small"
             current={current}
             onChange={onChange}
-            items={[
-              {
-                title: 'Step 1',
+            items={
+              props.widget_info?.fields?.map((field) => ({
+                title: field,
                 description,
-              },
-              {
-                title: 'Step 2',
-                description,
-              },
-              {
-                title: 'Step 3',
-                description,
-              },
-            ]}
+              }))
+            }
           />
         )}
       </div>
