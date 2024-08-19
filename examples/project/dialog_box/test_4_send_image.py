@@ -1,21 +1,15 @@
 import pytest
-from hardpy import run_dialog_box
-from hardpy.pytest_hardpy.utils.dialog_box import (
-    DialogBoxWidget,
-    DialogBoxWidgetType,
-    DialogBox,
-    ImageInfo,
-)
+
+from hardpy import run_dialog_box, DialogBox, ImageWidget
+
+pytestmark = pytest.mark.module_name("Image dialog box")
 
 
 @pytest.mark.case_name("Image")
 def test_upload_image():
     dbx = DialogBox(
         dialog_text="Test image",
-        widget=DialogBoxWidget(
-            DialogBoxWidgetType.IMAGE,
-            ImageInfo(address="assets/test.png"),
-        ),
+        widget=ImageWidget(address="assets/test.png"),
     )
     response = run_dialog_box(dbx)
-    assert response is None
+    assert response
