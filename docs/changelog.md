@@ -2,6 +2,7 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Refactor dialog box API.
 * Add dialog box with image.
 * Add conda.yaml example.
 * Add .vscode folder.

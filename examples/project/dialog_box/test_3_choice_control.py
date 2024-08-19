@@ -1,12 +1,11 @@
 import pytest
 
-from hardpy import run_dialog_box, set_message
-from hardpy.pytest_hardpy.utils.dialog_box import (
-    DialogBoxWidget,
-    DialogBoxWidgetType,
+from hardpy import (
+    run_dialog_box,
+    set_message,
     DialogBox,
-    RadiobuttonInfo,
-    CheckboxInfo,
+    RadiobuttonWidget,
+    CheckboxWidget,
 )
 
 
@@ -18,10 +17,7 @@ def test_radiobutton():
     dbx = DialogBox(
         dialog_text='Select item "one" out of several and click Confirm.',
         title_bar="Radiobutton example",
-        widget=DialogBoxWidget(
-            DialogBoxWidgetType.RADIOBUTTON,
-            RadiobuttonInfo(fields=["one", "two", "three"]),
-        ),
+        widget=RadiobuttonWidget(fields=["one", "two", "three"]),
     )
     response = run_dialog_box(dbx)
     set_message(f"Selected item {response}")
@@ -33,11 +29,9 @@ def test_checkbox():
     dbx = DialogBox(
         dialog_text='Select items "one" and "two" and click the Confirm button',
         title_bar="Checkbox example",
-        widget=DialogBoxWidget(
-            DialogBoxWidgetType.CHECKBOX,
-            CheckboxInfo(fields=["one", "two", "three"]),
-        ),
+        widget=CheckboxWidget(fields=["one", "two", "three"]),
     )
     response = run_dialog_box(dbx)
     set_message(f"Selected item {response}")
-    assert response == '["one","two"]', "The answer is not correct"
+    correct_answer = {"one", "two"}
+    assert set(response) == correct_answer, "The answer is not correct"

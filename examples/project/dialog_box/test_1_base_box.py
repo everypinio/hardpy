@@ -1,7 +1,6 @@
 import pytest
 
-from hardpy import run_dialog_box
-from hardpy.pytest_hardpy.utils import DialogBox
+from hardpy import run_dialog_box, DialogBox
 
 
 pytestmark = pytest.mark.module_name("Base dialog box")
@@ -19,7 +18,7 @@ def test_base_dialog_box():
         dialog_text="Press the Confirm button",
     )
     response = run_dialog_box(dbx)
-    assert response is None
+    assert response
 
 
 @pytest.mark.case_name("Empty test after")
