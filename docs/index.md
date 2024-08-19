@@ -14,7 +14,7 @@
 ## To Install
 
 ```bash
-pip3 install hardpy
+pip install hardpy
 ```
 
 ## Getting Started
