@@ -48,7 +48,10 @@
         ]
 
     [project.urls]
-        repository = "https://github.com/everypindevices/hardpy"
+        Homepage = "https://github.com/everypinio/hardpy/"
+        Documentation = "https://everypinio.github.io/hardpy/"
+        Repository = "https://github.com/everypinio/hardpy/"
+        Changelog = "https://everypinio.github.io/hardpy/changelog/"
 
     [project.scripts]
         # Provide `hardpy-panel` executable
