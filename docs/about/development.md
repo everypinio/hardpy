@@ -69,15 +69,15 @@ Use the `compile_front.sh` script from `scripts` folder
 or run the scripts manually:
 
 ```bash
-pip3 install -r requirements.txt
-python3 -m build
+pip install -r requirements.txt
+python -m build
 ```
 
 For frontend rebuilding use the `recompile_front.sh` from `scripts` folder
 or run the scripts manually:
 
 ```bash
-pip3 uninstall $PRJ -y
+pip uninstall $PRJ -y
 
 rm -rf hardpy/hardpy_panel/frontend/dist
 rm -rf hardpy/hardpy_panel/frontend/node_modules
@@ -85,8 +85,8 @@ rm -rf *.egg-info
 rm -rf dist
 rm -rf __pycache__
 
-pip3 install -r requirements.txt
-python3 -m build
+pip install -r requirements.txt
+python -m build
 ```
 
 ## Launch
