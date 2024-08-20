@@ -209,12 +209,22 @@ class ImageWidget(IWidget):
 class MultistepWidget(IWidget):
     """Multistep widget."""
 
-    def __init__(self, fields: list[str]):
-        """Initialize the MultistepWidget."""
+    def __init__(self, steps: list[dict]):
+        """Initialize the MultistepWidget.
+
+        Args:
+            steps (list[dict]): A list of dictionaries representing the steps.
+                Each dictionary should have the following keys:
+                    - title (str): The title of the step.
+                    - content (str): The content of the step.
+
+        Raises:
+            ValueError: If the provided list of steps is empty.
+        """
         super().__init__(WidgetType.MULTISTEP)
-        if not fields:
-            raise ValueError("MultistepWidget must have at least one field")
-        self.info["fields"] = fields
+        if not steps:
+            raise ValueError("MultistepWidget must have at least one step")
+        self.info["steps"] = steps
 
     def convert_data(self, input_data: str) -> None:
         """Get the multistep widget data in the correct format.

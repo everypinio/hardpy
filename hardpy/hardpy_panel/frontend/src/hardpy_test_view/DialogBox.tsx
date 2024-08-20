@@ -3,8 +3,8 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, Classes, Dialog, InputGroup, Radio, Checkbox } from '@blueprintjs/core';
-import { notification, Steps } from 'antd';
+import { Button, Classes, Dialog, InputGroup, Radio, Checkbox, Tab, Tabs } from '@blueprintjs/core';
+import { notification } from 'antd';
 
 interface Props {
   title_bar: string;
@@ -25,12 +25,18 @@ export enum WidgetType {
   Multistep = "multistep",
 }
 
+interface Step {
+  title: string;
+  content: string;
+}
+
 interface WidgetInfo {
   fields?: string[];
   text?: string;
   base64?: string;
   format?: string;
   width?: number;
+  steps?: Step[];
 }
 
 export function StartConfirmationDialog(props: Props) {
@@ -120,17 +126,8 @@ export function StartConfirmationDialog(props: Props) {
     }
   };
 
-  const defaultWidth = '500px';
-  const dialogWidth = props.width || defaultWidth;
-
   const widgetType = props.widget_type || WidgetType.Base;
   const inputPlaceholder = "enter answer";
-  const description = 'You can hover on the dot.';
-  const [current, setCurrent] = useState(0);
-  const onChange = (value: number) => {
-    console.log('onChange:', value);
-    setCurrent(value);
-  };
 
   return (
     <Dialog
@@ -138,9 +135,15 @@ export function StartConfirmationDialog(props: Props) {
       icon="info-sign"
       isOpen={dialogOpen}
       onClose={handleClose}
-      style={{ width: dialogWidth }}
+      style={{
+        width: 'auto',
+        height: 'auto',
+        minWidth: '300px',
+        minHeight: '200px',
+        maxWidth: '800px',
+      }}
     >
-      <div className={Classes.DIALOG_BODY}>
+      <div className={Classes.DIALOG_BODY} style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
         <p>{props.dialog_text}</p>
         {widgetType === WidgetType.TextInput && (
           <InputGroup
@@ -164,49 +167,56 @@ export function StartConfirmationDialog(props: Props) {
         )}
         {widgetType === WidgetType.RadioButton && (
           <>
-            {props.widget_info && props.widget_info.fields && props.widget_info.fields.map((option: string) => (
-              <Radio
-                key={option}
-                label={option}
-                checked={selectedRadioButton === option}
-                onChange={() => setSelectedRadioButton(option)}
-              />
-            ))}
+            {props.widget_info && props.widget_info.fields &&
+              props.widget_info.fields.map((option: string) => (
+                <Radio
+                  key={option}
+                  label={option}
+                  checked={selectedRadioButton === option}
+                  onChange={() => setSelectedRadioButton(option)}
+                />
+              ))}
           </>
         )}
         {widgetType === WidgetType.Checkbox && (
           <>
-            {props.widget_info && props.widget_info.fields && props.widget_info.fields.map((option: string) => (
-              <Checkbox
-                key={option}
-                label={option}
-                checked={selectedCheckboxes.includes(option)}
-                onChange={() => {
-                  if (selectedCheckboxes.includes(option)) {
-                    setSelectedCheckboxes(selectedCheckboxes.filter(item => item !== option));
-                  } else {
-                    setSelectedCheckboxes([...selectedCheckboxes, option]);
-                  }
-                }}
-              />
-            ))}
+            {props.widget_info && props.widget_info.fields &&
+              props.widget_info.fields.map((option: string) => (
+                <Checkbox
+                  key={option}
+                  label={option}
+                  checked={selectedCheckboxes.includes(option)}
+                  onChange={() => {
+                    if (selectedCheckboxes.includes(option)) {
+                      setSelectedCheckboxes(selectedCheckboxes.filter(item => item !== option));
+                    } else {
+                      setSelectedCheckboxes([...selectedCheckboxes, option]);
+
+                    }
+                  }}
+                />
+              ))}
           </>
         )}
         {widgetType === WidgetType.Image && (
-          <img src={`data:image/${props.widget_info?.format};base64,${props.widget_info?.base64}`}
-            alt="Image" style={{ width: `${props.widget_info?.width}%` }} />
+          <img
+            src={`data:image/${props.widget_info?.format};base64,${props.widget_info?.base64}`}
+            alt="Image"
+            style={{ width: `${props.widget_info?.width}%` }}
+          />
         )}
         {widgetType === WidgetType.Multistep && (
-          <Steps size="small"
-            current={current}
-            onChange={onChange}
-            items={
-              props.widget_info?.fields?.map((field) => ({
-                title: field,
-                description,
-              }))
-            }
-          />
+          <Tabs id={props.title_bar}>
+            {props.widget_info?.steps?.map((step: Step) => (
+              <Tab 
+                id={step.title} 
+                key={step.title}
+                title={step.title}
+                panel={<div>{step.content}</div>}
+              >
+              </Tab>
+            ))}
+          </Tabs>   
         )}
       </div>
       <div className={Classes.DIALOG_FOOTER}>
