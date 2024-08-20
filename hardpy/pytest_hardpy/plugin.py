@@ -195,8 +195,9 @@ class HardpyPlugin(object):
 
     def pytest_runtest_logreport(self, report: TestReport):
         """Call after call of each test item."""
-        if report.when != "call":
+        if report.when != "call" and report.failed is False:
             # ignore setup and teardown phase
+            # or continue processing setup and teardown failure (fixture exception handler)
             return True
 
         module_id = Path(report.fspath).stem
