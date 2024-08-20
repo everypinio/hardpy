@@ -6,6 +6,7 @@ from typing import Any, Callable
 from logging import getLogger
 from pathlib import Path, PurePath
 from platform import system
+from re import compile as re_compile
 
 from natsort import natsorted
 from pytest import (
@@ -299,7 +300,11 @@ class HardpyPlugin(object):
                 if isinstance(error, ExceptionRepr) and isinstance(  # noqa: WPS337
                     error.reprcrash, ReprFileLocation
                 ):
-                    return error.reprcrash.message
+                    # remove ansi codes
+                    ansi_pattern = re_compile(
+                        r"(?:\x1B[@-Z\\-_]|[\x80-\x9A\x9C-\x9F]|(?:\x1B\[|\x9B)[0-?]*[ -/]*[@-~])"  # noqa: E501
+                    )
+                    return ansi_pattern.sub("", error.reprcrash.message)
                 return str(error)
             case _:
                 return None
