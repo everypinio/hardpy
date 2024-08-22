@@ -25,9 +25,19 @@ export enum WidgetType {
   Multistep = "multistep",
 }
 
-interface Step {
+interface StepWidgetInfo {
+  type: string;
+  info: WidgetInfo;
+}
+interface StepInfo {
   title: string;
-  content: string;
+  text?: string;
+  widget?: StepWidgetInfo;
+}
+
+interface Step {
+  type: string;
+  info: StepInfo;
 }
 
 interface WidgetInfo {
@@ -208,15 +218,23 @@ export function StartConfirmationDialog(props: Props) {
         {widgetType === WidgetType.Multistep && (
           <Tabs id={props.title_bar}>
             {props.widget_info?.steps?.map((step: Step) => (
-              <Tab 
-                id={step.title} 
-                key={step.title}
-                title={step.title}
-                panel={<div>{step.content}</div>}
+              <Tab
+                id={step.info?.title}
+                key={step.info?.title}
+                title={step.info?.title}
+                panel={<div>{step.info?.text}
+                  {step.info?.widget?.type === WidgetType.Image && (
+                    <img
+                      src={`data:image/${step.info.widget?.info.format};base64,${step.info.widget?.info.base64}`}
+                      alt="Image"
+                      style={{ width: `${step.info.widget?.info.width}%` }}
+                    />
+                  )}
+                </div>}
               >
               </Tab>
             ))}
-          </Tabs>   
+          </Tabs>
         )}
       </div>
       <div className={Classes.DIALOG_FOOTER}>

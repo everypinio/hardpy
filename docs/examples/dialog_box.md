@@ -102,9 +102,9 @@ def test_upload_image():
 @pytest.mark.case_name("Multistep")
 def test_multiple_steps():
     steps = [
-        {"title": "Read 1", "content": "Content for step"},
-        {"title": "Read 2", "content": "Content for step"},
-        {"title": "Read 3", "content": "Content for step"},
+        StepWidget("Step 1", text="Content for step", widget=None),
+        StepWidget("Step 2", text="Content for step 2", widget=ImageWidget(address="assets/test.png")),
+        StepWidget("Step 3", text=None, widget=ImageWidget(address="assets/test.png")),
     ]
     dbx = DialogBox(
         dialog_text="Follow the steps and click Confirm",

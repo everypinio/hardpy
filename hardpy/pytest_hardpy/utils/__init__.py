@@ -19,7 +19,9 @@ from hardpy.pytest_hardpy.utils.dialog_box import (
     RadiobuttonWidget,
     ImageWidget,
     MultistepWidget,
+    StepWidget,
 )
+
 
 __all__ = [
     "NodeInfo",
@@ -38,4 +40,5 @@ __all__ = [
     "RadiobuttonWidget",
     "ImageWidget",
     "MultistepWidget",
+    "StepWidget"
 ]

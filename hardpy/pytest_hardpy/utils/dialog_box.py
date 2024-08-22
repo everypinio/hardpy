@@ -21,6 +21,7 @@ class WidgetType(Enum):
     RADIOBUTTON = "radiobutton"
     CHECKBOX = "checkbox"
     IMAGE = "image"
+    STEP = "step"
     MULTISTEP = "multistep"
 
 
@@ -206,17 +207,48 @@ class ImageWidget(IWidget):
         return True
 
 
+class StepWidget(IWidget):
+    """Step widget.
+
+    Args:
+        title (str): Step title
+        text (str | None): Step text
+        widget (IWidget | None): Step widget
+
+    Raises:
+        WidgetInfoError: If the text or widget are not provided.
+    """
+
+    def __init__(self, title: str, text: str | None, widget: IWidget | None):
+        super().__init__(WidgetType.STEP)
+        if text is None and widget is None:
+            raise WidgetInfoError("Text or widget must be provided")
+        self.info["title"] = title
+        if isinstance(text, str):
+            self.info["text"] = text
+        if isinstance(widget, IWidget):
+            self.info["widget"] = widget.__dict__
+
+    def convert_data(self, input_data: str) -> None:
+        """Get the step widget data in the correct format.
+
+        Args:
+            input_data (str): input string
+
+        Returns:
+            None
+        """
+        pass
+
+
 class MultistepWidget(IWidget):
     """Multistep widget."""
 
-    def __init__(self, steps: list[dict]):
-        """Initialize the MultistepWidget.
+    def __init__(self, steps: list[StepWidget]):
+        """Initialize the MultistepWidget.s
 
         Args:
-            steps (list[dict]): A list of dictionaries representing the steps.
-                Each dictionary should have the following keys:
-                    - title (str): The title of the step.
-                    - content (str): The content of the step.
+            steps (list[StepWidget]): A list with info about the steps.
 
         Raises:
             ValueError: If the provided list of steps is empty.
@@ -224,7 +256,9 @@ class MultistepWidget(IWidget):
         super().__init__(WidgetType.MULTISTEP)
         if not steps:
             raise ValueError("MultistepWidget must have at least one step")
-        self.info["steps"] = steps
+        self.info["steps"] = []
+        for step in steps:
+            self.info["steps"].append(step.__dict__)
 
     def convert_data(self, input_data: str) -> None:
         """Get the multistep widget data in the correct format.
