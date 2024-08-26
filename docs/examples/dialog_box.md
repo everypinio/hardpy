@@ -111,5 +111,5 @@ def test_multiple_steps():
         widget=MultistepWidget(steps),
     )
     response = run_dialog_box(dbx)
-    assert response is None
+    assert response
 ```

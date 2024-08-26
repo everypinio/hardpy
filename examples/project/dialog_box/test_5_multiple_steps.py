@@ -1,4 +1,5 @@
 import pytest
+
 from hardpy import run_dialog_box
 from hardpy.pytest_hardpy.utils.dialog_box import (
     DialogBox,
@@ -26,4 +27,4 @@ def test_multiple_steps():
         widget=MultistepWidget(steps),
     )
     response = run_dialog_box(dbx)
-    assert response is None
+    assert response
