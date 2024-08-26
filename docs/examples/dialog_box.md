@@ -1,6 +1,7 @@
 # Dialog Box
 
 This is an example of testing dialog boxes using the **HardPy** library.
+The code for this example can be seen inside the hardpy package [Dialog Box](https://github.com/everypinio/hardpy/tree/main/examples/project/dialog_box).
 
 ### how to start
 

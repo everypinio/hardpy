@@ -71,7 +71,7 @@ Contains radiobutton widget.
 Contains checkbox widget.
 
 * The user selects several options from several possible ones.
-* Returns a list with the contents of the selected items converted to a string.
+* Returns a list with the contents of the selected items.
 
 ![checkbox_dialog_box](../img/dialog_box/checkbox_dialog_box.png)
 

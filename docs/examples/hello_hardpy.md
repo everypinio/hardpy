@@ -1,6 +1,7 @@
 # Hello hardpy
 
 This is the simplest example of using **HardPy**.
+The code for this example can be seen inside the hardpy package [Hello Hardpy](https://github.com/everypinio/hardpy/tree/main/examples/project/hello_hardpy).
 
 ### how to start
 
