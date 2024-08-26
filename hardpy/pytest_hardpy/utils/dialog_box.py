@@ -213,7 +213,7 @@ class StepWidget(IWidget):
     Args:
         title (str): Step title
         text (str | None): Step text
-        widget (IWidget | None): Step widget
+        widget (ImageWidget | None): Step widget
 
     Raises:
         WidgetInfoError: If the text or widget are not provided.
@@ -229,23 +229,23 @@ class StepWidget(IWidget):
         if isinstance(widget, IWidget):
             self.info["widget"] = widget.__dict__
 
-    def convert_data(self, input_data: str) -> None:
+    def convert_data(self, input_data: str) -> bool:
         """Get the step widget data in the correct format.
 
         Args:
             input_data (str): input string
 
         Returns:
-            None
+            bool: True if confirm button is pressed
         """
-        pass
+        return True
 
 
 class MultistepWidget(IWidget):
     """Multistep widget."""
 
     def __init__(self, steps: list[StepWidget]):
-        """Initialize the MultistepWidget.s
+        """Initialize the MultistepWidget.
 
         Args:
             steps (list[StepWidget]): A list with info about the steps.
@@ -260,16 +260,16 @@ class MultistepWidget(IWidget):
         for step in steps:
             self.info["steps"].append(step.__dict__)
 
-    def convert_data(self, input_data: str) -> None:
+    def convert_data(self, input_data: str) -> bool:
         """Get the multistep widget data in the correct format.
 
         Args:
             input_data (str): input string
 
         Returns:
-            None
+            bool: True if confirm button is pressed
         """
-        pass
+        return True
 
 
 @dataclass

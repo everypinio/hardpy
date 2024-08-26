@@ -202,6 +202,7 @@ Widget list:
 - Radiobutton, `RadiobuttonWidget`;
 - Checkbox, `CheckboxWidget`;
 - Image demonstration, `ImageWidget`;
+- Multistep, `MultistepWidget`.
 
 **Returns:**
 
