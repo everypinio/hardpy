@@ -71,7 +71,7 @@ Contains radiobutton widget.
 Contains checkbox widget.
 
 * The user selects several options from several possible ones.
-* Returns a list with the contents of the selected items converted to a string.
+* Returns a list with the contents of the selected items.
 
 ![checkbox_dialog_box](../img/dialog_box/checkbox_dialog_box.png)
 
@@ -80,22 +80,38 @@ Contains checkbox widget.
 Contains an instruction or question with image and a `confirm` button for confirmation.
 
 * Allows change width through `width` parameter.
+* Allows next image types: gif, jpeg, pjpeg, png, svg+xml, tiff, vnd.microsoft.icon, vnd.wap.wbmp, webp.
 
 ![dialog_box_with_image](../img/dialog_box/dialog_box_with_image.png)
 
+#### multiple steps
+
+Contains an instruction with multiple steps and `confirm` button for confirmation.
+
+* Allows steps with text.
+
+![dialog_box_with_steps](../img/dialog_box/dialog_box_with_steps.png)
+
+* Allows steps with text and image.
+
+![dialog_box_with_step_with_image_and_text](../img/dialog_box/dialog_box_with_step_with_image_and_text.png)
+
+* Allows steps with image.
+
+![dialog_box_with_step_with_image](../img/dialog_box/dialog_box_with_step_with_image.png)
 
 #### warning window
 
 If the user clicks `confirm` without entering anything, a warning window will be displayed.
 
-![alert](../img/dialog_box/alert.png)
+![alert](../img/dialog_box/dialog_box_alert.png)
 
 #### error notification
 
 If the user closes the dialog box (using the cross in the upper right corner),
 the tests will be stopped, an error message will be displayed.
 
-![notification](../img/dialog_box/notification.png)
+![notification](../img/dialog_box/dialog_box_notification.png)
 
 ### Options
 
