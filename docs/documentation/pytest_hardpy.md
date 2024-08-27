@@ -202,6 +202,7 @@ Widget list:
 - Radiobutton, `RadiobuttonWidget`;
 - Checkbox, `CheckboxWidget`;
 - Image demonstration, `ImageWidget`;
+- Multistep, `MultistepWidget`.
 
 **Returns:**
 
@@ -215,6 +216,7 @@ The type of the return value depends on the widget type:
 - RADIOBUTTON: str.
 - CHECKBOX: List(str).
 - IMAGE: bool.
+- MULTISTEP: bool.
 
 **Raises**
 

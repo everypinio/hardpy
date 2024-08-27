@@ -1,6 +1,7 @@
 # Dialog Box
 
 This is an example of testing dialog boxes using the **HardPy** library.
+The code for this example can be seen inside the hardpy package [Dialog Box](https://github.com/everypinio/hardpy/tree/main/examples/project/dialog_box).
 
 ### how to start
 
@@ -95,6 +96,20 @@ def test_upload_image():
     dbx = DialogBox(
         dialog_text="Test image",
         widget=ImageWidget(address="assets/test.png"),
+    )
+    response = run_dialog_box(dbx)
+    assert response
+
+@pytest.mark.case_name("Multistep")
+def test_multiple_steps():
+    steps = [
+        StepWidget("Step 1", text="Content for step", widget=None),
+        StepWidget("Step 2", text="Content for step 2", widget=ImageWidget(address="assets/test.png")),
+        StepWidget("Step 3", text=None, widget=ImageWidget(address="assets/test.png")),
+    ]
+    dbx = DialogBox(
+        dialog_text="Follow the steps and click Confirm",
+        widget=MultistepWidget(steps),
     )
     response = run_dialog_box(dbx)
     assert response
