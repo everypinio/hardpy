@@ -226,7 +226,7 @@ class StepWidget(IWidget):
         self.info["title"] = title
         if isinstance(text, str):
             self.info["text"] = text
-        if isinstance(widget, IWidget):
+        if isinstance(widget, ImageWidget):
             self.info["widget"] = widget.__dict__
 
     def convert_data(self, input_data: str) -> bool:
