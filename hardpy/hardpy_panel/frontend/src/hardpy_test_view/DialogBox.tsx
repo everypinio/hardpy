@@ -223,15 +223,19 @@ export function StartConfirmationDialog(props: Props) {
                 id={step.info?.title}
                 key={step.info?.title}
                 title={step.info?.title}
-                panel={<div>{step.info?.text}
-                  {step.info?.widget?.type === WidgetType.Image && (
-                    <img
-                      src={`data:image/${step.info.widget?.info.format};base64,${step.info.widget?.info.base64}`}
-                      alt="Image"
-                      style={{ width: `${step.info.widget?.info.width}%` }}
-                    />
-                  )}
-                </div>}
+                panel={
+                  <div className="step-container" >
+                    <div className="step-content" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                      <p>{step.info?.text}</p>
+                      {step.info?.widget?.type === WidgetType.Image && (
+                        <img
+                          src={`data:image/${step.info.widget?.info.format};base64,${step.info.widget?.info.base64}`}
+                          alt="Image"
+                          style={{ width: `${step.info.widget?.info.width}%` }}
+                        />
+                      )}
+                    </div>
+                  </div>}
               >
               </Tab>
             ))}
