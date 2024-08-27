@@ -2,13 +2,13 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
-* Add dialog box with muliple steps.
+## HardPy 0.5.0
+
 * Refactor dialog box API.
-* Add dialog box with image.
 * Add conda.yaml example.
 * Add .vscode folder.
 * Fix capturing exceptions and displaying them in the operator panel.
-* Add dialog box with radiobutton and checkbox.
+* Add dialog box with radiobutton, checkbox, image, multiple steps.
 
 ## HardPy 0.4.0
 
