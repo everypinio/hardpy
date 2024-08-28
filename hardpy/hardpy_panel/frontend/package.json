@@ -29,7 +29,6 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-react": "^7.33.2",
     "events": "^3.3.0",
-    "html-escaper": "^3.0.3",
     "lodash": "^4.17.21",
     "normalize.css": "^8.0.1",
     "pouchdb-browser": "^8.0.1",

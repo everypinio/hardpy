@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Button, Classes, Dialog, InputGroup, Radio, Checkbox, Tab, Tabs } from '@blueprintjs/core';
 import { notification } from 'antd';
-import { escape } from 'html-escaper';
 
 interface Props {
   title_bar: string;
@@ -103,14 +102,22 @@ export function StartConfirmationDialog(props: Props) {
     }
     setDialogOpen(false);
     let textToSend = '';
+    
+    function fixedEncodeURIComponent (str: string) {
+      return encodeURIComponent(str).replace(/[!-'()*+,./:;<=>?@[\]^`{|}~]/g, function(c) {
+        return '%' + c.charCodeAt(0).toString(16);
+      });
+    }
 
     switch (props.widget_type) {
       case WidgetType.TextInput:
+        textToSend = JSON.stringify(fixedEncodeURIComponent(inputText));
+        break;
       case WidgetType.NumericInput:
         textToSend = inputText;
         break;
       case WidgetType.RadioButton:
-        textToSend = selectedRadioButton;
+        textToSend = JSON.stringify(selectedRadioButton);
         break;
       case WidgetType.Checkbox:
         textToSend = JSON.stringify(selectedCheckboxes);

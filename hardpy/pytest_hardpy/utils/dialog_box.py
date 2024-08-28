@@ -2,6 +2,8 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import base64
+import re
+import urllib.parse
 from abc import ABC, abstractmethod
 from ast import literal_eval
 from copy import deepcopy
@@ -70,6 +72,24 @@ class TextInputWidget(IWidget):
         """Initialize the TextInputWidget."""
         super().__init__(WidgetType.TEXT_INPUT)
 
+    def fixed_decode_uri_component(self, encoded_string):
+        """
+        Decode a percent-encoded URI component.
+
+        Args:
+            encoded_string (str): percent-encoded URI component
+
+        Returns:
+            str: decoded string
+        """
+        decoded_string = urllib.parse.unquote(encoded_string)
+
+        def replace_hex(match):
+            return chr(int(match.group(1), 16))
+        decoded_string = re.sub(r'%([0-9a-fA-F]{2})', replace_hex, decoded_string)
+
+        return decoded_string
+
     def convert_data(self, input_data: str) -> str:
         """Get the text input data in the string format.
 
@@ -79,7 +99,8 @@ class TextInputWidget(IWidget):
         Returns:
             str: Text input string data
         """
-        return input_data
+        input_data = self.fixed_decode_uri_component(input_data)
+        return input_data.replace("\"", '').replace("\'", '"')
 
 
 class NumericInputWidget(IWidget):
@@ -130,7 +151,7 @@ class RadiobuttonWidget(IWidget):
         Returns:
             str: Radiobutton string data
         """
-        return input_data
+        return input_data.replace("\"", '').replace("\'", '"')
 
 
 class CheckboxWidget(IWidget):
