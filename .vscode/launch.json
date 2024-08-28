@@ -17,7 +17,15 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+        },
+        {
+            "name": "Python: Main",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.__main__",
+            "console": "integratedTerminal",
+            "args": ["init", "--tests-dir", "minute_parity"]
         },
         {
             "name": "Python: Example Hello HardPy",
