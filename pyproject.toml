@@ -56,7 +56,7 @@
 
     [project.scripts]
         # Provide `hardpy-panel` executable
-        hardpy-panel = "hardpy.hardpy_panel.runner:run"
+        hardpy = "hardpy.hardpy:cli"
 
     [project.entry-points.pytest11]
         pytest_hardpy = "hardpy.pytest_hardpy.plugin"
