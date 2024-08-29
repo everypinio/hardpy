@@ -102,25 +102,27 @@ export function StartConfirmationDialog(props: Props) {
     }
     setDialogOpen(false);
     let textToSend = '';
-    
-    function fixedEncodeURIComponent (str: string) {
-      return encodeURIComponent(str).replace(/[!-'()*+,./:;<=>?@[\]^`{|}~]/g, function(c) {
+
+    function fixedEncodeURLComponent(str: string) {
+      return encodeURIComponent(str).replace(/[!-'()*+,./:;<=>?@[\]^`{|}~]/g, function (c) {
         return '%' + c.charCodeAt(0).toString(16);
       });
     }
 
     switch (props.widget_type) {
       case WidgetType.TextInput:
-        textToSend = JSON.stringify(fixedEncodeURIComponent(inputText));
+        textToSend = JSON.stringify(fixedEncodeURLComponent(inputText));
         break;
       case WidgetType.NumericInput:
         textToSend = inputText;
         break;
       case WidgetType.RadioButton:
-        textToSend = JSON.stringify(selectedRadioButton);
+        textToSend = JSON.stringify(fixedEncodeURLComponent(selectedRadioButton));
         break;
       case WidgetType.Checkbox:
-        textToSend = JSON.stringify(selectedCheckboxes);
+        textToSend = JSON.stringify(
+          selectedCheckboxes.map(checkboxValue => fixedEncodeURLComponent(checkboxValue))
+        );
         break;
       default:
         textToSend = 'ok';

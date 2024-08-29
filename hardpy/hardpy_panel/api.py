@@ -2,6 +2,8 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import os
+import re
+import urllib.parse
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -74,6 +76,25 @@ def confirm_dialog_box(dialog_box_output: str):
     Returns:
         dict[str, RunStatus]: run status
     """
+
+    def _fixed_decode_url_component(encoded_string):
+        """
+        Decode a percent-encoded URL component.
+
+        Args:
+            encoded_string (str): percent-encoded URL component
+
+        Returns:
+            str: decoded string
+        """
+        decoded_string = urllib.parse.unquote(encoded_string)
+
+        def _replace_hex(match):
+            return chr(int(match.group(1), 16))
+
+        return re.sub(r"%([0-9a-fA-F]{2})", _replace_hex, decoded_string)
+
+    dialog_box_output = _fixed_decode_url_component(dialog_box_output)
     if app.state.pytest_wrp.confirm_dialog_box(dialog_box_output):
         return {"status": Status.BUSY}
     return {"status": Status.ERROR}
