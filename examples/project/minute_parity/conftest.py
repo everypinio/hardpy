@@ -26,6 +26,7 @@ def driver_example():
 def finish_executing():
     report = get_current_report()
     if report:
+        raise ValueError("Test failed")
         loader = CouchdbLoader(CouchdbConfig())
         loader.load(report)
 

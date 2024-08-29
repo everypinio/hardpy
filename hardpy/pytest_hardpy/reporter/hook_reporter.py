@@ -33,6 +33,7 @@ class HookReporter(BaseReporter):
         self.set_doc_value(DF.PROGRESS, 0)
         self.set_doc_value(DF.DRIVERS, {})
         self.set_doc_value(DF.ARTIFACT, {}, runstore_only=True)
+        self.set_doc_value(DF.OPERATOR_MSG, None)
 
     def start(self):
         """Start test."""

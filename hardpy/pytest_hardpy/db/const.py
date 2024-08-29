@@ -24,3 +24,4 @@ class DatabaseField(str, Enum):  # noqa: WPS600
     SERIAL_NUMBER = "serial_number"
     DRIVERS = "drivers"
     DIALOG_BOX = "dialog_box"
+    OPERATOR_MSG = "operator_msg"
