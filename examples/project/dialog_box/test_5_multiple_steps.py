@@ -1,12 +1,6 @@
 import pytest
 
-from hardpy import run_dialog_box
-from hardpy.pytest_hardpy.utils.dialog_box import (
-    DialogBox,
-    MultistepWidget,
-    ImageWidget,
-    StepWidget,
-)
+from hardpy import run_dialog_box, DialogBox, ImageWidget, StepWidget, MultistepWidget
 
 pytestmark = pytest.mark.module_name("Multiple steps dialog box")
 

@@ -14,6 +14,8 @@ from hardpy.pytest_hardpy.utils import (
     CheckboxWidget,
     RadiobuttonWidget,
     ImageWidget,
+    StepWidget,
+    MultistepWidget,
 )
 from hardpy.pytest_hardpy.pytest_call import (
     get_current_report,
@@ -53,4 +55,6 @@ __all__ = [
     "CheckboxWidget",
     "RadiobuttonWidget",
     "ImageWidget",
+    "StepWidget",
+    "MultistepWidget",
 ]
