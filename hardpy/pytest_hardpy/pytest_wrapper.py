@@ -7,7 +7,7 @@ import subprocess
 from socket import socket
 from platform import system
 
-from hardpy.pytest_hardpy.utils.config_data import ConfigData
+from hardpy.config import ConfigManager
 
 
 class PyTestWrapper(object):
@@ -19,7 +19,7 @@ class PyTestWrapper(object):
 
         # Make sure test structure is stored in DB
         # before clients come in
-        self.config = ConfigData()
+        self.config = ConfigManager().get_config()
         self.collect()
 
     def start(self):
@@ -39,21 +39,9 @@ class PyTestWrapper(object):
                     self.python_executable,
                     "-m",
                     "pytest",
-                    "--hardpy-dbp",
-                    str(self.config.db_port),
-                    "--hardpy-dbh",
-                    self.config.db_host,
-                    "--hardpy-dbu",
-                    self.config.db_user,
-                    "--hardpy-dbpw",
-                    self.config.db_pswd,
-                    "--hardpy-sp",
-                    str(self.config.socket_port),
-                    "--hardpy-sa",
-                    self.config.socket_addr,
                     "--hardpy-pt",
                 ],
-                cwd=self.config.tests_dir.absolute(),
+                cwd=self.config.tests_dir,
             )
         elif system() == "Windows":
             self._proc = subprocess.Popen(  # noqa: S603
@@ -61,21 +49,9 @@ class PyTestWrapper(object):
                     self.python_executable,
                     "-m",
                     "pytest",
-                    "--hardpy-dbp",
-                    str(self.config.db_port),
-                    "--hardpy-dbh",
-                    self.config.db_host,
-                    "--hardpy-dbu",
-                    self.config.db_user,
-                    "--hardpy-dbpw",
-                    self.config.db_pswd,
-                    "--hardpy-sp",
-                    str(self.config.socket_port),
-                    "--hardpy-sa",
-                    self.config.socket_addr,
                     "--hardpy-pt",
                 ],
-                cwd=self.config.tests_dir.absolute(),
+                cwd=self.config.tests_dir,
                 creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
             )
 
@@ -110,17 +86,9 @@ class PyTestWrapper(object):
                 self.python_executable,
                 "-m" "pytest",
                 "--collect-only",
-                "--hardpy-dbp",
-                str(self.config.db_port),
-                "--hardpy-dbh",
-                self.config.db_host,
-                "--hardpy-dbu",
-                self.config.db_user,
-                "--hardpy-dbpw",
-                self.config.db_pswd,
                 "--hardpy-pt",
             ],
-            cwd=self.config.tests_dir.absolute(),
+            cwd=self.config.tests_dir,
         )
         return True
 
@@ -133,11 +101,9 @@ class PyTestWrapper(object):
         Returns:
             bool: True if dialog box was confirmed, else False
         """
-        config_data = ConfigData()
-
         try:
             client = socket()
-            client.connect((config_data.socket_addr, config_data.socket_port))
+            client.connect((self.config.socket.host, self.config.socket.port))
             client.sendall(dialog_box_output.encode("utf-8"))
             client.close()
         except Exception:

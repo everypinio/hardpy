@@ -6,8 +6,9 @@ import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from hardpy.pytest_hardpy.utils import ConfigData, RunStatus as Status
+from hardpy.pytest_hardpy.utils import RunStatus as Status
 from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
+from hardpy.config import ConfigManager
 
 app = FastAPI()
 app.state.pytest_wrp = PyTestWrapper()
@@ -55,12 +56,12 @@ def couch_connection():
     """Get couchdb connection string.
 
     Returns:
-        dict[str, str, str]: couchdb connection string
+        dict[str, str]: couchdb connection string
     """
-    config_data = ConfigData()
+    connection_url = ConfigManager().get_config().database.connection_url()
 
     return {
-        "connection_str": config_data.connection_string,
+        "connection_str": connection_url,
     }
 
 
