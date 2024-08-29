@@ -87,18 +87,17 @@ Contains an instruction or question with image and a `confirm` button for confir
 #### multiple steps
 
 Contains an instruction with multiple steps and `confirm` button for confirmation.
+Allows steps with text and image.
 
-* Allows steps with text.
+=== "Step 1"
+    ![dialog_box_with_steps](../img/dialog_box/dialog_box_with_steps.png)
 
-![dialog_box_with_steps](../img/dialog_box/dialog_box_with_steps.png)
+=== "Step 2"
+    ![dialog_box_with_step_with_image_and_text](../img/dialog_box/dialog_box_with_step_with_image_and_text.png)
 
-* Allows steps with text and image.
+=== "Step 3"
+    ![dialog_box_with_step_with_image](../img/dialog_box/dialog_box_with_step_with_image.png)
 
-![dialog_box_with_step_with_image_and_text](../img/dialog_box/dialog_box_with_step_with_image_and_text.png)
-
-* Allows steps with image.
-
-![dialog_box_with_step_with_image](../img/dialog_box/dialog_box_with_step_with_image.png)
 
 #### warning window
 
