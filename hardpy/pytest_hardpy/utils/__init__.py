@@ -5,7 +5,6 @@ from hardpy.pytest_hardpy.utils.node_info import NodeInfo
 from hardpy.pytest_hardpy.utils.progress_calculator import ProgressCalculator
 from hardpy.pytest_hardpy.utils.const import TestStatus, RunStatus
 from hardpy.pytest_hardpy.utils.singleton import Singleton
-from hardpy.pytest_hardpy.utils.config_data import ConfigData
 from hardpy.pytest_hardpy.utils.exception import (
     DuplicateSerialNumberError,
     DuplicateDialogBoxError,
@@ -29,7 +28,6 @@ __all__ = [
     "TestStatus",
     "RunStatus",
     "Singleton",
-    "ConfigData",
     "DuplicateSerialNumberError",
     "DuplicateDialogBoxError",
     "WidgetInfoError",
