@@ -1,7 +1,7 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from hardpy.config import ConfigManager
+from hardpy.config import ConfigManager, HardpyConfig
 
 docker_compose_yaml = """version: "3.8"
 
@@ -166,22 +166,22 @@ def fill_actions_after_test(post_run_functions: list):
 
 class FileGenerator:
 
-    def __init__(self):
-        self._config = ConfigManager.dict_config()
+    def __init__(self, config: HardpyConfig):
+        self._config = config
 
     @property
     def docker_compose_yaml(self) -> str:
         return docker_compose_yaml.format(
-            self._config["database"]["port"],
-            self._config["database"]["user"],
-            self._config["database"]["password"],
+            self._config.database.port,
+            self._config.database.user,
+            self._config.database.password,
         )
 
     @property
     def couchdb_ini(self) -> str:
         return couchdb_ini.format(
-            self._config["database"]["port"],
-            self._config["database"]["host"],
+            self._config.database.port,
+            self._config.database.host,
         )
 
     @property
