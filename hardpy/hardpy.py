@@ -3,50 +3,61 @@
 
 
 import os
+import sys
 from pathlib import Path
 
 import typer
+from uvicorn import run as uvicorn_run
 
 from hardpy.config import ConfigManager
 from hardpy.file_generator import FileGenerator
 
 cli = typer.Typer(add_completion=False)
-default_config = ConfigManager.dict_config()
+default_config = ConfigManager().get_config()
 
 
 @cli.command()
 def init(
     tests_dir: str = typer.Option(
-        default_config["tests_dir"], help="Specify a tests directory."
+        default_config.tests_dir,
+        "-t",
+        help="Specify a tests directory.",
     ),
     database_user: str = typer.Option(
-        default_config["database"]["user"], help="Specify a database user."
+        default_config.database.user,
+        help="Specify a database user.",
     ),
     database_password: str = typer.Option(
-        default_config["database"]["password"],
+        default_config.database.password,
         help="Specify a database user password.",
     ),
     database_host: str = typer.Option(
-        default_config["database"]["host"], help="Specify a database host."
+        default_config.database.host,
+        help="Specify a database host.",
     ),
     database_port: int = typer.Option(
-        default_config["database"]["port"], help="Specify a database port."
+        default_config.database.port,
+        help="Specify a database port.",
     ),
     frontend_host: str = typer.Option(
-        default_config["frontend"]["host"], help="Specify a frontend host."
+        default_config.frontend.host,
+        help="Specify a frontend host.",
     ),
     frontend_port: int = typer.Option(
-        default_config["frontend"]["port"], help="Specify a frontend port."
+        default_config.frontend.port,
+        help="Specify a frontend port.",
     ),
     socket_host: str = typer.Option(
-        default_config["socket"]["host"], help="Specify a socket host."
+        default_config.socket.host,
+        help="Specify a socket host.",
     ),
     socket_port: int = typer.Option(
-        default_config["socket"]["port"], help="Specify a socket port."
+        default_config.socket.port,
+        help="Specify a socket port.",
     ),
 ):
     """Initialize HardPy."""
-    ConfigManager.init_config(
+    ConfigManager().init_config(
         tests_dir=tests_dir,
         database_user=database_user,
         database_password=database_password,
@@ -64,10 +75,13 @@ def init(
     # create database directory
     os.makedirs(dir_path / "database", exist_ok=True)
 
-    # create hardpy_config.toml
-    ConfigManager.create_config(dir_path)
+    # create hardpy.toml
+    ConfigManager().create_config(dir_path)
+    config = ConfigManager().read_config(dir_path)
+    if not config:
+        sys.exit()
 
-    fg = FileGenerator()
+    fg = FileGenerator(config)
 
     # create docker-compose.yaml
     file_path = Path(dir_path / "docker-compose.yaml")
@@ -93,3 +107,27 @@ def init(
     file_path = Path(dir_path / "conftest.py")
     with open(file_path, "w") as conftest_py:
         conftest_py.write(fg.conftest_py)
+
+
+@cli.command()
+def run(
+    tests_dir: str = typer.Option(None, "-t", help="Specify a tests directory."),
+):
+    """Run HardPy server."""
+    dir_path = Path.cwd() / tests_dir if tests_dir else Path.cwd()
+    print(dir_path)
+    config = ConfigManager().read_config(dir_path)
+
+    if not config:
+        sys.exit()
+
+    uvicorn_run(
+        "hardpy.hardpy_panel.api:app",
+        host=config.frontend.host,
+        port=config.frontend.port,
+        log_level="critical",
+    )
+
+
+if __name__ == "__main__":
+    cli()
