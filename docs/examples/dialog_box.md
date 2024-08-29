@@ -34,83 +34,83 @@ import hardpy
 
 @pytest.mark.case_name("Base dialog box")
 def test_base_dialog_box():
-    dbx = DialogBox(
+    dbx = hardpy.DialogBox(
         title_bar="Operator check",
         dialog_text="Press the Confirm button",
     )
-    response = run_dialog_box(dbx)
+    response = hardpy.run_dialog_box(dbx)
     assert response
 
 
 @pytest.mark.case_name("Text input")
 def test_text_input():
-    dbx = DialogBox(
+    dbx = hardpy.DialogBox(
         dialog_text="Type 'ok' and press the Confirm button",
         title_bar="Example of text input",
         widget=TextInputWidget(),
     )
-    response = run_dialog_box(dbx)
-    set_message(f"Entered text {response}")
+    response = hardpy.run_dialog_box(dbx)
+    hardpy.set_message(f"Entered text {response}")
     assert response == "ok", "The entered text is not correct"
 
 
 @pytest.mark.case_name("Numeric input")
 def test_num_input():
     test_num = 123
-    dbx = DialogBox(
+    dbx = hardpy.DialogBox(
         dialog_text=f"Enter the number {test_num} and press the Confirm button",
         title_bar="Example of entering a number",
-        widget=NumericInputWidget(),
+        widget=hardpy.NumericInputWidget(),
     )
-    response = int(run_dialog_box(dbx))
-    set_message(f"Entered number {response}")
+    response = int(hardpy.run_dialog_box(dbx))
+    hardpy.set_message(f"Entered number {response}")
     assert response == test_num, "The entered number is not correct"
 
 
 @pytest.mark.case_name("Test dialog box with radiobutton")
 def test_radiobutton():
-    dbx = DialogBox(
+    dbx = hardpy.DialogBox(
         dialog_text='Select item "one" out of several and click Confirm.',
         title_bar="Radiobutton example",
-        widget=RadiobuttonWidget(fields=["one", "two", "three"]),
+        widget=hardpy.RadiobuttonWidget(fields=["one", "two", "three"]),
     )
     response = run_dialog_box(dbx)
-    set_message(f"Selected item {response}")
+    hardpy.set_message(f"Selected item {response}")
     assert response == "one", "The answer is not correct"
 
 
 @pytest.mark.case_name("Test dialog box with checkbox")
 def test_checkbox():
-    dbx = DialogBox(
+    dbx = hardpy.DialogBox(
         dialog_text='Select items "one" and "two" and click the Confirm button',
         title_bar="Checkbox example",
-        widget=CheckboxWidget(fields=["one", "two", "three"]),
+        widget=hardpy.CheckboxWidget(fields=["one", "two", "three"]),
     )
-    response = run_dialog_box(dbx)
-    set_message(f"Selected item {response}")
+    response = hardpy.run_dialog_box(dbx)
+    hardpy.set_message(f"Selected item {response}")
     correct_answer = {"one", "two"}
     assert set(response) == correct_answer, "The answer is not correct"
 
 @pytest.mark.case_name("Image")
 def test_upload_image():
-    dbx = DialogBox(
+    dbx = hardpy.DialogBox(
         dialog_text="Test image",
-        widget=ImageWidget(address="assets/test.png"),
+        widget=hardpy.ImageWidget(address="assets/test.png"),
     )
-    response = run_dialog_box(dbx)
+    response = hardpy.run_dialog_box(dbx)
     assert response
 
 @pytest.mark.case_name("Multistep")
 def test_multiple_steps():
     steps = [
-        StepWidget("Step 1", text="Content for step", widget=None),
-        StepWidget("Step 2", text="Content for step 2", widget=ImageWidget(address="assets/test.png")),
-        StepWidget("Step 3", text=None, widget=ImageWidget(address="assets/test.png")),
+        hardpy.StepWidget("Step 1", text="Content for step", widget=None),
+        hardpy.StepWidget("Step 2", text="Content for step 2", widget=hardpy.ImageWidget(address="assets/test.png")),
+        hardpy.StepWidget("Step 3", text=None, widget=hardpy.ImageWidget(address="assets/test.png")),
     ]
-    dbx = DialogBox(
+    dbx = hardpy.DialogBox(
         dialog_text="Follow the steps and click Confirm",
-        widget=MultistepWidget(steps),
+        widget=hardpy.MultistepWidget(steps),
     )
-    response = run_dialog_box(dbx)
+    response = hardpy.run_dialog_box(dbx)
     assert response
 ```
