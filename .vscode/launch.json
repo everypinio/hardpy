@@ -20,12 +20,20 @@
             "console": "integratedTerminal",
         },
         {
-            "name": "Python: Main",
+            "name": "Hardpy Init",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.__main__",
+            "module": "hardpy.hardpy",
             "console": "integratedTerminal",
-            "args": ["init", "--tests-dir", "minute_parity"]
+            "args": ["init", "-t", "minute_parity"]
+        },
+        {
+            "name": "Hardpy Run",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.hardpy",
+            "console": "integratedTerminal",
+            "args": ["run", "-t", "minute_parity"]
         },
         {
             "name": "Python: Example Hello HardPy",
