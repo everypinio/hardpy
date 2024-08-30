@@ -2,6 +2,10 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add hardpy config .toml file.
+* Refactor pytest-hardpy plugin options.
+* Add hardpy console utility.
+
 ## HardPy 0.5.0
 
 * Refactor dialog box API.
