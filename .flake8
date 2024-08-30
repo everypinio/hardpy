@@ -86,9 +86,14 @@ per-file-ignores =
   schema.py:
     E501,
     RST203,
-  examples/*:
-    # Allow assert in examples
-    S101
+  hardpy.py:
+    WPS121,
+    WPS221,
+    WPS237,
+    WPS404,
+    WPS421,
+    WPS425,
+    B008,
 
 max-returns = 8
 max-arguments = 5
