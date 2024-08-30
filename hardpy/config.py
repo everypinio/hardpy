@@ -53,7 +53,7 @@ class HardpyConfig(BaseModel):
     socket: SocketConfig
 
 
-class ConfigManager():
+class ConfigManager:
 
     obj = HardpyConfig(
         tests_dir="tests",
@@ -72,6 +72,7 @@ class ConfigManager():
             port=6525,
         ),
     )
+    tests_path = Path.cwd()
 
     @classmethod
     def init_config(  # noqa: WPS211
@@ -113,6 +114,7 @@ class ConfigManager():
 
     @classmethod
     def read_config(cls, toml_path: Path) -> HardpyConfig | None:
+        cls.tests_path = toml_path
         toml_file = toml_path / "hardpy.toml"
         if not toml_file.exists():
             logger.error(f"File hardpy.toml not found at path: {toml_file}")
@@ -132,3 +134,7 @@ class ConfigManager():
     @classmethod
     def get_config(cls):
         return cls.obj
+
+    @classmethod
+    def get_tests_path(cls):
+        return cls.tests_path
