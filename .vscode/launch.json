@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Current file",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+        },
+        {
             "name": "Python: Pytest",
             "type": "debugpy",
             "request": "launch",
@@ -13,59 +20,52 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Python: Current file",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal",
-        },
-        {
-            "name": "Hardpy Init",
+            "name": "HardPy: Init",
             "type": "debugpy",
             "request": "launch",
             "module": "hardpy.hardpy",
             "console": "integratedTerminal",
-            "args": ["init", "-t", "minute_parity"]
+            "args": ["init", "template"]
         },
         {
-            "name": "Hardpy Run",
+            "name": "HardPy: Run",
             "type": "debugpy",
             "request": "launch",
             "module": "hardpy.hardpy",
             "console": "integratedTerminal",
-            "args": ["run", "-t", "minute_parity"]
+            "args": ["run", "template"]
         },
         {
             "name": "Python: Example Hello HardPy",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.hardpy_panel.runner",
+            "module": "hardpy.hardpy",
             "console": "integratedTerminal",
-            "args": ["examples/project/hello_hardpy"]
+            "args": ["run", "examples/project/hello_hardpy"]
         },
         {
             "name": "Python: Example CouchDB load",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.hardpy_panel.runner",
+            "module": "hardpy.hardpy",
             "console": "integratedTerminal",
-            "args": ["examples/project/couchdb_load"]
+            "args": ["run", "examples/project/couchdb_load"]
         },
         {
             "name": "Python: Example Minute parity",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.hardpy_panel.runner",
+            "module": "hardpy.hardpy",
             "console": "integratedTerminal",
-            "args": ["examples/project/minute_parity"]
+            "args": ["run", "examples/project/minute_parity"]
         },
         {
             "name": "Python: Example Dialog box",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.hardpy_panel.runner",
+            "module": "hardpy.hardpy",
             "console": "integratedTerminal",
-            "args": ["examples/project/dialog_box"]
+            "args": ["run", "examples/project/dialog_box"]
         }
     ]
 }
