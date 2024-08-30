@@ -39,9 +39,15 @@ class PyTestWrapper(object):
                     self.python_executable,
                     "-m",
                     "pytest",
+                    "--hardpy-db-url",
+                    self.config.database.connection_url(),
+                    "--hardpy-sp",
+                    str(self.config.socket.port),
+                    "--hardpy-sh",
+                    self.config.socket.host,
                     "--hardpy-pt",
                 ],
-                cwd=self.config.tests_dir,
+                cwd=ConfigManager().get_tests_path(),
             )
         elif system() == "Windows":
             self._proc = subprocess.Popen(  # noqa: S603
@@ -49,9 +55,15 @@ class PyTestWrapper(object):
                     self.python_executable,
                     "-m",
                     "pytest",
+                    "--hardpy-db-url",
+                    self.config.database.connection_url(),
+                    "--hardpy-sp",
+                    str(self.config.socket.port),
+                    "--hardpy-sh",
+                    self.config.socket.host,
                     "--hardpy-pt",
                 ],
-                cwd=self.config.tests_dir,
+                cwd=ConfigManager().get_tests_path(),
                 creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
             )
 
@@ -86,9 +98,15 @@ class PyTestWrapper(object):
                 self.python_executable,
                 "-m" "pytest",
                 "--collect-only",
+                "--hardpy-db-url",
+                self.config.database.connection_url(),
+                "--hardpy-sp",
+                str(self.config.socket.port),
+                "--hardpy-sh",
+                self.config.socket.host,
                 "--hardpy-pt",
             ],
-            cwd=self.config.tests_dir,
+            cwd=ConfigManager().get_tests_path(),
         )
         return True
 

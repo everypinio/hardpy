@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import signal
+from os import getcwd
 from typing import Any, Callable
 from logging import getLogger
 from pathlib import Path, PurePath
@@ -34,12 +35,32 @@ from hardpy.pytest_hardpy.utils import (
     RunStatus,
     NodeInfo,
     ProgressCalculator,
+    ConnectionData,
 )
 from hardpy.pytest_hardpy.utils.node_info import TestDependencyInfo
 
 
 def pytest_addoption(parser: Parser):
     """Register argparse-style options."""
+    con_data = ConnectionData()
+    parser.addoption(
+        "--hardpy-db-url",
+        action="store",
+        default=con_data.database_url,
+        help="database url",
+    )
+    parser.addoption(
+        "--hardpy-sp",
+        action="store",
+        default=con_data.socket_port,
+        help="internal socket port",
+    )
+    parser.addoption(
+        "--hardpy-sh",
+        action="store",
+        default=con_data.socket_host,
+        help="internal socket host",
+    )
     parser.addoption(
         "--hardpy-pt",
         action="store_true",
@@ -55,7 +76,7 @@ def pytest_load_initial_conftests(early_config, parser, args):
         early_config.pluginmanager.register(plugin)
 
 
-class HardpyPlugin(object):
+class HardpyPlugin:
     """HardPy integration plugin for pytest.
 
     Extends hook functions from pytest API.
@@ -77,6 +98,20 @@ class HardpyPlugin(object):
 
     def pytest_configure(self, config: Config):
         """Configure pytest."""
+        con_data = ConnectionData()
+
+        database_url = config.getoption("--hardpy-db-url")
+        if database_url:
+            con_data.database_url = database_url
+
+        socket_port = config.getoption("--hardpy-sp")
+        if socket_port:
+            con_data.socket_port = int(socket_port)
+
+        socket_host = config.getoption("--hardpy-sh")
+        if socket_host:
+            con_data.socket_host = socket_host
+
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
         config.addinivalue_line("markers", "dependency")

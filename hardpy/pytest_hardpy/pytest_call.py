@@ -2,22 +2,21 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import socket
-from os import environ, getcwd
+from os import environ
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Optional, Any
 from uuid import uuid4
 
 from pycouchdb.exceptions import NotFound
 from pydantic import ValidationError
 
-from hardpy.config import ConfigManager
 from hardpy.pytest_hardpy.db import (
     DatabaseField as DF,
     ResultRunStore,
     RunStore,
 )
 from hardpy.pytest_hardpy.utils import (
+    ConnectionData,
     DuplicateSerialNumberError,
     DuplicateDialogBoxError,
     DialogBox,
@@ -289,13 +288,10 @@ def _get_socket_raw_data() -> str:
     # create socket connection
     server = socket.socket()
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    config = ConfigManager().read_config(Path(getcwd()))
-    if config:
-        socket_data = config.socket
-    else:
-        raise FileNotFoundError("The hardpy.toml file is not found")
+    con_data = ConnectionData()
+
     try:
-        server.bind((socket_data.host, socket_data.port))
+        server.bind((con_data.socket_host, con_data.socket_port))
     except socket.error as exc:
         raise RuntimeError(f"Error creating socket: {exc}")
     server.listen(1)
