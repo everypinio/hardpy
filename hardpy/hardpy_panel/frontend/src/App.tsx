@@ -65,80 +65,77 @@ function App(): JSX.Element {
     const useRenderDb = () => {
         const { rows, state, loading, error } = useAllDocs({
             include_docs: true
-          })
+        })
 
-          React.useEffect(() => {
+        React.useEffect(() => {
             if (state === 'error') {
-              setIsAuthenticated(false);
+                setIsAuthenticated(false);
             } else if (isAuthenticated === false) {
-              setIsAuthenticated(true);
+                setIsAuthenticated(true);
             }
-          }, [state, isAuthenticated]);
+        }, [state, isAuthenticated]);
 
-          if (loading && rows.length === 0) {
-            return  <Card style={{marginTop: '60px'}}>
-                        <H2>Establishing a connection... 🧐🔎</H2>
-                    </Card>
-          }
+        if (loading && rows.length === 0) {
+            return <Card style={{ marginTop: '60px' }}>
+                <H2>Establishing a connection... 🧐🔎</H2>
+            </Card>
+        }
 
-          if (state === 'error') {
-            return  <Card style={{marginTop: '60px'}}>
-                        <H2>Database connection error. 🙅🏽‍♀️🚫</H2>
-                        {error && <p>{error.message}</p>}
-                    </Card>
-          }
+        if (state === 'error') {
+            return <Card style={{ marginTop: '60px' }}>
+                <H2>Database connection error. 🙅🏽‍♀️🚫</H2>
+                {error && <p>{error.message}</p>}
+            </Card>
+        }
 
-          if (rows.length === 0)
-          {
-            return  <Card style={{marginTop: '60px'}}>
-                        <H2>No entries in the database 🫠</H2>
-                    </Card>
-          }
+        if (rows.length === 0) {
+            return <Card style={{ marginTop: '60px' }}>
+                <H2>No entries in the database 🫠</H2>
+            </Card>
+        }
 
-          /* Assume it is only one */
-          const db_row = rows[0].doc as TestRunI
-          const status = db_row.status
-          if (status && (status != lastRunStatus))
-          {
+        /* Assume it is only one */
+        const db_row = rows[0].doc as TestRunI
+        const status = db_row.status
+        if (status && (status != lastRunStatus)) {
             setLastRunStatus(status)
-          }
+        }
 
-          const progress = db_row.progress
-          if (progress && (progress != lastProgress))
-          {
+        const progress = db_row.progress
+        if (progress && (progress != lastProgress)) {
             setProgress(progress)
-          }
+        }
 
-          return (
-            <div style={{marginTop: '40px'}}>
-              {rows.map(row => (
-                <div key={row.id} style={{display: 'flex', flexDirection: 'row'}}>
-                    {(ultrawide || !use_debug_info) &&
-                    <Card style={{
-                        flexDirection: 'column',
-                        padding: '20px',
-                        flexGrow: 1,
-                        flexShrink: 1,
-                        marginTop: '20px',
-                        marginBottom: '20px',
-                    }}>
-                        <SuiteList_v3 db_state={row.doc as TestRunI} defaultClose={!ultrawide}></SuiteList_v3>
-                    </Card>
-                    }
-                    {use_debug_info &&
-                    <Card style={{
-                        flexDirection: 'column',
-                        padding: '20px',
-                        marginTop: '20px',
-                        marginBottom: '20px',
-                    }}>
-                        <pre>{JSON.stringify(row.doc, null, 2)}</pre>
-                    </Card>}
-                </div>
-              ))}
+        return (
+            <div style={{ marginTop: '40px' }}>
+                {rows.map(row => (
+                    <div key={row.id} style={{ display: 'flex', flexDirection: 'row' }}>
+                        {(ultrawide || !use_debug_info) &&
+                            <Card style={{
+                                flexDirection: 'column',
+                                padding: '20px',
+                                flexGrow: 1,
+                                flexShrink: 1,
+                                marginTop: '20px',
+                                marginBottom: '20px',
+                            }}>
+                                <SuiteList_v3 db_state={row.doc as TestRunI} defaultClose={!ultrawide}></SuiteList_v3>
+                            </Card>
+                        }
+                        {use_debug_info &&
+                            <Card style={{
+                                flexDirection: 'column',
+                                padding: '20px',
+                                marginTop: '20px',
+                                marginBottom: '20px',
+                            }}>
+                                <pre>{JSON.stringify(row.doc, null, 2)}</pre>
+                            </Card>}
+                    </div>
+                ))}
             </div>
-          )
-      };
+        )
+    };
 
     const renderSettingsMenu = () => {
         return (
@@ -162,13 +159,13 @@ function App(): JSX.Element {
     }
 
     return (
-        <div className="App" style={{minWidth: '310px', margin: 'auto'}}>
+        <div className="App" style={{ minWidth: '310px', margin: 'auto' }}>
             {/* Popout elements */}
             <ReloadAlert reload_timeout_s={3} />
             {/* <Notification /> */}
 
             {/* Header */}
-            <Navbar fixedToTop={true} style={{ background: Colors.LIGHT_GRAY4, margin: 'auto'}}>
+            <Navbar fixedToTop={true} style={{ background: Colors.LIGHT_GRAY4, margin: 'auto' }}>
                 <Navbar.Group align={Alignment.LEFT}>
                     <Navbar.Heading id={'main-heading'}>
                         <div className={'logo-smol'}></div>
@@ -178,7 +175,7 @@ function App(): JSX.Element {
                         }
                     </Navbar.Heading>
 
-                    { wide && <Navbar.Divider /> }
+                    {wide && <Navbar.Divider />}
 
                     <Navbar.Heading id={'last-exec-heading'}>
                         <div>
@@ -189,7 +186,7 @@ function App(): JSX.Element {
                         <TestStatus
                             status={lastRunStatus}
                         />
-                        {use_end_test_sound && <PlaySound key="sound" status={lastRunStatus}/>}
+                        {use_end_test_sound && <PlaySound key="sound" status={lastRunStatus} />}
                     </div>
 
                     <Navbar.Divider />
@@ -203,22 +200,22 @@ function App(): JSX.Element {
             </Navbar>
 
             {/* Tests panel */}
-            <div className={Classes.DRAWER_BODY} style={{marginBottom: '60px'}}>
+            <div className={Classes.DRAWER_BODY} style={{ marginBottom: '60px' }}>
                 {useRenderDb()}
             </div>
 
             {/* Footer */}
 
             <div className={Classes.DRAWER_FOOTER}
-            style={{
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'row',
-                position: 'fixed',
-                bottom: 0,
-                background: Colors.LIGHT_GRAY5,
-                margin: 'auto',
-            }}>
+                style={{
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    position: 'fixed',
+                    bottom: 0,
+                    background: Colors.LIGHT_GRAY5,
+                    margin: 'auto',
+                }}>
                 <div style={{
                     flexDirection: 'column',
                     flexGrow: 1,
@@ -229,8 +226,8 @@ function App(): JSX.Element {
                 }}>
                     <ProgressView percentage={lastProgress} status={lastRunStatus} />
                 </div>
-                <div style={{flexDirection: 'column'}}>
-                    <StartStopButton testing_status={lastRunStatus} is_authenticated={isAuthenticated}/>
+                <div style={{ flexDirection: 'column' }}>
+                    <StartStopButton testing_status={lastRunStatus} is_authenticated={isAuthenticated} />
                 </div>
             </div>
         </div>

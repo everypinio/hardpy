@@ -36,6 +36,11 @@ interface Dut {
 
 type Modules = Dictionary<TestItem>
 
+interface OperatorMsgProps {
+    msg: string
+    title?: string
+}
+
 export interface TestRunI {
     modules?: Modules
     test_stand?: TestStand
@@ -48,7 +53,7 @@ export interface TestRunI {
     progress?: number,
     drivers?: DriversInfo,
     artifact?: Record<string, unknown>,
-    operator_msg?: Record<string, unknown>,
+    operator_msg?: OperatorMsgProps,
 }
 
 /**
@@ -76,15 +81,6 @@ export class SuiteList extends React.Component<Props> {
             </div>;
         }
 
-        {
-            if db_state.operator_msg.msg && db_state.operator_msg.msg.length > 0(
-                <StartOperatorMsgDialog
-                    msg={db_state.operator_msg.msg}
-                    title={db_state.operator_msg.title}
-
-                />
-            )}
-
         const db_state = this.props.db_state;
         const start = db_state.start_time ? new Date(db_state.start_time * 1000).toLocaleString() : ""
         const stop = db_state.stop_time ? new Date(db_state.stop_time * 1000).toLocaleString() : ""
@@ -104,28 +100,38 @@ export class SuiteList extends React.Component<Props> {
 
         return (
             <>
-                <H1>
-                    {db_state.name}
-                </H1>
-                {db_state.test_stand &&
-                    <Tag minimal style={TAG_ELEMENT_STYLE}>Stand name: {db_state.test_stand?.name}</Tag>
-                }
-                {db_state.status &&
-                    <Tag minimal style={TAG_ELEMENT_STYLE}>Status: {db_state.status}</Tag>
-                }
-                {start &&
-                    <Tag minimal style={TAG_ELEMENT_STYLE}>Start time: {start + start_tz}</Tag>
-                }
-                {stop &&
-                    <Tag minimal style={TAG_ELEMENT_STYLE}>Finish time: {stop + stop_tz}</Tag>
-                }
-                <Divider />
-                {_.map(
-                    [...module_names],
-                    (name: string, index: number) => this.suiteRender(index, { name: name, test: modules[name] })
-                )}
+                <div>
+                    <H1>
+                        {db_state.name}
+                    </H1>
+                    {db_state.test_stand &&
+                        <Tag minimal style={TAG_ELEMENT_STYLE}>Stand name: {db_state.test_stand?.name}</Tag>
+                    }
+                    {db_state.status &&
+                        <Tag minimal style={TAG_ELEMENT_STYLE}>Status: {db_state.status}</Tag>
+                    }
+                    {start &&
+                        <Tag minimal style={TAG_ELEMENT_STYLE}>Start time: {start + start_tz}</Tag>
+                    }
+                    {stop &&
+                        <Tag minimal style={TAG_ELEMENT_STYLE}>Finish time: {stop + stop_tz}</Tag>
+                    }
+                    <Divider />
+                    {_.map(
+                        [...module_names],
+                        (name: string, index: number) => this.suiteRender(index, { name: name, test: modules[name] })
+                    )}
+                </div>
+                <div>
+                    {this.props.db_state.operator_msg && this.props.db_state.operator_msg.msg && this.props.db_state.operator_msg.msg.length > 0 && (
+                        <StartOperatorMsgDialog
+                            msg={this.props.db_state.operator_msg?.msg}
+                            title={this.props.db_state.operator_msg?.title || "Message"}
+                        />
+                    )}
+                </div>
             </>
-        )
+        );
     }
 
     private suiteRender(index: number, suite: Suite) {
