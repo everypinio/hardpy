@@ -18,20 +18,21 @@ export class StartStopButton extends React.Component<Props> {
     }
 
     private hardpy_call(uri: string) {
-            fetch(uri)
-                .then(response => {
-                    if (response.ok) {
-                        return response.text();
-                    } else {
-                        console.log("Request failed. Status: " + response.status);
-                    }
-                })
-                .catch(error => {
-                    console.log("Request failed. Error: " + error);
-                });
+        fetch(uri)
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    console.log("Request failed. Status: " + response.status);
+                }
+            })
+            .catch(error => {
+                console.log("Request failed. Error: " + error);
+            });
     }
 
     private hardpy_start(): void {
+        localStorage.clear();
         this.hardpy_call('api/start')
     }
 
@@ -41,9 +42,9 @@ export class StartStopButton extends React.Component<Props> {
 
     private hardpy_start_with_space = (event: KeyboardEvent) => {
         const is_testing_in_progress = this.props.testing_status == 'run';
-            if (event.key === ' ' && !is_testing_in_progress && this.props.is_authenticated) {
-                this.hardpy_start();
-            }
+        if (event.key === ' ' && !is_testing_in_progress && this.props.is_authenticated) {
+            this.hardpy_start();
+        }
     };
 
     private handleButtonClick = (): void => {
@@ -88,8 +89,8 @@ export class StartStopButton extends React.Component<Props> {
                 }
 
         return (
-            <Tooltip 
-                title="It is impossible to connect to the database" 
+            <Tooltip
+                title="It is impossible to connect to the database"
                 key="leftButton"
                 placement="top"
                 trigger="hover"
