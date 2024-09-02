@@ -3,8 +3,6 @@
 
 import React, { useState } from 'react';
 import { Classes, Dialog } from '@blueprintjs/core';
-import { notification } from 'antd';
-
 
 interface StartOperatorMsgDialogProps {
     title: string;
@@ -17,21 +15,6 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
 
     const handleClose = () => {
         setDialogOpen(false);
-        fetch('api/stop')
-            .then(response => {
-                if (response.ok) {
-                    return response.text();
-                } else {
-                    console.log("Request failed. Status: " + response.status);
-                }
-            })
-            .catch(error => {
-                console.log("Request failed. Error: " + error);
-            });
-        notification.error({
-            message: 'Notification',
-            description: 'The window was closed. Tests stopped.',
-        });
     };
 
     return (

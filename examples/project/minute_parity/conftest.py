@@ -2,11 +2,7 @@ import logging
 
 import pytest
 
-from hardpy import (
-    CouchdbLoader,
-    CouchdbConfig,
-    get_current_report,
-)
+from hardpy import CouchdbLoader, CouchdbConfig, get_current_report, set_operator_msg
 from driver_example import DriverExample
 
 
@@ -24,9 +20,12 @@ def driver_example():
 
 
 def finish_executing():
+    try:
+        raise ValueError("Test failed")
+    except ValueError as e:
+        set_operator_msg(msg=str(e), title="Message title")
     report = get_current_report()
     if report:
-        raise ValueError("Test failed")
         loader = CouchdbLoader(CouchdbConfig())
         loader.load(report)
 

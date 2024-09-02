@@ -6,7 +6,7 @@ import _, { Dictionary, } from "lodash"
 import { H1, H2, H4, Tag, Divider } from "@blueprintjs/core";
 
 import { TestItem, TestSuite as TestSuiteComponent } from "./TestSuite_v3"
-import { StartOperatorMsgDialog } from 'hardpy_test_view/OperatorMsg';
+import StartOperatorMsgDialog from 'hardpy_test_view/OperatorMsg';
 
 /**
  * Set of suites
