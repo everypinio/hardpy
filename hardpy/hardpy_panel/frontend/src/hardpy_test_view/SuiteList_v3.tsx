@@ -39,6 +39,7 @@ type Modules = Dictionary<TestItem>
 interface OperatorMsgProps {
     msg: string
     title?: string
+    visible: boolean
 }
 
 export interface TestRunI {
@@ -123,7 +124,7 @@ export class SuiteList extends React.Component<Props> {
                     )}
                 </div>
                 <div>
-                    {this.props.db_state.operator_msg && this.props.db_state.operator_msg.msg && this.props.db_state.operator_msg.msg.length > 0 && (
+                    {this.props.db_state.operator_msg && this.props.db_state.operator_msg.msg && this.props.db_state.operator_msg.msg.length > 0 && this.props.db_state.operator_msg.visible == true && (
                         <StartOperatorMsgDialog
                             msg={this.props.db_state.operator_msg?.msg}
                             title={this.props.db_state.operator_msg?.title || "Message"}

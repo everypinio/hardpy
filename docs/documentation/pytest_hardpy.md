@@ -253,6 +253,11 @@ def test_current_report():
     report = get_current_report()
 ```
 
+#### set_operator_msg
+
+
+
+
 ## Class
 
 #### CouchdbLoader

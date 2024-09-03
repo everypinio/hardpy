@@ -144,6 +144,26 @@ class PyTestWrapper(object):
             return False
         return True
 
+    def confirm_operator_msg(self, is_msg_visible: bool):
+        """Set operator message to pytest subprocess.
+
+        Args:
+            is_msg_visible (bool): is operator message is visible
+
+        Returns:
+            bool: True if operator message was confirmed, else False
+        """
+        config_data = ConfigData()
+
+        try:
+            client = socket()
+            client.connect((config_data.socket_addr, config_data.socket_port))
+            client.sendall(str(is_msg_visible).encode("utf-8"))
+            client.close()
+        except Exception:
+            return False
+        return True
+
     def is_running(self) -> bool | None:
         """Check if pytest is running."""
         return self._proc and self._proc.poll() is None

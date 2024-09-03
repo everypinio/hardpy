@@ -272,7 +272,11 @@ def set_operator_msg(msg: str, title: str | None) -> None:
     key = reporter.generate_key(
         DF.OPERATOR_MSG,
     )
-    msg_data = {"msg": msg, "title": title}
+    msg_data = {"msg": msg, "title": title, "visible": True}
+    reporter.set_doc_value(key, msg_data, statestore_only=True)
+    reporter.update_db_by_doc()
+    is_msg_visible = _get_socket_raw_data()
+    msg_data = {"msg": msg, "title": title, "visible": is_msg_visible}
     reporter.set_doc_value(key, msg_data, statestore_only=True)
     reporter.update_db_by_doc()
 

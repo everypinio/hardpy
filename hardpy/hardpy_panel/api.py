@@ -79,6 +79,21 @@ def confirm_dialog_box(dialog_box_output: str):
     return {"status": Status.ERROR}
 
 
+@app.post("/api/confirm_operator_msg/{is_msg_visible}")
+def confirm_operator_msg(is_msg_visible: bool):
+    """Confirm operator msg.
+
+    Args:
+        is_msg_visible (bool): is operator message is visible
+
+    Returns:
+        dict[str, RunStatus]: run status
+    """
+    if app.state.pytest_wrp.confirm_operator_msg(is_msg_visible):
+        return {"status": Status.BUSY}
+    return {"status": Status.ERROR}
+
+
 app.mount(
     "/",
     StaticFiles(directory=(os.path.dirname(__file__)) + "/frontend/dist", html=True),
