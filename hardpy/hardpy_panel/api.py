@@ -76,9 +76,12 @@ def confirm_dialog_box(dialog_box_output: str):
     Returns:
         dict[str, RunStatus]: run status
     """
+    hex_base = 16
     decoded_string = unquote(dialog_box_output)
     decoded_string = re.sub(
-        r"%([0-9a-fA-F]{2})", lambda match: chr(int(match.group(1), 16)), decoded_string
+        r"%([0-9a-fA-F]{2})",
+        lambda match: chr(int(match.group(1), hex_base)),
+        decoded_string,
     )
 
     if app.state.pytest_wrp.confirm_dialog_box(decoded_string):

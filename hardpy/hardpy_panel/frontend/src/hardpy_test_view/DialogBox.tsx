@@ -102,10 +102,11 @@ export function StartConfirmationDialog(props: Props) {
     }
     setDialogOpen(false);
     let textToSend = '';
+    const HEX_BASE = 16;
 
     function processEncodeURLComponent(str: string) {
       return encodeURIComponent(str).replace(/[!-'()*+,/:;<=>?@[\]^`{|}~]/g, function (c) {
-        return '%' + c.charCodeAt(0).toString(16);
+        return '%' + c.charCodeAt(0).toString(HEX_BASE);
       });
     }
 
