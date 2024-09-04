@@ -103,7 +103,7 @@ export function StartConfirmationDialog(props: Props) {
     setDialogOpen(false);
     let textToSend = '';
 
-    function fixedEncodeURLComponent(str: string) {
+    function processEncodeURLComponent(str: string) {
       return encodeURIComponent(str).replace(/[!-'()*+,./:;<=>?@[\]^`{|}~]/g, function (c) {
         return '%' + c.charCodeAt(0).toString(16);
       });
@@ -111,17 +111,17 @@ export function StartConfirmationDialog(props: Props) {
 
     switch (props.widget_type) {
       case WidgetType.TextInput:
-        textToSend = JSON.stringify(fixedEncodeURLComponent(inputText));
+        textToSend = JSON.stringify(processEncodeURLComponent(inputText));
         break;
       case WidgetType.NumericInput:
         textToSend = inputText;
         break;
       case WidgetType.RadioButton:
-        textToSend = JSON.stringify(fixedEncodeURLComponent(selectedRadioButton));
+        textToSend = JSON.stringify(processEncodeURLComponent(selectedRadioButton));
         break;
       case WidgetType.Checkbox:
         textToSend = JSON.stringify(
-          selectedCheckboxes.map(checkboxValue => fixedEncodeURLComponent(checkboxValue))
+          selectedCheckboxes.map(checkboxValue => processEncodeURLComponent(checkboxValue))
         );
         break;
       default:

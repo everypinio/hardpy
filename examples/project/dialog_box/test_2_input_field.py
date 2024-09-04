@@ -25,7 +25,6 @@ def test_text_input():
 
 @pytest.mark.case_name("Numeric input")
 def test_num_input():
-
     test_num = 123
     dbx = DialogBox(
         dialog_text=f"Enter the number {test_num} and press the Confirm button",

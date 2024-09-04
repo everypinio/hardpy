@@ -77,7 +77,7 @@ def confirm_dialog_box(dialog_box_output: str):
         dict[str, RunStatus]: run status
     """
 
-    def _fixed_decode_url_component(encoded_string):
+    def _decode_url_component(encoded_string):
         """
         Decode a percent-encoded URL component.
 
@@ -94,7 +94,7 @@ def confirm_dialog_box(dialog_box_output: str):
 
         return re.sub(r"%([0-9a-fA-F]{2})", _replace_hex, decoded_string)
 
-    dialog_box_output = _fixed_decode_url_component(dialog_box_output)
+    dialog_box_output = _decode_url_component(dialog_box_output)
     if app.state.pytest_wrp.confirm_dialog_box(dialog_box_output):
         return {"status": Status.BUSY}
     return {"status": Status.ERROR}
