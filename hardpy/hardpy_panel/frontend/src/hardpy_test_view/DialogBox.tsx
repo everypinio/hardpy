@@ -79,7 +79,7 @@ export function StartConfirmationDialog(props: Props) {
       switch (props.widget_type) {
         case WidgetType.TextInput:
         case WidgetType.NumericInput:
-          if (inputText.trim() === '') {
+          if (inputText.trim() === '' || inputText === '.' || inputText === '..') {
             alert('The field must not be empty');
             return;
           }
@@ -102,17 +102,28 @@ export function StartConfirmationDialog(props: Props) {
     }
     setDialogOpen(false);
     let textToSend = '';
+    const HEX_BASE = 16;
+
+    function processEncodeURLComponent(str: string) {
+      return encodeURIComponent(str).replace(/[!-'()*+,/:;<=>?@[\]^`{|}~]/g, function (c) {
+        return '%' + c.charCodeAt(0).toString(HEX_BASE);
+      });
+    }
 
     switch (props.widget_type) {
       case WidgetType.TextInput:
+        textToSend = processEncodeURLComponent(inputText);
+        break;
       case WidgetType.NumericInput:
         textToSend = inputText;
         break;
       case WidgetType.RadioButton:
-        textToSend = selectedRadioButton;
+        textToSend = processEncodeURLComponent(selectedRadioButton);
         break;
       case WidgetType.Checkbox:
-        textToSend = JSON.stringify(selectedCheckboxes);
+        textToSend = JSON.stringify(
+          selectedCheckboxes.map(checkboxValue => processEncodeURLComponent(checkboxValue))
+        );
         break;
       default:
         textToSend = 'ok';

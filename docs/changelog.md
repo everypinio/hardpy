@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Fix using special characters.
+
 ## HardPy 0.5.0
 
 * Refactor dialog box API.
