@@ -79,7 +79,7 @@ class TextInputWidget(IWidget):
         Returns:
             str: Text input string data
         """
-        return input_data.replace('"', "").replace("'", '"')
+        return input_data
 
 
 class NumericInputWidget(IWidget):
@@ -130,7 +130,7 @@ class RadiobuttonWidget(IWidget):
         Returns:
             str: Radiobutton string data
         """
-        return input_data.replace('"', "").replace("'", '"')
+        return input_data
 
 
 class CheckboxWidget(IWidget):

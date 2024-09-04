@@ -3,7 +3,7 @@
 
 import os
 import re
-import urllib.parse
+from urllib.parse import unquote
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -76,26 +76,12 @@ def confirm_dialog_box(dialog_box_output: str):
     Returns:
         dict[str, RunStatus]: run status
     """
+    decoded_string = unquote(dialog_box_output)
+    decoded_string = re.sub(
+        r"%([0-9a-fA-F]{2})", lambda match: chr(int(match.group(1), 16)), decoded_string
+    )
 
-    def _decode_url_component(encoded_string):
-        """
-        Decode a percent-encoded URL component.
-
-        Args:
-            encoded_string (str): percent-encoded URL component
-
-        Returns:
-            str: decoded string
-        """
-        decoded_string = urllib.parse.unquote(encoded_string)
-
-        def _replace_hex(match):
-            return chr(int(match.group(1), 16))
-
-        return re.sub(r"%([0-9a-fA-F]{2})", _replace_hex, decoded_string)
-
-    dialog_box_output = _decode_url_component(dialog_box_output)
-    if app.state.pytest_wrp.confirm_dialog_box(dialog_box_output):
+    if app.state.pytest_wrp.confirm_dialog_box(decoded_string):
         return {"status": Status.BUSY}
     return {"status": Status.ERROR}
 
