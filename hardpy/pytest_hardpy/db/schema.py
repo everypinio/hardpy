@@ -229,7 +229,7 @@ class ResultStateStore(IBaseResult):
     dut: Dut
     modules: dict[str, ModuleStateStore] = {}
     drivers: Optional[dict] = {}
-    operator_msg: Optional[dict] = None
+    operator_msg: Optional[dict] = {}
 
 
 class ResultRunStore(IBaseResult):
