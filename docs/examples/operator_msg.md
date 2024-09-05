@@ -26,7 +26,7 @@ def my_function():
     try:
         # ...
     except Exception as e:
-        hardpy.set_operator_msg(f"An error occurred: {str(e)}", "Error Notification")
+        hardpy.set_operator_msg(msg=str(e), title="Important Notice")
 ```
 
 ## Behavior:

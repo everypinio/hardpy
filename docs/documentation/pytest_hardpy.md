@@ -269,7 +269,7 @@ The function should be used to handle events outside of testing. For messages to
 from hardpy import set_operator_msg
 
 def test_set_operator_msg():
-    set_operator_msg("This is a sample operator message.", "Important Notice")
+    set_operator_msg(msg="This is a sample operator message.", title="Important Notice")
 ```
 
 ## Class
