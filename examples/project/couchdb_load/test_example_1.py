@@ -1,5 +1,4 @@
 import pytest
-import hardpy
 
 
 def test_one():

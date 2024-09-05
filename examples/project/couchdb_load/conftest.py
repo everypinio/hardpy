@@ -1,6 +1,10 @@
 import pytest
 
-from hardpy import CouchdbLoader, CouchdbConfig, get_current_report, set_operator_msg
+from hardpy import (
+    CouchdbLoader,
+    CouchdbConfig,
+    get_current_report,
+)
 
 
 def save_report_to_couchdb():
