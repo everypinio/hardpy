@@ -1,14 +1,11 @@
 import pytest
 
-from hardpy import (
-    CouchdbLoader,
-    CouchdbConfig,
-    get_current_report,
-)
+from hardpy import CouchdbLoader, CouchdbConfig, get_current_report, set_operator_msg
 
 
 def save_report_to_couchdb():
     report = get_current_report()
+    # set_operator_msg("This is a sample operator message.", "Important Notice")
     if report:
         loader = CouchdbLoader(CouchdbConfig())
         loader.load(report)

@@ -200,6 +200,7 @@ The **current** document of the **statestore** database contains the following f
 - **test_stand**: information about the test stand in the form of a dictionary.;
 - **modules**: module information;
 - **drivers**: information about drivers in the form of a dictionary.
+- **operator_msg**: operator message.
 
 The **dut** block contains the following fields:
 
@@ -259,6 +260,11 @@ Example of a **current** document:
           "state": "active",
           "port": 8000,
         }
+      },
+      "operator_msg": {
+        "msg": "Operator message",
+        "title": "Message",
+        "visible": "True"
       },
       "modules": {
         "test_1_a": {

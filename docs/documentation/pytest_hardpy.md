@@ -255,8 +255,22 @@ def test_current_report():
 
 #### set_operator_msg
 
+Sets an operator message in the **statestore** database and updates the database.
+The function should be used to handle events outside of testing. For messages to the operator during testing, there is the function `run_dialog_box`.
 
+**Arguments:**
 
+- `msg (str)`: The message to be displayed.
+- `title (str | None)`: The optional title for the message.
+
+**Example:**
+
+```python
+from hardpy import set_operator_msg
+
+def test_set_operator_msg():
+    set_operator_msg("This is a sample operator message.", "Important Notice")
+```
 
 ## Class
 
