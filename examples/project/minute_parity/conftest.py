@@ -6,7 +6,6 @@ from hardpy import (
     CouchdbLoader,
     CouchdbConfig,
     get_current_report,
-    set_operator_msg,
 )
 from driver_example import DriverExample
 

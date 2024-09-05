@@ -3,7 +3,6 @@ import pytest
 from hardpy import (
     run_dialog_box,
     set_message,
-    set_operator_msg,
     TextInputWidget,
     NumericInputWidget,
     DialogBox,
@@ -19,7 +18,6 @@ def test_text_input():
         title_bar="Example of text input",
         widget=TextInputWidget(),
     )
-    set_operator_msg(msg="1 message", title="Message title")
     response = run_dialog_box(dbx)
     set_message(f"Entered text {response}")
     assert response == "ok", "The entered text is not correct"

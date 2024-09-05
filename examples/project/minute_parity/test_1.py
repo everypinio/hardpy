@@ -25,9 +25,6 @@ def test_dut_info(module_log: logging.Logger):
 def test_stand_info(module_log: logging.Logger):
     test_stand_name = "Stand 1"
     module_log.info(f"Stand name: {test_stand_name}")
-    hardpy.set_operator_msg(msg="1 message", title="Message title")
-    hardpy.set_operator_msg(msg="2 message", title="Message title")
-    hardpy.set_operator_msg(msg="3 message", title="Message title")
     info = {
         "name": "Test stand 1",
     }
