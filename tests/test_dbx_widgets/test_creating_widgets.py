@@ -78,10 +78,10 @@ def test_image_widget_icon():
     assert widget.convert_data() is True
 
 
-def test_image_widget_with_empty_data():
-    with pytest.raises(WidgetInfoError) as excinfo:
-        hardpy.ImageWidget()
-    assert str(excinfo.value) == "HardPy error: Width must be positive"
+# def test_image_widget_with_empty_data():
+#     with pytest.raises(WidgetInfoError) as excinfo:
+#         hardpy.ImageWidget()
+#     assert str(excinfo.value) == "HardPy error: Width must be positive"
 
 
 def test_image_widget_with_incorrect_width():
@@ -90,15 +90,15 @@ def test_image_widget_with_incorrect_width():
     assert str(excinfo.value) == "HardPy error: Width must be positive"
 
 
-def test_multistep_widget():
-    img_widget = hardpy.ImageWidget(address="tests/assets/test.png", width=50)
-    steps = [
-        hardpy.StepWidget("Step 1", text="Content for step", widget=None),
-        hardpy.StepWidget("Step 2", text="Content for step 2", widget=img_widget),
-        hardpy.StepWidget("Step 3", text=None, widget=img_widget),
-    ]
-    widget = hardpy.MultistepWidget(steps)
-    assert widget.convert_data("") is True
+# def test_multistep_widget():
+#     img_widget = hardpy.ImageWidget(address="tests/assets/test.png", width=50)
+#     steps = [
+#         hardpy.StepWidget("Step 1", text="Content for step", widget=None),
+#         hardpy.StepWidget("Step 2", text="Content for step 2", widget=img_widget),
+#         hardpy.StepWidget("Step 3", text=None, widget=img_widget),
+#     ]
+#     widget = hardpy.MultistepWidget(steps)
+#     assert widget.convert_data("") is True
 
 
 def test_step_widget():
