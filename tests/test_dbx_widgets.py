@@ -1,4 +1,5 @@
 import pytest
+
 import hardpy
 from hardpy.pytest_hardpy.utils.dialog_box import BaseWidget
 from hardpy.pytest_hardpy.utils.exception import WidgetInfoError
@@ -11,7 +12,7 @@ def test_base_widget_convert_data():
 
 def test_text_input_widget_convert_data():
     widget = hardpy.TextInputWidget()
-    assert widget.convert_data("Blabla") == "Blabla"
+    assert widget.convert_data("Text") == "Text"
     assert widget.convert_data(" ") == " "
     assert widget.convert_data(123) == 123
     assert widget.convert_data("123") == "123"
@@ -26,8 +27,8 @@ def test_num_input_widget_convert_data():
 
 
 def test_radiobutton_widget_convert_data():
-    widget = hardpy.RadiobuttonWidget(fields=["Blabla", " ", 123, "123", "..", "\\"])
-    assert widget.convert_data("Blabla") == "Blabla"
+    widget = hardpy.RadiobuttonWidget(fields=["Text", " ", 123, "123", "..", "\\"])
+    assert widget.convert_data("Text") == "Text"
     assert widget.convert_data(" ") == " "
     assert widget.convert_data(123) == 123
     assert widget.convert_data("123") == "123"
@@ -36,9 +37,9 @@ def test_radiobutton_widget_convert_data():
 
 
 def test_checkbox_widget_convert_data():
-    widget = hardpy.CheckboxWidget(fields=["Blabla", "123"])
-    assert set(widget.convert_data('{"Blabla", "123"}')) == {
-        "Blabla",
+    widget = hardpy.CheckboxWidget(fields=["Text", "123"])
+    assert set(widget.convert_data('{"Text", "123"}')) == {
+        "Text",
         "123",
     }
 
@@ -81,5 +82,5 @@ def test_multistep_widget_convert_data_2():
 
 
 def test_step_widget_convert_data():
-    widget = hardpy.StepWidget(title="Blabla", text=" ", widget=None)
+    widget = hardpy.StepWidget(title="Text", text=" ", widget=None)
     assert widget.convert_data("") is True
