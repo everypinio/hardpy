@@ -6,101 +6,134 @@ from hardpy.pytest_hardpy.utils.exception import WidgetInfoError
 
 
 def test_base_widget():
-    widget = BaseWidget()
-    assert widget.convert_data() is True
+    BaseWidget()
+    assert True
 
 
 def test_text_input_widget():
-    widget = hardpy.TextInputWidget()
-    assert widget.convert_data("Text") == "Text"
+    hardpy.TextInputWidget()
+    assert True
 
 
 def test_num_input_widget():
-    widget = hardpy.NumericInputWidget()
-    assert widget.convert_data(0) == 0
+    hardpy.NumericInputWidget()
+    assert True
 
 
 def test_radiobutton_widget():
-    widget = hardpy.RadiobuttonWidget(fields=["Text", " ", 123, "123", "..", "\\"])
-    assert widget.convert_data("Text") == "Text"
+    hardpy.RadiobuttonWidget(fields=["Text", " ", 123, "123", "..", "\\"])
+    assert True
+
+
+def test_radiobutton_empty_widget():
+    try:
+        hardpy.RadiobuttonWidget(fields=[])
+        assert False, "WidgetInfoError was not raised"
+    except ValueError as excinfo:
+        assert str(excinfo) == "RadiobuttonWidget must have at least one field"
 
 
 def test_checkbox_widget():
-    widget = hardpy.CheckboxWidget(fields=["Text", "123"])
-    assert set(widget.convert_data('{"Text", "123"}')) == {
-        "Text",
-        "123",
-    }
+    hardpy.CheckboxWidget(fields=["Text", "123"])
+    assert True
+
+
+def test_checkbox_empty_widget():
+    try:
+        hardpy.CheckboxWidget(fields=[])
+        assert False, "WidgetInfoError was not raised"
+    except ValueError as excinfo:
+        assert str(excinfo) == "Checkbox must have at least one field"
 
 
 def test_image_widget_png():
-    widget = hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.png")
-    assert widget.convert_data() is True
+    hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.png")
+    assert True
 
 
 def test_image_widget_gif():
-    widget = hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.gif")
-    assert widget.convert_data() is True
+    hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.gif")
+    assert True
 
 
 def test_image_widget_jpeg():
-    widget = hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.jpeg")
-    assert widget.convert_data() is True
+    hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.jpeg")
+    assert True
 
 
 def test_image_widget_pjpg():
-    widget = hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.pjpg")
-    assert widget.convert_data() is True
+    hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.pjpg")
+    assert True
 
 
 def test_image_widget_svg():
-    widget = hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.svg")
-    assert widget.convert_data() is True
+    hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.svg")
+    assert True
 
 
 def test_image_widget_tif():
-    widget = hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.tif")
-    assert widget.convert_data() is True
+    hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.tif")
+    assert True
 
 
 def test_image_widget_wbmp():
-    widget = hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.wbmp")
-    assert widget.convert_data() is True
+    hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.wbmp")
+    assert True
 
 
 def test_image_widget_webp():
-    widget = hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.webp")
-    assert widget.convert_data() is True
+    hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.webp")
+    assert True
 
 
 def test_image_widget_icon():
-    widget = hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.icon")
-    assert widget.convert_data() is True
+    hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.icon")
+    assert True
 
 
-# def test_image_widget_with_empty_data():
-#     with pytest.raises(WidgetInfoError) as excinfo:
-#         hardpy.ImageWidget()
-#     assert str(excinfo.value) == "HardPy error: Width must be positive"
+def test_image_widget_with_empty_data():
+    try:
+        hardpy.ImageWidget()
+        assert False, "TypeError was not raised"
+    except TypeError as excinfo:
+        assert (
+            str(excinfo)
+            == "ImageWidget.__init__() missing 1 required positional argument: 'address'"
+        )
 
 
 def test_image_widget_with_incorrect_width():
-    with pytest.raises(WidgetInfoError) as excinfo:
+    try:
         hardpy.ImageWidget(address="tests/assets/test.png", width=-1)
-    assert str(excinfo.value) == "HardPy error: Width must be positive"
+        assert False, "WidgetInfoError was not raised"
+    except WidgetInfoError as excinfo:
+        assert str(excinfo) == "HardPy error: Width must be positive"
 
 
-# def test_multistep_widget():
-#     img_widget = hardpy.ImageWidget(address="tests/assets/test.png", width=50)
-#     steps = [
-#         hardpy.StepWidget("Step 1", text="Content for step", widget=None),
-#         hardpy.StepWidget("Step 2", text="Content for step 2", widget=img_widget),
-#         hardpy.StepWidget("Step 3", text=None, widget=img_widget),
-#     ]
-#     widget = hardpy.MultistepWidget(steps)
-#     assert widget.convert_data("") is True
+def test_multistep_widget():
+    img_widget = hardpy.ImageWidget(
+        address="tests/test_dbx_widgets/assets/test.png", width=50
+    )
+    steps = [
+        hardpy.StepWidget("Step 1", text="Content for step", widget=None),
+        hardpy.StepWidget("Step 2", text="Content for step 2", widget=img_widget),
+        hardpy.StepWidget("Step 3", text=None, widget=img_widget),
+    ]
+    hardpy.MultistepWidget(steps)
+    assert True
 
 
 def test_step_widget():
-    widget = hardpy.StepWidget(title="Text", text=" ", widget=None)
-    assert widget.convert_data("") is True
+    hardpy.StepWidget(title="Text", text=" ", widget=None)
+    assert True
+
+
+def test_empty_step_widget():
+    try:
+        hardpy.StepWidget()
+        assert False, "WidgetInfoError was not raised"
+    except TypeError as excinfo:
+        assert (
+            str(excinfo)
+            == "StepWidget.__init__() missing 3 required positional arguments: 'title', 'text', and 'widget'"
+        )

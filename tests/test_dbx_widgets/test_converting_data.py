@@ -52,15 +52,6 @@ def test_image_widget():
     assert widget.convert_data() is True
 
 
-def test_image_widget_with_incorrect_width():
-    with pytest.raises(WidgetInfoError) as excinfo:
-        widget = hardpy.ImageWidget(
-            address="tests/test_dbx_widgets/assets/test.png", width=-50
-        )
-        widget.convert_data()
-    assert str(excinfo.value) == "HardPy error: Width must be positive"
-
-
 def test_multistep_widget():
     img_widget = hardpy.ImageWidget(
         address="tests/test_dbx_widgets/assets/test.png", width=50
