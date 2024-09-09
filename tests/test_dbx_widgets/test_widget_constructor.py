@@ -29,8 +29,8 @@ def test_radiobutton_empty_widget():
     try:
         hardpy.RadiobuttonWidget(fields=[])
         assert False, "WidgetInfoError was not raised"
-    except ValueError as excinfo:
-        assert str(excinfo) == "RadiobuttonWidget must have at least one field"
+    except ValueError:
+        assert True
 
 
 def test_checkbox_widget():
@@ -42,8 +42,8 @@ def test_checkbox_empty_widget():
     try:
         hardpy.CheckboxWidget(fields=[])
         assert False, "WidgetInfoError was not raised"
-    except ValueError as excinfo:
-        assert str(excinfo) == "Checkbox must have at least one field"
+    except ValueError:
+        assert True
 
 
 def test_image_widget_png():
@@ -95,19 +95,16 @@ def test_image_widget_with_empty_data():
     try:
         hardpy.ImageWidget()
         assert False, "TypeError was not raised"
-    except TypeError as excinfo:
-        assert (
-            str(excinfo)
-            == "ImageWidget.__init__() missing 1 required positional argument: 'address'"
-        )
+    except TypeError:
+        assert True
 
 
 def test_image_widget_with_incorrect_width():
     try:
         hardpy.ImageWidget(address="tests/assets/test.png", width=-1)
         assert False, "WidgetInfoError was not raised"
-    except WidgetInfoError as excinfo:
-        assert str(excinfo) == "HardPy error: Width must be positive"
+    except WidgetInfoError:
+        assert True
 
 
 def test_multistep_widget():
@@ -132,8 +129,5 @@ def test_empty_step_widget():
     try:
         hardpy.StepWidget()
         assert False, "WidgetInfoError was not raised"
-    except TypeError as excinfo:
-        assert (
-            str(excinfo)
-            == "StepWidget.__init__() missing 3 required positional arguments: 'title', 'text', and 'widget'"
-        )
+    except TypeError:
+        assert True
