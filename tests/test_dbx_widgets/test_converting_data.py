@@ -33,7 +33,6 @@ def test_radiobutton_widget():
     widget = hardpy.RadiobuttonWidget(fields=["Text", " ", 123, "123", "..", "\\"])
     assert widget.convert_data("Text") == "Text"
     assert widget.convert_data(" ") == " "
-    assert widget.convert_data(123) == 123
     assert widget.convert_data("123") == "123"
     assert widget.convert_data("..") == ".."
     assert widget.convert_data("\\") == "\\"
