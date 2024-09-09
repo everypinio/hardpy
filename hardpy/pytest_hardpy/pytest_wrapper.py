@@ -144,7 +144,7 @@ class PyTestWrapper(object):
             return False
         return True
 
-    def confirm_operator_msg(self, is_msg_visible: bool):
+    def send_data(self, is_msg_visible: bool):
         """Set operator message to pytest subprocess.
 
         Args:

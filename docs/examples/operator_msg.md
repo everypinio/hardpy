@@ -1,7 +1,7 @@
 # Operator message
 
-Function set_operator_msg designed to send messages to an operator via a database. 
-Operator messages are needed to promptly inform the operator about problems that arise during testing, if problems arise before the start of testing or after its completion.
+The [set_operator_msg](./../documentation/pytest_hardpy.md/#set_operator_msg) function is intended for sending messages to the operator.
+Operator messages are required to promptly inform the operator of problems if they occur before the test begins or after the test is completed.
 
 ![operator_msg](../img/operator_msg.png)
 

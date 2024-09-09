@@ -1,6 +1,7 @@
 import pytest
 
 from hardpy import run_dialog_box, DialogBox
+import hardpy
 
 
 pytestmark = pytest.mark.module_name("Base dialog box")
@@ -8,6 +9,7 @@ pytestmark = pytest.mark.module_name("Base dialog box")
 
 @pytest.mark.case_name("Empty test before")
 def test_before():
+    hardpy.set_operator_msg(msg="Test", title="Important Notice")
     assert True
 
 

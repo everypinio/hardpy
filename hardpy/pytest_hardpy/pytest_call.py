@@ -261,7 +261,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
 
-def set_operator_msg(msg: str, title: str | None) -> None:
+def set_operator_msg(msg: str, title: str | None = None) -> None:
     """Set operator message.
 
     Args:
@@ -276,7 +276,7 @@ def set_operator_msg(msg: str, title: str | None) -> None:
     reporter.set_doc_value(key, msg_data, statestore_only=True)
     reporter.update_db_by_doc()
     is_msg_visible = _get_socket_raw_data()
-    msg_data = {"msg": msg, "title": title, "visible": is_msg_visible}
+    msg_data["visible"] = is_msg_visible
     reporter.set_doc_value(key, msg_data, statestore_only=True)
     reporter.update_db_by_doc()
 

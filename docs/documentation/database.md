@@ -207,6 +207,11 @@ The **dut** block contains the following fields:
   - **serial_number**: DUT serial number;
   - **info**: A dictionary containing additional information about the DUT, such as batch, board revision, etc.
 
+The **operator_msg** block contains the following fields:
+
+  - **msg**: Message for operator;
+  - **title**: The title of operator message dialog box.
+
 The **modules** block contains the following fields:
 
   - **test_{module_name}**: an object containing information about a specific module. Contains the following fields:
