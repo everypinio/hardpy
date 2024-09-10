@@ -5,6 +5,8 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 * Add hardpy config .toml file.
 * Refactor pytest-hardpy plugin options.
 * Add hardpy console utility.
+* Fix using special characters.
+* Add unit tests for dialog widgets.
 
 ## HardPy 0.5.0
 

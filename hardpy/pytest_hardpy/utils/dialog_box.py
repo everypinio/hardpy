@@ -147,7 +147,7 @@ class CheckboxWidget(IWidget):
         """
         super().__init__(WidgetType.CHECKBOX)
         if not fields:
-            raise ValueError("RadiobuttonWidget must have at least one field")
+            raise ValueError("Checkbox must have at least one field")
         self.info["fields"] = fields
 
     def convert_data(self, input_data: str) -> list[str] | None:

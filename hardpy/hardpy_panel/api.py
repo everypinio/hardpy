@@ -2,6 +2,8 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import os
+import re
+from urllib.parse import unquote
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -75,7 +77,15 @@ def confirm_dialog_box(dialog_box_output: str):
     Returns:
         dict[str, RunStatus]: run status
     """
-    if app.state.pytest_wrp.confirm_dialog_box(dialog_box_output):
+    hex_base = 16
+    unquoted_string = unquote(dialog_box_output)
+    decoded_string = re.sub(
+        r"%([0-9a-fA-F]{2})",
+        lambda match: chr(int(match.group(1), hex_base)),
+        unquoted_string,
+    )
+
+    if app.state.pytest_wrp.confirm_dialog_box(decoded_string):
         return {"status": Status.BUSY}
     return {"status": Status.ERROR}
 
