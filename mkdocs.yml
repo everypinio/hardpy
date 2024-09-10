@@ -47,6 +47,8 @@ nav:
   - Features: features/features.md
   - Documentation:
     - Structure: documentation/structure.md
+    - CLI: documentation/cli.md
+    - Configuration: documentation/hardpy_config.md
     - Database: documentation/database.md
     - Pytest-hardpy: documentation/pytest_hardpy.md
     - HardPy panel: documentation/hardpy_panel.md
