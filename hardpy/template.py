@@ -14,8 +14,8 @@ services:
       COUCHDB_USER: {}
       COUCHDB_PASSWORD: {}
     volumes:
-      - ./docker/dbdata:/opt/couchdb/data
-      - ./docker/couchdb.ini:/opt/couchdb/etc/local.ini
+      - ./database/dbdata:/opt/couchdb/data
+      - ./database/couchdb.ini:/opt/couchdb/etc/local.ini
 """
 
 couchdb_ini = """; CouchDB Configuration Settings
