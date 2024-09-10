@@ -3,6 +3,7 @@
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
 * Fix using special characters.
+* Add unit tests for dialog widgets.
 
 ## HardPy 0.5.0
 
