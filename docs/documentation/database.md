@@ -209,8 +209,9 @@ The **dut** block contains the following fields:
 
 The **operator_msg** block contains the following fields:
 
-  - **msg**: Message for operator;
-  - **title**: The title of operator message dialog box.
+  - **msg**: message for operator;
+  - **title**: the title of operator message dialog box.
+  - **visible**: should a message be displayed on the operator panel.
 
 The **modules** block contains the following fields:
 

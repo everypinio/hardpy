@@ -124,41 +124,21 @@ class PyTestWrapper(object):
         )
         return True
 
-    def confirm_dialog_box(self, dialog_box_output: str):
-        """Set dialog box data to pytest subprocess.
+    def send_data(self, data):
+        """Send data to pytest subprocess.
 
         Args:
-            dialog_box_output (str): dialog box output data
+            data (str): Data to be sent. Can be dialog box output or operator message visibility.
 
         Returns:
-            bool: True if dialog box was confirmed, else False
+            bool: True if dialog box was confirmed/closed, else False
         """
         config_data = ConfigData()
 
         try:
             client = socket()
             client.connect((config_data.socket_addr, config_data.socket_port))
-            client.sendall(dialog_box_output.encode("utf-8"))
-            client.close()
-        except Exception:
-            return False
-        return True
-
-    def send_data(self, is_msg_visible: bool):
-        """Set operator message to pytest subprocess.
-
-        Args:
-            is_msg_visible (bool): is operator message is visible
-
-        Returns:
-            bool: True if operator message was confirmed, else False
-        """
-        config_data = ConfigData()
-
-        try:
-            client = socket()
-            client.connect((config_data.socket_addr, config_data.socket_port))
-            client.sendall(str(is_msg_visible).encode("utf-8"))
+            client.sendall(str(data).encode("utf-8"))
             client.close()
         except Exception:
             return False

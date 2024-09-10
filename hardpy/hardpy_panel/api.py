@@ -84,7 +84,7 @@ def confirm_dialog_box(dialog_box_output: str):
         unquoted_string,
     )
 
-    if app.state.pytest_wrp.confirm_dialog_box(decoded_string):
+    if app.state.pytest_wrp.send_data(decoded_string):
         return {"status": Status.BUSY}
     return {"status": Status.ERROR}
 
