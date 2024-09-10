@@ -5,15 +5,21 @@ Operator messages are required to promptly inform the operator of problems if th
 
 ![operator_msg](../img/operator_msg.png)
 
-The operator_msg function is used to send a message to the operator, which is stored in the statestore database. 
-This function is primarily intended for events that occur outside of the testing environment. 
-For messages during testing, please use the run_dialog_box function.
-
 ### how to start
 
 1. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
 2. Create a directory `<dir_name>` with the files described below.
 3. Launch `hardpy-panel <dir_name>`.
+
+### description
+
+The operator_msg function is used to send a message to the operator, which is stored in the statestore database. 
+This function is primarily intended for events that occur outside of the testing environment. 
+For messages during testing, please use the run_dialog_box function.
+
+To use:
+
+- Call method `set_operator_msg()` if you want a message to appear in the operator panel for the operator when the condition you specify is met.
 
 
 ## example:
