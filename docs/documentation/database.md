@@ -16,11 +16,10 @@ The CouchDB version must be equal to or greater than the 3.2 version.
 This section explains how to launch and manage a CouchDB instance.
 After launching the database, it becomes available at the following address:
 
-> http://127.0.0.1:5984/_utils/
+> http://localhost:5984/_utils/
 
 The internal settings of the database are contained in the **couchDB.ini** configuration file.
 It contains settings that define the behavior and operating parameters of the database.
-The username is set via the `COUCHDB_USER`variable, the password via `COUCHDB_PASSWORD`, and the port number via the `ports` section.
 
 ### Running CouchDB with Docker
 

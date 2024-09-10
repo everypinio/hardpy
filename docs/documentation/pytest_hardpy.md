@@ -347,7 +347,7 @@ def test_two():
 
 **pytest-hardpy** has several options to run:
 
-#### hardpy_pt
+#### hardpy-pt
 
 Option to enable the **pytest-hardpy** plugin.
 
@@ -355,56 +355,29 @@ Option to enable the **pytest-hardpy** plugin.
 --hardpy-pt
 ```
 
-#### db_user
+#### hardpy-db-url
 
-The CouchDB instance user name for the **statestore** and **runstore** databases.
-The default is *dev*.
-
-```bash
---hardpy-dbu DB_USER
-```
-
-#### db_pswd
-
-The CouchDB instance password for the **statestore** and **runstore** databases.
-The default is *dev*.
+The CouchDB instance url for the **statestore** and **runstore** databases.
+The default is `http://dev:dev@localhost:5984/`.
 
 ```bash
---hardpy-dbpw DB_PSWD
+--hardpy-db-url
 ```
 
-#### db_port
-
-The CouchDB instance port number for the **statestore** and **runstore** databases.
-The default is *5984*.
-
-```bash
---hardpy-dbp DB_PORT
-```
-
-#### db_host
-
-The CouchDB instance hostname for the **statestore** and **runstore** databases.
-The default is *localhost*.
-
-```bash
---hardpy-dbh DB_HOST
-```
-
-#### socket_port
+#### hardpy-sp
 
 Internal socket port for passing backend data (such as a dialog box) to running pytest tests.
 The default is *6525*.
 
 ```bash
---hardpy-sp SOCKET_PORT
+--hardpy-sp
 ```
 
-#### socket_addr
+#### hardpy-sh
 
-Internal socket address for passing backend data (such as a dialog box) to running pytest tests.
+Internal socket host for passing backend data (such as a dialog box) to running pytest tests.
 The default is *localhost*.
 
 ```bash
---hardpy-sa SOCKET_ADDR
+--hardpy-sh
 ```
