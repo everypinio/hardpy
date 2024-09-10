@@ -17,7 +17,7 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
         setDialogOpen(false);
         const isMsgVisible = false;
         try {
-            const response = await axios.post(`/api/send_data/${JSON.stringify(isMsgVisible)}`);
+            const response = await axios.post(`/api/confirm_operator_msg/${JSON.stringify(isMsgVisible)}`);
             console.log(response.data);
         } catch (error) {
             console.error('Error confirming dialog box:', error);
