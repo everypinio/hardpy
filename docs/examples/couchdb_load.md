@@ -4,7 +4,7 @@ This is an example of storing the test result in CouchDB.
 Test reports are written to the **report** database at the end of 
 the testing process via **CouchdbLoader**.
 The code for this example can be seen inside the hardpy package 
-[CouchDB Load](https://github.com/everypinio/hardpy/tree/main/examples/project/couchdb_load).
+[CouchDB Load](https://github.com/everypinio/hardpy/tree/main/examples/couchdb_load).
 
 ### how to start
 

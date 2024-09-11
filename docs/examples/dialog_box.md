@@ -2,7 +2,7 @@
 
 This is an example of testing dialog boxes using the **HardPy** library.
 The code for this example can be seen inside the hardpy package 
-[Dialog Box](https://github.com/everypinio/hardpy/tree/main/examples/project/dialog_box).
+[Dialog Box](https://github.com/everypinio/hardpy/tree/main/examples/dialog_box).
 
 Contains some examples of valid tests for dialog boxes.
 To test images, create an `assets` folder in the `dialog_box` folder with the image `test.png`.

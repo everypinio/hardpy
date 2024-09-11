@@ -3,7 +3,7 @@
 This is an example of using **pytest-hardpy** functions, storing 
 the result to CouchDB and writing a simple driver.
 The code for this example can be seen inside the hardpy package 
-[Minute parity](https://github.com/everypinio/hardpy/tree/main/examples/project/minute_parity).
+[Minute parity](https://github.com/everypinio/hardpy/tree/main/examples/minute_parity).
 
 
 ### how to start
