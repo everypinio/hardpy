@@ -199,11 +199,18 @@ The **current** document of the **statestore** database contains the following f
 - **test_stand**: information about the test stand in the form of a dictionary.;
 - **modules**: module information;
 - **drivers**: information about drivers in the form of a dictionary.
+- **operator_msg**: operator message.
 
 The **dut** block contains the following fields:
 
   - **serial_number**: DUT serial number;
   - **info**: A dictionary containing additional information about the DUT, such as batch, board revision, etc.
+
+The **operator_msg** block contains the following fields:
+
+  - **msg**: message for operator;
+  - **title**: the title of operator message dialog box.
+  - **visible**: should a message be displayed on the operator panel.
 
 The **modules** block contains the following fields:
 
@@ -258,6 +265,11 @@ Example of a **current** document:
           "state": "active",
           "port": 8000,
         }
+      },
+      "operator_msg": {
+        "msg": "Operator message",
+        "title": "Message",
+        "visible": "True"
       },
       "modules": {
         "test_1_a": {
