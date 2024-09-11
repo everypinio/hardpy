@@ -173,6 +173,11 @@ class ResultStateStore(IBaseResult):
           "port": 8000
         }
       },
+      "operator_msg": {
+        "msg": "Operator message",
+        "title": "Message",
+        "visible": "True"
+      },
       "modules": {
         "test_1_a": {
           "status": "failed",
@@ -224,6 +229,7 @@ class ResultStateStore(IBaseResult):
     dut: Dut
     modules: dict[str, ModuleStateStore] = {}
     drivers: Optional[dict] = {}
+    operator_msg: Optional[dict] = {}
 
 
 class ResultRunStore(IBaseResult):
