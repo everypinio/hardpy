@@ -161,7 +161,8 @@ def test_driver_info():
 #### set_message
 
 Writes a string with a message.
-If a message is sent without a key, the key will be generated automatically and the messages will be appended.
+If a message is sent without a key, the key will be generated 
+automatically and the messages will be appended.
 If the message is sent with a known key, it will be updated.
 
 **Arguments:**
@@ -176,6 +177,27 @@ def test_message():
     set_message("Test message")
     set_message("Update message 1", "msg_upd")
     set_message("Update message 2", "msg_upd")
+```
+
+#### set_operator_message
+
+Sets an operator message in the **statestore** database and updates the database.
+The function should be used to handle events outside of testing. 
+For messages to the operator during testing, 
+there is the function [run_dialog_box](#run_dialog_box).
+
+**Arguments:**
+
+- `msg (str)`: The message to be displayed.
+- `title (str | None)`: The optional title for the message.
+
+**Example:**
+
+```python
+from hardpy import set_operator_message
+
+def test_set_operator_msg():
+    set_operator_message(msg="This is a sample operator message.", title="Important Notice")
 ```
 
 #### run_dialog_box
@@ -251,26 +273,6 @@ Returns the current report from the database **runstore**.
 ```python
 def test_current_report():
     report = get_current_report()
-```
-
-#### set_operator_msg
-
-Sets an operator message in the **statestore** database and updates the database.
-The function should be used to handle events outside of testing. 
-For messages to the operator during testing, there is the function [run_dialog_box](#run_dialog_box).
-
-**Arguments:**
-
-- `msg (str)`: The message to be displayed.
-- `title (str | None)`: The optional title for the message.
-
-**Example:**
-
-```python
-from hardpy import set_operator_msg
-
-def test_set_operator_msg():
-    set_operator_msg(msg="This is a sample operator message.", title="Important Notice")
 ```
 
 ## Class
@@ -350,6 +352,7 @@ pytestmark = pytest.mark.module_name("Module 1")
 #### dependency
 
 Skips the test case/module if the main test fails/skipped/errored.
+For more information, see the example [skip test](./../examples/skip_test.md)
 
 **Example:**
 

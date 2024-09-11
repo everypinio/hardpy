@@ -21,11 +21,36 @@ The **hardpy panel** or operator panel is a web interface that displays and cont
 
 ## Usage
 
-You can launch **hardpy panel** by using the command `hardpy-panel [...]`, where `[...]` is a tests directory.
+### Launch operator panel
+
+Use the [hardpy run](./cli.md#hardpy-run) command to start the web server.
 After this open page http://localhost:8000/ in the browser.
 
 When the operator panel is running, you can run tests through the web interface or through
 the pytest launcher (in a terminal or from another application).
+
+### Start and stop tests
+
+The operator panel contains a test start/stop button in the lower right corner of the screen.
+The user can start/stop tests using the space key.
+
+### Settings
+
+The operator panel contains a setting button in the top right corner.
+
+#### debug mode
+
+The user can view the **statestore** database online by clicking on 
+the **Turn on the debug mode** button.
+
+Debug mode is disabled by default.
+
+#### sound
+
+The user can turn on the sound of the end of the test by clicking on 
+the **Turn on the sound** button.
+
+Sound is disabled by default.
 
 ### Dialog box
 
@@ -111,3 +136,12 @@ If the user closes the dialog box (using the cross in the upper right corner),
 the tests will be stopped, an error message will be displayed.
 
 ![notification](../img/dialog_box/dialog_box_notification.png)
+
+### Operator message
+
+The messages to the operator are similar to [dialog boxes](#dialog-box), 
+but do not contain a **Confirm** button and should be called outside 
+the execution of the test plan, for example in case of exception 
+catching in the `conftest.py` file. 
+For more information, see the example [operator message](./../examples/operator_msg.md)
+or in the function description [set_operator_message](./pytest_hardpy.md#set_operator_message).

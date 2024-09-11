@@ -5,11 +5,11 @@ The code for this example can be seen inside the hardpy package [Hello Hardpy](h
 
 ### how to start
 
-1. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
-2. Create a directory `<dir_name>` with the files described below.
-3. Launch `hardpy-panel <dir_name>`.
+1. Launch `hardpy init hello_hardpy`
+2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
+3. Launch `hardpy run hello_hardpy`.
 
-### test_simple.py
+### test_1.py
 
 Contains the simplest example of a valid test.
 

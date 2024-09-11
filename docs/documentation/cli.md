@@ -62,7 +62,8 @@ hardpy init --help
 The `hardpy run` command is used to start the operator panel server.
 By default, it starts **HardPy** in the current directory.
 
-You can run the `hardpy run <tests_directory>` command, where `<tests_directory>` is the path to the directory with your tests.
+You can run the `hardpy run <tests_directory>` command, where `<tests_directory>` 
+is the path to the directory with your tests.
 
 ```bash
  Usage: hardpy run [OPTIONS] [TESTS_DIR]                                                                      

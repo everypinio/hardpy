@@ -1,8 +1,10 @@
 # Storing CouchDB Database in RAM
 
-When using one of the methods below, the database data will be saved to a folder in temporary storage, and after the computer is turned off, the data will be deleted.
+When using one of the methods below, the database data will be saved to a 
+folder in temporary storage, and after the computer is turned off, the data will be deleted.
 
-Here are instructions for saving the database in RAM for different methods of launching the database:
+Here are instructions for saving the database in RAM for different 
+methods of launching the database:
 
 - in linux with binary packages
 - in linux with docker-compose.yaml
@@ -13,7 +15,8 @@ Here are instructions for saving the database in RAM for different methods of la
 
 ### binary packages
 
-Start the database according to the [instructions](https://everypinio.github.io/hardpy/documentation/database/#running-couchdb-with-binary-packages-in-linux)
+Start the database according to the 
+[instructions](https://everypinio.github.io/hardpy/documentation/database/#running-couchdb-with-binary-packages-in-linux)
 
 - Create a CouchDB folder in the temporary file storage:
 
@@ -27,7 +30,8 @@ sudo mkdir /dev/shm/couchdb
 sudo chmod 777 /dev/shm/couchdb
 ```
 
-- Edit the database_dir parameter in the database configuration file `/opt/couchdb/etc/default.ini`:
+- Edit the database_dir parameter in the database configuration 
+file `/opt/couchdb/etc/default.ini`:
 
 ```ini
 [couchdb]
@@ -42,7 +46,8 @@ sudo service couchdb restart
 
 ### docker
 
-Start the database according to the [instructions](https://everypinio.github.io/hardpy/documentation/database/#running-couchdb-with-docker-compose) (steps 1-3)
+Start the database according to the 
+[instructions](https://everypinio.github.io/hardpy/documentation/database/#running-couchdb-with-docker-compose) (steps 1-3)
 
 Example of `docker-compose.yaml` file with saving files in RAM:
 
@@ -83,12 +88,14 @@ You need to create a virtual hard disk on which the database will be saved.
 - Click Action > Create Virtual Hard Disk.
 - Specify any Location, set Size (e.g., 30 MB), choose VHD type and Fixed size.
 - Right-click the created disk (left pane), select Initialize Disk, choose GUID Partition Table.
-- Right-click the created disk (right pane), select New Simple Volume, Assign drive letter (e.g., `K`), click Next twice, then Finish.
+- Right-click the created disk (right pane), select New Simple Volume, Assign drive 
+letter (e.g., `K`), click Next twice, then Finish.
 - Create a folder named `couchdb` in the created drive (`K` in our case) using File Explorer.
 
 ### binary packages
 
-Start the database according to the [instructions](https://everypinio.github.io/hardpy/documentation/database/#running-couchdb-with-binary-packages-in-windows)
+Start the database according to the 
+[instructions](https://everypinio.github.io/hardpy/documentation/database/#running-couchdb-with-binary-packages-in-windows)
 
 - Open the file located at `C:/CouchDB/etc/default.ini` as administrator.
 - Set the value of the database_dir parameter to `K:/couchdb`.
@@ -98,7 +105,8 @@ Start the database according to the [instructions](https://everypinio.github.io/
 
 ### docker
 
-Start the database according to the [instructions](https://everypinio.github.io/hardpy/documentation/database/#running-couchdb-with-docker-compose) (steps 1-3)
+Start the database according to the 
+[instructions](https://everypinio.github.io/hardpy/documentation/database/#running-couchdb-with-docker-compose) (steps 1-3)
 
 In `docker-compose.yaml` file in `volumes` find the string:
 

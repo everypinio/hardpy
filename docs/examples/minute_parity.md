@@ -1,28 +1,17 @@
 # Minute parity
 
-This is an example of using **pytest-hardpy** functions, storing the result to CouchDB and writing a simple driver.
-The code for this example can be seen inside the hardpy package [Minute parity](https://github.com/everypinio/hardpy/tree/main/examples/project/minute_parity).
+This is an example of using **pytest-hardpy** functions, storing 
+the result to CouchDB and writing a simple driver.
+The code for this example can be seen inside the hardpy package 
+[Minute parity](https://github.com/everypinio/hardpy/tree/main/examples/project/minute_parity).
 
 
 ### how to start
 
-1. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
-2. Create a directory `<dir_name>` with the files described below.
-3. Launch `hardpy-panel <dir_name>`.
-
-### pytest.ini
-
-It is a file of built-in configuration options that determine how live logging works and 
-enable **pytest-hardpy** plugin for launching via pytest.
-
-```ini
-[pytest]
-log_cli = true
-log_cli_level = INFO
-log_cli_format = %(asctime)s [%(levelname)s] %(message)s
-log_cli_date_format = %H:%M:%S
-addopts = --hardpy-pt
-```
+1. Launch `hardpy init minute_parity`
+2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
+3. Modify the files described below.
+4. Launch `hardpy run minute_parity`.
 
 ### conftest.py
 
