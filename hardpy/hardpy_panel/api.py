@@ -84,7 +84,22 @@ def confirm_dialog_box(dialog_box_output: str):
         unquoted_string,
     )
 
-    if app.state.pytest_wrp.confirm_dialog_box(decoded_string):
+    if app.state.pytest_wrp.send_data(decoded_string):
+        return {"status": Status.BUSY}
+    return {"status": Status.ERROR}
+
+
+@app.post("/api/confirm_operator_msg/{is_msg_visible}")
+def confirm_operator_msg(is_msg_visible: bool):
+    """Confirm operator msg.
+
+    Args:
+        is_msg_visible (bool): is operator message is visible
+
+    Returns:
+        dict[str, RunStatus]: run status
+    """
+    if app.state.pytest_wrp.send_data(str(is_msg_visible)):
         return {"status": Status.BUSY}
     return {"status": Status.ERROR}
 

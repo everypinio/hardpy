@@ -156,6 +156,7 @@ export function StartConfirmationDialog(props: Props) {
       icon="info-sign"
       isOpen={dialogOpen}
       onClose={handleClose}
+      canOutsideClickClose={false}
       style={{
         width: 'auto',
         height: 'auto',

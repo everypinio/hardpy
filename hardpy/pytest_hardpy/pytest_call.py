@@ -261,6 +261,29 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
 
+def set_operator_msg(msg: str, title: str | None = None) -> None:
+    """Set operator message.
+
+    The function should be used to handle events outside of testing.
+    For messages to the operator during testing, there is the function `run_dialog_box`.
+
+    Args:
+        msg (str): Message
+        title (str | None): Title
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(
+        DF.OPERATOR_MSG,
+    )
+    msg_data = {"msg": msg, "title": title, "visible": True}
+    reporter.set_doc_value(key, msg_data, statestore_only=True)
+    reporter.update_db_by_doc()
+    is_msg_visible = _get_socket_raw_data()
+    msg_data["visible"] = is_msg_visible
+    reporter.set_doc_value(key, msg_data, statestore_only=True)
+    reporter.update_db_by_doc()
+
+
 def _get_current_test() -> CurrentTestInfo:
     current_node = environ.get("PYTEST_CURRENT_TEST")
 
