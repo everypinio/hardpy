@@ -342,6 +342,9 @@ class HardpyPlugin:
         if dependency and self._is_dependency_failed(dependency):
             self._log.debug(f"Skipping test due to dependency: {dependency}")
             self._results[node_info.module_id][node_info.case_id] = TestStatus.SKIPPED
+            self._reporter.set_progress(
+                self._progress.calculate(f"{node_info.module_id}::{node_info.case_id}")
+            )
             skip(f"Test {node_info.module_id}::{node_info.case_id} is skipped")
 
     def _is_dependency_failed(self, dependency) -> bool:
