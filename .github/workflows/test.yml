@@ -46,5 +46,5 @@ jobs:
       env:
         COUCH_DB_HOST: localhost
       with:
-        options: --hardpy-db-url http://dev:dev@${COUCH_DB_HOST}:5984/ tests
+        options: tests
         show: "all"
