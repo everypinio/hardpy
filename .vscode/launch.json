@@ -20,7 +20,7 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "HardPy: Init",
+            "name": "HardPy: Init template",
             "type": "debugpy",
             "request": "launch",
             "module": "hardpy.hardpy",
@@ -28,7 +28,7 @@
             "args": ["init", "template"]
         },
         {
-            "name": "HardPy: Run",
+            "name": "HardPy: Run template",
             "type": "debugpy",
             "request": "launch",
             "module": "hardpy.hardpy",
