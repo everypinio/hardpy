@@ -80,12 +80,12 @@ def confirm_dialog_box(dialog_box_output: str):
     hex_base = 16
     unquoted_string = unquote(dialog_box_output)
     decoded_string = re.sub(
-        r"%([0-9a-fA-F]{2})",
+        "%([0-9a-fA-F]{2})",
         lambda match: chr(int(match.group(1), hex_base)),
         unquoted_string,
     )
 
-    if app.state.pytest_wrp.send_data(decoded_string):
+    if app.state.pytest_wrp.send_data(str(decoded_string)):
         return {"status": Status.BUSY}
     return {"status": Status.ERROR}
 

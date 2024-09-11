@@ -110,7 +110,7 @@ class PyTestWrapper(object):
         )
         return True
 
-    def send_data(self, data):
+    def send_data(self, data: str):
         """Send data to pytest subprocess.
 
         Args:
@@ -121,13 +121,8 @@ class PyTestWrapper(object):
         """
         try:
             client = socket()
-<<<<<<< HEAD
             client.connect((self.config.socket.host, self.config.socket.port))
-            client.sendall(dialog_box_output.encode("utf-8"))
-=======
-            client.connect((config_data.socket_addr, config_data.socket_port))
-            client.sendall(str(data).encode("utf-8"))
->>>>>>> origin/develop
+            client.sendall(data.encode("utf-8"))
             client.close()
         except Exception:
             return False
