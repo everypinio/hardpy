@@ -90,7 +90,7 @@ def confirm_dialog_box(dialog_box_output: str):
 
 
 @app.post("/api/confirm_operator_msg/{is_msg_visible}")
-def send_data(is_msg_visible: bool):
+def confirm_operator_msg(is_msg_visible: bool):
     """Confirm operator msg.
 
     Args:
