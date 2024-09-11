@@ -13,9 +13,9 @@ Operator messages are required to promptly inform the operator of problems if th
 
 ### description
 
-The `operator_msg` function is used to send a message to the operator, which is stored in the **statestore** database. 
+The `set_operator_msg()` function is used to send a message to the operator, which is stored in the **statestore** database. 
 This function is primarily intended for events that occur outside of the testing environment. 
-For messages during testing, please use `the run_dialog_box` function.
+For messages during testing, please use the `run_dialog_box` function.
 
 To use:
 
