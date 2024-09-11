@@ -261,7 +261,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
 
-def set_operator_msg(msg: str, title: str | None = None) -> None:
+def set_operator_message(msg: str, title: str | None = None) -> None:
     """Set operator message.
 
     The function should be used to handle events outside of testing.
