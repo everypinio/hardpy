@@ -29,6 +29,7 @@ from _pytest._code.code import (
 )
 
 from hardpy.pytest_hardpy.reporter import HookReporter
+from hardpy.pytest_hardpy.reporter.runner_reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
     TestStatus,
     RunStatus,
@@ -37,6 +38,7 @@ from hardpy.pytest_hardpy.utils import (
     ConfigData,
 )
 from hardpy.pytest_hardpy.utils.node_info import TestDependencyInfo
+from hardpy.pytest_hardpy.db import DatabaseField as DF
 
 
 def pytest_addoption(parser: Parser):
@@ -203,11 +205,7 @@ class HardpyPlugin(object):
         module_id = Path(report.fspath).stem
         case_id = report.nodeid.rpartition("::")[2]
 
-        self._reporter.set_case_status(
-            module_id,
-            case_id,
-            TestStatus(report.outcome),
-        )
+        self._reporter.set_case_status(module_id, case_id, TestStatus(report.outcome))
         self._reporter.set_case_stop_time(
             module_id,
             case_id,
@@ -270,6 +268,17 @@ class HardpyPlugin(object):
             case ExitCode.TESTS_FAILED:
                 return RunStatus.FAILED
             case ExitCode.INTERRUPTED:
+                reporter = RunnerReporter()
+                for module_id, results in self._results.items():
+                    self._log.error(f"YYYYYYYYYYYYYYYYYYY")
+                    for case_id, status in results.items():
+                        self._log.error(f"OOOOOOOOOOOOOOOOO.")
+                        key = reporter.generate_key(
+                            DF.MODULES, module_id, DF.CASES, case_id, DF.STATUS
+                        )
+                        reporter.set_doc_value(key, TestStatus.STOPPED)
+                self._reporter.update_db_by_doc()
+                self._log.error(f"AAAAAAAAAAAAAAAAAAAAAAa.")
                 return RunStatus.STOPPED
             case _:
                 return RunStatus.ERROR
