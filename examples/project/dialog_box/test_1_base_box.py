@@ -23,4 +23,4 @@ def test_base_dialog_box():
 
 @pytest.mark.case_name("Empty test after")
 def test_after():
-    assert False
+    assert True

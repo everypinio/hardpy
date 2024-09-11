@@ -6,7 +6,6 @@ pytestmark = pytest.mark.module_name("Multiple steps dialog box")
 
 
 @pytest.mark.case_name("Multistep")
-@pytest.mark.dependency("test_1_base_box")
 def test_multiple_steps():
     img_widget = ImageWidget(address="assets/test.png", width=50)
     steps = [
