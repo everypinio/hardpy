@@ -1,7 +1,9 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from hardpy.config import HardpyConfig
+from pathlib import Path
+
+from hardpy.common.config import HardpyConfig
 
 docker_compose_yaml = """version: "3.8"
 
@@ -165,9 +167,20 @@ def fill_actions_after_test(post_run_functions: list):
 
 
 class TemplateGenerator:
+    """HardPy template files generator."""
 
     def __init__(self, config: HardpyConfig):
         self._config = config
+
+    def create_file(self, file_path: Path, content: str):
+        """Create HardPy template file.
+
+        Args:
+            file_path (Path): file path
+            content (str): file content
+        """
+        with open(file_path, "w") as file:
+            file.write(content)
 
     @property
     def docker_compose_yaml(self) -> str:
@@ -189,7 +202,7 @@ class TemplateGenerator:
         return pytest_ini
 
     @property
-    def test_1_py(self) -> str:
+    def test_1_py(self) -> str:  # noqa: WPS114
         return test_1_py
 
     @property

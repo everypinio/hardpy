@@ -23,7 +23,7 @@
             "name": "HardPy: Init template",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.hardpy",
+            "module": "hardpy.cli.cli",
             "console": "integratedTerminal",
             "args": ["init", "template"]
         },
@@ -31,7 +31,7 @@
             "name": "HardPy: Run template",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.hardpy",
+            "module": "hardpy.cli.cli",
             "console": "integratedTerminal",
             "args": ["run", "template"]
         },
@@ -39,7 +39,7 @@
             "name": "Python: Example Hello HardPy",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.hardpy",
+            "module": "hardpy.cli.cli",
             "console": "integratedTerminal",
             "args": ["run", "examples/hello_hardpy"]
         },
@@ -47,7 +47,7 @@
             "name": "Python: Example CouchDB load",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.hardpy",
+            "module": "hardpy.cli.cli",
             "console": "integratedTerminal",
             "args": ["run", "examples/couchdb_load"]
         },
@@ -55,7 +55,7 @@
             "name": "Python: Example Minute parity",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.hardpy",
+            "module": "hardpy.cli.cli",
             "console": "integratedTerminal",
             "args": ["run", "examples/minute_parity"]
         },
@@ -63,7 +63,7 @@
             "name": "Python: Example Dialog box",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.hardpy",
+            "module": "hardpy.cli.cli",
             "console": "integratedTerminal",
             "args": ["run", "examples/dialog_box"]
         }

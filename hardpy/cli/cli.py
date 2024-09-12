@@ -4,21 +4,21 @@
 import os
 import sys
 from pathlib import Path
-from typing_extensions import Annotated
 from typing import Optional
+from typing_extensions import Annotated
 
 import typer
 from uvicorn import run as uvicorn_run
 
-from hardpy.config import ConfigManager
-from hardpy.template import TemplateGenerator
+from hardpy.cli.template import TemplateGenerator
+from hardpy.common.config import ConfigManager
 
 cli = typer.Typer(add_completion=False)
 default_config = ConfigManager().get_config()
 
 
 @cli.command()
-def init(
+def init(  # noqa: WPS211
     tests_dir: Annotated[Optional[str], typer.Argument()] = None,
     create_database: bool = typer.Option(
         True,
@@ -57,10 +57,23 @@ def init(
         help="Specify a socket port.",
     ),
 ):
-    """Initialize HardPy tests directory."""
+    """Initialize HardPy tests directory.
+
+    Args:
+        tests_dir (str | None): Tests directory. Current directory + `tests` by default
+        create_database (bool): Flag to create database
+        database_user (str): Database user name
+        database_password (str): Database password
+        database_host (str): Database host
+        database_port (int): Database port
+        frontend_host (str): Panel operator host
+        frontend_port (int): Panel operator port
+        socket_host (str): Socket host
+        socket_port (int): Socket port
+    """
     _tests_dir = tests_dir if tests_dir else default_config.tests_dir
     ConfigManager().init_config(
-        tests_dir=_tests_dir,
+        tests_dir=str(_tests_dir),
         database_user=database_user,
         database_password=database_password,
         database_host=database_host,
@@ -82,42 +95,34 @@ def init(
     ConfigManager().create_config(dir_path)
     config = ConfigManager().read_config(dir_path)
     if not config:
+        print(f"hardpy.toml config by path {dir_path} not detected.")
         sys.exit()
 
     template = TemplateGenerator(config)
 
+    files = {}
+
     if create_database:
-        # create docker-compose.yaml
-        file_path = Path(dir_path / "docker-compose.yaml")
-        with open(file_path, "w") as docker_compose_yaml:
-            docker_compose_yaml.write(template.docker_compose_yaml)
+        files[Path(dir_path / "docker-compose.yaml")] = template.docker_compose_yaml
+        files[Path(dir_path / "database" / "couchdb.ini")] = template.couchdb_ini
 
-    # create couchdb.ini
-    file_path = Path(dir_path / "database" / "couchdb.ini")
-    with open(file_path, "w") as couchdb_ini:
-        couchdb_ini.write(template.couchdb_ini)
+    files[Path(dir_path / "pytest.ini")] = template.pytest_ini
+    files[Path(dir_path / "test_1.py")] = template.test_1_py
+    files[Path(dir_path / "conftest.py")] = template.conftest_py
 
-    # create pytest.ini
-    file_path = Path(dir_path / "pytest.ini")
-    with open(file_path, "w") as pytest_ini:
-        pytest_ini.write(template.pytest_ini)
-
-    # create test_1.py
-    file_path = Path(dir_path / "test_1.py")
-    with open(file_path, "w") as test_1_py:  # noqa: WPS114
-        test_1_py.write(template.test_1_py)
-
-    # create conftest.py
-    file_path = Path(dir_path / "conftest.py")
-    with open(file_path, "w") as conftest_py:
-        conftest_py.write(template.conftest_py)
+    for key, value in files.items():
+        template.create_file(key, value)
 
     print(f"HardPy project {dir_path.name} initialized successfully.")
 
 
 @cli.command()
 def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None):
-    """Run HardPy server."""
+    """Run HardPy server.
+
+    Args:
+        tests_dir (Optional[str]): Test directory. Current directory by default
+    """
     dir_path = Path.cwd() / tests_dir if tests_dir else Path.cwd()
     config = ConfigManager().read_config(dir_path)
 

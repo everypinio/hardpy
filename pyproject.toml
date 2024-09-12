@@ -56,8 +56,8 @@
         Changelog = "https://everypinio.github.io/hardpy/changelog/"
 
     [project.scripts]
-        # Provide `hardpy-panel` executable
-        hardpy = "hardpy.hardpy:cli"
+        # Provide `hardpy` executable
+        hardpy = "hardpy.cli.cli:cli"
 
     [project.entry-points.pytest11]
         pytest_hardpy = "hardpy.pytest_hardpy.plugin"
