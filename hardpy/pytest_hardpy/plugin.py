@@ -2,12 +2,11 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import signal
-from os import getcwd
-from typing import Any, Callable
 from logging import getLogger
 from pathlib import Path, PurePath
 from platform import system
 from re import compile as re_compile
+from typing import Any, Callable
 
 from natsort import natsorted
 from pytest import (
@@ -32,7 +31,6 @@ from _pytest._code.code import (
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import (
     TestStatus,
-    RunStatus,
     NodeInfo,
     ProgressCalculator,
     ConnectionData,
@@ -102,15 +100,15 @@ class HardpyPlugin:
 
         database_url = config.getoption("--hardpy-db-url")
         if database_url:
-            con_data.database_url = database_url
+            con_data.database_url = str(database_url)
 
         socket_port = config.getoption("--hardpy-sp")
         if socket_port:
-            con_data.socket_port = int(socket_port)
+            con_data.socket_port = int(socket_port)  # type: ignore
 
         socket_host = config.getoption("--hardpy-sh")
         if socket_host:
-            con_data.socket_host = socket_host
+            con_data.socket_host = str(socket_host)
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
@@ -120,12 +118,7 @@ class HardpyPlugin:
         self._reporter = HookReporter()
 
     def pytest_sessionfinish(self, session: Session, exitstatus: int):
-        """Call at the end of test session.
-
-        Args:
-            session (Session): session description
-            exitstatus (int): exit test status
-        """
+        """Call at the end of test session."""
         if "--collect-only" in session.config.invocation_params.args:
             return
         status = self._get_run_status(exitstatus)
@@ -285,16 +278,16 @@ class HardpyPlugin:
         self._reporter.set_module_status(module_id, status)
         self._reporter.set_module_stop_time(module_id)
 
-    def _get_run_status(self, exitstatus: int) -> RunStatus:
+    def _get_run_status(self, exitstatus: int) -> TestStatus:
         match exitstatus:
             case ExitCode.OK:
-                return RunStatus.PASSED
+                return TestStatus.PASSED
             case ExitCode.TESTS_FAILED:
-                return RunStatus.FAILED
+                return TestStatus.FAILED
             case ExitCode.INTERRUPTED:
-                return RunStatus.STOPPED
+                return TestStatus.STOPPED
             case _:
-                return RunStatus.ERROR
+                return TestStatus.ERROR
 
     def _decode_assertion_msg(
         self,

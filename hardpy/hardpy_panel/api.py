@@ -3,17 +3,31 @@
 
 import os
 import re
+from enum import Enum
 from urllib.parse import unquote
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from hardpy.pytest_hardpy.utils import RunStatus as Status
+from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
-from hardpy.config import ConfigManager
 
 app = FastAPI()
 app.state.pytest_wrp = PyTestWrapper()
+
+
+class Status(str, Enum):  # noqa: WPS600
+    """Pytest run status.
+
+    Statuses, that can be returned by HardPy to frontend.
+    """
+
+    STOPPED = "stopped"
+    STARTED = "started"
+    COLLECTED = "collected"
+    BUSY = "busy"
+    READY = "ready"
+    ERROR = "error"
 
 
 @app.get("/api/start")
@@ -107,6 +121,9 @@ def confirm_operator_msg(is_msg_visible: bool):
 
 app.mount(
     "/",
-    StaticFiles(directory=(os.path.dirname(__file__)) + "/frontend/dist", html=True),
+    StaticFiles(
+        directory=(os.path.dirname(__file__)) + "/frontend/dist",  # noqa: WPS336
+        html=True,
+    ),
     name="static",
 )
