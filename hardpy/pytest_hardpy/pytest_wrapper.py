@@ -117,7 +117,8 @@ class PyTestWrapper:
         """Send data to pytest subprocess.
 
         Args:
-            data (str): Data to be sent. Can be dialog box output or operator message visibility.
+            data (str): Data to be sent. Can be dialog
+                        box output or operator message visibility.
 
         Returns:
             bool: True if dialog box was confirmed/closed, else False
