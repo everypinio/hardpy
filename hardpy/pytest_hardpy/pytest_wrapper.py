@@ -1,16 +1,16 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-import sys
 import signal
-import subprocess
-from socket import socket
+import subprocess  # noqa: S404
+import sys
 from platform import system
+from socket import socket
 
-from hardpy.config import ConfigManager
+from hardpy.common.config import ConfigManager
 
 
-class PyTestWrapper(object):
+class PyTestWrapper:
     """Wrapper for pytest subprocess."""
 
     def __init__(self):
@@ -22,10 +22,11 @@ class PyTestWrapper(object):
         self.config = ConfigManager().get_config()
         self.collect()
 
-    def start(self):
+    def start(self) -> bool:
         """Start pytest subprocess.
 
-        Returns True if pytest was started.
+        Returns:
+            bool: True if pytest was started
         """
         if self.python_executable is None:
             return False
@@ -72,7 +73,8 @@ class PyTestWrapper(object):
     def stop(self) -> bool:
         """Stop pytest subprocess.
 
-        Returns True if pytest was running and stopped.
+        Returns:
+            bool: True if pytest was running and stopped
         """
         if self.is_running() and self._proc:
             if system() == "Linux":
@@ -85,7 +87,8 @@ class PyTestWrapper(object):
     def collect(self) -> bool:
         """Perform pytest collection.
 
-        Returns True if collection was started.
+        Returns:
+            bool: True if collection was started
         """
         if self.python_executable is None:
             return False
@@ -129,5 +132,9 @@ class PyTestWrapper(object):
         return True
 
     def is_running(self) -> bool | None:
-        """Check if pytest is running."""
+        """Check if pytest is running.
+
+        Returns:
+            bool | None: True if self._proc is not None
+        """
         return self._proc and self._proc.poll() is None

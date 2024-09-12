@@ -1,6 +1,6 @@
 import pytest
 
-from hardpy.config import ConfigManager
+from hardpy.common.config import ConfigManager
 
 pytest_plugins = "pytester"
 
