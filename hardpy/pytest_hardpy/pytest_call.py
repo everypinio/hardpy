@@ -25,7 +25,7 @@ from hardpy.pytest_hardpy.reporter import RunnerReporter
 
 
 @dataclass
-class CurrentTestInfo(object):
+class CurrentTestInfo:
     """Current test info."""
 
     module_id: str

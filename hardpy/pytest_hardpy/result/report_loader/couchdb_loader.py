@@ -11,7 +11,7 @@ from hardpy.pytest_hardpy.db.schema import ResultRunStore
 from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig
 
 
-class CouchdbLoader(object):
+class CouchdbLoader:
     """CouchDB report generator."""
 
     def __init__(self, config: CouchdbConfig):
