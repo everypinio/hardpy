@@ -1,7 +1,10 @@
 # HardPy config
 
 **HardPy** uses the `hardpy.toml` file for configuration.
-The user can change the fields at creation by using [hardpy init](./cli.md#hardpy-init)
+The user can change the fields at creation by using [hardpy init](./cli.md#hardpy-init).
+
+???+ note
+    All **HardPy** project must have `hardpy.toml` file.
 
 ## Default config
 
@@ -59,7 +62,7 @@ The user can change this value with the `hardpy init --database-password` option
 Database host name. The default is `localhost`.
 The user can change this value with the `hardpy init --database-host` option.
 
-#### port 
+#### port
 
 Database port number. The default is `5984`.
 The user can change this value with the `hardpy init --database-port` option.
@@ -73,7 +76,7 @@ Frontend (operator panel) settings.
 Operator panel host name. The default is `localhost`.
 The user can change this value with the `hardpy init --frontend-host` option.
 
-#### port 
+#### port
 
 Operator panel port number. The default is `8000`.
 The user can change this value with the `hardpy init --frontend-port` option.
@@ -88,7 +91,7 @@ Internal socket port for passing backend data (such as a dialog box) to running 
 Socket host name. The default is `localhost`.
 The user can change this value with the `hardpy init --socket-host` option.
 
-#### port 
+#### port
 
 Socket port number. The default is `6525`.
 The user can change this value with the `hardpy init --socket-port` option.

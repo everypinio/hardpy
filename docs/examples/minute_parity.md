@@ -1,8 +1,8 @@
 # Minute parity
 
-This is an example of using **pytest-hardpy** functions, storing 
+This is an example of using **pytest-hardpy** functions, storing
 the result to CouchDB and writing a simple driver.
-The code for this example can be seen inside the hardpy package 
+The code for this example can be seen inside the hardpy package
 [Minute parity](https://github.com/everypinio/hardpy/tree/main/examples/minute_parity).
 
 
@@ -65,7 +65,7 @@ The driver returns the current minute in the OS.
 import datetime
 from logging import getLogger
 
-class DriverExample(object):
+class DriverExample:
     def __init__(self):
         self._log = getLogger(__name__)
 
@@ -148,8 +148,8 @@ Contains the final tests of the testing process:
 - The name of the test module for the web interface is set to `pytest.mark.module_name`;
 - The name of the test cases for the web interface is set to `pytest.mark.case_name`;
 - An example of setting and updating a message for a web interface using `set_message`;
-- `test_3` depends on `test_minute_parity` from `test_2`. 
-Dependency is set to `pytest.mark.dependency`. 
+- `test_3` depends on `test_minute_parity` from `test_2`.
+Dependency is set to `pytest.mark.dependency`.
 If `test_2::test_minute_parity` fails, `test_3` will be skipped
 
 ```python
