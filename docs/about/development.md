@@ -99,7 +99,7 @@ python -m build
 Addresses:
 
 - HardPy panel: http://localhost:8000/
-- Fauxton CouchDB: http://127.0.0.1:5984/_utils/
+- Fauxton CouchDB: http://localhost:5984/_utils/
 
 ## Documentation
 
@@ -111,7 +111,7 @@ Documentation server command is:
 mkdocs serve
 ```
 
-Documentation address: http://127.0.0.1:8000/
+Documentation address: http://localhost:8000/
 
 ### Build
 
