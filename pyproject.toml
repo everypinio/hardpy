@@ -42,7 +42,6 @@
         dev = [
             "wemake-python-styleguide", #
             "mypy",                     #
-
             "black",                    #
         ]
         build = [
