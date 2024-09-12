@@ -269,16 +269,21 @@ class HardpyPlugin(object):
                 return RunStatus.FAILED
             case ExitCode.INTERRUPTED:
                 reporter = RunnerReporter()
-                for module_id, results in self._results.items():
-                    self._log.error(f"YYYYYYYYYYYYYYYYYYY")
-                    for case_id, status in results.items():
-                        self._log.error(f"OOOOOOOOOOOOOOOOO.")
-                        key = reporter.generate_key(
-                            DF.MODULES, module_id, DF.CASES, case_id, DF.STATUS
-                        )
+                for module_id, module_data in self._results.items():
+                    self._log.info(self._results.items())
+                    if module_data[DF.MODULE_STATUS] == TestStatus.READY:
+                        key = reporter.generate_key(DF.MODULES, module_id, DF.STATUS)
                         reporter.set_doc_value(key, TestStatus.STOPPED)
-                self._reporter.update_db_by_doc()
-                self._log.error(f"AAAAAAAAAAAAAAAAAAAAAAa.")
+                        self._reporter.update_db_by_doc()
+                    if module_data[DF.MODULE_STATUS] == TestStatus.READY:
+                        for case, value in module_data.items():
+                            if case != DF.MODULE_STATUS and value is None:
+                                key = reporter.generate_key(
+                                    DF.MODULES, module_id, DF.CASES, case, DF.STATUS
+                                )
+                                reporter.set_doc_value(key, TestStatus.STOPPED)
+                                self._reporter.update_db_by_doc()
+                                return RunStatus.STOPPED
                 return RunStatus.STOPPED
             case _:
                 return RunStatus.ERROR
