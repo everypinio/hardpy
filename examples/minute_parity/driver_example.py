@@ -2,7 +2,7 @@ import datetime
 from logging import getLogger
 
 
-class DriverExample(object):
+class DriverExample:
     """Driver example."""
 
     def __init__(self):

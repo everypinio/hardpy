@@ -3,16 +3,31 @@
 
 import os
 import re
+from enum import Enum
 from urllib.parse import unquote
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from hardpy.pytest_hardpy.utils import ConfigData, RunStatus as Status
+from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
 
 app = FastAPI()
 app.state.pytest_wrp = PyTestWrapper()
+
+
+class Status(str, Enum):  # noqa: WPS600
+    """Pytest run status.
+
+    Statuses, that can be returned by HardPy to frontend.
+    """
+
+    STOPPED = "stopped"
+    STARTED = "started"
+    COLLECTED = "collected"
+    BUSY = "busy"
+    READY = "ready"
+    ERROR = "error"
 
 
 @app.get("/api/start")
@@ -57,12 +72,12 @@ def couch_connection():
     """Get couchdb connection string.
 
     Returns:
-        dict[str, str, str]: couchdb connection string
+        dict[str, str]: couchdb connection string
     """
-    config_data = ConfigData()
+    connection_url = ConfigManager().get_config().database.connection_url()
 
     return {
-        "connection_str": config_data.connection_string,
+        "connection_str": connection_url,
     }
 
 
@@ -79,12 +94,12 @@ def confirm_dialog_box(dialog_box_output: str):
     hex_base = 16
     unquoted_string = unquote(dialog_box_output)
     decoded_string = re.sub(
-        r"%([0-9a-fA-F]{2})",
+        "%([0-9a-fA-F]{2})",
         lambda match: chr(int(match.group(1), hex_base)),
         unquoted_string,
     )
 
-    if app.state.pytest_wrp.send_data(decoded_string):
+    if app.state.pytest_wrp.send_data(str(decoded_string)):
         return {"status": Status.BUSY}
     return {"status": Status.ERROR}
 
@@ -106,6 +121,9 @@ def confirm_operator_msg(is_msg_visible: bool):
 
 app.mount(
     "/",
-    StaticFiles(directory=(os.path.dirname(__file__)) + "/frontend/dist", html=True),
+    StaticFiles(
+        directory=(os.path.dirname(__file__)) + "/frontend/dist",  # noqa: WPS336
+        html=True,
+    ),
     name="static",
 )

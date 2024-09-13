@@ -161,7 +161,8 @@ def test_driver_info():
 #### set_message
 
 Writes a string with a message.
-If a message is sent without a key, the key will be generated automatically and the messages will be appended.
+If a message is sent without a key, the key will be generated 
+automatically and the messages will be appended.
 If the message is sent with a known key, it will be updated.
 
 **Arguments:**
@@ -176,6 +177,27 @@ def test_message():
     set_message("Test message")
     set_message("Update message 1", "msg_upd")
     set_message("Update message 2", "msg_upd")
+```
+
+#### set_operator_message
+
+Sets an operator message in the **statestore** database and updates the database.
+The function should be used to handle events outside of testing. 
+For messages to the operator during testing, 
+there is the function [run_dialog_box](#run_dialog_box).
+
+**Arguments:**
+
+- `msg (str)`: The message to be displayed.
+- `title (str | None)`: The optional title for the message.
+
+**Example:**
+
+```python
+from hardpy import set_operator_message
+
+def test_set_operator_msg():
+    set_operator_message(msg="This is a sample operator message.", title="Important Notice")
 ```
 
 #### run_dialog_box
@@ -251,26 +273,6 @@ Returns the current report from the database **runstore**.
 ```python
 def test_current_report():
     report = get_current_report()
-```
-
-#### set_operator_msg
-
-Sets an operator message in the **statestore** database and updates the database.
-The function should be used to handle events outside of testing. 
-For messages to the operator during testing, there is the function [run_dialog_box](#run_dialog_box).
-
-**Arguments:**
-
-- `msg (str)`: The message to be displayed.
-- `title (str | None)`: The optional title for the message.
-
-**Example:**
-
-```python
-from hardpy import set_operator_msg
-
-def test_set_operator_msg():
-    set_operator_msg(msg="This is a sample operator message.", title="Important Notice")
 ```
 
 ## Class
@@ -350,6 +352,7 @@ pytestmark = pytest.mark.module_name("Module 1")
 #### dependency
 
 Skips the test case/module if the main test fails/skipped/errored.
+For more information, see the example [skip test](./../examples/skip_test.md)
 
 **Example:**
 
@@ -367,7 +370,7 @@ def test_two():
 
 **pytest-hardpy** has several options to run:
 
-#### hardpy_pt
+#### hardpy-pt
 
 Option to enable the **pytest-hardpy** plugin.
 
@@ -375,56 +378,29 @@ Option to enable the **pytest-hardpy** plugin.
 --hardpy-pt
 ```
 
-#### db_user
+#### hardpy-db-url
 
-The CouchDB instance user name for the **statestore** and **runstore** databases.
-The default is *dev*.
-
-```bash
---hardpy-dbu DB_USER
-```
-
-#### db_pswd
-
-The CouchDB instance password for the **statestore** and **runstore** databases.
-The default is *dev*.
+The CouchDB instance url for the **statestore** and **runstore** databases.
+The default is `http://dev:dev@localhost:5984/`.
 
 ```bash
---hardpy-dbpw DB_PSWD
+--hardpy-db-url
 ```
 
-#### db_port
-
-The CouchDB instance port number for the **statestore** and **runstore** databases.
-The default is *5984*.
-
-```bash
---hardpy-dbp DB_PORT
-```
-
-#### db_host
-
-The CouchDB instance hostname for the **statestore** and **runstore** databases.
-The default is *localhost*.
-
-```bash
---hardpy-dbh DB_HOST
-```
-
-#### socket_port
+#### hardpy-sp
 
 Internal socket port for passing backend data (such as a dialog box) to running pytest tests.
 The default is *6525*.
 
 ```bash
---hardpy-sp SOCKET_PORT
+--hardpy-sp
 ```
 
-#### socket_addr
+#### hardpy-sh
 
-Internal socket address for passing backend data (such as a dialog box) to running pytest tests.
+Internal socket host for passing backend data (such as a dialog box) to running pytest tests.
 The default is *localhost*.
 
 ```bash
---hardpy-sa SOCKET_ADDR
+--hardpy-sh
 ```

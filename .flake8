@@ -60,6 +60,7 @@ per-file-ignores =
     WPS235,
     # Found too long name
     WPS118,
+    F401,
   examples/*:
     D100,
     D101,
@@ -82,13 +83,28 @@ per-file-ignores =
     # Allow magic numbers
     WPS432,
     # Allow missing docstring in public module
-    D100
+    D100,
+  plugin.py:
+    DAR101,
+    D103,
+    WPS235,
   schema.py:
     E501,
     RST203,
-  examples/*:
-    # Allow assert in examples
-    S101
+  cli.py:
+    WPS121,
+    WPS221,
+    WPS237,
+    WPS404,
+    WPS421,
+    WPS425,
+    B008,
+  template.py:
+    D102,
+    WPS114,
+    P103,
+    WPS323,
+    E501,
 
 max-returns = 8
 max-arguments = 5

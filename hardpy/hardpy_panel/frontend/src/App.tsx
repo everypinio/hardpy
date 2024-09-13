@@ -73,7 +73,7 @@ function App(): JSX.Element {
             } else if (isAuthenticated === false) {
               setIsAuthenticated(true);
             }
-          }, [state, isAuthenticated]);
+          }, [state]);
 
           if (loading && rows.length === 0) {
             return  <Card style={{marginTop: '60px'}}>

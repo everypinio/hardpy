@@ -5,7 +5,10 @@ from enum import Enum
 
 
 class TestStatus(str, Enum):  # noqa: WPS600
-    """Pytest test status."""
+    """Pytest test status.
+
+    Statuses, that can be returned by Pytest.
+    """
 
     PASSED = "passed"
     FAILED = "failed"
@@ -14,16 +17,3 @@ class TestStatus(str, Enum):  # noqa: WPS600
     RUN = "run"
     READY = "ready"
     STOPPED = "stopped"
-
-
-class RunStatus(str, Enum):  # noqa: WPS600
-    """Pytest run status."""
-
-    PASSED = "passed"
-    FAILED = "failed"
-    STOPPED = "stopped"
-    STARTED = "started"
-    COLLECTED = "collected"
-    BUSY = "busy"
-    READY = "ready"
-    ERROR = "error"
