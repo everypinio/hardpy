@@ -205,7 +205,11 @@ class HardpyPlugin(object):
         module_id = Path(report.fspath).stem
         case_id = report.nodeid.rpartition("::")[2]
 
-        self._reporter.set_case_status(module_id, case_id, TestStatus(report.outcome))
+        self._reporter.set_case_status(
+            module_id,
+            case_id,
+            TestStatus(report.outcome),
+        )
         self._reporter.set_case_stop_time(
             module_id,
             case_id,
