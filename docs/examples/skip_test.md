@@ -5,20 +5,10 @@ on another test and skipping tests.
 
 ### how to start
 
-1. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
-2. Create a directory `<dir_name>` with the files described below.
-3. Specify the dependency in the file `pyproject.toml`
-4. Launch `hardpy-panel <dir_name>`.
-
-### pytest.ini
-
-Enable the pytest-hardpy plugin.
-
-```ini
-# pytest.ini
-[pytest]
-addopts = --hardpy-pt
-```
+1. Launch `hardpy init skip_test`
+2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
+3. Modify the files described below.
+4. Launch `hardpy run skip_test`.
 
 ### description
 

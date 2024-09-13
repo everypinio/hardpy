@@ -1,16 +1,16 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-import sys
 import signal
-import subprocess
-from socket import socket
+import subprocess  # noqa: S404
+import sys
 from platform import system
+from socket import socket
 
-from hardpy.pytest_hardpy.utils.config_data import ConfigData
+from hardpy.common.config import ConfigManager
 
 
-class PyTestWrapper(object):
+class PyTestWrapper:
     """Wrapper for pytest subprocess."""
 
     def __init__(self):
@@ -19,13 +19,14 @@ class PyTestWrapper(object):
 
         # Make sure test structure is stored in DB
         # before clients come in
-        self.config = ConfigData()
+        self.config = ConfigManager().get_config()
         self.collect()
 
-    def start(self):
+    def start(self) -> bool:
         """Start pytest subprocess.
 
-        Returns True if pytest was started.
+        Returns:
+            bool: True if pytest was started
         """
         if self.python_executable is None:
             return False
@@ -39,21 +40,15 @@ class PyTestWrapper(object):
                     self.python_executable,
                     "-m",
                     "pytest",
-                    "--hardpy-dbp",
-                    str(self.config.db_port),
-                    "--hardpy-dbh",
-                    self.config.db_host,
-                    "--hardpy-dbu",
-                    self.config.db_user,
-                    "--hardpy-dbpw",
-                    self.config.db_pswd,
+                    "--hardpy-db-url",
+                    self.config.database.connection_url(),
                     "--hardpy-sp",
-                    str(self.config.socket_port),
-                    "--hardpy-sa",
-                    self.config.socket_addr,
+                    str(self.config.socket.port),
+                    "--hardpy-sh",
+                    self.config.socket.host,
                     "--hardpy-pt",
                 ],
-                cwd=self.config.tests_dir.absolute(),
+                cwd=ConfigManager().get_tests_path(),
             )
         elif system() == "Windows":
             self._proc = subprocess.Popen(  # noqa: S603
@@ -61,21 +56,15 @@ class PyTestWrapper(object):
                     self.python_executable,
                     "-m",
                     "pytest",
-                    "--hardpy-dbp",
-                    str(self.config.db_port),
-                    "--hardpy-dbh",
-                    self.config.db_host,
-                    "--hardpy-dbu",
-                    self.config.db_user,
-                    "--hardpy-dbpw",
-                    self.config.db_pswd,
+                    "--hardpy-db-url",
+                    self.config.database.connection_url(),
                     "--hardpy-sp",
-                    str(self.config.socket_port),
-                    "--hardpy-sa",
-                    self.config.socket_addr,
+                    str(self.config.socket.port),
+                    "--hardpy-sh",
+                    self.config.socket.host,
                     "--hardpy-pt",
                 ],
-                cwd=self.config.tests_dir.absolute(),
+                cwd=ConfigManager().get_tests_path(),
                 creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
             )
 
@@ -84,7 +73,8 @@ class PyTestWrapper(object):
     def stop(self) -> bool:
         """Stop pytest subprocess.
 
-        Returns True if pytest was running and stopped.
+        Returns:
+            bool: True if pytest was running and stopped
         """
         if self.is_running() and self._proc:
             if system() == "Linux":
@@ -97,7 +87,8 @@ class PyTestWrapper(object):
     def collect(self) -> bool:
         """Perform pytest collection.
 
-        Returns True if collection was started.
+        Returns:
+            bool: True if collection was started
         """
         if self.python_executable is None:
             return False
@@ -110,40 +101,41 @@ class PyTestWrapper(object):
                 self.python_executable,
                 "-m" "pytest",
                 "--collect-only",
-                "--hardpy-dbp",
-                str(self.config.db_port),
-                "--hardpy-dbh",
-                self.config.db_host,
-                "--hardpy-dbu",
-                self.config.db_user,
-                "--hardpy-dbpw",
-                self.config.db_pswd,
+                "--hardpy-db-url",
+                self.config.database.connection_url(),
+                "--hardpy-sp",
+                str(self.config.socket.port),
+                "--hardpy-sh",
+                self.config.socket.host,
                 "--hardpy-pt",
             ],
-            cwd=self.config.tests_dir.absolute(),
+            cwd=ConfigManager().get_tests_path(),
         )
         return True
 
-    def send_data(self, data):
+    def send_data(self, data: str):
         """Send data to pytest subprocess.
 
         Args:
-            data (str): Data to be sent. Can be dialog box output or operator message visibility.
+            data (str): Data to be sent. Can be dialog
+                        box output or operator message visibility.
 
         Returns:
             bool: True if dialog box was confirmed/closed, else False
         """
-        config_data = ConfigData()
-
         try:
             client = socket()
-            client.connect((config_data.socket_addr, config_data.socket_port))
-            client.sendall(str(data).encode("utf-8"))
+            client.connect((self.config.socket.host, self.config.socket.port))
+            client.sendall(data.encode("utf-8"))
             client.close()
         except Exception:
             return False
         return True
 
     def is_running(self) -> bool | None:
-        """Check if pytest is running."""
+        """Check if pytest is running.
+
+        Returns:
+            bool | None: True if self._proc is not None
+        """
         return self._proc and self._proc.poll() is None

@@ -16,43 +16,15 @@ The CouchDB version must be equal to or greater than the 3.2 version.
 This section explains how to launch and manage a CouchDB instance.
 After launching the database, it becomes available at the following address:
 
-> http://127.0.0.1:5984/_utils/
+> http://localhost:5984/_utils/
 
 The internal settings of the database are contained in the **couchDB.ini** configuration file.
 It contains settings that define the behavior and operating parameters of the database.
-The username is set via the `COUCHDB_USER`variable, the password via `COUCHDB_PASSWORD`, and the port number via the `ports` section.
-
-### Running CouchDB with Docker
-
-1. Create `couchdb.ini` file.
-
-```ini
-[chttpd]
-enable_cors=true
-
-[cors]
-origins = *
-methods = GET, PUT, POST, HEAD, DELETE
-credentials = true
-headers = accept, authorization, content-type, origin, referer, x-csrf-token
-```
-2. The Docker version must be 24.0.0 or higher. Run the Docker container (from the folder with the couchdb.ini file):
-
-```bash
-docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3
-```
-
-Command for Windows:
-
-```bash
-docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v .\couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3.2
-```
-
-The container will be deleted after use.
 
 ### Running CouchDB with Docker Compose
 
-An example configuration for running CouchDB via Docker Compose is located in the `example/database/couchdb` folder.
+An example configuration for running CouchDB via Docker Compose is located in
+the `example/database/couchdb` folder.
 A shortened version of the instructions is described below.
 
 1. Create a `docker` directory in the project's root directory.
@@ -96,21 +68,53 @@ docker compose up
 docker compose down
 ```
 
+### Running CouchDB with Docker
+
+1. Create `couchdb.ini` file.
+
+```ini
+[chttpd]
+enable_cors=true
+
+[cors]
+origins = *
+methods = GET, PUT, POST, HEAD, DELETE
+credentials = true
+headers = accept, authorization, content-type, origin, referer, x-csrf-token
+```
+2. The Docker version must be 24.0.0 or higher. Run the Docker container (from the folder with the couchdb.ini file):
+
+```bash
+docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3
+```
+
+Command for Windows:
+
+```bash
+docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v .\couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3.2
+```
+
+The container will be deleted after use.
+
 ### Running CouchDB with binary packages in Linux
 
 1. Use this [instruction](https://docs.couchdb.org/en/stable/install/unix.html#installation-using-the-apache-couchdb-convenience-binary-packages) to install CouchDB
-2. The installer asks you if you want to install CouchDB as a standalone application or in a clustered configuration.
+2. The installer asks you if you want to install CouchDB as a standalone
+application or in a clustered configuration.
 Select `Standalone` and press Enter.
 3. You are prompted to enter the Erlang Node Name.
 You can ask it in Terminal with the command `hostname -f`
 4. Set the Erlang Magic Cookie.
 This is a unique identifier, for example, `test1234`
 5. Configure the network interfaces on which CouchDB will be bound.
-`127.0.0.1` is fine.
-6. Enter an admin password of your choice for CouchDB, press `Enter`, re-type the password and press `Enter` again to continue the installation.
-7. After launching the database, it becomes available at the following address http://127.0.0.1:5984/_utils/.
+`localhost` is fine.
+6. Enter an admin password of your choice for CouchDB, press `Enter`, re-type the password
+and press `Enter` again to continue the installation.
+7. After launching the database, it becomes available at the following
+address http://localhost:5984/_utils/.
 Open it.
-8. First of all, in the `User Management` section in the `Create Admins` tab, create a user with the login `dev` and password `dev`
+8. First of all, in the `User Management` section in the `Create Admins` tab,
+create a user with the login `dev` and password `dev`
 9. In the `Config` choose `CORS` and appoint `Enable CORS` with `All domains`
 
 #### To disable the CouchDB service:
@@ -142,7 +146,7 @@ systemctl reset-failed
 2. Be sure to install CouchDB to a path with no spaces, such as `C:\CouchDB`.
 3. Create a user with the login `dev` and password `dev` during the installation steps. Validate Credentials.
 4. Generate Random Cookie.
-5. After launching the database, it becomes available at the following address http://127.0.0.1:5984/_utils/.
+5. After launching the database, it becomes available at the following address http://localhost:5984/_utils/.
 Open it.
 6. In the `Config` choose `CORS` and appoint `Enable CORS` with `All domains`
 
@@ -153,9 +157,11 @@ Open it.
 
 The pytest plugin has 2 databases: **statestore** and **runstore**.
 
-- The **statestore** database contains the document **current**, which is a JSON object that stores the current state of the test run without artifacts.
+- The **statestore** database contains the document **current**, which is a JSON
+object that stores the current state of the test run without artifacts.
 The plugin updates the document as testing progresses using the **StateStore** class.
-- The **runstore** database contains the document **current**, which is a JSON object that stores the current state of the test run with artifacts - a report on the current test run.
+- The **runstore** database contains the document **current**, which is a JSON object
+that stores the current state of the test run with artifacts - a report on the current test run.
 - The plugin updates the document as testing progresses using the **RunStore** class.
 
 A separate database is required to store the list of reports.
@@ -197,7 +203,7 @@ The **current** document of the **statestore** database contains the following f
 - **status**: test execution status;
 - **name**: test suite name;
 - **dut**: DUT information containing the serial number and additional information;
-- **test_stand**: information about the test stand in the form of a dictionary.;
+- **test_stand**: information about the test stand in the form of a dictionary;
 - **modules**: module information;
 - **drivers**: information about drivers in the form of a dictionary.
 - **operator_msg**: operator message.

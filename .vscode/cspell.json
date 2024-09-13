@@ -1,0 +1,28 @@
+{
+    "dictionaryDefinitions": [
+        {
+            "name": "hardpy-terms",
+            "path": ".dictionaries/terms.txt",
+            "addWords": true
+        }
+    ],
+    "dictionaries": [
+        "hardpy-terms"
+    ],
+    "language": "en",
+    "words": [
+        "HardPy",
+        "Hardpy",
+        "hardpy",
+        "pydantic",
+        "rtoml",
+        "pytest",
+        "Everypin",
+        "fastapi",
+        "Typer",
+        "typer",
+        "uvicorn",
+        "pytestmark",
+        "autouse"
+    ]
+}

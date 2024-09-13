@@ -3,12 +3,12 @@
 
 from pycouchdb import Server as DbServer
 
-from hardpy.pytest_hardpy.utils import ConfigData
+from hardpy.pytest_hardpy.utils import ConnectionData
 
 
-class BaseServer(object):
+class BaseServer:
     """Base class for CouchDB server."""
 
     def __init__(self):
-        config = ConfigData()
-        self._db_srv = DbServer(config.connection_string)
+        con_data = ConnectionData()
+        self._db_srv = DbServer(con_data.database_url)

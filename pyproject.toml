@@ -29,7 +29,9 @@
         "glom>=23.3.0",
         "pydantic>=2.4.0",
         "natsort>=8.4.0",
-        "pytest>7, <9",
+        "pytest>=7, <9",
+        "typer>=0.12,<1.0",
+        "rtoml~=0.11.0",
 
         # Frontend
         "fastapi>=0.100.1",
@@ -53,8 +55,8 @@
         Changelog = "https://everypinio.github.io/hardpy/changelog/"
 
     [project.scripts]
-        # Provide `hardpy-panel` executable
-        hardpy-panel = "hardpy.hardpy_panel.runner:run"
+        # Provide `hardpy` executable
+        hardpy = "hardpy.cli.cli:cli"
 
     [project.entry-points.pytest11]
         pytest_hardpy = "hardpy.pytest_hardpy.plugin"
