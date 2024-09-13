@@ -20,12 +20,19 @@
             "console": "integratedTerminal"
         },
         {
+            "name": "HardPy: Build",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "build",
+            "console": "integratedTerminal",
+        },
+        {
             "name": "HardPy: Init template",
             "type": "debugpy",
             "request": "launch",
             "module": "hardpy.cli.cli",
             "console": "integratedTerminal",
-            "args": ["init", "template"]
+
         },
         {
             "name": "HardPy: Run template",
