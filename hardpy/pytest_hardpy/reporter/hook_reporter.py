@@ -9,7 +9,7 @@ from natsort import natsorted
 
 from hardpy.pytest_hardpy.db import DatabaseField as DF
 from hardpy.pytest_hardpy.reporter.base import BaseReporter
-from hardpy.pytest_hardpy.utils import TestStatus, RunStatus, NodeInfo
+from hardpy.pytest_hardpy.utils import TestStatus, NodeInfo
 
 
 class HookReporter(BaseReporter):
@@ -44,7 +44,7 @@ class HookReporter(BaseReporter):
         self.set_doc_value(DF.TIMEZONE, tzname)  # noqa: WPS432
         self.set_doc_value(DF.PROGRESS, 0)
 
-    def finish(self, status: RunStatus):
+    def finish(self, status: TestStatus):
         """Finish test.
 
         This method must be called at the end of test run.

@@ -6,7 +6,7 @@ from logging import getLogger
 from hardpy.pytest_hardpy.db import StateStore, RunStore
 
 
-class BaseReporter(object):
+class BaseReporter:
     """Base class for test reporter."""
 
     def __init__(self):

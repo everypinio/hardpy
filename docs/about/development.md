@@ -5,7 +5,7 @@
 ### Requirements
 
 * **python** version must be equal to or greater than  **3.10**;
-* **yarn** version must be equal to or greater than **3.4.1**;
+* **yarn** version must be equal to 4.0.1;
 * **node.js** version must be equal to or greater than **16.10.0**;
 * **CouchDB** version must be equal to or greater than **3.2.0**;
 
@@ -99,7 +99,7 @@ python -m build
 Addresses:
 
 - HardPy panel: http://localhost:8000/
-- Fauxton CouchDB: http://127.0.0.1:5984/_utils/
+- CouchDB: http://localhost:5984/_utils/
 
 ## Documentation
 
@@ -111,7 +111,7 @@ Documentation server command is:
 mkdocs serve
 ```
 
-Documentation address: http://127.0.0.1:8000/
+Documentation address: http://localhost:8000/
 
 ### Build
 

@@ -4,7 +4,7 @@
 from logging import getLogger
 
 
-class ProgressCalculator(object):
+class ProgressCalculator:
     """Test run progress calculator."""
 
     def __init__(self):

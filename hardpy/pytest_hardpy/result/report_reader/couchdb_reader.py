@@ -15,7 +15,7 @@ from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig
 
 
 @dataclass
-class ReportInfo(object):
+class ReportInfo:
     """CouchDB report info."""
 
     name: str
@@ -26,7 +26,7 @@ class ReportInfo(object):
     first_failed_test_id: Optional[str]
 
 
-class CouchdbReader(object):
+class CouchdbReader:
     """CouchDB report info reader."""
 
     def __init__(self, config: CouchdbConfig):

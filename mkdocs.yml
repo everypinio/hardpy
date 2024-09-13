@@ -47,6 +47,8 @@ nav:
   - Features: features/features.md
   - Documentation:
       - Structure: documentation/structure.md
+      - CLI: documentation/cli.md
+      - Configuration: documentation/hardpy_config.md
       - Database: documentation/database.md
       - Pytest-hardpy: documentation/pytest_hardpy.md
       - HardPy panel: documentation/hardpy_panel.md
@@ -58,7 +60,7 @@ nav:
       - Multiple stands: examples/multiple_stands.md
       - Skip test: examples/skip_test.md
       - CouchDB in RAM: examples/db_in_ram.md
-      - Operator Message: examples/operator_msg.md
+      - Operator message: examples/operator_msg.md
   - About:
       - Development: about/development.md
   - Changelog: changelog.md

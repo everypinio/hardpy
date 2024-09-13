@@ -19,7 +19,7 @@ class TestDependencyInfo(NamedTuple):
     case_id: str | None
 
 
-class NodeInfo(object):
+class NodeInfo:
     """Test node info."""
 
     def __init__(self, item: Item):

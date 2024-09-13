@@ -16,16 +16,16 @@ from hardpy.pytest_hardpy.db import (
     RunStore,
 )
 from hardpy.pytest_hardpy.utils import (
+    ConnectionData,
     DuplicateSerialNumberError,
     DuplicateDialogBoxError,
     DialogBox,
-    ConfigData,
 )
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 
 
 @dataclass
-class CurrentTestInfo(object):
+class CurrentTestInfo:
     """Current test info."""
 
     module_id: str
@@ -261,7 +261,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
 
-def set_operator_msg(msg: str, title: str | None = None) -> None:
+def set_operator_message(msg: str, title: str | None = None) -> None:
     """Set operator message.
 
     The function should be used to handle events outside of testing.
@@ -311,9 +311,10 @@ def _get_socket_raw_data() -> str:
     # create socket connection
     server = socket.socket()
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    config_data = ConfigData()
+    con_data = ConnectionData()
+
     try:
-        server.bind((config_data.socket_addr, config_data.socket_port))
+        server.bind((con_data.socket_host, con_data.socket_port))
     except socket.error as exc:
         raise RuntimeError(f"Error creating socket: {exc}")
     server.listen(1)
