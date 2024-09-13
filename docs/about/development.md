@@ -99,7 +99,7 @@ python -m build
 Addresses:
 
 - HardPy panel: http://localhost:8000/
-- Fauxton CouchDB: http://localhost:5984/_utils/
+- CouchDB: http://localhost:5984/_utils/
 
 ## Documentation
 
