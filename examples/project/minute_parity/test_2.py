@@ -1,4 +1,3 @@
-from time import sleep
 import pytest
 import hardpy
 
@@ -18,6 +17,5 @@ def test_minute_parity(driver_example: DriverExample):
     data = {
         "minute": minute,
     }
-    sleep(10)
     hardpy.set_case_artifact(data)
     assert result == 0, f"The test failed because {minute} is odd! Try again!"
