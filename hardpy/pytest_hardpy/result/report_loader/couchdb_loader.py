@@ -4,8 +4,8 @@
 from logging import getLogger
 
 from pycouchdb import Server as DbServer
-from pycouchdb.exceptions import Conflict
 from pycouchdb.client import Database
+from pycouchdb.exceptions import Conflict
 
 from hardpy.pytest_hardpy.db.schema import ResultRunStore
 from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig

@@ -1,0 +1,51 @@
+line-length  = 88
+indent-width = 4
+
+[lint]
+    select = ["ALL"]
+    exclude = [
+        ".git",
+        "__pycache__",
+        ".venv",
+        "env",
+        "dist",
+        "build",
+        "docs",
+        "benchmarks",
+    ]
+    ignore = [
+        "ANN101", # Missing type annotation for `self` in method
+        "ANN102", # Missing type annotation for `cls` in classmethod
+        "D100",   # Missing docstring in public module
+        "D101",   # Missing docstring in public class
+        "D105",   # Missing docstring in magic method
+        "D107",   # Missing docstring in `__init__`
+        "FIX002", # Allow TODO
+        "TD003",  # Allow TODO withot task link
+    ]
+
+    [lint.isort]
+        combine-as-imports = true
+        case-sensitive     = true
+        force-to-top       = ["src"]
+
+    [lint.mccabe]
+        max-complexity = 12
+
+    [lint.pydocstyle]
+        convention = "google"
+
+    [lint.pylint]
+        max-returns        = 8
+        max-locals         = 10
+        max-public-methods = 20
+
+    [lint.per-file-ignores]
+        "**/__init__.py" = [
+            "F401", # unused imports
+        ]
+        "tests/*.py" = [
+            "D104", # Missing docstring in public package
+            "D103", # Missing docstring in public function
+            "S101", # use of `assert` detected
+        ]
