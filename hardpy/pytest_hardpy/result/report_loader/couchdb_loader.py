@@ -42,8 +42,9 @@ class CouchdbLoader:
 
     def _init_db(self) -> Database:
         try:
-            return self._db_srv.create(self._config.db_name)
+            return self._db_srv.create(self._config.db_name)  # type: ignore
         except Conflict:
+            # database is already created
             return self._db_srv.database(self._config.db_name)
 
     def _get_report_id(self, report: ResultRunStore) -> str:
