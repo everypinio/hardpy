@@ -49,13 +49,15 @@ docker compose up -d
 ```bash
 hardpy run
 ```
-4. View operator panel in browser http://localhost:8000/
+4. View operator panel in browser: http://localhost:8000/
   <h1 align="center">
       <img src="https://everypinio.github.io/hardpy/img/hardpy_operator_panel_hello_hardpy.png"
       alt="hardpy operator panel" style="width:600px;">
   </h1>
-5. View the latest test report http://localhost:5984/_utils
-Login and password: **dev**, database - **runstore** , document - **current**.
+5. View the latest test report: http://localhost:5984/_utils
+
+    Login and password: **dev**, database - **runstore** , document - **current**.
+
   <h1 align="center">
       <img src="https://everypinio.github.io/hardpy/img/runstore_hello_hardpy.png"
       alt="hardpy runstore" style="width:500px;">
