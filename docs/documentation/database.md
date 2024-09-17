@@ -170,6 +170,14 @@ It can be launched in the same instance as the **statestore**, **runstore** data
 The database is accessed through the **CouchdbLoader** class, which can be called at the end of each launch.
 To read the current report, use the `get_current_report()` function.
 
+**report** names are automatically generated based on the test completion date and the device serial number. 
+If the serial number is missing, a random identifier is used. 
+This allows for easy identification and sorting of reports.
+
+#### Examples
+Valid report name: `report_1726496218_1234567890`
+Valid report name (no serial number): `report_1726496218_no_serial_808007`
+
 Sample code for saving a report at the end of testing:
 
 ```python

@@ -9,6 +9,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 * Fix using special characters in dialog boxes. ASCII symbols are passed from frontend to backend.
 * Add unit tests for dialog widgets.
 * Fix progress bar with skipping tests. Progress bar fills to the end when tests are skipped.
+* Fix report name generation when serial number is missing.
 
 ## HardPy 0.5.0
 
