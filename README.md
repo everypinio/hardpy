@@ -57,7 +57,8 @@ hardpy run
   </h1>
 
 5. View the latest test report: http://localhost:5984/_utils
-  Login and password: **dev**, database - **runstore** , document - **current**.
+
+Login and password: **dev**, database - **runstore** , document - **current**.
 
   <h1 align="center">
       <img src="https://everypinio.github.io/hardpy/img/runstore_hello_hardpy.png"
