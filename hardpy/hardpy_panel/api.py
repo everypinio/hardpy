@@ -1,5 +1,6 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import annotations
 
 import os
 import re
@@ -31,7 +32,7 @@ class Status(str, Enum):
 
 
 @app.get("/api/start")
-def start_pytest():  # noqa: ANN201
+def start_pytest() -> dict[str, Status]:
     """Start pytest subprocess.
 
     Returns:
@@ -43,7 +44,7 @@ def start_pytest():  # noqa: ANN201
 
 
 @app.get("/api/stop")
-def stop_pytest():  # noqa: ANN201
+def stop_pytest() -> dict[str, Status]:
     """Stop pytest subprocess.
 
     Returns:
@@ -55,7 +56,7 @@ def stop_pytest():  # noqa: ANN201
 
 
 @app.get("/api/collect")
-def collect_pytest():  # noqa: ANN201
+def collect_pytest() -> dict[str, Status]:
     """Collect pytest subprocess.
 
     Returns:
@@ -68,7 +69,7 @@ def collect_pytest():  # noqa: ANN201
 
 
 @app.get("/api/couch")
-def couch_connection():  # noqa: ANN201
+def couch_connection() -> dict[str, str]:
     """Get couchdb connection string.
 
     Returns:
@@ -82,7 +83,7 @@ def couch_connection():  # noqa: ANN201
 
 
 @app.post("/api/confirm_dialog_box/{dialog_box_output}")
-def confirm_dialog_box(dialog_box_output: str):  # noqa: ANN201
+def confirm_dialog_box(dialog_box_output: str) -> dict[str, str]:
     """Confirm dialog box.
 
     Args:
@@ -105,7 +106,7 @@ def confirm_dialog_box(dialog_box_output: str):  # noqa: ANN201
 
 
 @app.post("/api/confirm_operator_msg/{is_msg_visible}")
-def confirm_operator_msg(is_msg_visible: bool):  # noqa: ANN201, FBT001
+def confirm_operator_msg(is_msg_visible: bool) -> dict[str, str]:  # noqa:  FBT001
     """Confirm operator msg.
 
     Args:

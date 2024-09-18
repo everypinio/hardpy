@@ -1,7 +1,9 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import annotations
 
 from logging import getLogger
+from typing import Any
 
 from hardpy.pytest_hardpy.db import RunStore, StateStore
 
@@ -17,9 +19,9 @@ class BaseReporter:
     def set_doc_value(
         self,
         key: str,
-        value,  # noqa: ANN001
-        runstore_only=False,  # noqa: ANN001, FBT002
-        statestore_only=False,  # noqa: ANN001, FBT002
+        value: Any,  # noqa: ANN401
+        runstore_only: bool | None = False,  # noqa: FBT002
+        statestore_only: bool | None = False,  # noqa: FBT002
     ) -> None:
         """Set value to the document.
 

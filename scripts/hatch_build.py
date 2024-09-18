@@ -8,7 +8,7 @@ from hatchling.builders.hooks.plugin.interface import BuildHookInterface  # type
 class CustomHook(BuildHookInterface):
     """A custom build hook for nbconvert."""
 
-    def initialize(self, version, build_data) -> None:  # noqa: ANN001, ARG002
+    def initialize(self, version: str, build_data: dict) -> None:  # noqa: ARG002
         """Initialize the hook."""
         if self.target_name not in ["sdist"]:
             return

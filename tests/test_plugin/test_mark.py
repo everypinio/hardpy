@@ -1,4 +1,6 @@
-from pytest import Pytester
+from __future__ import annotations
+
+from pytest import Pytester  # noqa: PT013, TCH002
 
 mark_test_header = """
         import pytest
@@ -41,7 +43,7 @@ mark_test_header_with_empty_data = """
         """
 
 
-def test_module_name(pytester: Pytester, hardpy_opts):
+def test_module_name(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {mark_test_header}
@@ -51,13 +53,13 @@ def test_module_name(pytester: Pytester, hardpy_opts):
             report = get_current_report()
             read_module_name = report.modules[node.module_id].name
             assert module_name == read_module_name
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_case_name(pytester: Pytester, hardpy_opts):
+def test_case_name(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {mark_test_header}
@@ -67,13 +69,13 @@ def test_case_name(pytester: Pytester, hardpy_opts):
             report = get_current_report()
             name = report.modules[node.module_id].cases[node.case_id].name
             assert case_name == name
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_default_case_name(pytester: Pytester, hardpy_opts):
+def test_default_case_name(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {test_default_header}
@@ -82,13 +84,13 @@ def test_default_case_name(pytester: Pytester, hardpy_opts):
             report = get_current_report()
             name = report.modules[node.module_id].cases[node.case_id].name
             assert name == "test_check_default_case_name"
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_default_module_name(pytester: Pytester, hardpy_opts):
+def test_default_module_name(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {test_default_header}
@@ -97,13 +99,13 @@ def test_default_module_name(pytester: Pytester, hardpy_opts):
             report = get_current_report()
             read_module_name = report.modules[node.module_id].name
             assert read_module_name == "test_default_module_name"
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_incorrect_markers(pytester: Pytester, hardpy_opts):
+def test_incorrect_markers(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {mark_test_header_with_incorrect_data}
@@ -113,13 +115,13 @@ def test_incorrect_markers(pytester: Pytester, hardpy_opts):
             report = get_current_report()
             name = report.modules[node.module_id].cases[node.case_id].name
             assert case_name == name
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1)
 
 
-def test_empty_case_marker(pytester: Pytester, hardpy_opts):
+def test_empty_case_marker(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {mark_test_header_with_empty_data}
@@ -129,7 +131,7 @@ def test_empty_case_marker(pytester: Pytester, hardpy_opts):
             report = get_current_report()
             name = report.modules[node.module_id].cases[node.case_id].name
             assert case_name == name
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1)

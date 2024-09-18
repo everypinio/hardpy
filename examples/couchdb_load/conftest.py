@@ -7,7 +7,7 @@ from hardpy import (
 )
 
 
-def save_report_to_couchdb() -> None:  # noqa: D103
+def save_report_to_couchdb() -> None:
     report = get_current_report()
     if report:
         loader = CouchdbLoader(CouchdbConfig())
@@ -15,6 +15,6 @@ def save_report_to_couchdb() -> None:  # noqa: D103
 
 
 @pytest.fixture(scope="session", autouse=True)
-def fill_actions_after_test(post_run_functions: list):  # noqa: ANN201, D103
+def fill_actions_after_test(post_run_functions: list):
     post_run_functions.append(save_report_to_couchdb)
     yield  # noqa: PT022

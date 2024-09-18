@@ -290,7 +290,7 @@ class HookReporter(BaseReporter):
 
         return new_modules
 
-    def _get_module_name(self, node_info) -> str:  # noqa: ANN001
+    def _get_module_name(self, node_info: NodeInfo) -> str:
         """Get module name from markers or use default.
 
         Args:
@@ -301,7 +301,7 @@ class HookReporter(BaseReporter):
         """
         return node_info.module_name if node_info.module_name else node_info.module_id
 
-    def _get_case_name(self, node_info) -> str:  # noqa: ANN001
+    def _get_case_name(self, node_info: NodeInfo) -> str:
         """Get case name from markers or use default.
 
         Args:

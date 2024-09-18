@@ -1,19 +1,19 @@
 import logging
 
 import pytest
+from driver_example import DriverExample
 
 from hardpy import (
-    CouchdbLoader,
     CouchdbConfig,
+    CouchdbLoader,
     get_current_report,
 )
-from driver_example import DriverExample
 
 
 @pytest.fixture(scope="module")
-def module_log(request):
+def module_log(request: pytest.FixtureRequest):
     log_name = request.module.__name__
-    yield logging.getLogger(log_name)
+    yield logging.getLogger(log_name)  # noqa: PT022
 
 
 @pytest.fixture(scope="session")
@@ -33,4 +33,4 @@ def finish_executing():
 @pytest.fixture(scope="session", autouse=True)
 def fill_actions_after_test(post_run_functions: list):
     post_run_functions.append(finish_executing)
-    yield
+    yield  # noqa: PT022

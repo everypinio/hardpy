@@ -6,12 +6,12 @@ pytestmark = pytest.mark.module_name("Base dialog box")
 
 
 @pytest.mark.case_name("Empty test before")
-def test_before() -> None:  # noqa: D103
-    assert True  # noqa: S101
+def test_before():
+    assert True
 
 
 @pytest.mark.case_name("Base dialog box")
-def test_base_dialog_box() -> None:
+def test_base_dialog_box():
     dbx = DialogBox(
         title_bar="Operator check",
         dialog_text="Press the Confirm button",

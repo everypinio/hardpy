@@ -69,7 +69,11 @@ def pytest_addoption(parser: Parser) -> None:
 
 
 # Bootstrapping hooks
-def pytest_load_initial_conftests(early_config, parser, args) -> None:  # noqa: ANN001, ARG001, D103
+def pytest_load_initial_conftests(  # noqa: D103
+    early_config: Config,
+    parser: Parser,  # noqa: ARG001
+    args: Any,  # noqa: ANN401
+) -> None:
     if "--hardpy-pt" in args:
         plugin = HardpyPlugin()
         early_config.pluginmanager.register(plugin)
@@ -348,7 +352,7 @@ class HardpyPlugin:
             )
             skip(f"Test {node_info.module_id}::{node_info.case_id} is skipped")
 
-    def _is_dependency_failed(self, dependency) -> bool:  # noqa: ANN001
+    def _is_dependency_failed(self, dependency: TestDependencyInfo) -> bool:
         if isinstance(dependency, TestDependencyInfo):
             incorrect_status = {
                 TestStatus.FAILED,
@@ -364,7 +368,7 @@ class HardpyPlugin:
             )
         return False
 
-    def _add_dependency(self, node_info, nodes) -> None:  # noqa: ANN001
+    def _add_dependency(self, node_info: NodeInfo, nodes: dict) -> None:
         dependency = node_info.dependency
         if dependency is None or dependency == "":
             return

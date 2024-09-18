@@ -1,7 +1,5 @@
 from math import inf
 
-import pytest
-
 import hardpy
 from hardpy.pytest_hardpy.utils.dialog_box import BaseWidget
 
@@ -23,10 +21,10 @@ def test_num_input_widget():
     assert widget.convert_data("0") == 0
     assert widget.convert_data("1") == 1
     assert widget.convert_data("-1") == -1
-    assert widget.convert_data("0.1") == 0.1
+    assert widget.convert_data("0.1") == 0.1  # noqa: PLR2004
     assert widget.convert_data("-inf") == -inf
     assert widget.convert_data("inf") == inf
-    assert widget.convert_data("1e15") == 1e15
+    assert widget.convert_data("1e15") == 1e15  # noqa: PLR2004
 
 
 def test_radiobutton_widget():

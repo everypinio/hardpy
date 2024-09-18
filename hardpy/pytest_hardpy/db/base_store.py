@@ -36,7 +36,7 @@ class BaseStore(BaseConnector):
         """
         return glom(self._doc, key)
 
-    def update_doc(self, key: str, value) -> None:  # noqa: ANN001
+    def update_doc(self, key: str, value: Any) -> None:  # noqa: ANN401
         """Update document.
 
         HardPy collecting uses a simple key without dots.

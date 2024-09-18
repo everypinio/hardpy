@@ -1,13 +1,14 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+from __future__ import annotations
+
 import os
 import sys
 from pathlib import Path
-from typing import Optional
-from typing_extensions import Annotated
 
 import typer
+from typing_extensions import Annotated
 from uvicorn import run as uvicorn_run
 
 from hardpy.cli.template import TemplateGenerator
@@ -18,10 +19,10 @@ default_config = ConfigManager().get_config()
 
 
 @cli.command()
-def init(  # noqa: WPS211
-    tests_dir: Annotated[Optional[str], typer.Argument()] = None,
-    create_database: bool = typer.Option(
-        True,
+def init(  # noqa: PLR0913
+    tests_dir: Annotated[str | None, typer.Argument()] = None,
+    create_database: bool = typer.Option(  # noqa: FBT001
+        True,  # noqa: FBT003
         help="Create CouchDB database.",
     ),
     database_user: str = typer.Option(
@@ -56,7 +57,7 @@ def init(  # noqa: WPS211
         default_config.socket.port,
         help="Specify a socket port.",
     ),
-):
+) -> None:
     """Initialize HardPy tests directory.
 
     Args:
@@ -85,17 +86,17 @@ def init(  # noqa: WPS211
     )
     # create tests directory
     dir_path = Path(Path.cwd() / _tests_dir)
-    os.makedirs(dir_path, exist_ok=True)
+    os.makedirs(dir_path, exist_ok=True)  # noqa: PTH103
 
     if create_database:
         # create database directory
-        os.makedirs(dir_path / "database", exist_ok=True)
+        os.makedirs(dir_path / "database", exist_ok=True)  # noqa: PTH103
 
     # create hardpy.toml
     ConfigManager().create_config(dir_path)
     config = ConfigManager().read_config(dir_path)
     if not config:
-        print(f"hardpy.toml config by path {dir_path} not detected.")
+        print(f"hardpy.toml config by path {dir_path} not detected.")  # noqa: T201
         sys.exit()
 
     template = TemplateGenerator(config)
@@ -113,11 +114,11 @@ def init(  # noqa: WPS211
     for key, value in files.items():
         template.create_file(key, value)
 
-    print(f"HardPy project {dir_path.name} initialized successfully.")
+    print(f"HardPy project {dir_path.name} initialized successfully.")  # noqa: T201
 
 
 @cli.command()
-def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None):
+def run(tests_dir: Annotated[str | None, typer.Argument()] = None) -> None:
     """Run HardPy server.
 
     Args:
@@ -127,11 +128,11 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None):
     config = ConfigManager().read_config(dir_path)
 
     if not config:
-        print(f"Config at path {dir_path} not found.")
+        print(f"Config at path {dir_path} not found.")  # noqa: T201
         sys.exit()
 
-    print("\nLaunch the HardPy operator panel...")
-    print(f"http://{config.frontend.host}:{config.frontend.port}\n")
+    print("\nLaunch the HardPy operator panel...")  # noqa: T201
+    print(f"http://{config.frontend.host}:{config.frontend.port}\n")  # noqa: T201
 
     uvicorn_run(
         "hardpy.hardpy_panel.api:app",

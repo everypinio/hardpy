@@ -45,7 +45,7 @@ class NodeInfo:
         self._case_id = item.name
 
     @property
-    def module_id(self):  # noqa: ANN201
+    def module_id(self) -> str:
         """Get module id.
 
         Returns:
@@ -54,7 +54,7 @@ class NodeInfo:
         return self._module_id
 
     @property
-    def case_id(self):  # noqa: ANN201
+    def case_id(self) -> str:
         """Get case id.
 
         Returns:
@@ -63,7 +63,7 @@ class NodeInfo:
         return self._case_id
 
     @property
-    def module_name(self):  # noqa: ANN201
+    def module_name(self) -> str:
         """Get module name.
 
         Returns:
@@ -72,7 +72,7 @@ class NodeInfo:
         return self._module_name
 
     @property
-    def case_name(self):  # noqa: ANN201
+    def case_name(self) -> str:
         """Get case name.
 
         Returns:
@@ -81,7 +81,7 @@ class NodeInfo:
         return self._case_name
 
     @property
-    def dependency(self):  # noqa: ANN201
+    def dependency(self) -> TestDependencyInfo | str:
         """Get dependency information.
 
         Returns:

@@ -166,5 +166,7 @@ class CouchdbReader:
             first_failed_test_id=first_failed_test_id,
         )
 
-    def _is_in_timeframe(self, start, end, timeframe_start, timeframe_end):  # noqa: ANN001, ANN202
+    def _is_in_timeframe(  # noqa: ANN202
+        self, start: int, end: int, timeframe_start: int, timeframe_end: int
+    ):
         return timeframe_start <= start and end <= timeframe_end

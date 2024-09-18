@@ -1,5 +1,3 @@
-import pytest
-
 import hardpy
 from hardpy.pytest_hardpy.utils.dialog_box import BaseWidget
 from hardpy.pytest_hardpy.utils.exception import WidgetInfoError
@@ -21,14 +19,14 @@ def test_num_input_widget():
 
 
 def test_radiobutton_widget():
-    hardpy.RadiobuttonWidget(fields=["Text", " ", 123, "123", "..", "\\"])
+    hardpy.RadiobuttonWidget(fields=["Text", " ", 123, "123", "..", "\\"])  # type: ignore
     assert True
 
 
 def test_radiobutton_empty_widget():
     try:
         hardpy.RadiobuttonWidget(fields=[])
-        assert False, "WidgetInfoError was not raised"
+        assert False, "WidgetInfoError was not raised"  # noqa: B011, PT015
     except ValueError:
         assert True
 
@@ -41,7 +39,7 @@ def test_checkbox_widget():
 def test_checkbox_empty_widget():
     try:
         hardpy.CheckboxWidget(fields=[])
-        assert False, "WidgetInfoError was not raised"
+        assert False, "WidgetInfoError was not raised"  # noqa: B011, PT015
     except ValueError:
         assert True
 
@@ -93,8 +91,9 @@ def test_image_widget_icon():
 
 def test_image_widget_with_empty_data():
     try:
-        hardpy.ImageWidget()
-        assert False, "TypeError was not raised"
+        hardpy.ImageWidget()  # type: ignore
+        msg = "TypeError was not raised"
+        raise AssertionError(msg)
     except TypeError:
         assert True
 
@@ -102,14 +101,16 @@ def test_image_widget_with_empty_data():
 def test_image_widget_with_incorrect_width():
     try:
         hardpy.ImageWidget(address="tests/assets/test.png", width=-1)
-        assert False, "WidgetInfoError was not raised"
+        msg = "WidgetInfoError was not raised"
+        raise AssertionError(msg)
     except WidgetInfoError:
         assert True
 
 
 def test_multistep_widget():
     img_widget = hardpy.ImageWidget(
-        address="tests/test_dbx_widgets/assets/test.png", width=50
+        address="tests/test_dbx_widgets/assets/test.png",
+        width=50,
     )
     steps = [
         hardpy.StepWidget("Step 1", text="Content for step", widget=None),
@@ -127,7 +128,8 @@ def test_step_widget():
 
 def test_empty_step_widget():
     try:
-        hardpy.StepWidget()
-        assert False, "WidgetInfoError was not raised"
+        hardpy.StepWidget()  # type: ignore
+        msg = "WidgetInfoError was not raised"
+        raise AssertionError(msg)
     except TypeError:
         assert True
