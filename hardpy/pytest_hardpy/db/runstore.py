@@ -16,7 +16,7 @@ class RunStore(Singleton, BaseStore):
     Save state and case artifact.
     """
 
-    def __init__(self) -> None:
+    def __init__(self):
         if not self._initialized:
             super().__init__("runstore")
             self._log = getLogger(__name__)

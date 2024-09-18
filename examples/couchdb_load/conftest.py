@@ -7,7 +7,7 @@ from hardpy import (
 )
 
 
-def save_report_to_couchdb() -> None:
+def save_report_to_couchdb():
     report = get_current_report()
     if report:
         loader = CouchdbLoader(CouchdbConfig())

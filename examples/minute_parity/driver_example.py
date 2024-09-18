@@ -5,7 +5,7 @@ from logging import getLogger
 class DriverExample:
     """Driver example."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         self._log = getLogger(__name__)
 
     @property
@@ -14,6 +14,6 @@ class DriverExample:
         current_time = datetime.datetime.now()  # noqa: DTZ005
         return int(current_time.strftime("%M"))
 
-    def random_method(self) -> None:
+    def random_method(self):
         """Example of random method."""
         self._log.warning("Random method")

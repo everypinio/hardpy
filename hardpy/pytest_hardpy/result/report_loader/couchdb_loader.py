@@ -14,7 +14,7 @@ from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig
 class CouchdbLoader:
     """CouchDB report generator."""
 
-    def __init__(self, config: CouchdbConfig) -> None:
+    def __init__(self, config: CouchdbConfig):
         self._log = getLogger(__name__)
         self._config: CouchdbConfig = config
         self._db_srv = DbServer(config.connection_string)

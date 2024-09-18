@@ -11,7 +11,7 @@ from hardpy.pytest_hardpy.utils import Singleton
 class StateStore(Singleton, BaseStore):
     """HardPy state storage interface for CouchDB."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         if not self._initialized:
             super().__init__("statestore")
             self._log = getLogger(__name__)

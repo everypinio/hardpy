@@ -169,10 +169,10 @@ def fill_actions_after_test(post_run_functions: list):
 class TemplateGenerator:
     """HardPy template files generator."""
 
-    def __init__(self, config: HardpyConfig) -> None:
+    def __init__(self, config: HardpyConfig):
         self._config = config
 
-    def create_file(self, file_path: Path, content: str) -> None:
+    def create_file(self, file_path: Path, content: str):
         """Create HardPy template file.
 
         Args:

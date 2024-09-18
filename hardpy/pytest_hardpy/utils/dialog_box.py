@@ -28,7 +28,7 @@ class WidgetType(Enum):
 class IWidget(ABC):
     """Dialog box widget interface."""
 
-    def __init__(self, widget_type: WidgetType) -> None:
+    def __init__(self, widget_type: WidgetType):
         self.type: Final[str] = widget_type.value
         self.info: dict = {}
 
@@ -48,7 +48,7 @@ class IWidget(ABC):
 class BaseWidget(IWidget):
     """Widget info interface."""
 
-    def __init__(self, widget_type: WidgetType = WidgetType.BASE) -> None:  # noqa: ARG002
+    def __init__(self, widget_type: WidgetType = WidgetType.BASE):  # noqa: ARG002
         super().__init__(WidgetType.BASE)
 
     def convert_data(self, input_data: str | None = None) -> bool:  # noqa: ARG002
@@ -66,7 +66,7 @@ class BaseWidget(IWidget):
 class TextInputWidget(IWidget):
     """Text input widget."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         """Initialize the TextInputWidget."""
         super().__init__(WidgetType.TEXT_INPUT)
 
@@ -85,7 +85,7 @@ class TextInputWidget(IWidget):
 class NumericInputWidget(IWidget):
     """Numeric input widget."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         """Initialize the NumericInputWidget."""
         super().__init__(WidgetType.NUMERIC_INPUT)
 
@@ -107,7 +107,7 @@ class NumericInputWidget(IWidget):
 class RadiobuttonWidget(IWidget):
     """Radiobutton widget."""
 
-    def __init__(self, fields: list[str]) -> None:
+    def __init__(self, fields: list[str]):
         """Initialize the RadiobuttonWidget.
 
         Args:
@@ -137,7 +137,7 @@ class RadiobuttonWidget(IWidget):
 class CheckboxWidget(IWidget):
     """Checkbox widget."""
 
-    def __init__(self, fields: list[str]) -> None:
+    def __init__(self, fields: list[str]):
         """Initialize the CheckboxWidget.
 
         Args:
@@ -170,7 +170,7 @@ class CheckboxWidget(IWidget):
 class ImageWidget(IWidget):
     """Image widget."""
 
-    def __init__(self, address: str, format: str = "image", width: int = 100) -> None:  # noqa: A002
+    def __init__(self, address: str, format: str = "image", width: int = 100):  # noqa: A002
         """Validate the image fields and defines the base64 if it does not exist.
 
         Args:
@@ -223,12 +223,7 @@ class StepWidget(IWidget):
         WidgetInfoError: If the text or widget are not provided.
     """
 
-    def __init__(
-        self,
-        title: str,
-        text: str | None,
-        widget: ImageWidget | None,
-    ) -> None:
+    def __init__(self, title: str, text: str | None, widget: ImageWidget | None):
         super().__init__(WidgetType.STEP)
         if text is None and widget is None:
             msg = "Text or widget must be provided"
@@ -254,7 +249,7 @@ class StepWidget(IWidget):
 class MultistepWidget(IWidget):
     """Multistep widget."""
 
-    def __init__(self, steps: list[StepWidget]) -> None:
+    def __init__(self, steps: list[StepWidget]):
         """Initialize the MultistepWidget.
 
         Args:
@@ -298,7 +293,7 @@ class DialogBox:
         dialog_text: str,
         title_bar: str | None = None,
         widget: IWidget | None = None,
-    ) -> None:
+    ):
         self.widget: IWidget = BaseWidget() if widget is None else widget
         self.dialog_text: str = dialog_text
         self.title_bar: str | None = title_bar

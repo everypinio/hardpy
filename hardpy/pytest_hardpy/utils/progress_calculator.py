@@ -7,12 +7,12 @@ from logging import getLogger
 class ProgressCalculator:
     """Test run progress calculator."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         self._progress_nodeids: set[str] = set()
         self._tests_amount: int = 1
         self._log = getLogger(__name__)
 
-    def set_test_amount(self, amount: int) -> None:
+    def set_test_amount(self, amount: int):
         """Set test amount.
 
         Raises:

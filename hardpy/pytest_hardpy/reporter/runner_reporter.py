@@ -11,7 +11,7 @@ from hardpy.pytest_hardpy.utils import Singleton
 class RunnerReporter(Singleton, BaseReporter):
     """Reporter for using in direct call from test runner with HardPy plugin."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         if not self._initialized:
             super().__init__()
             self._log = getLogger(__name__)

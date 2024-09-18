@@ -22,7 +22,7 @@ class TestDependencyInfo(NamedTuple):
 class NodeInfo:
     """Test node info."""
 
-    def __init__(self, item: Item) -> None:
+    def __init__(self, item: Item):
         self._item = item
         self._log = getLogger(__name__)
 
@@ -43,7 +43,7 @@ class NodeInfo:
         self._case_id = item.name
 
     @property
-    def module_id(self) -> str:
+    def module_id(self):
         """Get module id.
 
         Returns:
@@ -52,7 +52,7 @@ class NodeInfo:
         return self._module_id
 
     @property
-    def case_id(self) -> str:
+    def case_id(self):
         """Get case id.
 
         Returns:
@@ -61,7 +61,7 @@ class NodeInfo:
         return self._case_id
 
     @property
-    def module_name(self) -> str:
+    def module_name(self):
         """Get module name.
 
         Returns:
@@ -70,7 +70,7 @@ class NodeInfo:
         return self._module_name
 
     @property
-    def case_name(self) -> str:
+    def case_name(self):
         """Get case name.
 
         Returns:
@@ -79,7 +79,7 @@ class NodeInfo:
         return self._case_name
 
     @property
-    def dependency(self) -> TestDependencyInfo | str:
+    def dependency(self):
         """Get dependency information.
 
         Returns:

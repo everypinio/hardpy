@@ -49,7 +49,7 @@ def get_current_report() -> ResultRunStore | None:
         return None
 
 
-def set_dut_info(info: dict) -> None:
+def set_dut_info(info: dict):
     """Add DUT info to document.
 
     Args:
@@ -62,7 +62,7 @@ def set_dut_info(info: dict) -> None:
     reporter.update_db_by_doc()
 
 
-def set_dut_serial_number(serial_number: str) -> None:
+def set_dut_serial_number(serial_number: str):
     """Add DUT serial number to document.
 
     Args:
@@ -79,7 +79,7 @@ def set_dut_serial_number(serial_number: str) -> None:
     reporter.update_db_by_doc()
 
 
-def set_stand_info(info: dict) -> None:
+def set_stand_info(info: dict):
     """Add test stand info to document.
 
     Args:
@@ -92,7 +92,7 @@ def set_stand_info(info: dict) -> None:
     reporter.update_db_by_doc()
 
 
-def set_message(msg: str, msg_key: str | None = None) -> None:
+def set_message(msg: str, msg_key: str | None = None):
     """Add or update message in current test.
 
     Args:
@@ -124,7 +124,7 @@ def set_message(msg: str, msg_key: str | None = None) -> None:
     reporter.update_db_by_doc()
 
 
-def set_case_artifact(data: dict) -> None:
+def set_case_artifact(data: dict):
     """Add data to current test case.
 
     Artifact saves only in RunStore database
@@ -148,7 +148,7 @@ def set_case_artifact(data: dict) -> None:
     reporter.update_db_by_doc()
 
 
-def set_module_artifact(data: dict) -> None:
+def set_module_artifact(data: dict):
     """Add data to current test module.
 
     Artifact saves only in RunStore database
@@ -170,7 +170,7 @@ def set_module_artifact(data: dict) -> None:
     reporter.update_db_by_doc()
 
 
-def set_run_artifact(data: dict) -> None:
+def set_run_artifact(data: dict):
     """Add data to current test run.
 
     Artifact saves only in RunStore database
@@ -189,7 +189,7 @@ def set_run_artifact(data: dict) -> None:
     reporter.update_db_by_doc()
 
 
-def set_driver_info(drivers: dict) -> None:
+def set_driver_info(drivers: dict):
     """Add or update drivers data.
 
     Driver data is stored in both StateStore and RunStore databases.
@@ -262,7 +262,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
 
-def set_operator_message(msg: str, title: str | None = None) -> None:
+def set_operator_message(msg: str, title: str | None = None):
     """Set operator message.
 
     The function should be used to handle events outside of testing.
@@ -317,9 +317,8 @@ def _get_socket_raw_data() -> str:
 
     try:
         server.bind((con_data.socket_host, con_data.socket_port))
-    except OSError as exc:
-        msg = f"Error creating socket: {exc}"
-        raise RuntimeError(msg)  # noqa: B904
+    except socket.error as exc:
+        raise RuntimeError(f"Error creating socket: {exc}")
     server.listen(1)
     client, _ = server.accept()
 

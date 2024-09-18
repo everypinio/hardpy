@@ -5,26 +5,26 @@
 class HardpyError(Exception):
     """Base HardPy exception."""
 
-    def __init__(self, msg: str) -> None:
+    def __init__(self, msg: str):
         super().__init__(f"HardPy error: {msg}")
 
 
 class DuplicateSerialNumberError(HardpyError):
     """The serial number has already been determined."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         super().__init__(self.__doc__)  # type: ignore
 
 
 class DuplicateDialogBoxError(HardpyError):
     """The dialog box has already been determined."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         super().__init__(self.__doc__)  # type: ignore
 
 
 class WidgetInfoError(HardpyError):
     """The widget info is not correct."""
 
-    def __init__(self, message: str) -> None:
+    def __init__(self, message):
         super().__init__(message)

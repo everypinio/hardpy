@@ -79,7 +79,7 @@ class ConfigManager:
         frontend_port: int,
         socket_host: str,
         socket_port: int,
-    ) -> None:
+    ):
         """Initialize HardPy configuration.
 
         Args:
@@ -104,7 +104,7 @@ class ConfigManager:
         cls.obj.socket.port = socket_port
 
     @classmethod
-    def create_config(cls, parent_dir: Path) -> None:
+    def create_config(cls, parent_dir: Path):
         """Create HardPy configuration.
 
         Args:

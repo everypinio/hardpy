@@ -13,7 +13,7 @@ from hardpy.common.config import ConfigManager
 class PyTestWrapper:
     """Wrapper for pytest subprocess."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         self._proc = None
         self.python_executable = sys.executable
 
@@ -113,7 +113,7 @@ class PyTestWrapper:
         )
         return True
 
-    def send_data(self, data: str) -> bool:
+    def send_data(self, data: str):
         """Send data to pytest subprocess.
 
         Args:

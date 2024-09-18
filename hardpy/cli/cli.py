@@ -55,7 +55,7 @@ def init(  # noqa: PLR0913
         default_config.socket.port,
         help="Specify a socket port.",
     ),
-) -> None:
+):
     """Initialize HardPy tests directory.
 
     Args:
@@ -116,7 +116,7 @@ def init(  # noqa: PLR0913
 
 
 @cli.command()
-def run(tests_dir: Annotated[str | None, typer.Argument()] = None) -> None:
+def run(tests_dir: Annotated[str | None, typer.Argument()] = None):
     """Run HardPy server.
 
     Args:

@@ -9,7 +9,7 @@ from hardpy.pytest_hardpy.utils.singleton import Singleton
 class ConnectionData(Singleton):
     """Connection data storage."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         if not self._initialized:
             self.database_url: str = ""
             self.socket_host: str = gethostname()

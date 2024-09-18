@@ -29,7 +29,7 @@ class ReportInfo:
 class CouchdbReader:
     """CouchDB report info reader."""
 
-    def __init__(self, config: CouchdbConfig) -> None:
+    def __init__(self, config: CouchdbConfig):
         self._log = getLogger(__name__)
         self._config = config
         self._db_srv = DbServer(config.connection_string)
@@ -104,10 +104,8 @@ class CouchdbReader:
         return reports_info
 
     def get_report_infos_in_timeframe(
-        self,
-        start_time: int,
-        end_time: int,
-    ) -> List[ReportInfo]:  # noqa: FA100
+        self, start_time: int, end_time: int
+    ) -> List[ReportInfo]:
         """Get a list of information about reports in a timeframe in the database.
 
         Args:
@@ -166,7 +164,5 @@ class CouchdbReader:
             first_failed_test_id=first_failed_test_id,
         )
 
-    def _is_in_timeframe(  # noqa: ANN202
-        self, start: int, end: int, timeframe_start: int, timeframe_end: int
-    ):
+    def _is_in_timeframe(self, start, end, timeframe_start, timeframe_end):
         return timeframe_start <= start and end <= timeframe_end
