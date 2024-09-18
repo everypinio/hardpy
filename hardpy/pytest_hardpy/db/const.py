@@ -4,7 +4,7 @@
 from enum import Enum
 
 
-class DatabaseField(str, Enum):  # noqa: WPS600
+class DatabaseField(str, Enum):
     """Database field."""
 
     NAME = "name"

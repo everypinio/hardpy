@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class CouchdbConfig:  # noqa: WPS306
+class CouchdbConfig:
     """CouchDB loader config."""
 
     db_name: str = "report"
@@ -18,5 +18,5 @@ class CouchdbConfig:  # noqa: WPS306
     def connection_string(self) -> str:
         """Get couchdb connection string."""
         credentials = f"{self.user}:{self.password}"
-        uri = f"{self.host}:{str(self.port)}"
+        uri = f"{self.host}:{self.port!s}"
         return f"http://{credentials}@{uri}/"

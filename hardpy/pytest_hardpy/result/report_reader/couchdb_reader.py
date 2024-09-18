@@ -1,17 +1,17 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from logging import getLogger
 from dataclasses import dataclass
+from logging import getLogger
 from typing import List, Optional
 
 from pycouchdb import Server as DbServer
 from pycouchdb.client import Database
 from pycouchdb.exceptions import NotFound
 
-from hardpy.pytest_hardpy.db import DatabaseField as DF
-from hardpy.pytest_hardpy.utils.const import TestStatus
+from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
 from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig
+from hardpy.pytest_hardpy.utils.const import TestStatus
 
 
 @dataclass
@@ -22,14 +22,14 @@ class ReportInfo:
     status: str
     start_time: str
     end_time: str
-    first_failed_test_name: Optional[str]
-    first_failed_test_id: Optional[str]
+    first_failed_test_name: Optional[str]  # noqa: FA100
+    first_failed_test_id: Optional[str]  # noqa: FA100
 
 
 class CouchdbReader:
     """CouchDB report info reader."""
 
-    def __init__(self, config: CouchdbConfig):
+    def __init__(self, config: CouchdbConfig) -> None:
         self._log = getLogger(__name__)
         self._config = config
         self._db_srv = DbServer(config.connection_string)
@@ -58,7 +58,8 @@ class CouchdbReader:
             int: number of reports
         """
         if start_time < 0 or end_time < 0:
-            raise ValueError("Start time and end time must be positive values")
+            msg = "Start time and end time must be positive values"
+            raise ValueError(msg)
         return sum(
             1
             for report in self._db.all()
@@ -85,10 +86,11 @@ class CouchdbReader:
         doc = self._db.get(report_name)
         status = doc[DF.STATUS]
         if status not in {TestStatus.PASSED, TestStatus.FAILED, TestStatus.SKIPPED}:
-            raise ValueError("Invalid report status")
+            msg = "Invalid report status"
+            raise ValueError(msg)
         return status
 
-    def get_report_infos(self) -> List[ReportInfo]:
+    def get_report_infos(self) -> List[ReportInfo]:  # noqa: FA100
         """Get a list of information about all reports in the database.
 
         Returns:
@@ -102,8 +104,10 @@ class CouchdbReader:
         return reports_info
 
     def get_report_infos_in_timeframe(
-        self, start_time: int, end_time: int
-    ) -> List[ReportInfo]:
+        self,
+        start_time: int,
+        end_time: int,
+    ) -> List[ReportInfo]:  # noqa: FA100
         """Get a list of information about reports in a timeframe in the database.
 
         Args:
@@ -117,7 +121,8 @@ class CouchdbReader:
             List[ReportInfo]: list of report information
         """
         if start_time < 0 or end_time < 0:
-            raise ValueError("Start time and end time must be positive values")
+            msg = "Start time and end time must be positive values"
+            raise ValueError(msg)
 
         reports_info = []
         reports = self._db.all()
@@ -134,7 +139,8 @@ class CouchdbReader:
             return self._db_srv.database(self._config.db_name)
         except NotFound as exc:
             self._log.error(f"Error initializing database: {exc}")
-            raise RuntimeError("Error initializing database") from exc
+            msg = "Error initializing database"
+            raise RuntimeError(msg) from exc
 
     def _get_start_time_from_db(self, doc: dict) -> str:
         return doc[DF.START_TIME]
@@ -146,7 +152,7 @@ class CouchdbReader:
         first_failed_test_name = None
         first_failed_test_id = None
         report_doc = report[self._doc_id]
-        for _module_name, module_info in report_doc[DF.MODULES].items():
+        for module_info in report_doc[DF.MODULES].values():
             for case_name, case_info in module_info[DF.CASES].items():
                 if case_info[DF.STATUS] == TestStatus.FAILED:
                     first_failed_test_name = case_info[DF.NAME]
@@ -160,5 +166,5 @@ class CouchdbReader:
             first_failed_test_id=first_failed_test_id,
         )
 
-    def _is_in_timeframe(self, start, end, timeframe_start, timeframe_end):
+    def _is_in_timeframe(self, start, end, timeframe_start, timeframe_end):  # noqa: ANN001, ANN202
         return timeframe_start <= start and end <= timeframe_end

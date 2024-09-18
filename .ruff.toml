@@ -22,6 +22,7 @@ indent-width = 4
         "D107",   # Missing docstring in `__init__`
         "FIX002", # Allow TODO
         "TD003",  # Allow TODO withot task link
+        "PGH003",
     ]
 
     [lint.isort]

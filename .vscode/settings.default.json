@@ -6,7 +6,7 @@
     "python.testing.pytestEnabled": true,
     "python.analysis.typeCheckingMode": "basic",
     "[python]": {
-        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.defaultFormatter": "charliermarsh.ruff"
     },
     "evenBetterToml.formatter.alignComments": true,
     "evenBetterToml.formatter.alignEntries": true,

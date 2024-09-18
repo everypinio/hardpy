@@ -3,20 +3,24 @@
 
 from logging import getLogger
 
-from hardpy.pytest_hardpy.db import StateStore, RunStore
+from hardpy.pytest_hardpy.db import RunStore, StateStore
 
 
 class BaseReporter:
     """Base class for test reporter."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._statestore = StateStore()
         self._runstore = RunStore()
         self._log = getLogger(__name__)
 
     def set_doc_value(
-        self, key: str, value, runstore_only=False, statestore_only=False
-    ):
+        self,
+        key: str,
+        value,  # noqa: ANN001
+        runstore_only=False,  # noqa: ANN001, FBT002
+        statestore_only=False,  # noqa: ANN001, FBT002
+    ) -> None:
         """Set value to the document.
 
         Update a document without writing to the database.
@@ -33,7 +37,8 @@ class BaseReporter:
             ValueError: if both runstore_only and statestore_only are True
         """
         if runstore_only and statestore_only:
-            raise ValueError("Both runstore_only and statestore_only cannot be True")
+            msg = "Both runstore_only and statestore_only cannot be True"
+            raise ValueError(msg)
         if runstore_only:
             self._runstore.update_doc(key, value)
             return
@@ -43,12 +48,12 @@ class BaseReporter:
         self._runstore.update_doc(key, value)
         self._statestore.update_doc(key, value)
 
-    def update_db_by_doc(self):
+    def update_db_by_doc(self) -> None:
         """Update database by current document."""
         self._statestore.update_db()
         self._runstore.update_db()
 
-    def generate_key(self, *args) -> str:
+    def generate_key(self, *args) -> str:  # noqa: ANN002
         """Generate key for database.
 
         Args:

@@ -11,13 +11,13 @@ from hardpy.pytest_hardpy.utils import Singleton
 class RunnerReporter(Singleton, BaseReporter):
     """Reporter for using in direct call from test runner with HardPy plugin."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         if not self._initialized:
             super().__init__()
             self._log = getLogger(__name__)
             self._initialized = True
 
-    def get_field(self, key: str) -> Any:
+    def get_field(self, key: str) -> Any:  # noqa: ANN401
         """Get field from the statestore.
 
         Args:

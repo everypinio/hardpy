@@ -1,11 +1,13 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import annotations
 
-from typing import Optional
+from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
-from hardpy.pytest_hardpy.utils import TestStatus as Status
+if TYPE_CHECKING:
+    from hardpy.pytest_hardpy.utils import TestStatus as Status
 
 
 class IBaseResult(BaseModel):
@@ -65,7 +67,7 @@ class CaseRunStore(IBaseResult):
 
     assertion_msg: str | None = None
     msg: dict | None = None
-    artifact: Optional[dict] = {}
+    artifact: dict | None = {}
 
 
 class ModuleStateStore(IBaseResult):
@@ -118,7 +120,7 @@ class ModuleRunStore(IBaseResult):
     """
 
     cases: dict[str, CaseRunStore] = {}
-    artifact: Optional[dict] = {}
+    artifact: dict | None = {}
 
 
 class Dut(BaseModel):
@@ -228,8 +230,8 @@ class ResultStateStore(IBaseResult):
     test_stand: dict = {}
     dut: Dut
     modules: dict[str, ModuleStateStore] = {}
-    drivers: Optional[dict] = {}
-    operator_msg: Optional[dict] = {}
+    drivers: dict | None = {}
+    operator_msg: dict | None = {}
 
 
 class ResultRunStore(IBaseResult):
@@ -315,5 +317,5 @@ class ResultRunStore(IBaseResult):
     test_stand: dict = {}
     dut: Dut
     modules: dict[str, ModuleRunStore] = {}
-    drivers: Optional[dict] = {}
-    artifact: Optional[dict] = {}
+    drivers: dict | None = {}
+    artifact: dict | None = {}

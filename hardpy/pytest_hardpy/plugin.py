@@ -1,5 +1,6 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import annotations
 
 import signal
 from logging import getLogger
@@ -8,37 +9,37 @@ from platform import system
 from re import compile as re_compile
 from typing import Any, Callable
 
-from natsort import natsorted
-from pytest import (
-    skip,
-    exit,
-    TestReport,
-    Item,
-    Session,
-    Config,
-    Parser,
-    fixture,
-    ExitCode,
-)
 from _pytest._code.code import (
-    ExceptionRepr,
-    ReprFileLocation,
     ExceptionInfo,
+    ExceptionRepr,
     ReprExceptionInfo,
+    ReprFileLocation,
     TerminalRepr,
+)
+from natsort import natsorted
+from pytest import (  # noqa: PT013
+    Config,
+    ExitCode,
+    Item,
+    Parser,
+    Session,
+    TestReport,
+    exit,
+    fixture,
+    skip,
 )
 
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import (
-    TestStatus,
+    ConnectionData,
     NodeInfo,
     ProgressCalculator,
-    ConnectionData,
+    TestStatus,
 )
 from hardpy.pytest_hardpy.utils.node_info import TestDependencyInfo
 
 
-def pytest_addoption(parser: Parser):
+def pytest_addoption(parser: Parser) -> None:
     """Register argparse-style options."""
     con_data = ConnectionData()
     parser.addoption(
@@ -68,7 +69,7 @@ def pytest_addoption(parser: Parser):
 
 
 # Bootstrapping hooks
-def pytest_load_initial_conftests(early_config, parser, args):
+def pytest_load_initial_conftests(early_config, parser, args) -> None:  # noqa: ANN001, ARG001, D103
     if "--hardpy-pt" in args:
         plugin = HardpyPlugin()
         early_config.pluginmanager.register(plugin)
@@ -80,7 +81,7 @@ class HardpyPlugin:
     Extends hook functions from pytest API.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._progress = ProgressCalculator()
         self._results = {}
         self._post_run_functions: list[Callable] = []
@@ -89,12 +90,12 @@ class HardpyPlugin:
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
         elif system() == "Windows":
-            signal.signal(signal.SIGBREAK, self._stop_handler)
+            signal.signal(signal.SIGBREAK, self._stop_handler)  # type: ignore
         self._log = getLogger(__name__)
 
     # Initialization hooks
 
-    def pytest_configure(self, config: Config):
+    def pytest_configure(self, config: Config) -> None:
         """Configure pytest."""
         con_data = ConnectionData()
 
@@ -117,7 +118,7 @@ class HardpyPlugin:
         # must be init after config data is set
         self._reporter = HookReporter()
 
-    def pytest_sessionfinish(self, session: Session, exitstatus: int):
+    def pytest_sessionfinish(self, session: Session, exitstatus: int) -> None:
         """Call at the end of test session."""
         if "--collect-only" in session.config.invocation_params.args:
             return
@@ -134,8 +135,11 @@ class HardpyPlugin:
     # Collection hooks
 
     def pytest_collection_modifyitems(
-        self, session: Session, config: Config, items: list[Item]
-    ):
+        self,
+        session: Session,
+        config: Config,
+        items: list[Item],  # noqa: ARG002
+    ) -> None:
         """Call after collection phase."""
         self._reporter.init_doc(str(PurePath(config.rootpath).name))
 
@@ -172,7 +176,7 @@ class HardpyPlugin:
 
     # Test running (runtest) hooks
 
-    def pytest_runtestloop(self, session: Session):
+    def pytest_runtestloop(self, session: Session) -> bool | None:
         """Call at the start of test run."""
         self._progress.set_test_amount(session.testscollected)
         if session.config.option.collectonly:
@@ -182,8 +186,9 @@ class HardpyPlugin:
         # testrun entrypoint
         self._reporter.start()
         self._reporter.update_db_by_doc()
+        return None
 
-    def pytest_runtest_setup(self, item: Item):
+    def pytest_runtest_setup(self, item: Item) -> None:
         """Call before each test setup phase."""
         if item.parent is None:
             self._log.error(f"Test module name for test {item.name} not found.")
@@ -208,11 +213,11 @@ class HardpyPlugin:
 
     # Reporting hooks
 
-    def pytest_runtest_logreport(self, report: TestReport):
+    def pytest_runtest_logreport(self, report: TestReport) -> bool | None:
         """Call after call of each test item."""
         if report.when != "call" and report.failed is False:
-            # ignore setup and teardown phase
-            # or continue processing setup and teardown failure (fixture exception handler)
+            # ignore setup and teardown phase or continue processing setup
+            # and teardown failure (fixture exception handler)
             return True
 
         module_id = Path(report.fspath).stem
@@ -231,11 +236,12 @@ class HardpyPlugin:
         assertion_msg = self._decode_assertion_msg(report.longrepr)
         self._reporter.set_assertion_msg(module_id, case_id, assertion_msg)
         self._reporter.set_progress(self._progress.calculate(report.nodeid))
-        self._results[module_id][case_id] = report.outcome  # noqa: WPS204
+        self._results[module_id][case_id] = report.outcome
 
         if None not in self._results[module_id].values():
             self._collect_module_result(module_id)
         self._reporter.update_db_by_doc()
+        return None
 
     # Fixture
 
@@ -253,10 +259,10 @@ class HardpyPlugin:
 
     # Not hooks
 
-    def _stop_handler(self, signum: int, frame: Any):
+    def _stop_handler(self, signum: int, frame: Any) -> None:  # noqa: ANN401, ARG002
         exit("Tests stopped by user")
 
-    def _init_case_result(self, module_id: str, case_id: str):
+    def _init_case_result(self, module_id: str, case_id: str) -> None:
         if self._results.get(module_id) is None:
             self._results[module_id] = {
                 "module_status": TestStatus.READY,
@@ -265,7 +271,7 @@ class HardpyPlugin:
         else:
             self._results[module_id][case_id] = None
 
-    def _collect_module_result(self, module_id: str):
+    def _collect_module_result(self, module_id: str) -> None:
         if TestStatus.ERROR in self._results[module_id].values():
             status = TestStatus.ERROR
         elif TestStatus.FAILED in self._results[module_id].values():
@@ -291,8 +297,8 @@ class HardpyPlugin:
 
     def _decode_assertion_msg(
         self,
-        error: (  # noqa: WPS320
-            ExceptionInfo[BaseException]  # noqa: DAR101,DAR201
+        error: (
+            ExceptionInfo[BaseException]
             | tuple[str, int, str]
             | str
             | TerminalRepr
@@ -306,41 +312,43 @@ class HardpyPlugin:
         match error:
             case str():
                 return error
-            case tuple() if len(error) == 3:
+            case tuple() if len(error) == 3:  # noqa: PLR2004
                 return error[2]
             case ExceptionInfo():
                 error_repr = error.getrepr()
                 if isinstance(error_repr, ReprExceptionInfo) and error_repr.reprcrash:
                     return error_repr.reprcrash.message
+                return None
             case TerminalRepr():
-                if isinstance(error, ExceptionRepr) and isinstance(  # noqa: WPS337
-                    error.reprcrash, ReprFileLocation
+                if isinstance(error, ExceptionRepr) and isinstance(
+                    error.reprcrash,
+                    ReprFileLocation,
                 ):
                     # remove ansi codes
                     ansi_pattern = re_compile(
-                        r"(?:\x1B[@-Z\\-_]|[\x80-\x9A\x9C-\x9F]|(?:\x1B\[|\x9B)[0-?]*[ -/]*[@-~])"  # noqa: E501
+                        r"(?:\x1B[@-Z\\-_]|[\x80-\x9A\x9C-\x9F]|(?:\x1B\[|\x9B)[0-?]*[ -/]*[@-~])",  # noqa: E501
                     )
                     return ansi_pattern.sub("", error.reprcrash.message)
                 return str(error)
             case _:
                 return None
 
-    def _handle_dependency(self, node_info: NodeInfo):
+    def _handle_dependency(self, node_info: NodeInfo) -> None:
         dependency = self._dependencies.get(
             TestDependencyInfo(
                 node_info.module_id,
                 node_info.case_id,
-            )
+            ),
         )
         if dependency and self._is_dependency_failed(dependency):
             self._log.debug(f"Skipping test due to dependency: {dependency}")
             self._results[node_info.module_id][node_info.case_id] = TestStatus.SKIPPED
             self._reporter.set_progress(
-                self._progress.calculate(f"{node_info.module_id}::{node_info.case_id}")
+                self._progress.calculate(f"{node_info.module_id}::{node_info.case_id}"),
             )
             skip(f"Test {node_info.module_id}::{node_info.case_id} is skipped")
 
-    def _is_dependency_failed(self, dependency) -> bool:
+    def _is_dependency_failed(self, dependency) -> bool:  # noqa: ANN001
         if isinstance(dependency, TestDependencyInfo):
             incorrect_status = {
                 TestStatus.FAILED,
@@ -356,7 +364,7 @@ class HardpyPlugin:
             )
         return False
 
-    def _add_dependency(self, node_info, nodes):
+    def _add_dependency(self, node_info, nodes) -> None:  # noqa: ANN001
         dependency = node_info.dependency
         if dependency is None or dependency == "":
             return

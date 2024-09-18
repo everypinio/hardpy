@@ -5,8 +5,8 @@ from logging import getLogger
 
 from pycouchdb.exceptions import Conflict, NotFound
 
-from hardpy.pytest_hardpy.db.base_store import BaseStore
 from hardpy.pytest_hardpy.db import ResultRunStore
+from hardpy.pytest_hardpy.db.base_store import BaseStore
 from hardpy.pytest_hardpy.utils import Singleton
 
 
@@ -16,7 +16,7 @@ class RunStore(Singleton, BaseStore):
     Save state and case artifact.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         if not self._initialized:
             super().__init__("runstore")
             self._log = getLogger(__name__)

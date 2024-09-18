@@ -1,27 +1,28 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import annotations
 
 import socket
-from os import environ
 from dataclasses import dataclass
-from typing import Optional, Any
+from os import environ
+from typing import Any
 from uuid import uuid4
 
 from pycouchdb.exceptions import NotFound
 from pydantic import ValidationError
 
 from hardpy.pytest_hardpy.db import (
-    DatabaseField as DF,
+    DatabaseField as DF,  # noqa: N817
     ResultRunStore,
     RunStore,
 )
+from hardpy.pytest_hardpy.reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
     ConnectionData,
-    DuplicateSerialNumberError,
-    DuplicateDialogBoxError,
     DialogBox,
+    DuplicateDialogBoxError,
+    DuplicateSerialNumberError,
 )
-from hardpy.pytest_hardpy.reporter import RunnerReporter
 
 
 @dataclass
@@ -40,7 +41,7 @@ def get_current_report() -> ResultRunStore | None:
     """
     runstore = RunStore()
     try:
-        return runstore.get_document()
+        return runstore.get_document()  # type: ignore
     except NotFound:
         return None
     except ValidationError:
@@ -49,7 +50,7 @@ def get_current_report() -> ResultRunStore | None:
         return None
 
 
-def set_dut_info(info: dict):
+def set_dut_info(info: dict) -> None:
     """Add DUT info to document.
 
     Args:
@@ -62,7 +63,7 @@ def set_dut_info(info: dict):
     reporter.update_db_by_doc()
 
 
-def set_dut_serial_number(serial_number: str):
+def set_dut_serial_number(serial_number: str) -> None:
     """Add DUT serial number to document.
 
     Args:
@@ -79,7 +80,7 @@ def set_dut_serial_number(serial_number: str):
     reporter.update_db_by_doc()
 
 
-def set_stand_info(info: dict):
+def set_stand_info(info: dict) -> None:
     """Add test stand info to document.
 
     Args:
@@ -92,7 +93,7 @@ def set_stand_info(info: dict):
     reporter.update_db_by_doc()
 
 
-def set_message(msg: str, msg_key: Optional[str] = None) -> None:
+def set_message(msg: str, msg_key: str | None = None) -> None:
     """Add or update message in current test.
 
     Args:
@@ -124,7 +125,7 @@ def set_message(msg: str, msg_key: Optional[str] = None) -> None:
     reporter.update_db_by_doc()
 
 
-def set_case_artifact(data: dict):
+def set_case_artifact(data: dict) -> None:
     """Add data to current test case.
 
     Artifact saves only in RunStore database
@@ -148,7 +149,7 @@ def set_case_artifact(data: dict):
     reporter.update_db_by_doc()
 
 
-def set_module_artifact(data: dict):
+def set_module_artifact(data: dict) -> None:
     """Add data to current test module.
 
     Artifact saves only in RunStore database
@@ -170,7 +171,7 @@ def set_module_artifact(data: dict):
     reporter.update_db_by_doc()
 
 
-def set_run_artifact(data: dict):
+def set_run_artifact(data: dict) -> None:
     """Add data to current test run.
 
     Artifact saves only in RunStore database
@@ -209,7 +210,7 @@ def set_driver_info(drivers: dict) -> None:
     reporter.update_db_by_doc()
 
 
-def run_dialog_box(dialog_box_data: DialogBox) -> Any:
+def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     """Display a dialog box.
 
     Args:
@@ -240,7 +241,8 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
         DuplicateDialogBoxError: If the dialog box is already caused.
     """
     if not dialog_box_data.dialog_text:
-        raise ValueError("The 'dialog_text' argument cannot be empty.")
+        msg = "The 'dialog_text' argument cannot be empty."
+        raise ValueError(msg)
 
     current_test = _get_current_test()
     reporter = RunnerReporter()
@@ -288,7 +290,8 @@ def _get_current_test() -> CurrentTestInfo:
     current_node = environ.get("PYTEST_CURRENT_TEST")
 
     if current_node is None:
-        raise RuntimeError("PYTEST_CURRENT_TEST variable is not set")
+        msg = "PYTEST_CURRENT_TEST variable is not set"
+        raise RuntimeError(msg)
 
     module_delimiter = ".py::"
     module_id_end_index = current_node.find(module_delimiter)
@@ -315,8 +318,9 @@ def _get_socket_raw_data() -> str:
 
     try:
         server.bind((con_data.socket_host, con_data.socket_port))
-    except socket.error as exc:
-        raise RuntimeError(f"Error creating socket: {exc}")
+    except OSError as exc:
+        msg = f"Error creating socket: {exc}"
+        raise RuntimeError(msg)  # noqa: B904
     server.listen(1)
     client, _ = server.accept()
 
