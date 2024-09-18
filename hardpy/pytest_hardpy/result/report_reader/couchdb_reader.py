@@ -152,7 +152,7 @@ class CouchdbReader:
         first_failed_test_name = None
         first_failed_test_id = None
         report_doc = report[self._doc_id]
-        for module_info in report_doc[DF.MODULES].values():
+        for _module_name, module_info in report_doc[DF.MODULES].items():
             for case_name, case_info in module_info[DF.CASES].items():
                 if case_info[DF.STATUS] == TestStatus.FAILED:
                     first_failed_test_name = case_info[DF.NAME]

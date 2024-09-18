@@ -11,7 +11,7 @@ from hardpy import (
 
 
 @pytest.fixture(scope="module")
-def module_log(request: pytest.FixtureRequest):
+def module_log(request):
     log_name = request.module.__name__
     yield logging.getLogger(log_name)  # noqa: PT022
 

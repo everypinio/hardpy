@@ -18,5 +18,5 @@ class CouchdbConfig:
     def connection_string(self) -> str:
         """Get couchdb connection string."""
         credentials = f"{self.user}:{self.password}"
-        uri = f"{self.host}:{self.port!s}"
+        uri = f"{self.host}:{str(self.port)}"
         return f"http://{credentials}@{uri}/"

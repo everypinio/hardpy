@@ -1,6 +1,5 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
-from __future__ import annotations
 
 from logging import getLogger
 from pathlib import Path
@@ -28,7 +27,7 @@ class DatabaseConfig(BaseModel):
             str: database connection url
         """
         credentials = f"{self.user}:{self.password}"
-        uri = f"{self.host}:{self.port!s}"
+        uri = f"{self.host}:{str(self.port)}"
         return f"http://{credentials}@{uri}/"
 
 
@@ -130,7 +129,7 @@ class ConfigManager:
             logger.error(f"File hardpy.toml not found at path: {toml_file}")  # noqa: G004
             return None
         try:
-            with open(toml_path / "hardpy.toml") as f:  # noqa: PTH123
+            with open(toml_path / "hardpy.toml", "r") as f:  # noqa: PTH123
                 cls.obj = HardpyConfig(**rtoml.load(f))
             return cls.obj  # noqa: TRY300
         except rtoml.TomlParsingError as exc:
