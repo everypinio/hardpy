@@ -99,7 +99,7 @@ class PyTestWrapper:
         subprocess.Popen(  # noqa: S603
             [
                 self.python_executable,
-                "-mpytest",
+                "-m" "pytest",
                 "--collect-only",
                 "--hardpy-db-url",
                 self.config.database.connection_url(),
