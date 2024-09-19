@@ -1,8 +1,6 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from typing import Optional
-
 from pydantic import BaseModel, Field, ConfigDict
 
 from hardpy.pytest_hardpy.utils import TestStatus as Status
@@ -65,7 +63,7 @@ class CaseRunStore(IBaseResult):
 
     assertion_msg: str | None = None
     msg: dict | None = None
-    artifact: Optional[dict] = {}
+    artifact: dict = {}
 
 
 class ModuleStateStore(IBaseResult):
@@ -118,7 +116,7 @@ class ModuleRunStore(IBaseResult):
     """
 
     cases: dict[str, CaseRunStore] = {}
-    artifact: Optional[dict] = {}
+    artifact: dict = {}
 
 
 class Dut(BaseModel):
@@ -228,8 +226,8 @@ class ResultStateStore(IBaseResult):
     test_stand: dict = {}
     dut: Dut
     modules: dict[str, ModuleStateStore] = {}
-    drivers: Optional[dict] = {}
-    operator_msg: Optional[dict] = {}
+    drivers: dict = {}
+    operator_msg: dict = {}
 
 
 class ResultRunStore(IBaseResult):
@@ -315,5 +313,5 @@ class ResultRunStore(IBaseResult):
     test_stand: dict = {}
     dut: Dut
     modules: dict[str, ModuleRunStore] = {}
-    drivers: Optional[dict] = {}
-    artifact: Optional[dict] = {}
+    drivers: dict = {}
+    artifact: dict = {}
