@@ -28,6 +28,7 @@ from _pytest._code.code import (
     TerminalRepr,
 )
 
+from hardpy.pytest_hardpy.db import StateStore
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import (
     TestStatus,
@@ -58,6 +59,12 @@ def pytest_addoption(parser: Parser):
         action="store",
         default=con_data.socket_host,
         help="internal socket host",
+    )
+    parser.addoption(
+        "--hardpy-clear-database",
+        action="store",
+        default=False,
+        help="clear hardpy local database",
     )
     parser.addoption(
         "--hardpy-pt",
@@ -101,6 +108,11 @@ class HardpyPlugin:
         database_url = config.getoption("--hardpy-db-url")
         if database_url:
             con_data.database_url = str(database_url)
+
+        is_clear_database = config.getoption("--hardpy-clear-database")
+        if is_clear_database == str(True):
+            statestore = StateStore()
+            statestore.clear()
 
         socket_port = config.getoption("--hardpy-sp")
         if socket_port:

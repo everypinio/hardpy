@@ -20,7 +20,7 @@ class PyTestWrapper:
         # Make sure test structure is stored in DB
         # before clients come in
         self.config = ConfigManager().get_config()
-        self.collect()
+        self.collect(is_clear_database=True)
 
     def start(self) -> bool:
         """Start pytest subprocess.
@@ -84,8 +84,12 @@ class PyTestWrapper:
             return True
         return False
 
-    def collect(self) -> bool:
+    def collect(self, is_clear_database: bool = False) -> bool:
         """Perform pytest collection.
+
+        Args:
+            is_clear_database (bool): indicates whether database
+                                      should be cleared. Defaults to False.
 
         Returns:
             bool: True if collection was started
@@ -96,19 +100,25 @@ class PyTestWrapper:
         if self.is_running():
             return False
 
+        args = [
+            "-m",
+            "pytest",
+            "--collect-only",
+            "--hardpy-db-url",
+            self.config.database.connection_url(),
+            "--hardpy-sp",
+            str(self.config.socket.port),
+            "--hardpy-sh",
+            self.config.socket.host,
+            "--hardpy-pt",
+        ]
+
+        if is_clear_database:
+            args.append("--hardpy-clear-database")
+            args.append(str(is_clear_database))
+
         subprocess.Popen(  # noqa: S603
-            [
-                self.python_executable,
-                "-m" "pytest",
-                "--collect-only",
-                "--hardpy-db-url",
-                self.config.database.connection_url(),
-                "--hardpy-sp",
-                str(self.config.socket.port),
-                "--hardpy-sh",
-                self.config.socket.host,
-                "--hardpy-pt",
-            ],
+            [self.python_executable, *args],
             cwd=ConfigManager().get_tests_path(),
         )
         return True
