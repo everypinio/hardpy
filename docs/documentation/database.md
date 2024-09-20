@@ -208,9 +208,15 @@ The **current** document of the **statestore** database contains the following f
 - **drivers**: information about drivers in the form of a dictionary.
 - **operator_msg**: operator message.
 
+The **test_stand** block containt the following fields:
+
+  - **name** - test stand name;
+  - **info**: A dictionary containing additional information about the test stand.
+
 The **dut** block contains the following fields:
 
   - **serial_number**: DUT serial number;
+  - **part_number**: DUT part number;
   - **info**: A dictionary containing additional information about the DUT, such as batch, board revision, etc.
 
 The **operator_msg** block contains the following fields:
@@ -258,13 +264,17 @@ Example of a **current** document:
       "name": "hardpy-stand",
       "dut": {
         "serial_number": "92c5a4bb-ecb0-42c5-89ac-e0caca0919fd",
+        "part_number": "part_number_1",
         "info": {
           "batch": "test_batch",
           "board_rev": "rev_1"
         }
       },
       "test_stand": {
-        "name": "Test stand 1"
+        "name": "Test stand 1",
+        "info": {
+          "geo": "Belgrade",
+        },
       },
       "drivers": {
         "driver_1": "driver info",
@@ -346,9 +356,15 @@ The **current** document of **runstore** database contains the following fields:
 - **artifact**: an object containing information about artifacts created during the test run;
 - **modules**: module information.
 
+The **test_stand** block containt the following fields:
+
+  - **name** - test stand name;
+  - **info**: A dictionary containing additional information about the test stand.
+
 The **dut** block contains the following fields:
 
   - **serial_number**: DUT serial number;
+  - **part_number**: DUT part number;
   - **info**: A dictionary containing additional information about the DUT, such as batch, board revision, etc.
 
 The **modules** block contains the following fields:
@@ -386,13 +402,17 @@ Example of a **current** document:
       "name": "hardpy-stand",
       "dut": {
         "serial_number": "92c5a4bb-ecb0-42c5-89ac-e0caca0919fd",
+        "part_number": "part_number_1",
         "info": {
           "batch": "test_batch",
           "board_rev": "rev_1"
         }
       },
       "test_stand": {
-        "name": "Test stand 1"
+        "name": "Test stand 1",
+        "info": {
+          "geo": "Belgrade",
+        }
       },
       "drivers": {
         "driver_1": "driver info",
