@@ -28,7 +28,6 @@ from _pytest._code.code import (
     TerminalRepr,
 )
 
-from hardpy.pytest_hardpy.db import StateStore
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import (
     TestStatus,
@@ -110,9 +109,7 @@ class HardpyPlugin:
             con_data.database_url = str(database_url)
 
         is_clear_database = config.getoption("--hardpy-clear-database")
-        if is_clear_database == str(True):
-            statestore = StateStore()
-            statestore.clear()
+        is_clear_statestore = is_clear_database == str(True)
 
         socket_port = config.getoption("--hardpy-sp")
         if socket_port:
@@ -127,7 +124,7 @@ class HardpyPlugin:
         config.addinivalue_line("markers", "dependency")
 
         # must be init after config data is set
-        self._reporter = HookReporter()
+        self._reporter = HookReporter(is_clear_statestore)
 
     def pytest_sessionfinish(self, session: Session, exitstatus: int):
         """Call at the end of test session."""
