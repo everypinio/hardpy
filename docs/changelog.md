@@ -2,6 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add clearing the **statestore** database before running hardpy using
+  the `--hardpy-clear-database` option of the **pytest-hardpy** plugin.
+* Add the **name** and **info** fields to **test_stand** in the database schema.
+* Add the **part_number** field to **dut** in the database schema.
+* Add `set_stand_name` and `set_dut_part_number` functions.
 * Add a hardpy template project using the `hardpy init` command.
 * Add hardpy config .toml file.
 * Refactor pytest-hardpy plugin options.
