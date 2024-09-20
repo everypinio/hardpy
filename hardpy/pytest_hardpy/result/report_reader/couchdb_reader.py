@@ -29,7 +29,7 @@ class ReportInfo:
 class CouchdbReader:
     """CouchDB report info reader."""
 
-    def __init__(self, config: CouchdbConfig):
+    def __init__(self, config: CouchdbConfig) -> None:
         self._log = getLogger(__name__)
         self._config = config
         self._db_srv = DbServer(config.connection_string)
@@ -164,5 +164,7 @@ class CouchdbReader:
             first_failed_test_id=first_failed_test_id,
         )
 
-    def _is_in_timeframe(self, start, end, timeframe_start, timeframe_end):
+    def _is_in_timeframe(
+        self, start: int, end: int, timeframe_start: int, timeframe_end: int
+    ) -> bool:
         return timeframe_start <= start and end <= timeframe_end

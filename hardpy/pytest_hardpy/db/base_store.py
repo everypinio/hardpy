@@ -15,13 +15,13 @@ from hardpy.pytest_hardpy.db.const import DatabaseField as DF  # noqa: N817
 class BaseStore(BaseConnector):
     """HardPy base storage interface for CouchDB."""
 
-    def __init__(self, db_name: str):
+    def __init__(self, db_name: str) -> None:
         super().__init__(db_name)
         self._log = getLogger(__name__)
         self._doc: dict = self._init_doc()
         self._schema: ModelMetaclass
 
-    def compact(self):
+    def compact(self) -> None:
         """Compact database."""
         self._db.compact()
 
@@ -36,7 +36,7 @@ class BaseStore(BaseConnector):
         """
         return glom(self._doc, key)
 
-    def update_doc(self, key: str, value):  # noqa: ANN401
+    def update_doc(self, key: str, value) -> None:
         """Update document.
 
         HardPy collecting uses a simple key without dots.

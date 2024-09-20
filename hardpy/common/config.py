@@ -1,5 +1,6 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import annotations
 
 from logging import getLogger
 from pathlib import Path
@@ -79,7 +80,7 @@ class ConfigManager:
         frontend_port: int,
         socket_host: str,
         socket_port: int,
-    ):
+    ) -> None:
         """Initialize HardPy configuration.
 
         Args:
@@ -104,7 +105,7 @@ class ConfigManager:
         cls.obj.socket.port = socket_port
 
     @classmethod
-    def create_config(cls, parent_dir: Path):
+    def create_config(cls, parent_dir: Path) -> None:
         """Create HardPy configuration.
 
         Args:

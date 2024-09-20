@@ -1,4 +1,6 @@
-from pytest import Pytester  # noqa: PT013, TCH002
+from __future__ import annotations
+
+from pytest import Pytester  # noqa: PT013
 
 func_test_header = """
         from uuid import uuid4

@@ -1,5 +1,6 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import annotations
 
 from copy import deepcopy
 from logging import getLogger
@@ -15,11 +16,11 @@ from hardpy.pytest_hardpy.utils import NodeInfo, TestStatus
 class HookReporter(BaseReporter):
     """Reporter for using in the hook HardPy plugin's hooks."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._log = getLogger(__name__)
 
-    def init_doc(self, doc_name: str):
+    def init_doc(self, doc_name: str) -> None:
         """Initialize document.
 
         Args:
@@ -35,7 +36,7 @@ class HookReporter(BaseReporter):
         self.set_doc_value(DF.ARTIFACT, {}, runstore_only=True)
         self.set_doc_value(DF.OPERATOR_MSG, {}, statestore_only=True)
 
-    def start(self):
+    def start(self) -> None:
         """Start test."""
         self._log.debug("Starting test run.")
         start_time = int(time())
@@ -44,7 +45,7 @@ class HookReporter(BaseReporter):
         self.set_doc_value(DF.TIMEZONE, tzname)
         self.set_doc_value(DF.PROGRESS, 0)
 
-    def finish(self, status: TestStatus):
+    def finish(self, status: TestStatus) -> None:
         """Finish test.
 
         This method must be called at the end of test run.
@@ -54,12 +55,12 @@ class HookReporter(BaseReporter):
         self.set_doc_value(DF.STOP_TIME, stop_time)
         self.set_doc_value(DF.STATUS, status)
 
-    def compact_all(self):
+    def compact_all(self) -> None:
         """Compact all databases."""
         self._statestore.compact()
         self._runstore.compact()
 
-    def set_progress(self, progress: int):
+    def set_progress(self, progress: int) -> None:
         """Set test progress.
 
         Args:
@@ -67,7 +68,7 @@ class HookReporter(BaseReporter):
         """
         self.set_doc_value(DF.PROGRESS, progress)
 
-    def set_assertion_msg(self, module_id: str, case_id: str, msg: str | None):
+    def set_assertion_msg(self, module_id: str, case_id: str, msg: str | None) -> None:
         """Set case assertion message.
 
         Args:
@@ -84,7 +85,7 @@ class HookReporter(BaseReporter):
         )
         self.set_doc_value(key, msg)
 
-    def add_case(self, node_info: NodeInfo):
+    def add_case(self, node_info: NodeInfo) -> None:
         """Add test case to document.
 
         Args:
@@ -101,7 +102,7 @@ class HookReporter(BaseReporter):
         self.set_doc_value(key, item_statestore, statestore_only=True)
         self.set_doc_value(key, item_runstore, runstore_only=True)
 
-    def set_case_status(self, module_id: str, case_id: str, status: TestStatus):
+    def set_case_status(self, module_id: str, case_id: str, status: TestStatus) -> None:
         """Set test case status.
 
         Args:
@@ -112,7 +113,7 @@ class HookReporter(BaseReporter):
         key = self.generate_key(DF.MODULES, module_id, DF.CASES, case_id, DF.STATUS)
         self.set_doc_value(key, status)
 
-    def set_case_start_time(self, module_id: str, case_id: str):
+    def set_case_start_time(self, module_id: str, case_id: str) -> None:
         """Set test case start_time.
 
         Args:
@@ -122,7 +123,7 @@ class HookReporter(BaseReporter):
         key = self.generate_key(DF.MODULES, module_id, DF.CASES, case_id, DF.START_TIME)
         self._set_time(key)
 
-    def set_case_stop_time(self, module_id: str, case_id: str):
+    def set_case_stop_time(self, module_id: str, case_id: str) -> None:
         """Set test case start_time.
 
         Args:
@@ -132,7 +133,7 @@ class HookReporter(BaseReporter):
         key = self.generate_key(DF.MODULES, module_id, DF.CASES, case_id, DF.STOP_TIME)
         self._set_time(key)
 
-    def set_module_status(self, module_id: str, status: TestStatus):
+    def set_module_status(self, module_id: str, status: TestStatus) -> None:
         """Set test module status.
 
         Args:
@@ -142,7 +143,7 @@ class HookReporter(BaseReporter):
         key = self.generate_key(DF.MODULES, module_id, DF.STATUS)
         self.set_doc_value(key, status)
 
-    def set_module_start_time(self, module_id: str):
+    def set_module_start_time(self, module_id: str) -> None:
         """Set test module status.
 
         Args:
@@ -151,7 +152,7 @@ class HookReporter(BaseReporter):
         key = self.generate_key(DF.MODULES, module_id, DF.START_TIME)
         self._set_time(key)
 
-    def set_module_stop_time(self, module_id: str):
+    def set_module_stop_time(self, module_id: str) -> None:
         """Set test module status.
 
         Args:
@@ -160,7 +161,7 @@ class HookReporter(BaseReporter):
         key = self.generate_key(DF.MODULES, module_id, DF.STOP_TIME)
         self._set_time(key)
 
-    def update_node_order(self, nodes: dict):
+    def update_node_order(self, nodes: dict) -> None:
         """Update node order.
 
         Args:
@@ -175,7 +176,7 @@ class HookReporter(BaseReporter):
         updated_module_order = self._update_module_order(updated_case_order)
         self.set_doc_value(key, updated_module_order, statestore_only=True)
 
-    def _set_time(self, key: str):
+    def _set_time(self, key: str) -> None:
         current_time = self._statestore.get_field(key)
         if current_time is None:
             self.set_doc_value(key, int(time()))
@@ -186,7 +187,7 @@ class HookReporter(BaseReporter):
         node_info: NodeInfo,
         is_only_runstore: bool = False,  # noqa: FBT001, FBT002
         is_only_statestore: bool = False,  # noqa: FBT001, FBT002
-    ):
+    ) -> None:
         module_default = {
             DF.STATUS: TestStatus.READY,
             DF.NAME: self._get_module_name(node_info),

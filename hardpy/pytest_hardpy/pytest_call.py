@@ -1,5 +1,6 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import annotations
 
 import socket
 from dataclasses import dataclass
@@ -49,7 +50,7 @@ def get_current_report() -> ResultRunStore | None:
         return None
 
 
-def set_dut_info(info: dict):
+def set_dut_info(info: dict) -> None:
     """Add DUT info to document.
 
     Args:
@@ -62,7 +63,7 @@ def set_dut_info(info: dict):
     reporter.update_db_by_doc()
 
 
-def set_dut_serial_number(serial_number: str):
+def set_dut_serial_number(serial_number: str) -> None:
     """Add DUT serial number to document.
 
     Args:
@@ -79,7 +80,7 @@ def set_dut_serial_number(serial_number: str):
     reporter.update_db_by_doc()
 
 
-def set_stand_info(info: dict):
+def set_stand_info(info: dict) -> None:
     """Add test stand info to document.
 
     Args:
@@ -92,7 +93,7 @@ def set_stand_info(info: dict):
     reporter.update_db_by_doc()
 
 
-def set_message(msg: str, msg_key: str | None = None):
+def set_message(msg: str, msg_key: str | None = None) -> None:
     """Add or update message in current test.
 
     Args:
@@ -124,7 +125,7 @@ def set_message(msg: str, msg_key: str | None = None):
     reporter.update_db_by_doc()
 
 
-def set_case_artifact(data: dict):
+def set_case_artifact(data: dict) -> None:
     """Add data to current test case.
 
     Artifact saves only in RunStore database
@@ -148,7 +149,7 @@ def set_case_artifact(data: dict):
     reporter.update_db_by_doc()
 
 
-def set_module_artifact(data: dict):
+def set_module_artifact(data: dict) -> None:
     """Add data to current test module.
 
     Artifact saves only in RunStore database
@@ -170,7 +171,7 @@ def set_module_artifact(data: dict):
     reporter.update_db_by_doc()
 
 
-def set_run_artifact(data: dict):
+def set_run_artifact(data: dict) -> None:
     """Add data to current test run.
 
     Artifact saves only in RunStore database
@@ -189,7 +190,7 @@ def set_run_artifact(data: dict):
     reporter.update_db_by_doc()
 
 
-def set_driver_info(drivers: dict):
+def set_driver_info(drivers: dict) -> None:
     """Add or update drivers data.
 
     Driver data is stored in both StateStore and RunStore databases.
@@ -262,7 +263,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
 
-def set_operator_message(msg: str, title: str | None = None):
+def set_operator_message(msg: str, title: str | None = None) -> None:
     """Set operator message.
 
     The function should be used to handle events outside of testing.

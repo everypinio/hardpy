@@ -1,5 +1,3 @@
-import pytest
-
 import hardpy
 from hardpy.pytest_hardpy.utils.dialog_box import BaseWidget
 from hardpy.pytest_hardpy.utils.exception import WidgetInfoError

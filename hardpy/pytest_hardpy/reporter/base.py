@@ -10,14 +10,14 @@ from hardpy.pytest_hardpy.db import RunStore, StateStore
 class BaseReporter:
     """Base class for test reporter."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._statestore = StateStore()
         self._runstore = RunStore()
         self._log = getLogger(__name__)
 
     def set_doc_value(
         self, key: str, value, runstore_only=False, statestore_only=False
-    ):
+    ) -> None:
         """Set value to the document.
 
         Update a document without writing to the database.
@@ -45,7 +45,7 @@ class BaseReporter:
         self._runstore.update_doc(key, value)
         self._statestore.update_doc(key, value)
 
-    def update_db_by_doc(self):
+    def update_db_by_doc(self) -> None:
         """Update database by current document."""
         self._statestore.update_db()
         self._runstore.update_db()

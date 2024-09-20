@@ -1,6 +1,8 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
-from pydantic import BaseModel, Field, ConfigDict
+from __future__ import annotations
+
+from pydantic import BaseModel, ConfigDict, Field
 
 from hardpy.pytest_hardpy.utils import TestStatus as Status
 

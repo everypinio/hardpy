@@ -1,4 +1,6 @@
-from pytest import Pytester  # noqa: PT013, TCH002
+from __future__ import annotations
+
+from pytest import Pytester  # noqa: PT013
 
 mark_test_header = """
         import pytest

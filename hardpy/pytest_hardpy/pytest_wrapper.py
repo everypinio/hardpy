@@ -1,5 +1,6 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import annotations
 
 import signal
 import subprocess
@@ -13,7 +14,7 @@ from hardpy.common.config import ConfigManager
 class PyTestWrapper:
     """Wrapper for pytest subprocess."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._proc = None
         self.python_executable = sys.executable
 
@@ -113,7 +114,7 @@ class PyTestWrapper:
         )
         return True
 
-    def send_data(self, data: str):
+    def send_data(self, data: str) -> bool:
         """Send data to pytest subprocess.
 
         Args:

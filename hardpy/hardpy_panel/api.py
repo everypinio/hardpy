@@ -31,7 +31,7 @@ class Status(str, Enum):
 
 
 @app.get("/api/start")
-def start_pytest():
+def start_pytest() -> dict:
     """Start pytest subprocess.
 
     Returns:
@@ -43,7 +43,7 @@ def start_pytest():
 
 
 @app.get("/api/stop")
-def stop_pytest():
+def stop_pytest() -> dict:
     """Stop pytest subprocess.
 
     Returns:
@@ -55,7 +55,7 @@ def stop_pytest():
 
 
 @app.get("/api/collect")
-def collect_pytest():
+def collect_pytest() -> dict:
     """Collect pytest subprocess.
 
     Returns:
@@ -68,7 +68,7 @@ def collect_pytest():
 
 
 @app.get("/api/couch")
-def couch_connection():
+def couch_connection() -> dict:
     """Get couchdb connection string.
 
     Returns:
@@ -82,7 +82,7 @@ def couch_connection():
 
 
 @app.post("/api/confirm_dialog_box/{dialog_box_output}")
-def confirm_dialog_box(dialog_box_output: str):
+def confirm_dialog_box(dialog_box_output: str) -> dict:
     """Confirm dialog box.
 
     Args:
@@ -105,7 +105,7 @@ def confirm_dialog_box(dialog_box_output: str):
 
 
 @app.post("/api/confirm_operator_msg/{is_msg_visible}")
-def confirm_operator_msg(is_msg_visible: bool):  # noqa:  FBT001
+def confirm_operator_msg(is_msg_visible: bool) -> dict:  # noqa:  FBT001
     """Confirm operator msg.
 
     Args:

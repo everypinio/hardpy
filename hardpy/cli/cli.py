@@ -1,5 +1,6 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import annotations
 
 import os
 import sys
@@ -55,7 +56,7 @@ def init(  # noqa: PLR0913
         default_config.socket.port,
         help="Specify a socket port.",
     ),
-):
+) -> None:
     """Initialize HardPy tests directory.
 
     Args:
@@ -116,7 +117,7 @@ def init(  # noqa: PLR0913
 
 
 @cli.command()
-def run(tests_dir: Annotated[str | None, typer.Argument()] = None):
+def run(tests_dir: Annotated[str | None, typer.Argument()] = None) -> None:
     """Run HardPy server.
 
     Args:
