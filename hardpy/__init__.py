@@ -4,6 +4,8 @@
 from hardpy.pytest_hardpy.result import CouchdbLoader
 from hardpy.pytest_hardpy.utils import (
     DuplicateSerialNumberError,
+    DuplicatePartNumberError,
+    DuplicateTestStandNameError,
     DuplicateDialogBoxError,
 )
 from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig
@@ -21,6 +23,8 @@ from hardpy.pytest_hardpy.pytest_call import (
     get_current_report,
     set_dut_info,
     set_dut_serial_number,
+    set_dut_part_number,
+    set_stand_name,
     set_stand_info,
     set_case_artifact,
     set_module_artifact,
@@ -38,10 +42,14 @@ __all__ = [
     "get_current_report",
     # Errors
     "DuplicateSerialNumberError",
+    "DuplicatePartNumberError",
+    "DuplicateTestStandNameError",
     "DuplicateDialogBoxError",
     # Database info
     "set_dut_info",
     "set_dut_serial_number",
+    "set_dut_part_number",
+    "set_stand_name",
     "set_stand_info",
     "set_case_artifact",
     "set_module_artifact",

@@ -16,6 +16,20 @@ class DuplicateSerialNumberError(HardpyError):
         super().__init__(self.__doc__)  # type: ignore
 
 
+class DuplicatePartNumberError(HardpyError):
+    """The part number has already been determined."""
+
+    def __init__(self):
+        super().__init__(self.__doc__)  # type: ignore
+
+
+class DuplicateTestStandNameError(HardpyError):
+    """The test stand name has already been determined."""
+
+    def __init__(self):
+        super().__init__(self.__doc__)  # type: ignore
+
+
 class DuplicateDialogBoxError(HardpyError):
     """The dialog box has already been determined."""
 

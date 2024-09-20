@@ -18,6 +18,8 @@ from hardpy.pytest_hardpy.db import (
 from hardpy.pytest_hardpy.utils import (
     ConnectionData,
     DuplicateSerialNumberError,
+    DuplicatePartNumberError,
+    DuplicateTestStandNameError,
     DuplicateDialogBoxError,
     DialogBox,
 )
@@ -79,6 +81,40 @@ def set_dut_serial_number(serial_number: str):
     reporter.update_db_by_doc()
 
 
+def set_dut_part_number(part_number: str):
+    """Add DUT part number to document.
+
+    Args:
+        part_number (str): DUT part number
+
+    Raises:
+        DuplicatePartNumberError: if part number is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.DUT, DF.PART_NUMBER)
+    if reporter.get_field(key):
+        raise DuplicatePartNumberError
+    reporter.set_doc_value(key, part_number)
+    reporter.update_db_by_doc()
+
+
+def set_stand_name(name: str):
+    """Add test stand name to document.
+
+    Args:
+        name (str): test stand name
+
+    Raises:
+        DuplicateTestStandNameError: if test stand name is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.TEST_STAND, DF.NAME)
+    if reporter.get_field(key):
+        raise DuplicateTestStandNameError
+    reporter.set_doc_value(key, name)
+    reporter.update_db_by_doc()
+
+
 def set_stand_info(info: dict):
     """Add test stand info to document.
 
@@ -87,7 +123,7 @@ def set_stand_info(info: dict):
     """
     reporter = RunnerReporter()
     for stand_key, stand_value in info.items():
-        key = reporter.generate_key(DF.TEST_STAND, stand_key)
+        key = reporter.generate_key(DF.TEST_STAND, DF.INFO, stand_key)
         reporter.set_doc_value(key, stand_value)
     reporter.update_db_by_doc()
 
