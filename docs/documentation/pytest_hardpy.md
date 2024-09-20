@@ -57,6 +57,38 @@ def test_serial_number():
     set_dut_serial_number("1234")
 ```
 
+#### set_dut_part_number
+
+Writes a string with a part number.
+When called again, the Exception DuplicatePartNumberError will be caused.
+
+**Arguments:**
+
+- `part_number` *(str)*: DUT part number
+
+**Example:**
+
+```python
+def test_part_number():
+    set_dut_part_number("part_1")
+```
+
+#### set_stand_name
+
+Writes a string with a test stand name.
+When called again, the Exception DuplicateTestStandNameError will be caused.
+
+**Arguments:**
+
+- `name` *(str)*: test stand name
+
+**Example:**
+
+```python
+def test_stand_name():
+    set_stand_name("name 1")
+```
+
 #### set_stand_info
 
 Writes a dictionary with information about the test stand.
@@ -66,15 +98,11 @@ When called again, the information will be added to DB.
 
 - `info` *(dict)*: test stand info
 
-**Raises**
-
-- `DuplicateSerialNumberError`: if serial number is already set
-
 **Example:**
 
 ```python
 def test_stand_info():
-    set_stand_info({"name": "Test stand 1"})
+    set_stand_info({"geo": "Belgrade"})
 ```
 
 #### set_case_artifact
@@ -161,7 +189,7 @@ def test_driver_info():
 #### set_message
 
 Writes a string with a message.
-If a message is sent without a key, the key will be generated 
+If a message is sent without a key, the key will be generated
 automatically and the messages will be appended.
 If the message is sent with a known key, it will be updated.
 
@@ -182,8 +210,8 @@ def test_message():
 #### set_operator_message
 
 Sets an operator message in the **statestore** database and updates the database.
-The function should be used to handle events outside of testing. 
-For messages to the operator during testing, 
+The function should be used to handle events outside of testing.
+For messages to the operator during testing,
 there is the function [run_dialog_box](#run_dialog_box).
 
 **Arguments:**
@@ -403,4 +431,12 @@ The default is *localhost*.
 
 ```bash
 --hardpy-sh
+```
+
+#### hardpy-clear-database
+
+Option to clean the **statestore** database before running pytest.
+
+```bash
+--hardpy-clear-database
 ```
