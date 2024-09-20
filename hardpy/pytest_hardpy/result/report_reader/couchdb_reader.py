@@ -1,16 +1,17 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import annotations
 
 from dataclasses import dataclass
 from logging import getLogger
-from typing import List, Optional
+from typing import List
 
 from pycouchdb import Server as DbServer
-from pycouchdb.client import Database
+from pycouchdb.client import Database  # noqa: TCH002
 from pycouchdb.exceptions import NotFound
 
 from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
-from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig
+from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig  # noqa: TCH001
 from hardpy.pytest_hardpy.utils.const import TestStatus
 
 
@@ -22,8 +23,8 @@ class ReportInfo:
     status: str
     start_time: str
     end_time: str
-    first_failed_test_name: Optional[str]  # noqa: FA100
-    first_failed_test_id: Optional[str]  # noqa: FA100
+    first_failed_test_name: str | None
+    first_failed_test_id: str | None
 
 
 class CouchdbReader:
@@ -64,8 +65,8 @@ class CouchdbReader:
             1
             for report in self._db.all()
             if self._is_in_timeframe(
-                self._get_start_time_from_db(report[self._doc_id]),
-                self._get_stop_time_from_db(report[self._doc_id]),
+                self._get_start_time_from_db(report[self._doc_id]),  # type: ignore
+                self._get_stop_time_from_db(report[self._doc_id]),  # type: ignore
                 start_time,
                 end_time,
             )
@@ -90,7 +91,7 @@ class CouchdbReader:
             raise ValueError(msg)
         return status
 
-    def get_report_infos(self) -> List[ReportInfo]:  # noqa: FA100
+    def get_report_infos(self) -> List[ReportInfo]:
         """Get a list of information about all reports in the database.
 
         Returns:
@@ -104,7 +105,9 @@ class CouchdbReader:
         return reports_info
 
     def get_report_infos_in_timeframe(
-        self, start_time: int, end_time: int
+        self,
+        start_time: int,
+        end_time: int,
     ) -> List[ReportInfo]:
         """Get a list of information about reports in a timeframe in the database.
 
@@ -127,7 +130,7 @@ class CouchdbReader:
         for report in reports:
             start_t_db = self._get_start_time_from_db(report[self._doc_id])
             stop_t_db = self._get_stop_time_from_db(report[self._doc_id])
-            if self._is_in_timeframe(start_t_db, stop_t_db, start_time, end_time):
+            if self._is_in_timeframe(start_t_db, stop_t_db, start_time, end_time):  # type: ignore
                 report_info = self._get_single_report_info(report)
                 reports_info.append(report_info)
         return reports_info

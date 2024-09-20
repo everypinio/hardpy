@@ -7,7 +7,7 @@ from logging import getLogger
 from pathlib import Path
 from typing import NamedTuple
 
-from pytest import Item, Mark  # noqa: PT013
+from pytest import Item, Mark  # noqa: PT013, TCH002
 
 
 class TestDependencyInfo(NamedTuple):
@@ -44,7 +44,7 @@ class NodeInfo:
         self._case_id = item.name
 
     @property
-    def module_id(self):
+    def module_id(self) -> str:
         """Get module id.
 
         Returns:
@@ -53,7 +53,7 @@ class NodeInfo:
         return self._module_id
 
     @property
-    def case_id(self):
+    def case_id(self) -> str:
         """Get case id.
 
         Returns:
@@ -62,7 +62,7 @@ class NodeInfo:
         return self._case_id
 
     @property
-    def module_name(self):
+    def module_name(self) -> str:
         """Get module name.
 
         Returns:
@@ -71,7 +71,7 @@ class NodeInfo:
         return self._module_name
 
     @property
-    def case_name(self):
+    def case_name(self) -> str:
         """Get case name.
 
         Returns:
@@ -80,7 +80,7 @@ class NodeInfo:
         return self._case_name
 
     @property
-    def dependency(self):
+    def dependency(self) -> TestDependencyInfo | str:
         """Get dependency information.
 
         Returns:

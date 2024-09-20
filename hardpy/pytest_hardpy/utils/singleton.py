@@ -2,6 +2,9 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 
+from typing import Any
+
+
 class Singleton:
     """Singleton class.
 
@@ -18,7 +21,7 @@ class Singleton:
     _instance = None
     _initialized = False
 
-    def __new__(cls, *args, **kwargs):  # noqa: ANN002, ANN003, ANN204, D102
+    def __new__(cls, *args: Any, **kwargs: Any) -> "Singleton":  # noqa: ANN401, D102
         if not cls._instance:
             cls._instance = super().__new__(cls, *args, **kwargs)
         return cls._instance

@@ -95,7 +95,7 @@ def init(  # noqa: PLR0913
     ConfigManager().create_config(dir_path)
     config = ConfigManager().read_config(dir_path)
     if not config:
-        print(f"hardpy.toml config by path {dir_path} not detected.")  # noqa: T201
+        print(f"hardpy.toml config by path {dir_path} not detected.")
         sys.exit()
 
     template = TemplateGenerator(config)
@@ -113,7 +113,7 @@ def init(  # noqa: PLR0913
     for key, value in files.items():
         template.create_file(key, value)
 
-    print(f"HardPy project {dir_path.name} initialized successfully.")  # noqa: T201
+    print(f"HardPy project {dir_path.name} initialized successfully.")
 
 
 @cli.command()
@@ -127,11 +127,11 @@ def run(tests_dir: Annotated[str | None, typer.Argument()] = None) -> None:
     config = ConfigManager().read_config(dir_path)
 
     if not config:
-        print(f"Config at path {dir_path} not found.")  # noqa: T201
+        print(f"Config at path {dir_path} not found.")
         sys.exit()
 
-    print("\nLaunch the HardPy operator panel...")  # noqa: T201
-    print(f"http://{config.frontend.host}:{config.frontend.port}\n")  # noqa: T201
+    print("\nLaunch the HardPy operator panel...")
+    print(f"http://{config.frontend.host}:{config.frontend.port}\n")
 
     uvicorn_run(
         "hardpy.hardpy_panel.api:app",

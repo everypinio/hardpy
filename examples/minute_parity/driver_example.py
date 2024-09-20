@@ -5,7 +5,7 @@ from logging import getLogger
 class DriverExample:
     """Driver example."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._log = getLogger(__name__)
 
     @property

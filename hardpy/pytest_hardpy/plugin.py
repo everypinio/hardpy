@@ -45,19 +45,19 @@ def pytest_addoption(parser: Parser) -> None:
     parser.addoption(
         "--hardpy-db-url",
         action="store",
-        default=con_data.database_url,
+        default=con_data.database_url,  # type: ignore
         help="database url",
     )
     parser.addoption(
         "--hardpy-sp",
         action="store",
-        default=con_data.socket_port,
+        default=con_data.socket_port,  # type: ignore
         help="internal socket port",
     )
     parser.addoption(
         "--hardpy-sh",
         action="store",
-        default=con_data.socket_host,
+        default=con_data.socket_host,  # type: ignore
         help="internal socket host",
     )
     parser.addoption(
@@ -69,8 +69,10 @@ def pytest_addoption(parser: Parser) -> None:
 
 
 # Bootstrapping hooks
-def pytest_load_initial_conftests(
-    early_config: Config, parser: Parser, args: Any
+def pytest_load_initial_conftests(  # noqa: D103
+    early_config: Config,
+    parser: Parser,  # noqa: ARG001
+    args: Any,  # noqa: ANN401
 ) -> None:
     if "--hardpy-pt" in args:
         plugin = HardpyPlugin()
@@ -103,7 +105,7 @@ class HardpyPlugin:
 
         database_url = config.getoption("--hardpy-db-url")
         if database_url:
-            con_data.database_url = str(database_url)
+            con_data.database_url = str(database_url)  # type: ignore
 
         socket_port = config.getoption("--hardpy-sp")
         if socket_port:
@@ -111,7 +113,7 @@ class HardpyPlugin:
 
         socket_host = config.getoption("--hardpy-sh")
         if socket_host:
-            con_data.socket_host = str(socket_host)
+            con_data.socket_host = str(socket_host)  # type: ignore
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
@@ -140,7 +142,7 @@ class HardpyPlugin:
         self,
         session: Session,
         config: Config,
-        items: list[Item],
+        items: list[Item],  # noqa: ARG002
     ) -> None:
         """Call after collection phase."""
         self._reporter.init_doc(str(PurePath(config.rootpath).name))

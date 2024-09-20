@@ -16,7 +16,11 @@ class BaseReporter:
         self._log = getLogger(__name__)
 
     def set_doc_value(
-        self, key: str, value, runstore_only=False, statestore_only=False
+        self,
+        key: str,
+        value: Any,  # noqa: ANN401
+        runstore_only=False,  # noqa: ANN001, FBT002
+        statestore_only=False,  # noqa: ANN001, FBT002
     ) -> None:
         """Set value to the document.
 
@@ -50,7 +54,7 @@ class BaseReporter:
         self._statestore.update_db()
         self._runstore.update_db()
 
-    def generate_key(self, *args) -> str:  # noqa: ANN002
+    def generate_key(self, *args: Any) -> str:  # noqa: ANN401
         """Generate key for database.
 
         Args:

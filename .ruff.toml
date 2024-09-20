@@ -52,6 +52,7 @@ indent-width = 4
             "S101",   # use of `assert` detected
             "ANN201", # To prevent tests from being returned None, it is mandatory
             "INP001", # Imports of pytest and hardpy
+            "PT022",  # Using yield
         ]
         "examples/*" = [
             "D104",   # Missing docstring in public package
@@ -59,5 +60,7 @@ indent-width = 4
             "S101",   # use of `assert` detected   
             "ANN201", # To prevent tests from being returned None
             "INP001", # Imports of pytest and hardpy
+            "PT022",  # Using yield
         ]
         "hardpy/cli/template.py" = ["D102"]
+        "hardpy/cli/cli.py" = ["T201"] # using print

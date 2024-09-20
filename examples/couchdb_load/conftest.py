@@ -17,4 +17,4 @@ def save_report_to_couchdb():
 @pytest.fixture(scope="session", autouse=True)
 def fill_actions_after_test(post_run_functions: list):
     post_run_functions.append(save_report_to_couchdb)
-    yield  # noqa: PT022
+    yield

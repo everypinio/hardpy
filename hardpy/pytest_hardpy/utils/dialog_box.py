@@ -224,7 +224,9 @@ class StepWidget(IWidget):
         WidgetInfoError: If the text or widget are not provided.
     """
 
-    def __init__(self, title: str, text: str | None, widget: ImageWidget | None) -> None:
+    def __init__(
+        self, title: str, text: str | None, widget: ImageWidget | None
+    ) -> None:
         super().__init__(WidgetType.STEP)
         if text is None and widget is None:
             msg = "Text or widget must be provided"

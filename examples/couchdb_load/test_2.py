@@ -3,4 +3,4 @@ def test_three():
 
 
 def test_four():
-    assert False  # noqa: B011, PT015
+    raise AssertionError
