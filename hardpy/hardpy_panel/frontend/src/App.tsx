@@ -91,7 +91,7 @@ function App(): JSX.Element {
           if (rows.length === 0)
           {
             return  <Card style={{marginTop: '60px'}}>
-                        <H2>No entries in the database 🫠</H2>
+                        <H2>No entries in the database 🙅🏽‍♀️🚫</H2>
                     </Card>
           }
 
