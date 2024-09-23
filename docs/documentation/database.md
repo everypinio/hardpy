@@ -192,6 +192,8 @@ They can write custom classes to record reports at the end of testing.
 
 ### Statestore scheme
 
+![statestore_scheme](../img/database/statestore.png){ align=left, width="800" }
+
 The **current** document of the **statestore** database contains the following fields:
 
 - **_rev**: current document revision;
@@ -336,7 +338,10 @@ Example of a **current** document:
 
 ### Runstore scheme
 
+![runstore_scheme](../img/database/runstore.png){ align=left, width="800" }
+
 The **runstore** database is similar to **statestore** database, but there are differences:
+
 - **runstore** contains the **artifact** field for test run, module, and case;
 - **runstore** does not contain **dialog_box** filed.
 
