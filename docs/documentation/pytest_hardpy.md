@@ -303,7 +303,7 @@ If the serial number dut is empty, a random identifier with prefix `no_serial` i
 The random identifier is a unique string generated using the `uuid4()` function from the `uuid` module in Python.
 This allows for easy identification and sorting of reports.
 
-#### Examples
+**Examples**
 Valid report name: `report_1726496218_1234567890`
 Valid report name (no serial number): `report_1726496218_no_serial_808007`
 
