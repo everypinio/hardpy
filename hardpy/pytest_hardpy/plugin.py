@@ -60,6 +60,12 @@ def pytest_addoption(parser: Parser):
         help="internal socket host",
     )
     parser.addoption(
+        "--hardpy-clear-database",
+        action="store",
+        default=False,
+        help="clear hardpy local database",
+    )
+    parser.addoption(
         "--hardpy-pt",
         action="store_true",
         default=False,
@@ -102,6 +108,9 @@ class HardpyPlugin:
         if database_url:
             con_data.database_url = str(database_url)
 
+        is_clear_database = config.getoption("--hardpy-clear-database")
+        is_clear_statestore = is_clear_database == str(True)
+
         socket_port = config.getoption("--hardpy-sp")
         if socket_port:
             con_data.socket_port = int(socket_port)  # type: ignore
@@ -115,7 +124,7 @@ class HardpyPlugin:
         config.addinivalue_line("markers", "dependency")
 
         # must be init after config data is set
-        self._reporter = HookReporter()
+        self._reporter = HookReporter(is_clear_statestore)
 
     def pytest_sessionfinish(self, session: Session, exitstatus: int):
         """Call at the end of test session."""

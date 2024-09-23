@@ -8,6 +8,8 @@ from hardpy.pytest_hardpy.utils.singleton import Singleton
 from hardpy.pytest_hardpy.utils.connection_data import ConnectionData
 from hardpy.pytest_hardpy.utils.exception import (
     DuplicateSerialNumberError,
+    DuplicatePartNumberError,
+    DuplicateTestStandNameError,
     DuplicateDialogBoxError,
     WidgetInfoError,
 )
@@ -30,6 +32,8 @@ __all__ = [
     "Singleton",
     "ConnectionData",
     "DuplicateSerialNumberError",
+    "DuplicatePartNumberError",
+    "DuplicateTestStandNameError",
     "DuplicateDialogBoxError",
     "WidgetInfoError",
     "DialogBox",

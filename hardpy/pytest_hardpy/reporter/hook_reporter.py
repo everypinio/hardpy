@@ -15,8 +15,10 @@ from hardpy.pytest_hardpy.utils import TestStatus, NodeInfo
 class HookReporter(BaseReporter):
     """Reporter for using in the hook HardPy plugin's hooks."""
 
-    def __init__(self):  # noqa: WPS612
+    def __init__(self, is_clear_database: bool = False):  # noqa: WPS612
         super().__init__()
+        if is_clear_database:
+            self._statestore.clear()
         self._log = getLogger(__name__)
 
     def init_doc(self, doc_name: str):
