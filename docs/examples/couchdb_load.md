@@ -6,15 +6,6 @@ the testing process via **CouchdbLoader**.
 The code for this example can be seen inside the hardpy package 
 [CouchDB Load](https://github.com/everypinio/hardpy/tree/main/examples/couchdb_load).
 
-**report** names are automatically generated based on the test completion date and the device serial number. 
-If the serial number dut is empty, a random identifier with prefix `no_serial` is used. 
-The random identifier is a unique string generated using the `uuid4()` function from the `uuid` module in Python.
-This allows for easy identification and sorting of reports.
-
-#### Examples
-Valid report name: `report_1726496218_1234567890`
-Valid report name (no serial number): `report_1726496218_no_serial_808007`
-
 ### how to start
 
 1. Launch `hardpy init couchdb_load`
