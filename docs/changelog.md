@@ -10,6 +10,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 * Add unit tests for dialog widgets.
 * Fix statuses of stopped tests.
 * Fix progress bar with skipping tests. Progress bar fills to the end when tests are skipped.
+* Add report name generation when serial number is missing.
 
 ## HardPy 0.5.0
 
