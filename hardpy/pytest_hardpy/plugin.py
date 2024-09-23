@@ -29,7 +29,6 @@ from _pytest._code.code import (
 )
 
 from hardpy.pytest_hardpy.reporter import HookReporter
-from hardpy.pytest_hardpy.reporter.runner_reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
     TestStatus,
     NodeInfo,
@@ -37,7 +36,6 @@ from hardpy.pytest_hardpy.utils import (
     ConnectionData,
 )
 from hardpy.pytest_hardpy.utils.node_info import TestDependencyInfo
-from hardpy.pytest_hardpy.db import DatabaseField as DF
 
 
 def pytest_addoption(parser: Parser):
