@@ -8,6 +8,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 * Add CLI to hardpy as an entry point. The `hardpy-panel` command is now unavailable.
 * Fix using special characters in dialog boxes. ASCII symbols are passed from frontend to backend.
 * Add unit tests for dialog widgets.
+* Fix statuses of stopped tests.
 * Fix progress bar with skipping tests. Progress bar fills to the end when tests are skipped.
 
 ## HardPy 0.5.0
