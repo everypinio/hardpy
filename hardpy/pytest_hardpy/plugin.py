@@ -287,25 +287,39 @@ class HardpyPlugin:
             case ExitCode.TESTS_FAILED:
                 return TestStatus.FAILED
             case ExitCode.INTERRUPTED:
-                reporter = RunnerReporter()
-                for module_id, module_data in self._results.items():
-                    self._log.info(self._results.items())
-                    if module_data[DF.MODULE_STATUS] == TestStatus.READY:
-                        key_1 = reporter.generate_key(DF.MODULES, module_id, DF.STATUS)
-                        reporter.set_doc_value(key_1, TestStatus.STOPPED)
-                        self._reporter.update_db_by_doc()
-                    if module_data[DF.MODULE_STATUS] == TestStatus.READY:
-                        for case, value in module_data.items():
-                            if case != DF.MODULE_STATUS and value is None:
-                                key_2 = reporter.generate_key(
-                                    DF.MODULES, module_id, DF.CASES, case, DF.STATUS
-                                )
-                                reporter.set_doc_value(key_2, TestStatus.STOPPED)
-                                self._reporter.update_db_by_doc()
-                                return TestStatus.STOPPED
+                self._stop_tests()
                 return TestStatus.STOPPED
             case _:
                 return TestStatus.ERROR
+
+    def _stop_tests(self):  # noqa: WPS231
+        """Update module and case statuses from READY or RUN to STOPPED."""
+        for module_id, module_data in self._results.items():
+            module_status = module_data["module_status"]
+
+            # skip not ready and running modules
+            if module_status not in {TestStatus.READY, TestStatus.RUN}:
+                continue
+
+            # update module statuses
+            self._results[module_id]["module_status"] = TestStatus.STOPPED
+            self._reporter.set_module_status(module_id, TestStatus.STOPPED)
+
+            # update case statuses
+            for module_key, module_value in module_data.items():
+                # module status is not a case_id
+                if module_key == "module_status":
+                    continue
+                # case value is empty - case is not finished
+                if module_value is None:
+                    case_id = module_key
+                    self._results[module_id][case_id] = TestStatus.STOPPED
+                    self._reporter.set_case_status(
+                        module_id,
+                        case_id,
+                        TestStatus.STOPPED,
+                    )
+        self._reporter.update_db_by_doc()
 
     def _decode_assertion_msg(
         self,
