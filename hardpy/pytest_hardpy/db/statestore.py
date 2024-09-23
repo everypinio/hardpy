@@ -4,15 +4,16 @@
 from logging import getLogger
 
 from hardpy.pytest_hardpy.db.base_store import BaseStore
+from hardpy.pytest_hardpy.db.schema import ResultStateStore
 from hardpy.pytest_hardpy.utils import Singleton
 
 
 class StateStore(Singleton, BaseStore):
     """HardPy state storage interface for CouchDB."""
+
     def __init__(self) -> None:
         if not self._initialized:
             super().__init__("statestore")
             self._log = getLogger(__name__)
-            from hardpy.pytest_hardpy.db import ResultStateStore
             self._schema = ResultStateStore
             self._initialized = True
