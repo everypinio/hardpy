@@ -37,6 +37,7 @@ def test_dut_serial_number(pytester: Pytester, hardpy_opts):
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
+
 def test_dut_part_number(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""

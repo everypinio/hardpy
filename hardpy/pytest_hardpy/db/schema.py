@@ -139,6 +139,7 @@ class Dut(BaseModel):
     part_number: str | None
     info: dict = {}
 
+
 class TestStand(BaseModel):
     """Test stand description.
 
@@ -155,7 +156,6 @@ class TestStand(BaseModel):
 
     name: str | None
     info: dict = {}
-
 
 
 class ResultStateStore(IBaseResult):
