@@ -326,6 +326,16 @@ def fill_actions_after_test(post_run_functions: list):
     yield
 ```
 
+**report** names are automatically generated based on the test completion date and the device serial number. 
+If the serial number dut is empty, a random identifier with prefix `no_serial` is used. 
+The random identifier is a unique string generated using the `uuid4()` function from the `uuid` module in Python.
+This allows for easy identification and sorting of reports.
+
+**Examples**
+Valid report name: `report_1726496218_1234567890`
+Valid report name (no serial number): `report_1726496218_no_serial_808007`
+
+
 ## Fixture
 
 #### post_run_functions
