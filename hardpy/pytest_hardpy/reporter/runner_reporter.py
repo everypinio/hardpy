@@ -5,17 +5,15 @@ from logging import getLogger
 from typing import Any
 
 from hardpy.pytest_hardpy.reporter.base import BaseReporter
-from hardpy.pytest_hardpy.utils import Singleton
+from hardpy.pytest_hardpy.utils import SingletonMeta
 
 
-class RunnerReporter(Singleton, BaseReporter):
+class RunnerReporter(BaseReporter, metaclass=SingletonMeta):
     """Reporter for using in direct call from test runner with HardPy plugin."""
 
     def __init__(self) -> None:
-        if not self._initialized:
-            super().__init__()
-            self._log = getLogger(__name__)
-            self._initialized = True
+        super().__init__()
+        self._log = getLogger(__name__)
 
     def get_field(self, key: str) -> Any:  # noqa: ANN401
         """Get field from the statestore.

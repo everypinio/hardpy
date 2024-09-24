@@ -7,18 +7,16 @@ from pycouchdb.exceptions import Conflict, NotFound
 
 from hardpy.pytest_hardpy.db.base_store import BaseStore
 from hardpy.pytest_hardpy.db.schema import ResultStateStore
-from hardpy.pytest_hardpy.utils import Singleton
+from hardpy.pytest_hardpy.utils import SingletonMeta
 
 
-class StateStore(Singleton, BaseStore):
+class StateStore(BaseStore, metaclass=SingletonMeta):
     """HardPy state storage interface for CouchDB."""
 
     def __init__(self) -> None:
-        if not self._initialized:
-            super().__init__("statestore")
-            self._log = getLogger(__name__)
-            self._schema = ResultStateStore
-            self._initialized = True
+        super().__init__("statestore")
+        self._log = getLogger(__name__)
+        self._schema = ResultStateStore
 
     def clear(self) -> None:
         """Clear database."""

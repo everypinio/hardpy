@@ -22,13 +22,13 @@ from hardpy.pytest_hardpy.utils.exception import (
 )
 from hardpy.pytest_hardpy.utils.node_info import NodeInfo
 from hardpy.pytest_hardpy.utils.progress_calculator import ProgressCalculator
-from hardpy.pytest_hardpy.utils.singleton import Singleton
+from hardpy.pytest_hardpy.utils.singleton import SingletonMeta
 
 __all__ = [
     "NodeInfo",
     "ProgressCalculator",
     "TestStatus",
-    "Singleton",
+    "SingletonMeta",
     "ConnectionData",
     "DuplicateSerialNumberError",
     "DuplicatePartNumberError",
