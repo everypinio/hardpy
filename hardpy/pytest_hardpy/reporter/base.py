@@ -19,8 +19,8 @@ class BaseReporter:
         self,
         key: str,
         value: Any,  # noqa: ANN401
-        runstore_only=False,  # noqa: ANN001, FBT002
-        statestore_only=False,  # noqa: ANN001, FBT002
+        runstore_only: bool = False,
+        statestore_only: bool = False,
     ) -> None:
         """Set value to the document.
 

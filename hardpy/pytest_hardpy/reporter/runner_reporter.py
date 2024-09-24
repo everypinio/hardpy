@@ -14,6 +14,7 @@ class RunnerReporter(BaseReporter, metaclass=SingletonMeta):
     def __init__(self) -> None:
         super().__init__()
         self._log = getLogger(__name__)
+        self._initialized = True
 
     def get_field(self, key: str) -> Any:  # noqa: ANN401
         """Get field from the statestore.

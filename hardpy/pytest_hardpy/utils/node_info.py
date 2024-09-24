@@ -5,9 +5,10 @@ from __future__ import annotations
 import re
 from logging import getLogger
 from pathlib import Path
-from typing import NamedTuple
+from typing import TYPE_CHECKING, NamedTuple
 
-from pytest import Item, Mark  # noqa: PT013, TCH002
+if TYPE_CHECKING:
+    from pytest import Item, Mark
 
 
 class TestDependencyInfo(NamedTuple):

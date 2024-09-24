@@ -19,8 +19,8 @@ default_config = ConfigManager().get_config()
 @cli.command()
 def init(  # noqa: PLR0913
     tests_dir: Annotated[str | None, typer.Argument()] = None,
-    create_database: bool = typer.Option(  # noqa: FBT001
-        True,  # noqa: FBT003
+    create_database: bool = typer.Option(
+        True,
         help="Create CouchDB database.",
     ),
     database_user: str = typer.Option(

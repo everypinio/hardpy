@@ -17,7 +17,7 @@ from _pytest._code.code import (
     TerminalRepr,
 )
 from natsort import natsorted
-from pytest import (  # noqa: PT013
+from pytest import (
     Config,
     ExitCode,
     Item,

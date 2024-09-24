@@ -16,7 +16,7 @@ from hardpy.pytest_hardpy.utils import NodeInfo, TestStatus
 class HookReporter(BaseReporter):
     """Reporter for using in the hook HardPy plugin's hooks."""
 
-    def __init__(self, is_clear_database: bool = False) -> None:  # noqa: FBT001, FBT002
+    def __init__(self, is_clear_database: bool = False) -> None:
         super().__init__()
         if is_clear_database:
             self._statestore.clear()
@@ -187,8 +187,8 @@ class HookReporter(BaseReporter):
         self,
         item: dict,
         node_info: NodeInfo,
-        is_only_runstore: bool = False,  # noqa: FBT001, FBT002
-        is_only_statestore: bool = False,  # noqa: FBT001, FBT002
+        is_only_runstore: bool = False,
+        is_only_statestore: bool = False,
     ) -> None:
         module_default = {
             DF.STATUS: TestStatus.READY,

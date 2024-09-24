@@ -43,7 +43,7 @@ def get_current_report() -> ResultRunStore | None:
     """
     runstore = RunStore()
     try:
-        return runstore.get_document()
+        return runstore.get_document()  # type: ignore
     except NotFound:
         return None
     except ValidationError:

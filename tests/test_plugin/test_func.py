@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from pytest import Pytester  # noqa: PT013
+    from pytest import Pytester
 
 func_test_header = """
         from uuid import uuid4
@@ -62,7 +62,7 @@ def test_dut_part_number(pytester: Pytester, hardpy_opts: list[str]):
             second_part_number = "incorrect part number"
             with pytest.raises(DuplicatePartNumberError):
                 hardpy.set_dut_part_number(second_part_number)
-    """
+    """,
     )
 
     result = pytester.runpytest(*hardpy_opts)
@@ -183,7 +183,7 @@ def test_stand_name(pytester: Pytester, hardpy_opts: list[str]):
             second_name = "incorrect name"
             with pytest.raises(DuplicateTestStandNameError):
                 hardpy.set_stand_name(second_name)
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)

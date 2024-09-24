@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from pytest import Pytester  # noqa: PT013
+    from pytest import Pytester
 
 status_test_header = """
         import pytest

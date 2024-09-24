@@ -2,13 +2,15 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
-from typing import Any, ClassVar
+from typing import Generic, TypeVar
+
+T = TypeVar("T")
 
 
-class SingletonMeta(type):
-    _instances: ClassVar[dict[object, Any]] = {}
+class SingletonMeta(type, Generic[T]):
+    _instances: dict[SingletonMeta[T], T] = {}  # noqa: RUF012
 
-    def __call__(cls, *args, **kwargs) -> object:  # noqa: ANN002, ANN003
+    def __call__(cls, *args, **kwargs) -> T:  # noqa: ANN002, ANN003
         """Magic method to create an instance of the class.
 
         Args:

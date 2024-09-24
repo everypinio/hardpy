@@ -4,14 +4,18 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from logging import getLogger
+from typing import TYPE_CHECKING
 
 from pycouchdb import Server as DbServer
-from pycouchdb.client import Database  # noqa: TCH002
 from pycouchdb.exceptions import NotFound
 
 from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
-from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig  # noqa: TCH001
 from hardpy.pytest_hardpy.utils.const import TestStatus
+
+if TYPE_CHECKING:
+    from pycouchdb.client import Database
+
+    from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig
 
 
 @dataclass

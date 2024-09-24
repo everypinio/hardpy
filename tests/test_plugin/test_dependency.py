@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from pytest import Pytester  # noqa: PT013, TCH002
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pytest import Pytester
 
 status_test_header = """
         import pytest
@@ -222,7 +225,8 @@ def test_module_dependency_with_incorrect_module(
 
 
 def test_module_dependency_with_incorrect_case(
-    pytester: Pytester, hardpy_opts: list[str]
+    pytester: Pytester,
+    hardpy_opts: list[str],
 ):
     pytester.makepyfile(
         test_1="""
@@ -380,7 +384,8 @@ def test_module_dependency_from_failed_case(pytester: Pytester, hardpy_opts: lis
 
 
 def test_module_dependency_from_skipped_case(
-    pytester: Pytester, hardpy_opts: list[str]
+    pytester: Pytester,
+    hardpy_opts: list[str],
 ):
     pytester.makepyfile(
         test_1="""

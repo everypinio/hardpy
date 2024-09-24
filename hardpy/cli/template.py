@@ -179,7 +179,7 @@ class TemplateGenerator:
             file_path (Path): file path
             content (str): file content
         """
-        with open(file_path, "w") as file:  # noqa: PTH123
+        with Path.open(file_path, "w") as file:
             file.write(content)
 
     @property

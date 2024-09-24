@@ -28,7 +28,7 @@ class DatabaseConfig(BaseModel):
             str: database connection url
         """
         credentials = f"{self.user}:{self.password}"
-        uri = f"{self.host}:{str(self.port)}"
+        uri = f"{self.host}:{self.port!s}"
         return f"http://{credentials}@{uri}/"
 
 
@@ -111,7 +111,7 @@ class ConfigManager:
         Args:
             parent_dir (Path): Configuration file parent directory.
         """
-        with open(parent_dir / "hardpy.toml", "w") as file:  # noqa: PTH123
+        with Path.open(parent_dir / "hardpy.toml", "w") as file:
             file.write(rtoml.dumps(cls.obj.model_dump()))
 
     @classmethod
@@ -130,15 +130,15 @@ class ConfigManager:
             logger.error(f"File hardpy.toml not found at path: {toml_file}")  # noqa: G004
             return None
         try:
-            with open(toml_path / "hardpy.toml", "r") as f:  # noqa: PTH123
+            with Path.open(toml_path / "hardpy.toml", "r") as f:
                 cls.obj = HardpyConfig(**rtoml.load(f))
             return cls.obj  # noqa: TRY300
         except rtoml.TomlParsingError as exc:
-            logger.error(f"Error parsing TOML: {exc}")  # noqa: G004, TRY400
+            logger.exception(f"Error parsing TOML: {exc}")  # noqa: G004, TRY401
         except rtoml.TomlSerializationError as exc:
-            logger.error(f"Error parsing TOML: {exc}")  # noqa: G004, TRY400
+            logger.exception(f"Error parsing TOML: {exc}")  # noqa: G004, TRY401
         except ValidationError as exc:
-            logger.error(f"Error parsing TOML: {exc}")  # noqa: G004, TRY400
+            logger.exception(f"Error parsing TOML: {exc}")  # noqa: G004, TRY401
         return None
 
     @classmethod

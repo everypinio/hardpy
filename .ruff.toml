@@ -24,6 +24,10 @@ indent-width = 4
         "TD003",  # Allow TODO withot task link
         "PGH003",
         "D104",   # Missing docstring in public package
+        "FBT001", # Boolean positional arg in function call
+        "FBT002", # Boolean default value in function call
+        "FBT003", # Boolean positional arg in function definition
+        "PT013",  # Pytest import
     ]
 
     [lint.isort]
@@ -47,12 +51,13 @@ indent-width = 4
             "F401", # unused imports
         ]
         "tests/*" = [
-            "D104",   # Missing docstring in public package
-            "D103",   # Missing docstring in public function
-            "S101",   # use of `assert` detected
-            "ANN201", # To prevent tests from being returned None, it is mandatory
-            "INP001", # Imports of pytest and hardpy
-            "PT022",  # Using yield
+            "D104",    # Missing docstring in public package
+            "D103",    # Missing docstring in public function
+            "S101",    # use of `assert` detected
+            "ANN201",  # To prevent tests from being returned None, it is mandatory
+            "INP001",  # Imports of pytest and hardpy
+            "PT022",   # Using yield
+            "PLR2004", # Magic value used in comparison
         ]
         "examples/*" = [
             "D104",   # Missing docstring in public package
