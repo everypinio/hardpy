@@ -2,14 +2,21 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## HardPy 0.6.0
+
+In HardPy, compared to version 0.5.0 and less, the startup principle has changed.
+The `hardpy-panel` command is no longer available.
+
+The HardPy project from version 0.6.0 onwards must contain the **hardpy.toml** file.
+
 * Add clearing the **statestore** database before running hardpy using
   the `--hardpy-clear-database` option of the **pytest-hardpy** plugin.
 * Add the **name** and **info** fields to **test_stand** in the database schema.
 * Add the **part_number** field to **dut** in the database schema.
 * Add `set_stand_name` and `set_dut_part_number` functions.
 * Add a hardpy template project using the `hardpy init` command.
-* Add hardpy config .toml file.
-* Refactor pytest-hardpy plugin options.
+* Add hardpy config .toml file - **hardpy.toml**.
+* Refactor **pytest-hardpy** plugin options.
 * Add CLI to hardpy as an entry point. The `hardpy-panel` command is now unavailable.
 * Fix using special characters in dialog boxes. ASCII symbols are passed from frontend to backend.
 * Add unit tests for dialog widgets.
