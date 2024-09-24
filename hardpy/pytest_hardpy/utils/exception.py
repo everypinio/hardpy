@@ -19,14 +19,14 @@ class DuplicateSerialNumberError(HardpyError):
 class DuplicatePartNumberError(HardpyError):
     """The part number has already been determined."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(self.__doc__)  # type: ignore
 
 
 class DuplicateTestStandNameError(HardpyError):
     """The test stand name has already been determined."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(self.__doc__)  # type: ignore
 
 

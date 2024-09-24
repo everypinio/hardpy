@@ -1,6 +1,7 @@
 """Custom build script for hatch backend."""  # noqa: INP001
 
 import os
+from pathlib import Path
 
 from hatchling.builders.hooks.plugin.interface import BuildHookInterface  # type: ignore
 
@@ -13,7 +14,7 @@ class CustomHook(BuildHookInterface):
         if self.target_name not in ["sdist"]:
             return
 
-        build_dir = os.getcwd()  # noqa: PTH109
+        build_dir = Path.cwd()
         os.chdir("hardpy/hardpy_panel/frontend")
 
         exit_code = os.system("yarn")  # noqa: S605, S607

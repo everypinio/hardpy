@@ -26,7 +26,8 @@ def test_radiobutton_widget():
 def test_radiobutton_empty_widget():
     try:
         hardpy.RadiobuttonWidget(fields=[])
-        assert False, "WidgetInfoError was not raised"  # noqa: B011, PT015
+        msg = "WidgetInfoError was not raised"
+        raise AssertionError(msg)
     except ValueError:
         assert True
 
@@ -39,7 +40,8 @@ def test_checkbox_widget():
 def test_checkbox_empty_widget():
     try:
         hardpy.CheckboxWidget(fields=[])
-        assert False, "WidgetInfoError was not raised"  # noqa: B011, PT015
+        msg = "WidgetInfoError was not raised"
+        raise AssertionError(msg)
     except ValueError:
         assert True
 

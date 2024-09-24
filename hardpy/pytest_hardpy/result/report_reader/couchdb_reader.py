@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from logging import getLogger
-from typing import List
 
 from pycouchdb import Server as DbServer
 from pycouchdb.client import Database  # noqa: TCH002
@@ -91,7 +90,7 @@ class CouchdbReader:
             raise ValueError(msg)
         return status
 
-    def get_report_infos(self) -> List[ReportInfo]:
+    def get_report_infos(self) -> list[ReportInfo]:
         """Get a list of information about all reports in the database.
 
         Returns:
@@ -108,7 +107,7 @@ class CouchdbReader:
         self,
         start_time: int,
         end_time: int,
-    ) -> List[ReportInfo]:
+    ) -> list[ReportInfo]:
         """Get a list of information about reports in a timeframe in the database.
 
         Args:
@@ -153,7 +152,7 @@ class CouchdbReader:
         first_failed_test_name = None
         first_failed_test_id = None
         report_doc = report[self._doc_id]
-        for _module_name, module_info in report_doc[DF.MODULES].items():
+        for module_info in report_doc[DF.MODULES].values():
             for case_name, case_info in module_info[DF.CASES].items():
                 if case_info[DF.STATUS] == TestStatus.FAILED:
                     first_failed_test_name = case_info[DF.NAME]
@@ -168,6 +167,10 @@ class CouchdbReader:
         )
 
     def _is_in_timeframe(
-        self, start: int, end: int, timeframe_start: int, timeframe_end: int
+        self,
+        start: int,
+        end: int,
+        timeframe_start: int,
+        timeframe_end: int,
     ) -> bool:
         return timeframe_start <= start and end <= timeframe_end

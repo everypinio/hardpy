@@ -16,7 +16,7 @@ from hardpy.pytest_hardpy.utils import NodeInfo, TestStatus
 class HookReporter(BaseReporter):
     """Reporter for using in the hook HardPy plugin's hooks."""
 
-    def __init__(self, is_clear_database: bool = False):  # noqa: WPS612
+    def __init__(self, is_clear_database: bool = False) -> None:  # noqa: FBT001, FBT002
         super().__init__()
         if is_clear_database:
             self._statestore.clear()
@@ -292,7 +292,7 @@ class HookReporter(BaseReporter):
 
         return new_modules
 
-    def _get_module_name(self, node_info) -> str:
+    def _get_module_name(self, node_info: NodeInfo) -> str:
         """Get module name from markers or use default.
 
         Args:
@@ -303,7 +303,7 @@ class HookReporter(BaseReporter):
         """
         return node_info.module_name if node_info.module_name else node_info.module_id
 
-    def _get_case_name(self, node_info) -> str:
+    def _get_case_name(self, node_info: NodeInfo) -> str:
         """Get case name from markers or use default.
 
         Args:

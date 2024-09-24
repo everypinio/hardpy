@@ -1,9 +1,9 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-import os
 import re
 from enum import Enum
+from pathlib import Path
 from urllib.parse import unquote
 
 from fastapi import FastAPI
@@ -122,7 +122,7 @@ def confirm_operator_msg(is_msg_visible: bool) -> dict:  # noqa: FBT001
 app.mount(
     "/",
     StaticFiles(
-        directory=(os.path.dirname(__file__)) + "/frontend/dist",  # noqa: PTH120
+        directory=Path(__file__).parent / "frontend/dist",
         html=True,
     ),
     name="static",

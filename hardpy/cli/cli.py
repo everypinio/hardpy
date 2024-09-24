@@ -2,7 +2,6 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
 
@@ -85,11 +84,11 @@ def init(  # noqa: PLR0913
     )
     # create tests directory
     dir_path = Path(Path.cwd() / _tests_dir)
-    os.makedirs(dir_path, exist_ok=True)  # noqa: PTH103
+    Path.mkdir(dir_path, exist_ok=True, parents=True)
 
     if create_database:
         # create database directory
-        os.makedirs(dir_path / "database", exist_ok=True)  # noqa: PTH103
+        Path.mkdir(dir_path / "database", exist_ok=True, parents=True)
 
     # create hardpy.toml
     ConfigManager().create_config(dir_path)

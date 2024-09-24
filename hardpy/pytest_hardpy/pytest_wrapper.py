@@ -85,7 +85,7 @@ class PyTestWrapper:
             return True
         return False
 
-    def collect(self, is_clear_database: bool = False) -> bool:
+    def collect(self, is_clear_database: bool = False) -> bool:  # noqa: FBT001, FBT002
         """Perform pytest collection.
 
         Args:

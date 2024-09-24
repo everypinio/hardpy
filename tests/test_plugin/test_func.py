@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from pytest import Pytester  # noqa: PT013, TCH002
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pytest import Pytester  # noqa: PT013
 
 func_test_header = """
         from uuid import uuid4
@@ -39,7 +42,7 @@ def test_dut_serial_number(pytester: Pytester, hardpy_opts: list[str]):
     result.assert_outcomes(passed=1)
 
 
-def test_dut_part_number(pytester: Pytester, hardpy_opts):
+def test_dut_part_number(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -66,7 +69,7 @@ def test_dut_part_number(pytester: Pytester, hardpy_opts):
     result.assert_outcomes(passed=1)
 
 
-def test_empty_dut_serial_number(pytester: Pytester, hardpy_opts):
+def test_empty_dut_serial_number(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -160,7 +163,7 @@ def test_empty_dut_info(pytester: Pytester, hardpy_opts: list[str]):
     result.assert_outcomes(failed=1)
 
 
-def test_stand_name(pytester: Pytester, hardpy_opts):
+def test_stand_name(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -186,7 +189,7 @@ def test_stand_name(pytester: Pytester, hardpy_opts):
     result.assert_outcomes(passed=1)
 
 
-def test_stand_info(pytester: Pytester, hardpy_opts):
+def test_stand_info(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}

@@ -45,19 +45,19 @@ def pytest_addoption(parser: Parser) -> None:
     parser.addoption(
         "--hardpy-db-url",
         action="store",
-        default=con_data.database_url,  # type: ignore
+        default=con_data.database_url,
         help="database url",
     )
     parser.addoption(
         "--hardpy-sp",
         action="store",
-        default=con_data.socket_port,  # type: ignore
+        default=con_data.socket_port,
         help="internal socket port",
     )
     parser.addoption(
         "--hardpy-sh",
         action="store",
-        default=con_data.socket_host,  # type: ignore
+        default=con_data.socket_host,
         help="internal socket host",
     )
     parser.addoption(
@@ -75,11 +75,12 @@ def pytest_addoption(parser: Parser) -> None:
 
 
 # Bootstrapping hooks
-def pytest_load_initial_conftests(  # noqa: D103
+def pytest_load_initial_conftests(
     early_config: Config,
     parser: Parser,  # noqa: ARG001
     args: Any,  # noqa: ANN401
 ) -> None:
+    """Load initial conftests."""
     if "--hardpy-pt" in args:
         plugin = HardpyPlugin()
         early_config.pluginmanager.register(plugin)
@@ -309,7 +310,7 @@ class HardpyPlugin:
             case _:
                 return TestStatus.ERROR
 
-    def _stop_tests(self):  # noqa: WPS231
+    def _stop_tests(self) -> None:
         """Update module and case statuses from READY or RUN to STOPPED."""
         for module_id, module_data in self._results.items():
             module_status = module_data["module_status"]

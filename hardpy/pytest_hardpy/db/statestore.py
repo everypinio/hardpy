@@ -20,7 +20,7 @@ class StateStore(Singleton, BaseStore):
             self._schema = ResultStateStore
             self._initialized = True
 
-    def clear(self):
+    def clear(self) -> None:
         """Clear database."""
         try:
             # Clear the statestore database before each launch

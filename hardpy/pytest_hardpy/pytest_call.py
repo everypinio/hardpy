@@ -19,13 +19,11 @@ from hardpy.pytest_hardpy.db import (
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
     ConnectionData,
-    DuplicateSerialNumberError,
-    DuplicatePartNumberError,
-    DuplicateTestStandNameError,
-    DuplicateDialogBoxError,
     DialogBox,
     DuplicateDialogBoxError,
+    DuplicatePartNumberError,
     DuplicateSerialNumberError,
+    DuplicateTestStandNameError,
 )
 
 
@@ -45,7 +43,7 @@ def get_current_report() -> ResultRunStore | None:
     """
     runstore = RunStore()
     try:
-        return runstore.get_document()  # type: ignore
+        return runstore.get_document()
     except NotFound:
         return None
     except ValidationError:
@@ -84,7 +82,7 @@ def set_dut_serial_number(serial_number: str) -> None:
     reporter.update_db_by_doc()
 
 
-def set_dut_part_number(part_number: str):
+def set_dut_part_number(part_number: str) -> None:
     """Add DUT part number to document.
 
     Args:
@@ -101,7 +99,7 @@ def set_dut_part_number(part_number: str):
     reporter.update_db_by_doc()
 
 
-def set_stand_name(name: str):
+def set_stand_name(name: str) -> None:
     """Add test stand name to document.
 
     Args:
@@ -118,7 +116,7 @@ def set_stand_name(name: str):
     reporter.update_db_by_doc()
 
 
-def set_stand_info(info: dict):
+def set_stand_info(info: dict) -> None:
     """Add test stand info to document.
 
     Args:
@@ -356,8 +354,9 @@ def _get_socket_raw_data() -> str:
 
     try:
         server.bind((con_data.socket_host, con_data.socket_port))
-    except socket.error as exc:
-        raise RuntimeError(f"Error creating socket: {exc}")
+    except OSError as exc:
+        msg = f"Error creating socket: {exc}"
+        raise RuntimeError(msg)  # noqa: B904
     server.listen(1)
     client, _ = server.accept()
 

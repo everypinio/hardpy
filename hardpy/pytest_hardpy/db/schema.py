@@ -2,9 +2,12 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
-from pydantic import BaseModel, Field, ConfigDict
+from typing import TYPE_CHECKING
 
-from hardpy.pytest_hardpy.utils import TestStatus as Status
+from pydantic import BaseModel, ConfigDict, Field
+
+if TYPE_CHECKING:
+    from hardpy.pytest_hardpy.utils import TestStatus as Status
 
 
 class IBaseResult(BaseModel):
@@ -64,11 +67,7 @@ class CaseRunStore(IBaseResult):
 
     assertion_msg: str | None = None
     msg: dict | None = None
-<<<<<<< HEAD
-    artifact: dict | None = {}
-=======
     artifact: dict = {}
->>>>>>> 0eb521f554ecfe21e07c1582216d69f69beab3a2
 
 
 class ModuleStateStore(IBaseResult):
@@ -121,11 +120,7 @@ class ModuleRunStore(IBaseResult):
     """
 
     cases: dict[str, CaseRunStore] = {}
-<<<<<<< HEAD
-    artifact: dict | None = {}
-=======
     artifact: dict = {}
->>>>>>> 0eb521f554ecfe21e07c1582216d69f69beab3a2
 
 
 class Dut(BaseModel):
@@ -257,13 +252,8 @@ class ResultStateStore(IBaseResult):
     test_stand: TestStand
     dut: Dut
     modules: dict[str, ModuleStateStore] = {}
-<<<<<<< HEAD
-    drivers: dict | None = {}
-    operator_msg: dict | None = {}
-=======
     drivers: dict = {}
     operator_msg: dict = {}
->>>>>>> 0eb521f554ecfe21e07c1582216d69f69beab3a2
 
 
 class ResultRunStore(IBaseResult):
@@ -351,10 +341,5 @@ class ResultRunStore(IBaseResult):
     test_stand: TestStand
     dut: Dut
     modules: dict[str, ModuleRunStore] = {}
-<<<<<<< HEAD
-    drivers: dict | None = {}
-    artifact: dict | None = {}
-=======
     drivers: dict = {}
     artifact: dict = {}
->>>>>>> 0eb521f554ecfe21e07c1582216d69f69beab3a2
