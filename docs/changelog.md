@@ -7,6 +7,8 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 In HardPy, compared to version 0.5.0 and less, the startup principle has changed.
 The `hardpy-panel` command is no longer available.
 
+The HardPy project from version 0.6.0 onwards must contain the **hardpy.toml** file.
+
 * Add clearing the **statestore** database before running hardpy using
   the `--hardpy-clear-database` option of the **pytest-hardpy** plugin.
 * Add the **name** and **info** fields to **test_stand** in the database schema.
