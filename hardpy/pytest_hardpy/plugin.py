@@ -61,6 +61,12 @@ def pytest_addoption(parser: Parser) -> None:
         help="internal socket host",
     )
     parser.addoption(
+        "--hardpy-clear-database",
+        action="store",
+        default=False,
+        help="clear hardpy local database",
+    )
+    parser.addoption(
         "--hardpy-pt",
         action="store_true",
         default=False,
@@ -107,6 +113,9 @@ class HardpyPlugin:
         if database_url:
             con_data.database_url = str(database_url)  # type: ignore
 
+        is_clear_database = config.getoption("--hardpy-clear-database")
+        is_clear_statestore = is_clear_database == str(True)
+
         socket_port = config.getoption("--hardpy-sp")
         if socket_port:
             con_data.socket_port = int(socket_port)  # type: ignore
@@ -120,7 +129,7 @@ class HardpyPlugin:
         config.addinivalue_line("markers", "dependency")
 
         # must be init after config data is set
-        self._reporter = HookReporter()
+        self._reporter = HookReporter(is_clear_statestore)
 
     def pytest_sessionfinish(self, session: Session, exitstatus: int) -> None:
         """Call at the end of test session."""
@@ -295,9 +304,39 @@ class HardpyPlugin:
             case ExitCode.TESTS_FAILED:
                 return TestStatus.FAILED
             case ExitCode.INTERRUPTED:
+                self._stop_tests()
                 return TestStatus.STOPPED
             case _:
                 return TestStatus.ERROR
+
+    def _stop_tests(self):  # noqa: WPS231
+        """Update module and case statuses from READY or RUN to STOPPED."""
+        for module_id, module_data in self._results.items():
+            module_status = module_data["module_status"]
+
+            # skip not ready and running modules
+            if module_status not in {TestStatus.READY, TestStatus.RUN}:
+                continue
+
+            # update module statuses
+            self._results[module_id]["module_status"] = TestStatus.STOPPED
+            self._reporter.set_module_status(module_id, TestStatus.STOPPED)
+
+            # update case statuses
+            for module_key, module_value in module_data.items():
+                # module status is not a case_id
+                if module_key == "module_status":
+                    continue
+                # case value is empty - case is not finished
+                if module_value is None:
+                    case_id = module_key
+                    self._results[module_id][case_id] = TestStatus.STOPPED
+                    self._reporter.set_case_status(
+                        module_id,
+                        case_id,
+                        TestStatus.STOPPED,
+                    )
+        self._reporter.update_db_by_doc()
 
     def _decode_assertion_msg(
         self,

@@ -19,6 +19,7 @@ class DatabaseField(str, Enum):
     PROGRESS = "progress"
     ARTIFACT = "artifact"
     DUT = "dut"
+    PART_NUMBER = "part_number"
     INFO = "info"
     TEST_STAND = "test_stand"
     SERIAL_NUMBER = "serial_number"

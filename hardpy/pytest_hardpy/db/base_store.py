@@ -78,20 +78,30 @@ class BaseStore(BaseConnector):
                 DF.MODULES: {},
                 DF.DUT: {
                     DF.SERIAL_NUMBER: None,
+                    DF.PART_NUMBER: None,
                     DF.INFO: {},
                 },
-                DF.TEST_STAND: {},
+                DF.TEST_STAND: {
+                    DF.NAME: None,
+                    DF.INFO: {},
+                },
                 DF.DRIVERS: {},
             }
 
+        # init document
         if DF.MODULES not in doc:
             doc[DF.MODULES] = {}
 
-        for item in (DF.TEST_STAND, DF.DRIVERS):
-            doc[item] = {}
+        doc[DF.DRIVERS] = {}
 
         doc[DF.DUT] = {
             DF.SERIAL_NUMBER: None,
+            DF.PART_NUMBER: None,
+            DF.INFO: {},
+        }
+
+        doc[DF.TEST_STAND] = {
+            DF.NAME: None,
             DF.INFO: {},
         }
 

@@ -7,12 +7,14 @@ from hardpy.pytest_hardpy.pytest_call import (
     set_case_artifact,
     set_driver_info,
     set_dut_info,
+    set_dut_part_number,
     set_dut_serial_number,
     set_message,
     set_module_artifact,
     set_operator_message,
     set_run_artifact,
     set_stand_info,
+    set_stand_name,
 )
 from hardpy.pytest_hardpy.result import CouchdbLoader
 from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig
@@ -20,7 +22,9 @@ from hardpy.pytest_hardpy.utils import (
     CheckboxWidget,
     DialogBox,
     DuplicateDialogBoxError,
+    DuplicatePartNumberError,
     DuplicateSerialNumberError,
+    DuplicateTestStandNameError,
     ImageWidget,
     MultistepWidget,
     NumericInputWidget,
@@ -36,10 +40,14 @@ __all__ = [
     "get_current_report",
     # Errors
     "DuplicateSerialNumberError",
+    "DuplicatePartNumberError",
+    "DuplicateTestStandNameError",
     "DuplicateDialogBoxError",
     # Database info
     "set_dut_info",
     "set_dut_serial_number",
+    "set_dut_part_number",
+    "set_stand_name",
     "set_stand_info",
     "set_case_artifact",
     "set_module_artifact",

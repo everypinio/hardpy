@@ -2,7 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 from hardpy.pytest_hardpy.utils import TestStatus as Status
 
@@ -64,7 +64,11 @@ class CaseRunStore(IBaseResult):
 
     assertion_msg: str | None = None
     msg: dict | None = None
+<<<<<<< HEAD
     artifact: dict | None = {}
+=======
+    artifact: dict = {}
+>>>>>>> 0eb521f554ecfe21e07c1582216d69f69beab3a2
 
 
 class ModuleStateStore(IBaseResult):
@@ -117,7 +121,11 @@ class ModuleRunStore(IBaseResult):
     """
 
     cases: dict[str, CaseRunStore] = {}
+<<<<<<< HEAD
     artifact: dict | None = {}
+=======
+    artifact: dict = {}
+>>>>>>> 0eb521f554ecfe21e07c1582216d69f69beab3a2
 
 
 class Dut(BaseModel):
@@ -126,9 +134,10 @@ class Dut(BaseModel):
     Example:
     "dut": {
         "serial_number": "a9ad8dca-2c64-4df8-a358-c21e832a32e4",
+        "part_number": "part_number_1",
         "info": {
-        "batch": "test_batch",
-        "board_rev": "rev_1"
+          "batch": "test_batch",
+          "board_rev": "rev_1"
         }
     },
     """
@@ -136,6 +145,25 @@ class Dut(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     serial_number: str | None
+    part_number: str | None
+    info: dict = {}
+
+
+class TestStand(BaseModel):
+    """Test stand description.
+
+    Example:
+    "test_stand": {
+        "name": "test_stand_1",
+        "info": {
+          "geo": "Belgrade",
+        }
+    },
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: str | None
     info: dict = {}
 
 
@@ -157,6 +185,7 @@ class ResultStateStore(IBaseResult):
       "name": "hardpy-stand",
       "dut": {
         "serial_number": "92c5a4bb-ecb0-42c5-89ac-e0caca0919fd",
+        "part_number": "part_1",
         "info": {
           "batch": "test_batch",
           "board_rev": "rev_1"
@@ -164,6 +193,7 @@ class ResultStateStore(IBaseResult):
       },
       "test_stand": {
         "name": "Test stand 1"
+        "info": {}
       },
       "drivers": {
         "driver_1": "driver info",
@@ -224,11 +254,16 @@ class ResultStateStore(IBaseResult):
     id: str = Field(..., alias="_id")
     progress: int
     timezone: tuple[str, str] | None = None
-    test_stand: dict = {}
+    test_stand: TestStand
     dut: Dut
     modules: dict[str, ModuleStateStore] = {}
+<<<<<<< HEAD
     drivers: dict | None = {}
     operator_msg: dict | None = {}
+=======
+    drivers: dict = {}
+    operator_msg: dict = {}
+>>>>>>> 0eb521f554ecfe21e07c1582216d69f69beab3a2
 
 
 class ResultRunStore(IBaseResult):
@@ -249,6 +284,7 @@ class ResultRunStore(IBaseResult):
       "name": "hardpy-stand",
       "dut": {
         "serial_number": "92c5a4bb-ecb0-42c5-89ac-e0caca0919fd",
+        "part_number": "part_1",
         "info": {
           "batch": "test_batch",
           "board_rev": "rev_1"
@@ -256,6 +292,7 @@ class ResultRunStore(IBaseResult):
       },
       "test_stand": {
         "name": "Test stand 1"
+        "info": {}
       },
       "drivers": {
         "driver_1": "driver info",
@@ -311,8 +348,13 @@ class ResultRunStore(IBaseResult):
     id: str = Field(..., alias="_id")
     progress: int
     timezone: tuple[str, str] | None = None
-    test_stand: dict = {}
+    test_stand: TestStand
     dut: Dut
     modules: dict[str, ModuleRunStore] = {}
+<<<<<<< HEAD
     drivers: dict | None = {}
     artifact: dict | None = {}
+=======
+    drivers: dict = {}
+    artifact: dict = {}
+>>>>>>> 0eb521f554ecfe21e07c1582216d69f69beab3a2
