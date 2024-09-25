@@ -1,10 +1,6 @@
 name: Lint
 on:
-  workflow_call:
-    inputs:
-      path:
-        type: string
-        required: true
+  workflow_call: # allow this workflow to be called from other workflows
 jobs:
   ruff:
     runs-on: ubuntu-latest
