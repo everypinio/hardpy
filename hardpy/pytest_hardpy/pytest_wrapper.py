@@ -36,7 +36,7 @@ class PyTestWrapper:
             return False
 
         if system() == "Linux":
-            self._proc = subprocess.Popen(
+            self._proc = subprocess.Popen(  # noqa: S603
                 [
                     self.python_executable,
                     "-m",
