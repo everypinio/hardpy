@@ -1,5 +1,10 @@
 name: Lint
-on: [push, pull_request]
+on:
+  workflow_call:
+    inputs:
+      path:
+        type: string
+        required: true
 jobs:
   ruff:
     runs-on: ubuntu-latest
