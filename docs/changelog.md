@@ -2,6 +2,10 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## HardPy 0.5.1
+
+* Add the ability to work with cloud couchdb via couchdb config.
+
 ## HardPy 0.5.0
 
 * Refactor dialog box API.
