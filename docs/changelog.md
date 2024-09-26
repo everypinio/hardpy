@@ -24,6 +24,10 @@ The HardPy project from version 0.6.0 onwards must contain the **hardpy.toml** f
 * Fix progress bar with skipping tests. Progress bar fills to the end when tests are skipped.
 * Add report name generation when serial number is missing.
 
+## HardPy 0.5.1
+
+* Add the ability to work with cloud couchdb via couchdb config.
+
 ## HardPy 0.5.0
 
 * Refactor dialog box API.
