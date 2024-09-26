@@ -1,13 +1,12 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
-from typing import Optional
-from typing_extensions import Annotated
 
 import typer
+from typing_extensions import Annotated
 from uvicorn import run as uvicorn_run
 
 from hardpy.cli.template import TemplateGenerator
@@ -18,8 +17,8 @@ default_config = ConfigManager().get_config()
 
 
 @cli.command()
-def init(  # noqa: WPS211
-    tests_dir: Annotated[Optional[str], typer.Argument()] = None,
+def init(  # noqa: PLR0913
+    tests_dir: Annotated[str | None, typer.Argument()] = None,
     create_database: bool = typer.Option(
         True,
         help="Create CouchDB database.",
@@ -56,7 +55,7 @@ def init(  # noqa: WPS211
         default_config.socket.port,
         help="Specify a socket port.",
     ),
-):
+) -> None:
     """Initialize HardPy tests directory.
 
     Args:
@@ -85,11 +84,11 @@ def init(  # noqa: WPS211
     )
     # create tests directory
     dir_path = Path(Path.cwd() / _tests_dir)
-    os.makedirs(dir_path, exist_ok=True)
+    Path.mkdir(dir_path, exist_ok=True, parents=True)
 
     if create_database:
         # create database directory
-        os.makedirs(dir_path / "database", exist_ok=True)
+        Path.mkdir(dir_path / "database", exist_ok=True, parents=True)
 
     # create hardpy.toml
     ConfigManager().create_config(dir_path)
@@ -117,7 +116,7 @@ def init(  # noqa: WPS211
 
 
 @cli.command()
-def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None):
+def run(tests_dir: Annotated[str | None, typer.Argument()] = None) -> None:
     """Run HardPy server.
 
     Args:

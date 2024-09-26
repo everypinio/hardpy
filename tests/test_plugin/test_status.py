@@ -1,5 +1,9 @@
-from pytest import Pytester
+from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pytest import Pytester
 
 status_test_header = """
         import pytest
@@ -10,7 +14,7 @@ status_test_header = """
         """
 
 
-def test_ready_status(pytester: Pytester, hardpy_opts):
+def test_ready_status(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {status_test_header}
@@ -31,13 +35,13 @@ def test_ready_status(pytester: Pytester, hardpy_opts):
             report = get_current_report()
             read_status = report.modules[node.module_id].cases['test_status_run'].status
             assert Status.PASSED == read_status
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=3)
 
 
-def test_fail_status(pytester: Pytester, hardpy_opts):
+def test_fail_status(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {status_test_header}
@@ -50,13 +54,13 @@ def test_fail_status(pytester: Pytester, hardpy_opts):
             read_status = report.modules[node.module_id].cases['test_fail'].status
             assert Status.FAILED == read_status
             assert True
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1, passed=1)
 
 
-def test_run_status(pytester: Pytester, hardpy_opts):
+def test_run_status(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {status_test_header}
@@ -64,7 +68,7 @@ def test_run_status(pytester: Pytester, hardpy_opts):
             report = get_current_report()
             read_status = report.status
             assert Status.RUN == read_status
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
