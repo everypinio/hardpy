@@ -2,12 +2,9 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from pydantic import BaseModel, ConfigDict, Field
 
-if TYPE_CHECKING:
-    from hardpy.pytest_hardpy.utils import TestStatus as Status
+from hardpy.pytest_hardpy.utils import TestStatus as Status  # noqa: TCH001
 
 
 class IBaseResult(BaseModel):
