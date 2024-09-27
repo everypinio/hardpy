@@ -28,6 +28,7 @@ class CaseStateStore(IBaseResult):
         "stop_time": 1695817189,
         "assertion_msg": null,
         "msg": null,
+        "attempt": 1,
         "dialog_box": {
           "title_bar": "Example of text input",
           "dialog_text": "Type some text and press the Confirm button",
@@ -44,6 +45,7 @@ class CaseStateStore(IBaseResult):
     assertion_msg: str | None = None
     msg: dict | None = None
     dialog_box: dict = {}
+    attempt: int = 0
 
 
 class CaseRunStore(IBaseResult):
@@ -57,6 +59,7 @@ class CaseRunStore(IBaseResult):
         "stop_time": 1695817189,
         "assertion_msg": null,
         "msg": null,
+        "attempt": 1,
         "artifact": {}
     }
     """
@@ -64,6 +67,7 @@ class CaseRunStore(IBaseResult):
     assertion_msg: str | None = None
     msg: dict | None = None
     artifact: dict = {}
+    attempt: int = 0
 
 
 class ModuleStateStore(IBaseResult):
@@ -212,6 +216,7 @@ class ResultStateStore(IBaseResult):
               "stop_time": 1695817264,
               "assertion_msg": null,
               "msg": null,
+              "attempt": 1,
               "dialog_box": {
                 "title_bar": "Example of text input",
                 "dialog_text": "Type some text and press the Confirm button",
@@ -229,6 +234,7 @@ class ResultStateStore(IBaseResult):
               "start_time": 1695817264,
               "stop_time": 1695817264,
               "assertion_msg": "The test failed because minute 21 is odd! Try again!",
+              "attempt": 1,
               "msg": [
                 "Current minute 21"
               ]
@@ -303,6 +309,7 @@ class ResultRunStore(IBaseResult):
               "stop_time": 1695817264,
               "assertion_msg": null,
               "msg": null,
+              "attempt": 1,
               "artifact": {}
             },
             "test_minute_parity": {
@@ -314,6 +321,7 @@ class ResultRunStore(IBaseResult):
               "msg": [
                 "Current minute 21"
               ],
+              "attempt": 1,
               "artifact": {
                 "data_str": "123DATA",
                 "data_int": 12345,

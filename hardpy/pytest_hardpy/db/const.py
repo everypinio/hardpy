@@ -26,3 +26,4 @@ class DatabaseField(str, Enum):  # noqa: WPS600
     DRIVERS = "drivers"
     DIALOG_BOX = "dialog_box"
     OPERATOR_MSG = "operator_msg"
+    ATTEMPT = "attempt"
