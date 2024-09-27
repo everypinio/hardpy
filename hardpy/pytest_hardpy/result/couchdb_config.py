@@ -1,16 +1,17 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import annotations
 
 import ast
-import requests
 import socket
-
 from dataclasses import dataclass
+
+import requests
 from urllib3 import disable_warnings
 
 
 @dataclass
-class CouchdbConfig:  # noqa: WPS306
+class CouchdbConfig:
     """CouchDB loader config.
 
     If `connection_str` arg is not set, it will be created from other args.
@@ -23,7 +24,7 @@ class CouchdbConfig:  # noqa: WPS306
     port: int = 5984
     connection_str: str | None = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Disable urllib3 warnings.
 
         More info: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
@@ -43,14 +44,14 @@ class CouchdbConfig:  # noqa: WPS306
         if self.connection_str:
             return self.connection_str
 
-        # TODO: Modify connection string creating based on protocol.
+        # TODO: Modify connection string creating based on protocol.  # noqa: TD002
         #       Some problems with http and https, different ports, local
         #       and cloud databases.
         protocol = self._get_protocol()
 
         if protocol == "http":
             host_url = f"http://{self.host}:{self.port}"
-            uri = f"{self.host}:{str(self.port)}"  # noqa: WPS237
+            uri = f"{self.host}:{self.port!s}"
         elif protocol == "https":
             host_url = f"https://{self.host}"
             uri = f"{self.host}"
@@ -58,20 +59,22 @@ class CouchdbConfig:  # noqa: WPS306
         try:
             response = requests.get(host_url, timeout=5)
         except requests.exceptions.RequestException:
-            raise RuntimeError(f"Error CouchDB connecting to {host_url}.")
+            msg = f"Error CouchDB connecting to {host_url}."
+            raise RuntimeError(msg)  # noqa: B904
 
         # fmt: off
         try:
-            couchdb_dict = ast.literal_eval(response._content.decode("utf-8"))  # noqa: WPS437,E501
+            couchdb_dict = ast.literal_eval(response._content.decode("utf-8"))  # type: ignore # noqa: SLF001
             couchdb_dict.get("couchdb", False)
-        except Exception:
-            raise RuntimeError(f"Address {host_url} does not provide CouchDB attributes.")
+        except Exception:  # noqa: BLE001
+            msg = f"Address {host_url} does not provide CouchDB attributes."
+            raise RuntimeError(msg)  # noqa: B904
         # fmt: on
 
         credentials = f"{self.user}:{self.password}"
         return f"{protocol}://{credentials}@{uri}/"
 
-    def _get_protocol(self) -> str:  # noqa: WPS231
+    def _get_protocol(self) -> str:
         success = 200
         try:
             # HTTPS attempt
@@ -80,17 +83,18 @@ class CouchdbConfig:  # noqa: WPS306
             request = f"https://{self.host}"
             if requests.get(request, timeout=5).status_code == success:
                 return "https"
-            raise OSError
+            raise OSError  # noqa: TRY301
         except OSError:
-            try:  # noqa: WPS505
+            try:
                 # HTTP attempt
                 sock = socket.create_connection((self.host, self.port))
                 sock.close()
                 request = f"http://{self.host}:{self.port}"
                 if requests.get(request, timeout=5).status_code == success:
                     return "http"
-                raise OSError
+                raise OSError  # noqa: TRY301
             except OSError:
-                raise RuntimeError(
-                    f"Error connecting to couchdb server {self.host}:{self.port}."
+                msg = f"Error connecting to couchdb server {self.host}:{self.port}."
+                raise RuntimeError(  # noqa: B904
+                    msg,
                 )

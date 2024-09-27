@@ -1,5 +1,9 @@
-from pytest import Pytester
+from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pytest import Pytester
 
 func_test_header = """
         from uuid import uuid4
@@ -11,7 +15,7 @@ func_test_header = """
         """
 
 
-def test_dut_serial_number(pytester: Pytester, hardpy_opts):
+def test_dut_serial_number(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -31,14 +35,14 @@ def test_dut_serial_number(pytester: Pytester, hardpy_opts):
             second_serial_number = "incorrect serial number"
             with pytest.raises(DuplicateSerialNumberError):
                 hardpy.set_dut_serial_number(second_serial_number)
-    """
+    """,
     )
 
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_dut_part_number(pytester: Pytester, hardpy_opts):
+def test_dut_part_number(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -58,14 +62,14 @@ def test_dut_part_number(pytester: Pytester, hardpy_opts):
             second_part_number = "incorrect part number"
             with pytest.raises(DuplicatePartNumberError):
                 hardpy.set_dut_part_number(second_part_number)
-    """
+    """,
     )
 
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_empty_dut_serial_number(pytester: Pytester, hardpy_opts):
+def test_empty_dut_serial_number(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -81,14 +85,14 @@ def test_empty_dut_serial_number(pytester: Pytester, hardpy_opts):
             hardpy.set_dut_serial_number(serial_number)
             report = hardpy.get_current_report()
             assert serial_number == report.dut.serial_number
-    """
+    """,
     )
 
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1)
 
 
-def test_incorrect_dut_serial_number(pytester: Pytester, hardpy_opts):
+def test_incorrect_dut_serial_number(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -104,14 +108,14 @@ def test_incorrect_dut_serial_number(pytester: Pytester, hardpy_opts):
             hardpy.set_dut_serial_number(serial_number)
             report = hardpy.get_current_report()
             assert serial_number == report.dut.serial_number
-    """
+    """,
     )
 
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1)
 
 
-def test_dut_info(pytester: Pytester, hardpy_opts):
+def test_dut_info(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -129,13 +133,13 @@ def test_dut_info(pytester: Pytester, hardpy_opts):
             hardpy.set_dut_info(info)
             report = hardpy.get_current_report()
             assert info_before_write == report.dut.info
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_empty_dut_info(pytester: Pytester, hardpy_opts):
+def test_empty_dut_info(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -153,13 +157,13 @@ def test_empty_dut_info(pytester: Pytester, hardpy_opts):
             hardpy.set_dut_info(info)
             report = hardpy.get_current_report()
             assert info_before_write == report.dut.info
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1)
 
 
-def test_stand_name(pytester: Pytester, hardpy_opts):
+def test_stand_name(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -179,13 +183,13 @@ def test_stand_name(pytester: Pytester, hardpy_opts):
             second_name = "incorrect name"
             with pytest.raises(DuplicateTestStandNameError):
                 hardpy.set_stand_name(second_name)
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_stand_info(pytester: Pytester, hardpy_opts):
+def test_stand_info(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -203,13 +207,13 @@ def test_stand_info(pytester: Pytester, hardpy_opts):
             hardpy.set_stand_info(info)
             report = hardpy.get_current_report()
             assert stand_info_before_write == report.test_stand
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1)
 
 
-def test_drivers(pytester: Pytester, hardpy_opts):
+def test_drivers(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -232,13 +236,13 @@ def test_drivers(pytester: Pytester, hardpy_opts):
             hardpy.set_driver_info(drivers)
             report = hardpy.get_current_report()
             assert drivers_before_write == report.drivers
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_empty_drivers_data(pytester: Pytester, hardpy_opts):
+def test_empty_drivers_data(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -259,13 +263,13 @@ def test_empty_drivers_data(pytester: Pytester, hardpy_opts):
             hardpy.set_driver_info(drivers)
             report = hardpy.get_current_report()
             assert drivers_before_write == report.drivers
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_incorrect_drivers_data(pytester: Pytester, hardpy_opts):
+def test_incorrect_drivers_data(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -286,13 +290,13 @@ def test_incorrect_drivers_data(pytester: Pytester, hardpy_opts):
             hardpy.set_driver_info(drivers)
             report = hardpy.get_current_report()
             assert drivers_before_write == report.drivers
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1)
 
 
-def test_module_artifact(pytester: Pytester, hardpy_opts):
+def test_module_artifact(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -317,13 +321,13 @@ def test_module_artifact(pytester: Pytester, hardpy_opts):
             report = hardpy.get_current_report()
             read_artifact = report.modules[node.module_id].artifact
             assert read_artifact == artifact_before_write
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_empty_module_artifact_data(pytester: Pytester, hardpy_opts):
+def test_empty_module_artifact_data(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -346,13 +350,13 @@ def test_empty_module_artifact_data(pytester: Pytester, hardpy_opts):
             report = hardpy.get_current_report()
             read_artifact = report.modules[node.module_id].artifact
             assert read_artifact == artifact_before_write
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_incorrect_module_artifact_data(pytester: Pytester, hardpy_opts):
+def test_incorrect_module_artifact_data(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -375,13 +379,13 @@ def test_incorrect_module_artifact_data(pytester: Pytester, hardpy_opts):
             report = hardpy.get_current_report()
             read_artifact = report.modules[node.module_id].artifact
             assert read_artifact == artifact_before_write
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1)
 
 
-def test_case_artifact(pytester: Pytester, hardpy_opts):
+def test_case_artifact(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -406,13 +410,13 @@ def test_case_artifact(pytester: Pytester, hardpy_opts):
             report = hardpy.get_current_report()
             read_artifact = report.modules[node.module_id].cases[node.case_id].artifact
             assert read_artifact == artifact_before_write
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_empty_case_artifact_data(pytester: Pytester, hardpy_opts):
+def test_empty_case_artifact_data(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -435,13 +439,13 @@ def test_empty_case_artifact_data(pytester: Pytester, hardpy_opts):
             report = hardpy.get_current_report()
             read_artifact = report.modules[node.module_id].cases[node.case_id].artifact
             assert read_artifact == artifact_before_write
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_incorrect_case_artifact_data(pytester: Pytester, hardpy_opts):
+def test_incorrect_case_artifact_data(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -466,13 +470,13 @@ def test_incorrect_case_artifact_data(pytester: Pytester, hardpy_opts):
             report = hardpy.get_current_report()
             read_artifact = report.modules[node.module_id].cases[node.case_id].artifact
             assert read_artifact == artifact_before_write
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1)
 
 
-def test_run_artifact(pytester: Pytester, hardpy_opts):
+def test_run_artifact(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -495,13 +499,13 @@ def test_run_artifact(pytester: Pytester, hardpy_opts):
             report = hardpy.get_current_report()
             read_artifact = report.artifact
             assert read_artifact == artifact_before_write
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_empty_run_artifact_data(pytester: Pytester, hardpy_opts):
+def test_empty_run_artifact_data(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -522,13 +526,13 @@ def test_empty_run_artifact_data(pytester: Pytester, hardpy_opts):
             report = hardpy.get_current_report()
             read_artifact = report.artifact
             assert read_artifact == artifact_before_write
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_incorrect_run_artifact_data(pytester: Pytester, hardpy_opts):
+def test_incorrect_run_artifact_data(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -551,13 +555,13 @@ def test_incorrect_run_artifact_data(pytester: Pytester, hardpy_opts):
             report = hardpy.get_current_report()
             read_artifact = report.artifact
             assert read_artifact == artifact_before_write
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1)
 
 
-def test_case_message(pytester: Pytester, hardpy_opts):
+def test_case_message(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -596,13 +600,13 @@ def test_case_message(pytester: Pytester, hardpy_opts):
             assert msg_1 and msg_2 and msg_4 in msgs.values()
             assert len(msgs.values()) == 3
 
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_empty_case_message(pytester: Pytester, hardpy_opts):
+def test_empty_case_message(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -618,13 +622,13 @@ def test_empty_case_message(pytester: Pytester, hardpy_opts):
             report = hardpy.get_current_report()
             msgs = report.modules[node.module_id].cases[node.case_id].msg
             assert msg_1 in msgs.values()
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_incorrect_configdata(pytester: Pytester, hardpy_opts):
+def test_incorrect_configdata(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -640,13 +644,13 @@ def test_incorrect_configdata(pytester: Pytester, hardpy_opts):
             )
             report = hardpy.get_current_report()
             assert report
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1)
 
 
-def test_incorrect_couchdbconfig_data(pytester: Pytester, hardpy_opts):
+def test_incorrect_couchdbconfig_data(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
@@ -660,7 +664,7 @@ def test_incorrect_couchdbconfig_data(pytester: Pytester, hardpy_opts):
             )
             report = hardpy.get_current_report()
             assert report
-    """
+    """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1)

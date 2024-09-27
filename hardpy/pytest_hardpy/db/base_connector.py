@@ -10,7 +10,7 @@ from hardpy.pytest_hardpy.db.base_server import BaseServer
 class BaseConnector(BaseServer):
     """Base class for CouchDB connector."""
 
-    def __init__(self, db_name: str):
+    def __init__(self, db_name: str) -> None:
         super().__init__()
         self._db_name = db_name
         self._db = self._init_db()

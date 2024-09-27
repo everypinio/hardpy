@@ -1,6 +1,7 @@
 from time import sleep
 
 import pytest
+
 import hardpy
 
 pytestmark = [

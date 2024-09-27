@@ -1,5 +1,6 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import annotations
 
 import base64
 from abc import ABC, abstractmethod
@@ -28,12 +29,12 @@ class WidgetType(Enum):
 class IWidget(ABC):
     """Dialog box widget interface."""
 
-    def __init__(self, widget_type: WidgetType):
+    def __init__(self, widget_type: WidgetType) -> None:
         self.type: Final[str] = widget_type.value
         self.info: dict = {}
 
     @abstractmethod
-    def convert_data(self, input_data: str | None) -> Any | None:
+    def convert_data(self, input_data: str | None) -> Any | None:  # noqa: ANN401
         """Get the widget data in the correct format.
 
         Args:
@@ -48,10 +49,10 @@ class IWidget(ABC):
 class BaseWidget(IWidget):
     """Widget info interface."""
 
-    def __init__(self, widget_type: WidgetType = WidgetType.BASE):
+    def __init__(self, widget_type: WidgetType = WidgetType.BASE) -> None:  # noqa: ARG002
         super().__init__(WidgetType.BASE)
 
-    def convert_data(self, input_data: str | None = None) -> bool:  # noqa: WPS324
+    def convert_data(self, input_data: str | None = None) -> bool:  # noqa: ARG002
         """Get base widget data, i.e. None.
 
         Args:
@@ -66,7 +67,7 @@ class BaseWidget(IWidget):
 class TextInputWidget(IWidget):
     """Text input widget."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the TextInputWidget."""
         super().__init__(WidgetType.TEXT_INPUT)
 
@@ -85,7 +86,7 @@ class TextInputWidget(IWidget):
 class NumericInputWidget(IWidget):
     """Numeric input widget."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the NumericInputWidget."""
         super().__init__(WidgetType.NUMERIC_INPUT)
 
@@ -107,7 +108,7 @@ class NumericInputWidget(IWidget):
 class RadiobuttonWidget(IWidget):
     """Radiobutton widget."""
 
-    def __init__(self, fields: list[str]):
+    def __init__(self, fields: list[str]) -> None:
         """Initialize the RadiobuttonWidget.
 
         Args:
@@ -118,7 +119,8 @@ class RadiobuttonWidget(IWidget):
         """
         super().__init__(WidgetType.RADIOBUTTON)
         if not fields:
-            raise ValueError("RadiobuttonWidget must have at least one field")
+            msg = "RadiobuttonWidget must have at least one field"
+            raise ValueError(msg)
         self.info["fields"] = fields
 
     def convert_data(self, input_data: str) -> str:
@@ -136,7 +138,7 @@ class RadiobuttonWidget(IWidget):
 class CheckboxWidget(IWidget):
     """Checkbox widget."""
 
-    def __init__(self, fields: list[str]):
+    def __init__(self, fields: list[str]) -> None:
         """Initialize the CheckboxWidget.
 
         Args:
@@ -147,7 +149,8 @@ class CheckboxWidget(IWidget):
         """
         super().__init__(WidgetType.CHECKBOX)
         if not fields:
-            raise ValueError("Checkbox must have at least one field")
+            msg = "Checkbox must have at least one field"
+            raise ValueError(msg)
         self.info["fields"] = fields
 
     def convert_data(self, input_data: str) -> list[str] | None:
@@ -168,7 +171,7 @@ class CheckboxWidget(IWidget):
 class ImageWidget(IWidget):
     """Image widget."""
 
-    def __init__(self, address: str, format: str = "image", width: int = 100):
+    def __init__(self, address: str, format: str = "image", width: int = 100) -> None:  # noqa: A002
         """Validate the image fields and defines the base64 if it does not exist.
 
         Args:
@@ -182,20 +185,22 @@ class ImageWidget(IWidget):
         super().__init__(WidgetType.IMAGE)
 
         if width < 1:
-            raise WidgetInfoError("Width must be positive")
+            msg = "Width must be positive"
+            raise WidgetInfoError(msg)
 
         self.info["address"] = address
         self.info["format"] = format
         self.info["width"] = width
 
         try:
-            with open(address, "rb") as file:
+            with open(address, "rb") as file:  # noqa: PTH123
                 file_data = file.read()
         except FileNotFoundError:
-            raise WidgetInfoError("The image address is invalid")
+            msg = "The image address is invalid"
+            raise WidgetInfoError(msg)  # noqa: B904
         self.info["base64"] = base64.b64encode(file_data).decode("utf-8")
 
-    def convert_data(self, input_data: str | None = None) -> bool:
+    def convert_data(self, input_data: str | None = None) -> bool:  # noqa: ARG002
         """Get the image widget data, i.e. None.
 
         Args:
@@ -219,17 +224,23 @@ class StepWidget(IWidget):
         WidgetInfoError: If the text or widget are not provided.
     """
 
-    def __init__(self, title: str, text: str | None, widget: ImageWidget | None):
+    def __init__(
+        self,
+        title: str,
+        text: str | None,
+        widget: ImageWidget | None,
+    ) -> None:
         super().__init__(WidgetType.STEP)
         if text is None and widget is None:
-            raise WidgetInfoError("Text or widget must be provided")
+            msg = "Text or widget must be provided"
+            raise WidgetInfoError(msg)
         self.info["title"] = title
         if isinstance(text, str):
             self.info["text"] = text
         if isinstance(widget, ImageWidget):
             self.info["widget"] = widget.__dict__
 
-    def convert_data(self, input_data: str) -> bool:
+    def convert_data(self, input_data: str) -> bool:  # noqa: ARG002
         """Get the step widget data in the correct format.
 
         Args:
@@ -244,7 +255,7 @@ class StepWidget(IWidget):
 class MultistepWidget(IWidget):
     """Multistep widget."""
 
-    def __init__(self, steps: list[StepWidget]):
+    def __init__(self, steps: list[StepWidget]) -> None:
         """Initialize the MultistepWidget.
 
         Args:
@@ -255,12 +266,13 @@ class MultistepWidget(IWidget):
         """
         super().__init__(WidgetType.MULTISTEP)
         if not steps:
-            raise ValueError("MultistepWidget must have at least one step")
+            msg = "MultistepWidget must have at least one step"
+            raise ValueError(msg)
         self.info["steps"] = []
         for step in steps:
             self.info["steps"].append(step.__dict__)
 
-    def convert_data(self, input_data: str) -> bool:
+    def convert_data(self, input_data: str) -> bool:  # noqa: ARG002
         """Get the multistep widget data in the correct format.
 
         Args:
@@ -287,7 +299,7 @@ class DialogBox:
         dialog_text: str,
         title_bar: str | None = None,
         widget: IWidget | None = None,
-    ):
+    ) -> None:
         self.widget: IWidget = BaseWidget() if widget is None else widget
         self.dialog_text: str = dialog_text
         self.title_bar: str | None = title_bar

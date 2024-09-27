@@ -1,13 +1,12 @@
 import pytest
 
 from hardpy import (
-    run_dialog_box,
-    set_message,
+    CheckboxWidget,
     DialogBox,
     RadiobuttonWidget,
-    CheckboxWidget,
+    run_dialog_box,
+    set_message,
 )
-
 
 pytestmark = pytest.mark.module_name("Choice control dialog boxes")
 

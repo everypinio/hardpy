@@ -1,5 +1,6 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import annotations
 
 from logging import getLogger
 from pathlib import Path
@@ -27,7 +28,7 @@ class DatabaseConfig(BaseModel):
             str: database connection url
         """
         credentials = f"{self.user}:{self.password}"
-        uri = f"{self.host}:{str(self.port)}"  # noqa: WPS237
+        uri = f"{self.host}:{self.port!s}"
         return f"http://{credentials}@{uri}/"
 
 
@@ -68,7 +69,7 @@ class ConfigManager:
     tests_path = Path.cwd()
 
     @classmethod
-    def init_config(  # noqa: WPS211
+    def init_config(  # noqa: PLR0913
         cls,
         tests_dir: str,
         database_user: str,
@@ -79,7 +80,7 @@ class ConfigManager:
         frontend_port: int,
         socket_host: str,
         socket_port: int,
-    ):
+    ) -> None:
         """Initialize HardPy configuration.
 
         Args:
@@ -104,13 +105,13 @@ class ConfigManager:
         cls.obj.socket.port = socket_port
 
     @classmethod
-    def create_config(cls, parent_dir: Path):
+    def create_config(cls, parent_dir: Path) -> None:
         """Create HardPy configuration.
 
         Args:
             parent_dir (Path): Configuration file parent directory.
         """
-        with open(parent_dir / "hardpy.toml", "w") as file:
+        with Path.open(parent_dir / "hardpy.toml", "w") as file:
             file.write(rtoml.dumps(cls.obj.model_dump()))
 
     @classmethod
@@ -126,18 +127,18 @@ class ConfigManager:
         cls.tests_path = toml_path
         toml_file = toml_path / "hardpy.toml"
         if not toml_file.exists():
-            logger.error(f"File hardpy.toml not found at path: {toml_file}")
+            logger.error(f"File hardpy.toml not found at path: {toml_file}")  # noqa: G004
             return None
         try:
-            with open(toml_path / "hardpy.toml", "r") as f:
+            with Path.open(toml_path / "hardpy.toml", "r") as f:
                 cls.obj = HardpyConfig(**rtoml.load(f))
-            return cls.obj
+            return cls.obj  # noqa: TRY300
         except rtoml.TomlParsingError as exc:
-            logger.error(f"Error parsing TOML: {exc}")
+            logger.exception(f"Error parsing TOML: {exc}")  # noqa: G004, TRY401
         except rtoml.TomlSerializationError as exc:
-            logger.error(f"Error parsing TOML: {exc}")
+            logger.exception(f"Error parsing TOML: {exc}")  # noqa: G004, TRY401
         except ValidationError as exc:
-            logger.error(f"Error parsing TOML: {exc}")
+            logger.exception(f"Error parsing TOML: {exc}")  # noqa: G004, TRY401
         return None
 
     @classmethod
@@ -150,7 +151,7 @@ class ConfigManager:
         return cls.obj
 
     @classmethod
-    def get_tests_path(cls) -> Path:  # noqa: WPS615
+    def get_tests_path(cls) -> Path:
         """Get tests path.
 
         Returns:

@@ -9,23 +9,23 @@ from pycouchdb.exceptions import Conflict, NotFound
 from pydantic._internal._model_construction import ModelMetaclass
 
 from hardpy.pytest_hardpy.db.base_connector import BaseConnector
-from hardpy.pytest_hardpy.db.const import DatabaseField as DF
+from hardpy.pytest_hardpy.db.const import DatabaseField as DF  # noqa: N817
 
 
 class BaseStore(BaseConnector):
     """HardPy base storage interface for CouchDB."""
 
-    def __init__(self, db_name: str):
+    def __init__(self, db_name: str) -> None:
         super().__init__(db_name)
         self._log = getLogger(__name__)
         self._doc: dict = self._init_doc()
         self._schema: ModelMetaclass
 
-    def compact(self):
+    def compact(self) -> None:
         """Compact database."""
         self._db.compact()
 
-    def get_field(self, key: str) -> Any:
+    def get_field(self, key: str) -> Any:  # noqa: ANN401
         """Get field from the state store.
 
         Args:
@@ -36,7 +36,7 @@ class BaseStore(BaseConnector):
         """
         return glom(self._doc, key)
 
-    def update_doc(self, key: str, value):
+    def update_doc(self, key: str, value: Any) -> None:  # noqa: ANN401
         """Update document.
 
         HardPy collecting uses a simple key without dots.
@@ -52,7 +52,7 @@ class BaseStore(BaseConnector):
         else:
             self._doc[key] = value
 
-    def update_db(self):
+    def update_db(self) -> None:
         """Update database by current document."""
         try:
             self._doc = self._db.save(self._doc)

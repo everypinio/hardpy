@@ -9,6 +9,6 @@ from hardpy.pytest_hardpy.utils import ConnectionData
 class BaseServer:
     """Base class for CouchDB server."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         con_data = ConnectionData()
         self._db_srv = DbServer(con_data.database_url)
