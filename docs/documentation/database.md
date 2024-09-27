@@ -242,6 +242,7 @@ The **modules** block contains the following fields:
         - **stop_time**: test end time in Unix second;
         - **assertion_msg**: error message if the test fails;
         - **msg**: additional message;
+        - **attempt**: attempt counting to pass the case, not yet implemented in the **pytest-hardpy** plugin;
         - **dialog_box**: information about dialog box;
           - **title_bar**: title bar of the dialog box;
           - **dialog_text**: text displayed in the dialog box;
@@ -304,6 +305,7 @@ Example of a **current** document:
               "stop_time": 1695817264,
               "assertion_msg": null,
               "msg": null,
+              "attempt": 1,
               "dialog_box": {
                 "title_bar": "Dialog box title",
                 "dialog_text": "Dialog box text",
@@ -328,6 +330,7 @@ Example of a **current** document:
               "msg": [
                 "Current minute 21"
               ],
+              "attempt": 1,
               "dialog_box": {}
             },
           }
@@ -388,6 +391,7 @@ The **modules** block contains the following fields:
         - **stop_time**: test end time in Unix second;
         - **assertion_msg**: error message if the test fails;
         - **msg**: additional message;
+        - **attempt**: attempt counting to pass the case, not yet implemented in the **pytest-hardpy** plugin;
         - **artifact**: an object containing information about artifacts created during the test case process.
 
 Example of a **current** document:
@@ -448,6 +452,7 @@ Example of a **current** document:
               "stop_time": 1695817264,
               "assertion_msg": null,
               "msg": null,
+              "attempt": 1,
               "artifact": {"data_str": "456DATA"}
             },
             "test_minute_parity": {
@@ -459,6 +464,7 @@ Example of a **current** document:
               "msg": [
                 "Current minute 21"
               ],
+              "attempt": 1,
               "artifact": {
                 "data_str": "123DATA",
                 "data_int": 12345,
