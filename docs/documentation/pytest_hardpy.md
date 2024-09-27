@@ -22,7 +22,7 @@ Another way to enable a plugin without `pytest.ini` file is to run tests with th
 pytest --hardpy-pt tests
 ```
 
-If tests are run via [hardpy-panel](hardpy_panel.md), then the pytest-hardpy plugin will be enabled for tests by default.
+If tests are run via [hardpy panel](hardpy_panel.md), then the pytest-hardpy plugin will be enabled for tests by default.
 
 ## Functions
 

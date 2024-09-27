@@ -93,8 +93,9 @@ python -m build
 
 1. Install dependencies or create environment.
 2. Compile frontend if it's the first launch.
-3. Launch **CouchDB** instance.
-4. Launch `hardpy-panel` with path to tests folder.
+3. Launch `hardpy init` with path to tests folder.
+4. Launch **CouchDB** instance.
+5. Launch `hardpy run` with path to tests folder.
 
 Addresses:
 
