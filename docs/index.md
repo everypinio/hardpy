@@ -2,10 +2,6 @@
     <img src="https://everypinio.github.io/hardpy/img/logo256.png" alt="HardPy" style="width:200px;">
 </h1>
 
-<h1 align="center">
-    <b>HardPy</b>
-</h1>
-
 <p align="center">
 HardPy is a python library for creating a test bench for devices.
 </p>
