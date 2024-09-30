@@ -9,7 +9,7 @@ assigned to it in the **runstore** and **statestore** databases.
 The third CouchDB Instance is needed to store reports in the **report**
 database on each conducted test of each stand.
 
-You can learn more about storing reports here 
+You can learn more about storing reports here
 [Couchdb instance](../documentation/database.md#couchdb-instance).
 
 ### projects
@@ -21,13 +21,13 @@ hardpy init tests_1
 ```
 
 ```bash
-hardpy init tests_2 --database-port 5985 --frontend-port 8001 
+hardpy init tests_2 --database-port 5985 --frontend-port 8001
 ```
 
 ### databases
 
-For the third database, you can use `hardpy init` and delete 
-all files except the database folder and the `docker-compose.yaml` file. 
+For the third database, you can use `hardpy init` and delete
+all files except the database folder and the `docker-compose.yaml` file.
 
 ```bash
 hardpy init third_database --database-port 5986
@@ -82,5 +82,5 @@ hardpy init tests_2 --database-port 5985 --frontend-port 8001 --socket-port 6526
 
 ### how to start
 
-1. Start all databases via `docker compose`.
-2. Launch both project via `hardpy run <project_name>`
+1. Start all databases via **docker compose**.
+2. Launch both project via `hardpy run <project_name>`.

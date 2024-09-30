@@ -26,3 +26,4 @@ class DatabaseField(str, Enum):
     DRIVERS = "drivers"
     DIALOG_BOX = "dialog_box"
     OPERATOR_MSG = "operator_msg"
+    ATTEMPT = "attempt"
