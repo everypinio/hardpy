@@ -9,14 +9,16 @@ from natsort import natsorted
 
 from hardpy.pytest_hardpy.db import DatabaseField as DF
 from hardpy.pytest_hardpy.reporter.base import BaseReporter
-from hardpy.pytest_hardpy.utils import TestStatus, RunStatus, NodeInfo
+from hardpy.pytest_hardpy.utils import TestStatus, NodeInfo
 
 
 class HookReporter(BaseReporter):
     """Reporter for using in the hook HardPy plugin's hooks."""
 
-    def __init__(self):  # noqa: WPS612
+    def __init__(self, is_clear_database: bool = False):  # noqa: WPS612
         super().__init__()
+        if is_clear_database:
+            self._statestore.clear()
         self._log = getLogger(__name__)
 
     def init_doc(self, doc_name: str):
@@ -33,6 +35,7 @@ class HookReporter(BaseReporter):
         self.set_doc_value(DF.PROGRESS, 0)
         self.set_doc_value(DF.DRIVERS, {})
         self.set_doc_value(DF.ARTIFACT, {}, runstore_only=True)
+        self.set_doc_value(DF.OPERATOR_MSG, {}, statestore_only=True)
 
     def start(self):
         """Start test."""
@@ -43,7 +46,7 @@ class HookReporter(BaseReporter):
         self.set_doc_value(DF.TIMEZONE, tzname)  # noqa: WPS432
         self.set_doc_value(DF.PROGRESS, 0)
 
-    def finish(self, status: RunStatus):
+    def finish(self, status: TestStatus):
         """Finish test.
 
         This method must be called at the end of test run.
@@ -196,6 +199,7 @@ class HookReporter(BaseReporter):
             DF.STOP_TIME: None,
             DF.ASSERTION_MSG: None,
             DF.MSG: None,
+            DF.ATTEMPT: 0,
         }
 
         if item.get(node_info.module_id) is None:  # noqa: WPS204

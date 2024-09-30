@@ -38,6 +38,33 @@ def test_dut_serial_number(pytester: Pytester, hardpy_opts):
     result.assert_outcomes(passed=1)
 
 
+def test_dut_part_number(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        from hardpy import DuplicatePartNumberError
+
+        def test_dut_part_number():
+            report = hardpy.get_current_report()
+            assert (
+                report.dut.part_number is None
+            ), "Part number is not empty before start."
+
+            part_number = str(uuid4())[:6]
+            hardpy.set_dut_part_number(part_number)
+            report = hardpy.get_current_report()
+            assert part_number == report.dut.part_number
+
+            second_part_number = "incorrect part number"
+            with pytest.raises(DuplicatePartNumberError):
+                hardpy.set_dut_part_number(second_part_number)
+    """
+    )
+
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
 def test_empty_dut_serial_number(pytester: Pytester, hardpy_opts):
     pytester.makepyfile(
         f"""
@@ -130,6 +157,32 @@ def test_empty_dut_info(pytester: Pytester, hardpy_opts):
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1)
+
+
+def test_stand_name(pytester: Pytester, hardpy_opts):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        from hardpy import DuplicateTestStandNameError
+
+        def test_stand_name():
+            report = hardpy.get_current_report()
+            assert (
+                report.test_stand.name is None
+            ), "Test stand name is not empty before start."
+
+            name = str(uuid4())[:6]
+            hardpy.set_stand_name(name)
+            report = hardpy.get_current_report()
+            assert name == report.test_stand.name
+
+            second_name = "incorrect name"
+            with pytest.raises(DuplicateTestStandNameError):
+                hardpy.set_stand_name(second_name)
+    """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
 
 
 def test_stand_info(pytester: Pytester, hardpy_opts):

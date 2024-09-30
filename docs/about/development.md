@@ -5,7 +5,7 @@
 ### Requirements
 
 * **python** version must be equal to or greater than  **3.10**;
-* **yarn** version must be equal to or greater than **3.4.1**;
+* **yarn** version must be equal to 4.0.1;
 * **node.js** version must be equal to or greater than **16.10.0**;
 * **CouchDB** version must be equal to or greater than **3.2.0**;
 
@@ -93,13 +93,14 @@ python -m build
 
 1. Install dependencies or create environment.
 2. Compile frontend if it's the first launch.
-3. Launch **CouchDB** instance.
-4. Launch `hardpy-panel` with path to tests folder.
+3. Launch `hardpy init` with path to tests folder.
+4. Launch **CouchDB** instance.
+5. Launch `hardpy run` with path to tests folder.
 
 Addresses:
 
 - HardPy panel: http://localhost:8000/
-- Fauxton CouchDB: http://127.0.0.1:5984/_utils/
+- CouchDB: http://localhost:5984/_utils/
 
 ## Documentation
 
@@ -111,7 +112,7 @@ Documentation server command is:
 mkdocs serve
 ```
 
-Documentation address: http://127.0.0.1:8000/
+Documentation address: http://localhost:8000/
 
 ### Build
 

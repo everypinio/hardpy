@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from logging import getLogger
+from uuid import uuid4
 
 from pycouchdb import Server as DbServer
 from pycouchdb.exceptions import Conflict
@@ -11,7 +12,7 @@ from hardpy.pytest_hardpy.db.schema import ResultRunStore
 from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig
 
 
-class CouchdbLoader(object):
+class CouchdbLoader:
     """CouchDB report generator."""
 
     def __init__(self, config: CouchdbConfig):
@@ -51,7 +52,7 @@ class CouchdbLoader(object):
         device_serial_number = report.dut.serial_number
         if not device_serial_number:
             self._log.warning("Device serial number is not provided in the report.")
-            return f"report_{timestamp}"
+            return f"report_{timestamp}_no_serial_{str(uuid4())[:6]}"
         return f"report_{timestamp}_{device_serial_number}"
 
     def _schema_to_dict(self, report: ResultRunStore, report_id: str) -> dict:

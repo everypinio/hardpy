@@ -2,11 +2,11 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import signal
-from typing import Any, Callable
 from logging import getLogger
 from pathlib import Path, PurePath
 from platform import system
 from re import compile as re_compile
+from typing import Any, Callable
 
 from natsort import natsorted
 from pytest import (
@@ -31,26 +31,46 @@ from _pytest._code.code import (
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import (
     TestStatus,
-    RunStatus,
     NodeInfo,
     ProgressCalculator,
-    ConfigData,
+    ConnectionData,
 )
 from hardpy.pytest_hardpy.utils.node_info import TestDependencyInfo
 
 
 def pytest_addoption(parser: Parser):
     """Register argparse-style options."""
-    config_data = ConfigData()
-    # fmt: off
-    parser.addoption("--hardpy-dbu", action="store", default=config_data.db_user, help="database user")  # noqa: E501
-    parser.addoption("--hardpy-dbpw", action="store", default=config_data.db_pswd, help="database user password")  # noqa: E501
-    parser.addoption("--hardpy-dbp", action="store", default=config_data.db_port, help="database port number")  # noqa: E501
-    parser.addoption("--hardpy-dbh", action="store", default=config_data.db_host, help="database hostname")  # noqa: E501
-    parser.addoption("--hardpy-pt", action="store_true", default=False, help="enable pytest-hardpy plugin")  # noqa: E501
-    parser.addoption("--hardpy-sp", action="store", default=config_data.socket_port, help="internal socket port")  # noqa: E501
-    parser.addoption("--hardpy-sa", action="store", default=config_data.socket_addr, help="internal socket address")  # noqa: E501
-    # fmt: on
+    con_data = ConnectionData()
+    parser.addoption(
+        "--hardpy-db-url",
+        action="store",
+        default=con_data.database_url,
+        help="database url",
+    )
+    parser.addoption(
+        "--hardpy-sp",
+        action="store",
+        default=con_data.socket_port,
+        help="internal socket port",
+    )
+    parser.addoption(
+        "--hardpy-sh",
+        action="store",
+        default=con_data.socket_host,
+        help="internal socket host",
+    )
+    parser.addoption(
+        "--hardpy-clear-database",
+        action="store",
+        default=False,
+        help="clear hardpy local database",
+    )
+    parser.addoption(
+        "--hardpy-pt",
+        action="store_true",
+        default=False,
+        help="enable pytest-hardpy plugin",
+    )
 
 
 # Bootstrapping hooks
@@ -60,7 +80,7 @@ def pytest_load_initial_conftests(early_config, parser, args):
         early_config.pluginmanager.register(plugin)
 
 
-class HardpyPlugin(object):
+class HardpyPlugin:
     """HardPy integration plugin for pytest.
 
     Extends hook functions from pytest API.
@@ -82,28 +102,32 @@ class HardpyPlugin(object):
 
     def pytest_configure(self, config: Config):
         """Configure pytest."""
-        config_data = ConfigData()
-        config_data.db_user = config.getoption("--hardpy-dbu")
-        config_data.db_host = config.getoption("--hardpy-dbh")
-        config_data.db_pswd = config.getoption("--hardpy-dbpw")
-        config_data.db_port = config.getoption("--hardpy-dbp")
-        config_data.socket_port = int(config.getoption("--hardpy-sp"))
-        config_data.socket_addr = config.getoption("--hardpy-sa")
+        con_data = ConnectionData()
+
+        database_url = config.getoption("--hardpy-db-url")
+        if database_url:
+            con_data.database_url = str(database_url)
+
+        is_clear_database = config.getoption("--hardpy-clear-database")
+        is_clear_statestore = is_clear_database == str(True)
+
+        socket_port = config.getoption("--hardpy-sp")
+        if socket_port:
+            con_data.socket_port = int(socket_port)  # type: ignore
+
+        socket_host = config.getoption("--hardpy-sh")
+        if socket_host:
+            con_data.socket_host = str(socket_host)
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
         config.addinivalue_line("markers", "dependency")
 
         # must be init after config data is set
-        self._reporter = HookReporter()
+        self._reporter = HookReporter(is_clear_statestore)
 
     def pytest_sessionfinish(self, session: Session, exitstatus: int):
-        """Call at the end of test session.
-
-        Args:
-            session (Session): session description
-            exitstatus (int): exit test status
-        """
+        """Call at the end of test session."""
         if "--collect-only" in session.config.invocation_params.args:
             return
         status = self._get_run_status(exitstatus)
@@ -263,16 +287,46 @@ class HardpyPlugin(object):
         self._reporter.set_module_status(module_id, status)
         self._reporter.set_module_stop_time(module_id)
 
-    def _get_run_status(self, exitstatus: int) -> RunStatus:
+    def _get_run_status(self, exitstatus: int) -> TestStatus:
         match exitstatus:
             case ExitCode.OK:
-                return RunStatus.PASSED
+                return TestStatus.PASSED
             case ExitCode.TESTS_FAILED:
-                return RunStatus.FAILED
+                return TestStatus.FAILED
             case ExitCode.INTERRUPTED:
-                return RunStatus.STOPPED
+                self._stop_tests()
+                return TestStatus.STOPPED
             case _:
-                return RunStatus.ERROR
+                return TestStatus.ERROR
+
+    def _stop_tests(self):  # noqa: WPS231
+        """Update module and case statuses from READY or RUN to STOPPED."""
+        for module_id, module_data in self._results.items():
+            module_status = module_data["module_status"]
+
+            # skip not ready and running modules
+            if module_status not in {TestStatus.READY, TestStatus.RUN}:
+                continue
+
+            # update module statuses
+            self._results[module_id]["module_status"] = TestStatus.STOPPED
+            self._reporter.set_module_status(module_id, TestStatus.STOPPED)
+
+            # update case statuses
+            for module_key, module_value in module_data.items():
+                # module status is not a case_id
+                if module_key == "module_status":
+                    continue
+                # case value is empty - case is not finished
+                if module_value is None:
+                    case_id = module_key
+                    self._results[module_id][case_id] = TestStatus.STOPPED
+                    self._reporter.set_case_status(
+                        module_id,
+                        case_id,
+                        TestStatus.STOPPED,
+                    )
+        self._reporter.update_db_by_doc()
 
     def _decode_assertion_msg(
         self,
@@ -320,6 +374,9 @@ class HardpyPlugin(object):
         if dependency and self._is_dependency_failed(dependency):
             self._log.debug(f"Skipping test due to dependency: {dependency}")
             self._results[node_info.module_id][node_info.case_id] = TestStatus.SKIPPED
+            self._reporter.set_progress(
+                self._progress.calculate(f"{node_info.module_id}::{node_info.case_id}")
+            )
             skip(f"Test {node_info.module_id}::{node_info.case_id} is skipped")
 
     def _is_dependency_failed(self, dependency) -> bool:

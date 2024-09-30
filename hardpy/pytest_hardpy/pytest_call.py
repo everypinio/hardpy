@@ -16,16 +16,18 @@ from hardpy.pytest_hardpy.db import (
     RunStore,
 )
 from hardpy.pytest_hardpy.utils import (
+    ConnectionData,
     DuplicateSerialNumberError,
+    DuplicatePartNumberError,
+    DuplicateTestStandNameError,
     DuplicateDialogBoxError,
     DialogBox,
-    ConfigData,
 )
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 
 
 @dataclass
-class CurrentTestInfo(object):
+class CurrentTestInfo:
     """Current test info."""
 
     module_id: str
@@ -79,6 +81,40 @@ def set_dut_serial_number(serial_number: str):
     reporter.update_db_by_doc()
 
 
+def set_dut_part_number(part_number: str):
+    """Add DUT part number to document.
+
+    Args:
+        part_number (str): DUT part number
+
+    Raises:
+        DuplicatePartNumberError: if part number is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.DUT, DF.PART_NUMBER)
+    if reporter.get_field(key):
+        raise DuplicatePartNumberError
+    reporter.set_doc_value(key, part_number)
+    reporter.update_db_by_doc()
+
+
+def set_stand_name(name: str):
+    """Add test stand name to document.
+
+    Args:
+        name (str): test stand name
+
+    Raises:
+        DuplicateTestStandNameError: if test stand name is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.TEST_STAND, DF.NAME)
+    if reporter.get_field(key):
+        raise DuplicateTestStandNameError
+    reporter.set_doc_value(key, name)
+    reporter.update_db_by_doc()
+
+
 def set_stand_info(info: dict):
     """Add test stand info to document.
 
@@ -87,7 +123,7 @@ def set_stand_info(info: dict):
     """
     reporter = RunnerReporter()
     for stand_key, stand_value in info.items():
-        key = reporter.generate_key(DF.TEST_STAND, stand_key)
+        key = reporter.generate_key(DF.TEST_STAND, DF.INFO, stand_key)
         reporter.set_doc_value(key, stand_value)
     reporter.update_db_by_doc()
 
@@ -261,6 +297,29 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
 
+def set_operator_message(msg: str, title: str | None = None) -> None:
+    """Set operator message.
+
+    The function should be used to handle events outside of testing.
+    For messages to the operator during testing, there is the function `run_dialog_box`.
+
+    Args:
+        msg (str): Message
+        title (str | None): Title
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(
+        DF.OPERATOR_MSG,
+    )
+    msg_data = {"msg": msg, "title": title, "visible": True}
+    reporter.set_doc_value(key, msg_data, statestore_only=True)
+    reporter.update_db_by_doc()
+    is_msg_visible = _get_socket_raw_data()
+    msg_data["visible"] = is_msg_visible
+    reporter.set_doc_value(key, msg_data, statestore_only=True)
+    reporter.update_db_by_doc()
+
+
 def _get_current_test() -> CurrentTestInfo:
     current_node = environ.get("PYTEST_CURRENT_TEST")
 
@@ -288,9 +347,10 @@ def _get_socket_raw_data() -> str:
     # create socket connection
     server = socket.socket()
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    config_data = ConfigData()
+    con_data = ConnectionData()
+
     try:
-        server.bind((config_data.socket_addr, config_data.socket_port))
+        server.bind((con_data.socket_host, con_data.socket_port))
     except socket.error as exc:
         raise RuntimeError(f"Error creating socket: {exc}")
     server.listen(1)
