@@ -46,8 +46,6 @@ def fill_actions_after_test(post_run_functions: list):
 Contains two simple examples of a valid test.
 
 ```python
-import pytest
-
 def test_one():
     assert True
 
@@ -60,11 +58,9 @@ def test_two():
 Contains two simple examples: a valid test and an invalid test.
 
 ```python
-import pytest
-
 def test_three():
     assert True
 
 def test_four():
-    assert False
+    raise AssertionError
 ```

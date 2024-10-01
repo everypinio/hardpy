@@ -1,8 +1,7 @@
 import pytest
-import hardpy
-
 from driver_example import DriverExample
 
+import hardpy
 
 pytestmark = [
     pytest.mark.module_name("Main tests"),

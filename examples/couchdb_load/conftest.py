@@ -1,8 +1,8 @@
 import pytest
 
 from hardpy import (
-    CouchdbLoader,
     CouchdbConfig,
+    CouchdbLoader,
     get_current_report,
 )
 

@@ -4,7 +4,7 @@
 from enum import Enum
 
 
-class TestStatus(str, Enum):  # noqa: WPS600
+class TestStatus(str, Enum):
     """Pytest test status.
 
     Statuses, that can be returned by Pytest.
