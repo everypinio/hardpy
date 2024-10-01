@@ -1,4 +1,4 @@
-line-length  = 88
+line-length = 88
 indent-width = 4
 
 [lint]
@@ -17,7 +17,6 @@ indent-width = 4
         "ANN101", # Missing type annotation for `self` in method
         "ANN102", # Missing type annotation for `cls` in classmethod
         "D100",   # Missing docstring in public module
-        "D101",   # Missing docstring in public class
         "D105",   # Missing docstring in magic method
         "D107",   # Missing docstring in `__init__`
         "FIX002", # Allow TODO
@@ -28,12 +27,13 @@ indent-width = 4
         "FBT002", # Boolean default value in function call
         "FBT003", # Boolean positional arg in function definition
         "PT013",  # Pytest import
+        "G004",   # Logging f-string
     ]
 
     [lint.isort]
         combine-as-imports = true
-        case-sensitive     = true
-        force-to-top       = ["src"]
+        case-sensitive = true
+        force-to-top = ["src"]
 
     [lint.mccabe]
         max-complexity = 12
@@ -42,8 +42,8 @@ indent-width = 4
         convention = "google"
 
     [lint.pylint]
-        max-returns        = 8
-        max-locals         = 10
+        max-returns = 8
+        max-locals = 10
         max-public-methods = 20
 
     [lint.per-file-ignores]

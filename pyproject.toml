@@ -39,19 +39,14 @@
     ]
 
     [project.optional-dependencies]
-        dev = [
-            "wemake-python-styleguide>=0.19.2",
-            "mypy>=1.11.0",
-            "ruff>=0.5.6",
-            "pre-commit>=3.8.0",
-        ]
+        dev = ["wemake-python-styleguide>=0.19.2", "mypy>=1.11.0", "ruff>=0.5.6"]
         build = ["build==1.0.3"]
 
     [project.urls]
-        Homepage      = "https://github.com/everypinio/hardpy/"
+        Homepage = "https://github.com/everypinio/hardpy/"
         Documentation = "https://everypinio.github.io/hardpy/"
-        Repository    = "https://github.com/everypinio/hardpy/"
-        Changelog     = "https://everypinio.github.io/hardpy/changelog/"
+        Repository = "https://github.com/everypinio/hardpy/"
+        Changelog = "https://everypinio.github.io/hardpy/changelog/"
 
     [project.scripts]
         # Provide `hardpy` executable
@@ -61,7 +56,7 @@
         pytest_hardpy = "hardpy.pytest_hardpy.plugin"
 
 [build-system]
-    requires      = ["hatchling==1.21.1"]
+    requires = ["hatchling==1.21.1"]
     build-backend = "hatchling.build"
 
 [tool.hatch.build]
