@@ -13,6 +13,7 @@ The HardPy project from version 0.6.0 onwards must contain the **hardpy.toml** f
   the `--hardpy-clear-database` option of the **pytest-hardpy** plugin.
 * Add the **name** and **info** fields to **test_stand** in the database schema.
 * Add the **part_number** field to **dut** in the database schema.
+* Add the **attempt** field to test case in the database schema.
 * Add `set_stand_name` and `set_dut_part_number` functions.
 * Add a hardpy template project using the `hardpy init` command.
 * Add hardpy config .toml file - **hardpy.toml**.
