@@ -44,7 +44,7 @@ class CouchdbConfig:
         if self.connection_str:
             return self.connection_str
 
-        # TODO: Modify connection string creating based on protocol.  # noqa: TD002
+        # TODO(xorialexandrov): Modify connection string creating based on protocol.
         #       Some problems with http and https, different ports, local
         #       and cloud databases.
         protocol = self._get_protocol()
