@@ -51,8 +51,6 @@ If `test_one`, then `test_two` will be skipped.
 ##### test_1.py
 
 ```python
-import pytest
-
 def test_one():
     assert False
 ```

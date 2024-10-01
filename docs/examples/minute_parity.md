@@ -24,17 +24,18 @@ Contains settings and fixtures for all tests:
 
 ```python
 import logging
+
 import pytest
+from driver_example import DriverExample  # type: ignore
 
 from hardpy import (
-    CouchdbLoader,
     CouchdbConfig,
+    CouchdbLoader,
     get_current_report,
 )
-from driver_example import DriverExample
 
 @pytest.fixture(scope="module")
-def module_log(request):
+def module_log(request: pytest.FixtureRequest):
     log_name = request.module.__name__
     yield logging.getLogger(log_name)
 
@@ -66,15 +67,19 @@ import datetime
 from logging import getLogger
 
 class DriverExample:
-    def __init__(self):
+    """Driver example."""
+
+    def __init__(self) -> None:
         self._log = getLogger(__name__)
 
     @property
     def current_minute(self):
-        current_time = datetime.datetime.now()
+        """Example of driver method."""
+        current_time = datetime.datetime.now()  # noqa: DTZ005
         return int(current_time.strftime("%M"))
 
     def random_method(self):
+        """Example of random method."""
         self._log.warning("Random method")
 ```
 
@@ -92,6 +97,7 @@ import logging
 from uuid import uuid4
 
 import pytest
+
 import hardpy
 
 pytestmark = pytest.mark.module_name("Testing preparation")
@@ -102,17 +108,21 @@ def test_dut_info(module_log: logging.Logger):
     module_log.info(f"DUT serial number {serial_number}")
     hardpy.set_dut_serial_number(serial_number)
     hardpy.set_dut_part_number("part_number_1")
-    info = {"batch": "test_batch", "board_rev": "rev_1"}
+    info = {
+        "batch": "test_batch",
+        "board_rev": "rev_1",
+    }
     hardpy.set_dut_info(info)
     assert True
-
 
 @pytest.mark.case_name("Test stand info")
 def test_stand_info(module_log: logging.Logger):
     test_stand_name = "Stand 1"
     module_log.info(f"Stand name: {test_stand_name}")
     hardpy.set_stand_name(test_stand_name)
-    info = {"geo": "Moon"}
+    info = {
+        "geo": "Moon",
+    }
     hardpy.set_stand_info(info)
     assert True
 ```
@@ -128,20 +138,24 @@ Contains basic tests:
 
 ```python
 import pytest
-import hardpy
-
 from driver_example import DriverExample
 
-pytestmark = pytest.mark.module_name("Main tests")
+import hardpy
+
+pytestmark = [
+    pytest.mark.module_name("Main tests"),
+]
 
 @pytest.mark.case_name("Minute check")
 def test_minute_parity(driver_example: DriverExample):
     minute = driver_example.current_minute
     hardpy.set_message(f"Current minute {minute}")
     result = minute % 2
-    data = {"minute": minute}
+    data = {
+        "minute": minute,
+    }
     hardpy.set_case_artifact(data)
-    assert (result == 0), f"The test failed because {minute} is odd! Try again!"
+    assert result == 0, f"The test failed because {minute} is odd! Try again!"
 ```
 
 ### test_3.py
@@ -159,6 +173,7 @@ If `test_2::test_minute_parity` fails, `test_3` will be skipped
 from time import sleep
 
 import pytest
+
 import hardpy
 
 pytestmark = [

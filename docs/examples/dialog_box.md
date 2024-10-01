@@ -19,7 +19,7 @@ To test images, create an `assets` folder in the `dialog_box` folder with the im
 ```python
 import pytest
 
-from hardpy import run_dialog_box, DialogBox
+from hardpy import DialogBox, run_dialog_box
 
 pytestmark = pytest.mark.module_name("Base dialog box")
 
@@ -47,11 +47,11 @@ def test_after():
 import pytest
 
 from hardpy import (
+    DialogBox,
+    NumericInputWidget,
+    TextInputWidget,
     run_dialog_box,
     set_message,
-    TextInputWidget,
-    NumericInputWidget,
-    DialogBox,
 )
 
 pytestmark = pytest.mark.module_name("Input field dialog boxes")
@@ -86,11 +86,11 @@ def test_num_input():
 import pytest
 
 from hardpy import (
-    run_dialog_box,
-    set_message,
+    CheckboxWidget,
     DialogBox,
     RadiobuttonWidget,
-    CheckboxWidget,
+    run_dialog_box,
+    set_message,
 )
 
 pytestmark = pytest.mark.module_name("Choice control dialog boxes")
@@ -124,7 +124,7 @@ def test_checkbox():
 ```python
 import pytest
 
-from hardpy import run_dialog_box, DialogBox, ImageWidget
+from hardpy import DialogBox, ImageWidget, run_dialog_box
 
 pytestmark = pytest.mark.module_name("Image dialog box")
 
@@ -146,7 +146,7 @@ def test_upload_image():
 ```python
 import pytest
 
-from hardpy import run_dialog_box, DialogBox, ImageWidget, StepWidget, MultistepWidget
+from hardpy import DialogBox, ImageWidget, MultistepWidget, StepWidget, run_dialog_box
 
 pytestmark = pytest.mark.module_name("Multiple steps dialog box")
 
