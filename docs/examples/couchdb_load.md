@@ -22,7 +22,6 @@ Contains settings and fixtures for all tests:
 
 ```python
 import pytest
-
 from hardpy import (
     CouchdbLoader,
     CouchdbConfig,

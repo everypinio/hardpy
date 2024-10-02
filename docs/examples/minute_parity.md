@@ -24,10 +24,8 @@ Contains settings and fixtures for all tests:
 
 ```python
 import logging
-
 import pytest
 from driver_example import DriverExample
-
 from hardpy import (
     CouchdbConfig,
     CouchdbLoader,
@@ -91,9 +89,7 @@ Contains tests related to preparation for the testing process:
 ```python
 import logging
 from uuid import uuid4
-
 import pytest
-
 import hardpy
 
 pytestmark = pytest.mark.module_name("Testing preparation")
@@ -130,7 +126,6 @@ Contains basic tests:
 ```python
 import pytest
 from driver_example import DriverExample
-
 import hardpy
 
 pytestmark = pytest.mark.module_name("Main tests")
@@ -158,7 +153,6 @@ If `test_2::test_minute_parity` fails, `test_3` will be skipped
 
 ```python
 from time import sleep
-
 import pytest
 import hardpy
 
