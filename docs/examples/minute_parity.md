@@ -67,19 +67,15 @@ import datetime
 from logging import getLogger
 
 class DriverExample:
-    """Driver example."""
-
     def __init__(self) -> None:
         self._log = getLogger(__name__)
 
     @property
     def current_minute(self):
-        """Example of driver method."""
         current_time = datetime.datetime.now()
         return int(current_time.strftime("%M"))
 
     def random_method(self):
-        """Example of random method."""
         self._log.warning("Random method")
 ```
 
@@ -108,10 +104,7 @@ def test_dut_info(module_log: logging.Logger):
     module_log.info(f"DUT serial number {serial_number}")
     hardpy.set_dut_serial_number(serial_number)
     hardpy.set_dut_part_number("part_number_1")
-    info = {
-        "batch": "test_batch",
-        "board_rev": "rev_1",
-    }
+    info = {"batch": "test_batch", "board_rev": "rev_1"}
     hardpy.set_dut_info(info)
     assert True
 
@@ -120,9 +113,7 @@ def test_stand_info(module_log: logging.Logger):
     test_stand_name = "Stand 1"
     module_log.info(f"Stand name: {test_stand_name}")
     hardpy.set_stand_name(test_stand_name)
-    info = {
-        "geo": "Moon",
-    }
+    info = {"geo": "Moon",}
     hardpy.set_stand_info(info)
     assert True
 ```
@@ -142,18 +133,14 @@ from driver_example import DriverExample
 
 import hardpy
 
-pytestmark = [
-    pytest.mark.module_name("Main tests"),
-]
+pytestmark = pytest.mark.module_name("Main tests")
 
 @pytest.mark.case_name("Minute check")
 def test_minute_parity(driver_example: DriverExample):
     minute = driver_example.current_minute
     hardpy.set_message(f"Current minute {minute}")
     result = minute % 2
-    data = {
-        "minute": minute,
-    }
+    data = {"minute": minute}
     hardpy.set_case_artifact(data)
     assert result == 0, f"The test failed because {minute} is odd! Try again!"
 ```
@@ -173,7 +160,6 @@ If `test_2::test_minute_parity` fails, `test_3` will be skipped
 from time import sleep
 
 import pytest
-
 import hardpy
 
 pytestmark = [
