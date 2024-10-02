@@ -1,7 +1,5 @@
 from math import inf
 
-import pytest
-
 import hardpy
 from hardpy.pytest_hardpy.utils.dialog_box import BaseWidget
 

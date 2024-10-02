@@ -1,6 +1,6 @@
 import pytest
 
-from hardpy import run_dialog_box, DialogBox, ImageWidget
+from hardpy import DialogBox, ImageWidget, run_dialog_box
 
 pytestmark = pytest.mark.module_name("Image dialog box")
 

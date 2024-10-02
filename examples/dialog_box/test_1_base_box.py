@@ -1,7 +1,6 @@
 import pytest
 
-from hardpy import run_dialog_box, DialogBox
-
+from hardpy import DialogBox, run_dialog_box
 
 pytestmark = pytest.mark.module_name("Base dialog box")
 

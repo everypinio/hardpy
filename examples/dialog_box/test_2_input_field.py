@@ -1,11 +1,11 @@
 import pytest
 
 from hardpy import (
+    DialogBox,
+    NumericInputWidget,
+    TextInputWidget,
     run_dialog_box,
     set_message,
-    TextInputWidget,
-    NumericInputWidget,
-    DialogBox,
 )
 
 pytestmark = pytest.mark.module_name("Input field dialog boxes")
