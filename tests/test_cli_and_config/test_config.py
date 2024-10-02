@@ -90,7 +90,7 @@ def test_config_manager_create_config(tmp_path):  # noqa: ANN001
 
     config_file = tests_dir / "hardpy.toml"
     assert config_file.read_text() == rtoml.dumps(
-        ConfigManager.get_config().model_dump()
+        ConfigManager.get_config().model_dump(),
     )
 
 
