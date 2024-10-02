@@ -26,7 +26,7 @@ Contains settings and fixtures for all tests:
 import logging
 
 import pytest
-from driver_example import DriverExample  # type: ignore
+from driver_example import DriverExample
 
 from hardpy import (
     CouchdbConfig,
@@ -75,7 +75,7 @@ class DriverExample:
     @property
     def current_minute(self):
         """Example of driver method."""
-        current_time = datetime.datetime.now()  # noqa: DTZ005
+        current_time = datetime.datetime.now()
         return int(current_time.strftime("%M"))
 
     def random_method(self):
