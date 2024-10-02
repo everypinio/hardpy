@@ -7,7 +7,7 @@ from typing import Generic, TypeVar
 T = TypeVar("T")
 
 
-class SingletonMeta(type, Generic[T]):
+class SingletonMeta(type, Generic[T]):  # noqa: D101
     _instances: dict[SingletonMeta[T], T] = {}  # noqa: RUF012
 
     def __call__(cls, *args, **kwargs) -> T:  # noqa: ANN002, ANN003

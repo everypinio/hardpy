@@ -46,7 +46,6 @@ port numbers of this CouchDB Instance in the file `conftest.py` in the folder of
 
 ```bash
 import pytest
-
 from hardpy import (
     CouchdbLoader,
     CouchdbConfig,

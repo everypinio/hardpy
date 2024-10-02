@@ -14,8 +14,6 @@ The code for this example can be seen inside the hardpy package [Hello Hardpy](h
 Contains the simplest example of a valid test.
 
 ```python
-import pytest
-
 def test_one():
     assert True
 ```

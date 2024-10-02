@@ -127,18 +127,18 @@ class ConfigManager:
         cls.tests_path = toml_path
         toml_file = toml_path / "hardpy.toml"
         if not toml_file.exists():
-            logger.error(f"File hardpy.toml not found at path: {toml_file}")  # noqa: G004
+            logger.error(f"File hardpy.toml not found at path: {toml_file}")
             return None
         try:
             with Path.open(toml_path / "hardpy.toml", "r") as f:
                 cls.obj = HardpyConfig(**rtoml.load(f))
             return cls.obj  # noqa: TRY300
-        except rtoml.TomlParsingError as exc:
-            logger.exception(f"Error parsing TOML: {exc}")  # noqa: G004, TRY401
-        except rtoml.TomlSerializationError as exc:
-            logger.exception(f"Error parsing TOML: {exc}")  # noqa: G004, TRY401
-        except ValidationError as exc:
-            logger.exception(f"Error parsing TOML: {exc}")  # noqa: G004, TRY401
+        except rtoml.TomlParsingError:
+            logger.exception("Error parsing TOML")
+        except rtoml.TomlSerializationError:
+            logger.exception("Error parsing TOML")
+        except ValidationError:
+            logger.exception("Error parsing TOML")
         return None
 
     @classmethod

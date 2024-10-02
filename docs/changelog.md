@@ -3,6 +3,7 @@
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
 * Add `test_cli.py` and `test_config.py`.
+* Replace linter `Flake8` with a `Ruff` linter. 
 
 ## HardPy 0.6.0
 

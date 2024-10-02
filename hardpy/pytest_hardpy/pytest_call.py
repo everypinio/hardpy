@@ -355,8 +355,8 @@ def _get_socket_raw_data() -> str:
     try:
         server.bind((con_data.socket_host, con_data.socket_port))
     except OSError as exc:
-        msg = f"Error creating socket: {exc}"
-        raise RuntimeError(msg)  # noqa: B904
+        msg = "Socket creating error"
+        raise RuntimeError(msg) from exc
     server.listen(1)
     client, _ = server.accept()
 
