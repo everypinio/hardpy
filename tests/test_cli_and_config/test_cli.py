@@ -10,7 +10,7 @@ from hardpy.common.config import (
 
 
 def test_create_file_method(tmp_path: Path):
-    config = {}  # mock config
+    config = {}
     generator = TemplateGenerator(config)  # type: ignore
     file_path = tmp_path / "test_file.txt"
     content = "Hello, World!"
@@ -46,17 +46,17 @@ def test_couchdb_ini_property():
 
 
 def test_pytest_ini_property():
-    config = {}  # mock config
+    config = {}
     generator = TemplateGenerator(config)  # type: ignore
     pytest_ini = generator.pytest_ini
-    assert "log_cli = true" in pytest_ini  # assuming pytest_ini is a static string
+    assert "log_cli = true" in pytest_ini
 
 
 def test_test_1_property():
     config = {}  # mock config
     generator = TemplateGenerator(config)  # type: ignore
     test_1_py = generator.test_1_py
-    assert "pytestmark = " in test_1_py  # assuming test_1_py is a static string
+    assert "pytestmark = " in test_1_py
 
 
 def test_conftest_py_property():

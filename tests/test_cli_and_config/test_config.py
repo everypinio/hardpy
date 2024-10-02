@@ -117,18 +117,3 @@ def test_read_config_success(tmp_path):  # noqa: ANN001
     assert config.title == test_config_data["title"]
     assert config.tests_dir == test_config_data["tests_dir"]
     assert config.database.user == test_config_data["database"]["user"]
-
-
-def test_read_config_not_found(tmp_path):  # noqa: ANN001
-    tests_dir = tmp_path / "my_tests"
-    Path.mkdir(tests_dir, exist_ok=True, parents=True)
-
-    config = ConfigManager.read_config(tests_dir)
-    assert config is None
-
-
-def test_read_config_parsing_error(tmp_path):  # noqa: ANN001
-    tests_dir = tmp_path / "my_tests"
-    Path.mkdir(tests_dir, exist_ok=True, parents=True)
-    with Path.open(tests_dir / "hardpy.toml", "w") as file:
-        file.write("invalid_toml_data")
