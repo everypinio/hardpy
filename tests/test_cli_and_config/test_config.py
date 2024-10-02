@@ -11,6 +11,48 @@ from hardpy.common.config import (
 )
 
 
+def test_config_manager_init_new_config(tmp_path):  # noqa: ANN001
+    tests_dir = tmp_path / "my_tests"
+    ConfigManager.init_config(
+        tests_dir=str(tests_dir),
+        database_user="test_user",
+        database_password="test_password",  # noqa: S106
+        database_host="test_host",
+        database_port=5432,
+        frontend_host="test_frontend_host",
+        frontend_port=8080,
+        socket_host="test_socket_host",
+        socket_port=6000,
+    )
+    config = ConfigManager.get_config()
+    assert isinstance(config, HardpyConfig)
+    assert config.tests_dir == str(tests_dir)
+    assert config.database.user == "test_user"
+    assert config.frontend.host == "test_frontend_host"
+    assert config.socket.port == 6000
+
+
+def test_config_manager_init(tmp_path):  # noqa: ANN001
+    tests_dir = tmp_path / "my_tests"
+    ConfigManager.init_config(
+        tests_dir=str(tests_dir),
+        database_user="dev",
+        database_password="dev",  # noqa: S106
+        database_host="localhost",
+        database_port=5984,
+        frontend_host="localhost",
+        frontend_port=8000,
+        socket_host="localhost",
+        socket_port=6525,
+    )
+    config = ConfigManager.get_config()
+    assert isinstance(config, HardpyConfig)
+    assert config.tests_dir == str(tests_dir)
+    assert config.database.user == "dev"
+    assert config.frontend.host == "localhost"
+    assert config.socket.port == 6525
+
+
 def test_database_config():
     config = DatabaseConfig()
     assert config.user == "dev"
@@ -36,38 +78,17 @@ def test_socket_config():
 
 def test_hardpy_config():
     config = HardpyConfig(
-        title="Test HardPy Config",
-        tests_dir="my_tests",
-        database=DatabaseConfig(user="db_user", password="db_password"),  # noqa: S106
-        frontend=FrontendConfig(host="fe_host", port=3000),
-        socket=SocketConfig(host="socket_host", port=4000),
+        title="HardPy TOML config",
+        tests_dir="tests",
+        database=DatabaseConfig(),
+        frontend=FrontendConfig(),
+        socket=SocketConfig(),
     )
-    assert config.title == "Test HardPy Config"
-    assert config.tests_dir == "my_tests"
-    assert config.database.user == "db_user"
-    assert config.frontend.host == "fe_host"
-    assert config.socket.port == 4000
-
-
-def test_config_manager_init(tmp_path):  # noqa: ANN001
-    tests_dir = tmp_path / "my_tests"
-    ConfigManager.init_config(
-        tests_dir=str(tests_dir),
-        database_user="test_user",
-        database_password="test_password",  # noqa: S106
-        database_host="test_host",
-        database_port=5432,
-        frontend_host="test_frontend_host",
-        frontend_port=8080,
-        socket_host="test_socket_host",
-        socket_port=6000,
-    )
-    config = ConfigManager.get_config()
-    assert isinstance(config, HardpyConfig)
-    assert config.tests_dir == str(tests_dir)
-    assert config.database.user == "test_user"
-    assert config.frontend.host == "test_frontend_host"
-    assert config.socket.port == 6000
+    assert config.title == "HardPy TOML config"
+    assert config.tests_dir == "tests"
+    assert config.database.user == "dev"
+    assert config.frontend.host == "localhost"
+    assert config.socket.port == 6525
 
 
 def test_config_manager_create_config(tmp_path):  # noqa: ANN001
@@ -76,14 +97,14 @@ def test_config_manager_create_config(tmp_path):  # noqa: ANN001
 
     ConfigManager.init_config(
         tests_dir=str(tests_dir),
-        database_user="test_user",
-        database_password="test_password",  # noqa: S106
-        database_host="test_host",
-        database_port=5432,
-        frontend_host="test_frontend_host",
+        database_user="dev",
+        database_password="dev",  # noqa: S106
+        database_host="localhost",
+        database_port=5984,
+        frontend_host="localhost",
         frontend_port=8000,
-        socket_host="test_socket_host",
-        socket_port=6000,
+        socket_host="localhost",
+        socket_port=6525,
     )
 
     ConfigManager.create_config(tests_dir)
@@ -99,13 +120,13 @@ def test_read_config_success(tmp_path):  # noqa: ANN001
         "title": "Test HardPy Config",
         "tests_dir": "my_tests",
         "database": {
-            "user": "db_user",
-            "password": "db_password",
-            "host": "test_host",
-            "port": 5432,
+            "user": "dev",
+            "password": "dev",
+            "host": "localhost",
+            "port": 5984,
         },
-        "frontend": {"host": "test_frontend_host", "port": 8000},
-        "socket": {"host": "test_socket_host", "port": 6000},
+        "frontend": {"host": "localhost", "port": 8000},
+        "socket": {"host": "localhost", "port": 6525},
     }
     tests_dir = tmp_path / "tests"
     Path.mkdir(tests_dir, exist_ok=True, parents=True)
