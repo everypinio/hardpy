@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from typing import Optional
 
 import typer
 from typing_extensions import Annotated
@@ -18,7 +19,7 @@ default_config = ConfigManager().get_config()
 
 @cli.command()
 def init(  # noqa: PLR0913
-    tests_dir: Annotated[str | None, typer.Argument()] = None,
+    tests_dir: Annotated[Optional[str], typer.Argument()] = None,  # noqa: UP007
     create_database: bool = typer.Option(
         True,
         help="Create CouchDB database.",
@@ -116,7 +117,7 @@ def init(  # noqa: PLR0913
 
 
 @cli.command()
-def run(tests_dir: Annotated[str | None, typer.Argument()] = None) -> None:
+def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:  # noqa: UP007
     """Run HardPy server.
 
     Args:

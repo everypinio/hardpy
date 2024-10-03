@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Replace linter `Flake8` with a `Ruff` linter. 
+
 ## HardPy 0.6.0
 
 In HardPy, compared to version 0.5.0 and less, the startup principle has changed.
