@@ -11,46 +11,25 @@ from hardpy.common.config import (
 )
 
 
-def test_config_manager_init_new_config(tmp_path):  # noqa: ANN001
-    tests_dir = tmp_path / "my_tests"
-    ConfigManager.init_config(
-        tests_dir=str(tests_dir),
-        database_user="test_user",
-        database_password="test_password",  # noqa: S106
-        database_host="test_host",
-        database_port=5432,
-        frontend_host="test_frontend_host",
-        frontend_port=8080,
-        socket_host="test_socket_host",
-        socket_port=6000,
-    )
-    config = ConfigManager.get_config()
-    assert isinstance(config, HardpyConfig)
-    assert config.tests_dir == str(tests_dir)
-    assert config.database.user == "test_user"
-    assert config.frontend.host == "test_frontend_host"
-    assert config.socket.port == 6000
-
-
 def test_config_manager_init(tmp_path):  # noqa: ANN001
     tests_dir = tmp_path / "my_tests"
     ConfigManager.init_config(
         tests_dir=str(tests_dir),
-        database_user="dev",
-        database_password="dev",  # noqa: S106
-        database_host="localhost",
-        database_port=5984,
-        frontend_host="localhost",
-        frontend_port=8000,
-        socket_host="localhost",
-        socket_port=6525,
+        database_user="dev1",
+        database_password="dev1",  # noqa: S106
+        database_host="localhost1",
+        database_port=5985,
+        frontend_host="localhost1",
+        frontend_port=8001,
+        socket_host="localhost1",
+        socket_port=6526,
     )
     config = ConfigManager.get_config()
     assert isinstance(config, HardpyConfig)
     assert config.tests_dir == str(tests_dir)
-    assert config.database.user == "dev"
-    assert config.frontend.host == "localhost"
-    assert config.socket.port == 6525
+    assert config.database.user == "dev1"
+    assert config.frontend.host == "localhost1"
+    assert config.socket.port == 6526
 
 
 def test_database_config():
@@ -100,7 +79,7 @@ def test_config_manager_create_config(tmp_path):  # noqa: ANN001
         database_user="dev",
         database_password="dev",  # noqa: S106
         database_host="localhost",
-        database_port=5984,
+        database_port=59854,
         frontend_host="localhost",
         frontend_port=8000,
         socket_host="localhost",

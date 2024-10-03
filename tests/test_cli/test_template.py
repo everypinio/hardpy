@@ -29,7 +29,7 @@ def test_docker_compose_yaml_property():
     )
     generator = TemplateGenerator(config)
     docker_compose_yaml = generator.docker_compose_yaml
-    assert "version: " in docker_compose_yaml
+    assert "5984:5984" in docker_compose_yaml
 
 
 def test_couchdb_ini_property():
@@ -42,25 +42,26 @@ def test_couchdb_ini_property():
     )
     generator = TemplateGenerator(config)
     couchdb_ini = generator.couchdb_ini
-    assert "[couchdb]" in couchdb_ini
+    assert ";port = 5984" in couchdb_ini
+    assert ";bind_address = localhost" in couchdb_ini
 
 
 def test_pytest_ini_property():
     config = {}
     generator = TemplateGenerator(config)  # type: ignore
     pytest_ini = generator.pytest_ini
-    assert "log_cli = true" in pytest_ini
+    assert "addopts = --hardpy-pt" in pytest_ini
 
 
 def test_test_1_property():
     config = {}  # mock config
     generator = TemplateGenerator(config)  # type: ignore
     test_1_py = generator.test_1_py
-    assert "pytestmark = " in test_1_py
+    assert "import hardpy" in test_1_py
 
 
 def test_conftest_py_property():
     config = {}  # mock config
     generator = TemplateGenerator(config)  # type: ignore
     conftest_py = generator.conftest_py
-    assert "def finish_executing():" in conftest_py
+    assert "def fill_actions_after_test" in conftest_py
