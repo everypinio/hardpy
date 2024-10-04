@@ -13,7 +13,8 @@ HardPy is a python library for creating a test bench for devices.
 <div align="center">
 
 [![PyPI version](https://badge.fury.io/py/hardpy.svg)](https://badge.fury.io/py/hardpy)
-![versions](https://img.shields.io/pypi/pyversions/hardpy.svg)
+![python versions](https://img.shields.io/pypi/pyversions/hardpy.svg)
+[![pytest versions](https://img.shields.io/badge/pytest-%3E%3D7.0%20%3C9.0-blue)](https://docs.pytest.org/en/latest/)
 [![Documentation](https://img.shields.io/badge/Documentation%20-Overview%20-%20%23007ec6)](https://everypinio.github.io/hardpy/)
 
 </div>
