@@ -10,6 +10,6 @@ class ConnectionData(metaclass=SingletonMeta):
     """Connection data storage."""
 
     def __init__(self) -> None:
-        self.database_url: str = ""
+        self.database_url: str = "http://dev:dev@localhost:5984/"
         self.socket_host: str = gethostname()
         self.socket_port: int = 6525
