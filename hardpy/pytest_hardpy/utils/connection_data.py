@@ -11,7 +11,7 @@ class ConnectionData(Singleton):
 
     def __init__(self):
         if not self._initialized:
-            self.database_url: str = ""
+            self.database_url: str = "http://dev:dev@localhost:5984/"
             self.socket_host: str = gethostname()
             self.socket_port: int = 6525
             self._initialized = True
