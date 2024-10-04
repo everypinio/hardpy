@@ -5,6 +5,10 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 * Add `test_cli.py` and `test_config.py`.
 * Replace linter `Flake8` with a `Ruff` linter. 
 
+## HardPy 0.6.1
+
+* Fix running tests with a simple `pytest` command.
+
 ## HardPy 0.6.0
 
 In HardPy, compared to version 0.5.0 and less, the startup principle has changed.
