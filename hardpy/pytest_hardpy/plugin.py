@@ -124,7 +124,10 @@ class HardpyPlugin:
         config.addinivalue_line("markers", "dependency")
 
         # must be init after config data is set
-        self._reporter = HookReporter(is_clear_statestore)
+        try:
+            self._reporter = HookReporter(is_clear_statestore)
+        except RuntimeError as exc:
+            exit(str(exc), 1)
 
     def pytest_sessionfinish(self, session: Session, exitstatus: int):
         """Call at the end of test session."""
