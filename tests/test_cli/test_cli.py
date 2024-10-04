@@ -139,9 +139,5 @@ def test_cli_init_socket_port():
         ), f"hardpy.toml does not contain the expected port."  # noqa: F541
 
 
-# def test_cli_run():
-#     subprocess.run(["hardpy", "run", asset_dir], check=True)  # noqa: ERA001
-
-
 def test_cli_clean():
     shutil.rmtree(asset_dir, ignore_errors=True)
