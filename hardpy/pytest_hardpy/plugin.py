@@ -128,6 +128,8 @@ class HardpyPlugin:
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
         config.addinivalue_line("markers", "dependency")
+        config.addinivalue_line("markers", "attempt")
+        config.addinivalue_line("markers", "attempt.message")
 
         # must be init after config data is set
         self._reporter = HookReporter(is_clear_statestore)

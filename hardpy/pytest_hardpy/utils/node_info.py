@@ -21,6 +21,16 @@ class TestDependencyInfo(NamedTuple):
     case_id: str | None
 
 
+class TestAttemptsInfo(NamedTuple):
+    """Test attempts info."""
+
+    def __repr__(self) -> str:
+        return f"Attempts: {self.attempts}"
+
+    attempts: int
+    attempts_message: str | None
+
+
 class NodeInfo:
     """Test node info."""
 
@@ -40,6 +50,8 @@ class NodeInfo:
         self._dependency = self._get_dependency_info(
             item.own_markers + item.parent.own_markers,  # type: ignore
         )
+
+        self._attempts_data = self._get_attempts_info(item.own_markers)
 
         self._module_id = Path(item.parent.nodeid).stem  # type: ignore
         self._case_id = item.name
@@ -89,6 +101,15 @@ class NodeInfo:
         """
         return self._dependency
 
+    @property
+    def attempts(self) -> tuple[str | None, int]:
+        """Get attempts.
+
+        Returns:
+            tuple[str | None, int]: attempts data
+        """
+        return self._attempts_data
+
     def _get_human_name(self, markers: list[Mark], marker_name: str) -> str:
         """Get human name from markers.
 
@@ -123,3 +144,22 @@ class NodeInfo:
         elif dependency_data is None and dependency_value == "":
             return ""
         raise ValueError
+
+    def _get_attempts_info(self, markers: list[Mark]) -> tuple[str | None, int]:
+        """Extract and parse attempts information.
+
+        Args:
+            markers (list[Mark]): item markers list
+
+        Returns:
+            tuple[str | None, int]: Parsed attempts information.
+        """
+        attempts_message = None
+        attempts_quantity = 0
+        for marker in markers:
+            if marker.name == "attempt_message":
+                attempts_message = marker.args[0]
+            if marker.name == "attempts":
+                attempts_quantity = int(marker.args[0])
+
+        return attempts_message, attempts_quantity
