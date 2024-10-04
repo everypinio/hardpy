@@ -137,6 +137,9 @@ log_cli_level = INFO
 log_cli_format = %%(asctime)s [%%(levelname)s] %%(message)s
 log_cli_date_format = %H:%M:%S
 addopts = --hardpy-pt
+          --hardpy-db-url http://{}:{}@{}:{}/
+          --hardpy-sh {}
+          --hardpy-sp {}
 """
 
 test_1_py = """import pytest
@@ -199,7 +202,14 @@ class TemplateGenerator:
 
     @property
     def pytest_ini(self) -> str:
-        return pytest_ini
+        return pytest_ini.format(
+            self._config.database.user,
+            self._config.database.password,
+            self._config.database.host,
+            self._config.database.port,
+            self._config.socket.host,
+            self._config.socket.port,
+        )
 
     @property
     def test_1_py(self) -> str:  # noqa: WPS114
