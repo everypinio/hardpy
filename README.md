@@ -10,13 +10,13 @@
 HardPy is a python library for creating a test bench for devices.
 </p>
 
----
+<div align="center">
 
-**Documentation**: <a href=https://everypinio.github.io/hardpy/ target="_blank">https://everypinio.github.io/hardpy/</a>
+[![PyPI version](https://badge.fury.io/py/hardpy.svg)](https://badge.fury.io/py/hardpy)
+![versions](https://img.shields.io/pypi/pyversions/hardpy.svg)
+[![Documentation](https://img.shields.io/badge/Documentation%20-Overview%20-%20%23007ec6)](https://everypinio.github.io/hardpy/)
 
-**Source Code**: <a href=https://github.com/everypinio/hardpy target="_blank">https://github.com/everypinio/hardpy</a>
-
-**PyPi**: <a href=https://pypi.org/project/hardpy/ target="_blank">https://pypi.org/project/hardpy/</a>
+</div>
 
 ---
 
