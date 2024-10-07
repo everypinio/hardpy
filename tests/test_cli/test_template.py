@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 from hardpy.cli.template import TemplateGenerator
 from hardpy.common.config import (
     DatabaseConfig,
@@ -47,8 +49,14 @@ def test_couchdb_ini_property():
 
 
 def test_pytest_ini_property():
-    config = {}
-    generator = TemplateGenerator(config)  # type: ignore
+    config = HardpyConfig(
+        title="Test HardPy Config",
+        tests_dir="my_tests",
+        database=DatabaseConfig(user="db_user", password="db_password"),  # noqa: S106
+        frontend=FrontendConfig(host="fe_host", port=3000),
+        socket=SocketConfig(host="socket_host", port=4000),
+    )
+    generator = TemplateGenerator(config)
     pytest_ini = generator.pytest_ini
     assert "addopts = --hardpy-pt" in pytest_ini
 
