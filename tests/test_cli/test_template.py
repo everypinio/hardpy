@@ -1,7 +1,5 @@
 from pathlib import Path
 
-import pytest
-
 from hardpy.cli.template import TemplateGenerator
 from hardpy.common.config import (
     DatabaseConfig,
