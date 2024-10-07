@@ -3,15 +3,15 @@
 
 [project]
     name = "hardpy"
-    version = "0.6.0"
+    version = "0.6.1"
     description = "HardPy library for device testing"
-    authors = [{ name = "Everypin" }]
+    license = "GPL-3.0-or-later"
+    authors = [{ name = "Everypin", email = "info@everypin.io" }]
     readme = "README.md"
     classifiers = [
         "Development Status :: 4 - Beta",
         "Framework :: Pytest",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3 :: Only",
@@ -23,7 +23,7 @@
         "Topic :: Software Development :: Testing :: Acceptance",
         "Topic :: Utilities",
     ]
-    requires-python = ">=3.10, <4"
+    requires-python = ">=3.10"
     dependencies = [
         "pycouchdb>=1.14.2",
         "glom>=23.3.0",

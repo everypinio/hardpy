@@ -2,7 +2,8 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from pycouchdb.client import Database
-from pycouchdb.exceptions import Conflict
+from pycouchdb.exceptions import Conflict, GenericError
+from requests.exceptions import ConnectionError
 
 from hardpy.pytest_hardpy.db.base_server import BaseServer
 
@@ -22,3 +23,9 @@ class BaseConnector(BaseServer):
         except Conflict:
             # database is already created
             return self._db_srv.database(self._db_name)
+        except GenericError as exc:
+            msg = f"Error initializing database {exc}"
+            raise RuntimeError(msg) from exc
+        except ConnectionError as exc:
+            msg = f"Error initializing database: {exc}"
+            raise RuntimeError(msg) from exc
