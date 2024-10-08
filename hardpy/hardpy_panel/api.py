@@ -3,6 +3,7 @@
 
 import re
 from enum import Enum
+from os import getenv
 from pathlib import Path
 from urllib.parse import unquote
 
@@ -118,12 +119,19 @@ def confirm_operator_msg(is_msg_visible: str) -> dict:
         return {"status": Status.BUSY}
     return {"status": Status.ERROR}
 
+HARDPY_MODE = getenv("HARDPY_MODE", "PRODUCTION")
 
-app.mount(
-    "/",
-    StaticFiles(
-        directory=Path(__file__).parent / "frontend/dist",
-        html=True,
-    ),
-    name="static",
-)
+if HARDPY_MODE == "PRODUCTION":
+    app.mount(
+        "/",
+        StaticFiles(
+            directory=Path(__file__).parent / "frontend/dist",
+            html=True,
+        ),
+        name="static",
+    )
+elif HARDPY_MODE == "DEBUG":
+    pass
+else:
+    msg = f"Unknown HARDPY_MODE: {HARDPY_MODE}"
+    raise ValueError(msg)
