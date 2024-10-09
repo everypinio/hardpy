@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+import os
 import signal
 from logging import getLogger
 from pathlib import Path, PurePath
@@ -28,6 +29,7 @@ from pytest import (
     fixture,
     skip,
 )
+import pytest
 
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import (
@@ -36,7 +38,7 @@ from hardpy.pytest_hardpy.utils import (
     ProgressCalculator,
     TestStatus,
 )
-from hardpy.pytest_hardpy.utils.node_info import TestDependencyInfo
+from hardpy.pytest_hardpy.utils.node_info import TestAttemptsInfo, TestDependencyInfo
 
 
 def pytest_addoption(parser: Parser) -> None:
@@ -97,6 +99,7 @@ class HardpyPlugin:
         self._results = {}
         self._post_run_functions: list[Callable] = []
         self._dependencies = {}
+        self._attempts = {}
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -128,8 +131,8 @@ class HardpyPlugin:
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
         config.addinivalue_line("markers", "dependency")
-        config.addinivalue_line("markers", "attempt")
-        config.addinivalue_line("markers", "attempt.message")
+        config.addinivalue_line("markers", "attempts")
+        config.addinivalue_line("markers", "attempt_message")
 
         # must be init after config data is set
         try:
@@ -187,6 +190,7 @@ class HardpyPlugin:
             self._reporter.add_case(node_info)
 
             self._add_dependency(node_info, nodes)
+            self._add_attempts(node_info)
             modules.add(node_info.module_id)
         for module_id in modules:
             self._reporter.set_module_status(module_id, TestStatus.READY)
@@ -216,6 +220,7 @@ class HardpyPlugin:
         node_info = NodeInfo(item)
 
         self._handle_dependency(node_info)
+        self._handle_attempts(node_info, item)
 
         self._reporter.set_module_status(node_info.module_id, TestStatus.RUN)
         self._reporter.set_module_start_time(node_info.module_id)
@@ -397,6 +402,22 @@ class HardpyPlugin:
             )
             skip(f"Test {node_info.module_id}::{node_info.case_id} is skipped")
 
+    def _handle_attempts(self, node_info: NodeInfo, item: Item) -> None:
+        attempts = node_info.attempts.attempts
+        if attempts == 0:
+            return
+        for attempt in range(attempts):
+            try:
+                item.runtest()
+                self._log.info(f"Test '{item.name}' passed on attempt {attempt+1}")
+                break
+            except Exception as exc:
+                self._log.warning(
+                    f"Test '{item.name}' failed on attempt {attempt+1}: {exc}",
+                )
+                if attempt + 1 == attempts:
+                    raise
+
     def _is_dependency_failed(self, dependency: TestDependencyInfo) -> bool:
         if isinstance(dependency, TestDependencyInfo):
             incorrect_status = {
@@ -428,3 +449,9 @@ class HardpyPlugin:
         self._dependencies[
             TestDependencyInfo(node_info.module_id, node_info.case_id)
         ] = dependency
+
+    def _add_attempts(self, node_info: NodeInfo) -> None:
+        attempts = node_info.attempts
+        if attempts is None:
+            return
+        self._attempts[TestAttemptsInfo(node_info.attempts.attempts, "")] = attempts

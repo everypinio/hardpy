@@ -28,7 +28,7 @@ class TestAttemptsInfo(NamedTuple):
         return f"Attempts: {self.attempts}"
 
     attempts: int
-    attempts_message: str | None
+    attempt_message: str | None
 
 
 class NodeInfo:
@@ -102,11 +102,11 @@ class NodeInfo:
         return self._dependency
 
     @property
-    def attempts(self) -> tuple[str | None, int]:
+    def attempts(self) -> TestAttemptsInfo:
         """Get attempts.
 
         Returns:
-            tuple[str | None, int]: attempts data
+            TestAttemptsInfo: attempts data
         """
         return self._attempts_data
 
@@ -145,21 +145,21 @@ class NodeInfo:
             return ""
         raise ValueError
 
-    def _get_attempts_info(self, markers: list[Mark]) -> tuple[str | None, int]:
+    def _get_attempts_info(self, markers: list[Mark]) -> TestAttemptsInfo:
         """Extract and parse attempts information.
 
         Args:
             markers (list[Mark]): item markers list
 
         Returns:
-            tuple[str | None, int]: Parsed attempts information.
+            TestAttemptsInfo: parsed attempts information
         """
-        attempts_message = None
+        attempt_message = None
         attempts_quantity = 0
         for marker in markers:
             if marker.name == "attempt_message":
-                attempts_message = marker.args[0]
+                attempt_message = marker.args[0]
             if marker.name == "attempts":
                 attempts_quantity = int(marker.args[0])
 
-        return attempts_message, attempts_quantity
+        return TestAttemptsInfo(attempts_quantity, attempt_message)
