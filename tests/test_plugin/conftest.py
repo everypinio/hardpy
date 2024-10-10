@@ -13,5 +13,6 @@ def hardpy_opts():
         Path(__file__).parent.resolve(),
     )
     if not config_data:
-        raise Exception("Config not found")  # noqa: EM101, TRY002, TRY003
+        msg = "Config not found"
+        raise RuntimeError(msg)
     return ["--hardpy-db-url", config_data.database.connection_url(), "--hardpy-pt"]

@@ -2,11 +2,16 @@ from pathlib import Path
 
 from hardpy.cli.template import TemplateGenerator
 from hardpy.common.config import (
-    DatabaseConfig,
-    FrontendConfig,
     HardpyConfig,
-    SocketConfig,
 )
+
+db_user = "dev1"
+db_password = "dev1"
+db_host = "localhost1"
+db_port = 5985
+
+socket_host = "localhost1"
+socket_port = 6526
 
 
 def test_create_file_method(tmp_path: Path):
@@ -19,55 +24,57 @@ def test_create_file_method(tmp_path: Path):
     assert file_path.read_text() == content
 
 
-def test_docker_compose_yaml_property():
-    config = HardpyConfig(
-        title="Test HardPy Config",
-        tests_dir="my_tests",
-        database=DatabaseConfig(user="db_user", password="db_password"),  # noqa: S106
-        frontend=FrontendConfig(host="fe_host", port=3000),
-        socket=SocketConfig(host="socket_host", port=4000),
-    )
-    generator = TemplateGenerator(config)
-    docker_compose_yaml = generator.docker_compose_yaml
+def test_docker_compose_yaml_default_content():
+    template_generator = TemplateGenerator(HardpyConfig())
+    docker_compose_yaml = template_generator.docker_compose_yaml
     assert "5984:5984" in docker_compose_yaml
 
 
-def test_couchdb_ini_property():
-    config = HardpyConfig(
-        title="Test HardPy Config",
-        tests_dir="my_tests",
-        database=DatabaseConfig(user="db_user", password="db_password"),  # noqa: S106
-        frontend=FrontendConfig(host="fe_host", port=3000),
-        socket=SocketConfig(host="socket_host", port=4000),
-    )
-    generator = TemplateGenerator(config)
-    couchdb_ini = generator.couchdb_ini
-    assert ";port = 5984" in couchdb_ini
-    assert ";bind_address = localhost" in couchdb_ini
+def test_docker_compose_yaml_not_default_content():
+    config = HardpyConfig()
+    config.database.port = db_port
+    template_generator = TemplateGenerator(config)
+    docker_compose_yaml = template_generator.docker_compose_yaml
+    assert f"{db_port}:5984" in docker_compose_yaml
 
 
-def test_pytest_ini_property():
-    config = HardpyConfig(
-        title="Test HardPy Config",
-        tests_dir="my_tests",
-        database=DatabaseConfig(user="db_user", password="db_password"),  # noqa: S106
-        frontend=FrontendConfig(host="fe_host", port=3000),
-        socket=SocketConfig(host="socket_host", port=4000),
-    )
-    generator = TemplateGenerator(config)
-    pytest_ini = generator.pytest_ini
+def test_couchdb_ini_default_content():
+    template_generator = TemplateGenerator(HardpyConfig())
+    couchdb_ini = template_generator.couchdb_ini
+    expected_lines = [";port = 5984", ";bind_address = localhost"]
+
+    assert all(line in couchdb_ini for line in expected_lines)
+
+
+def test_couchdb_ini_not_default_content():
+    config = HardpyConfig()
+    config.database.port = db_port
+    config.database.host = db_host
+    template_generator = TemplateGenerator(config)
+    couchdb_ini = template_generator.couchdb_ini
+    expected_lines = f""";port = {db_port}
+;bind_address = {db_host}"""
+
+    assert expected_lines in couchdb_ini
+
+
+def test_pytest_ini_default_content():
+    template_generator = TemplateGenerator(HardpyConfig())
+    pytest_ini = template_generator.pytest_ini
     assert "addopts = --hardpy-pt" in pytest_ini
 
 
-def test_test_1_property():
-    config = {}  # mock config
-    generator = TemplateGenerator(config)  # type: ignore
-    test_1_py = generator.test_1_py
-    assert "import hardpy" in test_1_py
-
-
-def test_conftest_py_property():
-    config = {}  # mock config
-    generator = TemplateGenerator(config)  # type: ignore
-    conftest_py = generator.conftest_py
-    assert "def fill_actions_after_test" in conftest_py
+def test_pytest_ini_not_default_content():
+    config = HardpyConfig()
+    config.database.port = db_port
+    config.database.host = db_host
+    config.socket.port = socket_port
+    config.socket.host = socket_host
+    template_generator = TemplateGenerator(config)
+    pytest_ini = template_generator.pytest_ini
+    assert (
+        f"""--hardpy-db-url http://dev:dev@{db_host}:{db_port}/
+          --hardpy-sh {socket_host}
+          --hardpy-sp {socket_port}"""
+        in pytest_ini
+    )

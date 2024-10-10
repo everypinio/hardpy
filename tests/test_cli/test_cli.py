@@ -1,143 +1,164 @@
-# Expected configuration values from the provided instructions
 import os
-import shutil
 import subprocess
+from pathlib import Path
 
-asset_dir = "tests/test_cli/assets"
+HARDPY_COMMAND = ["hardpy", "init"]
 
+db_user = "dev1"
+db_password = "dev1"
+db_host = "localhost1"
+db_port = "5985"
 
-def test_cli_init():
-    shutil.rmtree(asset_dir, ignore_errors=True)
-    subprocess.run(["hardpy", "init", asset_dir], check=True)  # noqa: S603, S607
+frontend_host = "localhost1"
+frontend_port = "8001"
 
-
-def test_cli_init_create_db():
-    shutil.rmtree(asset_dir, ignore_errors=True)
-    subprocess.run(["hardpy", "init", asset_dir, "--create-database"], check=True)  # noqa: S603, S607
-
-
-def test_cli_init_no_create_db():
-    shutil.rmtree(asset_dir, ignore_errors=True)
-    subprocess.run(["hardpy", "init", asset_dir, "--no-create-database"], check=True)  # noqa: S603, S607
+socket_host = "localhost1"
+socket_port = "6526"
 
 
-def test_cli_init_db_user():
-    shutil.rmtree(asset_dir, ignore_errors=True)
-    subprocess.run(  # noqa: S603
-        ["hardpy", "init", asset_dir, "--database-user", "dev"],  # noqa: S607
+def test_cli_init(tmp_path: Path):
+    subprocess.run([*HARDPY_COMMAND, tmp_path], check=True)
+    expected_files = [
+        "database",
+        "hardpy.toml",
+        "docker-compose.yaml",
+        "pytest.ini",
+        "test_1.py",
+        "conftest.py",
+    ]
+    assert set(os.listdir(tmp_path)) == set(expected_files)
+
+
+def test_cli_init_create_db(tmp_path: Path):
+    subprocess.run([*HARDPY_COMMAND, tmp_path, "--create-database"], check=True)
+    expected_files = [
+        "database",
+        "docker-compose.yaml",
+        "hardpy.toml",
+        "pytest.ini",
+        "test_1.py",
+        "conftest.py",
+    ]
+    assert set(os.listdir(tmp_path)) == set(expected_files)
+
+
+def test_cli_init_no_create_db(tmp_path: Path):
+    subprocess.run([*HARDPY_COMMAND, tmp_path, "--no-create-database"], check=True)
+    expected_files = [
+        "hardpy.toml",
+        "pytest.ini",
+        "test_1.py",
+        "conftest.py",
+    ]
+    assert set(os.listdir(tmp_path)) == set(expected_files)
+
+
+def test_cli_init_db_user(tmp_path: Path):
+    subprocess.run([*HARDPY_COMMAND, tmp_path, "--database-user", db_user], check=True)
+    docker_compose_path = tmp_path / "docker-compose.yaml"
+    with Path.open(docker_compose_path) as f:
+        content = f.read()
+        assert (
+            f"COUCHDB_USER: {db_user}" in content
+        ), "docker-compose.yaml does not contain the expected user."
+
+
+def test_cli_init_db_password(tmp_path: Path):
+    subprocess.run(
+        [*HARDPY_COMMAND, tmp_path, "--database-password", db_password],
         check=True,
     )
-    docker_compose_path = os.path.join(asset_dir, "docker-compose.yaml")  # noqa: PTH118
-    with open(docker_compose_path, "r") as f:  # noqa: PTH123, UP015
+    docker_compose_path = tmp_path / "docker-compose.yaml"
+    with Path.open(docker_compose_path) as f:
         content = f.read()
         assert (
-            "COUCHDB_USER: dev" in content
-        ), f"docker-compose.yaml does not contain the expected user."  # noqa: F541
+            f"COUCHDB_PASSWORD: {db_password}" in content
+        ), "docker-compose.yaml does not contain the expected password."
 
 
-def test_cli_init_db_password():
-    shutil.rmtree(asset_dir, ignore_errors=True)
-    subprocess.run(  # noqa: S603
-        ["hardpy", "init", asset_dir, "--database-password", "dev"],  # noqa: S607
+def test_cli_init_db_host(tmp_path: Path):
+    subprocess.run([*HARDPY_COMMAND, tmp_path, "--database-host", db_host], check=True)
+    couchdb_ini_path = tmp_path / "database/couchdb.ini"
+    with Path.open(couchdb_ini_path) as f:
+        content = f.read()
+        assert (
+            f";bind_address = {db_host}" in content
+        ), "couchdb.ini does not contain the expected host."
+
+
+def test_cli_init_db_port(tmp_path: Path):
+    subprocess.run([*HARDPY_COMMAND, tmp_path, "--database-port", db_port], check=True)
+    docker_compose_path = tmp_path / "docker-compose.yaml"
+    with Path.open(docker_compose_path) as f:
+        content = f.read()
+        assert (
+            f"{db_port}:5984" in content
+        ), "docker-compose.yaml does not contain the expected port."
+    couchdb_ini_path = tmp_path / "database/couchdb.ini"
+    with Path.open(couchdb_ini_path) as f:
+        content = f.read()
+        assert (
+            ";port = 5985" in content
+        ), "couchdb.ini does not contain the expected port."
+
+
+def test_cli_init_frontend_host(tmp_path: Path):
+    subprocess.run(
+        [*HARDPY_COMMAND, tmp_path, "--frontend-host", frontend_host],
         check=True,
     )
-    docker_compose_path = os.path.join(asset_dir, "docker-compose.yaml")  # noqa: PTH118
-    with open(docker_compose_path, "r") as f:  # noqa: PTH123, UP015
+    hardpy_toml_path = tmp_path / "hardpy.toml"
+    with Path.open(hardpy_toml_path) as f:
         content = f.read()
+        frontend_info = f'[frontend]\nhost = "{frontend_host}"\nport = 8000\n'
         assert (
-            "COUCHDB_PASSWORD: dev" in content
-        ), f"docker-compose.yaml does not contain the expected password."  # noqa: F541
+            frontend_info in content
+        ), "hardpy.toml does not contain the expected host."
 
 
-def test_cli_init_db_host():
-    shutil.rmtree(asset_dir, ignore_errors=True)
-    subprocess.run(  # noqa: S603
-        ["hardpy", "init", asset_dir, "--database-host", "localhost"],  # noqa: S607
+def test_cli_init_frontend_port(tmp_path: Path):
+    subprocess.run(
+        [*HARDPY_COMMAND, tmp_path, "--frontend-port", frontend_port],
         check=True,
     )
-    couchdb_ini_path = os.path.join(asset_dir, "database/couchdb.ini")  # noqa: PTH118
-    with open(couchdb_ini_path, "r") as f:  # noqa: PTH123, UP015
+    hardpy_toml_path = tmp_path / "hardpy.toml"
+    with Path.open(hardpy_toml_path) as f:
         content = f.read()
+        frontend_info = (
+            f'[frontend]\nhost = "localhost"\nport = {frontend_port}\n\n'.format(
+                frontend_port,
+            )
+        )
         assert (
-            ";bind_address = localhost" in content
-        ), f"couchdb.ini does not contain the expected host."  # noqa: F541
+            frontend_info in content
+        ), "hardpy.toml does not contain the expected port."
 
 
-def test_cli_init_db_port():
-    shutil.rmtree(asset_dir, ignore_errors=True)
-    subprocess.run(  # noqa: S603
-        ["hardpy", "init", asset_dir, "--database-port", "5984"],  # noqa: S607
+def test_cli_init_socket_host(tmp_path: Path):
+    subprocess.run(
+        [*HARDPY_COMMAND, tmp_path, "--socket-host", socket_host],
         check=True,
     )
-    docker_compose_path = os.path.join(asset_dir, "docker-compose.yaml")  # noqa: PTH118
-    with open(docker_compose_path, "r") as f:  # noqa: PTH123, UP015
+    hardpy_toml_path = tmp_path / "hardpy.toml"
+    with Path.open(hardpy_toml_path) as f:
         content = f.read()
-        assert (
-            "5984:5984" in content
-        ), f"docker-compose.yaml does not contain the expected port."  # noqa: F541
-    couchdb_ini_path = os.path.join(asset_dir, "database/couchdb.ini")  # noqa: PTH118
-    with open(couchdb_ini_path, "r") as f:  # noqa: PTH123, UP015
-        content = f.read()
-        assert (
-            ";port = 5984" in content
-        ), f"couchdb.ini does not contain the expected port."  # noqa: F541
+        socket_info = f"""[socket]
+host = "{socket_host}"
+port = 6525
+"""
+        assert socket_info in content, "hardpy.toml does not contain the expected host."
 
 
-def test_cli_init_frontend_host():
-    shutil.rmtree(asset_dir, ignore_errors=True)
-    subprocess.run(  # noqa: S603
-        ["hardpy", "init", asset_dir, "--frontend-host", "localhost"],  # noqa: S607
+def test_cli_init_socket_port(tmp_path: Path):
+    subprocess.run(
+        [*HARDPY_COMMAND, tmp_path, "--socket-port", socket_port],
         check=True,
     )
-    hardpy_toml_path = os.path.join(asset_dir, "hardpy.toml")  # noqa: PTH118
-    with open(hardpy_toml_path, "r") as f:  # noqa: PTH123, UP015
+    hardpy_toml_path = tmp_path / "hardpy.toml"
+    with Path.open(hardpy_toml_path) as f:
         content = f.read()
-        assert (
-            'host = "localhost"' in content
-        ), f"hardpy.toml does not contain the expected host."  # noqa: F541
+        socket_info = f'[socket]\nhost = "localhost"\nport = {socket_port}\n'
+        assert socket_info in content, "hardpy.toml does not contain the expected port."
 
 
-def test_cli_init_frontend_port():
-    shutil.rmtree(asset_dir, ignore_errors=True)
-    subprocess.run(  # noqa: S603
-        ["hardpy", "init", asset_dir, "--frontend-port", "8000"],  # noqa: S607
-        check=True,
-    )
-    hardpy_toml_path = os.path.join(asset_dir, "hardpy.toml")  # noqa: PTH118
-    with open(hardpy_toml_path, "r") as f:  # noqa: PTH123, UP015
-        content = f.read()
-        assert (
-            "port = 8000" in content
-        ), f"hardpy.toml does not contain the expected port."  # noqa: F541
-
-
-def test_cli_init_socket_host():
-    shutil.rmtree(asset_dir, ignore_errors=True)
-    subprocess.run(  # noqa: S603
-        ["hardpy", "init", asset_dir, "--socket-host", "localhost"],  # noqa: S607
-        check=True,
-    )
-    hardpy_toml_path = os.path.join(asset_dir, "hardpy.toml")  # noqa: PTH118
-    with open(hardpy_toml_path, "r") as f:  # noqa: PTH123, UP015
-        content = f.read()
-        assert (
-            'host = "localhost"' in content
-        ), f"hardpy.toml does not contain the expected host."  # noqa: F541
-
-
-def test_cli_init_socket_port():
-    shutil.rmtree(asset_dir, ignore_errors=True)
-    subprocess.run(  # noqa: S603
-        ["hardpy", "init", asset_dir, "--socket-port", "6525"],  # noqa: S607
-        check=True,
-    )
-    hardpy_toml_path = os.path.join(asset_dir, "hardpy.toml")  # noqa: PTH118
-    with open(hardpy_toml_path, "r") as f:  # noqa: PTH123, UP015
-        content = f.read()
-        assert (
-            "port = 6525" in content
-        ), f"hardpy.toml does not contain the expected port."  # noqa: F541
-
-
-def test_cli_clean():
-    shutil.rmtree(asset_dir, ignore_errors=True)
+# TODO(@RiByryn): cli hardpy run
