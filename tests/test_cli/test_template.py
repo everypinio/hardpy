@@ -5,13 +5,13 @@ from hardpy.common.config import (
     HardpyConfig,
 )
 
-db_user = "dev1"
-db_password = "dev1"
-db_host = "localhost1"
-db_port = 5985
+db_no_default_user = "dev1"
+db_no_default_password = "dev1"
+db_no_default_host = "localhost1"
+db_no_default_port = 5985
 
-socket_host = "localhost1"
-socket_port = 6526
+socket_no_default_host = "localhost1"
+socket_no_default_port = 6526
 
 
 def test_create_file_method(tmp_path: Path):
@@ -30,12 +30,12 @@ def test_docker_compose_yaml_default_content():
     assert "5984:5984" in docker_compose_yaml
 
 
-def test_docker_compose_yaml_not_default_content():
+def test_docker_compose_yaml_no_default_content():
     config = HardpyConfig()
-    config.database.port = db_port
+    config.database.port = db_no_default_port
     template_generator = TemplateGenerator(config)
     docker_compose_yaml = template_generator.docker_compose_yaml
-    assert f"{db_port}:5984" in docker_compose_yaml
+    assert f"{db_no_default_port}:5984" in docker_compose_yaml
 
 
 def test_couchdb_ini_default_content():
@@ -46,14 +46,14 @@ def test_couchdb_ini_default_content():
     assert all(line in couchdb_ini for line in expected_lines)
 
 
-def test_couchdb_ini_not_default_content():
+def test_couchdb_ini_no_default_content():
     config = HardpyConfig()
-    config.database.port = db_port
-    config.database.host = db_host
+    config.database.port = db_no_default_port
+    config.database.host = db_no_default_host
     template_generator = TemplateGenerator(config)
     couchdb_ini = template_generator.couchdb_ini
-    expected_lines = f""";port = {db_port}
-;bind_address = {db_host}"""
+    expected_lines = f""";port = {db_no_default_port}
+;bind_address = {db_no_default_host}"""
 
     assert expected_lines in couchdb_ini
 
@@ -64,17 +64,17 @@ def test_pytest_ini_default_content():
     assert "addopts = --hardpy-pt" in pytest_ini
 
 
-def test_pytest_ini_not_default_content():
+def test_pytest_ini_no_default_content():
     config = HardpyConfig()
-    config.database.port = db_port
-    config.database.host = db_host
-    config.socket.port = socket_port
-    config.socket.host = socket_host
+    config.database.port = db_no_default_port
+    config.database.host = db_no_default_host
+    config.socket.port = socket_no_default_port
+    config.socket.host = socket_no_default_host
     template_generator = TemplateGenerator(config)
     pytest_ini = template_generator.pytest_ini
     assert (
-        f"""--hardpy-db-url http://dev:dev@{db_host}:{db_port}/
-          --hardpy-sh {socket_host}
-          --hardpy-sp {socket_port}"""
+        f"""--hardpy-db-url http://dev:dev@{db_no_default_host}:{db_no_default_port}/
+          --hardpy-sh {socket_no_default_host}
+          --hardpy-sp {socket_no_default_port}"""
         in pytest_ini
     )

@@ -10,38 +10,38 @@ from hardpy.common.config import (
     SocketConfig,
 )
 
-db_user = "dev1"
-db_password = "dev1"
-db_host = "localhost1"
-db_port = 5985
+db_no_default_user = "dev1"
+db_no_default_password = "dev1"
+db_no_default_host = "localhost1"
+db_no_default_port = 5985
 
-frontend_host = "localhost1"
-frontend_port = 8001
+frontend_no_default_host = "localhost1"
+frontend_no_default_port = 8001
 
-socket_host = "localhost1"
-socket_port = 6526
+socket_no_default_host = "localhost1"
+socket_no_default_port = 6526
 
 
 def test_config_manager_init(tmp_path: Path):
     tests_dir = tmp_path / "my_tests"
     ConfigManager.init_config(
         tests_dir=str(tests_dir),
-        database_user=db_user,
-        database_password=db_password,
-        database_host=db_host,
-        database_port=db_port,
-        frontend_host=frontend_host,
-        frontend_port=frontend_port,
-        socket_host=socket_host,
-        socket_port=socket_port,
+        database_user=db_no_default_user,
+        database_password=db_no_default_password,
+        database_host=db_no_default_host,
+        database_port=db_no_default_port,
+        frontend_host=frontend_no_default_host,
+        frontend_port=frontend_no_default_port,
+        socket_host=socket_no_default_host,
+        socket_port=socket_no_default_port,
     )
     config = ConfigManager.get_config()
     assert isinstance(config, HardpyConfig)
     assert config.tests_dir == str(tests_dir)
-    assert config.database.user == db_user
-    assert config.database.password == db_password
-    assert config.database.host == db_host
-    assert config.database.port == db_port
+    assert config.database.user == db_no_default_user
+    assert config.database.password == db_no_default_password
+    assert config.database.host == db_no_default_host
+    assert config.database.port == db_no_default_port
     assert config.frontend.host == "localhost1"
     assert config.frontend.port == 8001
     assert config.socket.host == "localhost1"
