@@ -2,7 +2,7 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
-* Replace linter `Flake8` with a `Ruff` linter.
+* Replace linter `Flake8` with a `Ruff` linter. 
 
 ## HardPy 0.6.1
 
