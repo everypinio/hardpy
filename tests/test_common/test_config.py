@@ -59,7 +59,7 @@ def test_database_config():
     config = DatabaseConfig()
     assert config.user == db_default_user
     assert config.password == db_default_password
-    assert config.host == db_no_default_host
+    assert config.host == db_default_host
     assert config.port == db_default_port
 
     connection_url = config.connection_url()
