@@ -47,7 +47,7 @@ version: "3.8"
 
 services:
   couchserver:
-    image: couchdb:3.3.2
+    image: couchdb:3.4.0
     ports:
       - "5984:5984"
     environment:
@@ -85,13 +85,13 @@ headers = accept, authorization, content-type, origin, referer, x-csrf-token
 2. The Docker version must be 24.0.0 or higher. Run the Docker container (from the folder with the couchdb.ini file):
 
 ```bash
-docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3
+docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.4
 ```
 
 Command for Windows:
 
 ```bash
-docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v .\couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3.2
+docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v .\couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.4.0
 ```
 
 The container will be deleted after use.
