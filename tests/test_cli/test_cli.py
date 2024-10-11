@@ -8,12 +8,16 @@ db_no_default_user = "dev1"
 db_no_default_password = "dev1"
 db_no_default_host = "localhost1"
 db_no_default_port = "5985"
-
 frontend_no_default_host = "localhost1"
 frontend_no_default_port = "8001"
-
 socket_no_default_host = "localhost1"
 socket_no_default_port = "6526"
+
+db_default_port = "5984"
+frontend_default_host = "localhost"
+frontend_default_port = "8000"
+socket_default_host = "localhost"
+socket_default_port = "6525"
 
 
 def test_cli_init(tmp_path: Path):

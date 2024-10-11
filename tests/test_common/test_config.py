@@ -14,12 +14,19 @@ db_no_default_user = "dev1"
 db_no_default_password = "dev1"
 db_no_default_host = "localhost1"
 db_no_default_port = 5985
-
 frontend_no_default_host = "localhost1"
 frontend_no_default_port = 8001
-
 socket_no_default_host = "localhost1"
 socket_no_default_port = 6526
+
+db_default_user = "dev"
+db_default_password = "dev"
+db_default_host = "localhost"
+db_default_port = 5984
+frontend_default_host = "localhost"
+frontend_default_port = 8000
+socket_default_host = "localhost"
+socket_default_port = 6525
 
 
 def test_config_manager_init(tmp_path: Path):
@@ -42,33 +49,36 @@ def test_config_manager_init(tmp_path: Path):
     assert config.database.password == db_no_default_password
     assert config.database.host == db_no_default_host
     assert config.database.port == db_no_default_port
-    assert config.frontend.host == "localhost1"
-    assert config.frontend.port == 8001
-    assert config.socket.host == "localhost1"
-    assert config.socket.port == 6526
+    assert config.frontend.host == frontend_no_default_host
+    assert config.frontend.port == frontend_no_default_port
+    assert config.socket.host == socket_no_default_host
+    assert config.socket.port == socket_no_default_port
 
 
 def test_database_config():
     config = DatabaseConfig()
-    assert config.user == "dev"
-    assert config.password == "dev"
-    assert config.host == "localhost"
-    assert config.port == 5984
+    assert config.user == db_default_user
+    assert config.password == db_default_password
+    assert config.host == db_no_default_host
+    assert config.port == db_default_port
 
     connection_url = config.connection_url()
-    assert connection_url == "http://dev:dev@localhost:5984/"
+    assert (
+        connection_url
+        == f"http://{db_default_user}:{db_default_password}@{db_default_host}:{db_default_port}/"
+    )
 
 
 def test_frontend_config():
     config = FrontendConfig()
-    assert config.host == "localhost"
-    assert config.port == 8000
+    assert config.host == frontend_default_host
+    assert config.port == frontend_default_port
 
 
 def test_socket_config():
     config = SocketConfig()
-    assert config.host == "localhost"
-    assert config.port == 6525
+    assert config.host == socket_default_host
+    assert config.port == socket_default_port
 
 
 def test_hardpy_config():
@@ -81,9 +91,14 @@ def test_hardpy_config():
     )
     assert config.title == "HardPy TOML config"
     assert config.tests_dir == "tests"
-    assert config.database.user == "dev"
-    assert config.frontend.host == "localhost"
-    assert config.socket.port == 6525
+    assert config.database.user == db_default_user
+    assert config.database.password == db_default_password
+    assert config.database.host == db_default_host
+    assert config.database.port == db_default_port
+    assert config.frontend.host == frontend_default_host
+    assert config.frontend.port == frontend_default_port
+    assert config.socket.host == socket_default_host
+    assert config.socket.port == socket_default_port
 
 
 def test_config_manager_create_config(tmp_path: Path):
@@ -92,14 +107,14 @@ def test_config_manager_create_config(tmp_path: Path):
 
     ConfigManager.init_config(
         tests_dir=str(tests_dir),
-        database_user="dev",
-        database_password="dev",
-        database_host="localhost",
-        database_port=5984,
-        frontend_host="localhost",
-        frontend_port=8000,
-        socket_host="localhost",
-        socket_port=6525,
+        database_user=db_default_user,
+        database_password=db_default_password,
+        database_host=db_default_host,
+        database_port=db_default_port,
+        frontend_host=frontend_default_host,
+        frontend_port=frontend_default_port,
+        socket_host=socket_default_host,
+        socket_port=socket_default_port,
     )
 
     ConfigManager.create_config(tests_dir)
@@ -115,13 +130,13 @@ def test_read_config_success(tmp_path: Path):
         "title": "Test HardPy Config",
         "tests_dir": "my_tests",
         "database": {
-            "user": "dev",
-            "password": "dev",
-            "host": "localhost",
-            "port": 5984,
+            "user": db_default_user,
+            "password": db_default_password,
+            "host": db_default_host,
+            "port": db_default_port,
         },
-        "frontend": {"host": "localhost", "port": 8000},
-        "socket": {"host": "localhost", "port": 6525},
+        "frontend": {"host": frontend_default_host, "port": frontend_default_port},
+        "socket": {"host": socket_default_host, "port": socket_default_port},
     }
     tests_dir = tmp_path / "tests"
     Path.mkdir(tests_dir, exist_ok=True, parents=True)

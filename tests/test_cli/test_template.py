@@ -5,13 +5,17 @@ from hardpy.common.config import (
     HardpyConfig,
 )
 
-db_no_default_user = "dev1"
-db_no_default_password = "dev1"
 db_no_default_host = "localhost1"
 db_no_default_port = 5985
-
 socket_no_default_host = "localhost1"
 socket_no_default_port = 6526
+
+db_default_host = "localhost"
+db_default_port = "5984"
+frontend_default_host = "localhost"
+frontend_default_port = "8000"
+socket_default_host = "localhost"
+socket_default_port = "6525"
 
 
 def test_create_file_method(tmp_path: Path):
@@ -27,7 +31,7 @@ def test_create_file_method(tmp_path: Path):
 def test_docker_compose_yaml_default_content():
     template_generator = TemplateGenerator(HardpyConfig())
     docker_compose_yaml = template_generator.docker_compose_yaml
-    assert "5984:5984" in docker_compose_yaml
+    assert f"{db_default_port}:5984" in docker_compose_yaml
 
 
 def test_docker_compose_yaml_no_default_content():
@@ -41,9 +45,10 @@ def test_docker_compose_yaml_no_default_content():
 def test_couchdb_ini_default_content():
     template_generator = TemplateGenerator(HardpyConfig())
     couchdb_ini = template_generator.couchdb_ini
-    expected_lines = [";port = 5984", ";bind_address = localhost"]
+    expected_lines = f""";port = {db_default_port}
+;bind_address = {db_default_host}"""
 
-    assert all(line in couchdb_ini for line in expected_lines)
+    assert expected_lines in couchdb_ini
 
 
 def test_couchdb_ini_no_default_content():
@@ -59,9 +64,15 @@ def test_couchdb_ini_no_default_content():
 
 
 def test_pytest_ini_default_content():
-    template_generator = TemplateGenerator(HardpyConfig())
+    config = HardpyConfig()
+    template_generator = TemplateGenerator(config)
     pytest_ini = template_generator.pytest_ini
-    assert "addopts = --hardpy-pt" in pytest_ini
+    assert (
+        f"""--hardpy-db-url http://dev:dev@{db_default_host}:{db_default_port}/
+          --hardpy-sh {socket_default_host}
+          --hardpy-sp {socket_default_port}"""
+        in pytest_ini
+    )
 
 
 def test_pytest_ini_no_default_content():
