@@ -56,7 +56,7 @@ version: "3.8"
 
 services:
   couchserver:
-    image: couchdb:3.4.0
+    image: couchdb:3.4
     ports:
       - "5984:5984"
     environment:

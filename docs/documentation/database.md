@@ -47,7 +47,7 @@ version: "3.8"
 
 services:
   couchserver:
-    image: couchdb:3.4.0
+    image: couchdb:3.4
     ports:
       - "5984:5984"
     environment:
@@ -91,7 +91,7 @@ docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSW
 Command for Windows:
 
 ```bash
-docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v .\couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.4.0
+docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v .\couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.4
 ```
 
 The container will be deleted after use.
