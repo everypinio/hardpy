@@ -30,7 +30,7 @@ def test_attempts():
 def test_attempts_minute_parity():
     current_time = datetime.datetime.now()  # noqa: DTZ005
     minute = int(current_time.strftime("%M"))
-    hardpy.set_message(f"Current minute {minute}")
+    hardpy.set_message(f"Current minute {minute}", "msg_upd")
     result = minute % 2
     sleep(10)
     data = {
@@ -40,11 +40,12 @@ def test_attempts_minute_parity():
     assert result == 0, f"The test failed because {minute} is odd! Try again!"
 
 
+@pytest.mark.attempts(5)
 @pytest.mark.attempt_message("The test failed, try again.")
 @pytest.mark.case_name("Minute check")
 def test_minute_parity(driver_example: DriverExample):
     minute = driver_example.current_minute
-    hardpy.set_message(f"Current minute {minute}")
+    hardpy.set_message(f"Current minute {minute}", "msg_upd")
     result = minute % 2
     data = {
         "minute": minute,

@@ -154,12 +154,24 @@ class NodeInfo:
         Returns:
             TestAttemptsInfo: parsed attempts information
         """
+        invalid_attempts_message = (
+            "The 'attempts' marker value must be a positive integer greater than zero."
+        )
+        invalid_attempts_value_message = (
+            "The 'attempts' marker value must be a valid integer."
+        )
+
         attempt_message = None
         attempts_quantity = 0
         for marker in markers:
             if marker.name == "attempt_message":
                 attempt_message = marker.args[0]
             if marker.name == "attempts":
-                attempts_quantity = int(marker.args[0])
+                try:
+                    attempts_quantity = int(marker.args[0])
+                    if attempts_quantity <= 0:
+                        raise ValueError(invalid_attempts_message)  # noqa: TRY301
+                except ValueError:
+                    raise ValueError(invalid_attempts_value_message)  # noqa: B904
 
         return TestAttemptsInfo(attempts_quantity, attempt_message)

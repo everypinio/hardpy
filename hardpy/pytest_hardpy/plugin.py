@@ -2,7 +2,6 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
-import os
 import signal
 from logging import getLogger
 from pathlib import Path, PurePath
@@ -29,7 +28,6 @@ from pytest import (
     fixture,
     skip,
 )
-import pytest
 
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import (
@@ -220,7 +218,6 @@ class HardpyPlugin:
         node_info = NodeInfo(item)
 
         self._handle_dependency(node_info)
-        self._handle_attempts(node_info, item)
 
         self._reporter.set_module_status(node_info.module_id, TestStatus.RUN)
         self._reporter.set_module_start_time(node_info.module_id)
@@ -234,6 +231,37 @@ class HardpyPlugin:
             node_info.case_id,
         )
         self._reporter.update_db_by_doc()
+
+    def pytest_runtest_call(self, item: Item) -> None:
+        """Call the test item.
+
+        Args:
+            item (Item): The test item to run.
+
+        Returns:
+            None
+        """
+        node_info = NodeInfo(item)
+        attempts = node_info.attempts.attempts
+        if attempts == 0:
+            pass
+        else:
+            for attempt in range(attempts):
+                try:
+                    self._reporter.set_module_status(
+                        node_info.module_id,
+                        TestStatus.RUN,
+                    )
+                    self._reporter.update_db_by_doc()
+                    item.runtest()
+                    self._log.info(f"Test '{item.name}' passed on attempt {attempt+1}")
+                    break
+                except Exception as exc:
+                    self._log.warning(
+                        f"Test '{item.name}' failed on attempt {attempt+1}: {exc}",
+                    )
+                    if attempt + 1 == attempts:
+                        raise
 
     # Reporting hooks
 
@@ -401,22 +429,6 @@ class HardpyPlugin:
                 self._progress.calculate(f"{node_info.module_id}::{node_info.case_id}"),
             )
             skip(f"Test {node_info.module_id}::{node_info.case_id} is skipped")
-
-    def _handle_attempts(self, node_info: NodeInfo, item: Item) -> None:
-        attempts = node_info.attempts.attempts
-        if attempts == 0:
-            return
-        for attempt in range(attempts):
-            try:
-                item.runtest()
-                self._log.info(f"Test '{item.name}' passed on attempt {attempt+1}")
-                break
-            except Exception as exc:
-                self._log.warning(
-                    f"Test '{item.name}' failed on attempt {attempt+1}: {exc}",
-                )
-                if attempt + 1 == attempts:
-                    raise
 
     def _is_dependency_failed(self, dependency: TestDependencyInfo) -> bool:
         if isinstance(dependency, TestDependencyInfo):
