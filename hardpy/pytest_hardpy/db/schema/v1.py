@@ -266,7 +266,7 @@ class ResultRunStore(IBaseResult):
     {
       "_rev": "44867-3888ae85c19c428cc46685845953b483",
       "_id": "current",
-      "progress": 100,
+      "schema_version": 1,
       "stop_time": 1695817266,
       "timezone": [
         "CET",
@@ -338,10 +338,12 @@ class ResultRunStore(IBaseResult):
     """
 
     model_config = ConfigDict(extra="forbid")
+    __version__ = 1
 
     rev: str = Field(..., alias="_rev")
     id: str = Field(..., alias="_id")
-    progress: int
+    schema_version: int = Field(default=__version__, frozen=True)
+
     timezone: tuple[str, str] | None = None
     test_stand: TestStand
     dut: Dut
