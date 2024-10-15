@@ -204,7 +204,6 @@ class HookReporter(BaseReporter):
             DF.STOP_TIME: None,
             DF.ASSERTION_MSG: None,
             DF.MSG: None,
-            DF.ATTEMPT: 0,
         }
 
         if item.get(node_info.module_id) is None:
@@ -223,6 +222,7 @@ class HookReporter(BaseReporter):
 
         if is_only_statestore:
             case_default[DF.DIALOG_BOX] = {}
+            case_default[DF.ATTEMPT] = 0
         item[node_info.module_id][DF.CASES][node_info.case_id] = case_default
 
     def _remove_outdate_node(

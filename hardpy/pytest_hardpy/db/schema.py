@@ -60,7 +60,6 @@ class CaseRunStore(IBaseResult):
         "stop_time": 1695817189,
         "assertion_msg": null,
         "msg": null,
-        "attempt": 1,
         "artifact": {}
     }
     """
@@ -68,7 +67,6 @@ class CaseRunStore(IBaseResult):
     assertion_msg: str | None = None
     msg: dict | None = None
     artifact: dict = {}
-    attempt: int = 0
 
 
 class ModuleStateStore(IBaseResult):
@@ -310,7 +308,6 @@ class ResultRunStore(IBaseResult):
               "stop_time": 1695817264,
               "assertion_msg": null,
               "msg": null,
-              "attempt": 1,
               "artifact": {}
             },
             "test_minute_parity": {
@@ -322,7 +319,6 @@ class ResultRunStore(IBaseResult):
               "msg": [
                 "Current minute 21"
               ],
-              "attempt": 1,
               "artifact": {
                 "data_str": "123DATA",
                 "data_int": 12345,

@@ -13,9 +13,8 @@ pytestmark = [
 count = 0
 
 
-@pytest.mark.attempts(5)
-@pytest.mark.attempt_message("The test failed, try again.")
-def test_attempts():
+@pytest.mark.attempt(5)
+def test_attempt():
     global count  # noqa: PLW0603
     count += 1
     sleep(0.5)
@@ -25,9 +24,8 @@ def test_attempts():
     assert True
 
 
-@pytest.mark.attempts(5)
-@pytest.mark.attempt_message("The test failed, try again.")
-def test_attempts_minute_parity():
+@pytest.mark.attempt(5)
+def test_attempt_minute_parity():
     current_time = datetime.datetime.now()  # noqa: DTZ005
     minute = int(current_time.strftime("%M"))
     hardpy.set_message(f"Current minute {minute}", "msg_upd")
@@ -40,8 +38,7 @@ def test_attempts_minute_parity():
     assert result == 0, f"The test failed because {minute} is odd! Try again!"
 
 
-@pytest.mark.attempts(5)
-@pytest.mark.attempt_message("The test failed, try again.")
+@pytest.mark.attempt(5)
 @pytest.mark.case_name("Minute check")
 def test_minute_parity(driver_example: DriverExample):
     minute = driver_example.current_minute

@@ -21,16 +21,6 @@ class TestDependencyInfo(NamedTuple):
     case_id: str | None
 
 
-class TestAttemptsInfo(NamedTuple):
-    """Test attempts info."""
-
-    def __repr__(self) -> str:
-        return f"Attempts: {self.attempts}"
-
-    attempts: int
-    attempt_message: str | None
-
-
 class NodeInfo:
     """Test node info."""
 
@@ -51,7 +41,7 @@ class NodeInfo:
             item.own_markers + item.parent.own_markers,  # type: ignore
         )
 
-        self._attempts_data = self._get_attempts_info(item.own_markers)
+        self._attempt_data = self._get_attempt_info(item.own_markers)
 
         self._module_id = Path(item.parent.nodeid).stem  # type: ignore
         self._case_id = item.name
@@ -102,13 +92,13 @@ class NodeInfo:
         return self._dependency
 
     @property
-    def attempts(self) -> TestAttemptsInfo:
-        """Get attempts.
+    def attempt(self) -> int:
+        """Get attempt.
 
         Returns:
-            TestAttemptsInfo: attempts data
+            int: attempt number
         """
-        return self._attempts_data
+        return self._attempt_data
 
     def _get_human_name(self, markers: list[Mark], marker_name: str) -> str:
         """Get human name from markers.
@@ -145,33 +135,30 @@ class NodeInfo:
             return ""
         raise ValueError
 
-    def _get_attempts_info(self, markers: list[Mark]) -> TestAttemptsInfo:
-        """Extract and parse attempts information.
+    def _get_attempt_info(self, markers: list[Mark]) -> int:
+        """Extract and parse attempt information.
 
         Args:
             markers (list[Mark]): item markers list
 
         Returns:
-            TestAttemptsInfo: parsed attempts information
+            TestAttemptInfo: parsed attempt information
         """
-        invalid_attempts_message = (
-            "The 'attempts' marker value must be a positive integer greater than zero."
+        invalid_attempt_message = (
+            "The 'attempt' marker value must be a positive integer greater than zero."
         )
-        invalid_attempts_value_message = (
-            "The 'attempts' marker value must be a valid integer."
+        invalid_attempt_value_message = (
+            "The 'attempt' marker value must be a valid integer."
         )
 
-        attempt_message = None
-        attempts_quantity = 0
+        attempt_quantity = 0
         for marker in markers:
-            if marker.name == "attempt_message":
-                attempt_message = marker.args[0]
-            if marker.name == "attempts":
+            if marker.name == "attempt":
                 try:
-                    attempts_quantity = int(marker.args[0])
-                    if attempts_quantity <= 0:
-                        raise ValueError(invalid_attempts_message)  # noqa: TRY301
+                    attempt_quantity = int(marker.args[0])
+                    if attempt_quantity <= 0:
+                        raise ValueError(invalid_attempt_message)  # noqa: TRY301
                 except ValueError:
-                    raise ValueError(invalid_attempts_value_message)  # noqa: B904
+                    raise ValueError(invalid_attempt_value_message)  # noqa: B904
 
-        return TestAttemptsInfo(attempts_quantity, attempt_message)
+        return attempt_quantity

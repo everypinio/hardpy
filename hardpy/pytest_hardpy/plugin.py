@@ -36,7 +36,7 @@ from hardpy.pytest_hardpy.utils import (
     ProgressCalculator,
     TestStatus,
 )
-from hardpy.pytest_hardpy.utils.node_info import TestAttemptsInfo, TestDependencyInfo
+from hardpy.pytest_hardpy.utils.node_info import TestDependencyInfo
 
 
 def pytest_addoption(parser: Parser) -> None:
@@ -97,7 +97,7 @@ class HardpyPlugin:
         self._results = {}
         self._post_run_functions: list[Callable] = []
         self._dependencies = {}
-        self._attempts = {}
+        self._attempt = {}
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -129,8 +129,7 @@ class HardpyPlugin:
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
         config.addinivalue_line("markers", "dependency")
-        config.addinivalue_line("markers", "attempts")
-        config.addinivalue_line("markers", "attempt_message")
+        config.addinivalue_line("markers", "attempt")
 
         # must be init after config data is set
         try:
@@ -188,7 +187,7 @@ class HardpyPlugin:
             self._reporter.add_case(node_info)
 
             self._add_dependency(node_info, nodes)
-            self._add_attempts(node_info)
+            self._add_attempt(node_info)
             modules.add(node_info.module_id)
         for module_id in modules:
             self._reporter.set_module_status(module_id, TestStatus.READY)
@@ -242,11 +241,11 @@ class HardpyPlugin:
             None
         """
         node_info = NodeInfo(item)
-        attempts = node_info.attempts.attempts
-        if attempts == 0:
+        attempt = node_info.attempt
+        if attempt == 0:
             pass
         else:
-            for attempt in range(attempts):
+            for attempt_num in range(attempt):
                 try:
                     self._reporter.set_module_status(
                         node_info.module_id,
@@ -254,13 +253,15 @@ class HardpyPlugin:
                     )
                     self._reporter.update_db_by_doc()
                     item.runtest()
-                    self._log.info(f"Test '{item.name}' passed on attempt {attempt+1}")
+                    self._log.info(
+                        f"Test '{item.name}' passed on attempt {attempt_num+1}"
+                    )
                     break
                 except Exception as exc:
                     self._log.warning(
-                        f"Test '{item.name}' failed on attempt {attempt+1}: {exc}",
+                        f"Test '{item.name}' failed on attempt {attempt_num+1}: {exc}",
                     )
-                    if attempt + 1 == attempts:
+                    if attempt_num + 1 == attempt:
                         raise
 
     # Reporting hooks
@@ -462,8 +463,8 @@ class HardpyPlugin:
             TestDependencyInfo(node_info.module_id, node_info.case_id)
         ] = dependency
 
-    def _add_attempts(self, node_info: NodeInfo) -> None:
-        attempts = node_info.attempts
-        if attempts is None:
+    def _add_attempt(self, node_info: NodeInfo) -> None:
+        attempt = node_info.attempt
+        if attempt is None:
             return
-        self._attempts[TestAttemptsInfo(node_info.attempts.attempts, "")] = attempts
+        self._attempt = attempt
