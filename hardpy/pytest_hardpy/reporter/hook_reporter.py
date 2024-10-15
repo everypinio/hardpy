@@ -9,6 +9,7 @@ from time import time, tzname
 from natsort import natsorted
 
 from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
+from hardpy.pytest_hardpy.db.schema import ResultRunStore
 from hardpy.pytest_hardpy.reporter.base import BaseReporter
 from hardpy.pytest_hardpy.utils import NodeInfo, TestStatus
 
@@ -33,10 +34,12 @@ class HookReporter(BaseReporter):
         self.set_doc_value(DF.START_TIME, None)
         self.set_doc_value(DF.TIMEZONE, None)
         self.set_doc_value(DF.STOP_TIME, None)
-        self.set_doc_value(DF.PROGRESS, 0)
+        self.set_doc_value(DF.PROGRESS, 0, statestore_only=True)
         self.set_doc_value(DF.DRIVERS, {})
         self.set_doc_value(DF.ARTIFACT, {}, runstore_only=True)
         self.set_doc_value(DF.OPERATOR_MSG, {}, statestore_only=True)
+        schema_version = ResultRunStore.__version__
+        self.set_doc_value(DF.SCHEMA_VERSION, schema_version, runstore_only=True)
 
     def start(self) -> None:
         """Start test."""
@@ -45,7 +48,9 @@ class HookReporter(BaseReporter):
         self.set_doc_value(DF.START_TIME, start_time)
         self.set_doc_value(DF.STATUS, TestStatus.RUN)
         self.set_doc_value(DF.TIMEZONE, tzname)
-        self.set_doc_value(DF.PROGRESS, 0)
+        self.set_doc_value(DF.PROGRESS, 0, statestore_only=True)
+        schema_version = ResultRunStore.__version__
+        self.set_doc_value(DF.SCHEMA_VERSION, schema_version, runstore_only=True)
 
     def finish(self, status: TestStatus) -> None:
         """Finish test.
@@ -68,7 +73,7 @@ class HookReporter(BaseReporter):
         Args:
             progress (int): test progress
         """
-        self.set_doc_value(DF.PROGRESS, progress)
+        self.set_doc_value(DF.PROGRESS, progress, statestore_only=True)
 
     def set_assertion_msg(self, module_id: str, case_id: str, msg: str | None) -> None:
         """Set case assertion message.
