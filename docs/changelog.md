@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Fix autofocus in dialog boxes.
+* Add test attempts.
 * Replace linter `Flake8` with a `Ruff` linter.
 
 ## HardPy 0.6.1

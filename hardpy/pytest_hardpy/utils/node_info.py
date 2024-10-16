@@ -147,18 +147,13 @@ class NodeInfo:
         invalid_attempt_message = (
             "The 'attempt' marker value must be a positive integer greater than zero."
         )
-        invalid_attempt_value_message = (
-            "The 'attempt' marker value must be a valid integer."
-        )
 
         attempt_quantity = 0
         for marker in markers:
+            attempt_value = self._get_human_name(markers, "attempt")
             if marker.name == "attempt":
-                try:
-                    attempt_quantity = int(marker.args[0])
-                    if attempt_quantity <= 0:
-                        raise ValueError(invalid_attempt_message)  # noqa: TRY301
-                except ValueError:
-                    raise ValueError(invalid_attempt_value_message)  # noqa: B904
-
+                if isinstance(attempt_value, int) and attempt_value > 0:
+                    attempt_quantity = attempt_value
+                else:
+                    raise ValueError(invalid_attempt_message)
         return attempt_quantity
