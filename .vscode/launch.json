@@ -77,8 +77,7 @@
             "args": [
                 "run",
                 "examples/minute_parity"
-            ],
-            "justMyCode": false
+            ]
         },
         {
             "name": "Python: Example Dialog box",
