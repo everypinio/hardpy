@@ -264,7 +264,7 @@ class HardpyPlugin:
                     self._reporter.update_db_by_doc()
                     item.runtest()
                     self._log.info(
-                        f"Test '{item.name}' passed on attempt {attempt_num+1}"
+                        f"Test '{item.name}' passed on attempt {attempt_num+1}",
                     )
                     break
                 except Exception as exc:
