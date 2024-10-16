@@ -243,13 +243,23 @@ class HardpyPlugin:
         node_info = NodeInfo(item)
         attempt = node_info.attempt
         if attempt == 0:
-            pass
+            self._reporter.set_num_attempt(
+                node_info.module_id,
+                node_info.case_id,
+                1,
+            )
+            self._reporter.update_db_by_doc()
         else:
             for attempt_num in range(attempt):
                 try:
                     self._reporter.set_module_status(
                         node_info.module_id,
                         TestStatus.RUN,
+                    )
+                    self._reporter.set_num_attempt(
+                        node_info.module_id,
+                        node_info.case_id,
+                        attempt_num + 1,
                     )
                     self._reporter.update_db_by_doc()
                     item.runtest()
