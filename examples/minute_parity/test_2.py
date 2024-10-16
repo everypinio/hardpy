@@ -7,8 +7,6 @@ pytestmark = [
     pytest.mark.module_name("Main tests"),
 ]
 
-count = 0
-
 
 @pytest.mark.case_name("Minute check")
 def test_minute_parity(driver_example: DriverExample):
