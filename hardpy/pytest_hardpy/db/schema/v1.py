@@ -22,6 +22,7 @@ class CaseStateStore(IBaseResult):
     """Test case description.
 
     Example:
+    ```
     "test_one": {
         "status": "passed",
         "name": "Test 2",
@@ -41,6 +42,7 @@ class CaseStateStore(IBaseResult):
           }
         }
     }
+    ```
     """
 
     assertion_msg: str | None = None
@@ -53,6 +55,7 @@ class CaseRunStore(IBaseResult):
     """Test case description with artifact.
 
     Example:
+    ```
     "test_one": {
         "status": "passed",
         "name": "Test 2",
@@ -63,6 +66,7 @@ class CaseRunStore(IBaseResult):
         "attempt": 1,
         "artifact": {}
     }
+    ```
     """
 
     assertion_msg: str | None = None
@@ -75,6 +79,7 @@ class ModuleStateStore(IBaseResult):
     """Test module description.
 
     Example:
+    ```
     "test_2_b": {
       "status": "passed",
       "name": "Module 2",
@@ -91,6 +96,7 @@ class ModuleStateStore(IBaseResult):
         }
       }
     }
+    ```
     """
 
     cases: dict[str, CaseStateStore] = {}
@@ -100,6 +106,7 @@ class ModuleRunStore(IBaseResult):
     """Test module description.
 
     Example:
+    ```
     "test_2_b": {
       "status": "passed",
       "name": "Module 2",
@@ -118,6 +125,7 @@ class ModuleRunStore(IBaseResult):
         }
       }
     }
+    ```
     """
 
     cases: dict[str, CaseRunStore] = {}
@@ -128,6 +136,7 @@ class Dut(BaseModel):
     """Device under test description.
 
     Example:
+    ```
     "dut": {
         "serial_number": "a9ad8dca-2c64-4df8-a358-c21e832a32e4",
         "part_number": "part_number_1",
@@ -135,7 +144,8 @@ class Dut(BaseModel):
           "batch": "test_batch",
           "board_rev": "rev_1"
         }
-    },
+    }
+    ```
     """
 
     model_config = ConfigDict(extra="forbid")
@@ -149,33 +159,47 @@ class TestStand(BaseModel):
     """Test stand description.
 
     Example:
+    ```
     "test_stand": {
         "name": "test_stand_1",
         "info": {
           "geo": "Belgrade",
         }
-    },
+        "timezone": [
+          "CET",
+          "CET"
+        ],
+        "drivers": {
+          "driver_1": "driver info",
+          "driver_2": {
+            "state": "active",
+            "port": 8000
+          }
+        },
+        "location": "Belgrade_1",
+    }
+    ```
     """
 
     model_config = ConfigDict(extra="forbid")
 
     name: str | None
+    timezone: tuple[str, str] | None = None
+    drivers: dict = {}
     info: dict = {}
+    location: str | None = None
 
 
 class ResultStateStore(IBaseResult):
     """Test run description.
 
     Example:
+    ```
     {
       "_rev": "44867-3888ae85c19c428cc46685845953b483",
       "_id": "current",
       "progress": 100,
       "stop_time": 1695817266,
-      "timezone": [
-        "CET",
-        "CET"
-      ],
       "start_time": 1695817263,
       "status": "failed",
       "name": "hardpy-stand",
@@ -190,13 +214,18 @@ class ResultStateStore(IBaseResult):
       "test_stand": {
         "name": "Test stand 1"
         "info": {}
-      },
-      "drivers": {
-        "driver_1": "driver info",
-        "driver_2": {
-          "state": "active",
-          "port": 8000
-        }
+        "timezone": [
+          "CET",
+          "CET"
+        ],
+        "drivers": {
+          "driver_1": "driver info",
+          "driver_2": {
+            "state": "active",
+            "port": 8000
+          }
+        },
+        location: "Belgrade_1",
       },
       "operator_msg": {
         "msg": "Operator message",
@@ -239,11 +268,12 @@ class ResultStateStore(IBaseResult):
               "msg": [
                 "Current minute 21"
               ]
-            },
+            }
           }
-        },
+        }
       }
     }
+    ```
     """
 
     model_config = ConfigDict(extra="forbid")
@@ -251,11 +281,9 @@ class ResultStateStore(IBaseResult):
     rev: str = Field(..., alias="_rev")
     id: str = Field(..., alias="_id")
     progress: int
-    timezone: tuple[str, str] | None = None
     test_stand: TestStand
     dut: Dut
     modules: dict[str, ModuleStateStore] = {}
-    drivers: dict = {}
     operator_msg: dict = {}
 
 
@@ -263,15 +291,11 @@ class ResultRunStore(IBaseResult):
     """Test run description.
 
     Example:
+    ```
     {
       "_rev": "44867-3888ae85c19c428cc46685845953b483",
       "_id": "current",
-      "schema_version": 1,
       "stop_time": 1695817266,
-      "timezone": [
-        "CET",
-        "CET"
-      ],
       "start_time": 1695817263,
       "status": "failed",
       "name": "hardpy-stand",
@@ -286,13 +310,18 @@ class ResultRunStore(IBaseResult):
       "test_stand": {
         "name": "Test stand 1"
         "info": {}
-      },
-      "drivers": {
-        "driver_1": "driver info",
-        "driver_2": {
-          "state": "active",
-          "port": 8000
-        }
+        "timezone": [
+          "CET",
+          "CET"
+        ],
+        "drivers": {
+          "driver_1": "driver info",
+          "driver_2": {
+            "state": "active",
+            "port": 8000
+          }
+        },
+        location: "Belgrade_1",
       },
       "artifact": {},
       "modules": {
@@ -330,11 +359,12 @@ class ResultRunStore(IBaseResult):
                   "test_key": "456DATA"
                 }
               }
-            },
+            }
           }
-        },
+        }
       }
     }
+    ```
     """
 
     model_config = ConfigDict(extra="forbid")
@@ -342,11 +372,8 @@ class ResultRunStore(IBaseResult):
 
     rev: str = Field(..., alias="_rev")
     id: str = Field(..., alias="_id")
-    schema_version: int = Field(default=__version__, frozen=True)
 
-    timezone: tuple[str, str] | None = None
     test_stand: TestStand
     dut: Dut
     modules: dict[str, ModuleRunStore] = {}
-    drivers: dict = {}
     artifact: dict = {}
