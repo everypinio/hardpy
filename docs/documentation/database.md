@@ -200,26 +200,29 @@ The **current** document of the **statestore** database contains the following f
 - **_id**: unique document identifier;
 - **progress**: test progress;
 - **stop_time**: end time of testing in Unix seconds;
-- **timezone**: timezone as a list of strings;
 - **start_time**: testing start time in Unix seconds;
 - **status**: test execution status;
 - **name**: test suite name;
 - **dut**: DUT information containing the serial number and additional information;
 - **test_stand**: information about the test stand in the form of a dictionary;
 - **modules**: module information;
-- **drivers**: information about drivers in the form of a dictionary.
+.
 - **operator_msg**: operator message.
 
 The **test_stand** block containt the following fields:
 
   - **name** - test stand name;
-  - **info**: A dictionary containing additional information about the test stand.
+  - **drivers**: information about drivers in the form of a dictionary
+  - **info**: a dictionary containing additional information about the test stand.
+  - **timezone**: timezone as a list of strings;
+  - **location**: test stand location;
+  - **id**: test stand id - tests folder name + test stand machine id (GUID);
 
 The **dut** block contains the following fields:
 
   - **serial_number**: DUT serial number;
   - **part_number**: DUT part number;
-  - **info**: A dictionary containing additional information about the DUT, such as batch, board revision, etc.
+  - **info**: a dictionary containing additional information about the DUT, such as batch, board revision, etc.
 
 The **operator_msg** block contains the following fields:
 
@@ -258,10 +261,6 @@ Example of a **current** document:
       "_id": "current",
       "progress": 100,
       "stop_time": 1695817266,
-      "timezone": [
-        "CET",
-        "CET"
-      ],
       "start_time": 1695817263,
       "status": "failed",
       "name": "hardpy-stand",
@@ -275,16 +274,20 @@ Example of a **current** document:
       },
       "test_stand": {
         "name": "Test stand 1",
-        "info": {
-          "geo": "Belgrade",
+        "id": "tests_123456789",
+        "info": {},
+        "location": "Belgrade_1",
+                "timezone": [
+          "CET",
+          "CET"
+        ],
+        "drivers": {
+          "driver_1": "driver info",
+          "driver_2": {
+            "state": "active",
+            "port": 8000,
+          }
         },
-      },
-      "drivers": {
-        "driver_1": "driver info",
-        "driver_2": {
-          "state": "active",
-          "port": 8000,
-        }
       },
       "operator_msg": {
         "msg": "Operator message",
@@ -352,22 +355,23 @@ The **current** document of **runstore** database contains the following fields:
 
 - **_rev**: current document revision;
 - **_id**: unique document identifier;
-- **progress**: test progress;
 - **stop_time**: end time of testing in Unix seconds;
-- **timezone**: timezone as a list of strings;
 - **start_time**: testing start time in Unix seconds;
 - **status**: test execution status;
 - **name**: test suite name;
 - **dut**: DUT information containing the serial number and additional information;
 - **test_stand**: information about the test stand in the form of a dictionary;
-- **drivers**: information about drivers in the form of a dictionary;
 - **artifact**: an object containing information about artifacts created during the test run;
 - **modules**: module information.
 
 The **test_stand** block containt the following fields:
 
   - **name** - test stand name;
-  - **info**: A dictionary containing additional information about the test stand.
+  - **drivers**: information about drivers in the form of a dictionary
+  - **info**: a dictionary containing additional information about the test stand.
+  - **timezone**: timezone as a list of strings;
+  - **location**: test stand location;
+  - **id**: test stand id - tests folder name + test stand machine id (GUID);
 
 The **dut** block contains the following fields:
 
@@ -400,12 +404,7 @@ Example of a **current** document:
 {
       "_rev": "44867-3888ae85c19c428cc46685845953b483",
       "_id": "current",
-      "progress": 100,
       "stop_time": 1695817266,
-      "timezone": [
-        "CET",
-        "CET"
-      ],
       "start_time": 1695817263,
       "status": "failed",
       "name": "hardpy-stand",
@@ -419,16 +418,20 @@ Example of a **current** document:
       },
       "test_stand": {
         "name": "Test stand 1",
-        "info": {
-          "geo": "Belgrade",
-        }
-      },
-      "drivers": {
-        "driver_1": "driver info",
-        "driver_2": {
-          "state": "active",
-          "port": 8000
-        }
+        "id": "tests_123456789",
+        "info": {},
+        "location": "Belgrade_1",
+        "timezone": [
+          "CET",
+          "CET"
+        ],
+        "drivers": {
+          "driver_1": "driver info",
+          "driver_2": {
+            "state": "active",
+            "port": 8000,
+          }
+        },
       },
       "artifact": {
         "data_str": "456DATA",
