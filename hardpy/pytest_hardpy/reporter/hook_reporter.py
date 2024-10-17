@@ -4,12 +4,13 @@ from __future__ import annotations
 
 from copy import deepcopy
 from logging import getLogger
+from platform import node as platform_node
 from time import time, tzname
 
+import machineid
 from natsort import natsorted
 
 from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
-from hardpy.pytest_hardpy.db.schema import ResultRunStore
 from hardpy.pytest_hardpy.reporter.base import BaseReporter
 from hardpy.pytest_hardpy.utils import NodeInfo, TestStatus
 
@@ -32,14 +33,17 @@ class HookReporter(BaseReporter):
         self.set_doc_value(DF.NAME, doc_name)
         self.set_doc_value(DF.STATUS, TestStatus.READY)
         self.set_doc_value(DF.START_TIME, None)
-        self.set_doc_value(DF.TIMEZONE, None)
         self.set_doc_value(DF.STOP_TIME, None)
         self.set_doc_value(DF.PROGRESS, 0, statestore_only=True)
-        self.set_doc_value(DF.DRIVERS, {})
         self.set_doc_value(DF.ARTIFACT, {}, runstore_only=True)
         self.set_doc_value(DF.OPERATOR_MSG, {}, statestore_only=True)
-        schema_version = ResultRunStore.__version__
-        self.set_doc_value(DF.SCHEMA_VERSION, schema_version, runstore_only=True)
+
+        test_stand_tz = self.generate_key(DF.TEST_STAND, DF.TIMEZONE)
+        self.set_doc_value(test_stand_tz, tzname)
+
+        test_stand_id = self._get_test_stand_id(doc_name)
+        test_stand_id_key = self.generate_key(DF.TEST_STAND, DF.ID)
+        self.set_doc_value(test_stand_id_key, test_stand_id)
 
     def start(self) -> None:
         """Start test."""
@@ -47,10 +51,7 @@ class HookReporter(BaseReporter):
         start_time = int(time())
         self.set_doc_value(DF.START_TIME, start_time)
         self.set_doc_value(DF.STATUS, TestStatus.RUN)
-        self.set_doc_value(DF.TIMEZONE, tzname)
         self.set_doc_value(DF.PROGRESS, 0, statestore_only=True)
-        schema_version = ResultRunStore.__version__
-        self.set_doc_value(DF.SCHEMA_VERSION, schema_version, runstore_only=True)
 
     def finish(self, status: TestStatus) -> None:
         """Finish test.
@@ -209,7 +210,6 @@ class HookReporter(BaseReporter):
             DF.STOP_TIME: None,
             DF.ASSERTION_MSG: None,
             DF.MSG: None,
-            DF.ATTEMPT: 0,
         }
 
         if item.get(node_info.module_id) is None:
@@ -228,6 +228,7 @@ class HookReporter(BaseReporter):
 
         if is_only_statestore:
             case_default[DF.DIALOG_BOX] = {}
+            case_default[DF.ATTEMPT] = 0
         item[node_info.module_id][DF.CASES][node_info.case_id] = case_default
 
     def _remove_outdate_node(
@@ -319,3 +320,11 @@ class HookReporter(BaseReporter):
             str: case name
         """
         return node_info.case_name if node_info.case_name else node_info.case_id
+
+    def _get_test_stand_id(self, doc_name: str) -> str:
+        try:
+            _id = machineid.id()
+        except machineid.MachineIdNotFound:
+            # if machine ID is not available, use MAC address instead of machine ID
+            _id = platform_node()
+        return f"{doc_name}_{_id}"
