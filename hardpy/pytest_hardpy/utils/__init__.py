@@ -17,6 +17,7 @@ from hardpy.pytest_hardpy.utils.exception import (
     DuplicateDialogBoxError,
     DuplicatePartNumberError,
     DuplicateSerialNumberError,
+    DuplicateTestStandLocationError,
     DuplicateTestStandNameError,
     WidgetInfoError,
 )
@@ -32,6 +33,7 @@ __all__ = [
     "ConnectionData",
     "DuplicateSerialNumberError",
     "DuplicatePartNumberError",
+    "DuplicateTestStandLocationError",
     "DuplicateTestStandNameError",
     "DuplicateDialogBoxError",
     "WidgetInfoError",

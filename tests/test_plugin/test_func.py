@@ -189,6 +189,32 @@ def test_stand_name(pytester: Pytester, hardpy_opts: list[str]):
     result.assert_outcomes(passed=1)
 
 
+def test_stand_location(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        from hardpy import DuplicateTestStandLocationError
+
+        def test_stand_location():
+            report = hardpy.get_current_report()
+            assert (
+                report.test_stand.location is None
+            ), "Test stand location is not empty before start."
+
+            location = "Moon"
+            hardpy.set_stand_location(location)
+            report = hardpy.get_current_report()
+            assert location == report.test_stand.location
+
+            second_location = "incorrect location"
+            with pytest.raises(DuplicateTestStandLocationError):
+                hardpy.set_stand_location(second_location)
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
 def test_stand_info(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
@@ -219,12 +245,12 @@ def test_drivers(pytester: Pytester, hardpy_opts: list[str]):
         {func_test_header}
         def test_drivers():
             report = hardpy.get_current_report()
-            assert report.drivers == dict(), "The drivers data is not empty."
+            assert report.test_stand.drivers == dict(), "The drivers data is not empty."
 
             drivers = {{"driver_1": "driver info"}}
             hardpy.set_driver_info(drivers)
             report = hardpy.get_current_report()
-            assert drivers == report.drivers
+            assert drivers == report.test_stand.drivers
 
             drivers = {{
                 "driver_2": {{
@@ -232,10 +258,10 @@ def test_drivers(pytester: Pytester, hardpy_opts: list[str]):
                     "port": 8000,
                 }}
             }}
-            drivers_before_write = report.drivers | drivers
+            drivers_before_write = report.test_stand.drivers | drivers
             hardpy.set_driver_info(drivers)
             report = hardpy.get_current_report()
-            assert drivers_before_write == report.drivers
+            assert drivers_before_write == report.test_stand.drivers
     """,
     )
     result = pytester.runpytest(*hardpy_opts)
@@ -247,22 +273,11 @@ def test_empty_drivers_data(pytester: Pytester, hardpy_opts: list[str]):
         f"""
         {func_test_header}
         def test_empty_drivers_data():
-            report = hardpy.get_current_report()
-            assert report.drivers == dict(), "The drivers data is not empty."
-
+            report_before = hardpy.get_current_report()
             drivers = {{}}
             hardpy.set_driver_info(drivers)
-            report = hardpy.get_current_report()
-            assert drivers == report.drivers
-
-            drivers = {{
-                "driver_2": {{
-                }}
-            }}
-            drivers_before_write = report.drivers | drivers
-            hardpy.set_driver_info(drivers)
-            report = hardpy.get_current_report()
-            assert drivers_before_write == report.drivers
+            report_after = hardpy.get_current_report()
+            assert report_before.test_stand.drivers == report_after.test_stand.drivers
     """,
     )
     result = pytester.runpytest(*hardpy_opts)
