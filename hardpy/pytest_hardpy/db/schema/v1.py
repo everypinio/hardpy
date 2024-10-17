@@ -161,7 +161,7 @@ class TestStand(BaseModel):
     Example:
     ```
     "test_stand": {
-        "id": "123456789_tests"
+        "id": "tests_123456789"
         "name": "test_stand_1",
         "info": {
           "geo": "Belgrade",
@@ -184,8 +184,8 @@ class TestStand(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    id: str
-    name: str | None
+    id: str | None = None
+    name: str | None = None
     timezone: tuple[str, str] | None = None
     drivers: dict = {}
     info: dict = {}
@@ -214,7 +214,7 @@ class ResultStateStore(IBaseResult):
         }
       },
       "test_stand": {
-        "id": "123456789_tests"
+        "id": "tests_123456789"
         "name": "Test stand 1"
         "info": {}
         "timezone": [
@@ -311,7 +311,7 @@ class ResultRunStore(IBaseResult):
         }
       },
       "test_stand": {
-        "id": "123456789_tests"
+        "id": "tests_123456789"
         "name": "Test stand 1"
         "info": {}
         "timezone": [
