@@ -44,4 +44,9 @@ For more info, read [database](./database.md).
 
 ## Structural scheme
 
-![hardpy_structure](../img/hardpy_struct.drawio.png){ align=left, width="800" }
+<figure align="left" width="800">
+    <img src="../img/hardpy_struct.drawio.png" alt="hardpy_structure">
+    <figcaption align="center">
+        Hardpy structure
+    </figcaption>
+</figure>
