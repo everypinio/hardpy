@@ -75,4 +75,4 @@ def test_minute_parity(driver_example: DriverExample):
 @pytest.mark.attempt(5)
 def test_attempt_negative_test():
     hardpy.set_message("Negative test")
-    assert False
+    assert False  # noqa: B011, PT015

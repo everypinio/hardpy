@@ -258,6 +258,7 @@ class HardpyPlugin:
             return
         node_info = NodeInfo(item)
         attempt = node_info.attempt
+
         if call.excinfo and attempt:
             for attempt_num in range(attempt - 1):
                 self._reporter.set_module_status(
@@ -268,6 +269,13 @@ class HardpyPlugin:
                     node_info.module_id,
                     node_info.case_id,
                     attempt_num + 2,
+                )
+                current_attempt = self._reporter.get_current_attempt(
+                    node_info.module_id,
+                    node_info.case_id,
+                )
+                self._log.info(
+                    f"AAAAAAAAAAAAAaa   Current attempt is {current_attempt}",
                 )
                 self._reporter.set_case_status(
                     node_info.module_id,
