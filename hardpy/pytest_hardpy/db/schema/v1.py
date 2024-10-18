@@ -368,6 +368,8 @@ class ResultRunStore(IBaseResult):
     """
 
     model_config = ConfigDict(extra="forbid")
+    # Create the new schema class with version update
+    # when you change this class or fields in this class.
     __version__ = 1
 
     rev: str = Field(..., alias="_rev")
