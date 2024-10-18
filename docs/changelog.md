@@ -2,8 +2,9 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add the test stand **id** obtained from the stand computer.
 * Remove the **progress** field from the **runstore** database.
-* Add the **location** variable to the **test_stand** field in the database.
+* Add the **location** and **id** variables to the **test_stand** field in the database.
 * Move the **timezone** and **driver** database variables to the **test_stand** field.
 * Add a schema version. The schema version is fixed to version 1.
 * Replace the **Flake8** linter with a **Ruff** linter.
