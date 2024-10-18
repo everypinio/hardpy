@@ -11,7 +11,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 
 ## HardPy 0.6.1
 
-* Fix running tests with a simple **pytest** command.
+* Fix running tests with a simple `pytest` command.
 
 ## HardPy 0.6.0
 
