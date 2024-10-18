@@ -89,6 +89,17 @@
                 "run",
                 "examples/dialog_box"
             ]
+        },
+        {
+            "name": "Python: Example Attempts",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "run",
+                "examples/attempts"
+            ]
         }
     ]
 }

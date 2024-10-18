@@ -20,7 +20,6 @@ from hardpy.pytest_hardpy.reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
     ConnectionData,
     DialogBox,
-    DuplicateDialogBoxError,
     DuplicatePartNumberError,
     DuplicateSerialNumberError,
     DuplicateTestStandNameError,
@@ -279,7 +278,6 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     if not dialog_box_data.dialog_text:
         msg = "The 'dialog_text' argument cannot be empty."
         raise ValueError(msg)
-
     current_test = _get_current_test()
     reporter = RunnerReporter()
     key = reporter.generate_key(
@@ -289,8 +287,16 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
         current_test.case_id,
         DF.DIALOG_BOX,
     )
-    if reporter.get_field(key):
-        raise DuplicateDialogBoxError
+
+    reporter.set_doc_value(key, {}, statestore_only=True)
+    reporter.update_db_by_doc()
+    key = reporter.generate_key(
+        DF.MODULES,
+        current_test.module_id,
+        DF.CASES,
+        current_test.case_id,
+        DF.DIALOG_BOX,
+    )
 
     reporter.set_doc_value(key, dialog_box_data.to_dict(), statestore_only=True)
     reporter.update_db_by_doc()
@@ -356,6 +362,7 @@ def _get_socket_raw_data() -> str:
         server.bind((con_data.socket_host, con_data.socket_port))
     except OSError as exc:
         msg = "Socket creating error"
+        server.close()
         raise RuntimeError(msg) from exc
     server.listen(1)
     client, _ = server.accept()

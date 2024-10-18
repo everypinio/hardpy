@@ -18,6 +18,7 @@ from _pytest._code.code import (
 )
 from natsort import natsorted
 from pytest import (
+    CallInfo,
     Config,
     ExitCode,
     Item,
@@ -241,35 +242,59 @@ class HardpyPlugin:
             None
         """
         node_info = NodeInfo(item)
+        self._reporter.set_num_attempt(
+            node_info.module_id,
+            node_info.case_id,
+            1,
+        )
+        self._reporter.update_db_by_doc()
+        self._log.info(
+            "First test run",
+        )
+
+    def pytest_runtest_makereport(self, item: Item, call: CallInfo) -> None:
+        """Call after call of each test item."""
+        if call.when != "call":
+            return
+        node_info = NodeInfo(item)
         attempt = node_info.attempt
-        if attempt == 0:
-            self._reporter.set_num_attempt(
-                node_info.module_id,
-                node_info.case_id,
-                1,
-            )
-            self._reporter.update_db_by_doc()
-        else:
-            for attempt_num in range(attempt):
+        if call.excinfo and attempt:
+            for attempt_num in range(attempt - 1):
+                self._reporter.set_module_status(
+                    node_info.module_id,
+                    TestStatus.RUN,
+                )
+                self._reporter.set_num_attempt(
+                    node_info.module_id,
+                    node_info.case_id,
+                    attempt_num + 2,
+                )
+                self._reporter.set_case_status(
+                    node_info.module_id,
+                    node_info.case_id,
+                    TestStatus.RUN,
+                )
+                self._reporter.update_db_by_doc()
                 try:
-                    self._reporter.set_module_status(
-                        node_info.module_id,
-                        TestStatus.RUN,
-                    )
-                    self._reporter.set_num_attempt(
-                        node_info.module_id,
-                        node_info.case_id,
-                        attempt_num + 1,
-                    )
-                    self._reporter.update_db_by_doc()
                     item.runtest()
                     self._log.info(
-                        f"Test '{item.name}' passed on attempt {attempt_num+1}",
+                        f"Test '{item.name}' passed on attempt {attempt_num+2}",
+                    )
+                    call.excinfo = None
+                    self._reporter.set_case_status(
+                        node_info.module_id,
+                        node_info.case_id,
+                        TestStatus.PASSED,
                     )
                     break
                 except Exception as exc:
                     self._log.warning(
-                        f"Test '{item.name}' failed on attempt {attempt_num+1}: {exc}",
+                        f"Test '{item.name}' failed on attempt {attempt_num+2}: {exc}",
+                    )
+                    self._reporter.set_case_status(
+                        node_info.module_id,
+                        node_info.case_id,
+                        TestStatus.FAILED,
                     )
                     if attempt_num + 1 == attempt:
                         raise
