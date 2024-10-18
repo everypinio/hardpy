@@ -54,6 +54,9 @@ indent-width = 4
             "D104",    # Missing docstring in public package
             "D103",    # Missing docstring in public function
             "S101",    # use of `assert` detected
+            "S105",    # Possible hardcoded password
+            "S106",    # Possible hardcoded password
+            "S603",    # Subprocess without shell
             "ANN201",  # To prevent tests from being returned None, it is mandatory
             "INP001",  # Imports of pytest and hardpy
             "PT022",   # Using yield
@@ -63,6 +66,7 @@ indent-width = 4
             "D104",   # Missing docstring in public package
             "D103",   # Missing docstring in public function
             "S101",   # use of `assert` detected   
+            "S106",   # Possible hardcoded password
             "ANN201", # To prevent tests from being returned None
             "INP001", # Imports of pytest and hardpy
             "PT022",  # Using yield
