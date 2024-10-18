@@ -4,15 +4,13 @@ from __future__ import annotations
 
 from copy import deepcopy
 from logging import getLogger
-from platform import node as platform_node
 from time import time, tzname
 
-import machineid
 from natsort import natsorted
 
 from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
 from hardpy.pytest_hardpy.reporter.base import BaseReporter
-from hardpy.pytest_hardpy.utils import NodeInfo, TestStatus
+from hardpy.pytest_hardpy.utils import NodeInfo, TestStatus, machine_id
 
 
 class HookReporter(BaseReporter):
@@ -41,9 +39,8 @@ class HookReporter(BaseReporter):
         test_stand_tz = self.generate_key(DF.TEST_STAND, DF.TIMEZONE)
         self.set_doc_value(test_stand_tz, tzname)
 
-        test_stand_id = self._get_test_stand_id(doc_name)
         test_stand_id_key = self.generate_key(DF.TEST_STAND, DF.ID)
-        self.set_doc_value(test_stand_id_key, test_stand_id)
+        self.set_doc_value(test_stand_id_key, f"{doc_name}_{machine_id()}")
 
     def start(self) -> None:
         """Start test."""
@@ -320,11 +317,3 @@ class HookReporter(BaseReporter):
             str: case name
         """
         return node_info.case_name if node_info.case_name else node_info.case_id
-
-    def _get_test_stand_id(self, doc_name: str) -> str:
-        try:
-            _id = machineid.id()
-        except machineid.MachineIdNotFound:
-            # if machine ID is not available, use MAC address instead of machine ID
-            _id = platform_node()
-        return f"{doc_name}_{_id}"
