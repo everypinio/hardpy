@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Fix autofocus in dialog boxes.
+* Add test attempts.
 * Add the test stand **id** obtained from the stand computer.
 * Remove the **progress** field from the **runstore** database.
 * Add the **location** and **id** variables to the **test_stand** field in the database.

@@ -18,6 +18,7 @@ from _pytest._code.code import (
 )
 from natsort import natsorted
 from pytest import (
+    CallInfo,
     Config,
     ExitCode,
     Item,
@@ -97,6 +98,7 @@ class HardpyPlugin:
         self._results = {}
         self._post_run_functions: list[Callable] = []
         self._dependencies = {}
+        self._attempt = {}
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -128,6 +130,7 @@ class HardpyPlugin:
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
         config.addinivalue_line("markers", "dependency")
+        config.addinivalue_line("markers", "attempt")
 
         # must be init after config data is set
         try:
@@ -185,6 +188,7 @@ class HardpyPlugin:
             self._reporter.add_case(node_info)
 
             self._add_dependency(node_info, nodes)
+            self._add_attempt(node_info)
             modules.add(node_info.module_id)
         for module_id in modules:
             self._reporter.set_module_status(module_id, TestStatus.READY)
@@ -227,6 +231,65 @@ class HardpyPlugin:
             node_info.case_id,
         )
         self._reporter.update_db_by_doc()
+
+    def pytest_runtest_call(self, item: Item) -> None:
+        """Call the test item.
+
+        Args:
+            item (Item): The test item to run.
+
+        Returns:
+            None
+        """
+        node_info = NodeInfo(item)
+        self._reporter.set_num_attempt(
+            node_info.module_id,
+            node_info.case_id,
+            1,
+        )
+        self._reporter.update_db_by_doc()
+
+    def pytest_runtest_makereport(self, item: Item, call: CallInfo) -> None:
+        """Call after call of each test item."""
+        if call.when != "call":
+            return
+
+        node_info = NodeInfo(item)
+        attempt = node_info.attempt or 1
+
+        if call.excinfo:
+            for attempt_num in range(1, attempt):
+                self._reporter.set_module_status(node_info.module_id, TestStatus.RUN)
+                self._reporter.set_num_attempt(
+                    node_info.module_id,
+                    node_info.case_id,
+                    attempt_num + 1,
+                )
+
+                self._reporter.set_case_status(
+                    node_info.module_id,
+                    node_info.case_id,
+                    TestStatus.RUN,
+                )
+                self._reporter.update_db_by_doc()
+
+                try:
+                    item.runtest()
+                    call.excinfo = None
+                    self._reporter.set_case_status(
+                        node_info.module_id,
+                        node_info.case_id,
+                        TestStatus.PASSED,
+                    )
+                    break
+                except Exception as exc:
+                    self._reporter.set_case_status(
+                        node_info.module_id,
+                        node_info.case_id,
+                        TestStatus.FAILED,
+                    )
+                    if attempt_num + 1 == attempt:
+                        raise AssertionError from exc
 
     # Reporting hooks
 
@@ -426,3 +489,9 @@ class HardpyPlugin:
         self._dependencies[
             TestDependencyInfo(node_info.module_id, node_info.case_id)
         ] = dependency
+
+    def _add_attempt(self, node_info: NodeInfo) -> None:
+        attempt = node_info.attempt
+        if attempt is None:
+            return
+        self._attempt = attempt

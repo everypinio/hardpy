@@ -196,6 +196,7 @@ export function StartConfirmationDialog(props: Props) {
                   label={option}
                   checked={selectedRadioButton === option}
                   onChange={() => setSelectedRadioButton(option)}
+                  autoFocus={option === (props.widget_info?.fields ?? [])[0]}
                 />
               ))}
           </>
@@ -208,6 +209,7 @@ export function StartConfirmationDialog(props: Props) {
                   key={option}
                   label={option}
                   checked={selectedCheckboxes.includes(option)}
+                  autoFocus={option === (props.widget_info?.fields ?? [])[0]}
                   onChange={() => {
                     if (selectedCheckboxes.includes(option)) {
                       setSelectedCheckboxes(selectedCheckboxes.filter(item => item !== option));
@@ -257,7 +259,11 @@ export function StartConfirmationDialog(props: Props) {
         <Button
           intent="primary"
           onClick={handleConfirm}
-          autoFocus={widgetType === WidgetType.Base}
+          autoFocus={
+            widgetType === WidgetType.Base ||
+            widgetType === WidgetType.Image ||
+            widgetType === WidgetType.Multistep
+          }
         >
           Confirm
         </Button>

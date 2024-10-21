@@ -391,7 +391,6 @@ The **modules** block contains the following fields:
         - **stop_time**: test end time in Unix second;
         - **assertion_msg**: error message if the test fails;
         - **msg**: additional message;
-        - **attempt**: attempt counting to pass the case, not yet implemented in the **pytest-hardpy** plugin;
         - **artifact**: an object containing information about artifacts created during the test case process.
 
 Example of a **current** document:
