@@ -256,37 +256,38 @@ class HardpyPlugin:
         """Call after call of each test item."""
         if call.when != "call":
             return
-        node_info = NodeInfo(item)
-        attempt = node_info.attempt
 
-        if call.excinfo and attempt:
-            for attempt_num in range(attempt - 1):
-                self._reporter.set_module_status(
-                    node_info.module_id,
-                    TestStatus.RUN,
-                )
+        node_info = NodeInfo(item)
+        attempt = node_info.attempt or 1
+
+        if call.excinfo:
+            for attempt_num in range(1, attempt):
+                self._reporter.set_module_status(node_info.module_id, TestStatus.RUN)
                 self._reporter.set_num_attempt(
                     node_info.module_id,
                     node_info.case_id,
-                    attempt_num + 2,
+                    attempt_num + 1,
                 )
                 current_attempt = self._reporter.get_current_attempt(
                     node_info.module_id,
                     node_info.case_id,
                 )
+
                 self._log.info(
-                    f"AAAAAAAAAAAAAaa   Current attempt is {current_attempt}",
+                    f"Current attempt is {current_attempt}",
                 )
+
                 self._reporter.set_case_status(
                     node_info.module_id,
                     node_info.case_id,
                     TestStatus.RUN,
                 )
                 self._reporter.update_db_by_doc()
+
                 try:
                     item.runtest()
                     self._log.info(
-                        f"Test '{item.name}' passed on attempt {attempt_num+2}",
+                        f"Test '{item.name}' passed on attempt {attempt_num + 1}",
                     )
                     call.excinfo = None
                     self._reporter.set_case_status(
@@ -297,7 +298,7 @@ class HardpyPlugin:
                     break
                 except Exception as exc:
                     self._log.warning(
-                        f"Test '{item.name}' failed on attempt {attempt_num+2}: {exc}",
+                        f"Test '{item.name}' failed on attempt {attempt_num + 1}: {exc}",  # noqa: E501
                     )
                     self._reporter.set_case_status(
                         node_info.module_id,
