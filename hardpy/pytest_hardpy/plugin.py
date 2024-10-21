@@ -248,9 +248,6 @@ class HardpyPlugin:
             1,
         )
         self._reporter.update_db_by_doc()
-        self._log.info(
-            "First test run",
-        )
 
     def pytest_runtest_makereport(self, item: Item, call: CallInfo) -> None:
         """Call after call of each test item."""
@@ -268,14 +265,6 @@ class HardpyPlugin:
                     node_info.case_id,
                     attempt_num + 1,
                 )
-                current_attempt = self._reporter.get_current_attempt(
-                    node_info.module_id,
-                    node_info.case_id,
-                )
-
-                self._log.info(
-                    f"Current attempt is {current_attempt}",
-                )
 
                 self._reporter.set_case_status(
                     node_info.module_id,
@@ -286,9 +275,6 @@ class HardpyPlugin:
 
                 try:
                     item.runtest()
-                    self._log.info(
-                        f"Test '{item.name}' passed on attempt {attempt_num + 1}",
-                    )
                     call.excinfo = None
                     self._reporter.set_case_status(
                         node_info.module_id,
@@ -297,16 +283,13 @@ class HardpyPlugin:
                     )
                     break
                 except Exception as exc:
-                    self._log.warning(
-                        f"Test '{item.name}' failed on attempt {attempt_num + 1}: {exc}",  # noqa: E501
-                    )
                     self._reporter.set_case_status(
                         node_info.module_id,
                         node_info.case_id,
                         TestStatus.FAILED,
                     )
                     if attempt_num + 1 == attempt:
-                        raise
+                        raise AssertionError from exc
 
     # Reporting hooks
 
