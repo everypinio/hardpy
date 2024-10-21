@@ -446,11 +446,7 @@ Example of a **current** document:
               "stop_time": 1695817264,
               "assertion_msg": null,
               "msg": null,
-<<<<<<< HEAD
-              "artifact": {"data_str": "456DATA"}
-=======
               "artifact": {}
->>>>>>> upstream/develop
             },
             "test_minute_parity": {
               "status": "failed",
