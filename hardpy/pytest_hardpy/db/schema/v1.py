@@ -2,6 +2,8 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+from typing import ClassVar
+
 from pydantic import BaseModel, ConfigDict, Field
 
 from hardpy.pytest_hardpy.utils import TestStatus as Status  # noqa: TCH001
@@ -370,7 +372,7 @@ class ResultRunStore(IBaseResult):
     model_config = ConfigDict(extra="forbid")
     # Create the new schema class with version update
     # when you change this class or fields in this class.
-    __version__ = 1
+    __version__: ClassVar[int] = 1
 
     rev: str = Field(..., alias="_rev")
     id: str = Field(..., alias="_id")
