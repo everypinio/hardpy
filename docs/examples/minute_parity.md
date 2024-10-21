@@ -109,7 +109,10 @@ def test_stand_info(module_log: logging.Logger):
     test_stand_name = "Stand 1"
     module_log.info(f"Stand name: {test_stand_name}")
     hardpy.set_stand_name(test_stand_name)
-    info = {"geo": "Moon"}
+    hardpy.set_stand_location("Moon")
+    info = {
+        "some_info": "123",
+    }
     hardpy.set_stand_info(info)
     assert True
 ```

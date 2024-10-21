@@ -4,7 +4,12 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 
 * Fix autofocus in dialog boxes.
 * Add test attempts.
-* Replace linter `Flake8` with a `Ruff` linter.
+* Add the test stand **id** obtained from the stand computer.
+* Remove the **progress** field from the **runstore** database.
+* Add the **location** and **id** variables to the **test_stand** field in the database.
+* Move the **timezone** and **driver** database variables to the **test_stand** field.
+* Add a schema version. The schema version is fixed to version 1.
+* Replace the **Flake8** linter with a **Ruff** linter.
 
 ## HardPy 0.6.1
 
@@ -12,25 +17,25 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 
 ## HardPy 0.6.0
 
-In HardPy, compared to version 0.5.0 and less, the startup principle has changed.
+In HardPy, the startup principle has changed compared to version 0.5.0 and lower.
 The `hardpy-panel` command is no longer available.
 
-The HardPy project from version 0.6.0 onwards must contain the **hardpy.toml** file.
+The HardPy project of version 0.6.0 or later must contain the file **hardpy.toml**.
 
-* Add clearing the **statestore** database before running hardpy using
-  the `--hardpy-clear-database` option of the **pytest-hardpy** plugin.
+* Add the ability to clear the **statestore** database before running hardpy
+  using the the `--hardpy-clear-database` option of the **pytest-hardpy** plugin.
 * Add the **name** and **info** fields to **test_stand** in the database schema.
 * Add the **part_number** field to **dut** in the database schema.
-* Add the **attempt** field to test case in the database schema.
+* Add the **attempt** field to the test case in the database schema.
 * Add `set_stand_name` and `set_dut_part_number` functions.
 * Add a hardpy template project using the `hardpy init` command.
-* Add hardpy config .toml file - **hardpy.toml**.
+* Add a hardpy config .toml file - **hardpy.toml**.
 * Refactor **pytest-hardpy** plugin options.
-* Add CLI to hardpy as an entry point. The `hardpy-panel` command is now unavailable.
-* Fix using special characters in dialog boxes. ASCII symbols are passed from frontend to backend.
+* Add CLI to hardpy as an entry point. The `hardpy-panel` command is no longer available.
+* Fix use of special characters in dialog boxes. ASCII symbols are passed from frontend to backend.
 * Add unit tests for dialog widgets.
-* Fix statuses of stopped tests.
-* Fix progress bar with skipping tests. Progress bar fills to the end when tests are skipped.
+* Fix status of stopped tests.
+* Fix progress bar for skipped tests. Progress bar fills to the end when tests are skipped.
 * Add report name generation when serial number is missing.
 
 ## HardPy 0.5.1
@@ -42,7 +47,7 @@ The HardPy project from version 0.6.0 onwards must contain the **hardpy.toml** f
 * Refactor dialog box API.
 * Add conda.yaml example.
 * Add .vscode folder.
-* Fix capturing exceptions and displaying them in the operator panel.
+* Fix catching exceptions and displaying them in the operator panel.
 * Add dialog box with radiobutton, checkbox, image, multiple steps.
 
 ## HardPy 0.4.0
@@ -53,18 +58,19 @@ The HardPy project from version 0.6.0 onwards must contain the **hardpy.toml** f
 
 ## HardPy 0.3.0
 
-* Add implementation of test dependencies without using third party plugins.
+* Add implementation of test dependencies without using third-party plugins.
 * Reduce the number of database calls.
 * Speed up test collection.
 
 ## HardPy 0.2.0
 
-* Add documentation site.
-* Remove the ability to access the HardpyPlugin. Users can now only register through the ini file.
+* Add documentation page.
+* Remove the ability to access the `HardPyPlugin`.
+  Users can now only register via the ini file.
 
 ## HardPy 0.1.0
 
-* Add pytest-hardpy and hardpy panel into one package.
+* Add pytest-hardpy and hardpy panel to the package.
 * Add frontend data synchronization via CouchDB data replication to PouchDB.
 * Add documentation.
-* CouchDB is main database.
+* CouchDB is the main database.

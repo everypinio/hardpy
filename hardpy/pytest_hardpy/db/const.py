@@ -27,3 +27,5 @@ class DatabaseField(str, Enum):
     DIALOG_BOX = "dialog_box"
     OPERATOR_MSG = "operator_msg"
     ATTEMPT = "attempt"
+    LOCATION = "location"
+    ID = "id"
