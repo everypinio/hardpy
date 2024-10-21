@@ -44,7 +44,7 @@ def test_dut_info():
 #### set_dut_serial_number
 
 Writes a string with a serial number.
-When called again, the Exception DuplicateSerialNumberError will be caused.
+When called again, the exception `DuplicateSerialNumberError` will be caused.
 
 **Arguments:**
 
@@ -60,7 +60,7 @@ def test_serial_number():
 #### set_dut_part_number
 
 Writes a string with a part number.
-When called again, the Exception DuplicatePartNumberError will be caused.
+When called again, the exception `DuplicatePartNumberError` will be caused.
 
 **Arguments:**
 
@@ -76,11 +76,11 @@ def test_part_number():
 #### set_stand_name
 
 Writes a string with a test stand name.
-When called again, the Exception DuplicateTestStandNameError will be caused.
+When called again, the exception `DuplicateTestStandNameError` will be caused.
 
 **Arguments:**
 
-- `name` *(str)*: test stand name
+- `location` *(str)*: test stand location
 
 **Example:**
 
@@ -103,6 +103,42 @@ When called again, the information will be added to DB.
 ```python
 def test_stand_info():
     set_stand_info({"geo": "Belgrade"})
+```
+
+#### set_stand_location
+
+Writes a string with a test stand location.
+When called again, the exception `DuplicateTestStandLocationError` will be caused.
+
+**Example:**
+
+```python
+def test_stand_info():
+    set_stand_location("Moon")
+```
+
+#### set_driver_info
+
+The function records a dictionary containing information about the test stand driver.
+The data is updated with new information each time the function is called.
+
+Driver data is stored in both **statestore** and **runstore** databases.
+
+**Arguments:**
+
+- `drivers` *(dict)*: A dictionary of drivers, where keys are driver names and values are driver-specific data.
+
+**Example:**
+
+```python
+def test_driver_info():
+    drivers = {
+        "driver_1": {
+            "name": "Driver A",
+            "type": "network"
+        }
+    }
+    set_driver_info(drivers)
 ```
 
 #### set_case_artifact
@@ -162,30 +198,6 @@ def test_run_artifact():
     set_run_artifact({"data_str": "789DATA"})
 ```
 
-#### set_driver_info
-
-The function records a dictionary containing information about the driver.
-The data is updated with new information each time the function is called.
-
-Driver data is stored in both **statestore** and **runstore** databases.
-
-**Arguments:**
-
-- `drivers` *(dict)*: A dictionary of drivers, where keys are driver names and values are driver-specific data.
-
-**Example:**
-
-```python
-def test_driver_info():
-    drivers = {
-        "driver_1": {
-            "name": "Driver A",
-            "type": "network"
-        }
-    }
-    set_driver_info(drivers)
-```
-
 #### set_message
 
 Writes a string with a message.
@@ -230,7 +242,7 @@ def test_set_operator_msg():
 
 #### run_dialog_box
 
-Displays a dialog box and updates the 'dialog_box' field in the **statestore** database.
+Displays a dialog box and updates the `dialog_box` field in the **statestore** database.
 Only one dialog box can be invoked per test case.
 
 **Arguments:**
@@ -270,7 +282,7 @@ The type of the return value depends on the widget type:
 
 **Raises**
 
-- `ValueError`: If the 'message' argument is empty.
+- `ValueError`: If the `message` argument is empty.
 - `DuplicateDialogBoxError`: If the dialog box is already caused.
 
 **Example:**
@@ -375,7 +387,7 @@ Sets a text name for the test case (default: function name)
 ```python
 @pytest.mark.case_name("Simple case 1")
 def test_one():
-    assert 42 == 42
+    assert True
 ```
 
 #### module_name

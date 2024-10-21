@@ -2,6 +2,8 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+from typing import ClassVar
+
 from pydantic import BaseModel, ConfigDict, Field
 
 from hardpy.pytest_hardpy.utils import TestStatus as Status  # noqa: TCH001
@@ -22,7 +24,9 @@ class CaseStateStore(IBaseResult):
     """Test case description.
 
     Example:
-    "test_one": {
+    ```
+    {
+      "test_one": {
         "status": "passed",
         "name": "Test 2",
         "start_time": 1695817188,
@@ -40,7 +44,9 @@ class CaseStateStore(IBaseResult):
             "type": "textinput"
           }
         }
+      }
     }
+    ```
     """
 
     assertion_msg: str | None = None
@@ -53,44 +59,50 @@ class CaseRunStore(IBaseResult):
     """Test case description with artifact.
 
     Example:
-    "test_one": {
+    ```
+    {
+      "test_one": {
         "status": "passed",
         "name": "Test 2",
         "start_time": 1695817188,
         "stop_time": 1695817189,
         "assertion_msg": null,
         "msg": null,
-        "attempt": 1,
         "artifact": {}
+      }
     }
+    ```
     """
 
     assertion_msg: str | None = None
     msg: dict | None = None
     artifact: dict = {}
-    attempt: int = 0
 
 
 class ModuleStateStore(IBaseResult):
     """Test module description.
 
     Example:
-    "test_2_b": {
-      "status": "passed",
-      "name": "Module 2",
-      "start_time": 1695816886,
-      "stop_time": 1695817016,
-      "cases": {
-        "test_one": {
-          "status": "passed",
-          "name": "Test 1",
-          "start_time": 1695817015,
-          "stop_time": 1695817016,
-          "assertion_msg": null,
-          "msg": null
+    ```
+    {
+      "test_2_b": {
+        "status": "passed",
+        "name": "Module 2",
+        "start_time": 1695816886,
+        "stop_time": 1695817016,
+        "cases": {
+          "test_one": {
+            "status": "passed",
+            "name": "Test 1",
+            "start_time": 1695817015,
+            "stop_time": 1695817016,
+            "assertion_msg": null,
+            "msg": null
+          }
         }
       }
     }
+    ```
     """
 
     cases: dict[str, CaseStateStore] = {}
@@ -100,24 +112,28 @@ class ModuleRunStore(IBaseResult):
     """Test module description.
 
     Example:
-    "test_2_b": {
-      "status": "passed",
-      "name": "Module 2",
-      "start_time": 1695816886,
-      "stop_time": 1695817016,
-      "artifact": {},
-      "cases": {
-        "test_one": {
-          "status": "passed",
-          "name": "Test 1",
-          "start_time": 1695817015,
-          "stop_time": 1695817016,
-          "assertion_msg": null,
-          "msg": null,
-          "artifact": {}
+    ```
+    {
+      "test_2_b": {
+        "status": "passed",
+        "name": "Module 2",
+        "start_time": 1695816886,
+        "stop_time": 1695817016,
+        "artifact": {},
+        "cases": {
+          "test_one": {
+            "status": "passed",
+            "name": "Test 1",
+            "start_time": 1695817015,
+            "stop_time": 1695817016,
+            "assertion_msg": null,
+            "msg": null,
+            "artifact": {}
+          }
         }
       }
     }
+    ```
     """
 
     cases: dict[str, CaseRunStore] = {}
@@ -128,14 +144,18 @@ class Dut(BaseModel):
     """Device under test description.
 
     Example:
-    "dut": {
+    ```
+    {
+      "dut": {
         "serial_number": "a9ad8dca-2c64-4df8-a358-c21e832a32e4",
         "part_number": "part_number_1",
         "info": {
           "batch": "test_batch",
           "board_rev": "rev_1"
         }
-    },
+      }
+    }
+    ```
     """
 
     model_config = ConfigDict(extra="forbid")
@@ -149,33 +169,51 @@ class TestStand(BaseModel):
     """Test stand description.
 
     Example:
-    "test_stand": {
+    ```
+    {
+      "test_stand": {
+        "id": "tests_123456789",
         "name": "test_stand_1",
         "info": {
-          "geo": "Belgrade",
-        }
-    },
+          "geo": "Belgrade"
+        },
+        "timezone": [
+          "CET",
+          "CET"
+        ],
+        "drivers": {
+          "driver_1": "driver info",
+          "driver_2": {
+            "state": "active",
+            "port": 8000
+          }
+        },
+        "location": "Belgrade_1"
+      }
+    }
+    ```
     """
 
     model_config = ConfigDict(extra="forbid")
 
-    name: str | None
+    id: str | None = None
+    name: str | None = None
+    timezone: tuple[str, str] | None = None
+    drivers: dict = {}
     info: dict = {}
+    location: str | None = None
 
 
 class ResultStateStore(IBaseResult):
     """Test run description.
 
     Example:
+    ```
     {
       "_rev": "44867-3888ae85c19c428cc46685845953b483",
       "_id": "current",
       "progress": 100,
       "stop_time": 1695817266,
-      "timezone": [
-        "CET",
-        "CET"
-      ],
       "start_time": 1695817263,
       "status": "failed",
       "name": "hardpy-stand",
@@ -188,15 +226,23 @@ class ResultStateStore(IBaseResult):
         }
       },
       "test_stand": {
-        "name": "Test stand 1"
-        "info": {}
-      },
-      "drivers": {
-        "driver_1": "driver info",
-        "driver_2": {
-          "state": "active",
-          "port": 8000
-        }
+        "id": "tests_123456789",
+        "name": "test_stand_1",
+        "info": {
+          "geo": "Belgrade"
+        },
+        "timezone": [
+          "CET",
+          "CET"
+        ],
+        "drivers": {
+          "driver_1": "driver info",
+          "driver_2": {
+            "state": "active",
+            "port": 8000
+          }
+        },
+        "location": "Belgrade_1"
       },
       "operator_msg": {
         "msg": "Operator message",
@@ -239,11 +285,12 @@ class ResultStateStore(IBaseResult):
               "msg": [
                 "Current minute 21"
               ]
-            },
+            }
           }
-        },
+        }
       }
     }
+    ```
     """
 
     model_config = ConfigDict(extra="forbid")
@@ -251,11 +298,9 @@ class ResultStateStore(IBaseResult):
     rev: str = Field(..., alias="_rev")
     id: str = Field(..., alias="_id")
     progress: int
-    timezone: tuple[str, str] | None = None
     test_stand: TestStand
     dut: Dut
     modules: dict[str, ModuleStateStore] = {}
-    drivers: dict = {}
     operator_msg: dict = {}
 
 
@@ -263,15 +308,11 @@ class ResultRunStore(IBaseResult):
     """Test run description.
 
     Example:
+    ```
     {
       "_rev": "44867-3888ae85c19c428cc46685845953b483",
       "_id": "current",
-      "progress": 100,
       "stop_time": 1695817266,
-      "timezone": [
-        "CET",
-        "CET"
-      ],
       "start_time": 1695817263,
       "status": "failed",
       "name": "hardpy-stand",
@@ -284,15 +325,23 @@ class ResultRunStore(IBaseResult):
         }
       },
       "test_stand": {
-        "name": "Test stand 1"
-        "info": {}
-      },
-      "drivers": {
-        "driver_1": "driver info",
-        "driver_2": {
-          "state": "active",
-          "port": 8000
-        }
+        "id": "tests_123456789",
+        "name": "test_stand_1",
+        "info": {
+          "geo": "Belgrade"
+        },
+        "timezone": [
+          "CET",
+          "CET"
+        ],
+        "drivers": {
+          "driver_1": "driver info",
+          "driver_2": {
+            "state": "active",
+            "port": 8000
+          }
+        },
+        "location": "Belgrade_1"
       },
       "artifact": {},
       "modules": {
@@ -310,7 +359,6 @@ class ResultRunStore(IBaseResult):
               "stop_time": 1695817264,
               "assertion_msg": null,
               "msg": null,
-              "attempt": 1,
               "artifact": {}
             },
             "test_minute_parity": {
@@ -322,7 +370,6 @@ class ResultRunStore(IBaseResult):
               "msg": [
                 "Current minute 21"
               ],
-              "attempt": 1,
               "artifact": {
                 "data_str": "123DATA",
                 "data_int": 12345,
@@ -330,21 +377,23 @@ class ResultRunStore(IBaseResult):
                   "test_key": "456DATA"
                 }
               }
-            },
+            }
           }
-        },
+        }
       }
     }
+    ```
     """
 
     model_config = ConfigDict(extra="forbid")
+    # Create the new schema class with version update
+    # when you change this class or fields in this class.
+    __version__: ClassVar[int] = 1
 
     rev: str = Field(..., alias="_rev")
     id: str = Field(..., alias="_id")
-    progress: int
-    timezone: tuple[str, str] | None = None
+
     test_stand: TestStand
     dut: Dut
     modules: dict[str, ModuleRunStore] = {}
-    drivers: dict = {}
     artifact: dict = {}

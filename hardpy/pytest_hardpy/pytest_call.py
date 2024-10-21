@@ -23,6 +23,7 @@ from hardpy.pytest_hardpy.utils import (
     DuplicateDialogBoxError,
     DuplicatePartNumberError,
     DuplicateSerialNumberError,
+    DuplicateTestStandLocationError,
     DuplicateTestStandNameError,
 )
 
@@ -129,6 +130,20 @@ def set_stand_info(info: dict) -> None:
     reporter.update_db_by_doc()
 
 
+def set_stand_location(location: str) -> None:
+    """Add test stand location to document.
+
+    Args:
+        location (str): test stand location
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.TEST_STAND, DF.LOCATION)
+    if reporter.get_field(key):
+        raise DuplicateTestStandLocationError
+    reporter.set_doc_value(key, location)
+    reporter.update_db_by_doc()
+
+
 def set_message(msg: str, msg_key: str | None = None) -> None:
     """Add or update message in current test.
 
@@ -227,7 +242,7 @@ def set_run_artifact(data: dict) -> None:
 
 
 def set_driver_info(drivers: dict) -> None:
-    """Add or update drivers data.
+    """Add or update test stand drivers data.
 
     Driver data is stored in both StateStore and RunStore databases.
 
@@ -239,6 +254,7 @@ def set_driver_info(drivers: dict) -> None:
 
     for driver_name, driver_data in drivers.items():
         key = reporter.generate_key(
+            DF.TEST_STAND,
             DF.DRIVERS,
             driver_name,
         )
