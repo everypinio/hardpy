@@ -25,7 +25,8 @@ class CaseStateStore(IBaseResult):
 
     Example:
     ```
-    "test_one": {
+    {
+      "test_one": {
         "status": "passed",
         "name": "Test 2",
         "start_time": 1695817188,
@@ -43,6 +44,7 @@ class CaseStateStore(IBaseResult):
             "type": "textinput"
           }
         }
+      }
     }
     ```
     """
@@ -58,7 +60,8 @@ class CaseRunStore(IBaseResult):
 
     Example:
     ```
-    "test_one": {
+    {
+      "test_one": {
         "status": "passed",
         "name": "Test 2",
         "start_time": 1695817188,
@@ -66,6 +69,7 @@ class CaseRunStore(IBaseResult):
         "assertion_msg": null,
         "msg": null,
         "artifact": {}
+      }
     }
     ```
     """
@@ -80,19 +84,21 @@ class ModuleStateStore(IBaseResult):
 
     Example:
     ```
-    "test_2_b": {
-      "status": "passed",
-      "name": "Module 2",
-      "start_time": 1695816886,
-      "stop_time": 1695817016,
-      "cases": {
-        "test_one": {
-          "status": "passed",
-          "name": "Test 1",
-          "start_time": 1695817015,
-          "stop_time": 1695817016,
-          "assertion_msg": null,
-          "msg": null
+    {
+      "test_2_b": {
+        "status": "passed",
+        "name": "Module 2",
+        "start_time": 1695816886,
+        "stop_time": 1695817016,
+        "cases": {
+          "test_one": {
+            "status": "passed",
+            "name": "Test 1",
+            "start_time": 1695817015,
+            "stop_time": 1695817016,
+            "assertion_msg": null,
+            "msg": null
+          }
         }
       }
     }
@@ -107,21 +113,23 @@ class ModuleRunStore(IBaseResult):
 
     Example:
     ```
-    "test_2_b": {
-      "status": "passed",
-      "name": "Module 2",
-      "start_time": 1695816886,
-      "stop_time": 1695817016,
-      "artifact": {},
-      "cases": {
-        "test_one": {
-          "status": "passed",
-          "name": "Test 1",
-          "start_time": 1695817015,
-          "stop_time": 1695817016,
-          "assertion_msg": null,
-          "msg": null,
-          "artifact": {}
+    {
+      "test_2_b": {
+        "status": "passed",
+        "name": "Module 2",
+        "start_time": 1695816886,
+        "stop_time": 1695817016,
+        "artifact": {},
+        "cases": {
+          "test_one": {
+            "status": "passed",
+            "name": "Test 1",
+            "start_time": 1695817015,
+            "stop_time": 1695817016,
+            "assertion_msg": null,
+            "msg": null,
+            "artifact": {}
+          }
         }
       }
     }
@@ -137,13 +145,15 @@ class Dut(BaseModel):
 
     Example:
     ```
-    "dut": {
+    {
+      "dut": {
         "serial_number": "a9ad8dca-2c64-4df8-a358-c21e832a32e4",
         "part_number": "part_number_1",
         "info": {
           "batch": "test_batch",
           "board_rev": "rev_1"
         }
+      }
     }
     ```
     """
@@ -160,12 +170,13 @@ class TestStand(BaseModel):
 
     Example:
     ```
-    "test_stand": {
-        "id": "tests_123456789"
+    {
+      "test_stand": {
+        "id": "tests_123456789",
         "name": "test_stand_1",
         "info": {
-          "geo": "Belgrade",
-        }
+          "geo": "Belgrade"
+        },
         "timezone": [
           "CET",
           "CET"
@@ -177,7 +188,8 @@ class TestStand(BaseModel):
             "port": 8000
           }
         },
-        "location": "Belgrade_1",
+        "location": "Belgrade_1"
+      }
     }
     ```
     """
@@ -215,8 +227,10 @@ class ResultStateStore(IBaseResult):
       },
       "test_stand": {
         "id": "tests_123456789",
-        "name": "Test stand 1",
-        "info": {},
+        "name": "test_stand_1",
+        "info": {
+          "geo": "Belgrade"
+        },
         "timezone": [
           "CET",
           "CET"
@@ -226,9 +240,9 @@ class ResultStateStore(IBaseResult):
           "driver_2": {
             "state": "active",
             "port": 8000
-          },
+          }
         },
-        "location": "Belgrade_1",
+        "location": "Belgrade_1"
       },
       "operator_msg": {
         "msg": "Operator message",
@@ -312,8 +326,10 @@ class ResultRunStore(IBaseResult):
       },
       "test_stand": {
         "id": "tests_123456789",
-        "name": "Test stand 1",
-        "info": {},
+        "name": "test_stand_1",
+        "info": {
+          "geo": "Belgrade"
+        },
         "timezone": [
           "CET",
           "CET"
@@ -323,9 +339,9 @@ class ResultRunStore(IBaseResult):
           "driver_2": {
             "state": "active",
             "port": 8000
-          },
+          }
         },
-        "location": "Belgrade_1",
+        "location": "Belgrade_1"
       },
       "artifact": {},
       "modules": {

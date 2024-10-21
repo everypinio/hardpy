@@ -206,17 +206,16 @@ The **current** document of the **statestore** database contains the following f
 - **dut**: DUT information containing the serial number and additional information;
 - **test_stand**: information about the test stand in the form of a dictionary;
 - **modules**: module information;
-.
 - **operator_msg**: operator message.
 
 The **test_stand** block containt the following fields:
 
   - **name** - test stand name;
-  - **drivers**: information about drivers in the form of a dictionary
-  - **info**: a dictionary containing additional information about the test stand.
+  - **drivers**: information about drivers in the form of a dictionary;
+  - **info**: a dictionary containing additional information about the test stand;
   - **timezone**: timezone as a list of strings;
   - **location**: test stand location;
-  - **id**: test stand id - tests folder name + test stand machine id (GUID);
+  - **id**: test stand id - tests folder name + test stand machine id (GUID).
 
 The **dut** block contains the following fields:
 
@@ -256,7 +255,7 @@ The **modules** block contains the following fields:
 Example of a **current** document:
 
 ```json
-{
+    {
       "_rev": "44867-3888ae85c19c428cc46685845953b483",
       "_id": "current",
       "progress": 100,
@@ -266,18 +265,19 @@ Example of a **current** document:
       "name": "hardpy-stand",
       "dut": {
         "serial_number": "92c5a4bb-ecb0-42c5-89ac-e0caca0919fd",
-        "part_number": "part_number_1",
+        "part_number": "part_1",
         "info": {
           "batch": "test_batch",
           "board_rev": "rev_1"
         }
       },
       "test_stand": {
-        "name": "Test stand 1",
         "id": "tests_123456789",
-        "info": {},
-        "location": "Belgrade_1",
-                "timezone": [
+        "name": "test_stand_1",
+        "info": {
+          "geo": "Belgrade"
+        },
+        "timezone": [
           "CET",
           "CET"
         ],
@@ -285,9 +285,10 @@ Example of a **current** document:
           "driver_1": "driver info",
           "driver_2": {
             "state": "active",
-            "port": 8000,
+            "port": 8000
           }
         },
+        "location": "Belgrade_1"
       },
       "operator_msg": {
         "msg": "Operator message",
@@ -303,24 +304,20 @@ Example of a **current** document:
           "cases": {
             "test_dut_info": {
               "status": "passed",
-              "name": "Obtaining information about DUT",
+              "name": "DUT info ",
               "start_time": 1695817263,
               "stop_time": 1695817264,
               "assertion_msg": null,
               "msg": null,
               "attempt": 1,
               "dialog_box": {
-                "title_bar": "Dialog box title",
-                "dialog_text": "Dialog box text",
+                "title_bar": "Example of text input",
+                "dialog_text": "Type some text and press the Confirm button",
                 "widget": {
-                  "type": "checkbox",
                   "info": {
-                    "fields": [
-                      "one",
-                      "two",
-                      "three"
-                    ]
-                  }
+                    "text": "some text"
+                  },
+                  "type": "textinput"
                 }
               }
             },
@@ -330,14 +327,13 @@ Example of a **current** document:
               "start_time": 1695817264,
               "stop_time": 1695817264,
               "assertion_msg": "The test failed because minute 21 is odd! Try again!",
+              "attempt": 1,
               "msg": [
                 "Current minute 21"
-              ],
-              "attempt": 1,
-              "dialog_box": {}
-            },
+              ]
+            }
           }
-        },
+        }
       }
     }
 ```
@@ -367,11 +363,11 @@ The **current** document of **runstore** database contains the following fields:
 The **test_stand** block containt the following fields:
 
   - **name** - test stand name;
-  - **drivers**: information about drivers in the form of a dictionary
-  - **info**: a dictionary containing additional information about the test stand.
+  - **drivers**: information about drivers in the form of a dictionary;
+  - **info**: a dictionary containing additional information about the test stand;
   - **timezone**: timezone as a list of strings;
   - **location**: test stand location;
-  - **id**: test stand id - tests folder name + test stand machine id (GUID);
+  - **id**: test stand id - tests folder name + test stand machine id (GUID).
 
 The **dut** block contains the following fields:
 
@@ -401,7 +397,7 @@ The **modules** block contains the following fields:
 Example of a **current** document:
 
 ```json
-{
+    {
       "_rev": "44867-3888ae85c19c428cc46685845953b483",
       "_id": "current",
       "stop_time": 1695817266,
@@ -410,17 +406,18 @@ Example of a **current** document:
       "name": "hardpy-stand",
       "dut": {
         "serial_number": "92c5a4bb-ecb0-42c5-89ac-e0caca0919fd",
-        "part_number": "part_number_1",
+        "part_number": "part_1",
         "info": {
           "batch": "test_batch",
           "board_rev": "rev_1"
         }
       },
       "test_stand": {
-        "name": "Test stand 1",
         "id": "tests_123456789",
-        "info": {},
-        "location": "Belgrade_1",
+        "name": "test_stand_1",
+        "info": {
+          "geo": "Belgrade"
+        },
         "timezone": [
           "CET",
           "CET"
@@ -429,17 +426,12 @@ Example of a **current** document:
           "driver_1": "driver info",
           "driver_2": {
             "state": "active",
-            "port": 8000,
+            "port": 8000
           }
         },
+        "location": "Belgrade_1"
       },
-      "artifact": {
-        "data_str": "456DATA",
-        "data_int": 12345,
-        "data_dict": {
-          "test_key": "456DATA"
-        }
-      },
+      "artifact": {},
       "modules": {
         "test_1_a": {
           "status": "failed",
@@ -450,13 +442,12 @@ Example of a **current** document:
           "cases": {
             "test_dut_info": {
               "status": "passed",
-              "name": "Obtaining information about DUT",
+              "name": "DUT info",
               "start_time": 1695817263,
               "stop_time": 1695817264,
               "assertion_msg": null,
               "msg": null,
-              "attempt": 1,
-              "artifact": {"data_str": "456DATA"}
+              "artifact": {}
             },
             "test_minute_parity": {
               "status": "failed",
@@ -467,7 +458,6 @@ Example of a **current** document:
               "msg": [
                 "Current minute 21"
               ],
-              "attempt": 1,
               "artifact": {
                 "data_str": "123DATA",
                 "data_int": 12345,
@@ -475,9 +465,9 @@ Example of a **current** document:
                   "test_key": "456DATA"
                 }
               }
-            },
+            }
           }
-        },
+        }
       }
     }
 ```
