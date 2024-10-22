@@ -348,6 +348,17 @@ def set_operator_message(msg: str, title: str | None = None) -> None:
     reporter.update_db_by_doc()
 
 
+def get_current_attempt() -> int:
+    """Get current attempt.
+
+    Returns:
+        int: current attempt
+    """
+    reporter = RunnerReporter()
+    module_id, case_id = _get_current_test().module_id, _get_current_test().case_id
+    return reporter.get_current_attempt(module_id, case_id)
+
+
 def _get_current_test() -> CurrentTestInfo:
     current_node = environ.get("PYTEST_CURRENT_TEST")
 

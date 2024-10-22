@@ -1,79 +1,71 @@
-import datetime
 from time import sleep
 
 import pytest
-from driver_example import DriverExample
 
 import hardpy
-from hardpy.pytest_hardpy.pytest_call import run_dialog_box, set_message
-from hardpy.pytest_hardpy.utils.dialog_box import DialogBox, TextInputWidget
+from hardpy import DialogBox, TextInputWidget, run_dialog_box
 
-pytestmark = [
-    pytest.mark.module_name("Main tests"),
-]
+
+@pytest.mark.attempt(5)
+def test_attempt_always_positive_test():
+    hardpy.set_message(
+        f"Current attempt {hardpy.get_current_attempt()}",
+        "updated_status",
+    )
+    assert True
+
 
 count = 0
 
 
-# @pytest.mark.attempt(5)
-# def test_attempt_positive_test():
-#     hardpy.set_message("Positive test")
-#     assert True
+@pytest.mark.attempt(7)
+def test_four_attempts():
+    global count  # noqa: PLW0603
+    count += 1
+    sleep(0.5)
+    hardpy.set_message(
+        f"Current attempt {hardpy.get_current_attempt()}",
+        "updated_status",
+    )
+    if count <= 3:  # noqa: PLR2004
+        msg = "Test failed intentionally"
+        raise Exception(msg)  # noqa: TRY002
+    assert True
 
 
-# @pytest.mark.attempt(7)
-# def test_attempt():
-#     global count  # noqa: PLW0603
-#     count += 1
-#     sleep(0.5)
-#     hardpy.set_message(f"Current minute {count}")
-#     if count <= 3:  # noqa: PLR2004
-#         msg = "Test failed intentionally"
-#         raise Exception(msg)  # noqa: TRY002
-#     assert True
-
-
-@pytest.mark.attempt(5)
-@pytest.mark.case_name("Text input")
-def test_text_input():
+@pytest.mark.attempt(3)
+def test_dialog_box():
     dbx = DialogBox(
         dialog_text="Type 'ok' and press the Confirm button",
         title_bar="Example of text input",
-        # widget=TextInputWidget(),
+        widget=TextInputWidget(),
     )
     response = run_dialog_box(dbx)
-    set_message(f"Entered text {response}")
-    assert False
-    # assert response == "ok", "The entered text is not correct"
+    attempt = hardpy.get_current_attempt()
+    if attempt <= 3:  # noqa: PLR2004
+        dbx = DialogBox(
+            dialog_text=f"Reconnect and try again. Test attempt {hardpy.get_current_attempt()}",
+            title_bar="Attempt message",
+        )
+        run_dialog_box(dbx)
+    else:
+        dbx = DialogBox(
+            dialog_text=f"Test failed on attempt {hardpy.get_current_attempt()}",
+            title_bar="Attempt message",
+        )
+        run_dialog_box(dbx)
+    assert response == "ok", "The entered text is not correct"
 
 
-# @pytest.mark.attempt(3)
-# def test_attempt_minute_parity():
-#     current_time = datetime.datetime.now()  # noqa: DTZ005
-#     minute = int(current_time.strftime("%M"))
-#     hardpy.set_message(f"Current minute {minute}")
-#     result = minute % 2
-#     sleep(10)
-#     data = {
-#         "minute": minute,
-#     }
-#     hardpy.set_case_artifact(data)
-#     assert result == 0, f"The test failed because {minute} is odd! Try again!"
-
-
-# @pytest.mark.attempt(5)
-# def test_minute_parity(driver_example: DriverExample):
-#     minute = driver_example.current_minute
-#     hardpy.set_message(f"Current minute {minute}")
-#     result = minute % 2
-#     data = {
-#         "minute": minute,
-#     }
-#     hardpy.set_case_artifact(data)
-#     assert result == 0, f"The test failed because {minute} is odd! Try again!"
-
-
-# @pytest.mark.attempt(5)
-# def test_attempt_negative_test():
-#     hardpy.set_message("Negative test")
-#     assert False  # noqa: B011, PT015
+@pytest.mark.attempt(5)
+def test_dialog_box_failed():
+    dbx = DialogBox(
+        dialog_text="This test is always negative",
+        title_bar="Example",
+    )
+    response = run_dialog_box(dbx)
+    hardpy.set_message(
+        f"Current attempt {hardpy.get_current_attempt()}. Response: {response}",
+        "updated_status",
+    )
+    assert False  # noqa: B011, PT015
