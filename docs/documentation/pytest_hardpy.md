@@ -283,7 +283,6 @@ The type of the return value depends on the widget type:
 **Raises**
 
 - `ValueError`: If the `message` argument is empty.
-- `DuplicateDialogBoxError`: If the dialog box is already caused.
 
 **Example:**
 

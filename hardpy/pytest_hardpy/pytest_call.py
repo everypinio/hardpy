@@ -290,7 +290,6 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
 
     Raises:
         ValueError: If the 'message' argument is empty.
-        DuplicateDialogBoxError: If the dialog box is already caused.
     """
     if not dialog_box_data.dialog_text:
         msg = "The 'dialog_text' argument cannot be empty."

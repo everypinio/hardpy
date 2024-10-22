@@ -23,7 +23,6 @@ from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig
 from hardpy.pytest_hardpy.utils import (
     CheckboxWidget,
     DialogBox,
-    DuplicateDialogBoxError,
     DuplicatePartNumberError,
     DuplicateSerialNumberError,
     DuplicateTestStandLocationError,
@@ -46,7 +45,6 @@ __all__ = [
     "DuplicatePartNumberError",
     "DuplicateTestStandNameError",
     "DuplicateTestStandLocationError",
-    "DuplicateDialogBoxError",
     # Database info
     "set_dut_info",
     "set_dut_serial_number",
