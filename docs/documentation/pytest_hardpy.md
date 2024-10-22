@@ -314,6 +314,21 @@ def test_current_report():
     report = get_current_report()
 ```
 
+#### get_current_attempt
+
+Returns the num of current attempt.
+
+**Returns:**
+
+- *(int)*: num of current attempt
+
+**Example:**
+
+```python
+def test_current_attempt():
+    attempt = get_current_attempt()
+```
+
 ## Class
 
 #### CouchdbLoader
@@ -414,6 +429,32 @@ def test_one():
 @pytest.mark.dependency("test_1::test_one")
 def test_two():
     assert True
+```
+
+#### attempts
+
+If a test is marked `attempt`, it will be repeated if it fails the number of attempts specified in the mark. 
+The test will continue to be repeated until it passes.
+For more information, see the example [attempts](./../examples/attempts.md)
+
+**Example:**
+
+```python
+@pytest.mark.attempt(5)
+def test_minute_parity(driver_example: DriverExample):
+    minute = driver_example.current_minute
+    hardpy.set_message(f"Current minute {minute}", "current_minute")
+    hardpy.set_message(
+        f"Current attempt {hardpy.get_current_attempt()}",
+        "updated_status",
+    )
+    result = minute % 2
+    data = {
+        "minute": minute,
+    }
+    hardpy.set_case_artifact(data)
+    sleep(15)
+    assert result == 0, f"The test failed because {minute} is odd! Try again!"
 ```
 
 ## Options
