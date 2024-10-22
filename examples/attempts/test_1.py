@@ -59,9 +59,9 @@ def test_dialog_box_failed():
         dialog_text="This test is always negative",
         title_bar="Example",
     )
-    response = run_dialog_box(dbx)
+    run_dialog_box(dbx)
     hardpy.set_message(
-        f"Current attempt {hardpy.get_current_attempt()}. Response: {response}",
+        f"Current attempt {hardpy.get_current_attempt()}",
         "updated_status",
     )
     assert False  # noqa: B011, PT015
