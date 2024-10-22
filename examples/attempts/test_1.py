@@ -35,25 +35,21 @@ def test_four_attempts():
 
 @pytest.mark.attempt(3)
 def test_dialog_box():
+    """Print "123", if you want to fail attempt. Print "ok" if you want to pass attempt."""  # noqa: E501
     dbx = DialogBox(
-        dialog_text="Type 'ok' and press the Confirm button",
+        dialog_text="Print '123', if you want to fail attempt. Print 'ok', if you want to pass attempt. ",  # noqa: E501
         title_bar="Example of text input",
         widget=TextInputWidget(),
     )
     response = run_dialog_box(dbx)
     attempt = hardpy.get_current_attempt()
-    if attempt <= 3:  # noqa: PLR2004
+    if attempt < 3:  # noqa: PLR2004
         dbx = DialogBox(
-            dialog_text=f"Reconnect and try again. Test attempt {hardpy.get_current_attempt()}",
+            dialog_text=f"Reconnect and try again. Test attempt {hardpy.get_current_attempt()}",  # noqa: E501
             title_bar="Attempt message",
         )
         run_dialog_box(dbx)
-    else:
-        dbx = DialogBox(
-            dialog_text=f"Test failed on attempt {hardpy.get_current_attempt()}",
-            title_bar="Attempt message",
-        )
-        run_dialog_box(dbx)
+
     assert response == "ok", "The entered text is not correct"
 
 
