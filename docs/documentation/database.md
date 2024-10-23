@@ -215,7 +215,7 @@ The **test_stand** block containt the following fields:
   - **info**: a dictionary containing additional information about the test stand;
   - **timezone**: timezone as a list of strings;
   - **location**: test stand location;
-  - **id**: test stand id - tests folder name + test stand machine id (GUID).
+  - **hw_id**: test stand machine id (GUID) or MAC address.
 
 The **dut** block contains the following fields:
 
@@ -272,7 +272,7 @@ Example of a **current** document:
         }
       },
       "test_stand": {
-        "id": "tests_123456789",
+        "hw_id": "840982098ca2459a7b22cc608eff65d4",
         "name": "test_stand_1",
         "info": {
           "geo": "Belgrade"
@@ -367,7 +367,7 @@ The **test_stand** block containt the following fields:
   - **info**: a dictionary containing additional information about the test stand;
   - **timezone**: timezone as a list of strings;
   - **location**: test stand location;
-  - **id**: test stand id - tests folder name + test stand machine id (GUID).
+  - **hw_id**: test stand machine id (GUID) or MAC address.
 
 The **dut** block contains the following fields:
 
@@ -413,7 +413,7 @@ Example of a **current** document:
         }
       },
       "test_stand": {
-        "id": "tests_123456789",
+        "hw_id": "840982098ca2459a7b22cc608eff65d4",
         "name": "test_stand_1",
         "info": {
           "geo": "Belgrade"

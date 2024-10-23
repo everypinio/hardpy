@@ -39,8 +39,8 @@ class HookReporter(BaseReporter):
         test_stand_tz = self.generate_key(DF.TEST_STAND, DF.TIMEZONE)
         self.set_doc_value(test_stand_tz, tzname)
 
-        test_stand_id_key = self.generate_key(DF.TEST_STAND, DF.ID)
-        self.set_doc_value(test_stand_id_key, f"{doc_name}_{machine_id()}")
+        test_stand_id_key = self.generate_key(DF.TEST_STAND, DF.HW_ID)
+        self.set_doc_value(test_stand_id_key, machine_id())
 
     def start(self) -> None:
         """Start test."""
