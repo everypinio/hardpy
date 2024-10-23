@@ -28,4 +28,4 @@ class DatabaseField(str, Enum):
     OPERATOR_MSG = "operator_msg"
     ATTEMPT = "attempt"
     LOCATION = "location"
-    ID = "id"
+    HW_ID = "hw_id"

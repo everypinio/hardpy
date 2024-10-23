@@ -172,7 +172,7 @@ class TestStand(BaseModel):
     ```
     {
       "test_stand": {
-        "id": "tests_123456789",
+        "hw_id": "840982098ca2459a7b22cc608eff65d4",
         "name": "test_stand_1",
         "info": {
           "geo": "Belgrade"
@@ -196,7 +196,7 @@ class TestStand(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    id: str | None = None
+    hw_id: str | None = None
     name: str | None = None
     timezone: tuple[str, str] | None = None
     drivers: dict = {}
@@ -226,7 +226,7 @@ class ResultStateStore(IBaseResult):
         }
       },
       "test_stand": {
-        "id": "tests_123456789",
+        "hw_id": "840982098ca2459a7b22cc608eff65d4",
         "name": "test_stand_1",
         "info": {
           "geo": "Belgrade"
@@ -325,7 +325,7 @@ class ResultRunStore(IBaseResult):
         }
       },
       "test_stand": {
-        "id": "tests_123456789",
+        "hw_id": "840982098ca2459a7b22cc608eff65d4",
         "name": "test_stand_1",
         "info": {
           "geo": "Belgrade"
