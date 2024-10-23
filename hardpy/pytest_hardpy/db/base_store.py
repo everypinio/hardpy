@@ -82,7 +82,7 @@ class BaseStore(BaseConnector):
                     DF.INFO: {},
                 },
                 DF.TEST_STAND: {
-                    DF.ID: None,
+                    DF.HW_ID: None,
                     DF.NAME: None,
                     DF.TIMEZONE: None,
                     DF.LOCATION: None,
@@ -102,7 +102,7 @@ class BaseStore(BaseConnector):
         }
 
         doc[DF.TEST_STAND] = {
-            DF.ID: None,
+            DF.HW_ID: None,
             DF.NAME: None,
             DF.TIMEZONE: None,
             DF.LOCATION: None,
