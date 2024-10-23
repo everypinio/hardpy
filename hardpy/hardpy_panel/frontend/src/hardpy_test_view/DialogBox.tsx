@@ -166,7 +166,7 @@ export function StartConfirmationDialog(props: Props) {
       }}
     >
       <div className={Classes.DIALOG_BODY} style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
-        <p>{props.dialog_text}</p>
+        <p style={{ textAlign: 'left' }}>{props.dialog_text}</p>
         {widgetType === WidgetType.TextInput && (
           <InputGroup
             value={inputText}
@@ -221,11 +221,13 @@ export function StartConfirmationDialog(props: Props) {
           </>
         )}
         {widgetType === WidgetType.Image && (
-          <img
-            src={`data:image/${props.widget_info?.format};base64,${props.widget_info?.base64}`}
-            alt="Image"
-            style={{ width: `${props.widget_info?.width}%` }}
-          />
+          <div className="image-container">
+            <img
+              src={`data:image/${props.widget_info?.format};base64,${props.widget_info?.base64}`}
+              alt="Image"
+              style={{ width: `${props.widget_info?.width}%` }}
+            />
+          </div>
         )}
         {widgetType === WidgetType.Multistep && (
           <Tabs id={props.title_bar}>
