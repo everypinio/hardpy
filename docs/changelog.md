@@ -2,8 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
-* Fix autofocus in dialog boxes.
-* Add test attempts.
+* Add a marker **attempt** to indicate the number of attempts to run a test before it passes successfully.
+* Add a method **get_current_attempt** to get the number of the current attempt.
+* Add the ability to run multiple dialog boxes in one test.
+* Fix the problem of tests with dialog boxes freezing.
+* Add autofocus on dialog boxes (on the **Confirm** button or the first item from the list).
 * Add the test stand **id** obtained from the stand computer.
 * Remove the **progress** field from the **runstore** database.
 * Add the **location** and **id** variables to the **test_stand** field in the database.
