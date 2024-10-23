@@ -333,6 +333,7 @@ def set_operator_message(msg: str, title: str | None = None) -> None:
     )
     reporter.set_doc_value(key, {}, statestore_only=True)
     reporter.update_db_by_doc()
+    # TODO @RiByryn: solve problem with operator msg attempts without sleep
     sleep(0.2)
     msg_data = {"msg": msg, "title": title, "visible": True}
     reporter.set_doc_value(key, msg_data, statestore_only=True)

@@ -243,7 +243,6 @@ def test_set_operator_msg():
 #### run_dialog_box
 
 Displays a dialog box and updates the `dialog_box` field in the **statestore** database.
-Only one dialog box can be invoked per test case.
 
 **Arguments:**
 
@@ -325,8 +324,31 @@ Returns the num of current attempt.
 **Example:**
 
 ```python
-def test_current_attempt():
-    attempt = get_current_attempt()
+@pytest.mark.attempt(5)
+def test_attempts_message():
+    hardpy.set_message(
+        f"Current attempt {hardpy.get_current_attempt()}",
+        "updated_status",
+    )
+    assert False
+
+
+@pytest.mark.attempt(3)
+def test_dialog_box():
+    dbx = DialogBox(
+        dialog_text="Print '123', if you want to fail attempt. Print 'ok', if you want to pass attempt. ",
+        title_bar="Example of text input",
+        widget=TextInputWidget(),
+    )
+    response = run_dialog_box(dbx)
+    if response != "ok":
+        dbx = DialogBox(
+            dialog_text=f"Test attempt {hardpy.get_current_attempt()}",
+            title_bar="Attempt message",
+        )
+        run_dialog_box(dbx)
+
+    assert response == "ok", "The entered text is not correct"
 ```
 
 ## Class
@@ -441,20 +463,8 @@ For more information, see the example [attempts](./../examples/attempts.md)
 
 ```python
 @pytest.mark.attempt(5)
-def test_minute_parity(driver_example: DriverExample):
-    minute = driver_example.current_minute
-    hardpy.set_message(f"Current minute {minute}", "current_minute")
-    hardpy.set_message(
-        f"Current attempt {hardpy.get_current_attempt()}",
-        "updated_status",
-    )
-    result = minute % 2
-    data = {
-        "minute": minute,
-    }
-    hardpy.set_case_artifact(data)
-    sleep(15)
-    assert result == 0, f"The test failed because {minute} is odd! Try again!"
+def test_attempts():
+    assert False
 ```
 
 ## Options

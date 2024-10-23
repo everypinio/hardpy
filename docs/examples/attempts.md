@@ -14,20 +14,52 @@ Contains some examples of valid tests with attempts.
 3. Modify the files described below.
 4. Launch `hardpy run attempts`.
 
-For a test using `DriverExample` you need files similar to the example [Minute parity](../documentation/examples/minute_parity.md).
+### conftest.py
+
+```python
+import datetime
+import logging
+import pytest
+from hardpy import (
+    CouchdbConfig,
+    CouchdbLoader,
+    get_current_report,
+)
+
+@pytest.fixture(scope="module")
+def module_log(request: pytest.FixtureRequest):
+    log_name = request.module.__name__
+    yield logging.getLogger(log_name)
+
+@pytest.fixture(scope="session")
+def current_minute():
+    current_time = datetime.datetime.now()
+    return int(current_time.strftime("%M"))
+
+def finish_executing():
+    report = get_current_report()
+    if report:
+        loader = CouchdbLoader(CouchdbConfig())
+        loader.load(report)
+
+@pytest.fixture(scope="session", autouse=True)
+def fill_actions_after_test(post_run_functions: list):
+    post_run_functions.append(finish_executing)
+    yield
+```
+
 
 ### test_1.py
 
 ```python
 from time import sleep
 import pytest
-from driver_example import DriverExample
 import hardpy
 from hardpy import DialogBox, TextInputWidget, run_dialog_box
 
 @pytest.mark.attempt(5)
-def test_minute_parity(driver_example: DriverExample):
-    minute = driver_example.current_minute
+def test_minute_parity(current_minute: int):
+    minute = current_minute
     hardpy.set_message(f"Current minute {minute}", "current_minute")
     hardpy.set_message(
         f"Current attempt {hardpy.get_current_attempt()}",

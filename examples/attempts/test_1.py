@@ -1,15 +1,14 @@
 from time import sleep
 
 import pytest
-from driver_example import DriverExample
 
 import hardpy
 from hardpy import DialogBox, TextInputWidget, run_dialog_box
 
 
 @pytest.mark.attempt(5)
-def test_minute_parity(driver_example: DriverExample):
-    minute = driver_example.current_minute
+def test_minute_parity(current_minute: int):
+    minute = current_minute
     hardpy.set_message(f"Current minute {minute}", "current_minute")
     hardpy.set_message(
         f"Current attempt {hardpy.get_current_attempt()}",

@@ -1,7 +1,7 @@
+import datetime
 import logging
 
 import pytest
-from driver_example import DriverExample  # type: ignore
 
 from hardpy import (
     CouchdbConfig,
@@ -17,10 +17,9 @@ def module_log(request: pytest.FixtureRequest):
 
 
 @pytest.fixture(scope="session")
-def driver_example():
-    example = DriverExample()
-    yield example
-    example.random_method()
+def current_minute():
+    current_time = datetime.datetime.now()  # noqa: DTZ005
+    return int(current_time.strftime("%M"))
 
 
 def finish_executing():
