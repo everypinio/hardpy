@@ -235,7 +235,7 @@ class HardpyPlugin:
     def pytest_runtest_call(self, item: Item) -> None:
         """Call the test item."""
         node_info = NodeInfo(item)
-        self._reporter.set_num_attempt(
+        self._reporter.set_case_attempt(
             node_info.module_id,
             node_info.case_id,
             1,
@@ -254,10 +254,10 @@ class HardpyPlugin:
 
         if call.excinfo:
             # first attempt was in pytest_runtest_call
-            for attempt_num in range(2, attempt + 1):
+            for case_attempt in range(2, attempt + 1):
                 self._reporter.set_module_status(module_id, TestStatus.RUN)
                 self._reporter.set_case_status(module_id, case_id, TestStatus.RUN)
-                self._reporter.set_num_attempt(module_id, case_id, attempt_num)
+                self._reporter.set_case_attempt(module_id, case_id, case_attempt)
                 self._reporter.update_db_by_doc()
 
                 # fmt: off
@@ -268,7 +268,7 @@ class HardpyPlugin:
                     break
                 except AssertionError:
                     self._reporter.set_case_status(module_id, case_id, TestStatus.FAILED)  # noqa: E501
-                    if attempt_num == attempt:
+                    if case_attempt == attempt:
                         return
                 # fmt: on
 
