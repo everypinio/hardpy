@@ -14,7 +14,6 @@ from hardpy.pytest_hardpy.utils.dialog_box import (
     TextInputWidget,
 )
 from hardpy.pytest_hardpy.utils.exception import (
-    DuplicateDialogBoxError,
     DuplicatePartNumberError,
     DuplicateSerialNumberError,
     DuplicateTestStandLocationError,
@@ -36,7 +35,6 @@ __all__ = [
     "DuplicatePartNumberError",
     "DuplicateTestStandLocationError",
     "DuplicateTestStandNameError",
-    "DuplicateDialogBoxError",
     "WidgetInfoError",
     "DialogBox",
     "TextInputWidget",

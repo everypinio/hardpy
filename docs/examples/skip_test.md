@@ -5,7 +5,7 @@ on another test and skipping tests.
 
 ### how to start
 
-1. Launch `hardpy init skip_test`
+1. Launch `hardpy init skip_test`.
 2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
 4. Launch `hardpy run skip_test`.

@@ -243,7 +243,6 @@ def test_set_operator_msg():
 #### run_dialog_box
 
 Displays a dialog box and updates the `dialog_box` field in the **statestore** database.
-Only one dialog box can be invoked per test case.
 
 **Arguments:**
 
@@ -283,7 +282,6 @@ The type of the return value depends on the widget type:
 **Raises**
 
 - `ValueError`: If the `message` argument is empty.
-- `DuplicateDialogBoxError`: If the dialog box is already caused.
 
 **Example:**
 
@@ -313,6 +311,44 @@ Returns the current report from the database **runstore**.
 ```python
 def test_current_report():
     report = get_current_report()
+```
+
+#### get_current_attempt
+
+Returns the num of current attempt.
+
+**Returns:**
+
+- *(int)*: num of current attempt
+
+**Example:**
+
+```python
+@pytest.mark.attempt(5)
+def test_attempts_message():
+    hardpy.set_message(
+        f"Current attempt {hardpy.get_current_attempt()}",
+        "updated_status",
+    )
+    assert False
+
+
+@pytest.mark.attempt(3)
+def test_dialog_box():
+    dbx = DialogBox(
+        dialog_text="Print '123', if you want to fail attempt. Print 'ok', if you want to pass attempt. ",
+        title_bar="Example of text input",
+        widget=TextInputWidget(),
+    )
+    response = run_dialog_box(dbx)
+    if response != "ok":
+        dbx = DialogBox(
+            dialog_text=f"Test attempt {hardpy.get_current_attempt()}",
+            title_bar="Attempt message",
+        )
+        run_dialog_box(dbx)
+
+    assert response == "ok", "The entered text is not correct"
 ```
 
 ## Class
@@ -415,6 +451,20 @@ def test_one():
 @pytest.mark.dependency("test_1::test_one")
 def test_two():
     assert True
+```
+
+#### attempt
+
+If a test is marked `attempt`, it will be repeated if it fails the number of attempts specified in the mark. 
+The test will continue to be repeated until it passes.
+For more information, see the example [attempts](./../examples/attempts.md)
+
+**Example:**
+
+```python
+@pytest.mark.attempt(5)
+def test_attempts():
+    assert False
 ```
 
 ## Options

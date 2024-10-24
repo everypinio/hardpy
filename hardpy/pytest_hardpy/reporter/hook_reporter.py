@@ -166,6 +166,23 @@ class HookReporter(BaseReporter):
         key = self.generate_key(DF.MODULES, module_id, DF.STOP_TIME)
         self._set_time(key)
 
+    def set_case_attempt(self, module_id: str, case_id: str, case_attempt: int) -> None:
+        """Set test case case_attempt.
+
+        Args:
+            module_id (str): module id
+            case_id (str): case id
+            case_attempt (int): test case case_attempt
+        """
+        key = self.generate_key(
+            DF.MODULES,
+            module_id,
+            DF.CASES,
+            case_id,
+            DF.ATTEMPT,
+        )
+        self.set_doc_value(key, case_attempt, statestore_only=True)
+
     def update_node_order(self, nodes: dict) -> None:
         """Update node order.
 

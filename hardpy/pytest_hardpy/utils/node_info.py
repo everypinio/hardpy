@@ -41,6 +41,8 @@ class NodeInfo:
             item.own_markers + item.parent.own_markers,  # type: ignore
         )
 
+        self._attempt = self._get_attempt(item.own_markers)
+
         self._module_id = Path(item.parent.nodeid).stem  # type: ignore
         self._case_id = item.name
 
@@ -89,6 +91,15 @@ class NodeInfo:
         """
         return self._dependency
 
+    @property
+    def attempt(self) -> int:
+        """Get attempt.
+
+        Returns:
+            int: attempt number
+        """
+        return self._attempt
+
     def _get_human_name(self, markers: list[Mark], marker_name: str) -> str:
         """Get human name from markers.
 
@@ -123,3 +134,21 @@ class NodeInfo:
         elif dependency_data is None and dependency_value == "":
             return ""
         raise ValueError
+
+    def _get_attempt(self, markers: list[Mark]) -> int:
+        """Get the number of attempts.
+
+        Args:
+            markers (list[Mark]): item markers list
+
+        Returns:
+            int: number of attempts
+        """
+        attempt: int = 1
+        for marker in markers:
+            if marker.name == "attempt" and marker.args:
+                attempt = marker.args[0]
+        if not isinstance(attempt, int) or attempt < 1:
+            msg = "The 'attempt' marker value must be a positive integer."
+            raise ValueError(msg)
+        return attempt

@@ -5,6 +5,7 @@ from __future__ import annotations
 import socket
 from dataclasses import dataclass
 from os import environ
+from time import sleep
 from typing import Any
 from uuid import uuid4
 
@@ -20,7 +21,6 @@ from hardpy.pytest_hardpy.reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
     ConnectionData,
     DialogBox,
-    DuplicateDialogBoxError,
     DuplicatePartNumberError,
     DuplicateSerialNumberError,
     DuplicateTestStandLocationError,
@@ -290,12 +290,10 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
 
     Raises:
         ValueError: If the 'message' argument is empty.
-        DuplicateDialogBoxError: If the dialog box is already caused.
     """
     if not dialog_box_data.dialog_text:
         msg = "The 'dialog_text' argument cannot be empty."
         raise ValueError(msg)
-
     current_test = _get_current_test()
     reporter = RunnerReporter()
     key = reporter.generate_key(
@@ -305,8 +303,12 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
         current_test.case_id,
         DF.DIALOG_BOX,
     )
-    if reporter.get_field(key):
-        raise DuplicateDialogBoxError
+
+    reporter.set_doc_value(key, {}, statestore_only=True)
+    reporter.update_db_by_doc()
+
+    # TODO @RiByryn: solve problem with dialog box attempts without sleep
+    sleep(0.2)
 
     reporter.set_doc_value(key, dialog_box_data.to_dict(), statestore_only=True)
     reporter.update_db_by_doc()
@@ -329,6 +331,10 @@ def set_operator_message(msg: str, title: str | None = None) -> None:
     key = reporter.generate_key(
         DF.OPERATOR_MSG,
     )
+    reporter.set_doc_value(key, {}, statestore_only=True)
+    reporter.update_db_by_doc()
+    # TODO @RiByryn: solve problem with operator msg attempts without sleep
+    sleep(0.2)
     msg_data = {"msg": msg, "title": title, "visible": True}
     reporter.set_doc_value(key, msg_data, statestore_only=True)
     reporter.update_db_by_doc()
@@ -336,6 +342,17 @@ def set_operator_message(msg: str, title: str | None = None) -> None:
     msg_data["visible"] = is_msg_visible
     reporter.set_doc_value(key, msg_data, statestore_only=True)
     reporter.update_db_by_doc()
+
+
+def get_current_attempt() -> int:
+    """Get current attempt.
+
+    Returns:
+        int: current attempt
+    """
+    reporter = RunnerReporter()
+    module_id, case_id = _get_current_test().module_id, _get_current_test().case_id
+    return reporter.get_current_attempt(module_id, case_id)
 
 
 def _get_current_test() -> CurrentTestInfo:
@@ -372,6 +389,7 @@ def _get_socket_raw_data() -> str:
         server.bind((con_data.socket_host, con_data.socket_port))
     except OSError as exc:
         msg = "Socket creating error"
+        server.close()
         raise RuntimeError(msg) from exc
     server.listen(1)
     client, _ = server.accept()

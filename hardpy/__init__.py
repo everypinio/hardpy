@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from hardpy.pytest_hardpy.pytest_call import (
+    get_current_attempt,
     get_current_report,
     run_dialog_box,
     set_case_artifact,
@@ -22,7 +23,6 @@ from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig
 from hardpy.pytest_hardpy.utils import (
     CheckboxWidget,
     DialogBox,
-    DuplicateDialogBoxError,
     DuplicatePartNumberError,
     DuplicateSerialNumberError,
     DuplicateTestStandLocationError,
@@ -45,7 +45,6 @@ __all__ = [
     "DuplicatePartNumberError",
     "DuplicateTestStandNameError",
     "DuplicateTestStandLocationError",
-    "DuplicateDialogBoxError",
     # Database info
     "set_dut_info",
     "set_dut_serial_number",
@@ -59,6 +58,7 @@ __all__ = [
     "set_message",
     "set_driver_info",
     "set_operator_message",
+    "get_current_attempt",
     # Dialog boxes
     "run_dialog_box",
     "DialogBox",
