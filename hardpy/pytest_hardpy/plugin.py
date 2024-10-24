@@ -188,7 +188,6 @@ class HardpyPlugin:
             self._reporter.add_case(node_info)
 
             self._add_dependency(node_info, nodes)
-            self._add_attempt(node_info)
             modules.add(node_info.module_id)
         for module_id in modules:
             self._reporter.set_module_status(module_id, TestStatus.READY)
@@ -470,9 +469,3 @@ class HardpyPlugin:
         self._dependencies[
             TestDependencyInfo(node_info.module_id, node_info.case_id)
         ] = dependency
-
-    def _add_attempt(self, node_info: NodeInfo) -> None:
-        attempt = node_info.attempt
-        if attempt is None:
-            return
-        self._attempt = attempt
