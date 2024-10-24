@@ -98,7 +98,6 @@ class HardpyPlugin:
         self._results = {}
         self._post_run_functions: list[Callable] = []
         self._dependencies = {}
-        self._attempt = {}
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
