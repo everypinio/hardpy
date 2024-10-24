@@ -9,7 +9,7 @@ To test images, create an `assets` folder in the `dialog_box` folder with the im
 
 ### how to start
 
-1. Launch `hardpy init dialog_box`
+1. Launch `hardpy init dialog_box`.
 2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
 4. Launch `hardpy run dialog_box`.

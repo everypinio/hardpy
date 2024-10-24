@@ -4,7 +4,11 @@
 from logging import getLogger
 from typing import Any
 
-from hardpy.pytest_hardpy.db import RunStore, StateStore
+from hardpy.pytest_hardpy.db import (
+    DatabaseField as DF,  # noqa: N817
+    RunStore,
+    StateStore,
+)
 
 
 class BaseReporter:
@@ -64,3 +68,18 @@ class BaseReporter:
             str: database key
         """
         return ".".join(args)
+
+    def get_current_attempt(self, module_id: str, case_id: str) -> int:
+        """Get current attempt.
+
+        Returns:
+            int: current attempt
+        """
+        key = self.generate_key(
+            DF.MODULES,
+            module_id,
+            DF.CASES,
+            case_id,
+            DF.ATTEMPT,
+        )
+        return self._statestore.get_field(key)

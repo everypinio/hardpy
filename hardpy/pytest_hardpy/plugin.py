@@ -18,6 +18,7 @@ from _pytest._code.code import (
 )
 from natsort import natsorted
 from pytest import (
+    CallInfo,
     Config,
     ExitCode,
     Item,
@@ -128,6 +129,7 @@ class HardpyPlugin:
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
         config.addinivalue_line("markers", "dependency")
+        config.addinivalue_line("markers", "attempt")
 
         # must be init after config data is set
         try:
@@ -172,8 +174,8 @@ class HardpyPlugin:
                 continue
             try:
                 node_info = NodeInfo(item)
-            except ValueError:
-                error_msg = f"Error creating NodeInfo for item: {item}\n"
+            except ValueError as exc:
+                error_msg = f"Error creating NodeInfo for item: {item}. {exc}"
                 exit(error_msg, 1)
 
             self._init_case_result(node_info.module_id, node_info.case_id)
@@ -227,6 +229,46 @@ class HardpyPlugin:
             node_info.case_id,
         )
         self._reporter.update_db_by_doc()
+
+    def pytest_runtest_call(self, item: Item) -> None:
+        """Call the test item."""
+        node_info = NodeInfo(item)
+        self._reporter.set_case_attempt(
+            node_info.module_id,
+            node_info.case_id,
+            1,
+        )
+        self._reporter.update_db_by_doc()
+
+    def pytest_runtest_makereport(self, item: Item, call: CallInfo) -> None:
+        """Call after call of each test item."""
+        if call.when != "call":
+            return
+
+        node_info = NodeInfo(item)
+        attempt = node_info.attempt
+        module_id = node_info.module_id
+        case_id = node_info.case_id
+
+        if call.excinfo:
+            # first attempt was in pytest_runtest_call
+            for case_attempt in range(2, attempt + 1):
+                self._reporter.set_module_status(module_id, TestStatus.RUN)
+                self._reporter.set_case_status(module_id, case_id, TestStatus.RUN)
+                self._reporter.set_case_attempt(module_id, case_id, case_attempt)
+                self._reporter.update_db_by_doc()
+
+                # fmt: off
+                try:
+                    item.runtest()
+                    call.excinfo = None
+                    self._reporter.set_case_status(module_id, case_id, TestStatus.PASSED)  # noqa: E501
+                    break
+                except AssertionError:
+                    self._reporter.set_case_status(module_id, case_id, TestStatus.FAILED)  # noqa: E501
+                    if case_attempt == attempt:
+                        return
+                # fmt: on
 
     # Reporting hooks
 

@@ -244,7 +244,7 @@ The **modules** block contains the following fields:
         - **stop_time**: test end time in Unix second;
         - **assertion_msg**: error message if the test fails;
         - **msg**: additional message;
-        - **attempt**: attempt counting to pass the case, not yet implemented in the **pytest-hardpy** plugin;
+        - **attempt**: attempt counting to pass the case;
         - **dialog_box**: information about dialog box;
           - **title_bar**: title bar of the dialog box;
           - **dialog_text**: text displayed in the dialog box;
@@ -345,7 +345,7 @@ Example of a **current** document:
 The **runstore** database is similar to **statestore** database, but there are differences:
 
 - **runstore** contains the **artifact** field for test run, module, and case;
-- **runstore** does not contain **dialog_box** filed.
+- **runstore** does not contain **dialog_box** and **attempt** fields.
 
 The **current** document of **runstore** database contains the following fields:
 
@@ -391,7 +391,6 @@ The **modules** block contains the following fields:
         - **stop_time**: test end time in Unix second;
         - **assertion_msg**: error message if the test fails;
         - **msg**: additional message;
-        - **attempt**: attempt counting to pass the case, not yet implemented in the **pytest-hardpy** plugin;
         - **artifact**: an object containing information about artifacts created during the test case process.
 
 Example of a **current** document:
