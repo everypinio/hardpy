@@ -453,7 +453,7 @@ def test_two():
     assert True
 ```
 
-#### attempts
+#### attempt
 
 If a test is marked `attempt`, it will be repeated if it fails the number of attempts specified in the mark. 
 The test will continue to be repeated until it passes.

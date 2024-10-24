@@ -18,7 +18,6 @@ Contains some examples of valid tests with attempts.
 
 ```python
 import datetime
-import logging
 import pytest
 from hardpy import (
     CouchdbConfig,
@@ -26,15 +25,18 @@ from hardpy import (
     get_current_report,
 )
 
-@pytest.fixture(scope="module")
-def module_log(request: pytest.FixtureRequest):
-    log_name = request.module.__name__
-    yield logging.getLogger(log_name)
+class CurrentMinute:
+    """Class example."""
 
-@pytest.fixture(scope="session")
+    def get_minute(self):
+        """Get current minute."""
+        current_time = datetime.datetime.now()
+        return int(current_time.strftime("%M"))
+
+@pytest.fixture
 def current_minute():
-    current_time = datetime.datetime.now()
-    return int(current_time.strftime("%M"))
+    current_time = CurrentMinute()
+    yield current_time
 
 def finish_executing():
     report = get_current_report()
@@ -58,20 +60,17 @@ import hardpy
 from hardpy import DialogBox, TextInputWidget, run_dialog_box
 
 @pytest.mark.attempt(5)
-def test_minute_parity(current_minute: int):
-    minute = current_minute
-    hardpy.set_message(f"Current minute {minute}", "current_minute")
-    hardpy.set_message(
-        f"Current attempt {hardpy.get_current_attempt()}",
-        "updated_status",
-    )
-    result = minute % 2
-    data = {
-        "minute": minute,
-    }
-    hardpy.set_case_artifact(data)
-    sleep(15)
-    assert result == 0, f"The test failed because {minute} is odd! Try again!"
+def test_minute_parity(current_minute):
+    attempt = hardpy.get_current_attempt()
+    hardpy.set_message(f"Current attempt {attempt}", "updated_status")
+    if attempt > 1:
+        sleep(15)
+
+    minute = current_minute.get_minute()
+    hardpy.set_message(f"Current minute {minute}")
+    hardpy.set_case_artifact({"minute": minute})
+
+    assert minute % 2 == 0, f"The test failed because {minute} is odd! Try again!"
 
 @pytest.mark.attempt(3)
 def test_dialog_box():

@@ -1,5 +1,4 @@
 import datetime
-import logging
 
 import pytest
 
@@ -10,16 +9,19 @@ from hardpy import (
 )
 
 
-@pytest.fixture(scope="module")
-def module_log(request: pytest.FixtureRequest):
-    log_name = request.module.__name__
-    yield logging.getLogger(log_name)
+class CurrentMinute:
+    """Class example."""
+
+    def get_minute(self):
+        """Get current minute."""
+        current_time = datetime.datetime.now()  # noqa: DTZ005
+        return int(current_time.strftime("%M"))
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def current_minute():
-    current_time = datetime.datetime.now()  # noqa: DTZ005
-    return int(current_time.strftime("%M"))
+    current_time = CurrentMinute()
+    yield current_time
 
 
 def finish_executing():

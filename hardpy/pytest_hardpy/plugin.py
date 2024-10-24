@@ -175,8 +175,8 @@ class HardpyPlugin:
                 continue
             try:
                 node_info = NodeInfo(item)
-            except ValueError:
-                error_msg = f"Error creating NodeInfo for item: {item}\n"
+            except ValueError as exc:
+                error_msg = f"Error creating NodeInfo for item: {item}. {exc}"
                 exit(error_msg, 1)
 
             self._init_case_result(node_info.module_id, node_info.case_id)
@@ -233,14 +233,7 @@ class HardpyPlugin:
         self._reporter.update_db_by_doc()
 
     def pytest_runtest_call(self, item: Item) -> None:
-        """Call the test item.
-
-        Args:
-            item (Item): The test item to run.
-
-        Returns:
-            None
-        """
+        """Call the test item."""
         node_info = NodeInfo(item)
         self._reporter.set_num_attempt(
             node_info.module_id,
@@ -255,7 +248,7 @@ class HardpyPlugin:
             return
 
         node_info = NodeInfo(item)
-        attempt = node_info.attempt or 1
+        attempt = node_info.attempt
 
         if call.excinfo:
             for attempt_num in range(1, attempt):
@@ -265,7 +258,6 @@ class HardpyPlugin:
                     node_info.case_id,
                     attempt_num + 1,
                 )
-
                 self._reporter.set_case_status(
                     node_info.module_id,
                     node_info.case_id,
@@ -282,14 +274,14 @@ class HardpyPlugin:
                         TestStatus.PASSED,
                     )
                     break
-                except Exception as exc:
+                except AssertionError:
                     self._reporter.set_case_status(
                         node_info.module_id,
                         node_info.case_id,
                         TestStatus.FAILED,
                     )
                     if attempt_num + 1 == attempt:
-                        raise AssertionError from exc
+                        return
 
     # Reporting hooks
 
