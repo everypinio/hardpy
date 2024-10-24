@@ -8,9 +8,9 @@ pytestmark = pytest.mark.module_name("Image dialog box")
 @pytest.mark.case_name("Image")
 def test_upload_image():
     dbx = DialogBox(
-        dialog_text="Test image",
+        dialog_text="Test imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest image",
         widget=ImageWidget(
-            address="assets/test.png",
+            address="assets/test.icon",
             width=50,
         ),
     )

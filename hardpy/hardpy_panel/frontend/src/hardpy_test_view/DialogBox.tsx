@@ -158,11 +158,12 @@ export function StartConfirmationDialog(props: Props) {
       onClose={handleClose}
       canOutsideClickClose={false}
       style={{
-        width: 'auto',
-        height: 'auto',
+        width: widgetType === WidgetType.Multistep ? '800px' : 'auto',
+        height: widgetType === WidgetType.Multistep ? '600px' : 'auto',
         minWidth: '300px',
         minHeight: '200px',
         maxWidth: '800px',
+        maxHeight: '600px',
       }}
     >
       <div className={Classes.DIALOG_BODY} style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
@@ -170,7 +171,7 @@ export function StartConfirmationDialog(props: Props) {
         {widgetType === WidgetType.TextInput && (
           <InputGroup
             value={inputText}
-            onChange={(event) => setInputText(event.target.value)}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setInputText(event.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={inputPlaceholder}
             type="text"
@@ -180,7 +181,7 @@ export function StartConfirmationDialog(props: Props) {
         {widgetType === WidgetType.NumericInput && (
           <InputGroup
             value={inputText}
-            onChange={(event) => setInputText(event.target.value)}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setInputText(event.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={inputPlaceholder}
             type="number"
@@ -227,7 +228,7 @@ export function StartConfirmationDialog(props: Props) {
             <img
               src={`data:image/${props.widget_info?.format};base64,${props.widget_info?.base64}`}
               alt="Image"
-              style={{ width: `${props.widget_info?.width}%` }}
+              style={{ width: props.widget_info?.width && props.widget_info.width <= 800 ? `${props.widget_info.width}%` : 'auto', height: 'auto', display: 'block', margin: '0 auto' }}
             />
           </div>
         )}
@@ -240,13 +241,13 @@ export function StartConfirmationDialog(props: Props) {
                 title={step.info?.title}
                 panel={
                   <div className="step-container" >
-                    <div className="step-content" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                    <div className="step-content" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
                       <p>{step.info?.text}</p>
                       {step.info?.widget?.type === WidgetType.Image && (
                         <img
                           src={`data:image/${step.info.widget?.info.format};base64,${step.info.widget?.info.base64}`}
                           alt="Image"
-                          style={{ width: `${step.info.widget?.info.width}%` }}
+                          style={{ width: `${step.info.widget?.info.width}%` || 'auto', height: 'auto', display: 'block', margin: '0 auto' }}
                         />
                       )}
                     </div>
