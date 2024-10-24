@@ -325,30 +325,11 @@ Returns the num of current attempt.
 
 ```python
 @pytest.mark.attempt(5)
-def test_attempts_message():
-    hardpy.set_message(
-        f"Current attempt {hardpy.get_current_attempt()}",
-        "updated_status",
-    )
-    assert False
-
-
-@pytest.mark.attempt(3)
-def test_dialog_box():
-    dbx = DialogBox(
-        dialog_text="Print '123', if you want to fail attempt. Print 'ok', if you want to pass attempt. ",
-        title_bar="Example of text input",
-        widget=TextInputWidget(),
-    )
-    response = run_dialog_box(dbx)
-    if response != "ok":
-        dbx = DialogBox(
-            dialog_text=f"Test attempt {hardpy.get_current_attempt()}",
-            title_bar="Attempt message",
-        )
-        run_dialog_box(dbx)
-
-    assert response == "ok", "The entered text is not correct"
+def test_attempt_message():
+    attempt = hardpy.get_current_attempt()
+    hardpy.set_message(f"Current attempt {attempt}")
+    if attempt < 5:
+        assert False
 ```
 
 ## Class
@@ -455,8 +436,9 @@ def test_two():
 
 #### attempt
 
-If a test is marked `attempt`, it will be repeated if it fails the number of attempts specified in the mark. 
-The test will continue to be repeated until it passes.
+If a test is marked `attempt`, it will be repeated if it fails the number of
+attempts specified by the mark.
+The test will be repeated until it is passed.
 For more information, see the example [attempts](./../examples/attempts.md)
 
 **Example:**

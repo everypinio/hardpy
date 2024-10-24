@@ -1,8 +1,11 @@
 # Attempts
 
-In **HardPy** library, the `@pytest.mark.attempt(n)` marker allows you to configure a test to be retried a specified number of times `(n)` if it initially fails. 
-This functionality is particularly useful for tests that might encounter transient errors or require multiple attempts to succeed due to external factors.
-The code for this example can be seen inside the hardpy package 
+In **HardPy** library, the [@pytest.mark.attempt(n)](./../documentation/pytest_hardpy.md#attempt)
+marker allows you to configure a test to be retried a specified number of
+times `(n)` if it initially fails.
+This functionality is particularly useful for tests that might encounter transient errors or
+require multiple attempts to succeed due to external factors.
+The code for this example can be seen inside the hardpy package
 [Attempts](https://github.com/everypinio/hardpy/tree/main/examples/attempts).
 
 Contains some examples of valid tests with attempts.
@@ -19,17 +22,9 @@ Contains some examples of valid tests with attempts.
 ```python
 import datetime
 import pytest
-from hardpy import (
-    CouchdbConfig,
-    CouchdbLoader,
-    get_current_report,
-)
 
 class CurrentMinute:
-    """Class example."""
-
     def get_minute(self):
-        """Get current minute."""
         current_time = datetime.datetime.now()
         return int(current_time.strftime("%M"))
 
@@ -37,19 +32,7 @@ class CurrentMinute:
 def current_minute():
     current_time = CurrentMinute()
     yield current_time
-
-def finish_executing():
-    report = get_current_report()
-    if report:
-        loader = CouchdbLoader(CouchdbConfig())
-        loader.load(report)
-
-@pytest.fixture(scope="session", autouse=True)
-def fill_actions_after_test(post_run_functions: list):
-    post_run_functions.append(finish_executing)
-    yield
 ```
-
 
 ### test_1.py
 
@@ -75,7 +58,7 @@ def test_minute_parity(current_minute):
 @pytest.mark.attempt(3)
 def test_dialog_box():
     dbx = DialogBox(
-        dialog_text="Print '123', if you want to fail attempt. Print 'ok', if you want to pass attempt. ",
+        dialog_text="Print 'ok', if you want to pass attempt.",
         title_bar="Example of text input",
         widget=TextInputWidget(),
     )
