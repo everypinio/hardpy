@@ -345,7 +345,7 @@ Example of a **current** document:
 The **runstore** database is similar to **statestore** database, but there are differences:
 
 - **runstore** contains the **artifact** field for test run, module, and case;
-- **runstore** does not contain **dialog_box** and **attempt** filed.
+- **runstore** does not contain **dialog_box** and **attempt** fields.
 
 The **current** document of **runstore** database contains the following fields:
 
