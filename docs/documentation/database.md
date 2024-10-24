@@ -213,7 +213,7 @@ The **test_stand** block containt the following fields:
   - **name** - test stand name;
   - **drivers**: information about drivers in the form of a dictionary;
   - **info**: a dictionary containing additional information about the test stand;
-  - **timezone**: timezone as a list of strings;
+  - **timezone**: timezone as a string;
   - **location**: test stand location;
   - **hw_id**: test stand machine id (GUID) or MAC address.
 
@@ -277,10 +277,7 @@ Example of a **current** document:
         "info": {
           "geo": "Belgrade"
         },
-        "timezone": [
-          "CET",
-          "CET"
-        ],
+        "timezone": "CET",
         "drivers": {
           "driver_1": "driver info",
           "driver_2": {
@@ -365,7 +362,7 @@ The **test_stand** block containt the following fields:
   - **name** - test stand name;
   - **drivers**: information about drivers in the form of a dictionary;
   - **info**: a dictionary containing additional information about the test stand;
-  - **timezone**: timezone as a list of strings;
+  - **timezone**: timezone as a string;
   - **location**: test stand location;
   - **hw_id**: test stand machine id (GUID) or MAC address.
 
@@ -417,10 +414,7 @@ Example of a **current** document:
         "info": {
           "geo": "Belgrade"
         },
-        "timezone": [
-          "CET",
-          "CET"
-        ],
+        "timezone": "CET",
         "drivers": {
           "driver_1": "driver info",
           "driver_2": {
