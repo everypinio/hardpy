@@ -7,7 +7,6 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 * Add the ability to run multiple dialog boxes in one test.
 * Fix the problem of tests with dialog boxes freezing.
 * Add autofocus on dialog boxes (on the **Confirm** button or the first item from the list).
-* Add the test stand **id** obtained from the stand computer.
 * Remove the **progress** field from the **runstore** database.
 * Add the **hw_id** variable to the **test_stand** field in the database obtained from the stand computer.
 * Add the **location** variables to the **test_stand** field in the database.
