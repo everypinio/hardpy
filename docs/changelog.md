@@ -4,11 +4,11 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 
 ## HardPy 0.7.0
 
-* Add a marker **attempt** to indicate the number of attempts to run a test before it passes successfully.
-* Add a method **get_current_attempt** to get the number of the current attempt.
-* Add the ability to run multiple dialog boxes in one test.
-* Fix the problem of tests with dialog boxes freezing.
-* Add autofocus on dialog boxes (on the **Confirm** button or the first item from the list).
+* Add an **attempt** marker to indicate the number of attempts to run a test before it passes successfully.
+* Add a **get_current_attempt** method to get the current attempt number.
+* Add the ability to run multiple dialog boxes in a single test.
+* Fix the problem of freezing the dialog box in some test cases.
+* Add autofocus on dialog boxes (on the **Confirm** button or the first item in the list).
 * Remove the **progress** field from the **runstore** database.
 * Add the **hw_id** variable to the **test_stand** field in the database obtained from the stand computer.
 * Add the **location** variables to the **test_stand** field in the database.
@@ -38,7 +38,6 @@ The HardPy project of version 0.6.0 or later must contain the file **hardpy.toml
 * Refactor **pytest-hardpy** plugin options.
 * Add CLI to hardpy as an entry point. The `hardpy-panel` command is no longer available.
 * Fix use of special characters in dialog boxes. ASCII symbols are passed from frontend to backend.
-* Add unit tests for dialog widgets.
 * Fix status of stopped tests.
 * Fix progress bar for skipped tests. Progress bar fills to the end when tests are skipped.
 * Add report name generation when serial number is missing.
