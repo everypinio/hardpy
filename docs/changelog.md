@@ -14,6 +14,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 * Add the **location** variables to the **test_stand** field in the database.
 * Move the **timezone** and **driver** database variables to the **test_stand** field.
 * Add a schema version. The schema version is fixed to version 1.
+* Change **timezone** from two strings to one string.
 * Replace the **Flake8** linter with a **Ruff** linter.
 
 ## HardPy 0.6.1
