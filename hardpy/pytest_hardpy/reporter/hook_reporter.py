@@ -10,7 +10,7 @@ from natsort import natsorted
 
 from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
 from hardpy.pytest_hardpy.reporter.base import BaseReporter
-from hardpy.pytest_hardpy.utils import NodeInfo, TestStatus
+from hardpy.pytest_hardpy.utils import NodeInfo, TestStatus, machine_id
 
 
 class HookReporter(BaseReporter):
@@ -31,12 +31,16 @@ class HookReporter(BaseReporter):
         self.set_doc_value(DF.NAME, doc_name)
         self.set_doc_value(DF.STATUS, TestStatus.READY)
         self.set_doc_value(DF.START_TIME, None)
-        self.set_doc_value(DF.TIMEZONE, None)
         self.set_doc_value(DF.STOP_TIME, None)
-        self.set_doc_value(DF.PROGRESS, 0)
-        self.set_doc_value(DF.DRIVERS, {})
+        self.set_doc_value(DF.PROGRESS, 0, statestore_only=True)
         self.set_doc_value(DF.ARTIFACT, {}, runstore_only=True)
         self.set_doc_value(DF.OPERATOR_MSG, {}, statestore_only=True)
+
+        test_stand_tz = self.generate_key(DF.TEST_STAND, DF.TIMEZONE)
+        self.set_doc_value(test_stand_tz, tzname)
+
+        test_stand_id_key = self.generate_key(DF.TEST_STAND, DF.HW_ID)
+        self.set_doc_value(test_stand_id_key, machine_id())
 
     def start(self) -> None:
         """Start test."""
@@ -44,8 +48,7 @@ class HookReporter(BaseReporter):
         start_time = int(time())
         self.set_doc_value(DF.START_TIME, start_time)
         self.set_doc_value(DF.STATUS, TestStatus.RUN)
-        self.set_doc_value(DF.TIMEZONE, tzname)
-        self.set_doc_value(DF.PROGRESS, 0)
+        self.set_doc_value(DF.PROGRESS, 0, statestore_only=True)
 
     def finish(self, status: TestStatus) -> None:
         """Finish test.
@@ -68,7 +71,7 @@ class HookReporter(BaseReporter):
         Args:
             progress (int): test progress
         """
-        self.set_doc_value(DF.PROGRESS, progress)
+        self.set_doc_value(DF.PROGRESS, progress, statestore_only=True)
 
     def set_assertion_msg(self, module_id: str, case_id: str, msg: str | None) -> None:
         """Set case assertion message.
@@ -163,6 +166,23 @@ class HookReporter(BaseReporter):
         key = self.generate_key(DF.MODULES, module_id, DF.STOP_TIME)
         self._set_time(key)
 
+    def set_case_attempt(self, module_id: str, case_id: str, case_attempt: int) -> None:
+        """Set test case case_attempt.
+
+        Args:
+            module_id (str): module id
+            case_id (str): case id
+            case_attempt (int): test case case_attempt
+        """
+        key = self.generate_key(
+            DF.MODULES,
+            module_id,
+            DF.CASES,
+            case_id,
+            DF.ATTEMPT,
+        )
+        self.set_doc_value(key, case_attempt, statestore_only=True)
+
     def update_node_order(self, nodes: dict) -> None:
         """Update node order.
 
@@ -204,7 +224,6 @@ class HookReporter(BaseReporter):
             DF.STOP_TIME: None,
             DF.ASSERTION_MSG: None,
             DF.MSG: None,
-            DF.ATTEMPT: 0,
         }
 
         if item.get(node_info.module_id) is None:
@@ -223,6 +242,7 @@ class HookReporter(BaseReporter):
 
         if is_only_statestore:
             case_default[DF.DIALOG_BOX] = {}
+            case_default[DF.ATTEMPT] = 0
         item[node_info.module_id][DF.CASES][node_info.case_id] = case_default
 
     def _remove_outdate_node(

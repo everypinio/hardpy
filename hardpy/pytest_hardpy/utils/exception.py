@@ -30,8 +30,8 @@ class DuplicateTestStandNameError(HardpyError):
         super().__init__(self.__doc__)  # type: ignore
 
 
-class DuplicateDialogBoxError(HardpyError):
-    """The dialog box has already been determined."""
+class DuplicateTestStandLocationError(HardpyError):
+    """The test stand location has already been determined."""
 
     def __init__(self) -> None:
         super().__init__(self.__doc__)  # type: ignore

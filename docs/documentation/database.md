@@ -47,7 +47,7 @@ version: "3.8"
 
 services:
   couchserver:
-    image: couchdb:3.3.2
+    image: couchdb:3.4
     ports:
       - "5984:5984"
     environment:
@@ -85,13 +85,13 @@ headers = accept, authorization, content-type, origin, referer, x-csrf-token
 2. The Docker version must be 24.0.0 or higher. Run the Docker container (from the folder with the couchdb.ini file):
 
 ```bash
-docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3
+docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v ./couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.4
 ```
 
 Command for Windows:
 
 ```bash
-docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v .\couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.3.2
+docker run --rm --name couchdb -p 5984:5984 -e COUCHDB_USER=dev -e COUCHDB_PASSWORD=dev -v .\couchdb.ini:/opt/couchdb/etc/local.ini couchdb:3.4
 ```
 
 The container will be deleted after use.
@@ -200,26 +200,28 @@ The **current** document of the **statestore** database contains the following f
 - **_id**: unique document identifier;
 - **progress**: test progress;
 - **stop_time**: end time of testing in Unix seconds;
-- **timezone**: timezone as a list of strings;
 - **start_time**: testing start time in Unix seconds;
 - **status**: test execution status;
 - **name**: test suite name;
 - **dut**: DUT information containing the serial number and additional information;
 - **test_stand**: information about the test stand in the form of a dictionary;
 - **modules**: module information;
-- **drivers**: information about drivers in the form of a dictionary.
 - **operator_msg**: operator message.
 
 The **test_stand** block containt the following fields:
 
   - **name** - test stand name;
-  - **info**: A dictionary containing additional information about the test stand.
+  - **drivers**: information about drivers in the form of a dictionary;
+  - **info**: a dictionary containing additional information about the test stand;
+  - **timezone**: timezone as a list of strings;
+  - **location**: test stand location;
+  - **hw_id**: test stand machine id (GUID) or MAC address.
 
 The **dut** block contains the following fields:
 
   - **serial_number**: DUT serial number;
   - **part_number**: DUT part number;
-  - **info**: A dictionary containing additional information about the DUT, such as batch, board revision, etc.
+  - **info**: a dictionary containing additional information about the DUT, such as batch, board revision, etc.
 
 The **operator_msg** block contains the following fields:
 
@@ -242,7 +244,7 @@ The **modules** block contains the following fields:
         - **stop_time**: test end time in Unix second;
         - **assertion_msg**: error message if the test fails;
         - **msg**: additional message;
-        - **attempt**: attempt counting to pass the case, not yet implemented in the **pytest-hardpy** plugin;
+        - **attempt**: attempt counting to pass the case;
         - **dialog_box**: information about dialog box;
           - **title_bar**: title bar of the dialog box;
           - **dialog_text**: text displayed in the dialog box;
@@ -253,38 +255,40 @@ The **modules** block contains the following fields:
 Example of a **current** document:
 
 ```json
-{
+    {
       "_rev": "44867-3888ae85c19c428cc46685845953b483",
       "_id": "current",
       "progress": 100,
       "stop_time": 1695817266,
-      "timezone": [
-        "CET",
-        "CET"
-      ],
       "start_time": 1695817263,
       "status": "failed",
       "name": "hardpy-stand",
       "dut": {
         "serial_number": "92c5a4bb-ecb0-42c5-89ac-e0caca0919fd",
-        "part_number": "part_number_1",
+        "part_number": "part_1",
         "info": {
           "batch": "test_batch",
           "board_rev": "rev_1"
         }
       },
       "test_stand": {
-        "name": "Test stand 1",
+        "hw_id": "840982098ca2459a7b22cc608eff65d4",
+        "name": "test_stand_1",
         "info": {
-          "geo": "Belgrade",
+          "geo": "Belgrade"
         },
-      },
-      "drivers": {
-        "driver_1": "driver info",
-        "driver_2": {
-          "state": "active",
-          "port": 8000,
-        }
+        "timezone": [
+          "CET",
+          "CET"
+        ],
+        "drivers": {
+          "driver_1": "driver info",
+          "driver_2": {
+            "state": "active",
+            "port": 8000
+          }
+        },
+        "location": "Belgrade_1"
       },
       "operator_msg": {
         "msg": "Operator message",
@@ -300,24 +304,20 @@ Example of a **current** document:
           "cases": {
             "test_dut_info": {
               "status": "passed",
-              "name": "Obtaining information about DUT",
+              "name": "DUT info ",
               "start_time": 1695817263,
               "stop_time": 1695817264,
               "assertion_msg": null,
               "msg": null,
               "attempt": 1,
               "dialog_box": {
-                "title_bar": "Dialog box title",
-                "dialog_text": "Dialog box text",
+                "title_bar": "Example of text input",
+                "dialog_text": "Type some text and press the Confirm button",
                 "widget": {
-                  "type": "checkbox",
                   "info": {
-                    "fields": [
-                      "one",
-                      "two",
-                      "three"
-                    ]
-                  }
+                    "text": "some text"
+                  },
+                  "type": "textinput"
                 }
               }
             },
@@ -327,14 +327,13 @@ Example of a **current** document:
               "start_time": 1695817264,
               "stop_time": 1695817264,
               "assertion_msg": "The test failed because minute 21 is odd! Try again!",
+              "attempt": 1,
               "msg": [
                 "Current minute 21"
-              ],
-              "attempt": 1,
-              "dialog_box": {}
-            },
+              ]
+            }
           }
-        },
+        }
       }
     }
 ```
@@ -346,28 +345,29 @@ Example of a **current** document:
 The **runstore** database is similar to **statestore** database, but there are differences:
 
 - **runstore** contains the **artifact** field for test run, module, and case;
-- **runstore** does not contain **dialog_box** filed.
+- **runstore** does not contain **dialog_box** and **attempt** fields.
 
 The **current** document of **runstore** database contains the following fields:
 
 - **_rev**: current document revision;
 - **_id**: unique document identifier;
-- **progress**: test progress;
 - **stop_time**: end time of testing in Unix seconds;
-- **timezone**: timezone as a list of strings;
 - **start_time**: testing start time in Unix seconds;
 - **status**: test execution status;
 - **name**: test suite name;
 - **dut**: DUT information containing the serial number and additional information;
 - **test_stand**: information about the test stand in the form of a dictionary;
-- **drivers**: information about drivers in the form of a dictionary;
 - **artifact**: an object containing information about artifacts created during the test run;
 - **modules**: module information.
 
 The **test_stand** block containt the following fields:
 
   - **name** - test stand name;
-  - **info**: A dictionary containing additional information about the test stand.
+  - **drivers**: information about drivers in the form of a dictionary;
+  - **info**: a dictionary containing additional information about the test stand;
+  - **timezone**: timezone as a list of strings;
+  - **location**: test stand location;
+  - **hw_id**: test stand machine id (GUID) or MAC address.
 
 The **dut** block contains the following fields:
 
@@ -391,52 +391,46 @@ The **modules** block contains the following fields:
         - **stop_time**: test end time in Unix second;
         - **assertion_msg**: error message if the test fails;
         - **msg**: additional message;
-        - **attempt**: attempt counting to pass the case, not yet implemented in the **pytest-hardpy** plugin;
         - **artifact**: an object containing information about artifacts created during the test case process.
 
 Example of a **current** document:
 
 ```json
-{
+    {
       "_rev": "44867-3888ae85c19c428cc46685845953b483",
       "_id": "current",
-      "progress": 100,
       "stop_time": 1695817266,
-      "timezone": [
-        "CET",
-        "CET"
-      ],
       "start_time": 1695817263,
       "status": "failed",
       "name": "hardpy-stand",
       "dut": {
         "serial_number": "92c5a4bb-ecb0-42c5-89ac-e0caca0919fd",
-        "part_number": "part_number_1",
+        "part_number": "part_1",
         "info": {
           "batch": "test_batch",
           "board_rev": "rev_1"
         }
       },
       "test_stand": {
-        "name": "Test stand 1",
+        "hw_id": "840982098ca2459a7b22cc608eff65d4",
+        "name": "test_stand_1",
         "info": {
-          "geo": "Belgrade",
-        }
+          "geo": "Belgrade"
+        },
+        "timezone": [
+          "CET",
+          "CET"
+        ],
+        "drivers": {
+          "driver_1": "driver info",
+          "driver_2": {
+            "state": "active",
+            "port": 8000
+          }
+        },
+        "location": "Belgrade_1"
       },
-      "drivers": {
-        "driver_1": "driver info",
-        "driver_2": {
-          "state": "active",
-          "port": 8000
-        }
-      },
-      "artifact": {
-        "data_str": "456DATA",
-        "data_int": 12345,
-        "data_dict": {
-          "test_key": "456DATA"
-        }
-      },
+      "artifact": {},
       "modules": {
         "test_1_a": {
           "status": "failed",
@@ -447,13 +441,12 @@ Example of a **current** document:
           "cases": {
             "test_dut_info": {
               "status": "passed",
-              "name": "Obtaining information about DUT",
+              "name": "DUT info",
               "start_time": 1695817263,
               "stop_time": 1695817264,
               "assertion_msg": null,
               "msg": null,
-              "attempt": 1,
-              "artifact": {"data_str": "456DATA"}
+              "artifact": {}
             },
             "test_minute_parity": {
               "status": "failed",
@@ -464,7 +457,6 @@ Example of a **current** document:
               "msg": [
                 "Current minute 21"
               ],
-              "attempt": 1,
               "artifact": {
                 "data_str": "123DATA",
                 "data_int": 12345,
@@ -472,9 +464,9 @@ Example of a **current** document:
                   "test_key": "456DATA"
                 }
               }
-            },
+            }
           }
-        },
+        }
       }
     }
 ```

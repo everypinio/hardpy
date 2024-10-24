@@ -82,17 +82,18 @@ class BaseStore(BaseConnector):
                     DF.INFO: {},
                 },
                 DF.TEST_STAND: {
+                    DF.HW_ID: None,
                     DF.NAME: None,
+                    DF.TIMEZONE: None,
+                    DF.LOCATION: None,
+                    DF.DRIVERS: {},
                     DF.INFO: {},
                 },
-                DF.DRIVERS: {},
             }
 
         # init document
         if DF.MODULES not in doc:
             doc[DF.MODULES] = {}
-
-        doc[DF.DRIVERS] = {}
 
         doc[DF.DUT] = {
             DF.SERIAL_NUMBER: None,
@@ -101,7 +102,11 @@ class BaseStore(BaseConnector):
         }
 
         doc[DF.TEST_STAND] = {
+            DF.HW_ID: None,
             DF.NAME: None,
+            DF.TIMEZONE: None,
+            DF.LOCATION: None,
+            DF.DRIVERS: {},
             DF.INFO: {},
         }
 

@@ -8,7 +8,7 @@ The code for this example can be seen inside the hardpy package
 
 ### how to start
 
-1. Launch `hardpy init minute_parity`
+1. Launch `hardpy init minute_parity`.
 2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
 4. Launch `hardpy run minute_parity`.
@@ -109,7 +109,10 @@ def test_stand_info(module_log: logging.Logger):
     test_stand_name = "Stand 1"
     module_log.info(f"Stand name: {test_stand_name}")
     hardpy.set_stand_name(test_stand_name)
-    info = {"geo": "Moon"}
+    hardpy.set_stand_location("Moon")
+    info = {
+        "some_info": "123",
+    }
     hardpy.set_stand_info(info)
     assert True
 ```

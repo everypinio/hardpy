@@ -2,6 +2,8 @@ import hardpy
 from hardpy.pytest_hardpy.utils.dialog_box import BaseWidget
 from hardpy.pytest_hardpy.utils.exception import WidgetInfoError
 
+assets_path = "tests/test_pytest_hardpy/test_dbx_widgets/assets/"
+
 
 def test_base_widget():
     BaseWidget()
@@ -47,47 +49,47 @@ def test_checkbox_empty_widget():
 
 
 def test_image_widget_png():
-    hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.png")
+    hardpy.ImageWidget(address=f"{assets_path}test.png")
     assert True
 
 
 def test_image_widget_gif():
-    hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.gif")
+    hardpy.ImageWidget(address=f"{assets_path}test.gif")
     assert True
 
 
 def test_image_widget_jpeg():
-    hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.jpeg")
+    hardpy.ImageWidget(address=f"{assets_path}test.jpeg")
     assert True
 
 
 def test_image_widget_pjpg():
-    hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.pjpg")
+    hardpy.ImageWidget(address=f"{assets_path}test.pjpg")
     assert True
 
 
 def test_image_widget_svg():
-    hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.svg")
+    hardpy.ImageWidget(address=f"{assets_path}test.svg")
     assert True
 
 
 def test_image_widget_tif():
-    hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.tif")
+    hardpy.ImageWidget(address=f"{assets_path}test.tif")
     assert True
 
 
 def test_image_widget_wbmp():
-    hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.wbmp")
+    hardpy.ImageWidget(address=f"{assets_path}test.wbmp")
     assert True
 
 
 def test_image_widget_webp():
-    hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.webp")
+    hardpy.ImageWidget(address=f"{assets_path}test.webp")
     assert True
 
 
 def test_image_widget_icon():
-    hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.icon")
+    hardpy.ImageWidget(address=f"{assets_path}test.icon")
     assert True
 
 
@@ -102,7 +104,7 @@ def test_image_widget_with_empty_data():
 
 def test_image_widget_with_incorrect_width():
     try:
-        hardpy.ImageWidget(address="tests/assets/test.png", width=-1)
+        hardpy.ImageWidget(address="123.png", width=-1)
         msg = "WidgetInfoError was not raised"
         raise AssertionError(msg)
     except WidgetInfoError:
@@ -111,7 +113,7 @@ def test_image_widget_with_incorrect_width():
 
 def test_multistep_widget():
     img_widget = hardpy.ImageWidget(
-        address="tests/test_dbx_widgets/assets/test.png",
+        address=f"{assets_path}/test.png",
         width=50,
     )
     steps = [
