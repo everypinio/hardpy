@@ -127,7 +127,7 @@ class ConfigManager:
         cls.tests_path = toml_path
         toml_file = toml_path / "hardpy.toml"
         if not toml_file.exists():
-            logger.error(f"File hardpy.toml not found at path: {toml_file}")
+            logger.error("File hardpy.toml not found at path: %s", toml_file)
             return None
         try:
             with Path.open(toml_path / "hardpy.toml", "r") as f:

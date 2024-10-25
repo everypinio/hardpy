@@ -158,12 +158,12 @@ export function StartConfirmationDialog(props: Props) {
       onClose={handleClose}
       canOutsideClickClose={false}
       style={{
-        width: widgetType === WidgetType.Multistep ? '800px' : 'auto',
-        height: widgetType === WidgetType.Multistep ? '600px' : 'auto',
+        width: 'auto',
+        height: 'auto',
         minWidth: '300px',
         minHeight: '200px',
-        maxWidth: '800px',
-        maxHeight: '600px',
+        maxWidth: '1000px',
+        maxHeight: '800px',
       }}
     >
       <div className={Classes.DIALOG_BODY} style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>

@@ -11,12 +11,12 @@ def test_multiple_steps():
     steps = [
         StepWidget(
             "Step 1",
-            text="Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. ",
+            text="Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. ",  # noqa: E501
             widget=None,
         ),
         StepWidget(
             "Step 2",
-            text="Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. ",
+            text="Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. Content for step. ",  # noqa: E501
             widget=img_widget,
         ),
         StepWidget("Step 3", text=None, widget=img_widget),
