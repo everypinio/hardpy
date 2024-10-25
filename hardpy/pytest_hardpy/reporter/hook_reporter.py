@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from datetime import datetime
 from logging import getLogger
-from time import time, tzname
+from time import time
 
 from natsort import natsorted
 
@@ -37,7 +38,7 @@ class HookReporter(BaseReporter):
         self.set_doc_value(DF.OPERATOR_MSG, {}, statestore_only=True)
 
         test_stand_tz = self.generate_key(DF.TEST_STAND, DF.TIMEZONE)
-        self.set_doc_value(test_stand_tz, tzname)
+        self.set_doc_value(test_stand_tz, datetime.now().astimezone().tzname())
 
         test_stand_id_key = self.generate_key(DF.TEST_STAND, DF.HW_ID)
         self.set_doc_value(test_stand_id_key, machine_id())
@@ -166,13 +167,13 @@ class HookReporter(BaseReporter):
         key = self.generate_key(DF.MODULES, module_id, DF.STOP_TIME)
         self._set_time(key)
 
-    def set_case_attempt(self, module_id: str, case_id: str, case_attempt: int) -> None:
-        """Set test case case_attempt.
+    def set_case_attempt(self, module_id: str, case_id: str, attempt: int) -> None:
+        """Set test case current attempt.
 
         Args:
             module_id (str): module id
             case_id (str): case id
-            case_attempt (int): test case case_attempt
+            attempt (int): test case current attempt
         """
         key = self.generate_key(
             DF.MODULES,
@@ -181,7 +182,7 @@ class HookReporter(BaseReporter):
             case_id,
             DF.ATTEMPT,
         )
-        self.set_doc_value(key, case_attempt, statestore_only=True)
+        self.set_doc_value(key, attempt, statestore_only=True)
 
     def update_node_order(self, nodes: dict) -> None:
         """Update node order.

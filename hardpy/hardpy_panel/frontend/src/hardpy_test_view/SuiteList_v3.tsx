@@ -85,8 +85,7 @@ export class SuiteList extends React.Component<Props> {
         const db_state = this.props.db_state;
         const start = db_state.start_time ? new Date(db_state.start_time * 1000).toLocaleString() : ""
         const stop = db_state.stop_time ? new Date(db_state.stop_time * 1000).toLocaleString() : ""
-        const start_tz = db_state.timezone ? db_state.timezone[0] : ""
-        const stop_tz = db_state.timezone ? db_state.timezone[1] : ""
+        const start_tz = db_state.timezone ? db_state.timezone : ""
 
 
         let module_names: string[] = []
@@ -115,7 +114,7 @@ export class SuiteList extends React.Component<Props> {
                         <Tag minimal style={TAG_ELEMENT_STYLE}>Start time: {start + start_tz}</Tag>
                     }
                     {stop &&
-                        <Tag minimal style={TAG_ELEMENT_STYLE}>Finish time: {stop + stop_tz}</Tag>
+                        <Tag minimal style={TAG_ELEMENT_STYLE}>Finish time: {stop + start_tz}</Tag>
                     }
                     <Divider />
                     {_.map(
