@@ -1,9 +1,5 @@
 <h1 align="center">
-    <img src="https://everypinio.github.io/hardpy/img/logo256.png" alt="HardPy" style="width:200px;">
-</h1>
-
-<h1 align="center">
-    <b>HardPy</b>
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/logo256.png" alt="HardPy" style="width:150px;">
 </h1>
 
 <p align="center">
@@ -29,6 +25,10 @@ HardPy allows you to:
 * Use a browser to view, start, stop, and interact with tests;
 * Store test results in the [CouchDB](https://couchdb.apache.org/) database.
 
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/hardpy_panel.gif" alt="hardpy panel" style="width:550px;">
+</h1>
+
 ## To Install
 
 ```bash
@@ -51,20 +51,9 @@ docker compose up -d
 hardpy run
 ```
 4. View operator panel in browser: http://localhost:8000/
-
-  <h1 align="center">
-      <img src="https://everypinio.github.io/hardpy/img/hardpy_operator_panel_hello_hardpy.png"
-      alt="hardpy operator panel" style="width:600px;">
-  </h1>
-
 5. View the latest test report: http://localhost:5984/_utils
 
     Login and password: **dev**, database - **runstore**, document - **current**.
-
-  <h1 align="center">
-      <img src="https://everypinio.github.io/hardpy/img/runstore_hello_hardpy.png"
-      alt="hardpy runstore" style="width:500px;">
-  </h1>
 
 ## Examples
 
