@@ -2,10 +2,8 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
-import socket
 from dataclasses import dataclass
 from os import environ
-from time import sleep
 from typing import Any
 from uuid import uuid4
 
@@ -19,12 +17,12 @@ from hardpy.pytest_hardpy.db import (
 )
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
-    ConnectionData,
     DialogBox,
     DuplicatePartNumberError,
     DuplicateSerialNumberError,
     DuplicateTestStandLocationError,
     DuplicateTestStandNameError,
+    SocketServer,
 )
 
 
@@ -294,6 +292,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     if not dialog_box_data.dialog_text:
         msg = "The 'dialog_text' argument cannot be empty."
         raise ValueError(msg)
+    socket_server = SocketServer()
     current_test = _get_current_test()
     reporter = RunnerReporter()
     key = reporter.generate_key(
@@ -307,13 +306,10 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     reporter.set_doc_value(key, {}, statestore_only=True)
     reporter.update_db_by_doc()
 
-    # TODO @RiByryn: solve problem with dialog box attempts without sleep
-    sleep(0.2)
-
     reporter.set_doc_value(key, dialog_box_data.to_dict(), statestore_only=True)
     reporter.update_db_by_doc()
 
-    input_dbx_data = _get_socket_raw_data()
+    input_dbx_data = _get_socket_raw_data(socket_server)
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
 
@@ -327,18 +323,18 @@ def set_operator_message(msg: str, title: str | None = None) -> None:
         msg (str): Message
         title (str | None): Title
     """
+    socket_server = SocketServer()
     reporter = RunnerReporter()
     key = reporter.generate_key(
         DF.OPERATOR_MSG,
     )
     reporter.set_doc_value(key, {}, statestore_only=True)
     reporter.update_db_by_doc()
-    # TODO @RiByryn: solve problem with operator msg attempts without sleep
-    sleep(0.2)
+
     msg_data = {"msg": msg, "title": title, "visible": True}
     reporter.set_doc_value(key, msg_data, statestore_only=True)
     reporter.update_db_by_doc()
-    is_msg_visible = _get_socket_raw_data()
+    is_msg_visible = _get_socket_raw_data(socket_server)
     msg_data["visible"] = is_msg_visible
     reporter.set_doc_value(key, msg_data, statestore_only=True)
     reporter.update_db_by_doc()
@@ -379,20 +375,8 @@ def _get_current_test() -> CurrentTestInfo:
     return CurrentTestInfo(module_id=module_id, case_id=case_id)
 
 
-def _get_socket_raw_data() -> str:
-    # create socket connection
-    server = socket.socket()
-    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    con_data = ConnectionData()
-
-    try:
-        server.bind((con_data.socket_host, con_data.socket_port))
-    except OSError as exc:
-        msg = "Socket creating error"
-        server.close()
-        raise RuntimeError(msg) from exc
-    server.listen(1)
-    client, _ = server.accept()
+def _get_socket_raw_data(socket_server: SocketServer) -> str:
+    client, _ = socket_server.accept()
 
     # receive data
     max_input_data_len = 1024
@@ -400,6 +384,5 @@ def _get_socket_raw_data() -> str:
 
     # close connection
     client.close()
-    server.close()
 
     return socket_data

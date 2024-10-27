@@ -24,12 +24,14 @@ from hardpy.pytest_hardpy.utils.machineid import machine_id
 from hardpy.pytest_hardpy.utils.node_info import NodeInfo
 from hardpy.pytest_hardpy.utils.progress_calculator import ProgressCalculator
 from hardpy.pytest_hardpy.utils.singleton import SingletonMeta
+from hardpy.pytest_hardpy.utils.socket_server import SocketServer
 
 __all__ = [
     "NodeInfo",
     "ProgressCalculator",
     "TestStatus",
     "SingletonMeta",
+    "SocketServer",
     "ConnectionData",
     "DuplicateSerialNumberError",
     "DuplicatePartNumberError",
