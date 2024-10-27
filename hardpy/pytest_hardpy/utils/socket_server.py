@@ -14,8 +14,7 @@ class SocketServer:
         con_data = ConnectionData()
 
         bind_exc = None
-        connect_attemt = 5
-        for _ in range(connect_attemt):
+        for _ in range(5):
             try:
                 self._server.bind((con_data.socket_host, con_data.socket_port))
                 break
