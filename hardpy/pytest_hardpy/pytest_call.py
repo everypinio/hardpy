@@ -5,7 +5,6 @@ from __future__ import annotations
 import socket
 from dataclasses import dataclass
 from os import environ
-from time import sleep
 from typing import Any
 from uuid import uuid4
 
@@ -307,13 +306,14 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     reporter.set_doc_value(key, {}, statestore_only=True)
     reporter.update_db_by_doc()
 
-    # TODO @RiByryn: solve problem with dialog box attempts without sleep
-    sleep(0.2)
-
     reporter.set_doc_value(key, dialog_box_data.to_dict(), statestore_only=True)
     reporter.update_db_by_doc()
 
     input_dbx_data = _get_socket_raw_data()
+
+    # cleanup widget
+    reporter.set_doc_value(key, {}, statestore_only=True)
+    reporter.update_db_by_doc()
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
 
@@ -333,14 +333,17 @@ def set_operator_message(msg: str, title: str | None = None) -> None:
     )
     reporter.set_doc_value(key, {}, statestore_only=True)
     reporter.update_db_by_doc()
-    # TODO @RiByryn: solve problem with operator msg attempts without sleep
-    sleep(0.2)
+
     msg_data = {"msg": msg, "title": title, "visible": True}
     reporter.set_doc_value(key, msg_data, statestore_only=True)
     reporter.update_db_by_doc()
     is_msg_visible = _get_socket_raw_data()
     msg_data["visible"] = is_msg_visible
     reporter.set_doc_value(key, msg_data, statestore_only=True)
+    reporter.update_db_by_doc()
+
+    # cleanup widget
+    reporter.set_doc_value(key, {}, statestore_only=True)
     reporter.update_db_by_doc()
 
 
