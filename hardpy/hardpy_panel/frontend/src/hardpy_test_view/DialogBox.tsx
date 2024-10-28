@@ -1,7 +1,7 @@
 // Copyright (c) 2024 Everypin
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Button, Classes, Dialog, InputGroup, Radio, Checkbox, Tab, Tabs } from '@blueprintjs/core';
 import { notification } from 'antd';
@@ -54,6 +54,8 @@ export function StartConfirmationDialog(props: Props) {
   const [inputText, setInputText] = useState('');
   const [selectedRadioButton, setSelectedRadioButton] = useState('');
   const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
+  const imgRef = useRef(null);
+  const [imgStyle, setImgStyle] = useState({});
 
   const handleClose = () => {
     setDialogOpen(false);
@@ -150,6 +152,58 @@ export function StartConfirmationDialog(props: Props) {
   const widgetType = props.widget_type || WidgetType.Base;
   const inputPlaceholder = "enter answer";
 
+  useEffect(() => {
+    const imgRef = React.createRef<HTMLImageElement>();
+
+
+    if (imgRef.current !== null) {
+      const originalWidth = imgRef.current.naturalWidth;
+      const originalHeight = imgRef.current.naturalHeight;
+
+      const percentWidth = props.widget_info?.width ?? 100;
+      const containerWidth = 1000;
+      const containerHeight = 800;
+
+      const widthInPixels = (percentWidth / 100) * containerWidth;
+
+      if (widthInPixels > containerWidth || originalHeight > containerHeight) {
+        const aspectRatio = originalWidth / originalHeight;
+
+        let newWidth, newHeight;
+
+        if (widthInPixels > containerWidth) {
+          newWidth = containerWidth;
+          newHeight = newWidth / aspectRatio;
+        } else {
+          newWidth = widthInPixels;
+          newHeight = newWidth / aspectRatio;
+
+          if (newHeight > containerHeight) {
+            newHeight = containerHeight;
+            newWidth = newHeight * aspectRatio;
+          }
+        }
+
+        setImgStyle({
+          width: `${newWidth}px`,
+          height: `${newHeight}px`,
+        });
+      } else {
+        setImgStyle({
+          width: `${widthInPixels}px`,
+          height: 'auto',
+        });
+      }
+    } else {
+      console.log('No img ref AAAAAAAAAAAAAAA');
+      setImgStyle({
+        width: '20',
+        height: '20',
+      });
+    }
+
+  }, [props.widget_info]);
+
   return (
     <Dialog
       title={props.title_bar}
@@ -226,9 +280,10 @@ export function StartConfirmationDialog(props: Props) {
         {widgetType === WidgetType.Image && (
           <div className="image-container">
             <img
+              ref={imgRef}
               src={`data:image/${props.widget_info?.format};base64,${props.widget_info?.base64}`}
               alt="Image"
-              style={{ width: props.widget_info?.width && props.widget_info.width <= 800 ? `${props.widget_info.width}%` : 'auto', height: 'auto', display: 'block', margin: '0 auto' }}
+              style={imgStyle}
             />
           </div>
         )}

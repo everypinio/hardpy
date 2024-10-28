@@ -10,8 +10,9 @@ def test_upload_image():
     dbx = DialogBox(
         dialog_text="Test imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest imageTest image",  # noqa: E501
         widget=ImageWidget(
-            address="assets/test.icon",
-            width=50,
+            address="assets/sample_1920x1280.gif",
+            # address="assets/test.png",
+            width=20,
         ),
     )
     response = run_dialog_box(dbx)
