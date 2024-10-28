@@ -26,7 +26,7 @@ class SocketServer:
         else:
             self._server.close()
             msg = (
-                "Socket creating error by"
+                "Socket creating error by "
                 f"{con_data.socket_host}:{con_data.socket_port}"
             )
             raise RuntimeError(msg) from bind_exc
