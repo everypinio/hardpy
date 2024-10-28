@@ -2,7 +2,7 @@
     "recommendations": [
         "ms-python.python",
         "njpwerner.autodocstring",
-        "lextudio.restructuredtext",
+        "charliermarsh.ruff",
         "bungcip.better-toml",
     ]
 }

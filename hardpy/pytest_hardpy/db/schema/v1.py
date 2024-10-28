@@ -177,10 +177,7 @@ class TestStand(BaseModel):
         "info": {
           "geo": "Belgrade"
         },
-        "timezone": [
-          "CET",
-          "CET"
-        ],
+        "timezone": "CET",
         "drivers": {
           "driver_1": "driver info",
           "driver_2": {
@@ -198,7 +195,7 @@ class TestStand(BaseModel):
 
     hw_id: str | None = None
     name: str | None = None
-    timezone: tuple[str, str] | None = None
+    timezone: str | None = None
     drivers: dict = {}
     info: dict = {}
     location: str | None = None
@@ -231,10 +228,7 @@ class ResultStateStore(IBaseResult):
         "info": {
           "geo": "Belgrade"
         },
-        "timezone": [
-          "CET",
-          "CET"
-        ],
+        "timezone": "CET",
         "drivers": {
           "driver_1": "driver info",
           "driver_2": {
@@ -330,10 +324,7 @@ class ResultRunStore(IBaseResult):
         "info": {
           "geo": "Belgrade"
         },
-        "timezone": [
-          "CET",
-          "CET"
-        ],
+        "timezone": "CET",
         "drivers": {
           "driver_1": "driver info",
           "driver_2": {

@@ -23,7 +23,7 @@ def test_minute_parity(current_minute):  # noqa: ANN001
 @pytest.mark.attempt(3)
 def test_dialog_box():
     dbx = DialogBox(
-        dialog_text="Print '123', if you want to fail attempt. Print 'ok', if you want to pass attempt. ",  # noqa: E501
+        dialog_text="Print 'ok', if you want to pass attempt.",
         title_bar="Example of text input",
         widget=TextInputWidget(),
     )
