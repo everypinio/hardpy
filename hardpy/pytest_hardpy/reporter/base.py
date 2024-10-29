@@ -2,21 +2,30 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from logging import getLogger
+from typing import Any
 
-from hardpy.pytest_hardpy.db import StateStore, RunStore
+from hardpy.pytest_hardpy.db import (
+    DatabaseField as DF,  # noqa: N817
+    RunStore,
+    StateStore,
+)
 
 
 class BaseReporter:
     """Base class for test reporter."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._statestore = StateStore()
         self._runstore = RunStore()
         self._log = getLogger(__name__)
 
     def set_doc_value(
-        self, key: str, value, runstore_only=False, statestore_only=False
-    ):
+        self,
+        key: str,
+        value: Any,  # noqa: ANN401
+        runstore_only: bool = False,
+        statestore_only: bool = False,
+    ) -> None:
         """Set value to the document.
 
         Update a document without writing to the database.
@@ -33,7 +42,8 @@ class BaseReporter:
             ValueError: if both runstore_only and statestore_only are True
         """
         if runstore_only and statestore_only:
-            raise ValueError("Both runstore_only and statestore_only cannot be True")
+            msg = "Both runstore_only and statestore_only cannot be True"
+            raise ValueError(msg)
         if runstore_only:
             self._runstore.update_doc(key, value)
             return
@@ -43,12 +53,12 @@ class BaseReporter:
         self._runstore.update_doc(key, value)
         self._statestore.update_doc(key, value)
 
-    def update_db_by_doc(self):
+    def update_db_by_doc(self) -> None:
         """Update database by current document."""
         self._statestore.update_db()
         self._runstore.update_db()
 
-    def generate_key(self, *args) -> str:
+    def generate_key(self, *args: Any) -> str:  # noqa: ANN401
         """Generate key for database.
 
         Args:
@@ -58,3 +68,18 @@ class BaseReporter:
             str: database key
         """
         return ".".join(args)
+
+    def get_current_attempt(self, module_id: str, case_id: str) -> int:
+        """Get current attempt.
+
+        Returns:
+            int: current attempt
+        """
+        key = self.generate_key(
+            DF.MODULES,
+            module_id,
+            DF.CASES,
+            case_id,
+            DF.ATTEMPT,
+        )
+        return self._statestore.get_field(key)

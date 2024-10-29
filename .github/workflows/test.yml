@@ -16,7 +16,7 @@ jobs:
       # Label used to access the service container
       db:
         # Docker Hub image
-        image: couchdb:3.3.2
+        image: couchdb:3.4
         env:
           COUCHDB_USER: dev
           COUCHDB_PASSWORD: dev

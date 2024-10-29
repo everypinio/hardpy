@@ -8,7 +8,7 @@ The code for this example can be seen inside the hardpy package
 
 ### how to start
 
-1. Launch `hardpy init couchdb_load`
+1. Launch `hardpy init couchdb_load`.
 2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
 4. Launch `hardpy run couchdb_load`.
@@ -22,7 +22,6 @@ Contains settings and fixtures for all tests:
 
 ```python
 import pytest
-
 from hardpy import (
     CouchdbLoader,
     CouchdbConfig,
@@ -46,8 +45,6 @@ def fill_actions_after_test(post_run_functions: list):
 Contains two simple examples of a valid test.
 
 ```python
-import pytest
-
 def test_one():
     assert True
 
@@ -60,11 +57,9 @@ def test_two():
 Contains two simple examples: a valid test and an invalid test.
 
 ```python
-import pytest
-
 def test_three():
     assert True
 
 def test_four():
-    assert False
+    raise AssertionError
 ```

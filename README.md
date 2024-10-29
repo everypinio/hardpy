@@ -1,22 +1,19 @@
 <h1 align="center">
-    <img src="https://everypinio.github.io/hardpy/img/logo256.png" alt="HardPy" style="width:200px;">
-</h1>
-
-<h1 align="center">
-    <b>HardPy</b>
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/logo256.png" alt="HardPy" style="width:150px;">
 </h1>
 
 <p align="center">
 HardPy is a python library for creating a test bench for devices.
 </p>
 
----
+<div align="center">
 
-**Documentation**: <a href=https://everypinio.github.io/hardpy/ target="_blank">https://everypinio.github.io/hardpy/</a>
+[![PyPI version](https://badge.fury.io/py/hardpy.svg)](https://badge.fury.io/py/hardpy)
+![python versions](https://img.shields.io/pypi/pyversions/hardpy.svg)
+[![pytest versions](https://img.shields.io/badge/pytest-%3E%3D7.0%20%3C9.0-blue)](https://docs.pytest.org/en/latest/)
+[![Documentation](https://img.shields.io/badge/Documentation%20-Overview%20-%20%23007ec6)](https://everypinio.github.io/hardpy/)
 
-**Source Code**: <a href=https://github.com/everypinio/hardpy target="_blank">https://github.com/everypinio/hardpy</a>
-
-**PyPi**: <a href=https://pypi.org/project/hardpy/ target="_blank">https://pypi.org/project/hardpy/</a>
+</div>
 
 ---
 
@@ -27,6 +24,10 @@ HardPy allows you to:
 * Create test benches for devices using [pytest](https://docs.pytest.org/);
 * Use a browser to view, start, stop, and interact with tests;
 * Store test results in the [CouchDB](https://couchdb.apache.org/) database.
+
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/hardpy_panel.gif" alt="hardpy panel" style="width:550px;">
+</h1>
 
 ## To Install
 
@@ -50,20 +51,9 @@ docker compose up -d
 hardpy run
 ```
 4. View operator panel in browser: http://localhost:8000/
-
-  <h1 align="center">
-      <img src="https://everypinio.github.io/hardpy/img/hardpy_operator_panel_hello_hardpy.png"
-      alt="hardpy operator panel" style="width:600px;">
-  </h1>
-
 5. View the latest test report: http://localhost:5984/_utils
 
     Login and password: **dev**, database - **runstore**, document - **current**.
-
-  <h1 align="center">
-      <img src="https://everypinio.github.io/hardpy/img/runstore_hello_hardpy.png"
-      alt="hardpy runstore" style="width:500px;">
-  </h1>
 
 ## Examples
 

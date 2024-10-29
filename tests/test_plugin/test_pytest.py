@@ -8,7 +8,7 @@ def test_correct_db_url(pytester: Pytester):
 
         def test_passed():
             assert True
-    """
+    """,
     )
     result = pytester.runpytest("--hardpy-pt")
     result.assert_outcomes(passed=1)

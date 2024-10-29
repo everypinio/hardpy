@@ -1,9 +1,9 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-import os
 import re
 from enum import Enum
+from pathlib import Path
 from urllib.parse import unquote
 
 from fastapi import FastAPI
@@ -16,7 +16,7 @@ app = FastAPI()
 app.state.pytest_wrp = PyTestWrapper()
 
 
-class Status(str, Enum):  # noqa: WPS600
+class Status(str, Enum):
     """Pytest run status.
 
     Statuses, that can be returned by HardPy to frontend.
@@ -31,7 +31,7 @@ class Status(str, Enum):  # noqa: WPS600
 
 
 @app.get("/api/start")
-def start_pytest():
+def start_pytest() -> dict:
     """Start pytest subprocess.
 
     Returns:
@@ -43,7 +43,7 @@ def start_pytest():
 
 
 @app.get("/api/stop")
-def stop_pytest():
+def stop_pytest() -> dict:
     """Stop pytest subprocess.
 
     Returns:
@@ -55,7 +55,7 @@ def stop_pytest():
 
 
 @app.get("/api/collect")
-def collect_pytest():
+def collect_pytest() -> dict:
     """Collect pytest subprocess.
 
     Returns:
@@ -68,7 +68,7 @@ def collect_pytest():
 
 
 @app.get("/api/couch")
-def couch_connection():
+def couch_connection() -> dict:
     """Get couchdb connection string.
 
     Returns:
@@ -82,7 +82,7 @@ def couch_connection():
 
 
 @app.post("/api/confirm_dialog_box/{dialog_box_output}")
-def confirm_dialog_box(dialog_box_output: str):
+def confirm_dialog_box(dialog_box_output: str) -> dict:
     """Confirm dialog box.
 
     Args:
@@ -105,7 +105,7 @@ def confirm_dialog_box(dialog_box_output: str):
 
 
 @app.post("/api/confirm_operator_msg/{is_msg_visible}")
-def confirm_operator_msg(is_msg_visible: bool):
+def confirm_operator_msg(is_msg_visible: str) -> dict:
     """Confirm operator msg.
 
     Args:
@@ -122,7 +122,7 @@ def confirm_operator_msg(is_msg_visible: bool):
 app.mount(
     "/",
     StaticFiles(
-        directory=(os.path.dirname(__file__)) + "/frontend/dist",  # noqa: WPS336
+        directory=Path(__file__).parent / "frontend/dist",
         html=True,
     ),
     name="static",

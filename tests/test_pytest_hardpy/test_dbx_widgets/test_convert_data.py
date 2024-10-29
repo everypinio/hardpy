@@ -1,7 +1,5 @@
 from math import inf
 
-import pytest
-
 import hardpy
 from hardpy.pytest_hardpy.utils.dialog_box import BaseWidget
 
@@ -47,7 +45,9 @@ def test_checkbox_widget():
 
 
 def test_image_widget():
-    widget = hardpy.ImageWidget(address="tests/test_dbx_widgets/assets/test.png")
+    widget = hardpy.ImageWidget(
+        address="tests/test_pytest_hardpy/test_dbx_widgets/assets/test.png",
+    )
     assert widget.convert_data() is True
 
 

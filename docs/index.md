@@ -1,18 +1,10 @@
 <h1 align="center">
-    <img src="https://everypinio.github.io/hardpy/img/logo256.png" alt="HardPy" style="width:200px;">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/logo256.png" alt="HardPy" style="width:150px;">
 </h1>
 
 <p align="center">
 HardPy is a python library for creating a test bench for devices.
 </p>
-
----
-
-**Documentation**: <a href=https://everypinio.github.io/hardpy/ target="_blank">https://everypinio.github.io/hardpy/</a>
-
-**Source Code**: <a href=https://github.com/everypinio/hardpy target="_blank">https://github.com/everypinio/hardpy</a>
-
-**PyPi**: <a href=https://pypi.org/project/hardpy/ target="_blank">https://pypi.org/project/hardpy/</a>
 
 ---
 
@@ -23,6 +15,10 @@ HardPy allows you to:
 * Create test benches for devices using [pytest](https://docs.pytest.org/);
 * Use a browser to view, start, stop, and interact with tests;
 * Store test results in the [CouchDB](https://couchdb.apache.org/) database.
+
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/hardpy_panel.gif" alt="hardpy panel" style="width:600;">
+</h1>
 
 ## To Install
 
@@ -47,7 +43,7 @@ hardpy run
 ```
 4. View operator panel in browser: http://localhost:8000/
   <h1 align="center">
-      <img src="https://everypinio.github.io/hardpy/img/hardpy_operator_panel_hello_hardpy.png"
+      <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/hardpy_operator_panel_hello_hardpy.png"
       alt="hardpy operator panel" style="width:600px;">
   </h1>
 5. View the latest test report: http://localhost:5984/_utils
@@ -55,6 +51,6 @@ hardpy run
     Login and password: **dev**, database - **runstore** , document - **current**.
 
   <h1 align="center">
-      <img src="https://everypinio.github.io/hardpy/img/runstore_hello_hardpy.png"
+      <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/runstore_hello_hardpy.png"
       alt="hardpy runstore" style="width:500px;">
   </h1>

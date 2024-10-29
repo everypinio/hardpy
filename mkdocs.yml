@@ -61,6 +61,7 @@ nav:
       - Skip test: examples/skip_test.md
       - CouchDB in RAM: examples/db_in_ram.md
       - Operator message: examples/operator_msg.md
+      - Attempts: examples/attempts.md
   - About:
       - Development: about/development.md
   - Changelog: changelog.md

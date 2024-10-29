@@ -8,7 +8,7 @@ The code for this example can be seen inside the hardpy package
 
 ### how to start
 
-1. Launch `hardpy init minute_parity`
+1. Launch `hardpy init minute_parity`.
 2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
 4. Launch `hardpy run minute_parity`.
@@ -25,16 +25,15 @@ Contains settings and fixtures for all tests:
 ```python
 import logging
 import pytest
-
+from driver_example import DriverExample
 from hardpy import (
-    CouchdbLoader,
     CouchdbConfig,
+    CouchdbLoader,
     get_current_report,
 )
-from driver_example import DriverExample
 
 @pytest.fixture(scope="module")
-def module_log(request):
+def module_log(request: pytest.FixtureRequest):
     log_name = request.module.__name__
     yield logging.getLogger(log_name)
 
@@ -66,7 +65,7 @@ import datetime
 from logging import getLogger
 
 class DriverExample:
-    def __init__(self):
+    def __init__(self) -> None:
         self._log = getLogger(__name__)
 
     @property
@@ -90,7 +89,6 @@ Contains tests related to preparation for the testing process:
 ```python
 import logging
 from uuid import uuid4
-
 import pytest
 import hardpy
 
@@ -106,13 +104,15 @@ def test_dut_info(module_log: logging.Logger):
     hardpy.set_dut_info(info)
     assert True
 
-
 @pytest.mark.case_name("Test stand info")
 def test_stand_info(module_log: logging.Logger):
     test_stand_name = "Stand 1"
     module_log.info(f"Stand name: {test_stand_name}")
     hardpy.set_stand_name(test_stand_name)
-    info = {"geo": "Moon"}
+    hardpy.set_stand_location("Moon")
+    info = {
+        "some_info": "123",
+    }
     hardpy.set_stand_info(info)
     assert True
 ```
@@ -128,9 +128,8 @@ Contains basic tests:
 
 ```python
 import pytest
-import hardpy
-
 from driver_example import DriverExample
+import hardpy
 
 pytestmark = pytest.mark.module_name("Main tests")
 
@@ -141,7 +140,7 @@ def test_minute_parity(driver_example: DriverExample):
     result = minute % 2
     data = {"minute": minute}
     hardpy.set_case_artifact(data)
-    assert (result == 0), f"The test failed because {minute} is odd! Try again!"
+    assert result == 0, f"The test failed because {minute} is odd! Try again!"
 ```
 
 ### test_3.py
@@ -157,7 +156,6 @@ If `test_2::test_minute_parity` fails, `test_3` will be skipped
 
 ```python
 from time import sleep
-
 import pytest
 import hardpy
 

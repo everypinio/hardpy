@@ -1,0 +1,75 @@
+line-length = 88
+indent-width = 4
+
+[lint]
+    select = ["ALL"]
+    exclude = [
+        ".git",
+        "__pycache__",
+        ".venv",
+        "env",
+        "dist",
+        "build",
+        "docs",
+        "benchmarks",
+    ]
+    ignore = [
+        "ANN101", # Missing type annotation for `self` in method
+        "ANN102", # Missing type annotation for `cls` in classmethod
+        "D100",   # Missing docstring in public module
+        "D105",   # Missing docstring in magic method
+        "D107",   # Missing docstring in `__init__`
+        "FIX002", # Allow TODO
+        "TD003",  # Allow TODO withot task link
+        "PGH003",
+        "D104",   # Missing docstring in public package
+        "FBT001", # Boolean positional arg in function call
+        "FBT002", # Boolean default value in function call
+        "FBT003", # Boolean positional arg in function definition
+        "PT013",  # Pytest import
+        "G004",   # Logging f-string
+    ]
+
+    [lint.isort]
+        combine-as-imports = true
+        case-sensitive = true
+        force-to-top = ["src"]
+
+    [lint.mccabe]
+        max-complexity = 12
+
+    [lint.pydocstyle]
+        convention = "google"
+
+    [lint.pylint]
+        max-returns = 8
+        max-locals = 10
+        max-public-methods = 20
+
+    [lint.per-file-ignores]
+        "**/__init__.py" = [
+            "F401", # unused imports
+        ]
+        "tests/*" = [
+            "D104",    # Missing docstring in public package
+            "D103",    # Missing docstring in public function
+            "S101",    # use of `assert` detected
+            "S105",    # Possible hardcoded password
+            "S106",    # Possible hardcoded password
+            "S603",    # Subprocess without shell
+            "ANN201",  # To prevent tests from being returned None, it is mandatory
+            "INP001",  # Imports of pytest and hardpy
+            "PT022",   # Using yield
+            "PLR2004", # Magic value used in comparison
+        ]
+        "examples/*" = [
+            "D104",   # Missing docstring in public package
+            "D103",   # Missing docstring in public function
+            "S101",   # use of `assert` detected   
+            "S106",   # Possible hardcoded password
+            "ANN201", # To prevent tests from being returned None
+            "INP001", # Imports of pytest and hardpy
+            "PT022",  # Using yield
+        ]
+        "hardpy/cli/template.py" = ["D102"]
+        "hardpy/cli/cli.py" = ["T201"] # using print

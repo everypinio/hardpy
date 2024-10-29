@@ -16,7 +16,9 @@
             "type": "debugpy",
             "request": "launch",
             "module": "pytest",
-            "args": ["${workspaceFolder}/tests"],
+            "args": [
+                "${workspaceFolder}/tests"
+            ],
             "console": "integratedTerminal"
         },
         {
@@ -32,7 +34,6 @@
             "request": "launch",
             "module": "hardpy.cli.cli",
             "console": "integratedTerminal",
-
         },
         {
             "name": "HardPy: Run template",
@@ -40,7 +41,10 @@
             "request": "launch",
             "module": "hardpy.cli.cli",
             "console": "integratedTerminal",
-            "args": ["run", "template"]
+            "args": [
+                "run",
+                "template"
+            ]
         },
         {
             "name": "Python: Example Hello HardPy",
@@ -48,7 +52,10 @@
             "request": "launch",
             "module": "hardpy.cli.cli",
             "console": "integratedTerminal",
-            "args": ["run", "examples/hello_hardpy"]
+            "args": [
+                "run",
+                "examples/hello_hardpy"
+            ]
         },
         {
             "name": "Python: Example CouchDB load",
@@ -56,7 +63,10 @@
             "request": "launch",
             "module": "hardpy.cli.cli",
             "console": "integratedTerminal",
-            "args": ["run", "examples/couchdb_load"]
+            "args": [
+                "run",
+                "examples/couchdb_load"
+            ]
         },
         {
             "name": "Python: Example Minute parity",
@@ -64,7 +74,10 @@
             "request": "launch",
             "module": "hardpy.cli.cli",
             "console": "integratedTerminal",
-            "args": ["run", "examples/minute_parity"]
+            "args": [
+                "run",
+                "examples/minute_parity"
+            ]
         },
         {
             "name": "Python: Example Dialog box",
@@ -72,7 +85,21 @@
             "request": "launch",
             "module": "hardpy.cli.cli",
             "console": "integratedTerminal",
-            "args": ["run", "examples/dialog_box"]
+            "args": [
+                "run",
+                "examples/dialog_box"
+            ]
+        },
+        {
+            "name": "Python: Example Attempts",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "run",
+                "examples/attempts"
+            ]
         }
     ]
 }

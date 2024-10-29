@@ -5,7 +5,7 @@ The code for this example can be seen inside the hardpy package [Hello Hardpy](h
 
 ### how to start
 
-1. Launch `hardpy init hello_hardpy`
+1. Launch `hardpy init hello_hardpy`.
 2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
 3. Launch `hardpy run hello_hardpy`.
 
@@ -14,8 +14,6 @@ The code for this example can be seen inside the hardpy package [Hello Hardpy](h
 Contains the simplest example of a valid test.
 
 ```python
-import pytest
-
 def test_one():
     assert True
 ```

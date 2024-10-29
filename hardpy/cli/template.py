@@ -9,7 +9,7 @@ docker_compose_yaml = """version: "3.8"
 
 services:
   couchserver:
-    image: couchdb:3.3.2
+    image: couchdb:3.4
     ports:
       - "{}:5984"
     environment:
@@ -129,7 +129,7 @@ headers = accept, authorization, content-type, origin, referer, x-csrf-token
 ; changing this.
 [admins]
 ;admin = mysecretpassword
-"""
+"""  # noqa: E501
 
 pytest_ini = """[pytest]
 log_cli = true
@@ -172,17 +172,17 @@ def fill_actions_after_test(post_run_functions: list):
 class TemplateGenerator:
     """HardPy template files generator."""
 
-    def __init__(self, config: HardpyConfig):
+    def __init__(self, config: HardpyConfig) -> None:
         self._config = config
 
-    def create_file(self, file_path: Path, content: str):
+    def create_file(self, file_path: Path, content: str) -> None:
         """Create HardPy template file.
 
         Args:
             file_path (Path): file path
             content (str): file content
         """
-        with open(file_path, "w") as file:
+        with Path.open(file_path, "w") as file:
             file.write(content)
 
     @property
@@ -212,7 +212,7 @@ class TemplateGenerator:
         )
 
     @property
-    def test_1_py(self) -> str:  # noqa: WPS114
+    def test_1_py(self) -> str:
         return test_1_py
 
     @property

@@ -7,12 +7,12 @@ from logging import getLogger
 class ProgressCalculator:
     """Test run progress calculator."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._progress_nodeids: set[str] = set()
         self._tests_amount: int = 1
         self._log = getLogger(__name__)
 
-    def set_test_amount(self, amount: int):
+    def set_test_amount(self, amount: int) -> None:
         """Set test amount.
 
         Raises:
@@ -22,7 +22,8 @@ class ProgressCalculator:
             amount (int): test amount
         """
         if amount <= 0:
-            raise ValueError("Test amount must be greater than 0.")
+            msg = "Test amount must be greater than 0."
+            raise ValueError(msg)
         self._tests_amount = amount
 
     def calculate(self, nodeid: str) -> int:
