@@ -5,6 +5,7 @@ from __future__ import annotations
 import socket
 from dataclasses import dataclass
 from os import environ
+from time import sleep
 from typing import Any
 from uuid import uuid4
 
@@ -305,6 +306,8 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
 
     reporter.set_doc_value(key, {}, statestore_only=True)
     reporter.update_db_by_doc()
+    debounce_time = 0.2
+    sleep(debounce_time)
 
     reporter.set_doc_value(key, dialog_box_data.to_dict(), statestore_only=True)
     reporter.update_db_by_doc()
@@ -328,11 +331,12 @@ def set_operator_message(msg: str, title: str | None = None) -> None:
         title (str | None): Title
     """
     reporter = RunnerReporter()
-    key = reporter.generate_key(
-        DF.OPERATOR_MSG,
-    )
+    key = reporter.generate_key(DF.OPERATOR_MSG)
+
     reporter.set_doc_value(key, {}, statestore_only=True)
     reporter.update_db_by_doc()
+    debounce_time = 0.2
+    sleep(debounce_time)
 
     msg_data = {"msg": msg, "title": title, "visible": True}
     reporter.set_doc_value(key, msg_data, statestore_only=True)
