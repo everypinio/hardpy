@@ -57,4 +57,4 @@ hardpy run
 
 ## Examples
 
-Find more examples of using the **HardPy** in the [examples](https://github.com/everypinio/hardpy/tree/main/examples) folder.
+For more examples of using **HardPy**, see the [examples](https://github.com/everypinio/hardpy/tree/main/examples) folder and the [documentation](https://everypinio.github.io/hardpy/examples/).
