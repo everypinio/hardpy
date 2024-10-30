@@ -47,6 +47,6 @@ For more info, read [database](./database.md).
 <figure align="left" width="800">
     <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/hardpy_struct.drawio.png" alt="hardpy structure">
     <figcaption align="center">
-        Hardpy structure
+        HardPy structure
     </figcaption>
 </figure>
