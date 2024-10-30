@@ -171,7 +171,6 @@ export function StartConfirmationDialog(props: Props) {
     setStepImageDimensions(calculateDimensions(naturalWidth, naturalHeight, width));
   };
 
-  const textHeight = 100;
   const baseDialogWidth = 200;
   const baseDialogHeight = 200;
 
@@ -179,12 +178,31 @@ export function StartConfirmationDialog(props: Props) {
     ? Math.min(imageStepDimensions.width + baseDialogWidth, screenWidth * 0.6)
     : Math.min(imageDimensions.width + baseDialogWidth, screenWidth * 0.6);
 
-  const dialogHeight = widgetType === WidgetType.Multistep
-    ? Math.min(imageStepDimensions.height + baseDialogHeight, screenHeight * 0.6)
-    : Math.min(imageDimensions.height + baseDialogHeight + textHeight, screenHeight * 0.6);
+  const calculateTextLines = (text: string, width: number) => {
+    const font = '10px sans-serif'
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d') || null;
+    if (context) {
+      context.font = font;
+      let linesCount = 0;
+      let textWidth = text.length * context.measureText("M").width;
+      while (textWidth > width) {
+        linesCount++;
+        textWidth = textWidth - width
+      }
+      return linesCount;
+    }
+  }
 
-  console.log("Image Dimensions:", imageDimensions.width, imageDimensions.height, widgetType);
-  console.log("Dialog Dimensions:", dialogWidth, dialogHeight, widgetType);
+  const textHeight = (calculateTextLines(props.dialog_text, dialogWidth) || 1) * 30;
+  const step = props.widget_info?.steps?.[0];
+  let textStepHeight = 40
+  if (step && step.info && step.info.text) {
+    textStepHeight = (calculateTextLines(step.info.text, dialogWidth) || 1) * 30;
+  }
+  const dialogHeight = widgetType === WidgetType.Multistep
+    ? Math.min(imageStepDimensions.height + baseDialogHeight + textHeight + textStepHeight, screenHeight * 0.6)
+    : Math.min(imageDimensions.height + baseDialogHeight + textHeight, screenHeight * 0.6);
 
   return (
     <Dialog
@@ -270,7 +288,7 @@ export function StartConfirmationDialog(props: Props) {
               style={{
                 width: `${props.widget_info?.width}%`,
                 height: `${props.widget_info?.width}%`,
-                maxWidth: `${dialogWidth - 200}px`,
+                maxWidth: `${dialogWidth - 150}px`,
                 maxHeight: `${dialogHeight - 200}px`,
                 objectFit: 'contain',
                 display: 'block',
@@ -288,8 +306,8 @@ export function StartConfirmationDialog(props: Props) {
                 title={step.info?.title}
                 panel={
                   <div className="step-container" >
-                    <div className="step-content" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-                      <p>{step.info?.text}</p>
+                    <div className="step-content" >
+                      <p style={{ textAlign: 'left' }}>{step.info?.text}</p>
                       {step.info?.widget?.type === WidgetType.Image && (
                         <img
                           src={`data:image/${step.info.widget?.info.format};base64,${step.info.widget?.info.base64}`}
@@ -298,10 +316,11 @@ export function StartConfirmationDialog(props: Props) {
                           style={{
                             width: `${step.info.widget?.info.width}%`,
                             height: `${step.info.widget?.info.width}%`,
-                            maxWidth: `${dialogWidth - 200}px`,
-                            maxHeight: `${dialogHeight - 200}px`,
+                            maxWidth: `${dialogWidth - 150}px`,
+                            maxHeight: `${dialogHeight - 250}px`,
                             objectFit: 'contain',
-                            display: 'block'
+                            display: 'block',
+                            margin: '0 auto'
                           }}
                         />
                       )}
