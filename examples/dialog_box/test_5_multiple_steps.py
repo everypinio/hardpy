@@ -8,7 +8,7 @@ pytestmark = pytest.mark.module_name("Multiple steps dialog box")
 @pytest.mark.attempt(2)
 @pytest.mark.case_name("Multistep")
 def test_multiple_steps():
-    img_widget = ImageWidget(address="assets/test.png", width=100)
+    img_widget = ImageWidget(address="assets/sample_1920x1280.gif", width=100)
     steps = [
         StepWidget(
             "Step 1",
