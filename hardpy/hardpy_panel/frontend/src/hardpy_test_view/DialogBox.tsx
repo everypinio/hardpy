@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Button, Classes, Dialog, InputGroup, Radio, Checkbox, Tab, Tabs } from '@blueprintjs/core';
 import { notification } from 'antd';
+import './DialogBox.css';
 
 interface Props {
   title_bar: string;
@@ -171,38 +172,36 @@ export function StartConfirmationDialog(props: Props) {
     setStepImageDimensions(calculateDimensions(naturalWidth, naturalHeight, width));
   };
 
-  const baseDialogWidth = 200;
-  const baseDialogHeight = 200;
+  const baseDialogDimensions = { width: 200, height: 200 };
 
-  const dialogWidth = widgetType === WidgetType.Multistep
-    ? Math.min(imageStepDimensions.width + baseDialogWidth, screenWidth * 0.6)
-    : Math.min(imageDimensions.width + baseDialogWidth, screenWidth * 0.6);
+  const dialogWidth = Math.min(
+    (widgetType === WidgetType.Multistep ? imageStepDimensions : imageDimensions).width + baseDialogDimensions.width,
+    screenWidth * 0.6
+  );
 
   const calculateTextLines = (text: string, width: number) => {
-    const font = '10px sans-serif'
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d') || null;
+    const context = document.createElement('canvas').getContext('2d');
     if (context) {
-      context.font = font;
-      let linesCount = 0;
-      let textWidth = text.length * context.measureText("M").width;
-      while (textWidth > width) {
-        linesCount++;
-        textWidth = textWidth - width
-      }
+      context.font = '10px sans-serif';
+      const linesCount = Math.ceil(text.length * context.measureText("M").width / width);
       return linesCount;
-    }
+    };
   }
 
-  const textHeight = (calculateTextLines(props.dialog_text, dialogWidth) || 1) * 30;
+
+  const textHeight = (calculateTextLines(props.dialog_text, dialogWidth) || 1) * 20;
   const step = props.widget_info?.steps?.[0];
-  let textStepHeight = 40
-  if (step && step.info && step.info.text) {
-    textStepHeight = (calculateTextLines(step.info.text, dialogWidth) || 1) * 30;
-  }
-  const dialogHeight = widgetType === WidgetType.Multistep
-    ? Math.min(imageStepDimensions.height + baseDialogHeight + textHeight + textStepHeight, screenHeight * 0.6)
-    : Math.min(imageDimensions.height + baseDialogHeight + textHeight, screenHeight * 0.6);
+  const textStepHeight = step?.info?.text ? (calculateTextLines(step.info.text, dialogWidth) || 1) * 20 : 40;
+
+  const dialogHeight = Math.max(
+    Math.min(
+      (widgetType === WidgetType.Multistep ? imageStepDimensions.height : imageDimensions.height) + baseDialogDimensions.height + textHeight + textStepHeight,
+      screenHeight * 0.6
+    ),
+    screenHeight * 0.25
+  );
+
+  console.log("width", imageStepDimensions.width || imageDimensions.width, dialogWidth, "height", imageStepDimensions.height || imageDimensions.height, textHeight, textStepHeight, dialogHeight)
 
   return (
     <Dialog
@@ -214,13 +213,13 @@ export function StartConfirmationDialog(props: Props) {
       style={{
         width: widgetType === WidgetType.Image || widgetType === WidgetType.Multistep ? `${dialogWidth}px` : 'auto',
         height: widgetType === WidgetType.Image || widgetType === WidgetType.Multistep ? `${dialogHeight}px` : 'auto',
-        minWidth: screenWidth * 0.2,
-        minHeight: screenHeight * 0.2,
+        minWidth: screenWidth * 0.25,
+        minHeight: screenHeight * 0.25,
         maxWidth: screenWidth * 0.6,
         maxHeight: screenHeight * 0.6,
       }}
     >
-      <div className={Classes.DIALOG_BODY} style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
+      <div className={Classes.DIALOG_BODY} style={{ wordWrap: 'break-word', wordBreak: 'break-word', maxHeight: screenHeight * 0.6, overflowY: 'auto', overflowX: 'auto', maxWidth: screenWidth * 0.6, padding: '10px' }}>
         <p style={{ textAlign: 'left' }}>{props.dialog_text}</p>
         {widgetType === WidgetType.TextInput && (
           <InputGroup
@@ -288,8 +287,8 @@ export function StartConfirmationDialog(props: Props) {
               style={{
                 width: `${props.widget_info?.width}%`,
                 height: `${props.widget_info?.width}%`,
-                maxWidth: `${dialogWidth - 150}px`,
-                maxHeight: `${dialogHeight - 200}px`,
+                maxWidth: `${dialogWidth - baseDialogDimensions.width / 2}px`,
+                maxHeight: `${dialogHeight - baseDialogDimensions.height / 2}px`,
                 objectFit: 'contain',
                 display: 'block',
                 margin: '0 auto'
@@ -316,8 +315,8 @@ export function StartConfirmationDialog(props: Props) {
                           style={{
                             width: `${step.info.widget?.info.width}%`,
                             height: `${step.info.widget?.info.width}%`,
-                            maxWidth: `${dialogWidth - 150}px`,
-                            maxHeight: `${dialogHeight - 250}px`,
+                            maxWidth: `${dialogWidth - baseDialogDimensions.width}px`,
+                            maxHeight: `${dialogHeight - baseDialogDimensions.height}px`,
                             objectFit: 'contain',
                             display: 'block',
                             margin: '0 auto'

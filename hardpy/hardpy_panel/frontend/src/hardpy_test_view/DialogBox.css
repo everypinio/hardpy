@@ -1,0 +1,15 @@
+.checkbox-label {
+    display: inline-block;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.radio-button-label {
+    display: inline-block;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    white-space: normal;
+}
