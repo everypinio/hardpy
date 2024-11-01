@@ -12,7 +12,7 @@
 
 For more info, read [CLI](./cli.md).
 
-## HardPy pytest plugin 
+## HardPy pytest plugin
 
 **pytest-hardpy** on a [structural scheme](#structural-scheme).
 
@@ -45,8 +45,8 @@ For more info, read [database](./database.md).
 ## Structural scheme
 
 <figure align="left" width="800">
-    <img src="../img/hardpy_struct.drawio.png" alt="hardpy_structure">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/hardpy_struct.drawio.png" alt="hardpy structure">
     <figcaption align="center">
-        Hardpy structure
+        HardPy structure
     </figcaption>
 </figure>
