@@ -1,11 +1,20 @@
 // Copyright (c) 2024 Everypin
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-import React, { useState } from 'react';
-import axios from 'axios';
-import { Button, Classes, Dialog, InputGroup, Radio, Checkbox, Tab, Tabs } from '@blueprintjs/core';
-import { notification } from 'antd';
-import './DialogBox.css';
+import React, { useState } from "react";
+import axios from "axios";
+import {
+  Button,
+  Classes,
+  Dialog,
+  InputGroup,
+  Radio,
+  Checkbox,
+  Tab,
+  Tabs,
+} from "@blueprintjs/core";
+import { notification } from "antd";
+import "./DialogBox.css";
 
 interface Props {
   title_bar: string;
@@ -52,26 +61,47 @@ interface WidgetInfo {
 
 export function StartConfirmationDialog(props: Props) {
   const [dialogOpen, setDialogOpen] = useState(true);
-  const [inputText, setInputText] = useState('');
-  const [selectedRadioButton, setSelectedRadioButton] = useState('');
+  const [inputText, setInputText] = useState("");
+  const [selectedRadioButton, setSelectedRadioButton] = useState("");
   const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
+  const [imageDimensions, setImageDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
+  const [imageStepDimensions, setStepImageDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
+
+  const HEX_BASE = 16;
+
+  const widgetType = props.widget_type || WidgetType.Base;
+  const inputPlaceholder = "enter answer";
+
+  const screenWidth = window.screen.width;
+  const screenHeight = window.screen.height;
+
+  const baseDialogDimensions = { width: 200, height: 200 };
+  const maxSize = 0.6;
+  const minSize = 0.25;
+  const lineHeight = 20;
 
   const handleClose = () => {
     setDialogOpen(false);
-    fetch('api/stop')
-      .then(response => {
+    fetch("api/stop")
+      .then((response) => {
         if (response.ok) {
           return response.text();
         } else {
           console.log("Request failed. Status: " + response.status);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("Request failed. Error: " + error);
       });
     notification.error({
-      message: 'Notification',
-      description: 'The window was closed. Tests stopped.',
+      message: "Notification",
+      description: "The window was closed. Tests stopped.",
     });
   };
 
@@ -80,20 +110,24 @@ export function StartConfirmationDialog(props: Props) {
       switch (props.widget_type) {
         case WidgetType.TextInput:
         case WidgetType.NumericInput:
-          if (inputText.trim() === '' || inputText === '.' || inputText === '..') {
-            alert('The field must not be empty');
+          if (
+            inputText.trim() === "" ||
+            inputText === "." ||
+            inputText === ".."
+          ) {
+            alert("The field must not be empty");
             return;
           }
           break;
         case WidgetType.RadioButton:
-          if (selectedRadioButton === '') {
-            alert('The field must not be empty');
+          if (selectedRadioButton === "") {
+            alert("The field must not be empty");
             return;
           }
           break;
         case WidgetType.Checkbox:
           if (selectedCheckboxes.length === 0) {
-            alert('The field must not be empty');
+            alert("The field must not be empty");
             return;
           }
           break;
@@ -102,13 +136,15 @@ export function StartConfirmationDialog(props: Props) {
       }
     }
     setDialogOpen(false);
-    let textToSend = '';
-    const HEX_BASE = 16;
+    let textToSend = "";
 
     function processEncodeURLComponent(str: string) {
-      return encodeURIComponent(str).replace(/[!-'()*+,/:;<=>?@[\]^`{|}~]/g, function (c) {
-        return '%' + c.charCodeAt(0).toString(HEX_BASE);
-      });
+      return encodeURIComponent(str).replace(
+        /[!-'()*+,/:;<=>?@[\]^`{|}~]/g,
+        function (c) {
+          return "%" + c.charCodeAt(0).toString(HEX_BASE);
+        }
+      );
     }
 
     switch (props.widget_type) {
@@ -123,11 +159,13 @@ export function StartConfirmationDialog(props: Props) {
         break;
       case WidgetType.Checkbox:
         textToSend = JSON.stringify(
-          selectedCheckboxes.map(checkboxValue => processEncodeURLComponent(checkboxValue))
+          selectedCheckboxes.map((checkboxValue) =>
+            processEncodeURLComponent(checkboxValue)
+          )
         );
         break;
       default:
-        textToSend = 'ok';
+        textToSend = "ok";
         break;
     }
 
@@ -135,73 +173,89 @@ export function StartConfirmationDialog(props: Props) {
       props.onConfirm(textToSend);
     }
     try {
-      const response = await axios.post(`/api/confirm_dialog_box/${textToSend}`);
+      const response = await axios.post(
+        `/api/confirm_dialog_box/${textToSend}`
+      );
       console.log(response.data);
     } catch (error) {
-      console.error('Error confirming dialog box:', error);
+      console.error("Error confirming dialog box:", error);
     }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       handleConfirm();
     }
   };
 
-  const widgetType = props.widget_type || WidgetType.Base;
-  const inputPlaceholder = "enter answer";
-
-  const screenWidth = window.screen.width
-  const screenHeight = window.screen.height
-
-  const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
-  const [imageStepDimensions, setStepImageDimensions] = useState({ width: 0, height: 0 });
-
-  const calculateDimensions = (naturalWidth: number, naturalHeight: number, widthFactor: number) => ({
+  const calculateDimensions = (
+    naturalWidth: number,
+    naturalHeight: number,
+    widthFactor: number
+  ) => ({
     width: (naturalWidth * (widthFactor || 1)) / 100,
     height: (naturalHeight * (widthFactor || 1)) / 100,
   });
 
   const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
     const { naturalWidth, naturalHeight } = event.target as HTMLImageElement;
-    setImageDimensions(calculateDimensions(naturalWidth, naturalHeight, props.widget_info?.width || 100));
+    setImageDimensions(
+      calculateDimensions(
+        naturalWidth,
+        naturalHeight,
+        props.widget_info?.width || 100
+      )
+    );
   };
 
-  const handleStepImageLoad = (event: React.SyntheticEvent<HTMLImageElement>, width: number) => {
+  const handleStepImageLoad = (
+    event: React.SyntheticEvent<HTMLImageElement>,
+    width: number
+  ) => {
     const { naturalWidth, naturalHeight } = event.target as HTMLImageElement;
-    setStepImageDimensions(calculateDimensions(naturalWidth, naturalHeight, width));
+    setStepImageDimensions(
+      calculateDimensions(naturalWidth, naturalHeight, width)
+    );
   };
-
-  const baseDialogDimensions = { width: 200, height: 200 };
-
-  const dialogWidth = Math.min(
-    (widgetType === WidgetType.Multistep ? imageStepDimensions : imageDimensions).width + baseDialogDimensions.width,
-    screenWidth * 0.6
-  );
 
   const calculateTextLines = (text: string, width: number) => {
-    const context = document.createElement('canvas').getContext('2d');
+    const context = document.createElement("canvas").getContext("2d");
     if (context) {
-      context.font = '10px sans-serif';
-      const linesCount = Math.ceil(text.length * context.measureText("M").width / width);
+      context.font = "10px sans-serif";
+      const linesCount = Math.ceil(
+        (text.length * context.measureText("M").width) / width
+      );
       return linesCount;
-    };
-  }
+    }
+  };
 
+  const dialogWidth = Math.min(
+    (widgetType === WidgetType.Multistep
+      ? imageStepDimensions
+      : imageDimensions
+    ).width + baseDialogDimensions.width,
+    screenWidth * maxSize
+  );
 
-  const textHeight = (calculateTextLines(props.dialog_text, dialogWidth) || 1) * 20;
+  const textHeight =
+    (calculateTextLines(props.dialog_text, dialogWidth) || 1) * lineHeight;
   const step = props.widget_info?.steps?.[0];
-  const textStepHeight = step?.info?.text ? (calculateTextLines(step.info.text, dialogWidth) || 1) * 20 : 40;
+  const textStepHeight = step?.info?.text
+    ? (calculateTextLines(step.info.text, dialogWidth) || 1) * lineHeight
+    : lineHeight * 2;
 
   const dialogHeight = Math.max(
     Math.min(
-      (widgetType === WidgetType.Multistep ? imageStepDimensions.height : imageDimensions.height) + baseDialogDimensions.height + textHeight + textStepHeight,
-      screenHeight * 0.6
+      (widgetType === WidgetType.Multistep
+        ? imageStepDimensions.height
+        : imageDimensions.height) +
+        baseDialogDimensions.height +
+        textHeight +
+        textStepHeight,
+      screenHeight * maxSize
     ),
-    screenHeight * 0.25
+    screenHeight * minSize
   );
-
-  console.log("width", imageStepDimensions.width || imageDimensions.width, dialogWidth, "height", imageStepDimensions.height || imageDimensions.height, textHeight, textStepHeight, dialogHeight)
 
   return (
     <Dialog
@@ -211,20 +265,39 @@ export function StartConfirmationDialog(props: Props) {
       onClose={handleClose}
       canOutsideClickClose={false}
       style={{
-        width: widgetType === WidgetType.Image || widgetType === WidgetType.Multistep ? `${dialogWidth}px` : 'auto',
-        height: widgetType === WidgetType.Image || widgetType === WidgetType.Multistep ? `${dialogHeight}px` : 'auto',
-        minWidth: screenWidth * 0.25,
-        minHeight: screenHeight * 0.25,
-        maxWidth: screenWidth * 0.6,
-        maxHeight: screenHeight * 0.6,
+        width:
+          widgetType === WidgetType.Image || widgetType === WidgetType.Multistep
+            ? `${dialogWidth}px`
+            : "auto",
+        height:
+          widgetType === WidgetType.Image || widgetType === WidgetType.Multistep
+            ? `${dialogHeight}px`
+            : "auto",
+        minWidth: screenWidth * minSize,
+        minHeight: screenHeight * minSize,
+        maxWidth: screenWidth * maxSize,
+        maxHeight: screenHeight * maxSize,
       }}
     >
-      <div className={Classes.DIALOG_BODY} style={{ wordWrap: 'break-word', wordBreak: 'break-word', maxHeight: screenHeight * 0.6, overflowY: 'auto', overflowX: 'auto', maxWidth: screenWidth * 0.6, padding: '10px' }}>
-        <p style={{ textAlign: 'left' }}>{props.dialog_text}</p>
+      <div
+        className={Classes.DIALOG_BODY}
+        style={{
+          wordWrap: "break-word",
+          wordBreak: "break-word",
+          maxHeight: screenHeight * maxSize,
+          overflowY: "auto",
+          overflowX: "auto",
+          maxWidth: screenWidth * maxSize,
+          padding: "10px",
+        }}
+      >
+        <p style={{ textAlign: "left" }}>{props.dialog_text}</p>
         {widgetType === WidgetType.TextInput && (
           <InputGroup
             value={inputText}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setInputText(event.target.value)}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setInputText(event.target.value)
+            }
             onKeyDown={handleKeyDown}
             placeholder={inputPlaceholder}
             type="text"
@@ -234,7 +307,9 @@ export function StartConfirmationDialog(props: Props) {
         {widgetType === WidgetType.NumericInput && (
           <InputGroup
             value={inputText}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setInputText(event.target.value)}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setInputText(event.target.value)
+            }
             onKeyDown={handleKeyDown}
             placeholder={inputPlaceholder}
             type="number"
@@ -244,7 +319,8 @@ export function StartConfirmationDialog(props: Props) {
 
         {widgetType === WidgetType.RadioButton && (
           <>
-            {props.widget_info && props.widget_info.fields &&
+            {props.widget_info &&
+              props.widget_info.fields &&
               props.widget_info.fields.map((option: string) => (
                 <Radio
                   key={option}
@@ -258,7 +334,8 @@ export function StartConfirmationDialog(props: Props) {
         )}
         {widgetType === WidgetType.Checkbox && (
           <>
-            {props.widget_info && props.widget_info.fields &&
+            {props.widget_info &&
+              props.widget_info.fields &&
               props.widget_info.fields.map((option: string) => (
                 <Checkbox
                   key={option}
@@ -267,10 +344,11 @@ export function StartConfirmationDialog(props: Props) {
                   autoFocus={option === (props.widget_info?.fields ?? [])[0]}
                   onChange={() => {
                     if (selectedCheckboxes.includes(option)) {
-                      setSelectedCheckboxes(selectedCheckboxes.filter(item => item !== option));
+                      setSelectedCheckboxes(
+                        selectedCheckboxes.filter((item) => item !== option)
+                      );
                     } else {
                       setSelectedCheckboxes([...selectedCheckboxes, option]);
-
                     }
                   }}
                 />
@@ -282,16 +360,15 @@ export function StartConfirmationDialog(props: Props) {
             <img
               src={`data:image/${props.widget_info?.format};base64,${props.widget_info?.base64}`}
               alt="Image"
-
               onLoad={handleImageLoad}
               style={{
                 width: `${props.widget_info?.width}%`,
                 height: `${props.widget_info?.width}%`,
                 maxWidth: `${dialogWidth - baseDialogDimensions.width / 2}px`,
                 maxHeight: `${dialogHeight - baseDialogDimensions.height / 2}px`,
-                objectFit: 'contain',
-                display: 'block',
-                margin: '0 auto'
+                objectFit: "contain",
+                display: "block",
+                margin: "0 auto",
               }}
             />
           </div>
@@ -304,29 +381,34 @@ export function StartConfirmationDialog(props: Props) {
                 key={step.info?.title}
                 title={step.info?.title}
                 panel={
-                  <div className="step-container" >
-                    <div className="step-content" >
-                      <p style={{ textAlign: 'left' }}>{step.info?.text}</p>
+                  <div className="step-container">
+                    <div className="step-content">
+                      <p style={{ textAlign: "left" }}>{step.info?.text}</p>
                       {step.info?.widget?.type === WidgetType.Image && (
                         <img
                           src={`data:image/${step.info.widget?.info.format};base64,${step.info.widget?.info.base64}`}
                           alt="Image"
-                          onLoad={(event) => handleStepImageLoad(event, step.info.widget?.info.width ?? 100)}
+                          onLoad={(event) =>
+                            handleStepImageLoad(
+                              event,
+                              step.info.widget?.info.width ?? 100
+                            )
+                          }
                           style={{
                             width: `${step.info.widget?.info.width}%`,
                             height: `${step.info.widget?.info.width}%`,
                             maxWidth: `${dialogWidth - baseDialogDimensions.width}px`,
                             maxHeight: `${dialogHeight - baseDialogDimensions.height}px`,
-                            objectFit: 'contain',
-                            display: 'block',
-                            margin: '0 auto'
+                            objectFit: "contain",
+                            display: "block",
+                            margin: "0 auto",
                           }}
                         />
                       )}
                     </div>
-                  </div>}
-              >
-              </Tab>
+                  </div>
+                }
+              ></Tab>
             ))}
           </Tabs>
         )}
