@@ -46,13 +46,14 @@ nav:
   - HardPy: index.md
   - Features: features/features.md
   - Documentation:
-      - Structure: documentation/structure.md
+      - documentation/index.md
       - CLI: documentation/cli.md
       - Configuration: documentation/hardpy_config.md
       - Database: documentation/database.md
       - Pytest-hardpy: documentation/pytest_hardpy.md
       - HardPy panel: documentation/hardpy_panel.md
   - Examples:
+      - examples/index.md
       - Hello HardPy: examples/hello_hardpy.md
       - CouchDB load: examples/couchdb_load.md
       - Minute parity: examples/minute_parity.md
