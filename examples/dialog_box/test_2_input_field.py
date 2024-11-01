@@ -11,6 +11,7 @@ from hardpy import (
 pytestmark = pytest.mark.module_name("Input field dialog boxes")
 
 
+@pytest.mark.case_name("Text input")
 def test_text_input():
     dbx = DialogBox(
         dialog_text="Type 'ok' and press the Confirm button",
@@ -22,6 +23,7 @@ def test_text_input():
     assert response == "ok", "The entered text is not correct"
 
 
+@pytest.mark.case_name("Numeric input")
 def test_num_input():
     test_num = 123
     dbx = DialogBox(
