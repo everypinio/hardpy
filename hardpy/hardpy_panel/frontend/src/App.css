@@ -1,25 +1,25 @@
 #main-heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #main-heading .logo-smol {
-    margin-right: 10px;
-    width: 30px;
-    height: 30px;
-    background: url(assets/logo_smol.png) no-repeat;
-    background-size: cover;
+  margin-right: 10px;
+  width: 30px;
+  height: 30px;
+  background: url(assets/logo_smol.png) no-repeat;
+  background-size: cover;
 }
 
 #last-exec-heading {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 #glob-test-status {
-    margin-top: 2px;  /* Justify status icon to text. */
+  margin-top: 2px; /* Justify status icon to text. */
 }
 
 html {
-    height: inherit;
+  height: inherit;
 }
