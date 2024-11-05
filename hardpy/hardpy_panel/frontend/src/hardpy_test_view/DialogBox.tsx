@@ -14,7 +14,6 @@ import {
   Tabs,
 } from "@blueprintjs/core";
 import { notification } from "antd";
-import "./DialogBox.css";
 
 interface Props {
   title_bar: string;
@@ -249,9 +248,9 @@ export function StartConfirmationDialog(props: Props) {
       (widgetType === WidgetType.Multistep
         ? imageStepDimensions.height
         : imageDimensions.height) +
-        baseDialogDimensions.height +
-        textHeight +
-        textStepHeight,
+      baseDialogDimensions.height +
+      textHeight +
+      textStepHeight,
       screenHeight * maxSize
     ),
     screenHeight * minSize
@@ -397,9 +396,9 @@ export function StartConfirmationDialog(props: Props) {
                           style={{
                             width: `${step.info.widget?.info.width}%`,
                             height: `${step.info.widget?.info.width}%`,
-                            maxWidth: `${dialogWidth - baseDialogDimensions.width}px`,
-                            maxHeight: `${dialogHeight - baseDialogDimensions.height}px`,
-                            objectFit: "contain",
+                            maxWidth: `${imageStepDimensions.width}px`,
+                            maxHeight: `${imageStepDimensions.height}px`,
+                            objectFit: "scale-down",
                             display: "block",
                             margin: "0 auto",
                           }}
