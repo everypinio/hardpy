@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Fix skipped test case and module status. Now status of skipped test is **skipped**, not **ready**.
+
 ## HardPy 0.7.0
 
 * Add an **attempt** marker to indicate the number of attempts to run a test before it passes successfully.
