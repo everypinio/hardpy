@@ -215,20 +215,23 @@ class HardpyPlugin:
 
         node_info = NodeInfo(item)
 
-        self._handle_dependency(node_info)
+        status = TestStatus.RUN
+        is_skip_test = self._is_skip_test(node_info)
+        if not is_skip_test:
+            self._reporter.set_module_start_time(node_info.module_id)
+            self._reporter.set_case_start_time(node_info.module_id, node_info.case_id)
+        else:
+            status = TestStatus.SKIPPED
+            self._results[node_info.module_id][node_info.case_id] = status
+            progress = self._progress.calculate(item.nodeid)
+            self._reporter.set_progress(progress)
 
-        self._reporter.set_module_status(node_info.module_id, TestStatus.RUN)
-        self._reporter.set_module_start_time(node_info.module_id)
-        self._reporter.set_case_status(
-            node_info.module_id,
-            node_info.case_id,
-            TestStatus.RUN,
-        )
-        self._reporter.set_case_start_time(
-            node_info.module_id,
-            node_info.case_id,
-        )
+        self._reporter.set_module_status(node_info.module_id, status)
+        self._reporter.set_case_status(node_info.module_id, node_info.case_id, status)
         self._reporter.update_db_by_doc()
+
+        if is_skip_test:
+            skip(f"Test {item.nodeid} is skipped")
 
     def pytest_runtest_call(self, item: Item) -> None:
         """Call the test item."""
@@ -422,36 +425,25 @@ class HardpyPlugin:
             case _:
                 return None
 
-    def _handle_dependency(self, node_info: NodeInfo) -> None:
-        dependency = self._dependencies.get(
-            TestDependencyInfo(
-                node_info.module_id,
-                node_info.case_id,
-            ),
+    def _is_skip_test(self, node_info: NodeInfo) -> bool:
+        """Is need to skip a test because it depends on another test."""
+        is_dependency_test_exist = self._dependencies.get(
+            TestDependencyInfo(node_info.module_id, node_info.case_id),
         )
-        if dependency and self._is_dependency_failed(dependency):
-            self._log.debug(f"Skipping test due to dependency: {dependency}")
-            self._results[node_info.module_id][node_info.case_id] = TestStatus.SKIPPED
-            self._reporter.set_progress(
-                self._progress.calculate(f"{node_info.module_id}::{node_info.case_id}"),
-            )
-            skip(f"Test {node_info.module_id}::{node_info.case_id} is skipped")
-
-    def _is_dependency_failed(self, dependency: TestDependencyInfo) -> bool:
-        if isinstance(dependency, TestDependencyInfo):
-            incorrect_status = {
-                TestStatus.FAILED,
-                TestStatus.SKIPPED,
-                TestStatus.ERROR,
-            }
-            module_id, case_id = dependency
+        is_dependency_test_failed = False
+        if is_dependency_test_exist:
+            wrong_status = {TestStatus.FAILED, TestStatus.SKIPPED, TestStatus.ERROR}
+            module_id, case_id = is_dependency_test_exist
             if case_id is not None:
-                return self._results[module_id][case_id] in incorrect_status
-            return any(
-                status in incorrect_status
-                for status in set(self._results[module_id].values())
-            )
-        return False
+                is_dependency_test_failed = (
+                    self._results[module_id][case_id] in wrong_status
+                )
+            else:
+                result_set = set(self._results[module_id].values())
+                is_dependency_test_failed = any(
+                    status in wrong_status for status in result_set
+                )
+        return bool(is_dependency_test_exist and is_dependency_test_failed)
 
     def _add_dependency(self, node_info: NodeInfo, nodes: dict) -> None:
         dependency = node_info.dependency
