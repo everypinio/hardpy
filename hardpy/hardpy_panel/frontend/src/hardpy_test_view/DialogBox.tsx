@@ -248,9 +248,9 @@ export function StartConfirmationDialog(props: Props) {
       (widgetType === WidgetType.Multistep
         ? imageStepDimensions.height
         : imageDimensions.height) +
-      baseDialogDimensions.height +
-      textHeight +
-      textStepHeight,
+        baseDialogDimensions.height +
+        textHeight +
+        textStepHeight,
       screenHeight * maxSize
     ),
     screenHeight * minSize
@@ -290,7 +290,11 @@ export function StartConfirmationDialog(props: Props) {
           padding: "10px",
         }}
       >
-        <p style={{ textAlign: "left" }}>{props.dialog_text}</p>
+        {props.dialog_text.split("\n").map((line, index) => (
+          <p key={index} style={{ textAlign: "left" }}>
+            {line}
+          </p>
+        ))}
         {widgetType === WidgetType.TextInput && (
           <InputGroup
             value={inputText}
@@ -382,7 +386,11 @@ export function StartConfirmationDialog(props: Props) {
                 panel={
                   <div className="step-container">
                     <div className="step-content">
-                      <p style={{ textAlign: "left" }}>{step.info?.text}</p>
+                      {step.info?.text?.split("\n").map((line, index) => (
+                        <p key={index} style={{ textAlign: "left" }}>
+                          {line}
+                        </p>
+                      ))}
                       {step.info?.widget?.type === WidgetType.Image && (
                         <img
                           src={`data:image/${step.info.widget?.info.format};base64,${step.info.widget?.info.base64}`}
@@ -394,10 +402,10 @@ export function StartConfirmationDialog(props: Props) {
                             )
                           }
                           style={{
-                            width: `${step.info.widget?.info.width}%`,
-                            height: `${step.info.widget?.info.width}%`,
-                            maxWidth: `${imageStepDimensions.width}px`,
-                            maxHeight: `${imageStepDimensions.height}px`,
+                            width: `${step.info.widget?.info.width ?? 100}%`,
+                            height: `${step.info.widget?.info.width ?? 100}%`,
+                            maxWidth: `${dialogWidth}px`,
+                            maxHeight: `${dialogHeight - 100}px`,
                             objectFit: "scale-down",
                             display: "block",
                             margin: "0 auto",
