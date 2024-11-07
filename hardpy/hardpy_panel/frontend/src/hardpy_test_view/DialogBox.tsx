@@ -80,10 +80,10 @@ export function StartConfirmationDialog(props: Props) {
   const screenWidth = window.screen.width;
   const screenHeight = window.screen.height;
 
-  const baseDialogDimensions = { width: 200, height: 200 };
+  const baseDialogDimensions = { width: 100, height: 100 };
   const maxSize = 0.6;
   const minSize = 0.25;
-  const lineHeight = 20;
+  const lineHeight = 10;
 
   const handleClose = () => {
     setDialogOpen(false);
@@ -246,7 +246,7 @@ export function StartConfirmationDialog(props: Props) {
   const dialogHeight = Math.max(
     Math.min(
       (widgetType === WidgetType.Multistep
-        ? imageStepDimensions.height
+        ? imageStepDimensions.height + baseDialogDimensions.height
         : imageDimensions.height) +
         baseDialogDimensions.height +
         textHeight +
@@ -369,7 +369,7 @@ export function StartConfirmationDialog(props: Props) {
                 height: `${props.widget_info?.width}%`,
                 maxWidth: `${dialogWidth - baseDialogDimensions.width / 2}px`,
                 maxHeight: `${dialogHeight - baseDialogDimensions.height / 2}px`,
-                objectFit: "contain",
+                objectFit: "scale-down",
                 display: "block",
                 margin: "0 auto",
               }}
