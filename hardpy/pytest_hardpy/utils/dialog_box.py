@@ -228,7 +228,7 @@ class StepWidget(IWidget):
         self,
         title: str,
         text: str | None,
-        widget: ImageWidget | None,
+        widget: ImageWidget | None = None,
     ) -> None:
         super().__init__(WidgetType.STEP)
         if text is None and widget is None:
