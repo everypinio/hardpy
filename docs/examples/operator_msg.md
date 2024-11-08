@@ -25,14 +25,19 @@ To use:
 Call method `set_operator_message()` if you want a message to appear in
 the operator panel for the operator when the condition you specify is met.
 
-## example:
+### conftest.py
+
+Contains settings and fixtures for all tests:
+
+- The `finish_executing` function generates a report and saves it to the database.
+- The `test_end_message` function shows message about completing of testing.
+- The `fill_actions_after_test` function populates a list of actions to be performed post-test. You may rename this function or use it twice (e.g., `fill_other_actions_after_test`).
+- The `fill_other_actions_after_test`, `test_1_message` and `test_2_message` functions are examples of how you can name functions as needed.
+
+If the report database doesn't exist, the report won't be saved, and an error message will be displayed to the operator. Otherwise, a success message will be shown indicating successful report saving.
 
 ```python
-import hardpy
-
-def my_function():
 import pytest
-
 from hardpy import (
     CouchdbConfig,
     CouchdbLoader,
@@ -52,20 +57,46 @@ def finish_executing():
             )
     except RuntimeError as e:
         set_operator_message(
-            msg="The report was not recorded with error " + str(e) + ".",
+            msg="The report was not recorded with error \"" + str(e) + "\".",
             title="Operator message",
         )
+
+def test_end_message():
+    set_operator_message(
+        msg="Testing completed",
+        title="Operator message",
+    )
+
+def test_1_message():
+    set_operator_message(
+        msg="Testing 1",
+        title="Operator message",
+    )
+
+def test_2_message():
+    set_operator_message(
+        msg="Testing 2",
+        title="Operator message",
+    )
 
 @pytest.fixture(scope="session", autouse=True)
 def fill_actions_after_test(post_run_functions: list):
     post_run_functions.append(finish_executing)
-    set_operator_message(
-        msg="Testing was successful",
-        title="Operator message",
-    )
-    set_operator_message(
-        msg="Press the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\n",  # noqa: E501
-        title="Operator message",
-    )
+    post_run_functions.append(test_end_message)
     yield
+
+@pytest.fixture(scope="session", autouse=True)
+def fill_other_actions_after_test(post_run_functions: list):
+    post_run_functions.append(test_1_message)
+    post_run_functions.append(test_2_message)
+    yield
+```
+
+### test_1.py
+
+Contains the simplest example of a valid test.
+
+```python
+def test_one():
+    assert True
 ```

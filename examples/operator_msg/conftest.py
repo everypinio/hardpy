@@ -25,15 +25,36 @@ def finish_executing():
         )
 
 
+def test_end_message():
+    set_operator_message(
+        msg="Testing completed",
+        title="Operator message",
+    )
+
+
+def test_1_message():
+    set_operator_message(
+        msg="Testing 1",
+        title="Operator message",
+    )
+
+
+def test_2_message():
+    set_operator_message(
+        msg="Testing 2",
+        title="Operator message",
+    )
+
+
 @pytest.fixture(scope="session", autouse=True)
 def fill_actions_after_test(post_run_functions: list):
     post_run_functions.append(finish_executing)
-    set_operator_message(
-        msg="Testing was successful",
-        title="Operator message",
-    )
-    set_operator_message(
-        msg="Press the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\nPress the X button\n",  # noqa: E501
-        title="Operator message",
-    )
+    post_run_functions.append(test_end_message)
+    yield
+
+
+@pytest.fixture(scope="session", autouse=True)
+def fill_other_actions_after_test(post_run_functions: list):
+    post_run_functions.append(test_1_message)
+    post_run_functions.append(test_2_message)
     yield
