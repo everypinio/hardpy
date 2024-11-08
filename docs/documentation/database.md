@@ -277,7 +277,7 @@ Example of a **current** document:
         "info": {
           "geo": "Belgrade"
         },
-        "timezone": "CET",
+        "timezone": "Europe/Belgrade",
         "drivers": {
           "driver_1": "driver info",
           "driver_2": {
@@ -414,7 +414,7 @@ Example of a **current** document:
         "info": {
           "geo": "Belgrade"
         },
-        "timezone": "CET",
+        "timezone": "Europe/Belgrade",
         "drivers": {
           "driver_1": "driver info",
           "driver_2": {
