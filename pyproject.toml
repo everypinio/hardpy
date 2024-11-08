@@ -33,6 +33,7 @@
         "typer>=0.12,<1.0",
         "rtoml~=0.11.0",
         "py-machineid~=0.6.0",
+        "tzlocal~=5.2",
 
         # Frontend
         "fastapi>=0.100.1",
