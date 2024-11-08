@@ -31,8 +31,7 @@ Contains settings and fixtures for all tests:
 
 - The `finish_executing` function generates a report and saves it to the database.
 - The `test_end_message` function shows message about completing of testing.
-- The `fill_actions_after_test` function populates a list of actions to be performed post-test. You may rename this function or use it twice (e.g., `fill_other_actions_after_test`).
-- The `fill_other_actions_after_test`, `test_1_message` and `test_2_message` functions are examples of how you can name functions as needed.
+- The `fill_list_functions_after_test` function populates a list of actions to be performed post-test. You may rename this function as you want.
 
 If the report database doesn't exist, the report won't be saved, and an error message will be displayed to the operator. Otherwise, a success message will be shown indicating successful report saving.
 
@@ -57,7 +56,7 @@ def finish_executing():
             )
     except RuntimeError as e:
         set_operator_message(
-            msg="The report was not recorded with error \"" + str(e) + "\".",
+            msg='The report was not recorded with error: "' + str(e) + '"',
             title="Operator message",
         )
 
@@ -67,28 +66,10 @@ def test_end_message():
         title="Operator message",
     )
 
-def test_1_message():
-    set_operator_message(
-        msg="Testing 1",
-        title="Operator message",
-    )
-
-def test_2_message():
-    set_operator_message(
-        msg="Testing 2",
-        title="Operator message",
-    )
-
 @pytest.fixture(scope="session", autouse=True)
-def fill_actions_after_test(post_run_functions: list):
-    post_run_functions.append(finish_executing)
+def fill_list_functions_after_test(post_run_functions: list):
     post_run_functions.append(test_end_message)
-    yield
-
-@pytest.fixture(scope="session", autouse=True)
-def fill_other_actions_after_test(post_run_functions: list):
-    post_run_functions.append(test_1_message)
-    post_run_functions.append(test_2_message)
+    post_run_functions.append(finish_executing)
     yield
 ```
 
