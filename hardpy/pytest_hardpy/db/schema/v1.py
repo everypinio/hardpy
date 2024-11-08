@@ -177,7 +177,7 @@ class TestStand(BaseModel):
         "info": {
           "geo": "Belgrade"
         },
-        "timezone": "CET",
+        "timezone": "Europe/Belgrade",
         "drivers": {
           "driver_1": "driver info",
           "driver_2": {
@@ -228,7 +228,7 @@ class ResultStateStore(IBaseResult):
         "info": {
           "geo": "Belgrade"
         },
-        "timezone": "CET",
+        "timezone": "Europe/Belgrade",
         "drivers": {
           "driver_1": "driver info",
           "driver_2": {
@@ -324,7 +324,7 @@ class ResultRunStore(IBaseResult):
         "info": {
           "geo": "Belgrade"
         },
-        "timezone": "CET",
+        "timezone": "Europe/Belgrade",
         "drivers": {
           "driver_1": "driver info",
           "driver_2": {

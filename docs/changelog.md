@@ -2,6 +2,7 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Fix the timezone format via the **tzlocal** package.
 * Fix skipped test case and module status. Now status of skipped test is **skipped**, not **ready**.
 
 ## HardPy 0.7.0
