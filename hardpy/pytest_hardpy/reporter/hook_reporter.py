@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from datetime import datetime
 from logging import getLogger
 from time import time
 
 from natsort import natsorted
+from tzlocal import get_localzone
 
 from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
 from hardpy.pytest_hardpy.reporter.base import BaseReporter
@@ -38,7 +38,7 @@ class HookReporter(BaseReporter):
         self.set_doc_value(DF.OPERATOR_MSG, {}, statestore_only=True)
 
         test_stand_tz = self.generate_key(DF.TEST_STAND, DF.TIMEZONE)
-        self.set_doc_value(test_stand_tz, datetime.now().astimezone().tzname())
+        self.set_doc_value(test_stand_tz, str(get_localzone().key))
 
         test_stand_id_key = self.generate_key(DF.TEST_STAND, DF.HW_ID)
         self.set_doc_value(test_stand_id_key, machine_id())
