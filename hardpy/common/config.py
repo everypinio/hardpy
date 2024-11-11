@@ -5,7 +5,8 @@ from __future__ import annotations
 from logging import getLogger
 from pathlib import Path
 
-import rtoml
+import tomli
+import tomli_w
 from pydantic import BaseModel, ConfigDict, ValidationError
 
 logger = getLogger(__name__)
@@ -111,8 +112,9 @@ class ConfigManager:
         Args:
             parent_dir (Path): Configuration file parent directory.
         """
+        config_str = tomli_w.dumps(cls.obj.model_dump())
         with Path.open(parent_dir / "hardpy.toml", "w") as file:
-            file.write(rtoml.dumps(cls.obj.model_dump()))
+            file.write(config_str)
 
     @classmethod
     def read_config(cls, toml_path: Path) -> HardpyConfig | None:
@@ -130,12 +132,10 @@ class ConfigManager:
             logger.error("File hardpy.toml not found at path: %s", toml_file)
             return None
         try:
-            with Path.open(toml_path / "hardpy.toml", "r") as f:
-                cls.obj = HardpyConfig(**rtoml.load(f))
+            with Path.open(toml_path / "hardpy.toml", "rb") as f:
+                cls.obj = HardpyConfig(**tomli.load(f))
             return cls.obj  # noqa: TRY300
-        except rtoml.TomlParsingError:
-            logger.exception("Error parsing TOML")
-        except rtoml.TomlSerializationError:
+        except tomli.TOMLDecodeError:
             logger.exception("Error parsing TOML")
         except ValidationError:
             logger.exception("Error parsing TOML")
