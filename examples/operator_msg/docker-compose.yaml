@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  couchserver:
+    image: couchdb:3.4
+    ports:
+      - "5984:5984"
+    environment:
+      COUCHDB_USER: dev
+      COUCHDB_PASSWORD: dev
+    volumes:
+      - ./database/dbdata:/opt/couchdb/data
+      - ./database/couchdb.ini:/opt/couchdb/etc/local.ini
