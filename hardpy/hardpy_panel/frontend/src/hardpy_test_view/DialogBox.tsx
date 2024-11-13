@@ -1,7 +1,7 @@
 // Copyright (c) 2024 Everypin
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Button,
@@ -80,7 +80,7 @@ export function StartConfirmationDialog(props: Props) {
   const screenWidth = window.screen.width;
   const screenHeight = window.screen.height;
 
-  const baseDialogDimensions = { width: 100, height: 100 };
+  const baseDialogDimensions = { width: 100, height: 150 };
   const maxSize = 0.6;
   const minSize = 0.25;
   const lineHeight = 10;
@@ -207,16 +207,6 @@ export function StartConfirmationDialog(props: Props) {
     );
   };
 
-  const handleStepImageLoad = (
-    event: React.SyntheticEvent<HTMLImageElement>,
-    width: number
-  ) => {
-    const { naturalWidth, naturalHeight } = event.target as HTMLImageElement;
-    setStepImageDimensions(
-      calculateDimensions(naturalWidth, naturalHeight, width)
-    );
-  };
-
   const calculateTextLines = (text: string, width: number) => {
     const context = document.createElement("canvas").getContext("2d");
     if (context) {
@@ -255,6 +245,39 @@ export function StartConfirmationDialog(props: Props) {
     ),
     screenHeight * minSize
   );
+
+  useEffect(() => {
+    if (widgetType === WidgetType.Multistep) {
+      let maxWidth = 0;
+      let maxHeight = 0;
+
+      const handleStepImageLoad = (image: HTMLImageElement) => {
+        const { naturalWidth, naturalHeight } = image;
+
+        if (naturalWidth > maxWidth) {
+          maxWidth = naturalWidth;
+        }
+        if (naturalHeight > maxHeight) {
+          maxHeight = naturalHeight;
+        }
+
+        setStepImageDimensions((prevDimensions) => ({
+          width: Math.max(prevDimensions.width, naturalWidth),
+          height: Math.max(prevDimensions.height, naturalHeight),
+        }));
+      };
+
+      props.widget_info?.steps?.forEach((step) => {
+        if (step.info?.widget?.type === WidgetType.Image) {
+          const base64Src = `data:image/${step.info.widget?.info.format};base64,${step.info.widget?.info.base64}`;
+
+          const image = new Image();
+          image.src = base64Src;
+          image.onload = () => handleStepImageLoad(image);
+        }
+      });
+    }
+  }, [props.widget_info, widgetType]);
 
   return (
     <Dialog
@@ -387,12 +410,6 @@ export function StartConfirmationDialog(props: Props) {
                         <img
                           src={`data:image/${step.info.widget?.info.format};base64,${step.info.widget?.info.base64}`}
                           alt="Image"
-                          onLoad={(event) =>
-                            handleStepImageLoad(
-                              event,
-                              step.info.widget?.info.width ?? 100
-                            )
-                          }
                           style={{
                             maxWidth: `${dialogWidth}px`,
                             maxHeight: `${dialogHeight}px`,
