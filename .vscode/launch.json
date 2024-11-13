@@ -47,6 +47,16 @@
             ]
         },
         {
+            "name": "HardPy: StandCloud register",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "register",
+            ]
+        },
+        {
             "name": "Python: Example Hello HardPy",
             "type": "debugpy",
             "request": "launch",
