@@ -265,13 +265,9 @@ export function StartConfirmationDialog(props: Props) {
       canOutsideClickClose={false}
       style={{
         width:
-          widgetType === WidgetType.Image || widgetType === WidgetType.Multistep
-            ? `${dialogWidth}px`
-            : "auto",
+          widgetType === WidgetType.Multistep ? `${dialogWidth}px` : "auto",
         height:
-          widgetType === WidgetType.Image || widgetType === WidgetType.Multistep
-            ? `${dialogHeight}px`
-            : "auto",
+          widgetType === WidgetType.Multistep ? `${dialogHeight}px` : "auto",
         minWidth: screenWidth * minSize,
         minHeight: screenHeight * minSize,
         maxWidth: screenWidth * maxSize,
@@ -285,7 +281,6 @@ export function StartConfirmationDialog(props: Props) {
           wordBreak: "break-word",
           maxHeight: screenHeight * maxSize,
           overflowY: "auto",
-          overflowX: "auto",
           maxWidth: screenWidth * maxSize,
           padding: "10px",
         }}
@@ -359,22 +354,19 @@ export function StartConfirmationDialog(props: Props) {
           </>
         )}
         {widgetType === WidgetType.Image && (
-          <div className="image-container">
-            <img
-              src={`data:image/${props.widget_info?.format};base64,${props.widget_info?.base64}`}
-              alt="Image"
-              onLoad={handleImageLoad}
-              style={{
-                width: `${props.widget_info?.width}%`,
-                height: `${props.widget_info?.width}%`,
-                maxWidth: `${dialogWidth - baseDialogDimensions.width / 2}px`,
-                maxHeight: `${dialogHeight - baseDialogDimensions.height / 2}px`,
-                objectFit: "scale-down",
-                display: "block",
-                margin: "0 auto",
-              }}
-            />
-          </div>
+          <img
+            src={`data:image/${props.widget_info?.format};base64,${props.widget_info?.base64}`}
+            alt="Image"
+            onLoad={handleImageLoad}
+            style={{
+              maxWidth: `${dialogWidth}px`,
+              maxHeight: `${dialogHeight}px`,
+              transform: `scale(${(props.widget_info?.width || 100) / 100})`,
+              transformOrigin: `top center`,
+              display: "block",
+              margin: "0 auto",
+            }}
+          />
         )}
         {widgetType === WidgetType.Multistep && (
           <Tabs id={props.title_bar}>
@@ -402,11 +394,10 @@ export function StartConfirmationDialog(props: Props) {
                             )
                           }
                           style={{
-                            width: `${step.info.widget?.info.width ?? 100}%`,
-                            height: `${step.info.widget?.info.width ?? 100}%`,
                             maxWidth: `${dialogWidth}px`,
-                            maxHeight: `${dialogHeight - 100}px`,
-                            objectFit: "scale-down",
+                            maxHeight: `${dialogHeight}px`,
+                            transform: `scale(${(step.info.widget?.info.width || 100) / 100})`,
+                            transformOrigin: `top center`,
                             display: "block",
                             margin: "0 auto",
                           }}
