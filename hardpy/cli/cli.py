@@ -10,6 +10,7 @@ import typer
 from typing_extensions import Annotated
 from uvicorn import run as uvicorn_run
 
+from hardpy.cli.auth.registration import register as auth_register
 from hardpy.cli.template import TemplateGenerator
 from hardpy.common.config import ConfigManager
 
@@ -139,6 +140,27 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:  
         port=config.frontend.port,
         log_level="critical",
     )
+
+
+@cli.command()
+def register(  # noqa: D417
+    verify_ssl: bool = typer.Option(
+        True,
+        help="Skips SSL checks. The option only for developers. "
+        "Must not be pushed to production.",
+    ),
+) -> None:
+    """Register HardPy in StandCloud.
+
+    The command opens an authentication and authorization portal of StandCloud
+    where you will be requested for your credentials and consents to authorize
+    HardPy to upload test reports from your identity.
+
+    Args:
+        ssl_verify (bool): Skips SSL checks. The option only for developers.
+        Must not be pushed to production.
+    """
+    auth_register(False)
 
 
 if __name__ == "__main__":
