@@ -1,7 +1,7 @@
 // Copyright (c) 2024 Everypin
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import {
   Button,
@@ -71,6 +71,7 @@ export function StartConfirmationDialog(props: Props) {
     width: 0,
     height: 0,
   });
+  const maxDimensions = useRef({ width: 0, height: 0 });
 
   const HEX_BASE = 16;
 
@@ -80,7 +81,7 @@ export function StartConfirmationDialog(props: Props) {
   const screenWidth = window.screen.width;
   const screenHeight = window.screen.height;
 
-  const baseDialogDimensions = { width: 100, height: 150 };
+  const baseDialogDimensions = { width: 100, height: 100 };
   const maxSize = 0.6;
   const minSize = 0.25;
   const lineHeight = 10;
@@ -192,8 +193,8 @@ export function StartConfirmationDialog(props: Props) {
     naturalHeight: number,
     widthFactor: number
   ) => ({
-    width: (naturalWidth * (widthFactor || 1)) / 100,
-    height: (naturalHeight * (widthFactor || 1)) / 100,
+    width: (naturalWidth * (widthFactor || 100)) / 100,
+    height: (naturalHeight * (widthFactor || 100)) / 100,
   });
 
   const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
@@ -220,7 +221,7 @@ export function StartConfirmationDialog(props: Props) {
 
   const dialogWidth = Math.min(
     (widgetType === WidgetType.Multistep
-      ? imageStepDimensions
+      ? maxDimensions.current
       : imageDimensions
     ).width + baseDialogDimensions.width,
     screenWidth * maxSize
@@ -236,7 +237,7 @@ export function StartConfirmationDialog(props: Props) {
   const dialogHeight = Math.max(
     Math.min(
       (widgetType === WidgetType.Multistep
-        ? imageStepDimensions.height + baseDialogDimensions.height
+        ? maxDimensions.current.height + baseDialogDimensions.height
         : imageDimensions.height) +
         baseDialogDimensions.height +
         textHeight +
@@ -248,23 +249,21 @@ export function StartConfirmationDialog(props: Props) {
 
   useEffect(() => {
     if (widgetType === WidgetType.Multistep) {
-      let maxWidth = 0;
-      let maxHeight = 0;
-
-      const handleStepImageLoad = (image: HTMLImageElement) => {
+      const handleStepImageLoad = (
+        image: HTMLImageElement,
+        widthFactor: number
+      ) => {
         const { naturalWidth, naturalHeight } = image;
 
-        if (naturalWidth > maxWidth) {
-          maxWidth = naturalWidth;
-        }
-        if (naturalHeight > maxHeight) {
-          maxHeight = naturalHeight;
-        }
-
-        setStepImageDimensions((prevDimensions) => ({
-          width: Math.max(prevDimensions.width, naturalWidth),
-          height: Math.max(prevDimensions.height, naturalHeight),
-        }));
+        maxDimensions.current.width = Math.max(
+          maxDimensions.current.width,
+          naturalWidth * (widthFactor / 100)
+        );
+        maxDimensions.current.height = Math.max(
+          maxDimensions.current.height,
+          naturalHeight * (widthFactor / 100)
+        );
+        setStepImageDimensions(maxDimensions.current);
       };
 
       props.widget_info?.steps?.forEach((step) => {
@@ -273,7 +272,8 @@ export function StartConfirmationDialog(props: Props) {
 
           const image = new Image();
           image.src = base64Src;
-          image.onload = () => handleStepImageLoad(image);
+          image.onload = () =>
+            handleStepImageLoad(image, step.info.widget?.info.width || 100);
         }
       });
     }
