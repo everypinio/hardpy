@@ -411,8 +411,8 @@ export function StartConfirmationDialog(props: Props) {
                           src={`data:image/${step.info.widget?.info.format};base64,${step.info.widget?.info.base64}`}
                           alt="Image"
                           style={{
-                            maxWidth: `${dialogWidth}px`,
-                            maxHeight: `${dialogHeight}px`,
+                            maxWidth: `${imageStepDimensions.width + baseDialogDimensions.width}px`,
+                            maxHeight: `${imageStepDimensions.height + baseDialogDimensions.height}px`,
                             transform: `scale(${(step.info.widget?.info.width || 100) / 100})`,
                             transformOrigin: `top center`,
                             display: "block",
