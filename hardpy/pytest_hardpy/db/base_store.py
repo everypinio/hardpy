@@ -69,6 +69,17 @@ class BaseStore(BaseConnector):
         self._doc = self._db.get(self._doc_id)
         return self._schema(**self._doc)
 
+    def clear(self) -> None:
+        """Clear database."""
+        try:
+            # Clear statestore and runstore databases before each launch
+            self._db.delete(self._doc_id)
+        except (Conflict, NotFound):
+            self._log.debug(
+                "Statestore and runstore databases will be created for the first time"
+            )
+        self._doc: dict = self._init_doc()
+
     def _init_doc(self) -> dict:
         try:
             doc = self._db.get(self._doc_id)

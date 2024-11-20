@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add the ability to clear the **runstore** database before running hardpy
+  using the the `--hardpy-clear-database` option of the **pytest-hardpy** plugin.
 * Fix the timezone format via the **tzlocal** package.
 * Fix skipped test case and module status. Now status of skipped test is **skipped**, not **ready**.
 
