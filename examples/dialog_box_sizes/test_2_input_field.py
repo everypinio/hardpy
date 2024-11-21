@@ -43,7 +43,7 @@ def test_text_input_with_image():
         dialog_text="Type 'ok' and press the Confirm button",
         title_bar="Example of text input",
         widget=TextInputWidget(),
-        image=ImageWidget(address="assets/test.png", width=50),
+        image=ImageWidget(address="assets/test.png", width=50, border=0),
     )
     response = run_dialog_box(dbx)
     set_message(f"Entered text {response}")
@@ -57,7 +57,7 @@ def test_num_input_with_image():
         dialog_text=f"Enter the number {test_num} and press the Confirm button",
         title_bar="Example of entering a number",
         widget=NumericInputWidget(),
-        image=ImageWidget(address="assets/test.png", width=50),
+        image=ImageWidget(address="assets/test.png", width=50, border=1),
     )
     response = int(run_dialog_box(dbx))
     set_message(f"Entered number {response}")

@@ -16,7 +16,7 @@ def test_base_dialog_box_with_image():
     dbx = DialogBox(
         title_bar="Operator check",
         dialog_text="Press the Confirm button",
-        image=ImageWidget(address="assets/test.png", width=50),
+        image=ImageWidget(address="assets/test.png", width=50, border=1),
     )
     response = run_dialog_box(dbx)
     assert response

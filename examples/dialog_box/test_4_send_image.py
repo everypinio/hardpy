@@ -11,7 +11,7 @@ def test_upload_image():
         dialog_text="Test image",
         widget=ImageWidget(
             address="assets/test.png",
-            width=50,
+            width=50
         ),
         image=ImageWidget(address="assets/test.png", width=50),
     )

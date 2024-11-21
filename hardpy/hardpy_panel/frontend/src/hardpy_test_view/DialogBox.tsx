@@ -25,6 +25,7 @@ interface Props {
   image_base64?: string;
   image_format?: string;
   image_width?: number;
+  image_border?: number;
 }
 
 export enum WidgetType {
@@ -250,6 +251,13 @@ export function StartConfirmationDialog(props: Props) {
     screenHeight * minSize
   );
 
+  const imageStyle = {
+    border: `${props.image_border || 0}px solid black`,
+    borderRadius: '5px',
+    display: 'block',
+    margin: '0 auto',
+  };
+  
   useEffect(() => {
     if (widgetType === WidgetType.Multistep) {
       const handleStepImageLoad = (
@@ -390,8 +398,7 @@ export function StartConfirmationDialog(props: Props) {
               maxHeight: `${dialogHeight}px`,
               transform: `scale(${(props.widget_info?.width || 100) / 100})`,
               transformOrigin: `top center`,
-              display: "block",
-              margin: "0 auto",
+              ...imageStyle,
             }}
           />
         )}
@@ -419,10 +426,7 @@ export function StartConfirmationDialog(props: Props) {
                             maxHeight: `${imageStepDimensions.height + baseDialogDimensions.height}px`,
                             transform: `scale(${(step.info.widget?.info.width || 100) / 100})`,
                             transformOrigin: `top center`,
-                            display: "block",
-                            margin: "0 auto",
-                            border: '1px solid black',
-                            borderRadius: '5px',
+                            ...imageStyle,
                           }}
                         />
                       )}
@@ -446,10 +450,7 @@ export function StartConfirmationDialog(props: Props) {
               maxWidth: `${dialogWidth - baseDialogDimensions.width / 2}px`,
               maxHeight: `${dialogHeight - baseDialogDimensions.height / 2}px`,
               objectFit: "scale-down",
-              display: "block",
-              margin: "0 auto",
-              border: '1px solid black',
-              borderRadius: '5px',
+              ...imageStyle,
             }}
           />
         </div>

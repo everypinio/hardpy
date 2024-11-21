@@ -174,13 +174,14 @@ class CheckboxWidget(IWidget):
 class ImageWidget(IWidget):
     """Image widget."""
 
-    def __init__(self, address: str, format: str = "image", width: int = 100) -> None:  # noqa: A002
+    def __init__(self, address: str, format: str = "image", width: int = 100, border: int = 0) -> None:  # noqa: A002
         """Validate the image fields and defines the base64 if it does not exist.
 
         Args:
             address (str): image address
-            format (str): image format
+            format (str): image formats
             width (int): image width
+            border (int): image border
 
         Raises:
             WidgetInfoError: If both address and base64 are specified.
@@ -190,10 +191,15 @@ class ImageWidget(IWidget):
         if width < 1:
             msg = "Width must be positive"
             raise WidgetInfoError(msg)
+        
+        if border < 0:
+            msg = "Border must be non-negative"
+            raise WidgetInfoError(msg)
 
         self.info["address"] = address
         self.info["format"] = format
         self.info["width"] = width
+        self.info["border"] = border
 
         try:
             with open(address, "rb") as file:  # noqa: PTH123
@@ -225,6 +231,7 @@ class ImageWidget(IWidget):
             "format": self.info["format"],
             "width": self.info["width"],
             "base64": self.info["base64"],
+            "border": self.info["border"],
         }
 
 

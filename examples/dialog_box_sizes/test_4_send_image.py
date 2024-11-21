@@ -1,4 +1,5 @@
 import pytest
+
 from hardpy import DialogBox, ImageWidget, run_dialog_box
 
 pytestmark = pytest.mark.module_name("Image dialog box")
@@ -10,6 +11,7 @@ def test_small_100():
         widget=ImageWidget(
             address="assets/test.png",
             width=100,
+            border=1,
         ),
     )
     response = run_dialog_box(dbx)
