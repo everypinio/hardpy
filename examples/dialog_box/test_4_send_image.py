@@ -13,6 +13,7 @@ def test_upload_image():
             address="assets/test.png",
             width=50,
         ),
+        image=ImageWidget(address="assets/test.png", width=50),
     )
     response = run_dialog_box(dbx)
     assert response

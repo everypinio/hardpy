@@ -22,6 +22,9 @@ interface Props {
   width?: string;
   widget_type?: WidgetType;
   widget_info?: WidgetInfo;
+  image_base64?: string;
+  image_format?: string;
+  image_width?: number;
 }
 
 export enum WidgetType {
@@ -276,6 +279,7 @@ export function StartConfirmationDialog(props: Props) {
         minHeight: screenHeight * minSize,
         maxWidth: screenWidth * maxSize,
         maxHeight: screenHeight * maxSize,
+        fontSize: '1rem',
       }}
     >
       <div
@@ -372,6 +376,8 @@ export function StartConfirmationDialog(props: Props) {
                 objectFit: "scale-down",
                 display: "block",
                 margin: "0 auto",
+                border: '1px solid black',
+                borderRadius: '5px',
               }}
             />
           </div>
@@ -409,6 +415,8 @@ export function StartConfirmationDialog(props: Props) {
                             objectFit: "scale-down",
                             display: "block",
                             margin: "0 auto",
+                            border: '1px solid black',
+                            borderRadius: '5px',
                           }}
                         />
                       )}
@@ -420,6 +428,26 @@ export function StartConfirmationDialog(props: Props) {
           </Tabs>
         )}
       </div>
+      {props.image_base64 && (
+        <div className="image-container">
+          <img
+            src={`data:image/${props.image_format};base64,${props.image_base64}`}
+            alt="Image"
+            onLoad={handleImageLoad}
+            style={{
+              width: `${props.image_width}%`,
+              height: `${props.image_width}%`,
+              maxWidth: `${dialogWidth - baseDialogDimensions.width / 2}px`,
+              maxHeight: `${dialogHeight - baseDialogDimensions.height / 2}px`,
+              objectFit: "scale-down",
+              display: "block",
+              margin: "0 auto",
+              border: '1px solid black',
+              borderRadius: '5px',
+            }}
+          />
+        </div>
+      )}    
       <div className={Classes.DIALOG_FOOTER}>
         <Button
           intent="primary"

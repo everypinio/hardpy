@@ -119,11 +119,11 @@ def confirm_operator_msg(is_msg_visible: str) -> dict:
     return {"status": Status.ERROR}
 
 
-app.mount(
-    "/",
-    StaticFiles(
-        directory=Path(__file__).parent / "frontend/dist",
-        html=True,
-    ),
-    name="static",
-)
+# app.mount(
+#     "/",
+#     StaticFiles(
+#         directory=Path(__file__).parent / "frontend/dist",
+#         html=True,
+#     ),
+#     name="static",
+# )

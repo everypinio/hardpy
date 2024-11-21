@@ -22,10 +22,17 @@ interface WidgetDescription {
     type: WidgetType;
 }
 
+interface ImageInfo {
+    base64?: string;
+    format?: string;
+    width?: number;
+  }
+
 interface DialogBoxProps {
     title_bar?: string;
     dialog_text: string;
-    widget?: WidgetDescription
+    widget?: WidgetDescription;
+    image?: ImageInfo;
 }
 
 interface Case {
@@ -263,6 +270,7 @@ export class TestSuite extends React.Component<Props, State> {
     private cellRendererStatus(test_topics: Case[], row_: string, rowIndex: number) {
         const test = test_topics[rowIndex];
         const { info: widget_info, type: widget_type } = test.dialog_box.widget || {};
+        const { base64: image_base64, format: image_format, width: image_width } = test.dialog_box.image || {};
 
         return this.commonCellRender(
             <div style={{ marginTop: '0.2em', marginBottom: '0.2em' }}>
@@ -272,6 +280,9 @@ export class TestSuite extends React.Component<Props, State> {
                         dialog_text={test.dialog_box.dialog_text}
                         widget_info={widget_info}
                         widget_type={widget_type}
+                        image_base64={image_base64}
+                        image_format={image_format}
+                        image_width={image_width}
                     />
                 )}
                 <TestStatus

@@ -29,9 +29,12 @@ class WidgetType(Enum):
 class IWidget(ABC):
     """Dialog box widget interface."""
 
-    def __init__(self, widget_type: WidgetType) -> None:
+    def __init__(self, widget_type: WidgetType, image: ImageWidget | None = None) -> None:
         self.type: Final[str] = widget_type.value
         self.info: dict = {}
+
+        if isinstance(image, ImageWidget):
+            self.info["image"] = image.__dict__
 
     @abstractmethod
     def convert_data(self, input_data: str | None) -> Any | None:  # noqa: ANN401
@@ -49,8 +52,8 @@ class IWidget(ABC):
 class BaseWidget(IWidget):
     """Widget info interface."""
 
-    def __init__(self, widget_type: WidgetType = WidgetType.BASE) -> None:  # noqa: ARG002
-        super().__init__(WidgetType.BASE)
+    def __init__(self, widget_type: WidgetType = WidgetType.BASE, image: ImageWidget | None = None) -> None:  # noqa: ARG002
+        super().__init__(WidgetType.BASE, image)
 
     def convert_data(self, input_data: str | None = None) -> bool:  # noqa: ARG002
         """Get base widget data, i.e. None.
@@ -67,9 +70,9 @@ class BaseWidget(IWidget):
 class TextInputWidget(IWidget):
     """Text input widget."""
 
-    def __init__(self) -> None:
+    def __init__(self, image: ImageWidget | None = None) -> None:
         """Initialize the TextInputWidget."""
-        super().__init__(WidgetType.TEXT_INPUT)
+        super().__init__(WidgetType.TEXT_INPUT, image)
 
     def convert_data(self, input_data: str) -> str:
         """Get the text input data in the string format.
@@ -86,9 +89,9 @@ class TextInputWidget(IWidget):
 class NumericInputWidget(IWidget):
     """Numeric input widget."""
 
-    def __init__(self) -> None:
+    def __init__(self, image: ImageWidget | None = None) -> None:
         """Initialize the NumericInputWidget."""
-        super().__init__(WidgetType.NUMERIC_INPUT)
+        super().__init__(WidgetType.NUMERIC_INPUT, image)
 
     def convert_data(self, input_data: str) -> float | None:
         """Get the numeric widget data in the correct format.
@@ -108,7 +111,7 @@ class NumericInputWidget(IWidget):
 class RadiobuttonWidget(IWidget):
     """Radiobutton widget."""
 
-    def __init__(self, fields: list[str]) -> None:
+    def __init__(self, fields: list[str], image: ImageWidget | None = None) -> None:
         """Initialize the RadiobuttonWidget.
 
         Args:
@@ -117,7 +120,7 @@ class RadiobuttonWidget(IWidget):
         Raises:
             ValueError: If the fields list is empty.
         """
-        super().__init__(WidgetType.RADIOBUTTON)
+        super().__init__(WidgetType.RADIOBUTTON, image)
         if not fields:
             msg = "RadiobuttonWidget must have at least one field"
             raise ValueError(msg)
@@ -138,7 +141,7 @@ class RadiobuttonWidget(IWidget):
 class CheckboxWidget(IWidget):
     """Checkbox widget."""
 
-    def __init__(self, fields: list[str]) -> None:
+    def __init__(self, fields: list[str], image: ImageWidget | None = None) -> None:
         """Initialize the CheckboxWidget.
 
         Args:
@@ -147,7 +150,7 @@ class CheckboxWidget(IWidget):
         Raises:
             ValueError: If the fields list is empty.
         """
-        super().__init__(WidgetType.CHECKBOX)
+        super().__init__(WidgetType.CHECKBOX, image)
         if not fields:
             msg = "Checkbox must have at least one field"
             raise ValueError(msg)
@@ -210,6 +213,19 @@ class ImageWidget(IWidget):
             bool: True if confirm button is pressed
         """
         return True
+    
+    def to_dict(self) -> dict:
+        """Convert ImageWidget to dictionary.
+
+        Returns:
+            dict: ImageWidget dictionary.
+        """
+        return {
+            "address": self.info["address"],
+            "format": self.info["format"],
+            "width": self.info["width"],
+            "base64": self.info["base64"],
+        }
 
 
 class StepWidget(IWidget):
@@ -229,8 +245,9 @@ class StepWidget(IWidget):
         title: str,
         text: str | None,
         widget: ImageWidget | None = None,
+        image: ImageWidget | None = None,
     ) -> None:
-        super().__init__(WidgetType.STEP)
+        super().__init__(WidgetType.STEP, image)
         if text is None and widget is None:
             msg = "Text or widget must be provided"
             raise WidgetInfoError(msg)
@@ -255,7 +272,7 @@ class StepWidget(IWidget):
 class MultistepWidget(IWidget):
     """Multistep widget."""
 
-    def __init__(self, steps: list[StepWidget]) -> None:
+    def __init__(self, steps: list[StepWidget], image: ImageWidget | None = None) -> None:
         """Initialize the MultistepWidget.
 
         Args:
@@ -264,7 +281,7 @@ class MultistepWidget(IWidget):
         Raises:
             ValueError: If the provided list of steps is empty.
         """
-        super().__init__(WidgetType.MULTISTEP)
+        super().__init__(WidgetType.MULTISTEP, image)
         if not steps:
             msg = "MultistepWidget must have at least one step"
             raise ValueError(msg)
@@ -292,6 +309,7 @@ class DialogBox:
         dialog_text (str): dialog text
         title_bar (str | None): title bar
         widget (IWidget | None): widget info
+        image (ImageWidget | None): image
     """
 
     def __init__(
@@ -299,8 +317,10 @@ class DialogBox:
         dialog_text: str,
         title_bar: str | None = None,
         widget: IWidget | None = None,
+        image: ImageWidget | None = None,
     ) -> None:
         self.widget: IWidget = BaseWidget() if widget is None else widget
+        self.image: ImageWidget | None = image
         self.dialog_text: str = dialog_text
         self.title_bar: str | None = title_bar
 
@@ -312,4 +332,6 @@ class DialogBox:
         """
         dbx_dict = deepcopy(self.__dict__)
         dbx_dict["widget"] = deepcopy(self.widget.__dict__)
+        if self.image:
+            dbx_dict["image"] = self.image.to_dict() 
         return dbx_dict

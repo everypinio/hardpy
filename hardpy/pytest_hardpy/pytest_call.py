@@ -274,6 +274,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
         - title_bar (str | None): The title bar of the dialog box.
           If the title_bar field is missing, it is the case name.
         - widget (DialogBoxWidget | None): Widget information.
+        - image (ImageWidget | None): Image information.
 
     Returns:
         Any: An object containing the user's response.
