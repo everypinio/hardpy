@@ -63,7 +63,7 @@ def pytest_addoption(parser: Parser) -> None:
     )
     parser.addoption(
         "--hardpy-clear-database",
-        action="store",
+        action="store_true",
         default=False,
         help="clear hardpy local database",
     )
@@ -116,7 +116,6 @@ class HardpyPlugin:
             con_data.database_url = str(database_url)  # type: ignore
 
         is_clear_database = config.getoption("--hardpy-clear-database")
-        is_clear_statestore = is_clear_database == str(True)
 
         socket_port = config.getoption("--hardpy-sp")
         if socket_port:
@@ -133,7 +132,7 @@ class HardpyPlugin:
 
         # must be init after config data is set
         try:
-            self._reporter = HookReporter(is_clear_statestore)
+            self._reporter = HookReporter(bool(is_clear_database))
         except RuntimeError as exc:
             exit(str(exc), 1)
 

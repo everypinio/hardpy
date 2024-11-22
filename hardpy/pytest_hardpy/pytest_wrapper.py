@@ -116,7 +116,6 @@ class PyTestWrapper:
 
         if is_clear_database:
             args.append("--hardpy-clear-database")
-            args.append(str(is_clear_database))
 
         subprocess.Popen(  # noqa: S603
             [self.python_executable, *args],
