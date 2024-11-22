@@ -1,7 +1,7 @@
 // Copyright (c) 2024 Everypin
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Classes, Dialog } from "@blueprintjs/core";
 import axios from "axios";
 
@@ -25,6 +25,20 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
       console.error("Error confirming dialog box:", error);
     }
   };
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    const keyboardEvent = event as unknown as React.KeyboardEvent<HTMLInputElement>;
+    if (keyboardEvent.key === "Escape") {
+      handleClose();
+    }
+  };
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []); 
 
   return (
     <Dialog
