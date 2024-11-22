@@ -75,21 +75,14 @@ def set_dut_serial_number(serial_number: str) -> None:
     Raises:
         DuplicateSerialNumberError: if serial number is already set
     """
-    try:
-        if not isinstance(serial_number, str):
-            if isinstance(str(serial_number), str):
-                serial_number = str(serial_number)
-            msg = "Expected 'serial_number' to be a string"
-            raise ValueError(msg)  # noqa: TRY004, TRY301
-    except Exception as e:  # noqa: BLE001
-        msg = f"Invalid input for DUT serial number: {e}"
-        raise ValueError(msg)  # noqa: B904
-
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.DUT, DF.SERIAL_NUMBER)
     if reporter.get_field(key):
         raise DuplicateSerialNumberError
-    reporter.set_doc_value(key, serial_number)
+    reporter.set_doc_value(
+        key,
+        serial_number if isinstance(serial_number, str) else str(serial_number),
+    )
     reporter.update_db_by_doc()
 
 
