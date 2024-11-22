@@ -4,9 +4,10 @@
 from hardpy.pytest_hardpy.utils.connection_data import ConnectionData
 from hardpy.pytest_hardpy.utils.const import TestStatus
 from hardpy.pytest_hardpy.utils.dialog_box import (
+    BaseWidget,
     CheckboxWidget,
     DialogBox,
-    ImageWidget,
+    ImageComponent,
     MultistepWidget,
     NumericInputWidget,
     RadiobuttonWidget,
@@ -37,11 +38,12 @@ __all__ = [
     "DuplicateTestStandNameError",
     "WidgetInfoError",
     "DialogBox",
+    "BaseWidget",
     "TextInputWidget",
     "NumericInputWidget",
     "CheckboxWidget",
     "RadiobuttonWidget",
-    "ImageWidget",
+    "ImageComponent",
     "MultistepWidget",
     "StepWidget",
     "machine_id",

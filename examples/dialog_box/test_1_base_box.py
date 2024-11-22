@@ -1,7 +1,7 @@
 import pytest
 
 from hardpy import DialogBox, run_dialog_box
-from hardpy.pytest_hardpy.utils.dialog_box import ImageWidget
+from hardpy.pytest_hardpy.utils.dialog_box import ImageComponent
 
 pytestmark = pytest.mark.module_name("Base dialog box")
 
@@ -16,7 +16,7 @@ def test_base_dialog_box_with_image():
     dbx = DialogBox(
         title_bar="Operator check",
         dialog_text="Press the Confirm button",
-        image=ImageWidget(address="assets/test.png", width=50),
+        image=ImageComponent(address="assets/test.png", width=50),
     )
     response = run_dialog_box(dbx)
     assert response

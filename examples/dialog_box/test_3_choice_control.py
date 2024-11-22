@@ -7,7 +7,7 @@ from hardpy import (
     run_dialog_box,
     set_message,
 )
-from hardpy.pytest_hardpy.utils.dialog_box import ImageWidget
+from hardpy.pytest_hardpy.utils.dialog_box import ImageComponent
 
 pytestmark = pytest.mark.module_name("Choice control dialog boxes")
 
@@ -43,7 +43,7 @@ def test_radiobutton_with_image():
         dialog_text='Select item "one" out of several and click Confirm.',
         title_bar="Radiobutton example",
         widget=RadiobuttonWidget(fields=["one", "two", "three"]),
-        image=ImageWidget(address="assets/test.png", width=50),
+        image=ImageComponent(address="assets/test.png", width=50),
     )
     response = run_dialog_box(dbx)
     set_message(f"Selected item {response}")
@@ -56,7 +56,7 @@ def test_checkbox_with_image():
         dialog_text='Select items "one" and "two" and click the Confirm button',
         title_bar="Checkbox example",
         widget=CheckboxWidget(fields=["one", "two", "three"]),
-        image=ImageWidget(address="assets/test.png", width=50),
+        image=ImageComponent(address="assets/test.png", width=50),
     )
     response = run_dialog_box(dbx)
     set_message(f"Selected item {response}")

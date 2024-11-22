@@ -7,7 +7,7 @@ from hardpy import (
     run_dialog_box,
     set_message,
 )
-from hardpy.pytest_hardpy.utils.dialog_box import ImageWidget
+from hardpy.pytest_hardpy.utils.dialog_box import ImageComponent
 
 pytestmark = pytest.mark.module_name("Input field dialog boxes")
 
@@ -43,7 +43,7 @@ def test_text_input_with_image():
         dialog_text="Type 'ok' and press the Confirm button",
         title_bar="Example of text input",
         widget=TextInputWidget(),
-        image=ImageWidget(address="assets/test.png", width=50),
+        image=ImageComponent(address="assets/test.png", width=50),
     )
     response = run_dialog_box(dbx)
     set_message(f"Entered text {response}")
@@ -57,7 +57,7 @@ def test_num_input_with_image():
         dialog_text=f"Enter the number {test_num} and press the Confirm button",
         title_bar="Example of entering a number",
         widget=NumericInputWidget(),
-        image=ImageWidget(address="assets/test.png", width=50),
+        image=ImageComponent(address="assets/test.png", width=50),
     )
     response = int(run_dialog_box(dbx))
     set_message(f"Entered number {response}")

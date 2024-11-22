@@ -9,7 +9,7 @@ from hardpy import (
 def finish_executing():
     report = get_current_report()
 
-    if report.status == "passed": # type: ignore
+    if report.status == "passed":  # type: ignore
         set_operator_message(
             "Тестирование завершилось успешно. Ошибок не обнаружено.",
         )
@@ -18,7 +18,7 @@ def finish_executing():
             "в hardpy_encoder/README.md.",
         )
 
-    elif report.status == "failed": # type: ignore
+    elif report.status == "failed":  # type: ignore
         set_operator_message(
             "Тестирование провалено. Обнаружены ошибки.",
         )

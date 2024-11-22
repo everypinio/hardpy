@@ -34,8 +34,14 @@ export enum WidgetType {
   NumericInput = "numericinput",
   RadioButton = "radiobutton",
   Checkbox = "checkbox",
-  Image = "image",
   Multistep = "multistep",
+}
+
+interface ImageComponent {
+  base64?: string;
+  format?: string;
+  width?: number;
+  border?: number;
 }
 
 interface StepWidgetInfo {
@@ -46,6 +52,7 @@ interface StepInfo {
   title: string;
   text?: string;
   widget?: StepWidgetInfo;
+  image?: ImageComponent;
 }
 
 interface Step {
@@ -56,9 +63,6 @@ interface Step {
 interface WidgetInfo {
   fields?: string[];
   text?: string;
-  base64?: string;
-  format?: string;
-  width?: number;
   steps?: Step[];
 }
 
@@ -204,11 +208,7 @@ export function StartConfirmationDialog(props: Props) {
   const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
     const { naturalWidth, naturalHeight } = event.target as HTMLImageElement;
     setImageDimensions(
-      calculateDimensions(
-        naturalWidth,
-        naturalHeight,
-        props.widget_info?.width || 100
-      )
+      calculateDimensions(naturalWidth, naturalHeight, props.image_width ?? 100)
     );
   };
 
@@ -253,11 +253,11 @@ export function StartConfirmationDialog(props: Props) {
 
   const imageStyle = {
     border: `${props.image_border || 0}px solid black`,
-    borderRadius: '5px',
-    display: 'block',
-    margin: '0 auto',
+    borderRadius: "5px",
+    display: "block",
+    margin: "0 auto",
   };
-  
+
   useEffect(() => {
     if (widgetType === WidgetType.Multistep) {
       const handleStepImageLoad = (
@@ -278,13 +278,13 @@ export function StartConfirmationDialog(props: Props) {
       };
 
       props.widget_info?.steps?.forEach((step) => {
-        if (step.info?.widget?.type === WidgetType.Image) {
-          const base64Src = `data:image/${step.info.widget?.info.format};base64,${step.info.widget?.info.base64}`;
+        if (step.info?.widget?.type === WidgetType.Base) {
+          const base64Src = `data:image/${step.info.image?.format};base64,${step.info.image?.base64}`;
 
           const image = new Image();
           image.src = base64Src;
           image.onload = () =>
-            handleStepImageLoad(image, step.info.widget?.info.width || 100);
+            handleStepImageLoad(image, step.info.image?.width || 100);
         }
       });
     }
@@ -306,7 +306,7 @@ export function StartConfirmationDialog(props: Props) {
         minHeight: screenHeight * minSize,
         maxWidth: screenWidth * maxSize,
         maxHeight: screenHeight * maxSize,
-        fontSize: '1rem',
+        fontSize: "1rem",
       }}
     >
       <div
@@ -388,20 +388,6 @@ export function StartConfirmationDialog(props: Props) {
               ))}
           </>
         )}
-        {widgetType === WidgetType.Image && (
-          <img
-            src={`data:image/${props.widget_info?.format};base64,${props.widget_info?.base64}`}
-            alt="Image"
-            onLoad={handleImageLoad}
-            style={{
-              maxWidth: `${dialogWidth}px`,
-              maxHeight: `${dialogHeight}px`,
-              transform: `scale(${(props.widget_info?.width || 100) / 100})`,
-              transformOrigin: `top center`,
-              ...imageStyle,
-            }}
-          />
-        )}
         {widgetType === WidgetType.Multistep && (
           <Tabs id={props.title_bar}>
             {props.widget_info?.steps?.map((step: Step) => (
@@ -417,14 +403,14 @@ export function StartConfirmationDialog(props: Props) {
                           {line}
                         </p>
                       ))}
-                      {step.info?.widget?.type === WidgetType.Image && (
+                      {step.info?.widget?.type === WidgetType.Base && (
                         <img
-                          src={`data:image/${step.info.widget?.info.format};base64,${step.info.widget?.info.base64}`}
+                          src={`data:image/${step.info.image?.format};base64,${step.info.image?.base64}`}
                           alt="Image"
                           style={{
                             maxWidth: `${imageStepDimensions.width + baseDialogDimensions.width}px`,
                             maxHeight: `${imageStepDimensions.height + baseDialogDimensions.height}px`,
-                            transform: `scale(${(step.info.widget?.info.width || 100) / 100})`,
+                            transform: `scale(${(step.info.image?.width || 100) / 100})`,
                             transformOrigin: `top center`,
                             ...imageStyle,
                           }}
@@ -454,14 +440,13 @@ export function StartConfirmationDialog(props: Props) {
             }}
           />
         </div>
-      )}    
+      )}
       <div className={Classes.DIALOG_FOOTER}>
         <Button
           intent="primary"
           onClick={handleConfirm}
           autoFocus={
             widgetType === WidgetType.Base ||
-            widgetType === WidgetType.Image ||
             widgetType === WidgetType.Multistep
           }
         >
