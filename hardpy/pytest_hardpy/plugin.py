@@ -63,7 +63,7 @@ def pytest_addoption(parser: Parser) -> None:
     )
     parser.addoption(
         "--hardpy-clear-database",
-        action="store",
+        action="store_true",
         default=False,
         help="clear hardpy local database",
     )
