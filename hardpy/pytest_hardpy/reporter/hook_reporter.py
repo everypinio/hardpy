@@ -21,6 +21,7 @@ class HookReporter(BaseReporter):
         super().__init__()
         if is_clear_database:
             self._statestore.clear()
+            self._runstore.clear()
         self._log = getLogger(__name__)
 
     def init_doc(self, doc_name: str) -> None:

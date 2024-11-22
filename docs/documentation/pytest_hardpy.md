@@ -490,7 +490,7 @@ The default is *localhost*.
 
 #### hardpy-clear-database
 
-Option to clean the **statestore** database before running pytest.
+Option to clean **statestore** and **runstore** databases before running pytest.
 
 ```bash
 --hardpy-clear-database
