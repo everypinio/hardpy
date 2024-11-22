@@ -17,7 +17,6 @@ def hardpy_opts():
         raise RuntimeError(msg)
     return [
         "--hardpy-clear-database",
-        str(True),
         "--hardpy-db-url",
         config_data.database.connection_url(),
         "--hardpy-pt",

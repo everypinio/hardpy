@@ -75,9 +75,7 @@ class BaseStore(BaseConnector):
             # Clear statestore and runstore databases before each launch
             self._db.delete(self._doc_id)
         except (Conflict, NotFound):
-            self._log.debug(
-                "Statestore and runstore databases will be created for the first time",
-            )
+            self._log.debug("Database will be created for the first time")
         self._doc: dict = self._init_doc()
 
     def _init_doc(self) -> dict:
