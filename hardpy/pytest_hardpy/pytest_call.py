@@ -79,7 +79,10 @@ def set_dut_serial_number(serial_number: str) -> None:
     key = reporter.generate_key(DF.DUT, DF.SERIAL_NUMBER)
     if reporter.get_field(key):
         raise DuplicateSerialNumberError
-    reporter.set_doc_value(key, serial_number)
+    reporter.set_doc_value(
+        key,
+        serial_number if isinstance(serial_number, str) else str(serial_number),
+    )
     reporter.update_db_by_doc()
 
 
