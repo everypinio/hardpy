@@ -25,7 +25,7 @@ from pytest import (
     Parser,
     Session,
     TestReport,
-    exit,
+    exit,  # noqa: A004
     fixture,
     skip,
 )
