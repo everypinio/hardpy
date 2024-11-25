@@ -14,8 +14,6 @@ indent-width = 4
         "benchmarks",
     ]
     ignore = [
-        "ANN101", # Missing type annotation for `self` in method
-        "ANN102", # Missing type annotation for `cls` in classmethod
         "D100",   # Missing docstring in public module
         "D105",   # Missing docstring in magic method
         "D107",   # Missing docstring in `__init__`
