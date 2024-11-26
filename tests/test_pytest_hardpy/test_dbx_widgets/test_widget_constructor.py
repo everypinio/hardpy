@@ -117,16 +117,16 @@ def test_multistep_widget():
         width=50,
     )
     steps = [
-        hardpy.StepWidget("Step 1", text="Content for step", widget=None),
-        hardpy.StepWidget("Step 2", text="Content for step 2", widget=img_widget),
-        hardpy.StepWidget("Step 3", text=None, widget=img_widget),
+        hardpy.StepWidget("Step 1", text="Content for step"),
+        hardpy.StepWidget("Step 2", text="Content for step 2", image=img_widget),
+        hardpy.StepWidget("Step 3", text=None, image=img_widget),
     ]
     hardpy.MultistepWidget(steps)
     assert True
 
 
 def test_step_widget():
-    hardpy.StepWidget(title="Text", text=" ", widget=None)
+    hardpy.StepWidget(title="Text", text=" ")
     assert True
 
 

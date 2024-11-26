@@ -53,12 +53,12 @@ def test_image_widget():
 
 def test_multistep_widget():
     steps = [
-        hardpy.StepWidget("Step 1", text="Content for step", widget=None),
+        hardpy.StepWidget("Step 1", text="Content for step"),
     ]
     widget = hardpy.MultistepWidget(steps)
     assert widget.convert_data("") is True
 
 
 def test_step_widget():
-    widget = hardpy.StepWidget(title="Text", text=" ", widget=None)
+    widget = hardpy.StepWidget(title="Text", text=" ")
     assert widget.convert_data("") is True
