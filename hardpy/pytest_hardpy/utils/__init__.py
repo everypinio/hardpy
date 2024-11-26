@@ -19,6 +19,7 @@ from hardpy.pytest_hardpy.utils.exception import (
     DuplicateSerialNumberError,
     DuplicateTestStandLocationError,
     DuplicateTestStandNameError,
+    ImageError,
     WidgetInfoError,
 )
 from hardpy.pytest_hardpy.utils.machineid import machine_id
@@ -36,6 +37,7 @@ __all__ = [
     "DuplicateTestStandLocationError",
     "DuplicateTestStandNameError",
     "ImageComponent",
+    "ImageError",
     "MultistepWidget",
     "NodeInfo",
     "NumericInputWidget",

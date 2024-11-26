@@ -23,7 +23,6 @@ interface Props {
   widget_type?: WidgetType;
   widget_info?: WidgetInfo;
   image_base64?: string;
-  image_format?: string;
   image_width?: number;
   image_border?: number;
 }
@@ -39,7 +38,6 @@ export enum WidgetType {
 
 interface ImageComponent {
   base64?: string;
-  format?: string;
   width?: number;
   border?: number;
 }
@@ -48,6 +46,7 @@ interface StepWidgetInfo {
   type: string;
   info: WidgetInfo;
 }
+
 interface StepInfo {
   title: string;
   text?: string;
@@ -253,7 +252,6 @@ export function StartConfirmationDialog(props: Props) {
 
   const imageStyle = {
     border: `${props.image_border || 0}px solid black`,
-    borderRadius: "5px",
     display: "block",
     margin: "0 auto",
   };
@@ -278,8 +276,8 @@ export function StartConfirmationDialog(props: Props) {
       };
 
       props.widget_info?.steps?.forEach((step) => {
-        if (step.info?.widget?.type === WidgetType.Base) {
-          const base64Src = `data:image/${step.info.image?.format};base64,${step.info.image?.base64}`;
+        if (step.info.image) {
+          const base64Src = `data:image/image;base64,${step.info.image?.base64}`;
 
           const image = new Image();
           image.src = base64Src;
@@ -403,9 +401,9 @@ export function StartConfirmationDialog(props: Props) {
                           {line}
                         </p>
                       ))}
-                      {step.info?.widget?.type === WidgetType.Base && (
+                      {step.info.image && (
                         <img
-                          src={`data:image/${step.info.image?.format};base64,${step.info.image?.base64}`}
+                          src={`data:image/image;base64,${step.info.image?.base64}`}
                           alt="Image"
                           style={{
                             maxWidth: `${imageStepDimensions.width + baseDialogDimensions.width}px`,
@@ -423,24 +421,27 @@ export function StartConfirmationDialog(props: Props) {
             ))}
           </Tabs>
         )}
+        <p> </p>
+        {props.image_base64 && (
+          <div className="image-container">
+            <img
+              src={`data:image/image;base64,${props.image_base64}`}
+              alt="Image"
+              onLoad={handleImageLoad}
+              style={{
+                width: `${props.image_width}%`,
+                height: `${props.image_width}%`,
+                maxWidth: `${dialogWidth - baseDialogDimensions.width / 2}px`,
+                maxHeight: `${dialogHeight - baseDialogDimensions.height / 2}px`,
+                objectFit: "scale-down",
+                transform: `scale(${(props.image_width || 100) / 100})`,
+                transformOrigin: `top center`,
+                ...imageStyle,
+              }}
+            />
+          </div>
+        )}
       </div>
-      {props.image_base64 && (
-        <div className="image-container">
-          <img
-            src={`data:image/${props.image_format};base64,${props.image_base64}`}
-            alt="Image"
-            onLoad={handleImageLoad}
-            style={{
-              width: `${props.image_width}%`,
-              height: `${props.image_width}%`,
-              maxWidth: `${dialogWidth - baseDialogDimensions.width / 2}px`,
-              maxHeight: `${dialogHeight - baseDialogDimensions.height / 2}px`,
-              objectFit: "scale-down",
-              ...imageStyle,
-            }}
-          />
-        </div>
-      )}
       <div className={Classes.DIALOG_FOOTER}>
         <Button
           intent="primary"

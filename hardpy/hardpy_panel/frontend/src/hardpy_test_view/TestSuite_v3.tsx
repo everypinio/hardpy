@@ -271,7 +271,7 @@ export class TestSuite extends React.Component<Props, State> {
     private cellRendererStatus(test_topics: Case[], row_: string, rowIndex: number) {
         const test = test_topics[rowIndex];
         const { info: widget_info, type: widget_type } = test.dialog_box.widget || {};
-        const { base64: image_base64, format: image_format, width: image_width, border: image_border } = test.dialog_box.image || {};
+        const { base64: image_base64, width: image_width, border: image_border } = test.dialog_box.image || {};
 
         return this.commonCellRender(
             <div style={{ marginTop: '0.2em', marginBottom: '0.2em' }}>
@@ -282,7 +282,6 @@ export class TestSuite extends React.Component<Props, State> {
                         widget_info={widget_info}
                         widget_type={widget_type}
                         image_base64={image_base64}
-                        image_format={image_format}
                         image_width={image_width}
                         image_border={image_border}
                     />

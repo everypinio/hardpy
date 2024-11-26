@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Final
 
-from hardpy.pytest_hardpy.utils.exception import WidgetInfoError
+from hardpy.pytest_hardpy.utils.exception import ImageError, WidgetInfoError
 
 
 class WidgetType(Enum):
@@ -21,7 +21,6 @@ class WidgetType(Enum):
     NUMERIC_INPUT = "numericinput"
     RADIOBUTTON = "radiobutton"
     CHECKBOX = "checkbox"
-    IMAGE = "image"
     STEP = "step"
     MULTISTEP = "multistep"
 
@@ -29,12 +28,11 @@ class WidgetType(Enum):
 class IWidget(ABC):
     """Dialog box widget interface."""
 
-    def __init__(self, widget_type: WidgetType, image: ImageComponent | None = None) -> None:
+    def __init__(
+        self, widget_type: WidgetType,
+    ) -> None:
         self.type: Final[str] = widget_type.value
         self.info: dict = {}
-
-        if isinstance(image, ImageComponent):
-            self.info["image"] = image.__dict__
 
     @abstractmethod
     def convert_data(self, input_data: str | None) -> Any | None:  # noqa: ANN401
@@ -52,8 +50,11 @@ class IWidget(ABC):
 class BaseWidget(IWidget):
     """Widget info interface."""
 
-    def __init__(self, widget_type: WidgetType = WidgetType.BASE, image: ImageComponent | None = None) -> None:  # noqa: ARG002
-        super().__init__(WidgetType.BASE, image)
+    def __init__(
+        self,
+        widget_type: WidgetType = WidgetType.BASE,
+    ) -> None:
+        super().__init__(widget_type)
 
     def convert_data(self, input_data: str | None = None) -> bool:  # noqa: ARG002
         """Get base widget data, i.e. None.
@@ -70,9 +71,9 @@ class BaseWidget(IWidget):
 class TextInputWidget(IWidget):
     """Text input widget."""
 
-    def __init__(self, image: ImageComponent | None = None) -> None:
+    def __init__(self) -> None:
         """Initialize the TextInputWidget."""
-        super().__init__(WidgetType.TEXT_INPUT, image)
+        super().__init__(WidgetType.TEXT_INPUT)
 
     def convert_data(self, input_data: str) -> str:
         """Get the text input data in the string format.
@@ -89,9 +90,9 @@ class TextInputWidget(IWidget):
 class NumericInputWidget(IWidget):
     """Numeric input widget."""
 
-    def __init__(self, image: ImageComponent | None = None) -> None:
+    def __init__(self) -> None:
         """Initialize the NumericInputWidget."""
-        super().__init__(WidgetType.NUMERIC_INPUT, image)
+        super().__init__(WidgetType.NUMERIC_INPUT)
 
     def convert_data(self, input_data: str) -> float | None:
         """Get the numeric widget data in the correct format.
@@ -111,7 +112,7 @@ class NumericInputWidget(IWidget):
 class RadiobuttonWidget(IWidget):
     """Radiobutton widget."""
 
-    def __init__(self, fields: list[str], image: ImageComponent | None = None) -> None:
+    def __init__(self, fields: list[str]) -> None:
         """Initialize the RadiobuttonWidget.
 
         Args:
@@ -120,7 +121,7 @@ class RadiobuttonWidget(IWidget):
         Raises:
             ValueError: If the fields list is empty.
         """
-        super().__init__(WidgetType.RADIOBUTTON, image)
+        super().__init__(WidgetType.RADIOBUTTON)
         if not fields:
             msg = "RadiobuttonWidget must have at least one field"
             raise ValueError(msg)
@@ -141,7 +142,7 @@ class RadiobuttonWidget(IWidget):
 class CheckboxWidget(IWidget):
     """Checkbox widget."""
 
-    def __init__(self, fields: list[str], image: ImageComponent | None = None) -> None:
+    def __init__(self, fields: list[str]) -> None:
         """Initialize the CheckboxWidget.
 
         Args:
@@ -150,7 +151,7 @@ class CheckboxWidget(IWidget):
         Raises:
             ValueError: If the fields list is empty.
         """
-        super().__init__(WidgetType.CHECKBOX, image)
+        super().__init__(WidgetType.CHECKBOX)
         if not fields:
             msg = "Checkbox must have at least one field"
             raise ValueError(msg)
@@ -174,23 +175,26 @@ class CheckboxWidget(IWidget):
 class ImageComponent:
     """Image component."""
 
-    def __init__(self, address: str, format: str = "image", width: int = 100, border: int = 0) -> None:  # noqa: A002
+    def __init__(
+        self,
+        address: str,
+        width: int = 100,
+        border: int = 0,
+    ) -> None:
         """Validate the image fields and defines the base64 if it does not exist.
 
         Args:
             address (str): image address
-            format (str): image formats
             width (int): image width
             border (int): image border
 
         Raises:
-            ImageError: If both address and base64 are specified.
+            ImageError: If both address and base64data are specified.
         """
-
         if width < 1:
             msg = "Width must be positive"
             raise WidgetInfoError(msg)
-        
+
         if border < 0:
             msg = "Border must be non-negative"
             raise WidgetInfoError(msg)
@@ -201,7 +205,11 @@ class ImageComponent:
         except FileNotFoundError:
             msg = "The image address is invalid"
             raise ImageError(msg)  # noqa: B904
-        base64 = base64.b64encode(file_data).decode("utf-8")
+        self.address = address
+        self.width = width
+        self.border = border
+        self.base64 = base64.b64encode(file_data).decode("utf-8")
+
 
     def convert_data(self, input_data: str | None = None) -> bool:  # noqa: ARG002
         """Get the image component data, i.e. None.
@@ -213,7 +221,7 @@ class ImageComponent:
             bool: True if confirm button is pressed
         """
         return True
-    
+
     def to_dict(self) -> dict:
         """Convert ImageComponent to dictionary.
 
@@ -221,11 +229,10 @@ class ImageComponent:
             dict: ImageComponent dictionary.
         """
         return {
-            "address": self.info["address"],
-            "format": self.info["format"],
-            "width": self.info["width"],
-            "base64": self.info["base64"],
-            "border": self.info["border"],
+            "address": self.address,
+            "width": self.width,
+            "base64": self.base64,
+            "border": self.border,
         }
 
 
@@ -235,7 +242,7 @@ class StepWidget(IWidget):
     Args:
         title (str): Step title
         text (str | None): Step text
-        widget (BaseWidget | None): Step widget
+        image (ImageComponent | None): Step image
 
     Raises:
         WidgetInfoError: If the text or widget are not provided.
@@ -245,10 +252,9 @@ class StepWidget(IWidget):
         self,
         title: str,
         text: str | None,
-        widget: BaseWidget | None = None,
         image: ImageComponent | None = None,
     ) -> None:
-        super().__init__(WidgetType.STEP, image)
+        super().__init__(WidgetType.STEP)
         if text is None and image is None:
             msg = "Text or image must be provided"
             raise WidgetInfoError(msg)
@@ -273,7 +279,9 @@ class StepWidget(IWidget):
 class MultistepWidget(IWidget):
     """Multistep widget."""
 
-    def __init__(self, steps: list[StepWidget], image: ImageComponent | None = None) -> None:
+    def __init__(
+        self, steps: list[StepWidget],
+    ) -> None:
         """Initialize the MultistepWidget.
 
         Args:
@@ -282,7 +290,7 @@ class MultistepWidget(IWidget):
         Raises:
             ValueError: If the provided list of steps is empty.
         """
-        super().__init__(WidgetType.MULTISTEP, image)
+        super().__init__(WidgetType.MULTISTEP)
         if not steps:
             msg = "MultistepWidget must have at least one step"
             raise ValueError(msg)

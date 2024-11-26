@@ -46,6 +46,7 @@ def test_after():
 import pytest
 from hardpy import (
     DialogBox,
+    ImageComponent,
     NumericInputWidget,
     TextInputWidget,
     run_dialog_box,
@@ -54,12 +55,13 @@ from hardpy import (
 
 pytestmark = pytest.mark.module_name("Input field dialog boxes")
 
-@pytest.mark.case_name("Text input")
-def test_text_input():
+@pytest.mark.case_name("Text input with image")
+def test_text_input_with_image():
     dbx = DialogBox(
         dialog_text="Type 'ok' and press the Confirm button",
         title_bar="Example of text input",
         widget=TextInputWidget(),
+        image=ImageComponent(address="assets/test.png", width=50),
     )
     response = run_dialog_box(dbx)
     set_message(f"Entered text {response}")
@@ -120,7 +122,7 @@ def test_checkbox():
 
 ```python
 import pytest
-from hardpy import DialogBox, ImageWidget, run_dialog_box
+from hardpy import DialogBox, ImageComponent, run_dialog_box
 
 pytestmark = pytest.mark.module_name("Image dialog box")
 
@@ -128,10 +130,7 @@ pytestmark = pytest.mark.module_name("Image dialog box")
 def test_upload_image():
     dbx = DialogBox(
         dialog_text="Test image",
-        widget=ImageWidget(
-            address="assets/test.png",
-            width=50,
-        ),
+        image=ImageComponent(address="assets/test.png", width=50),
     )
     response = run_dialog_box(dbx)
     assert response
@@ -141,17 +140,24 @@ def test_upload_image():
 
 ```python
 import pytest
-from hardpy import DialogBox, ImageWidget, MultistepWidget, StepWidget, run_dialog_box
+from hardpy import DialogBox, ImageComponent, MultistepWidget, StepWidget, run_dialog_box
 
 pytestmark = pytest.mark.module_name("Multiple steps dialog box")
 
 @pytest.mark.case_name("Multistep")
 def test_multiple_steps():
-    img_widget = ImageWidget(address="assets/test.png", width=50)
     steps = [
-        StepWidget("Step 1", text="Content for step", widget=None),
-        StepWidget("Step 2", text="Content for step 2", widget=img_widget),
-        StepWidget("Step 3", text=None, widget=img_widget),
+        StepWidget("Step 1", text="Content for step"),
+        StepWidget(
+            "Step 2",
+            text="Content for step 2",
+            image=ImageComponent(address="assets/test.png", width=50),
+        ),
+        StepWidget(
+            "Step 3",
+            text=None,
+            image=ImageComponent(address="assets/test.png", width=50),
+        ),
     ]
     dbx = DialogBox(
         dialog_text="Follow the steps and click Confirm",
