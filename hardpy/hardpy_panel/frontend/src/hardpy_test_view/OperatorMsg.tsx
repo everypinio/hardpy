@@ -26,20 +26,20 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
     }
   };
 
-  const handleKeyDown = (event: KeyboardEvent) => {
-    const keyboardEvent = event as unknown as React.KeyboardEvent<HTMLInputElement>;
-    if (keyboardEvent.key === "Escape") {
-      handleClose();
-    }
-  };
-  
   useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const keyboardEvent = event as unknown as React.KeyboardEvent<HTMLInputElement>;
+      if (keyboardEvent.key === "Escape") {
+        handleClose();
+      }
+    };
+  
     window.addEventListener('keydown', handleKeyDown);
-
+  
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleKeyDown]); 
+  }, []);
 
   return (
     <Dialog
