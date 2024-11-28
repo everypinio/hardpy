@@ -34,7 +34,7 @@ def register(ssl_verify: bool):
     authorization_url = "https://auth.standcloud.localhost/api/oidc/authorization"
     par_url = "https://auth.standcloud.localhost/api/oidc/pushed-authorization-request"
     token_url = "https://auth.standcloud.localhost/api/oidc/token"
-    demo_api_url = "https://demo-api.standcloud.localhost"
+    api_url = "https://api.standcloud.localhost"
 
     # Code Challange Data
 
@@ -79,7 +79,7 @@ def register(ssl_verify: bool):
         "code_challenge": code_challenge,
         "code_challenge_method": "S256",
         "state": state,
-        "audience": demo_api_url,
+        "audience": api_url,
     }
 
     # pushed authorization response
@@ -137,22 +137,19 @@ def register(ssl_verify: bool):
         print(e)
         sys.exit(1)
 
-    with open("token_info.json", "w", encoding="utf-8") as f:  # noqa: PTH123
-        storage_keyring = load_keyring("keyring.backends.SecretService.Keyring")
-        mem_keyring = storage_keyring
+    storage_keyring = load_keyring("keyring.backends.SecretService.Keyring")
+    mem_keyring = storage_keyring
 
-        storage_keyring.set_password(
-            "HardPy",
-            "refresh_token",
-            client.token["refresh_token"],
-        )
-        mem_keyring.set_password("HardPy", "access_token", client.token["access_token"])
-
-        token = client.token
-        token.pop("expires_in")
-        token.pop("access_token")
-        token.pop("refresh_token")
-        json.dump(token, f, ensure_ascii=False, indent=4)
+    storage_keyring.set_password(
+        "HardPy",
+        "refresh_token",
+        client.token["refresh_token"],
+    )
+    token_data = {
+        "access_token": client.token["access_token"],
+        "expires_at": client.token["expires_at"],
+    }
+    mem_keyring.set_password("HardPy", "access_token", json.dumps(token_data))
 
     print()
     print("Registration completed")
