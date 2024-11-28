@@ -3,8 +3,6 @@
 
 from logging import getLogger
 
-from pycouchdb.exceptions import Conflict, NotFound
-
 from hardpy.pytest_hardpy.db.base_store import BaseStore
 from hardpy.pytest_hardpy.db.schema import ResultStateStore
 from hardpy.pytest_hardpy.utils import SingletonMeta
@@ -17,12 +15,3 @@ class StateStore(BaseStore, metaclass=SingletonMeta):
         super().__init__("statestore")
         self._log = getLogger(__name__)
         self._schema = ResultStateStore
-
-    def clear(self) -> None:
-        """Clear database."""
-        try:
-            # Clear the statestore database before each launch
-            self._db.delete(self._doc_id)
-        except (Conflict, NotFound):
-            self._log.debug("Statestore database will be created for the first time")
-        self._doc: dict = self._init_doc()

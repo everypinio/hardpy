@@ -15,4 +15,9 @@ def hardpy_opts():
     if not config_data:
         msg = "Config not found"
         raise RuntimeError(msg)
-    return ["--hardpy-db-url", config_data.database.connection_url(), "--hardpy-pt"]
+    return [
+        "--hardpy-clear-database",
+        "--hardpy-db-url",
+        config_data.database.connection_url(),
+        "--hardpy-pt",
+    ]
