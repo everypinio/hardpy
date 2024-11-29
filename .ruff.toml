@@ -62,7 +62,7 @@ indent-width = 4
         "examples/*" = [
             "D104",   # Missing docstring in public package
             "D103",   # Missing docstring in public function
-            "S101",   # use of `assert` detected   
+            "S101",   # use of `assert` detected
             "S106",   # Possible hardcoded password
             "ANN201", # To prevent tests from being returned None
             "INP001", # Imports of pytest and hardpy
@@ -70,3 +70,5 @@ indent-width = 4
         ]
         "hardpy/cli/template.py" = ["D102"]
         "hardpy/cli/cli.py" = ["T201"] # using print
+        "hardpy/cli/auth/registration.py" = ["T201"] # using print
+        "hardpy/pytest_hardpy/result/report_loader/stand_cloud_loader.py" = ["B904"] # raise ... from err
