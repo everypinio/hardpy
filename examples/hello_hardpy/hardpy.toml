@@ -14,3 +14,7 @@ port = 8000
 [socket]
 host = "localhost"
 port = 6525
+
+[stand_cloud]
+api = "api.standcloud.localhost"
+auth = "auth.standcloud.localhost"
