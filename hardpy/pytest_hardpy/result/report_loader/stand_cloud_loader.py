@@ -4,104 +4,108 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timedelta, timezone
+from http import HTTPStatus
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from keyring.core import load_keyring
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError, TokenExpiredError
 from requests.exceptions import HTTPError
 from requests_oauth2client import ApiClient, BearerToken
 from requests_oauth2client.tokens import ExpiredAccessToken
 from requests_oauthlib import OAuth2Session
 
+from hardpy.common.token_storage import get_token_store
+from hardpy.pytest_hardpy.utils import ConnectionData, StandCloudError
+
 if TYPE_CHECKING:
-    from keyring.backend import KeyringBackend
-
     from hardpy.pytest_hardpy.db.schema import ResultRunStore
-
 
 
 class StandCloudLoader:
     """StandCloud report generator."""
 
-    def __init__(self, is_debug: bool = False) -> None:
-        self._api_url = "https://api.standcloud.localhost/healthcheck"
-        self._is_debug = is_debug
-        self._is_resp_verify = not is_debug
-        self._log = getLogger(__name__)
-        self.healthcheck()
+    def __init__(self, verify_ssl: bool = False) -> None:
+        """Create StandCLoud loader.
 
-    def load(self, report: ResultRunStore) -> int:
+        Args:
+            verify_ssl (bool, optional): Skips SSL checks.
+            The option only for development and debug. Defaults to False.
+        """
+        connection_data = ConnectionData()
+        self._api_addr = connection_data.stand_cloud_api
+        self._auth_addr = connection_data.stand_cloud_auth
+        self._api_url = f"https://{self._api_addr}/"
+        self._is_debug = verify_ssl
+        self._verify_ssl = verify_ssl
+        self._log = getLogger(__name__)
+
+    def load(self, report: ResultRunStore) -> None:
         """Load report to the StandCloud.
 
         Args:
             report (ResultRunStore): report
 
-        Returns:
-            int: response status code
+        Raises:
+            StandCloudError: if report not uploaded to StandCloud
         """
-        api = self._get_api()
-        error_code = 500
+        api = self._get_api("api/test_run")
 
         try:
-            resp = api.post(verify=self._is_resp_verify, data=report.model_dump())
+            resp = api.post(verify=self._verify_ssl, json=report.model_dump())
             self._log.debug(f"Got new content from API: {resp}")
         except ExpiredAccessToken as e:
-            self._log.error(
+            msg = (
                 "API access error: token is expired for ",
                 f"{timedelta(seconds = abs(e.args[0].expires_in))}",
             )
-            return error_code
+            raise StandCloudError(msg) # type: ignore
         except TokenExpiredError as e:
-            self._log.error(f"API access error: {e.description}")
-            return error_code
+            msg = f"API access error: {e.description}"
+            raise StandCloudError(msg)
         except InvalidGrantError as e:
-            self._log.error(f"Refresh token error: {e.description}")
-            return error_code
+            msg = f"Refresh token error: {e.description}"
+            raise StandCloudError(msg)
         except HTTPError as e:
-            self._log.error(e)
-            return resp.status_code
+            msg = f"Refresh token error: {e}"
+            raise StandCloudError(msg)
 
-        return resp.status_code
+        if resp.status_code != HTTPStatus.CREATED:
+            msg = f"Report not uploaded to StandCloud, response code {resp.status_code}"
+            raise StandCloudError(msg)
 
-    def healthcheck(self) -> int:
+    def healthcheck(self) -> None:
         """Healthcheck of StandCloud API.
 
-        Returns:
-            int: response status code
+        Raises:
+            StandCloudError: if StandCloud is unavailable
         """
-        api = self._get_api()
-        error_code = 500
+        api = self._get_api("healthcheck")
 
         try:
-            resp = api.get(verify=self._is_resp_verify)
+            resp = api.get(verify=self._verify_ssl)
             self._log.debug(f"Got new content from API: {resp}")
         except ExpiredAccessToken as e:
-            self._log.error(
+            msg = (
                 "API access error: token is expired for ",
                 f"{timedelta(seconds = abs(e.args[0].expires_in))}",
             )
-            return error_code
+            raise StandCloudError(msg) # type: ignore
         except TokenExpiredError as e:
-            self._log.error(f"API access error: {e.description}")
-            return error_code
+            msg = f"API access error: {e.description}"
+            raise StandCloudError(msg)
         except InvalidGrantError as e:
-            self._log.error(f"Refresh token error: {e.description}")
-            return error_code
+            msg = f"Refresh token error: {e.description}"
+            raise StandCloudError(msg)
         except HTTPError as e:
-            self._log.error(e)
-            return resp.status_code
+            msg = f"Refresh token error: {e}"
+            raise StandCloudError(msg)
 
-        return resp.status_code
-
-    def _get_keyrings(self) -> tuple[KeyringBackend, KeyringBackend]:
-        storage_keyring = load_keyring("keyring.backends.SecretService.Keyring")
-        mem_keyring = storage_keyring
-
-        return storage_keyring, mem_keyring
+        if resp.status_code != HTTPStatus.OK:
+            msg = f"StandCloud is unavailable, response code {resp.status_code}"
+            raise StandCloudError(msg)
 
     def _token_update(self, token: BearerToken) -> None:
-        storage_keyring, mem_keyring = self._get_keyrings()
+        storage_keyring, mem_keyring = get_token_store()
 
         _access_token = "access_token"  # noqa: S105
         _expires_at = "expires_at"
@@ -129,7 +133,7 @@ class StandCloudLoader:
         return int(expires_in_datetime.total_seconds())
 
     def _get_access_token_info(self) -> tuple[str | None, float | None]:
-        _, mem_keyring = self._get_keyrings()
+        _, mem_keyring = get_token_store()
 
         _access_token = "access_token"  # noqa: S105
         _expires_at = "expires_at"
@@ -144,20 +148,20 @@ class StandCloudLoader:
         return access_token, expired_at
 
     def _get_refresh_token(self) -> str | None:
-        (storage_keyring, _) = self._get_keyrings()
+        (storage_keyring, _) = get_token_store()
 
         refresh_token = storage_keyring.get_password("HardPy", "refresh_token")
         self._log.debug("Got refresh token from the storage keyring")
         return refresh_token
 
-    def _get_api(self) -> ApiClient:
+    def _get_api(self, endpoint: str) -> ApiClient:
         token = self._get_token()
         client_id = "hardpy-report-uploader"
 
         extra = {
             "client_id": client_id,
-            "audience": "https://demo-api.standcloud.localhost",
-            "redirect_uri": "http://localhost:8088/oauth2/callback",
+            "audience": self._api_url,
+            "redirect_uri": "http://localhost/oauth2/callback",
         }
 
         session = OAuth2Session(
@@ -177,15 +181,19 @@ class StandCloudLoader:
             is_need_refresh = True
 
         if is_need_refresh:
-            ret = session.refresh_token(
-                token_url="https://auth.standcloud.localhost/api/oidc/token",  # noqa: S106
-                refresh_token=self._get_refresh_token(),
-                verify=False,
-                **extra,
-            )
+            try:
+                ret = session.refresh_token(
+                    token_url=f"https://{self._auth_addr}/api/oidc/token",
+                    refresh_token=self._get_refresh_token(),
+                    verify=False,
+                    **extra,
+                )
+            except InvalidGrantError as e:
+                msg = f"Refresh token error: {e.description}"
+                raise StandCloudError(msg)
             self._token_update(ret)  # type: ignore
 
-        return ApiClient(self._api_url, session=session, timeout=10)
+        return ApiClient(self._api_url + endpoint, session=session, timeout=10)
 
     def _get_token(self) -> BearerToken:
         access_token, expires_at = self._get_access_token_info()
