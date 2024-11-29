@@ -56,6 +56,14 @@ def init(  # noqa: PLR0913
         default_config.socket.port,
         help="Specify a socket port.",
     ),
+    stand_cloud_api: str = typer.Option(
+        default_config.stand_cloud.api,
+        help="Specify a StandCloud api address.",
+    ),
+    stand_cloud_auth: str = typer.Option(
+        default_config.stand_cloud.auth,
+        help="Specify a StandCloud authorization address.",
+    ),
 ) -> None:
     """Initialize HardPy tests directory.
 
@@ -70,6 +78,8 @@ def init(  # noqa: PLR0913
         frontend_port (int): Panel operator port
         socket_host (str): Socket host
         socket_port (int): Socket port
+        stand_cloud_api (str): StandCloud API address
+        stand_cloud_auth (str): StandCloud authorization address
     """
     _tests_dir = tests_dir if tests_dir else default_config.tests_dir
     ConfigManager().init_config(
@@ -82,6 +92,8 @@ def init(  # noqa: PLR0913
         frontend_port=frontend_port,
         socket_host=socket_host,
         socket_port=socket_port,
+        stand_cloud_api=stand_cloud_api,
+        stand_cloud_auth=stand_cloud_auth,
     )
     # create tests directory
     dir_path = Path(Path.cwd() / _tests_dir)
@@ -143,10 +155,10 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:  
 
 @cli.command()
 def register(  # noqa: D417
+    tests_dir: Annotated[Optional[str], typer.Argument()] = None,  # noqa: UP007
     verify_ssl: bool = typer.Option(
         True,
-        help="Skips SSL checks. The option only for developers. "
-        "Must not be pushed to production.",
+        help="Skips SSL checks. The option only for development and debug.",
     ),
 ) -> None:
     """Register HardPy in StandCloud.
@@ -156,10 +168,17 @@ def register(  # noqa: D417
     HardPy to upload test reports from your identity.
 
     Args:
-        ssl_verify (bool): Skips SSL checks. The option only for developers.
-        Must not be pushed to production.
+        tests_dir (str | None): Tests directory. Current directory + `tests` by default
+        ssl_verify (bool): Skips SSL checks. The option only for development and debug.
     """
-    auth_register(False)
+    dir_path = Path.cwd() / tests_dir if tests_dir else Path.cwd()
+    config = ConfigManager().read_config(dir_path)
+
+    if not config:
+        print(f"Config at path {dir_path} not found.")
+        sys.exit()
+
+    auth_register(verify_ssl, config)
 
 
 if __name__ == "__main__":
