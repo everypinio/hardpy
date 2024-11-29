@@ -1,0 +1,20 @@
+title = "HardPy TOML config"
+tests_dir = "minute_parity"
+
+[database]
+user = "dev"
+password = "dev"
+host = "localhost"
+port = 5984
+
+[frontend]
+host = "localhost"
+port = 8000
+
+[socket]
+host = "localhost"
+port = 6525
+
+[stand_cloud]
+api = "api.standcloud.localhost"
+auth = "auth.standcloud.localhost"
