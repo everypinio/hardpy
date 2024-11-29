@@ -13,64 +13,47 @@ import socket
 import subprocess
 import sys
 from time import sleep
+from typing import TYPE_CHECKING
 from urllib.parse import urlencode
 
 import requests
-from keyring.core import load_keyring
+from keyring.errors import KeyringError
 from oauthlib.common import urldecode
 from oauthlib.oauth2 import WebApplicationClient
 from oauthlib.oauth2.rfc6749.errors import InvalidClientIdError
 
+from hardpy.common.token_storage import get_token_store
 
-def register(ssl_verify: bool):
+if TYPE_CHECKING:
+    from requests_oauth2client import BearerToken
+
+    from hardpy.common.config import HardpyConfig
+
+
+def register(ssl_verify: bool, config: HardpyConfig) -> None:
     """Register HardPy in StandCloud."""
+    # TODO (xorialexandrov): Fix magic numbers
     # OAuth client configuration
-
     client_id = "hardpy-report-uploader"
     client = WebApplicationClient(client_id)
 
     # URLs
-
-    authorization_url = "https://auth.standcloud.localhost/api/oidc/authorization"
-    par_url = "https://auth.standcloud.localhost/api/oidc/pushed-authorization-request"
-    token_url = "https://auth.standcloud.localhost/api/oidc/token"
-    api_url = "https://api.standcloud.localhost"
-
-    # Code Challange Data
-
-    code_verifier = base64.urlsafe_b64encode(os.urandom(40)).decode("utf-8")
-    code_verifier = re.sub("[^a-zA-Z0-9]+", "", code_verifier)
-
-    code_challenge = hashlib.sha256(code_verifier.encode("utf-8")).digest()
-    code_challenge = base64.urlsafe_b64encode(code_challenge).decode("utf-8")
-    code_challenge = code_challenge.replace("=", "")
+    authorization_url = f"https://{config.stand_cloud.auth}/api/oidc/authorization"
+    par_url = f"https://{config.stand_cloud.auth}/api/oidc/pushed-authorization-request"
+    token_url = f"https://{config.stand_cloud.auth}/api/oidc/token"
+    api_url = f"https://{config.stand_cloud.api}/"
 
     # Auth requests
-
-    response = ""
     port = _reserve_socket_port()
-
-    args = [
-        sys.executable,
-        "-m",
-        "uvicorn",
-        "hardpy.cli.auth.oauth_callback:app",
-        "--host=127.0.0.1",
-        f"--port={port}",
-        "--log-level=error",
-    ]
-
-    callback_process = subprocess.Popen(
-        args,
-        stdout=subprocess.PIPE,
-        bufsize=1,
-        universal_newlines=True,
-        env=dict(PYTHONUNBUFFERED="1"),
-    )
+    callback_process = _create_callback_process(port)
 
     state = secrets.token_urlsafe(16)
 
-    # pushed authorization request
+    # Code Challange Data
+    code_verifier = _code_verifier()
+    code_challenge = _code_challenge(code_verifier)
+
+    # # pushed authorization request
     data = {
         "scope": "authelia.bearer.authz offline_access",
         "response_type": "code",
@@ -82,15 +65,12 @@ def register(ssl_verify: bool):
         "audience": api_url,
     }
 
+    timeout = 10
+
     # pushed authorization response
     response = json.loads(
-        requests.post(
-            par_url,
-            data=data,
-            verify=False,
-        ).content
+        requests.post(par_url, data=data, verify=ssl_verify, timeout=timeout).content,
     )
-
     url = (
         authorization_url
         + "?"
@@ -98,26 +78,17 @@ def register(ssl_verify: bool):
     )
 
     # OAuth authorization code request
-    print("\nOpen the provided URL and authorize HardPy to use StandCloud")
-    print(f"{url}\n")
+    print(f"\nOpen the provided URL and authorize HardPy to use StandCloud\n{url}\n")
 
     # use subprocess
-    first_line = next(callback_process.stdout)
+    first_line = next(callback_process.stdout)  # type: ignore
     sleep(1)
 
     # OAuth authorization code grant
     response = json.loads(first_line)
     callback_process.kill()
 
-    if response["state"] != state:
-        print("Wrong state in response")
-        sys.exit(1)
-
-    if "error" in response:
-        error = response["error"]
-        error_description = response["error_description"]
-        print(f"{error}: {error_description}")
-        sys.exit(1)
+    _check_incorrect_response(response, state)
 
     data = client.prepare_request_body(
         code=response["code"],
@@ -128,7 +99,7 @@ def register(ssl_verify: bool):
 
     # OAuth access token request
     data = dict(urldecode(data))
-    response = requests.post(token_url, data=data, verify=ssl_verify)
+    response = requests.post(token_url, data=data, verify=ssl_verify, timeout=timeout)
 
     try:
         # OAuth access token grant
@@ -137,22 +108,7 @@ def register(ssl_verify: bool):
         print(e)
         sys.exit(1)
 
-    storage_keyring = load_keyring("keyring.backends.SecretService.Keyring")
-    mem_keyring = storage_keyring
-
-    storage_keyring.set_password(
-        "HardPy",
-        "refresh_token",
-        client.token["refresh_token"],
-    )
-    token_data = {
-        "access_token": client.token["access_token"],
-        "expires_at": client.token["expires_at"],
-    }
-    mem_keyring.set_password("HardPy", "access_token", json.dumps(token_data))
-
-    print()
-    print("Registration completed")
+    _store_password(client.token)
 
 
 def _redirect_uri(port: str) -> str:
@@ -166,3 +122,66 @@ def _reserve_socket_port() -> str:
     sock.close()
 
     return str(port)
+
+
+def _code_verifier() -> str:
+    code_verifier = base64.urlsafe_b64encode(os.urandom(40)).decode("utf-8")
+    return re.sub("[^a-zA-Z0-9]+", "", code_verifier)
+
+
+def _code_challenge(code_verifier: str) -> str:
+    code_challenge = hashlib.sha256(code_verifier.encode("utf-8")).digest()
+    code_challenge = base64.urlsafe_b64encode(code_challenge).decode("utf-8")
+    return code_challenge.replace("=", "")
+
+
+def _create_callback_process(port: str) -> subprocess.Popen:
+    args = [
+        sys.executable,
+        "-m",
+        "uvicorn",
+        "hardpy.cli.auth.oauth_callback:app",
+        "--host=127.0.0.1",
+        f"--port={port}",
+        "--log-level=error",
+    ]
+
+    return subprocess.Popen(  # noqa: S603
+        args,
+        stdout=subprocess.PIPE,
+        bufsize=1,
+        universal_newlines=True,
+        env=dict(PYTHONUNBUFFERED="1"),  # noqa: C408
+    )
+
+
+def _store_password(token: BearerToken) -> None:
+    storage_keyring, mem_keyring = get_token_store()
+
+    storage_keyring.set_password(
+        "HardPy",
+        "refresh_token",
+        token["refresh_token"],
+    )
+    token_data = {
+        "access_token": token["access_token"],
+        "expires_at": token["expires_at"],
+    }
+    try:
+        mem_keyring.set_password("HardPy", "access_token", json.dumps(token_data))
+    except KeyringError as e:
+        print(e)
+        return
+    print("\nRegistration completed")
+
+
+def _check_incorrect_response(response: dict, state: str) -> None:
+    if response["state"] != state:
+        print("Wrong state in response")
+        sys.exit(1)
+
+    if "error" in response:
+        error = response["error"]
+        error_description = response["error_description"]
+        print(f"{error}: {error_description}")
+        sys.exit(1)
