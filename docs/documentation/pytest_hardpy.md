@@ -366,6 +366,31 @@ def fill_actions_after_test(post_run_functions: list):
     yield
 ```
 
+#### StandCloudLoader
+
+Used to write reports to the **StandCloud**.
+
+**Example:**
+
+```python
+# conftest
+def finish_executing():
+    report = get_current_report()
+    if report:
+        loader = StandCloudLoader()
+        try:
+            loader.healthcheck()
+            loader.load(report)
+        except StandCloudError as exc:
+            set_operator_message(f"{exc}")
+            return
+
+@pytest.fixture(scope="session", autouse=True)
+def fill_actions_after_test(post_run_functions: list):
+    post_run_functions.append(finish_executing)
+    yield
+```
+
 ## Fixture
 
 #### post_run_functions
@@ -494,4 +519,22 @@ Option to clean **statestore** and **runstore** databases before running pytest.
 
 ```bash
 --hardpy-clear-database
+```
+
+#### standcloud-api
+
+**StandCloud** API address. 
+The default is *api.standcloud.localhost*.
+
+```bash
+--standcloud-api
+```
+
+#### standcloud-auth
+
+**StandCloud** authorization address. 
+The default is *auth.standcloud.localhost*.
+
+```bash
+--standcloud-auth
 ```
