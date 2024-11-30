@@ -18,7 +18,6 @@ from hardpy.pytest_hardpy.utils.exception import (
     DuplicateSerialNumberError,
     DuplicateTestStandLocationError,
     DuplicateTestStandNameError,
-    StandCloudError,
     WidgetInfoError,
 )
 from hardpy.pytest_hardpy.utils.machineid import machine_id
@@ -41,7 +40,6 @@ __all__ = [
     "ProgressCalculator",
     "RadiobuttonWidget",
     "SingletonMeta",
-    "StandCloudError",
     "StepWidget",
     "TestStatus",
     "TextInputWidget",

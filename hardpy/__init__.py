@@ -1,6 +1,7 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+from hardpy.common.stand_cloud import StandCloudError
 from hardpy.pytest_hardpy.pytest_call import (
     get_current_attempt,
     get_current_report,
@@ -31,7 +32,6 @@ from hardpy.pytest_hardpy.utils import (
     MultistepWidget,
     NumericInputWidget,
     RadiobuttonWidget,
-    StandCloudError,
     StepWidget,
     TextInputWidget,
 )

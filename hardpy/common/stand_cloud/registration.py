@@ -22,15 +22,13 @@ from oauthlib.common import urldecode
 from oauthlib.oauth2 import WebApplicationClient
 from oauthlib.oauth2.rfc6749.errors import InvalidClientIdError
 
-from hardpy.common.token_storage import get_token_store
+from hardpy.common.stand_cloud.token_storage import get_token_store
 
 if TYPE_CHECKING:
     from requests_oauth2client import BearerToken
 
-    from hardpy.common.config import HardpyConfig
 
-
-def register(ssl_verify: bool, config: HardpyConfig) -> None:
+def register(ssl_verify: bool, api_addr: str, auth_addr: str) -> None:
     """Register HardPy in StandCloud."""
     # TODO (xorialexandrov): Fix magic numbers
     # OAuth client configuration
@@ -38,10 +36,10 @@ def register(ssl_verify: bool, config: HardpyConfig) -> None:
     client = WebApplicationClient(client_id)
 
     # URLs
-    authorization_url = f"https://{config.stand_cloud.auth}/api/oidc/authorization"
-    par_url = f"https://{config.stand_cloud.auth}/api/oidc/pushed-authorization-request"
-    token_url = f"https://{config.stand_cloud.auth}/api/oidc/token"
-    api_url = f"https://{config.stand_cloud.api}/"
+    authorization_url = f"https://{auth_addr}/api/oidc/authorization"
+    par_url = f"https://{auth_addr}/api/oidc/pushed-authorization-request"
+    token_url = f"https://{auth_addr}/api/oidc/token"
+    api_url = f"https://{api_addr}/"
 
     # Auth requests
     port = _reserve_socket_port()
@@ -140,7 +138,7 @@ def _create_callback_process(port: str) -> subprocess.Popen:
         sys.executable,
         "-m",
         "uvicorn",
-        "hardpy.cli.auth.oauth_callback:app",
+        "hardpy.common.stand_cloud.oauth_callback:app",
         "--host=127.0.0.1",
         f"--port={port}",
         "--log-level=error",

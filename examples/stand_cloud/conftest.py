@@ -27,7 +27,7 @@ def driver_example():
 def finish_executing():
     report = get_current_report()
     if report:
-        loader = StandCloudLoader(verify_ssl=False)
+        loader = StandCloudLoader()
         try:
             loader.healthcheck()
             loader.load(report)
