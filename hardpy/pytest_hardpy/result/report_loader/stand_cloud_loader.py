@@ -2,7 +2,6 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
-from datetime import timedelta
 from http import HTTPStatus
 from logging import getLogger
 from typing import TYPE_CHECKING
@@ -29,10 +28,11 @@ class StandCloudLoader:
             The option only for development and debug. Defaults to False.
         """
         connection_data = ConnectionData()
+        self._verify_ssl = verify_ssl
         self._sc_connector = StandCloudConnector(
-            verify_ssl,
             connection_data.stand_cloud_api,
             connection_data.stand_cloud_auth,
+            verify_ssl,
         )
         self._log = getLogger(__name__)
 
@@ -50,21 +50,14 @@ class StandCloudLoader:
         try:
             resp = api.post(verify=self._verify_ssl, json=report.model_dump())
             self._log.debug(f"Got new content from API: {resp}")
-        except ExpiredAccessToken as e:
-            msg = (
-                "API access error: token is expired for ",
-                f"{timedelta(seconds = abs(e.args[0].expires_in))}",
-            )
-            raise StandCloudError(msg)  # type: ignore
-        except TokenExpiredError as e:
-            msg = f"API access error: {e.description}"
-            raise StandCloudError(msg)
-        except InvalidGrantError as e:
-            msg = f"Refresh token error: {e.description}"
-            raise StandCloudError(msg)
-        except HTTPError as e:
-            msg = f"Refresh token error: {e}"
-            raise StandCloudError(msg)
+        except ExpiredAccessToken as exc:
+            raise StandCloudError(exc.description)  # type: ignore
+        except TokenExpiredError as exc:
+            raise StandCloudError(exc.description)
+        except InvalidGrantError as exc:
+            raise StandCloudError(exc.description)
+        except HTTPError as exc:
+            raise StandCloudError(exc.description)
 
         if resp.status_code != HTTPStatus.CREATED:
             msg = f"Report not uploaded to StandCloud, response code {resp.status_code}"

@@ -7,7 +7,11 @@ from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 from logging import getLogger
 
-from oauthlib.oauth2.rfc6749.errors import InvalidGrantError, TokenExpiredError
+from oauthlib.oauth2.rfc6749.errors import (
+    InvalidGrantError,
+    MissingTokenError,
+    TokenExpiredError,
+)
 from requests.exceptions import ConnectionError as RequestConnectionError, HTTPError
 from requests_oauth2client import ApiClient, BearerToken
 from requests_oauth2client.tokens import ExpiredAccessToken
@@ -63,21 +67,14 @@ class StandCloudConnector:
         try:
             resp = api.get(verify=self._verify_ssl)
             self._log.debug(f"Got new content from API: {resp}")
-        except ExpiredAccessToken as e:
-            msg = (
-                "API access error: token is expired for ",
-                f"{timedelta(seconds = abs(e.args[0].expires_in))}",
-            )
-            raise StandCloudError(msg)  # type: ignore
-        except TokenExpiredError as e:
-            msg = f"API access error: {e.description}"
-            raise StandCloudError(msg)
-        except InvalidGrantError as e:
-            msg = f"Refresh token error: {e.description}"
-            raise StandCloudError(msg)
-        except HTTPError as e:
-            msg = f"Refresh token error: {e}"
-            raise StandCloudError(msg)
+        except ExpiredAccessToken as exc:
+            raise StandCloudError(exc.description)  # type: ignore
+        except TokenExpiredError as exc:
+            raise StandCloudError(exc.description)
+        except InvalidGrantError as exc:
+            raise StandCloudError(exc.description)
+        except HTTPError as exc:
+            raise StandCloudError(exc.description)
 
         if resp.status_code != HTTPStatus.OK:
             msg = f"StandCloud is unavailable, response code {resp.status_code}"
@@ -167,12 +164,12 @@ class StandCloudConnector:
                     verify=False,
                     **extra,
                 )
-            except InvalidGrantError as e:
-                msg = f"Refresh token error: {e.description}"
-                raise StandCloudError(msg)
+            except InvalidGrantError as exc:
+                raise StandCloudError(exc.description)
             except RequestConnectionError as exc:
-                msg = f"Connection error, StandCloud is unavailable: {exc}"
-                raise StandCloudError(msg)
+                raise StandCloudError(exc.description)
+            except MissingTokenError as exc:
+                raise StandCloudError(exc.description)
             self._token_update(ret)  # type: ignore
 
         return ApiClient(self._api_url + endpoint, session=session, timeout=10)
