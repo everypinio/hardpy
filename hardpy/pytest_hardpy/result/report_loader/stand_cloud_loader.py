@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from logging import getLogger
 from typing import TYPE_CHECKING
 
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError, TokenExpiredError
@@ -34,7 +33,6 @@ class StandCloudLoader:
             connection_data.stand_cloud_auth,
             verify_ssl,
         )
-        self._log = getLogger(__name__)
 
     def load(self, report: ResultRunStore) -> None:
         """Load report to the StandCloud.
@@ -49,7 +47,6 @@ class StandCloudLoader:
 
         try:
             resp = api.post(verify=self._verify_ssl, json=report.model_dump())
-            self._log.debug(f"Got new content from API: {resp}")
         except ExpiredAccessToken as exc:
             raise StandCloudError(exc.description)  # type: ignore
         except TokenExpiredError as exc:

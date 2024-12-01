@@ -66,9 +66,8 @@ class StandCloudConnector:
 
         try:
             resp = api.get(verify=self._verify_ssl)
-            self._log.debug(f"Got new content from API: {resp}")
         except ExpiredAccessToken as exc:
-            raise StandCloudError(exc.description)  # type: ignore
+            raise StandCloudError(exc.description)
         except TokenExpiredError as exc:
             raise StandCloudError(exc.description)
         except InvalidGrantError as exc:
