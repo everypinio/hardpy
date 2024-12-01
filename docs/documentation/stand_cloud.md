@@ -13,3 +13,10 @@ For more information, visit the **StandCloud** [website](https://everypin.io/sta
 ## StandCloud and HardPy integration
 
 **HardPy** allows test result data to be stored in the **StandCloud**.
+
+### Authorization in StandCloud
+
+To authorise in StandCloud you will need to know 2 addresses: 
+the API address and the authorisation address. 
+To get them, contact info@everypin.io.
+
