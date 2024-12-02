@@ -28,7 +28,7 @@ class StandCloudConnector:
         self,
         stand_cloud_api: str,
         stand_cloud_auth: str,
-        verify_ssl: bool = False,
+        verify_ssl: bool = True,
     ) -> None:
         """Create StandCLoud loader.
 
@@ -36,7 +36,7 @@ class StandCloudConnector:
             stand_cloud_auth (str | None, optional): StandCloud authorization address.
             stand_cloud_api (str | None, optional): StandCloud API address.
             verify_ssl (bool, optional): Skips SSL checks.
-            The option only for development and debug. Defaults to False.
+            The option only for development and debug. Defaults to True.
         """
         self._api_addr = stand_cloud_api
         self._auth_addr = stand_cloud_auth
