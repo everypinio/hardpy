@@ -52,6 +52,7 @@ nav:
       - Database: documentation/database.md
       - Pytest-hardpy: documentation/pytest_hardpy.md
       - HardPy panel: documentation/hardpy_panel.md
+      - StandCloud: documentation/stand_cloud.md
   - Examples:
       - examples/index.md
       - Hello HardPy: examples/hello_hardpy.md

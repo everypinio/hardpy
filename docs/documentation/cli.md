@@ -47,6 +47,10 @@ More info in [hardpy config](./hardpy_config.md).
 │ --frontend-host                                TEXT     Specify a frontend host. [default: localhost]      │
 │ --socket-host                                  TEXT     Specify a socket host. [default: localhost]        │
 │ --socket-port                                  INTEGER  Specify a socket port. [default: 6525]             │
+│ --stand-cloud-api                              TEXT     Specify a StandCloud api address.                  │
+│                                                         [default: api.standcloud.localhost]                │
+│ --stand-cloud-auth                             TEXT     Specify a StandCloud authorization address.        │
+│                                                         [default: auth.standcloud.localhost]               │
 │ --help                                                  Show this message and exit.                        │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
@@ -75,6 +79,36 @@ is the path to the directory with your tests.
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ --help          Show this message and exit.                                                                │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+To obtain this information, use: 
+
+```bash
+hardpy run --help
+```
+
+## sc-register
+
+The `hardpy sc-register` command is used to register in **StandCloud**.
+By default, it registers **HardPy** tests from the current directory.
+
+You can run the `hardpy sc-register <tests_directory>` command, where `<tests_directory>` 
+is the path to the directory with your tests.
+
+```bash
+ Usage: hardpy sc-register [OPTIONS] [TESTS_DIR]                                                              
+                                                                                                              
+ Register HardPy in StandCloud.                                                                               
+                                                                                                              
+╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
+│   tests_dir      [TESTS_DIR]  [default: None]                                                              │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --verify-ssl    --no-verify-ssl      Skips SSL checks. The option only for development and debug.          │
+│                                      [default: verify-ssl]                                                 │
+│ --check         --no-check           Check StandCloud connection. [default: no-check]                      │
+│ --help                               Show this message and exit.                                           │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
