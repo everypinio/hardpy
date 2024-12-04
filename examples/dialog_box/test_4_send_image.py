@@ -1,6 +1,6 @@
 import pytest
 
-from hardpy import DialogBox, ImageWidget, run_dialog_box
+from hardpy import DialogBox, ImageComponent, run_dialog_box
 
 pytestmark = pytest.mark.module_name("Image dialog box")
 
@@ -9,10 +9,7 @@ pytestmark = pytest.mark.module_name("Image dialog box")
 def test_upload_image():
     dbx = DialogBox(
         dialog_text="Test image",
-        widget=ImageWidget(
-            address="assets/test.png",
-            width=50,
-        ),
+        image=ImageComponent(address="assets/test.png", width=50),
     )
     response = run_dialog_box(dbx)
     assert response

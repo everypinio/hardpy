@@ -21,13 +21,14 @@ from hardpy.pytest_hardpy.pytest_call import (
 from hardpy.pytest_hardpy.result import CouchdbLoader
 from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig
 from hardpy.pytest_hardpy.utils import (
+    BaseWidget,
     CheckboxWidget,
     DialogBox,
     DuplicatePartNumberError,
     DuplicateSerialNumberError,
     DuplicateTestStandLocationError,
     DuplicateTestStandNameError,
-    ImageWidget,
+    ImageComponent,
     MultistepWidget,
     NumericInputWidget,
     RadiobuttonWidget,
@@ -36,6 +37,7 @@ from hardpy.pytest_hardpy.utils import (
 )
 
 __all__ = [
+    "BaseWidget",
     "CheckboxWidget",
     "CouchdbConfig",
     "CouchdbLoader",
@@ -44,7 +46,7 @@ __all__ = [
     "DuplicateSerialNumberError",
     "DuplicateTestStandLocationError",
     "DuplicateTestStandNameError",
-    "ImageWidget",
+    "ImageComponent",
     "MultistepWidget",
     "NumericInputWidget",
     "RadiobuttonWidget",

@@ -254,6 +254,7 @@ DialogBox attributes:
 - title_bar (str | None): The title bar of the dialog box.
 If the title_bar field is missing, it is the case name.
 - widget (IWidget | None): Widget information.
+- image (ImageComponent | None): Image information.
 
 Widget list:
 
@@ -262,7 +263,6 @@ Widget list:
 - Numeric input, `NumericInputWidget`;
 - Radiobutton, `RadiobuttonWidget`;
 - Checkbox, `CheckboxWidget`;
-- Image demonstration, `ImageWidget`;
 - Multistep, `MultistepWidget`.
 
 **Returns:**
@@ -276,7 +276,6 @@ The type of the return value depends on the widget type:
 - TEXT_INPUT: str.
 - RADIOBUTTON: str.
 - CHECKBOX: List(str).
-- IMAGE: bool.
 - MULTISTEP: bool.
 
 **Raises**
@@ -292,6 +291,7 @@ def test_text_input():
         dialog_text="Type 'ok' and press the Confirm button",
         title_bar="Example of text input",
         widget=TextInputWidget(),
+        image=ImageComponent(address="assets/test.png", width=50),
     )
     response = run_dialog_box(dbx)
     set_message(f"Entered text {response}")

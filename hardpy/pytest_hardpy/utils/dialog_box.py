@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Final
 
-from hardpy.pytest_hardpy.utils.exception import WidgetInfoError
+from hardpy.pytest_hardpy.utils.exception import ImageError, WidgetInfoError
 
 
 class WidgetType(Enum):
@@ -21,7 +21,6 @@ class WidgetType(Enum):
     NUMERIC_INPUT = "numericinput"
     RADIOBUTTON = "radiobutton"
     CHECKBOX = "checkbox"
-    IMAGE = "image"
     STEP = "step"
     MULTISTEP = "multistep"
 
@@ -29,7 +28,9 @@ class WidgetType(Enum):
 class IWidget(ABC):
     """Dialog box widget interface."""
 
-    def __init__(self, widget_type: WidgetType) -> None:
+    def __init__(
+        self, widget_type: WidgetType,
+    ) -> None:
         self.type: Final[str] = widget_type.value
         self.info: dict = {}
 
@@ -49,8 +50,11 @@ class IWidget(ABC):
 class BaseWidget(IWidget):
     """Widget info interface."""
 
-    def __init__(self, widget_type: WidgetType = WidgetType.BASE) -> None:  # noqa: ARG002
-        super().__init__(WidgetType.BASE)
+    def __init__(
+        self,
+        widget_type: WidgetType = WidgetType.BASE,
+    ) -> None:
+        super().__init__(widget_type)
 
     def convert_data(self, input_data: str | None = None) -> bool:  # noqa: ARG002
         """Get base widget data, i.e. None.
@@ -168,40 +172,47 @@ class CheckboxWidget(IWidget):
             return None
 
 
-class ImageWidget(IWidget):
-    """Image widget."""
+class ImageComponent:
+    """Image component."""
 
-    def __init__(self, address: str, format: str = "image", width: int = 100) -> None:  # noqa: A002
+    def __init__(
+        self,
+        address: str,
+        width: int = 100,
+        border: int = 0,
+    ) -> None:
         """Validate the image fields and defines the base64 if it does not exist.
 
         Args:
             address (str): image address
-            format (str): image format
             width (int): image width
+            border (int): image border
 
         Raises:
-            WidgetInfoError: If both address and base64 are specified.
+            ImageError: If both address and base64data are specified.
         """
-        super().__init__(WidgetType.IMAGE)
-
         if width < 1:
             msg = "Width must be positive"
             raise WidgetInfoError(msg)
 
-        self.info["address"] = address
-        self.info["format"] = format
-        self.info["width"] = width
+        if border < 0:
+            msg = "Border must be non-negative"
+            raise WidgetInfoError(msg)
 
         try:
             with open(address, "rb") as file:  # noqa: PTH123
                 file_data = file.read()
         except FileNotFoundError:
             msg = "The image address is invalid"
-            raise WidgetInfoError(msg)  # noqa: B904
-        self.info["base64"] = base64.b64encode(file_data).decode("utf-8")
+            raise ImageError(msg)  # noqa: B904
+        self.address = address
+        self.width = width
+        self.border = border
+        self.base64 = base64.b64encode(file_data).decode("utf-8")
+
 
     def convert_data(self, input_data: str | None = None) -> bool:  # noqa: ARG002
-        """Get the image widget data, i.e. None.
+        """Get the image component data, i.e. None.
 
         Args:
             input_data (str | None): input string or nothing.
@@ -211,6 +222,19 @@ class ImageWidget(IWidget):
         """
         return True
 
+    def to_dict(self) -> dict:
+        """Convert ImageComponent to dictionary.
+
+        Returns:
+            dict: ImageComponent dictionary.
+        """
+        return {
+            "address": self.address,
+            "width": self.width,
+            "base64": self.base64,
+            "border": self.border,
+        }
+
 
 class StepWidget(IWidget):
     """Step widget.
@@ -218,7 +242,7 @@ class StepWidget(IWidget):
     Args:
         title (str): Step title
         text (str | None): Step text
-        widget (ImageWidget | None): Step widget
+        image (ImageComponent | None): Step image
 
     Raises:
         WidgetInfoError: If the text or widget are not provided.
@@ -228,17 +252,17 @@ class StepWidget(IWidget):
         self,
         title: str,
         text: str | None,
-        widget: ImageWidget | None = None,
+        image: ImageComponent | None = None,
     ) -> None:
         super().__init__(WidgetType.STEP)
-        if text is None and widget is None:
-            msg = "Text or widget must be provided"
+        if text is None and image is None:
+            msg = "Text or image must be provided"
             raise WidgetInfoError(msg)
         self.info["title"] = title
         if isinstance(text, str):
             self.info["text"] = text
-        if isinstance(widget, ImageWidget):
-            self.info["widget"] = widget.__dict__
+        if isinstance(image, ImageComponent):
+            self.info["image"] = image.__dict__
 
     def convert_data(self, input_data: str) -> bool:  # noqa: ARG002
         """Get the step widget data in the correct format.
@@ -255,7 +279,9 @@ class StepWidget(IWidget):
 class MultistepWidget(IWidget):
     """Multistep widget."""
 
-    def __init__(self, steps: list[StepWidget]) -> None:
+    def __init__(
+        self, steps: list[StepWidget],
+    ) -> None:
         """Initialize the MultistepWidget.
 
         Args:
@@ -292,6 +318,7 @@ class DialogBox:
         dialog_text (str): dialog text
         title_bar (str | None): title bar
         widget (IWidget | None): widget info
+        image (ImageComponent | None): image
     """
 
     def __init__(
@@ -299,8 +326,10 @@ class DialogBox:
         dialog_text: str,
         title_bar: str | None = None,
         widget: IWidget | None = None,
+        image: ImageComponent | None = None,
     ) -> None:
         self.widget: IWidget = BaseWidget() if widget is None else widget
+        self.image: ImageComponent | None = image
         self.dialog_text: str = dialog_text
         self.title_bar: str | None = title_bar
 
@@ -312,4 +341,6 @@ class DialogBox:
         """
         dbx_dict = deepcopy(self.__dict__)
         dbx_dict["widget"] = deepcopy(self.widget.__dict__)
+        if self.image:
+            dbx_dict["image"] = deepcopy(self.image.__dict__)
         return dbx_dict
