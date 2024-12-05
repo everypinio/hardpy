@@ -49,53 +49,53 @@ def test_checkbox_empty_widget():
 
 
 def test_image_widget_png():
-    hardpy.ImageWidget(address=f"{assets_path}test.png")
+    hardpy.ImageComponent(address=f"{assets_path}test.png")
     assert True
 
 
 def test_image_widget_gif():
-    hardpy.ImageWidget(address=f"{assets_path}test.gif")
+    hardpy.ImageComponent(address=f"{assets_path}test.gif")
     assert True
 
 
 def test_image_widget_jpeg():
-    hardpy.ImageWidget(address=f"{assets_path}test.jpeg")
+    hardpy.ImageComponent(address=f"{assets_path}test.jpeg")
     assert True
 
 
 def test_image_widget_pjpg():
-    hardpy.ImageWidget(address=f"{assets_path}test.pjpg")
+    hardpy.ImageComponent(address=f"{assets_path}test.pjpg")
     assert True
 
 
 def test_image_widget_svg():
-    hardpy.ImageWidget(address=f"{assets_path}test.svg")
+    hardpy.ImageComponent(address=f"{assets_path}test.svg")
     assert True
 
 
 def test_image_widget_tif():
-    hardpy.ImageWidget(address=f"{assets_path}test.tif")
+    hardpy.ImageComponent(address=f"{assets_path}test.tif")
     assert True
 
 
 def test_image_widget_wbmp():
-    hardpy.ImageWidget(address=f"{assets_path}test.wbmp")
+    hardpy.ImageComponent(address=f"{assets_path}test.wbmp")
     assert True
 
 
 def test_image_widget_webp():
-    hardpy.ImageWidget(address=f"{assets_path}test.webp")
+    hardpy.ImageComponent(address=f"{assets_path}test.webp")
     assert True
 
 
 def test_image_widget_icon():
-    hardpy.ImageWidget(address=f"{assets_path}test.icon")
+    hardpy.ImageComponent(address=f"{assets_path}test.icon")
     assert True
 
 
 def test_image_widget_with_empty_data():
     try:
-        hardpy.ImageWidget()  # type: ignore
+        hardpy.ImageComponent()  # type: ignore
         msg = "TypeError was not raised"
         raise AssertionError(msg)
     except TypeError:
@@ -104,7 +104,7 @@ def test_image_widget_with_empty_data():
 
 def test_image_widget_with_incorrect_width():
     try:
-        hardpy.ImageWidget(address="123.png", width=-1)
+        hardpy.ImageComponent(address="123.png", width=-1)
         msg = "WidgetInfoError was not raised"
         raise AssertionError(msg)
     except WidgetInfoError:
@@ -112,21 +112,21 @@ def test_image_widget_with_incorrect_width():
 
 
 def test_multistep_widget():
-    img_widget = hardpy.ImageWidget(
+    img_widget = hardpy.ImageComponent(
         address=f"{assets_path}/test.png",
         width=50,
     )
     steps = [
-        hardpy.StepWidget("Step 1", text="Content for step", widget=None),
-        hardpy.StepWidget("Step 2", text="Content for step 2", widget=img_widget),
-        hardpy.StepWidget("Step 3", text=None, widget=img_widget),
+        hardpy.StepWidget("Step 1", text="Content for step"),
+        hardpy.StepWidget("Step 2", text="Content for step 2", image=img_widget),
+        hardpy.StepWidget("Step 3", text=None, image=img_widget),
     ]
     hardpy.MultistepWidget(steps)
     assert True
 
 
 def test_step_widget():
-    hardpy.StepWidget(title="Text", text=" ", widget=None)
+    hardpy.StepWidget(title="Text", text=" ")
     assert True
 
 

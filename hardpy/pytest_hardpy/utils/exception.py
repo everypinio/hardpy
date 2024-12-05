@@ -42,3 +42,9 @@ class WidgetInfoError(HardpyError):
 
     def __init__(self, message: str) -> None:
         super().__init__(message)
+
+class ImageError(HardpyError):
+    """The image info is not correct."""
+
+    def __init__(self, message: str) -> None:
+        super().__init__(message)

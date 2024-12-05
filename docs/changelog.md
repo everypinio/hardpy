@@ -2,10 +2,12 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add an error when entering the same selection items or step names in dialog boxes.
 * Add the ability to clear the **runstore** database before running hardpy
   using the the `--hardpy-clear-database` option of the **pytest-hardpy** plugin.
 * Fix the timezone format via the **tzlocal** package.
 * Fix skipped test case and module status. Now status of skipped test is **skipped**, not **ready**.
+* Add the ability to add images to all widgets.
 
 ## HardPy 0.7.0
 

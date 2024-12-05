@@ -27,7 +27,7 @@ export function TestData(props: Props): React.ReactElement {
             })}
             {props.assertion_msg &&
                 <Tag key={'assertion'} style={TAG_ELEMENT_STYLE} minimal={true} intent="warning">
-                    {props.assertion_msg}
+                    {props.assertion_msg.split('\n')[0]}
                 </Tag>
             }
         </div>
