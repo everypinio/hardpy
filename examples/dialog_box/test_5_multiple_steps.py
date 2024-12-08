@@ -18,7 +18,7 @@ def test_multiple_steps():
         StepWidget(
             "Step 2",
             text="Content for step 2",
-            image=ImageComponent(address="assets/test.png", width=50),
+            image=ImageComponent(address="assets/image.png", width=100),
         ),
         StepWidget(
             "Step 3",

@@ -9,7 +9,7 @@ pytestmark = pytest.mark.module_name("Image dialog box")
 def test_upload_image():
     dbx = DialogBox(
         dialog_text="Test image",
-        image=ImageComponent(address="assets/test.png", width=50),
+        image=ImageComponent(address="assets/image.png", width=100),
     )
     response = run_dialog_box(dbx)
     assert response
