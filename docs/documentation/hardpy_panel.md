@@ -58,11 +58,11 @@ For user interaction with the test, it is possible to use dialog boxes.
 An example of usage can be seen in the example [dialog box](../examples/dialog_box.md) and in [dialog box documentation](pytest_hardpy/#run_dialog_box).
 Currently, there are some types of dialog boxes.
 
-Any dialog box can contain an image.
+Each dialog box can contain an image.
 
-* Allows change width through `width` parameter.
-* Allows change border thickness through `border` parameter.
-* Allows next image types: gif, jpeg, pjpeg, png, svg+xml, tiff, vnd.microsoft.icon, vnd.wap.wbmp, webp.
+* Allows the width to be changed using the `width` parameter.
+* Allows changing the border thickness with the `border` parameter.
+* Allow the following image types: gif, jpeg, pjpeg, png, svg+xml, tiff, vnd.microsoft.icon, vnd.wap.wbmp, webp.
 
 #### basic dialog box
 
