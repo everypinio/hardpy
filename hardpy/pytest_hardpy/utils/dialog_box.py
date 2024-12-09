@@ -123,6 +123,9 @@ class RadiobuttonWidget(IWidget):
         if not fields:
             msg = "RadiobuttonWidget must have at least one field"
             raise ValueError(msg)
+        if len(fields) != len(set(fields)):
+            msg = "RadiobuttonWidget fields must be unique"
+            raise ValueError(msg)
         self.info["fields"] = fields
 
     def convert_data(self, input_data: str) -> str:
@@ -152,6 +155,9 @@ class CheckboxWidget(IWidget):
         super().__init__(WidgetType.CHECKBOX)
         if not fields:
             msg = "Checkbox must have at least one field"
+            raise ValueError(msg)
+        if len(fields) != len(set(fields)):
+            msg = "CheckboxWidget fields must be unique"
             raise ValueError(msg)
         self.info["fields"] = fields
 
@@ -226,8 +232,14 @@ class MultistepWidget(IWidget):
         if not steps:
             msg = "MultistepWidget must have at least one step"
             raise ValueError(msg)
+        title_set = set()
         self.info["steps"] = []
         for step in steps:
+            title = step.info["title"]
+            if title in title_set:
+                msg = "MultistepWidget must have unique step titles"
+                raise ValueError(msg)
+            title_set.add(title)
             self.info["steps"].append(step.__dict__)
 
     def convert_data(self, input_data: str) -> bool:  # noqa: ARG002

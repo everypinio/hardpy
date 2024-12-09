@@ -2,6 +2,7 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add an error when entering the same selection items or step names in dialog boxes.
 * Add the ability to clear the **runstore** database before running hardpy
   using the the `--hardpy-clear-database` option of the **pytest-hardpy** plugin.
 * Fix the timezone format via the **tzlocal** package.
