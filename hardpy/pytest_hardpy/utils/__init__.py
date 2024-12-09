@@ -4,9 +4,10 @@
 from hardpy.pytest_hardpy.utils.connection_data import ConnectionData
 from hardpy.pytest_hardpy.utils.const import TestStatus
 from hardpy.pytest_hardpy.utils.dialog_box import (
+    BaseWidget,
     CheckboxWidget,
     DialogBox,
-    ImageWidget,
+    ImageComponent,
     MultistepWidget,
     NumericInputWidget,
     RadiobuttonWidget,
@@ -18,6 +19,7 @@ from hardpy.pytest_hardpy.utils.exception import (
     DuplicateSerialNumberError,
     DuplicateTestStandLocationError,
     DuplicateTestStandNameError,
+    ImageError,
     WidgetInfoError,
 )
 from hardpy.pytest_hardpy.utils.machineid import machine_id
@@ -26,6 +28,7 @@ from hardpy.pytest_hardpy.utils.progress_calculator import ProgressCalculator
 from hardpy.pytest_hardpy.utils.singleton import SingletonMeta
 
 __all__ = [
+    "BaseWidget",
     "CheckboxWidget",
     "ConnectionData",
     "DialogBox",
@@ -33,7 +36,8 @@ __all__ = [
     "DuplicateSerialNumberError",
     "DuplicateTestStandLocationError",
     "DuplicateTestStandNameError",
-    "ImageWidget",
+    "ImageComponent",
+    "ImageError",
     "MultistepWidget",
     "NodeInfo",
     "NumericInputWidget",
