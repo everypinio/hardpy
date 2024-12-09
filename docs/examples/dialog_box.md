@@ -26,11 +26,12 @@ pytestmark = pytest.mark.module_name("Base dialog box")
 def test_before():
     assert True
 
-@pytest.mark.case_name("Base dialog box")
-def test_base_dialog_box():
+@pytest.mark.case_name("Base dialog box with image")
+def test_base_dialog_box_with_image():
     dbx = DialogBox(
         title_bar="Operator check",
         dialog_text="Press the Confirm button",
+        image=ImageComponent(address="assets/image.png", width=100, border=1),
     )
     response = run_dialog_box(dbx)
     assert response
@@ -118,25 +119,7 @@ def test_checkbox():
     assert set(response) == correct_answer, "The answer is not correct"
 ```
 
-### test_4_send_image.py
-
-```python
-import pytest
-from hardpy import DialogBox, ImageComponent, run_dialog_box
-
-pytestmark = pytest.mark.module_name("Image dialog box")
-
-@pytest.mark.case_name("Image")
-def test_upload_image():
-    dbx = DialogBox(
-        dialog_text="Test image",
-        image=ImageComponent(address="assets/test.png", width=50),
-    )
-    response = run_dialog_box(dbx)
-    assert response
-```
-
-### test_5_multiple_steps.py
+### test_4_multiple_steps.py
 
 ```python
 import pytest

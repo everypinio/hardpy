@@ -8,6 +8,9 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 * Fix the timezone format via the **tzlocal** package.
 * Fix skipped test case and module status. Now status of skipped test is **skipped**, not **ready**.
 * Add the ability to add images to all widgets.
+* Add ability to add borders to images.
+* Add ability to close `set_operator_message` with `Escape` button.
+* Change API for dialog boxes with images.
 
 ## HardPy 0.7.0
 

@@ -44,13 +44,6 @@ def test_checkbox_widget():
     }
 
 
-def test_image_widget():
-    widget = hardpy.ImageComponent(
-        address="tests/test_pytest_hardpy/test_dbx_widgets/assets/test.png",
-    )
-    assert widget.convert_data() is True
-
-
 def test_multistep_widget():
     steps = [
         hardpy.StepWidget("Step 1", text="Content for step"),

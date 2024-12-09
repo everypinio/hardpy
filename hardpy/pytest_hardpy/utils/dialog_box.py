@@ -28,10 +28,7 @@ class WidgetType(Enum):
 class IWidget(ABC):
     """Dialog box widget interface."""
 
-    def __init__(
-        self,
-        widget_type: WidgetType,
-    ) -> None:
+    def __init__(self, widget_type: WidgetType) -> None:
         self.type: Final[str] = widget_type.value
         self.info: dict = {}
 
@@ -179,69 +176,6 @@ class CheckboxWidget(IWidget):
             return None
 
 
-class ImageComponent:
-    """Image component."""
-
-    def __init__(
-        self,
-        address: str,
-        width: int = 100,
-        border: int = 0,
-    ) -> None:
-        """Validate the image fields and defines the base64 if it does not exist.
-
-        Args:
-            address (str): image address
-            width (int): image width
-            border (int): image border
-
-        Raises:
-            ImageError: If both address and base64data are specified.
-        """
-        if width < 1:
-            msg = "Width must be positive"
-            raise WidgetInfoError(msg)
-
-        if border < 0:
-            msg = "Border must be non-negative"
-            raise WidgetInfoError(msg)
-
-        try:
-            with open(address, "rb") as file:  # noqa: PTH123
-                file_data = file.read()
-        except FileNotFoundError:
-            msg = "The image address is invalid"
-            raise ImageError(msg)  # noqa: B904
-        self.address = address
-        self.width = width
-        self.border = border
-        self.base64 = base64.b64encode(file_data).decode("utf-8")
-
-    def convert_data(self, input_data: str | None = None) -> bool:  # noqa: ARG002
-        """Get the image component data, i.e. None.
-
-        Args:
-            input_data (str | None): input string or nothing.
-
-        Returns:
-            bool: True if confirm button is pressed
-        """
-        return True
-
-    def to_dict(self) -> dict:
-        """Convert ImageComponent to dictionary.
-
-        Returns:
-            dict: ImageComponent dictionary.
-        """
-        return {
-            "address": self.address,
-            "width": self.width,
-            "base64": self.base64,
-            "border": self.border,
-        }
-
-
 class StepWidget(IWidget):
     """Step widget.
 
@@ -285,10 +219,7 @@ class StepWidget(IWidget):
 class MultistepWidget(IWidget):
     """Multistep widget."""
 
-    def __init__(
-        self,
-        steps: list[StepWidget],
-    ) -> None:
+    def __init__(self, steps: list[StepWidget]) -> None:
         """Initialize the MultistepWidget.
 
         Args:
@@ -321,6 +252,58 @@ class MultistepWidget(IWidget):
             bool: True if confirm button is pressed
         """
         return True
+
+
+class ImageComponent:
+    """Image component."""
+
+    def __init__(
+        self,
+        address: str,
+        width: int = 100,
+        border: int = 0,
+    ) -> None:
+        """Validate the image fields and defines the base64 if it does not exist.
+
+        Args:
+            address (str): image address
+            width (int): image width
+            border (int): image border
+
+        Raises:
+            ImageError: If both address and base64data are specified.
+        """
+        if width < 1:
+            msg = "Width must be positive"
+            raise WidgetInfoError(msg)
+
+        if border < 0:
+            msg = "Border must be non-negative"
+            raise WidgetInfoError(msg)
+
+        try:
+            with open(address, "rb") as file:  # noqa: PTH123
+                file_data = file.read()
+        except FileNotFoundError:
+            msg = "The image address is invalid"
+            raise ImageError(msg)  # noqa: B904
+        self.address = address
+        self.width = width
+        self.border = border
+        self.base64 = base64.b64encode(file_data).decode("utf-8")
+
+    def to_dict(self) -> dict:
+        """Convert ImageComponent to dictionary.
+
+        Returns:
+            dict: ImageComponent dictionary.
+        """
+        return {
+            "address": self.address,
+            "width": self.width,
+            "base64": self.base64,
+            "border": self.border,
+        }
 
 
 @dataclass
