@@ -48,13 +48,13 @@ class StandCloudLoader:
         try:
             resp = api.post(verify=self._verify_ssl, json=report.model_dump())
         except ExpiredAccessToken as exc:
-            raise StandCloudError(exc.description)  # type: ignore
+            raise StandCloudError(str(exc))  # type: ignore
         except TokenExpiredError as exc:
             raise StandCloudError(exc.description)
         except InvalidGrantError as exc:
             raise StandCloudError(exc.description)
         except HTTPError as exc:
-            raise StandCloudError(exc.description)
+            raise StandCloudError(exc.strerror)
 
         if resp.status_code != HTTPStatus.CREATED:
             msg = f"Report not uploaded to StandCloud, response code {resp.status_code}"
