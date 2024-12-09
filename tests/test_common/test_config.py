@@ -8,6 +8,7 @@ from hardpy.common.config import (
     FrontendConfig,
     HardpyConfig,
     SocketConfig,
+    StandCloudConfig,
 )
 
 db_no_default_user = "dev1"
@@ -18,6 +19,8 @@ frontend_no_default_host = "localhost1"
 frontend_no_default_port = 8001
 socket_no_default_host = "localhost1"
 socket_no_default_port = 6526
+stand_cloud_no_default_api = "api1.standcloud.localhost"
+stand_cloud_no_default_auth = "auth1.standcloud.localhost"
 
 db_default_user = "dev"
 db_default_password = "dev"
@@ -27,6 +30,8 @@ frontend_default_host = "localhost"
 frontend_default_port = 8000
 socket_default_host = "localhost"
 socket_default_port = 6525
+stand_cloud_default_api = "api.standcloud.localhost"
+stand_cloud_default_auth = "auth.standcloud.localhost"
 
 
 def test_config_manager_init(tmp_path: Path):
@@ -41,6 +46,8 @@ def test_config_manager_init(tmp_path: Path):
         frontend_port=frontend_no_default_port,
         socket_host=socket_no_default_host,
         socket_port=socket_no_default_port,
+        stand_cloud_api=stand_cloud_no_default_api,
+        stand_cloud_auth=stand_cloud_no_default_auth,
     )
     config = ConfigManager.get_config()
     assert isinstance(config, HardpyConfig)
@@ -53,6 +60,8 @@ def test_config_manager_init(tmp_path: Path):
     assert config.frontend.port == frontend_no_default_port
     assert config.socket.host == socket_no_default_host
     assert config.socket.port == socket_no_default_port
+    assert config.stand_cloud.api == stand_cloud_no_default_api
+    assert config.stand_cloud.auth == stand_cloud_no_default_auth
 
 
 def test_database_config():
@@ -81,6 +90,12 @@ def test_socket_config():
     assert config.port == socket_default_port
 
 
+def test_stand_cloud_config():
+    config = StandCloudConfig()
+    assert config.api == stand_cloud_default_api
+    assert config.auth == stand_cloud_default_auth
+
+
 def test_hardpy_config():
     config = HardpyConfig(
         title="HardPy TOML config",
@@ -88,6 +103,7 @@ def test_hardpy_config():
         database=DatabaseConfig(),
         frontend=FrontendConfig(),
         socket=SocketConfig(),
+        stand_cloud=StandCloudConfig(),
     )
     assert config.title == "HardPy TOML config"
     assert config.tests_dir == "tests"
@@ -115,6 +131,8 @@ def test_config_manager_create_config(tmp_path: Path):
         frontend_port=frontend_default_port,
         socket_host=socket_default_host,
         socket_port=socket_default_port,
+        stand_cloud_api=stand_cloud_default_api,
+        stand_cloud_auth=stand_cloud_default_auth,
     )
 
     ConfigManager.create_config(tests_dir)
@@ -137,6 +155,10 @@ def test_read_config_success(tmp_path: Path):
         },
         "frontend": {"host": frontend_default_host, "port": frontend_default_port},
         "socket": {"host": socket_default_host, "port": socket_default_port},
+        "stand_cloud": {
+            "api": stand_cloud_default_api,
+            "auth": stand_cloud_default_auth,
+        },
     }
     tests_dir = tmp_path / "tests"
     Path.mkdir(tests_dir, exist_ok=True, parents=True)
@@ -148,3 +170,12 @@ def test_read_config_success(tmp_path: Path):
     assert config.title == test_config_data["title"]
     assert config.tests_dir == test_config_data["tests_dir"]
     assert config.database.user == test_config_data["database"]["user"]
+    assert config.database.password == test_config_data["database"]["password"]
+    assert config.database.host == test_config_data["database"]["host"]
+    assert config.database.port == test_config_data["database"]["port"]
+    assert config.frontend.host == test_config_data["frontend"]["host"]
+    assert config.frontend.port == test_config_data["frontend"]["port"]
+    assert config.socket.host == test_config_data["socket"]["host"]
+    assert config.socket.port == test_config_data["socket"]["port"]
+    assert config.stand_cloud.api == test_config_data["stand_cloud"]["api"]
+    assert config.stand_cloud.auth == test_config_data["stand_cloud"]["auth"]
