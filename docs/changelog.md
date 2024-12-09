@@ -2,15 +2,17 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
-* Add an error when entering the same selection items or step names in dialog boxes.
-* Add the ability to clear the **runstore** database before running hardpy
-  using the the `--hardpy-clear-database` option of the **pytest-hardpy** plugin.
-* Fix the timezone format via the **tzlocal** package.
-* Fix skipped test case and module status. Now status of skipped test is **skipped**, not **ready**.
+## HardPy 0.8.0
+
+* Modify API for dialog boxes with images.
 * Add the ability to add images to all widgets.
 * Add ability to add borders to images.
+* Fix timezone format using the **tzlocal** package.
 * Add ability to close `set_operator_message` with `Escape` button.
-* Change API for dialog boxes with images.
+* Fix skipped test case and module status. Now skipped test status is **skipped**, not **ready**.
+* Add an exception when entering the same selection items or step names in dialog boxes.
+* Add the ability to clear the **runstore** database before running hardpy
+  using the the `--hardpy-clear-database` option of the **pytest-hardpy** plugin.
 
 ## HardPy 0.7.0
 
