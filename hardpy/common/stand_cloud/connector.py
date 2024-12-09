@@ -41,7 +41,6 @@ class StandCloudConnector:
         self._api_addr = stand_cloud_api
         self._auth_addr = stand_cloud_auth
         self._api_url = f"https://{self._api_addr}/"
-        self._is_debug = verify_ssl
         self._verify_ssl = verify_ssl
         self._log = getLogger(__name__)
 
@@ -67,13 +66,13 @@ class StandCloudConnector:
         try:
             resp = api.get(verify=self._verify_ssl)
         except ExpiredAccessToken as exc:
-            raise StandCloudError(exc.description)
+            raise StandCloudError(str(exc))
         except TokenExpiredError as exc:
             raise StandCloudError(exc.description)
         except InvalidGrantError as exc:
             raise StandCloudError(exc.description)
         except HTTPError as exc:
-            raise StandCloudError(exc.description)
+            raise StandCloudError(exc.strerror)
 
         if resp.status_code != HTTPStatus.OK:
             msg = f"StandCloud is unavailable, response code {resp.status_code}"
@@ -166,7 +165,7 @@ class StandCloudConnector:
             except InvalidGrantError as exc:
                 raise StandCloudError(exc.description)
             except RequestConnectionError as exc:
-                raise StandCloudError(exc.description)
+                raise StandCloudError(exc.strerror)
             except MissingTokenError as exc:
                 raise StandCloudError(exc.description)
             self._token_update(ret)  # type: ignore
