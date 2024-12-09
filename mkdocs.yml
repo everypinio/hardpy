@@ -64,6 +64,7 @@ nav:
       - CouchDB in RAM: examples/db_in_ram.md
       - Operator message: examples/operator_msg.md
       - Attempts: examples/attempts.md
+      - StandCloud: examples/stand_cloud.md
   - About:
       - Development: about/development.md
   - Changelog: changelog.md
