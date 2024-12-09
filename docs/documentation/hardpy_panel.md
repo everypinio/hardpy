@@ -68,22 +68,24 @@ Each dialog box can contain an image.
 
 Contains an instruction or question and a `confirm` button for confirmation.
 
-![base_dialog_box](../img/dialog_box/base_dialog_box.png)
+=== "Widget without image"
+    ![base_dialog_box](../img/dialog_box/base_dialog_box.png)
 
-Base dialog box with image:
+=== "Widget with image"
+    ![base_dialog_box_with_image](../img/dialog_box/base_dbx_with_image.png)
 
-![base_dialog_box_with_image](../img/dialog_box/base_dbx_with_image.png)
 
 #### text input field
 
 Contains an instruction or question, a text input field, and a `confirm` button for confirmation.
 The text is transmitted in UTF-8 encoding.
 
-![text_input_dialog_box](../img/dialog_box/text_input_dialog_box.png)
+=== "Widget without image"
+    ![text_input_dialog_box](../img/dialog_box/text_input_dialog_box.png)
 
-Text input dialog box with image:
+=== "Widget with image"
+    ![text_input_dialog_box_with_image](../img/dialog_box/dbx_with_text_input_and_image.png)
 
-![text_input_dialog_box_with_image](../img/dialog_box/dbx_with_text_input_and_image.png)
 
 #### number input field
 
@@ -94,11 +96,12 @@ Contains an instruction or question, a number input field, and a `confirm` butto
 * Allows numbers to be entered using **E notation** with `e`, e.g. `2e3`.
 * The entered numbers will be converted to float.
 
-![num_input_dialog_box](../img/dialog_box/num_input_dialog_box.png)
+=== "Widget without image"
+    ![num_input_dialog_box](../img/dialog_box/num_input_dialog_box.png)
 
-Dialog box with number input and image:
+=== "Widget with image"
+    ![num_input_dialog_box_with_image](../img/dialog_box/dbx_with_num_input_and_image.png)
 
-![num_input_dialog_box_with_image](../img/dialog_box/dbx_with_num_input_and_image.png)
 
 #### radiobutton
 
@@ -107,11 +110,13 @@ Contains radiobutton widget.
 * The user selects one option from several possible ones.
 * Returns the contents of the selected item as a string.
 
-![radiobutton_dialog_box](../img/dialog_box/radiobutton_dialog_box.png)
 
-Dialog box with radiobutton and image:
+=== "Widget without image"
+    ![radiobutton_dialog_box](../img/dialog_box/radiobutton_dialog_box.png)
 
-![radiobutton_dialog_box_with_image](../img/dialog_box/dbx_with_radio_and_image.png)
+=== "Widget with image"
+    ![radiobutton_dialog_box_with_image](../img/dialog_box/dbx_with_radio_and_image.png)
+
 
 #### checkbox
 
@@ -120,11 +125,13 @@ Contains checkbox widget.
 * The user selects several options from several possible ones.
 * Returns a list with the contents of the selected items.
 
-![checkbox_dialog_box](../img/dialog_box/checkbox_dialog_box.png)
 
-Dialog box with checkbox and image:
+=== "Widget without image"
+    ![checkbox_dialog_box](../img/dialog_box/checkbox_dialog_box.png)
 
-![checkbox_dialog_box_with_image](../img/dialog_box/dbx_with_checkbox_and_image.png)
+=== "Widget with image"
+    ![checkbox_dialog_box_with_image](../img/dialog_box/dbx_with_checkbox_and_image.png)
+
 
 #### multiple steps
 

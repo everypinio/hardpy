@@ -228,8 +228,8 @@ there is the function [run_dialog_box](#run_dialog_box).
 
 **Arguments:**
 
-- `msg (str)`: The message to be displayed.
-- `title (str | None)`: The optional title for the message.
+- `msg` *(str)*: The message to be displayed.
+- `title` *(str | None)*: The optional title for the message.
 
 **Example:**
 
@@ -250,11 +250,17 @@ Displays a dialog box and updates the `dialog_box` field in the **statestore** d
 
 DialogBox attributes:
 
-- dialog_text (str): The text of the dialog box.
-- title_bar (str | None): The title bar of the dialog box.
+- `dialog_text` *(str)*: The text of the dialog box.
+- `title_bar` *(str | None)*: The title bar of the dialog box.
 If the title_bar field is missing, it is the case name.
-- widget (IWidget | None): Widget information.
-- image (ImageComponent | None): Image information.
+- `widget` *(IWidget | None)*: Widget information.
+- `image` *(ImageComponent | None)*: Image information.
+
+ImageComponent attributes:
+
+- `address` *(str)*: Image address.
+- `width` *(int | None)*: Image width in %.
+- `border` *(int | None)*: Image border width.
 
 Widget list:
 

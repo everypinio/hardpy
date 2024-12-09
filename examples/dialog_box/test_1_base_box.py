@@ -25,17 +25,6 @@ def test_base_dialog_box_with_image():
     dbx = DialogBox(
         title_bar="Operator check",
         dialog_text="Press the Confirm button",
-        image=ImageComponent(address="assets/image.png", width=100),
-    )
-    response = run_dialog_box(dbx)
-    assert response
-
-
-@pytest.mark.case_name("Base dialog box with image")
-def test_base_dialog_box_with_image_with_border():
-    dbx = DialogBox(
-        title_bar="Operator check",
-        dialog_text="Press the Confirm button",
         image=ImageComponent(address="assets/image.png", width=100, border=1),
     )
     response = run_dialog_box(dbx)
