@@ -6,7 +6,7 @@ from typing import ClassVar
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from hardpy.pytest_hardpy.utils import TestStatus as Status  # noqa: TCH001
+from hardpy.pytest_hardpy.utils import TestStatus as Status  # noqa: TC001
 
 
 class IBaseResult(BaseModel):
@@ -177,7 +177,7 @@ class TestStand(BaseModel):
         "info": {
           "geo": "Belgrade"
         },
-        "timezone": "CET",
+        "timezone": "Europe/Belgrade",
         "drivers": {
           "driver_1": "driver info",
           "driver_2": {
@@ -228,7 +228,7 @@ class ResultStateStore(IBaseResult):
         "info": {
           "geo": "Belgrade"
         },
-        "timezone": "CET",
+        "timezone": "Europe/Belgrade",
         "drivers": {
           "driver_1": "driver info",
           "driver_2": {
@@ -324,7 +324,7 @@ class ResultRunStore(IBaseResult):
         "info": {
           "geo": "Belgrade"
         },
-        "timezone": "CET",
+        "timezone": "Europe/Belgrade",
         "drivers": {
           "driver_1": "driver info",
           "driver_2": {

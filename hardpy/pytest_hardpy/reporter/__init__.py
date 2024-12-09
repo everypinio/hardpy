@@ -5,6 +5,6 @@ from hardpy.pytest_hardpy.reporter.hook_reporter import HookReporter
 from hardpy.pytest_hardpy.reporter.runner_reporter import RunnerReporter
 
 __all__ = [
-    "RunnerReporter",
     "HookReporter",
+    "RunnerReporter",
 ]

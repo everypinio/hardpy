@@ -4,5 +4,6 @@
         "njpwerner.autodocstring",
         "charliermarsh.ruff",
         "bungcip.better-toml",
+        "esbenp.prettier-vscode"
     ]
 }

@@ -12,6 +12,6 @@ __all__ = [
     "DatabaseField",
     "ResultRunStore",
     "ResultStateStore",
-    "StateStore",
     "RunStore",
+    "StateStore",
 ]

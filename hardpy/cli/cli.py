@@ -4,10 +4,9 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
-from typing_extensions import Annotated
 from uvicorn import run as uvicorn_run
 
 from hardpy.cli.template import TemplateGenerator

@@ -25,16 +25,59 @@ To use:
 Call method `set_operator_message()` if you want a message to appear in
 the operator panel for the operator when the condition you specify is met.
 
+### conftest.py
 
-## example:
+Contains settings and fixtures for all tests:
+
+- The `finish_executing` function generates a report and saves it to the database.
+- The `test_end_message` function shows message about completing of testing.
+- The `fill_list_functions_after_test` function populates a list of actions to be performed post-test. You may rename this function as you want.
+
+If the report database doesn't exist, the report won't be saved, and an error message will be displayed to the operator. Otherwise, a success message will be shown indicating successful report saving.
 
 ```python
-import hardpy
+import pytest
+from hardpy import (
+    CouchdbConfig,
+    CouchdbLoader,
+    get_current_report,
+    set_operator_message,
+)
 
-def my_function():
-    # Some code that might trigger an error
+def finish_executing():
+    report = get_current_report()
     try:
-        # ...
-    except Exception as e:
-        hardpy.set_operator_message(msg=str(e), title="Important Notice")
+        if report:
+            loader = CouchdbLoader(CouchdbConfig(port=5986))
+            loader.load(report)
+            set_operator_message(
+                msg="Saving report was successful",
+                title="Operator message",
+            )
+    except RuntimeError as e:
+        set_operator_message(
+            msg='The report was not recorded with error: "' + str(e) + '"',
+            title="Operator message",
+        )
+
+def test_end_message():
+    set_operator_message(
+        msg="Testing completed",
+        title="Operator message",
+    )
+
+@pytest.fixture(scope="session", autouse=True)
+def fill_list_functions_after_test(post_run_functions: list):
+    post_run_functions.append(test_end_message)
+    post_run_functions.append(finish_executing)
+    yield
+```
+
+### test_1.py
+
+Contains the simplest example of a valid test.
+
+```python
+def test_one():
+    assert True
 ```

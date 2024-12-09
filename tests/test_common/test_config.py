@@ -1,6 +1,6 @@
 from pathlib import Path
 
-import rtoml
+import tomli_w
 
 from hardpy.common.config import (
     ConfigManager,
@@ -120,7 +120,7 @@ def test_config_manager_create_config(tmp_path: Path):
     ConfigManager.create_config(tests_dir)
 
     config_file: Path = tests_dir / "hardpy.toml"
-    assert config_file.read_text() == rtoml.dumps(
+    assert config_file.read_text() == tomli_w.dumps(
         ConfigManager.get_config().model_dump(),
     )
 
@@ -141,7 +141,7 @@ def test_read_config_success(tmp_path: Path):
     tests_dir = tmp_path / "tests"
     Path.mkdir(tests_dir, exist_ok=True, parents=True)
     with Path.open(tests_dir / "hardpy.toml", "w") as file:
-        file.write(rtoml.dumps(test_config_data))
+        file.write(tomli_w.dumps(test_config_data))
 
     config = ConfigManager.read_config(tests_dir)
     assert isinstance(config, HardpyConfig)
