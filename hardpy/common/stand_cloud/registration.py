@@ -28,7 +28,7 @@ if TYPE_CHECKING:
     from requests_oauth2client import BearerToken
 
 
-def register(ssl_verify: bool, api_addr: str, auth_addr: str) -> None:
+def register(verify_ssl: bool, api_addr: str, auth_addr: str) -> None:
     """Register HardPy in StandCloud."""
     # TODO (xorialexandrov): Fix magic numbers
     # OAuth client configuration
@@ -67,7 +67,7 @@ def register(ssl_verify: bool, api_addr: str, auth_addr: str) -> None:
 
     # pushed authorization response
     response = json.loads(
-        requests.post(par_url, data=data, verify=ssl_verify, timeout=timeout).content,
+        requests.post(par_url, data=data, verify=verify_ssl, timeout=timeout).content,
     )
     url = (
         authorization_url
@@ -97,7 +97,7 @@ def register(ssl_verify: bool, api_addr: str, auth_addr: str) -> None:
 
     # OAuth access token request
     data = dict(urldecode(data))
-    response = requests.post(token_url, data=data, verify=ssl_verify, timeout=timeout)
+    response = requests.post(token_url, data=data, verify=verify_ssl, timeout=timeout)
 
     try:
         # OAuth access token grant

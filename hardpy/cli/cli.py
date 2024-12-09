@@ -23,7 +23,7 @@ default_config = ConfigManager().get_config()
 
 @cli.command()
 def init(  # noqa: PLR0913
-    tests_dir: Annotated[Optional[str], typer.Argument()] = None,  # noqa: UP007
+    tests_dir: Annotated[Optional[str], typer.Argument()] = None,
     create_database: bool = typer.Option(
         True,
         help="Create CouchDB database.",
@@ -133,7 +133,7 @@ def init(  # noqa: PLR0913
 
 
 @cli.command()
-def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:  # noqa: UP007
+def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
     """Run HardPy server.
 
     Args:
@@ -158,8 +158,8 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:  
 
 
 @cli.command()
-def sc_register(  # noqa: D417
-    tests_dir: Annotated[Optional[str], typer.Argument()] = None,  # noqa: UP007
+def sc_register(
+    tests_dir: Annotated[Optional[str], typer.Argument()] = None,
     verify_ssl: bool = typer.Option(
         True,
         help="Skips SSL checks. The option only for development and debug.",
@@ -177,7 +177,7 @@ def sc_register(  # noqa: D417
 
     Args:
         tests_dir (str | None): Tests directory. Current directory + `tests` by default.
-        ssl_verify (bool): Skips SSL checks. The option only for development and debug.
+        verify_ssl (bool): Skips SSL checks. The option only for development and debug.
         check (bool): Check StandCloud connection.
     """
     dir_path = Path.cwd() / tests_dir if tests_dir else Path.cwd()
@@ -189,9 +189,9 @@ def sc_register(  # noqa: D417
 
     if check:
         sc_connector = StandCloudConnector(
-            verify_ssl,
-            config.stand_cloud.api,
-            config.stand_cloud.auth,
+            stand_cloud_api=config.stand_cloud.api,
+            stand_cloud_auth=config.stand_cloud.auth,
+            verify_ssl=verify_ssl,
         )
         try:
             sc_connector.healthcheck()
@@ -200,7 +200,12 @@ def sc_register(  # noqa: D417
             sys.exit()
         print("StandCloud connection success")
         sys.exit()
-    auth_register(verify_ssl, config.stand_cloud.api, config.stand_cloud.auth)
+    auth_register(
+        verify_ssl=verify_ssl,
+        api_addr=config.stand_cloud.api,
+        auth_addr=config.stand_cloud.auth,
+    )
+
 
 if __name__ == "__main__":
     cli()
