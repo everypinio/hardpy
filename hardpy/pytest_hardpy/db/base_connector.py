@@ -3,7 +3,7 @@
 
 from pycouchdb.client import Database
 from pycouchdb.exceptions import Conflict, GenericError
-from requests.exceptions import ConnectionError
+from requests.exceptions import ConnectionError  # noqa: A004
 
 from hardpy.pytest_hardpy.db.base_server import BaseServer
 

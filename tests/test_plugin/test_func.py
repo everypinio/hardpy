@@ -92,27 +92,22 @@ def test_empty_dut_serial_number(pytester: Pytester, hardpy_opts: list[str]):
     result.assert_outcomes(failed=1)
 
 
-def test_incorrect_dut_serial_number(pytester: Pytester, hardpy_opts: list[str]):
+def test_clean_dut_serial_number(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
         from hardpy import DuplicateSerialNumberError
 
-        def test_incorrect_dut_serial_number():
+        def test_clean_dut_serial_number():
             report = hardpy.get_current_report()
             assert (
                 report.dut.serial_number is None
             ), "Serial number is not empty before start."
-
-            serial_number = 'qiuwgdiwg'
-            hardpy.set_dut_serial_number(serial_number)
-            report = hardpy.get_current_report()
-            assert serial_number == report.dut.serial_number
     """,
     )
 
     result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(failed=1)
+    result.assert_outcomes(passed=1)
 
 
 def test_dut_info(pytester: Pytester, hardpy_opts: list[str]):
@@ -160,7 +155,7 @@ def test_empty_dut_info(pytester: Pytester, hardpy_opts: list[str]):
     """,
     )
     result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(failed=1)
+    result.assert_outcomes(passed=1)
 
 
 def test_stand_name(pytester: Pytester, hardpy_opts: list[str]):

@@ -228,8 +228,8 @@ there is the function [run_dialog_box](#run_dialog_box).
 
 **Arguments:**
 
-- `msg (str)`: The message to be displayed.
-- `title (str | None)`: The optional title for the message.
+- `msg` *(str)*: The message to be displayed.
+- `title` *(str | None)*: The optional title for the message.
 
 **Example:**
 
@@ -250,10 +250,17 @@ Displays a dialog box and updates the `dialog_box` field in the **statestore** d
 
 DialogBox attributes:
 
-- dialog_text (str): The text of the dialog box.
-- title_bar (str | None): The title bar of the dialog box.
+- `dialog_text` *(str)*: The text of the dialog box.
+- `title_bar` *(str | None)*: The title bar of the dialog box.
 If the title_bar field is missing, it is the case name.
-- widget (IWidget | None): Widget information.
+- `widget` *(IWidget | None)*: Widget information.
+- `image` *(ImageComponent | None)*: Image information.
+
+ImageComponent attributes:
+
+- `address` *(str)*: Image address.
+- `width` *(int | None)*: Image width in %.
+- `border` *(int | None)*: Image border width.
 
 Widget list:
 
@@ -262,7 +269,6 @@ Widget list:
 - Numeric input, `NumericInputWidget`;
 - Radiobutton, `RadiobuttonWidget`;
 - Checkbox, `CheckboxWidget`;
-- Image demonstration, `ImageWidget`;
 - Multistep, `MultistepWidget`.
 
 **Returns:**
@@ -276,7 +282,6 @@ The type of the return value depends on the widget type:
 - TEXT_INPUT: str.
 - RADIOBUTTON: str.
 - CHECKBOX: List(str).
-- IMAGE: bool.
 - MULTISTEP: bool.
 
 **Raises**
@@ -292,6 +297,7 @@ def test_text_input():
         dialog_text="Type 'ok' and press the Confirm button",
         title_bar="Example of text input",
         widget=TextInputWidget(),
+        image=ImageComponent(address="assets/test.png", width=50),
     )
     response = run_dialog_box(dbx)
     set_message(f"Entered text {response}")
@@ -490,7 +496,7 @@ The default is *localhost*.
 
 #### hardpy-clear-database
 
-Option to clean the **statestore** database before running pytest.
+Option to clean **statestore** and **runstore** databases before running pytest.
 
 ```bash
 --hardpy-clear-database

@@ -79,7 +79,10 @@ def set_dut_serial_number(serial_number: str) -> None:
     key = reporter.generate_key(DF.DUT, DF.SERIAL_NUMBER)
     if reporter.get_field(key):
         raise DuplicateSerialNumberError
-    reporter.set_doc_value(key, serial_number)
+    reporter.set_doc_value(
+        key,
+        serial_number if isinstance(serial_number, str) else str(serial_number),
+    )
     reporter.update_db_by_doc()
 
 
@@ -274,6 +277,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
         - title_bar (str | None): The title bar of the dialog box.
           If the title_bar field is missing, it is the case name.
         - widget (DialogBoxWidget | None): Widget information.
+        - image (ImageComponent | None): Image information.
 
     Returns:
         Any: An object containing the user's response.
@@ -285,7 +289,6 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
         - NUMERIC_INPUT: float.
         - RADIOBUTTON: str.
         - CHECKBOX: list[str].
-        - IMAGE: bool.
         - MULTISTEP: bool.
 
     Raises:

@@ -5,6 +5,6 @@ from hardpy.pytest_hardpy.result.report_loader.couchdb_loader import CouchdbLoad
 from hardpy.pytest_hardpy.result.report_reader.couchdb_reader import CouchdbReader
 
 __all__ = [
-    "CouchdbReader",
     "CouchdbLoader",
+    "CouchdbReader",
 ]
