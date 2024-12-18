@@ -30,8 +30,11 @@ hardpy sc-register <tests_path>
 where <tests_path> is the real tests path.
 Then go to the authorization link in the terminal and open the link to the browser.
 You will need to enter your StandCloud login and password.
-After successful authorization, you should press the `Confirm` button,
-after which a page will appear in the browser informing about successfully issued token.
+After successful authorization, you should press the `Accept` button.
+
+![stand_cloud_auth](../img/stand_cloud/stand_cloud_auth.png)
+
+After which a page will appear in the browser informing about successfully issued token.
 Otherwise, an error message will appear on the page.
 The browser can be closed.
 The `Registration completed` message should appear in the terminal with
