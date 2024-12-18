@@ -47,6 +47,31 @@
             ]
         },
         {
+            "name": "StandCloud register",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "sc-register",
+                "--no-verify-ssl",
+                "examples/stand_cloud"
+            ]
+        },
+        {
+            "name": "StandCloud check connection",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "sc-register",
+                "--no-verify-ssl",
+                "--check",
+                "examples/stand_cloud"
+            ]
+        },
+        {
             "name": "Python: Example Hello HardPy",
             "type": "debugpy",
             "request": "launch",
@@ -77,6 +102,17 @@
             "args": [
                 "run",
                 "examples/minute_parity"
+            ]
+        },
+        {
+            "name": "Python: Example StandCloud",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "run",
+                "examples/stand_cloud"
             ]
         },
         {
