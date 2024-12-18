@@ -55,21 +55,37 @@ Sound is disabled by default.
 ### Dialog box
 
 For user interaction with the test, it is possible to use dialog boxes.
-An example of usage can be seen in the example [dialog box](../examples/dialog_box.md).
+An example of usage can be seen in the example [dialog box](../examples/dialog_box.md) and in [dialog box documentation](pytest_hardpy.md#run_dialog_box).
 Currently, there are some types of dialog boxes.
+
+Each dialog box can contain an image.
+
+* Allows the width to be changed using the `width` parameter.
+* Allows changing the border thickness with the `border` parameter.
+* Allow the following image types: gif, jpeg, pjpeg, png, svg+xml, tiff, vnd.microsoft.icon, vnd.wap.wbmp, webp.
 
 #### basic dialog box
 
 Contains an instruction or question and a `confirm` button for confirmation.
 
-![base_dialog_box](../img/dialog_box/base_dialog_box.png)
+=== "Widget without image"
+    ![base_dialog_box](../img/dialog_box/base_dialog_box.png)
+
+=== "Widget with image"
+    ![base_dialog_box_with_image](../img/dialog_box/base_dbx_with_image.png)
+
 
 #### text input field
 
 Contains an instruction or question, a text input field, and a `confirm` button for confirmation.
 The text is transmitted in UTF-8 encoding.
 
-![text_input_dialog_box](../img/dialog_box/text_input_dialog_box.png)
+=== "Widget without image"
+    ![text_input_dialog_box](../img/dialog_box/text_input_dialog_box.png)
+
+=== "Widget with image"
+    ![text_input_dialog_box_with_image](../img/dialog_box/dbx_with_text_input_and_image.png)
+
 
 #### number input field
 
@@ -80,7 +96,12 @@ Contains an instruction or question, a number input field, and a `confirm` butto
 * Allows numbers to be entered using **E notation** with `e`, e.g. `2e3`.
 * The entered numbers will be converted to float.
 
-![num_input_dialog_box](../img/dialog_box/num_input_dialog_box.png)
+=== "Widget without image"
+    ![num_input_dialog_box](../img/dialog_box/num_input_dialog_box.png)
+
+=== "Widget with image"
+    ![num_input_dialog_box_with_image](../img/dialog_box/dbx_with_num_input_and_image.png)
+
 
 #### radiobutton
 
@@ -89,7 +110,13 @@ Contains radiobutton widget.
 * The user selects one option from several possible ones.
 * Returns the contents of the selected item as a string.
 
-![radiobutton_dialog_box](../img/dialog_box/radiobutton_dialog_box.png)
+
+=== "Widget without image"
+    ![radiobutton_dialog_box](../img/dialog_box/radiobutton_dialog_box.png)
+
+=== "Widget with image"
+    ![radiobutton_dialog_box_with_image](../img/dialog_box/dbx_with_radio_and_image.png)
+
 
 #### checkbox
 
@@ -98,16 +125,13 @@ Contains checkbox widget.
 * The user selects several options from several possible ones.
 * Returns a list with the contents of the selected items.
 
-![checkbox_dialog_box](../img/dialog_box/checkbox_dialog_box.png)
 
-#### image
+=== "Widget without image"
+    ![checkbox_dialog_box](../img/dialog_box/checkbox_dialog_box.png)
 
-Contains an instruction or question with image and a `confirm` button for confirmation.
+=== "Widget with image"
+    ![checkbox_dialog_box_with_image](../img/dialog_box/dbx_with_checkbox_and_image.png)
 
-* Allows change width through `width` parameter.
-* Allows next image types: gif, jpeg, pjpeg, png, svg+xml, tiff, vnd.microsoft.icon, vnd.wap.wbmp, webp.
-
-![dialog_box_with_image](../img/dialog_box/dialog_box_with_image.png)
 
 #### multiple steps
 
@@ -118,7 +142,7 @@ Allows steps with text and image.
     ![dialog_box_with_steps](../img/dialog_box/dialog_box_with_steps.png)
 
 === "Step 2"
-    ![dialog_box_with_step_with_image_and_text](../img/dialog_box/dialog_box_with_step_with_image_and_text.png)
+    ![dialog_box_with_step_with_image_and_text](../img/dialog_box/dbx_with_multistep_and_image.png)
 
 === "Step 3"
     ![dialog_box_with_step_with_image](../img/dialog_box/dialog_box_with_step_with_image.png)

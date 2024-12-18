@@ -251,6 +251,12 @@ The **modules** block contains the following fields:
           - **widget**: information about the widget;
             - **info**: widget additional information;
             - **type**: type of the widget;
+          - **image**: information about image;
+            - **address**: image address;
+            - **width**: image width in percent;
+            - **border**: image border in pixels;
+            - **base64**: image in base64 code.
+
 
 Example of a **current** document:
 
@@ -315,7 +321,12 @@ Example of a **current** document:
                     "text": "some text"
                   },
                   "type": "textinput"
-                }
+                },
+                "image": {
+                  "address": "assets/test.png",
+                  "width": 100,
+                  "border": 0,
+                }               
               }
             },
             "test_minute_parity": {
