@@ -69,10 +69,14 @@ Each dialog box can contain an image.
 Contains an instruction or question and a `confirm` button for confirmation.
 
 === "Widget without image"
-    ![base_dialog_box](../img/dialog_box/base_dialog_box.png)
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/base_dialog_box.png" alt="base_dialog_box">
+    </h1>
 
 === "Widget with image"
-    ![base_dialog_box_with_image](../img/dialog_box/base_dbx_with_image.png)
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/base_dbx_with_image.png" alt="base_dialog_box_with_image">
+    </h1>
 
 
 #### text input field
@@ -81,10 +85,14 @@ Contains an instruction or question, a text input field, and a `confirm` button 
 The text is transmitted in UTF-8 encoding.
 
 === "Widget without image"
-    ![text_input_dialog_box](../img/dialog_box/text_input_dialog_box.png)
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/text_input_dialog_box.png" alt="text_input_dialog_box">
+    </h1>
 
 === "Widget with image"
-    ![text_input_dialog_box_with_image](../img/dialog_box/dbx_with_text_input_and_image.png)
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_text_input_and_image.png" alt="text_input_dialog_box_with_image">
+    </h1>
 
 
 #### number input field
@@ -97,10 +105,14 @@ Contains an instruction or question, a number input field, and a `confirm` butto
 * The entered numbers will be converted to float.
 
 === "Widget without image"
-    ![num_input_dialog_box](../img/dialog_box/num_input_dialog_box.png)
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/num_input_dialog_box.png" alt="num_input_dialog_box">
+    </h1>
 
 === "Widget with image"
-    ![num_input_dialog_box_with_image](../img/dialog_box/dbx_with_num_input_and_image.png)
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_num_input_and_image.png" alt="num_input_dialog_box_with_image">
+    </h1>
 
 
 #### radiobutton
@@ -112,11 +124,14 @@ Contains radiobutton widget.
 
 
 === "Widget without image"
-    ![radiobutton_dialog_box](../img/dialog_box/radiobutton_dialog_box.png)
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/radiobutton_dialog_box.png" alt="radiobutton_dialog_box">
+    </h1>
 
 === "Widget with image"
-    ![radiobutton_dialog_box_with_image](../img/dialog_box/dbx_with_radio_and_image.png)
-
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_radio_and_image.png" alt="radiobutton_dialog_box_with_image">
+    </h1>
 
 #### checkbox
 
@@ -127,10 +142,14 @@ Contains checkbox widget.
 
 
 === "Widget without image"
-    ![checkbox_dialog_box](../img/dialog_box/checkbox_dialog_box.png)
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/checkbox_dialog_box.png" alt="checkbox_dialog_box">
+    </h1>
 
 === "Widget with image"
-    ![checkbox_dialog_box_with_image](../img/dialog_box/dbx_with_checkbox_and_image.png)
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_checkbox_and_image.png" alt="checkbox_dialog_box_with_image">
+    </h1>
 
 
 #### multiple steps
@@ -139,27 +158,37 @@ Contains an instruction with multiple steps and `confirm` button for confirmatio
 Allows steps with text and image.
 
 === "Step 1"
-    ![dialog_box_with_steps](../img/dialog_box/dialog_box_with_steps.png)
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_steps.png" alt="dialog_box_with_steps">
+    </h1>
 
 === "Step 2"
-    ![dialog_box_with_step_with_image_and_text](../img/dialog_box/dbx_with_multistep_and_image.png)
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_multistep_and_image.png" alt="dialog_box_with_step_with_image_and_text">
+    </h1>
 
 === "Step 3"
-    ![dialog_box_with_step_with_image](../img/dialog_box/dialog_box_with_step_with_image.png)
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_step_with_image.png" alt="dialog_box_with_step_with_image">
+    </h1>
 
 
 #### warning window
 
 If the user clicks `confirm` without entering anything, a warning window will be displayed.
 
-![alert](../img/dialog_box/dialog_box_alert.png)
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_alert.png" alt="alert">
+</h1>
 
 #### error notification
 
 If the user closes the dialog box (using the cross in the upper right corner),
 the tests will be stopped, an error message will be displayed.
 
-![notification](../img/dialog_box/dialog_box_notification.png)
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_notification.png" alt="notification">
+</h1>
 
 ### Operator message
 
