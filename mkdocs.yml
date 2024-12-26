@@ -63,6 +63,7 @@ nav:
       - CouchDB in RAM: examples/db_in_ram.md
       - Operator message: examples/operator_msg.md
       - Attempts: examples/attempts.md
+      - Hardpy Launch: examples/hardpy_launch.md
   - About:
       - Development: about/development.md
   - Changelog: changelog.md
