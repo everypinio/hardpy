@@ -1,26 +1,15 @@
 # Instructions for running HardPy and tests with Pytest
 
-## Step 1: Initialize the project
+### how to start
 
 1. **Initialize the HardPy project:**
 
-   ```
-   hardpy init hello_hardpy
-   ```
+1. Launch `hardpy init test_priject`.
+2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
+3. Modify the files described below.
+4. Launch `hardpy run test_priject`.
 
-2. **Launch the CouchDB instance:**
-
-   Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
-
-3. **(Optional) Launch HardPy:**
-
-   ```
-   hardpy run hello_hardpy
-   ```
-
-## Step 2: Options for running the tests
-
-### Option 1: Run from the operator panel
+### launch in operator panel
 
 1. Open the Operator Panel in your browser at: [http://localhost:8000/](http://localhost:8000/).
 2. Click the **Start** button.
@@ -29,7 +18,7 @@
    hardpy run
    ```
 
-### Option 2: Run through the console using Pytest
+### run through the console using pytest
 
 > **Note:** This method is only appropriate if you are not using any operator panel features such as operator messages and dialog boxes.
 
@@ -48,7 +37,7 @@ Example:
 pytest examples/couchdb_load
 ```
 
-### Option 3: Run through the Testing extension in VS Code
+### run through the IDE
 
 1. Open the **Testing** extension in VS Code.
 2. Run the tests through the extension interface.
@@ -93,7 +82,7 @@ You can read more about it [here](https://docs.pytest.org/en/stable/example/simp
     Alternatively, you can add the parameter `--my-opt hello` to the `pytest.ini` file. 
     This is the only way to run the test from the IDE for testing purposes.
 
-## To summarise
+### summarize
 
 You can pass any parameters in the terminal using command line arguments.
 
