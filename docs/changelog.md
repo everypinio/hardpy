@@ -2,8 +2,6 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
-* Add description of different ways to launch Hardpy.
-
 ## HardPy 0.8.0
 
 * Modify API for dialog boxes with images.

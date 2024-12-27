@@ -48,11 +48,11 @@ If you use other IDEs, explore the possibility of running tests in your environm
 1. Open the [Testing](https://code.visualstudio.com/docs/editor/testing) extension in VS Code.
 2. Run the tests through the extension interface.
 
-##### 2.1. Pytest in Testing with launching operator panel
+##### 3.1. Pytest in Testing with launching operator panel
 
 If the operator panel is running, the tests will start after launching in Testing in the same way as by clicking on the `Start` button.
 
-##### 2.2. Pytest in Testing without launching operator panel
+##### 3.2. Pytest in Testing without launching operator panel
 
 If the operator panel has not been started, the tests will also run, but without visualization.
 
