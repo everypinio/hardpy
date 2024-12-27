@@ -66,9 +66,18 @@ def register(verify_ssl: bool, api_addr: str, auth_addr: str) -> None:
     timeout = 10
 
     # pushed authorization response
-    response = json.loads(
-        requests.post(par_url, data=data, verify=verify_ssl, timeout=timeout).content,
-    )
+    try:
+        response = json.loads(
+            requests.post(
+                par_url,
+                data=data,
+                verify=verify_ssl,
+                timeout=timeout,
+            ).content,
+        )
+    except Exception as e:  # noqa: BLE001
+        print(f"Authentication server is unavailable: {e}")
+        sys.exit(1)
     url = (
         authorization_url
         + "?"
