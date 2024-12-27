@@ -62,6 +62,8 @@ nav:
   - Examples:
       - examples/index.md
       - Hello HardPy: examples/hello_hardpy.md
+      - HardPy launch: examples/hardpy_launch.md
+      - Launch arguments: examples/launch_arguments.md
       - CouchDB load: examples/couchdb_load.md
       - Minute parity: examples/minute_parity.md
       - Dialog box: examples/dialog_box.md
