@@ -40,7 +40,7 @@ If the operator panel has not been started, the tests will also run, but without
 ???+ warning
     This method is only appropriate if you are not using any operator panel features such as operator messages and dialog boxes.
 
-### 3. IDE
+#### 3. IDE
 
 An example of starting in vscode is as follows.
 If you use other IDEs, explore the possibility of running tests in your environment.
