@@ -42,4 +42,3 @@ pytest --my-opt hello
 ```
 
 Alternatively, you can add the parameter `--my-opt hello` to the `pytest.ini` file. 
-This is the only way to run the test from the IDE for testing purposes.
