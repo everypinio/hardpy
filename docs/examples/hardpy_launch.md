@@ -42,7 +42,7 @@ If the operator panel has not been started, the tests will also run, but without
 
 ### 3. IDE
 
-We will look at an example of running in vscode. 
+An example of starting in vscode is as follows.
 If you use other IDEs, explore the possibility of running tests in your environment.
 
 1. Open the [Testing](https://code.visualstudio.com/docs/editor/testing) extension in VS Code.
