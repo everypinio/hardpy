@@ -1,14 +1,17 @@
-# launching arguments
+# Launch arguments
+
+**HardPy** launches pytest tests. 
+User can add own arguments and options for test execution. 
+For example, user can write own script for **HardPy** to run with special arguments, such as device serial number, and use it in tests.
 
 ### how to start
 
-1. Launch `hardpy init attempts`.
+1. Launch `hardpy init launch_arg`.
 2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
-4. Launch `hardpy run attempts`.
+4. Launch `hardpy run launch_arg`.
 
-So that you can run Hardpy in separate scripts that use the arguments, you can use pytest's built-in `addoption` method. 
-
+So that you can run **HardPy** in separate scripts that use the arguments, you can use pytest's built-in `addoption` method. 
 You can read more about it [here](https://docs.pytest.org/en/stable/example/simple.html#how-to-change-command-line-options-defaults).
 
 ### conftest.py
@@ -40,10 +43,3 @@ pytest --my-opt hello
 
 Alternatively, you can add the parameter `--my-opt hello` to the `pytest.ini` file. 
 This is the only way to run the test from the IDE for testing purposes.
-
-### summarize
-
-You can pass any parameters in the terminal using command line arguments.
-
-Running in the Ubuntu terminal is done in the same way. 
-Don't forget to configure the environment.
