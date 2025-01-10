@@ -2,6 +2,10 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Change waiting for socket data through thread.
+* Add non-blocking mode for operator message.
+* Add `clear_operator_message` function for closing operator message.
+
 ## HardPy 0.8.0
 
 * Modify API for dialog boxes with images.
