@@ -5,7 +5,9 @@ function is intended for sending messages to the operator.
 Operator messages are required to promptly inform the operator of
 problems if they occur before the test begins or after the test is completed.
 
-![operator_msg](../img/operator_msg.png)
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/operator_msg.png" alt="operator_msg">
+</h1>
 
 ### how to start
 
