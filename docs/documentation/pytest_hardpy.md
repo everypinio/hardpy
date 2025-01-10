@@ -222,14 +222,13 @@ def test_message():
 #### set_operator_message
 
 Sets an operator message in the **statestore** database and updates the database.
-The function should be used to handle events outside of testing.
-For messages to the operator during testing,
-there is the function [run_dialog_box](#run_dialog_box).
+Does not provide user interaction unlike the [run_dialog_box](#run_dialog_box) function.
 
 **Arguments:**
 
 - `msg` *(str)*: The message to be displayed.
 - `title` *(str | None)*: The optional title for the message.
+- `blocking` *(bool=True)*: if True, the function will block until the message is closed.
 
 **Example:**
 
@@ -238,6 +237,22 @@ from hardpy import set_operator_message
 
 def test_set_operator_msg():
     set_operator_message(msg="This is a sample operator message.", title="Important Notice")
+```
+
+#### clear_operator_message
+
+Clears the current message to the operator if it exists, otherwise does nothing.
+
+**Example:**
+
+```python
+from time import sleep
+from hardpy import set_operator_message, clear_operator_message
+
+def test_clear_operator_msg():
+    hardpy.set_operator_message(msg="Clearing operator message.", title="Operator message", blocking=False)
+    sleep(2)
+    clear_operator_message()
 ```
 
 #### run_dialog_box
