@@ -350,7 +350,10 @@ class HardpyPlugin:
             self._results[module_id][case_id] = None
 
     def _collect_module_result(self, module_id: str) -> None:
-        if TestStatus.FAILED or TestStatus.ERROR in self._results[module_id].values():
+        if (
+            TestStatus.FAILED in self._results[module_id].values()
+            or TestStatus.ERROR in self._results[module_id].values()
+        ):
             status = TestStatus.FAILED
         elif TestStatus.SKIPPED in self._results[module_id].values():
             status = TestStatus.SKIPPED
