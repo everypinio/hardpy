@@ -328,7 +328,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
 def set_operator_message(
     msg: str,
     title: str | None = None,
-    blocking: bool = True,
+    block: bool = True,
 ) -> None:
     """Set operator message.
 
@@ -338,7 +338,7 @@ def set_operator_message(
     Args:
         msg (str): Message
         title (str | None): Title
-        blocking (bool): if True, the function will block until the message is closed
+        block (bool): if True, the function will block until the message is closed
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.OPERATOR_MSG)
@@ -351,7 +351,7 @@ def set_operator_message(
     reporter.set_doc_value(key, msg_data, statestore_only=True)
     reporter.update_db_by_doc()
 
-    if blocking:
+    if block:
         # get socket data
         is_msg_visible = _run_socket_thread()
 

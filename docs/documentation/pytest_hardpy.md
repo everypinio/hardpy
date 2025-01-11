@@ -228,7 +228,7 @@ Does not provide user interaction unlike the [run_dialog_box](#run_dialog_box) f
 
 - `msg` *(str)*: The message to be displayed.
 - `title` *(str | None)*: The optional title for the message.
-- `blocking` *(bool=True)*: if True, the function will block until the message is closed.
+- `block` *(bool=True)*: if True, the function will block until the message is closed.
 
 **Example:**
 
@@ -250,7 +250,7 @@ from time import sleep
 from hardpy import set_operator_message, clear_operator_message
 
 def test_clear_operator_msg():
-    hardpy.set_operator_message(msg="Clearing operator message.", title="Operator message", blocking=False)
+    hardpy.set_operator_message(msg="Clearing operator message.", title="Operator message", block=False)
     sleep(2)
     clear_operator_message()
 ```

@@ -5,7 +5,7 @@ function is intended for sending messages to the operator.
 Operator messages can be used before, after, and during tests.
 
 The default message to the operator blocks further execution of the code,
-but the user can set the argument blocking=False and the function will display the message
+but the user can set the argument `block=False` and the function will display the message
 and continue execution of the test.
 In this case, the user can clear the operator message with the `clear_operator_message` function.
 
@@ -90,7 +90,7 @@ def test_block_operator_message():
 
 
 def test_not_block_operator_message():
-    hardpy.set_operator_message(msg="Test not blocking operator message", title="Operator message", blocking=False)
+    hardpy.set_operator_message(msg="Test not blocking operator message", title="Operator message", block=False)
     for i in range(3, 0, -1):
         hardpy.set_message(f"Time left to complete test case {i} s", "updated_status")
         sleep(1)
@@ -100,7 +100,7 @@ def test_not_block_operator_message():
 
 
 def test_clear_operator_message():
-    hardpy.set_operator_message(msg="Test clearing operator message", title="Operator message", blocking=False)
+    hardpy.set_operator_message(msg="Test clearing operator message", title="Operator message", block=False)
     for i in range(3, 0, -1):
         hardpy.set_message(f"Time left to complete test case {i} s", "updated_status")
         sleep(1)
