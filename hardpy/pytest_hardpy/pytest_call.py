@@ -26,6 +26,7 @@ from hardpy.pytest_hardpy.utils import (
     DuplicateSerialNumberError,
     DuplicateTestStandLocationError,
     DuplicateTestStandNameError,
+    ImageComponent,
 )
 
 
@@ -307,20 +308,13 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
         current_test.case_id,
         DF.DIALOG_BOX,
     )
-
-    # cleanup widget
-    reporter.set_doc_value(key, {}, statestore_only=True)
-    reporter.update_db_by_doc()
+    _cleanup_widget(reporter, key)
 
     reporter.set_doc_value(key, dialog_box_data.to_dict(), statestore_only=True)
     reporter.update_db_by_doc()
 
-    # get socket data
     input_dbx_data = _run_socket_thread()
-
-    # cleanup widget
-    reporter.set_doc_value(key, {}, statestore_only=True)
-    reporter.update_db_by_doc()
+    _cleanup_widget(reporter, key)
 
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
@@ -329,6 +323,7 @@ def set_operator_message(
     msg: str,
     title: str | None = None,
     block: bool = True,
+    image: ImageComponent | None = None,
 ) -> None:
     """Set operator message.
 
@@ -336,18 +331,21 @@ def set_operator_message(
     For messages to the operator during testing, there is the function `run_dialog_box`.
 
     Args:
-        msg (str): Message
-        title (str | None): Title
+        msg (str): message
+        title (str | None): title
+        image (ImageComponent | None): operator message info
         block (bool): if True, the function will block until the message is closed
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.OPERATOR_MSG)
+    _cleanup_widget(reporter, key)
 
-    # cleanup widget
-    reporter.set_doc_value(key, {}, statestore_only=True)
-    reporter.update_db_by_doc()
-
-    msg_data = {"msg": msg, "title": title, "visible": True}
+    msg_data = {
+        DF.MSG: msg,
+        DF.TITLE: title,
+        DF.VISIBLE: True,
+        DF.IMAGE: image.to_dict() if image else None,
+    }
     reporter.set_doc_value(key, msg_data, statestore_only=True)
     reporter.update_db_by_doc()
 
@@ -355,13 +353,11 @@ def set_operator_message(
         # get socket data
         is_msg_visible = _run_socket_thread()
 
-        msg_data["visible"] = is_msg_visible
+        msg_data[DF.VISIBLE] = is_msg_visible
         reporter.set_doc_value(key, msg_data, statestore_only=True)
         reporter.update_db_by_doc()
 
-        # cleanup widget
-        reporter.set_doc_value(key, {}, statestore_only=True)
-        reporter.update_db_by_doc()
+        _cleanup_widget(reporter, key)
 
 
 def clear_operator_message() -> None:
@@ -372,9 +368,7 @@ def clear_operator_message() -> None:
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.OPERATOR_MSG)
 
-    # cleanup widget
-    reporter.set_doc_value(key, {}, statestore_only=True)
-    reporter.update_db_by_doc()
+    _cleanup_widget(reporter, key)
 
 
 def get_current_attempt() -> int:
@@ -448,3 +442,8 @@ def _run_socket_thread() -> str:
     t.start()
     t.join()
     return queue.get(timeout=1)
+
+
+def _cleanup_widget(reporter: RunnerReporter, key: str) -> None:
+    reporter.set_doc_value(key, {}, statestore_only=True)
+    reporter.update_db_by_doc()
