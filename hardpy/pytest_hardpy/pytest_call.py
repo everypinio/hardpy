@@ -444,7 +444,7 @@ def _run_socket_thread() -> str:
     """
     queue = Queue()
     con_data = ConnectionData()
-    t = Thread(target=_get_socket_raw_data, args=(queue, con_data))
+    t = Thread(target=_get_socket_raw_data, daemon=True, args=(queue, con_data))
     t.start()
     t.join()
     return queue.get(timeout=1)
