@@ -263,29 +263,6 @@ Displays a dialog box and updates the `dialog_box` field in the **statestore** d
 
 - `dialog_box_data` *(DialogBox)*: Data for the dialog box.
 
-DialogBox attributes:
-
-- `dialog_text` *(str)*: The text of the dialog box.
-- `title_bar` *(str | None)*: The title bar of the dialog box.
-If the title_bar field is missing, it is the case name.
-- `widget` *(IWidget | None)*: Widget information.
-- `image` *(ImageComponent | None)*: Image information.
-
-ImageComponent attributes:
-
-- `address` *(str)*: Image address.
-- `width` *(int | None)*: Image width in %.
-- `border` *(int | None)*: Image border width.
-
-Widget list:
-
-- Base, only dialog text;
-- Text input, `TextInputWidget`;
-- Numeric input, `NumericInputWidget`;
-- Radiobutton, `RadiobuttonWidget`;
-- Checkbox, `CheckboxWidget`;
-- Multistep, `MultistepWidget`.
-
 **Returns:**
 
 - *(Any)*: An object containing the user's response.
@@ -354,6 +331,52 @@ def test_attempt_message():
 ```
 
 ## Class
+
+#### DialogBox
+
+The class is used to configure the dialogue box and is used with 
+the [run_dialog_box](#run_dialog_box) function.
+
+**Arguments:**
+
+- `dialog_text` *(str)*: The text of the dialog box.
+- `title_bar` *(str | None)*: The title bar of the dialog box.
+If the title_bar field is missing, it is the case name.
+- `widget` *(IWidget | None)*: Widget information.
+- `image` *([ImageComponent](#imagecomponent) | None)*: Image information.
+
+Widget list:
+
+- Base, only dialog text;
+- Text input, `TextInputWidget`;
+- Numeric input, `NumericInputWidget`;
+- Radiobutton, `RadiobuttonWidget`;
+- Checkbox, `CheckboxWidget`;
+- Multistep, `MultistepWidget`.
+
+**Example:**
+
+```python
+    dbx = DialogBox(title_bar="Example title", dialog_text="Example text")
+    run_dialog_box(dbx)
+```
+
+#### ImageComponent
+
+A class for configuring an image for a dialogue box or operator message box and is used with 
+the [run_dialog_box](#run_dialog_box) and [set_operator_message](#set_operator_message) functions.
+
+**Arguments:**
+
+- `address` *(str)*: Image address.
+- `width` *(int | None)*: Image width in %.
+- `border` *(int | None)*: Image border width.
+
+**Example:**
+
+```python
+    image=ImageComponent(address="assets/image.png", width=100)
+```
 
 #### CouchdbLoader
 
