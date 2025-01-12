@@ -4,10 +4,15 @@ The [set_operator_message](./../documentation/pytest_hardpy.md/#set_operator_mes
 function is intended for sending messages to the operator.
 Operator messages can be used before, after, and during tests.
 
+**set_operator_message** can be used in conjunction with images. 
+To do this, the user can set the argument `image` with the 
+[ImageComponent](./../documentation/pytest_hardpy.md/#imagecomponent) class.
+
 The default message to the operator blocks further execution of the code,
 but the user can set the argument `block=False` and the function will display the message
 and continue execution of the test.
-In this case, the user can clear the operator message with the `clear_operator_message` function.
+In this case, the user can clear the operator message with the 
+[clear_operator_message](./../documentation/pytest_hardpy.md/#clear_operator_message) function.
 
 The [clear_operator_message](./../documentation/pytest_hardpy.md/#clear_operator_message)
 is intended for clearing current operator message.
@@ -34,12 +39,7 @@ If the report database doesn't exist, the report won't be saved, and an error me
 
 ```python
 import pytest
-from hardpy import (
-    CouchdbConfig,
-    CouchdbLoader,
-    get_current_report,
-    set_operator_message,
-)
+from hardpy import CouchdbConfig, CouchdbLoader, get_current_report, set_operator_message
 
 def finish_executing():
     report = get_current_report()
@@ -47,21 +47,12 @@ def finish_executing():
         if report:
             loader = CouchdbLoader(CouchdbConfig(port=5986))
             loader.load(report)
-            set_operator_message(
-                msg="Saving report was successful",
-                title="Operator message",
-            )
+            set_operator_message(msg="Saving report was successful", title="Operator message")
     except RuntimeError as e:
-        set_operator_message(
-            msg='The report was not recorded with error: "' + str(e) + '"',
-            title="Operator message",
-        )
+        set_operator_message(msg='The report was not recorded with error: "' + str(e) + '"', title="Operator message")
 
 def test_end_message():
-    set_operator_message(
-        msg="Testing completed",
-        title="Operator message",
-    )
+    set_operator_message(msg="Testing completed", title="Operator message")
 
 @pytest.fixture(scope="session", autouse=True)
 def fill_list_functions_after_test(post_run_functions: list):
@@ -76,36 +67,80 @@ Contains examples of how to use operator messages.
 
 ```python
 from time import sleep
-
-import hardpy
-
+from hardpy import clear_operator_message, set_message, set_operator_message
 
 def test_block_operator_message():
-    hardpy.set_operator_message(msg="Test blocking operator message", title="Operator message")
+    set_operator_message(msg="Test blocking operator message", title="Operator message")
     for i in range(3, 0, -1):
-        hardpy.set_message(f"Time left to complete test case {i} s", "updated_status")
+        set_message(f"Time left to complete test case {i} s", "updated_status")
         sleep(1)
-    hardpy.set_message("Test case finished", "updated_status")
+    set_message("Test case finished", "updated_status")
     assert True
 
-
 def test_not_block_operator_message():
-    hardpy.set_operator_message(msg="Test not blocking operator message", title="Operator message", block=False)
+    set_operator_message(msg="Test not blocking operator message", title="Operator message", block=False)
     for i in range(3, 0, -1):
-        hardpy.set_message(f"Time left to complete test case {i} s", "updated_status")
+        set_message(f"Time left to complete test case {i} s", "updated_status")
         sleep(1)
-    hardpy.set_message("Test case finished", "updated_status")
+    set_message("Test case finished", "updated_status")
     sleep(2)
     assert True
 
+def test_clear_operator_message():
+    set_operator_message(msg="Test clearing operator message", title="Operator message", block=False)
+    for i in range(3, 0, -1):
+        set_message(f"Time left to complete test case {i} s", "updated_status")
+        sleep(1)
+    clear_operator_message()
+    set_message("Test case finished", "updated_status")
+    sleep(2)
+    assert True
+```
+
+### test_2.py
+
+```python
+from time import sleep
+from hardpy import ImageComponent, clear_operator_message, set_message, set_operator_message
+
+def test_block_operator_message():
+    set_operator_message(
+        msg="Test blocking operator message",
+        title="Operator message",
+        image=ImageComponent(address="assets/image.png", width=100),
+    )
+    for i in range(3, 0, -1):
+        set_message(f"Time left to complete test case {i} s", "updated_status")
+        sleep(1)
+    set_message("Test case finished", "updated_status")
+    assert True
+
+def test_not_block_operator_message():
+    set_operator_message(
+        msg="Test not blocking operator message",
+        title="Operator message",
+        image=ImageComponent(address="assets/image.png", width=100),
+        block=False,
+    )
+    for i in range(3, 0, -1):
+        set_message(f"Time left to complete test case {i} s", "updated_status")
+        sleep(1)
+    set_message("Test case finished", "updated_status")
+    sleep(2)
+    assert True
 
 def test_clear_operator_message():
-    hardpy.set_operator_message(msg="Test clearing operator message", title="Operator message", block=False)
+    set_operator_message(
+        msg="Test clearing operator message",
+        title="Operator message",
+        image=ImageComponent(address="assets/test.png", width=100),
+        block=False,
+    )
     for i in range(3, 0, -1):
-        hardpy.set_message(f"Time left to complete test case {i} s", "updated_status")
+        set_message(f"Time left to complete test case {i} s", "updated_status")
         sleep(1)
-    hardpy.clear_operator_message()
-    hardpy.set_message("Test case finished", "updated_status")
+    clear_operator_message()
+    set_message("Test case finished", "updated_status")
     sleep(2)
     assert True
 ```
