@@ -348,17 +348,136 @@ If the title_bar field is missing, it is the case name.
 Widget list:
 
 - Base, only dialog text;
-- Text input, `TextInputWidget`;
-- Numeric input, `NumericInputWidget`;
-- Radiobutton, `RadiobuttonWidget`;
-- Checkbox, `CheckboxWidget`;
-- Multistep, `MultistepWidget`.
+- Text input, [TextInputWidget](#textinputwidget);
+- Numeric input, [NumericInputWidget](#numericinputwidget);
+- Radiobutton, [RadiobuttonWidget](#radiobuttonwidget);
+- Checkbox, [CheckboxWidget](#checkboxwidget);
+- Multistep, [MultistepWidget](#multistepwidget).
 
 **Example:**
 
 ```python
-    dbx = DialogBox(title_bar="Example title", dialog_text="Example text")
-    run_dialog_box(dbx)
+    DialogBox(title_bar="Example title", dialog_text="Example text")
+```
+
+#### TextInputWidget
+
+The class is used to configure text input widget in [dialog box](#dialogbox).
+Further information can be found in section
+[text input field](./hardpy_panel.md/#text-input-field).
+Widget returns a string when using [run_dialog_box](#run_dialog_box).
+
+**Example:**
+
+```python
+    dbx = DialogBox(
+        dialog_text="Type 'ok' and press the Confirm button",
+        title_bar="Example of text input",
+        widget=TextInputWidget(),
+    )
+    response = run_dialog_box(dbx)
+```
+
+#### NumericInputWidget
+
+The class is used to configure numeric input widget in [dialog box](#dialogbox).
+Further information can be found in section
+[numeric input field](./hardpy_panel.md/#number-input-field).
+Widget returns a float when using [run_dialog_box](#run_dialog_box).
+
+**Example:**
+
+```python
+    dbx = DialogBox(
+        dialog_text=f"Enter the number {test_num} and press the Confirm button",
+        title_bar="Example of entering a number",
+        widget=NumericInputWidget(),
+    )
+    response = int(run_dialog_box(dbx))
+```
+
+#### RadiobuttonWidget
+
+The class is used to configure radiobutton widget in [dialog box](#dialogbox).
+Further information can be found in section
+[radiobutton](./hardpy_panel.md/#radiobutton).
+Widget returns a string with the selected radiobutton value
+[run_dialog_box](#run_dialog_box).
+
+**Arguments:**
+
+- `fields` *(list[str])*: Radiobutton fields.
+
+**Example:**
+
+```python
+    dbx = DialogBox(
+        dialog_text='Select item "one" out of several and click Confirm.',
+        title_bar="Radiobutton example",
+        widget=RadiobuttonWidget(fields=["one", "two", "three"]),
+    )
+    response = run_dialog_box(dbx)
+```
+
+#### CheckboxWidget
+
+The class is used to configure checkbox widget in [dialog box](#dialogbox).
+Further information can be found in section
+[checkbox](./hardpy_panel.md/#checkbox).
+Widget returns a list of string with the selected checkbox value
+[run_dialog_box](#run_dialog_box).
+
+**Arguments:**
+
+- `fields` *(list[str])*: Checkbox fields.
+
+**Example:**
+
+```python
+    dbx = DialogBox(
+        dialog_text='Select items "one" and "two" and click the Confirm button',
+        title_bar="Checkbox example",
+        widget=CheckboxWidget(fields=["one", "two", "three"]),
+    )
+    response = run_dialog_box(dbx)
+```
+
+#### StepWidget
+
+The class is used to configure the step for the 
+[multistep](#multistepwidget) widget in [dialog box](#dialogbox).
+
+**Arguments:**
+
+- `title` *(str)*: Step title.
+- `text` *(str | None)*: Step text.
+- `image` *([ImageComponent](#imagecomponent) | None)*: Step image.
+
+**Example:**
+
+```python
+    StepWidget("Step 1", text="Content for step")
+```
+
+#### MultistepWidget
+
+The class is used to configure multistep widget in [dialog box](#dialogbox).
+Further information can be found in section
+[multiple steps](./hardpy_panel.md/#multiple-steps).
+
+**Arguments:**
+
+- `steps` *(list[[StepWidget](#stepwidget)])*: A list with info about the steps.
+
+**Example:**
+
+```python
+    steps = [
+        StepWidget("Step 1", text="Content for step"),
+        StepWidget("Step 2", text="Content for step 2", image=ImageComponent(address="assets/image.png", width=100)),
+    ]
+    dbx = DialogBox(dialog_text="Follow the steps and click Confirm", widget=MultistepWidget(steps))
+    response = run_dialog_box(dbx)
 ```
 
 #### ImageComponent
@@ -375,7 +494,7 @@ the [run_dialog_box](#run_dialog_box) and [set_operator_message](#set_operator_m
 **Example:**
 
 ```python
-    image=ImageComponent(address="assets/image.png", width=100)
+    ImageComponent(address="assets/image.png", width=100)
 ```
 
 #### CouchdbLoader
