@@ -5,7 +5,7 @@ from __future__ import annotations
 import socket
 from dataclasses import dataclass
 from os import environ
-from queue import Queue
+from queue import Empty, Queue
 from threading import Thread
 from typing import Any
 from uuid import uuid4
@@ -444,7 +444,11 @@ def _run_socket_thread() -> str:
     """
     queue = Queue()
     con_data = ConnectionData()
+    # daemon mode for correct stop/start processing
     t = Thread(target=_get_socket_raw_data, daemon=True, args=(queue, con_data))
     t.start()
     t.join()
-    return queue.get(timeout=1)
+    try:
+        return queue.get(timeout=1)
+    except Empty:
+        return ""
