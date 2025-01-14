@@ -192,7 +192,9 @@ They can write custom classes to record reports at the end of testing.
 
 ### Statestore scheme
 
-![statestore_scheme](../img/database/statestore.png){ align=left, width="800" }
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/database/statestore.png" alt="statestore_scheme">
+</h1>
 
 The **current** document of the **statestore** database contains the following fields:
 
@@ -348,7 +350,9 @@ Example of a **current** document:
 
 ### Runstore scheme
 
-![runstore_scheme](../img/database/runstore.png){ align=left, width="800" }
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/database/runstore.png" alt="runstore_scheme">
+</h1>
 
 The **runstore** database is similar to **statestore** database, but there are differences:
 
