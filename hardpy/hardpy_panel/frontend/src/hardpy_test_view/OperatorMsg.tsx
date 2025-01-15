@@ -11,10 +11,12 @@ interface StartOperatorMsgDialogProps {
   image_base64?: string;
   image_width?: number;
   image_border?: number;
+  is_visible?: boolean;
 }
 
 export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
-  const [dialogOpen, setDialogOpen] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  // const [dialogOpen, setDialogOpen] = useState(true);
   const [imageDimensions, setImageDimensions] = useState({
     width: 0,
     height: 0,
@@ -28,10 +30,11 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
 
   const handleClose = async () => {
     setDialogOpen(false);
-    const isMsgVisible = false;
+    // const isMsgVisible = false;
     try {
       const response = await axios.post(
-        `/api/confirm_operator_msg/${JSON.stringify(isMsgVisible)}`
+        `/api/confirm_operator_msg/${JSON.stringify(dialogOpen)}`
+        // `/api/confirm_operator_msg/${JSON.stringify(isMsgVisible)}`
       );
       console.log(response.data);
     } catch (error) {
@@ -89,6 +92,10 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
   };
 
   useEffect(() => {
+    if (props.is_visible) {
+      setDialogOpen(true);
+    }
+
     const handleKeyDown = (event: KeyboardEvent) => {
       const keyboardEvent =
         event as unknown as React.KeyboardEvent<HTMLInputElement>;

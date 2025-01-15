@@ -34,6 +34,7 @@ interface DialogBoxProps {
     dialog_text: string;
     widget?: WidgetDescription;
     image?: ImageInfo;
+    visible: boolean;
 }
 
 interface Case {
@@ -275,7 +276,7 @@ export class TestSuite extends React.Component<Props, State> {
 
         return this.commonCellRender(
             <div style={{ marginTop: '0.2em', marginBottom: '0.2em' }}>
-                {test.dialog_box.dialog_text && test.status === 'run' && this.props.commonTestRunStatus === 'run' && (
+                {test.dialog_box.dialog_text && test.status === 'run' && this.props.commonTestRunStatus === 'run' && test.dialog_box.visible == true && (
                     <StartConfirmationDialog
                         title_bar={test.dialog_box.title_bar || test.name}
                         dialog_text={test.dialog_box.dialog_text}
@@ -284,6 +285,7 @@ export class TestSuite extends React.Component<Props, State> {
                         image_base64={image_base64}
                         image_width={image_width}
                         image_border={image_border}
+                        is_visible={test.dialog_box.visible}
                     />
                 )}
                 <TestStatus

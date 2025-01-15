@@ -25,6 +25,7 @@ interface Props {
   image_base64?: string;
   image_width?: number;
   image_border?: number;
+  is_visible?: boolean;
 }
 
 export enum WidgetType {
@@ -262,7 +263,7 @@ export function StartConfirmationDialog(props: Props) {
     // console.log("props.dialog_text " + props.dialog_text);
     // console.log()
 
-    if (props.dialog_text) {
+    if (props.is_visible) {
       setDialogOpen(true);
     }
 

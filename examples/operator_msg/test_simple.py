@@ -4,7 +4,7 @@ import hardpy
 from hardpy import DialogBox, run_dialog_box, set_message
 
 
-@pytest.mark.attempt(15)
+@pytest.mark.attempt(2)
 @pytest.mark.case_name("Text input")
 def test_text_input():
     dbx = DialogBox(

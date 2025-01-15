@@ -150,6 +150,7 @@ export class SuiteList extends React.Component<Props> {
                 image_base64={this.props.db_state.operator_msg?.image?.base64}
                 image_width={this.props.db_state.operator_msg?.image?.width}
                 image_border={this.props.db_state.operator_msg?.image?.border}
+                is_visible={this.props.db_state.operator_msg?.visible}
               />
             )}
         </div>
