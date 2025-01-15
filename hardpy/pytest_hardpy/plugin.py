@@ -7,6 +7,7 @@ from logging import getLogger
 from pathlib import Path, PurePath
 from platform import system
 from re import compile as re_compile
+from time import sleep
 from typing import Any, Callable
 
 from _pytest._code.code import (
@@ -254,6 +255,9 @@ class HardpyPlugin:
 
         # first attempt was in pytest_runtest_call
         for current_attempt in range(2, attempt + 1):
+            # add pause between attempts to verify STOP condition
+            sleep(1)
+
             self._reporter.set_module_status(module_id, TestStatus.RUN)
             self._reporter.set_case_status(module_id, case_id, TestStatus.RUN)
             self._reporter.set_case_attempt(module_id, case_id, current_attempt)
