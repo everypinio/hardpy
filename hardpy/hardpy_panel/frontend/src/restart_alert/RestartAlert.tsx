@@ -29,7 +29,7 @@ const RELOAD_MSG =
 /**
  * Render alert about app restart (page update) and restart page after
  */
-export function RestartAlert(props: Props): React.ReactElement {
+export function ReloadAlert(props: Props): React.ReactElement {
     /** States */
     const [state, dispatch] = React.useReducer(reducer, "BEFORE_RELOAD");
 
@@ -65,4 +65,4 @@ export function RestartAlert(props: Props): React.ReactElement {
 }
 
 
-export default RestartAlert;
+export default ReloadAlert;

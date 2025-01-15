@@ -5,8 +5,7 @@ from __future__ import annotations
 import socket
 from dataclasses import dataclass
 from os import environ
-from queue import Empty, Queue
-from threading import Thread
+from select import select
 from typing import Any
 from uuid import uuid4
 
@@ -406,11 +405,13 @@ def _get_current_test() -> CurrentTestInfo:
     return CurrentTestInfo(module_id=module_id, case_id=case_id)
 
 
-def _get_socket_raw_data(queue: Queue, con_data: ConnectionData) -> None:
+def _get_socket_raw_data() -> str:
     # create socket connection
     server = socket.socket()
+    server.setblocking(False)
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
+    con_data = ConnectionData()
     try:
         server.bind((con_data.socket_host, con_data.socket_port))
     except OSError as exc:
@@ -418,7 +419,13 @@ def _get_socket_raw_data(queue: Queue, con_data: ConnectionData) -> None:
         server.close()
         raise RuntimeError(msg) from exc
     server.listen(1)
-    client, _ = server.accept()
+
+    client = None
+    while True:
+        ready_to_read, _, _ = select([server], [], [], 0.5)
+        if ready_to_read:
+            client, _ = server.accept()
+            break
 
     # receive data
     max_input_data_len = 1024
@@ -428,24 +435,12 @@ def _get_socket_raw_data(queue: Queue, con_data: ConnectionData) -> None:
     client.close()
     server.close()
 
-    queue.put(socket_data)
+    return socket_data
 
 
 def _run_socket_thread() -> str:
-    """Run socket thread.
+    return _get_socket_raw_data()
 
-    Socket thread does not block the main thread.
-    """
-    queue = Queue()
-    con_data = ConnectionData()
-    # daemon mode for correct stop/start processing
-    t = Thread(target=_get_socket_raw_data, daemon=True, args=(queue, con_data))
-    t.start()
-    t.join()
-    try:
-        return queue.get(timeout=1)
-    except Empty:
-        return ""
 
 def _cleanup_widget(reporter: RunnerReporter, key: str) -> None:
     reporter.set_doc_value(key, {}, statestore_only=True)

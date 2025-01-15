@@ -66,7 +66,7 @@ interface WidgetInfo {
 }
 
 export function StartConfirmationDialog(props: Props) {
-  const [dialogOpen, setDialogOpen] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [inputText, setInputText] = useState("");
   const [selectedRadioButton, setSelectedRadioButton] = useState("");
   const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
@@ -257,6 +257,15 @@ export function StartConfirmationDialog(props: Props) {
   };
 
   useEffect(() => {
+    // console.log("AAA "+ props.widget_info);
+    // console.log("widgetType "+ widgetType);
+    // console.log("props.dialog_text " + props.dialog_text);
+    // console.log()
+
+    if (props.dialog_text) {
+      setDialogOpen(true);
+    }
+
     if (widgetType === WidgetType.Multistep) {
       const handleStepImageLoad = (
         image: HTMLImageElement,
