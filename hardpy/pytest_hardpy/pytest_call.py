@@ -312,9 +312,10 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     reporter.set_doc_value(key, dialog_box_data.to_dict(), statestore_only=True)
     reporter.update_db_by_doc()
 
-    input_dbx_data = _run_socket_thread()
-    _cleanup_widget(reporter, key)
+    # get socket data
+    input_dbx_data = _get_socket_raw_data()
 
+    _cleanup_widget(reporter, key)
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
 
@@ -350,7 +351,7 @@ def set_operator_message(
 
     if block:
         # get socket data
-        is_msg_visible = _run_socket_thread()
+        is_msg_visible = _get_socket_raw_data()
 
         msg_data[DF.VISIBLE] = is_msg_visible
         reporter.set_doc_value(key, msg_data, statestore_only=True)
@@ -436,10 +437,6 @@ def _get_socket_raw_data() -> str:
     server.close()
 
     return socket_data
-
-
-def _run_socket_thread() -> str:
-    return _get_socket_raw_data()
 
 
 def _cleanup_widget(reporter: RunnerReporter, key: str) -> None:

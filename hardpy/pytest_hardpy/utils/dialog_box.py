@@ -328,6 +328,7 @@ class DialogBox:
         self.image: ImageComponent | None = image
         self.dialog_text: str = dialog_text
         self.title_bar: str | None = title_bar
+        self.visible: bool = True
 
     def to_dict(self) -> dict:
         """Convert DialogBox to dictionary.
