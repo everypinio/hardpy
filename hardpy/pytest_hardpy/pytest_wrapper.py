@@ -134,10 +134,10 @@ class PyTestWrapper:
             bool: True if dialog box was confirmed/closed, else False
         """
         try:
-            client = socket()
-            client.connect((self.config.socket.host, self.config.socket.port))
-            client.sendall(data.encode("utf-8"))
-            client.close()
+            with socket() as client:
+                client.connect((self.config.socket.host, self.config.socket.port))
+                client.sendall(data.encode("utf-8"))
+                client.close()
         except Exception:  # noqa: BLE001
             return False
         return True

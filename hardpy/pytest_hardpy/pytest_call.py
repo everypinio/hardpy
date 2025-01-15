@@ -408,35 +408,35 @@ def _get_current_test() -> CurrentTestInfo:
 
 def _get_socket_raw_data() -> str:
     # create socket connection
-    server = socket.socket()
-    server.setblocking(False)
-    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    with socket.socket() as server:
+        server.setblocking(False)
+        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-    con_data = ConnectionData()
-    try:
-        server.bind((con_data.socket_host, con_data.socket_port))
-    except OSError as exc:
-        msg = "Socket creating error"
+        con_data = ConnectionData()
+        try:
+            server.bind((con_data.socket_host, con_data.socket_port))
+        except OSError as exc:
+            msg = "Socket creating error"
+            server.close()
+            raise RuntimeError(msg) from exc
+        server.listen(1)
+
+        client = None
+        while True:
+            ready_to_read, _, _ = select([server], [], [], 0.5)
+            if ready_to_read:
+                client, _ = server.accept()
+                break
+
+        # receive data
+        max_input_data_len = 1024
+        socket_data = client.recv(max_input_data_len).decode("utf-8")
+
+        # close connection
+        client.close()
         server.close()
-        raise RuntimeError(msg) from exc
-    server.listen(1)
 
-    client = None
-    while True:
-        ready_to_read, _, _ = select([server], [], [], 0.5)
-        if ready_to_read:
-            client, _ = server.accept()
-            break
-
-    # receive data
-    max_input_data_len = 1024
-    socket_data = client.recv(max_input_data_len).decode("utf-8")
-
-    # close connection
-    client.close()
-    server.close()
-
-    return socket_data
+        return socket_data
 
 
 def _cleanup_widget(reporter: RunnerReporter, key: str) -> None:
