@@ -1,7 +1,7 @@
 // Copyright (c) 2024 Everypin
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Classes, Dialog } from "@blueprintjs/core";
 import axios from "axios";
 
@@ -28,7 +28,7 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
   const minSize = 0.25;
   const lineHeight = 10;
 
-  const handleClose = useCallback(async ()  => {
+  const handleClose = async ()  => {
     setOperatorMessageOpen(false);
 
     try {
@@ -39,7 +39,7 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
     } catch (error) {
       console.error("Error confirming operator message:", error);
     }
-  }, [operatorMessageOpen]);
+  };
 
   const calculateDimensions = (
     naturalWidth: number,
@@ -106,7 +106,7 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handleClose]);
+  });
 
   useEffect(() => {
     if (props.is_visible) {
