@@ -285,8 +285,7 @@ export function StartConfirmationDialog(props: Props) {
     if (props.is_visible) {
       setDialogOpen(true);
     }
-  }, [props.is_visible, props.id]);  
-
+  }, [props.is_visible, props.id]);
 
   useEffect(() => {
     if (widgetType === WidgetType.Multistep) {
