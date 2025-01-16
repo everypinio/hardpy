@@ -32,3 +32,4 @@ class DatabaseField(str, Enum):
     TITLE = "title"
     VISIBLE = "visible"
     IMAGE = "image"
+    ID = "id"
