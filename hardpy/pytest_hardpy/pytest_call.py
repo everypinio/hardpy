@@ -345,6 +345,7 @@ def set_operator_message(
         DF.TITLE: title,
         DF.VISIBLE: True,
         DF.IMAGE: image.to_dict() if image else None,
+        "id": str(uuid4()),
     }
     reporter.set_doc_value(key, msg_data, statestore_only=True)
     reporter.update_db_by_doc()

@@ -50,6 +50,7 @@ interface OperatorMsgProps {
   title?: string;
   visible: boolean;
   image?: ImageInfo;
+  id?: string;
 }
 
 export interface TestRunI {
@@ -151,6 +152,7 @@ export class SuiteList extends React.Component<Props> {
                 image_width={this.props.db_state.operator_msg?.image?.width}
                 image_border={this.props.db_state.operator_msg?.image?.border}
                 is_visible={this.props.db_state.operator_msg?.visible}
+                id={this.props.db_state.operator_msg?.id}
               />
             )}
         </div>

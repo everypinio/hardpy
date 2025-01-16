@@ -1,7 +1,7 @@
 // Copyright (c) 2024 Everypin
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Classes, Dialog } from "@blueprintjs/core";
 import axios from "axios";
 
@@ -12,33 +12,32 @@ interface StartOperatorMsgDialogProps {
   image_width?: number;
   image_border?: number;
   is_visible?: boolean;
+  id?: string;
 }
 
 export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
-  const [dialogOpen, setDialogOpen] = useState(false);
-  // const [dialogOpen, setDialogOpen] = useState(true);
+  const [operatorMessageOpen, setOperatorMessageOpen] = useState(false);
   const [imageDimensions, setImageDimensions] = useState({
     width: 0,
     height: 0,
   });
   const screenWidth = window.screen.width;
   const screenHeight = window.screen.height;
-  const baseDialogDimensions = { width: 100, height: 100 };
+  const baseOperatorMessageDimensions = { width: 100, height: 100 };
   const maxSize = 0.6;
   const minSize = 0.25;
   const lineHeight = 10;
 
   const handleClose = async () => {
-    setDialogOpen(false);
-    // const isMsgVisible = false;
+    setOperatorMessageOpen(false);
+
     try {
       const response = await axios.post(
-        `/api/confirm_operator_msg/${JSON.stringify(dialogOpen)}`
-        // `/api/confirm_operator_msg/${JSON.stringify(isMsgVisible)}`
+        `/api/confirm_operator_msg/${JSON.stringify(operatorMessageOpen)}`
       );
       console.log(response.data);
     } catch (error) {
-      console.error("Error confirming dialog box:", error);
+      console.error("Error confirming operator message:", error);
     }
   };
 
@@ -69,17 +68,19 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
     }
   };
 
-  const dialogWidth = Math.min(
-    imageDimensions.width + baseDialogDimensions.width,
+  const operatorMessageWidth = Math.min(
+    imageDimensions.width + baseOperatorMessageDimensions.width,
     screenWidth * maxSize
   );
 
   const textHeight =
-    (calculateTextLines(props.msg, dialogWidth) || 1) * lineHeight;
+    (calculateTextLines(props.msg, operatorMessageWidth) || 1) * lineHeight;
 
-  const dialogHeight = Math.max(
+  const operatorMessageHeight = Math.max(
     Math.min(
-      imageDimensions.height + baseDialogDimensions.height + textHeight,
+      imageDimensions.height +
+        baseOperatorMessageDimensions.height +
+        textHeight,
       screenHeight * maxSize
     ),
     screenHeight * minSize
@@ -90,11 +91,13 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
     display: "block",
     margin: "0 auto",
   };
-
+  
   useEffect(() => {
     if (props.is_visible) {
-      setDialogOpen(true);
+      setOperatorMessageOpen(true);
     }
+    console.log("is op message open in use effect", operatorMessageOpen);
+    console.log("is visible in use effect", props.is_visible)
 
     const handleKeyDown = (event: KeyboardEvent) => {
       const keyboardEvent =
@@ -109,13 +112,16 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [props.msg, props.id]);
 
+  console.log("is op message open before return ", operatorMessageOpen);
+  console.log("is visible before return ", props.is_visible)
+  console.log("text ", props.msg)
   return (
     <Dialog
       title={props.title || "Message"}
       icon="info-sign"
-      isOpen={dialogOpen}
+      isOpen={operatorMessageOpen}
       onClose={handleClose}
       canOutsideClickClose={false}
       style={{
@@ -153,8 +159,8 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
               style={{
                 width: `${props.image_width}%`,
                 height: `${props.image_width}%`,
-                maxWidth: `${dialogWidth - baseDialogDimensions.width / 2}px`,
-                maxHeight: `${dialogHeight - baseDialogDimensions.height / 2}px`,
+                maxWidth: `${operatorMessageWidth - baseOperatorMessageDimensions.width / 2}px`,
+                maxHeight: `${operatorMessageHeight - baseOperatorMessageDimensions.height / 2}px`,
                 objectFit: "scale-down",
                 transform: `scale(${(props.image_width || 100) / 100})`,
                 transformOrigin: `top center`,
