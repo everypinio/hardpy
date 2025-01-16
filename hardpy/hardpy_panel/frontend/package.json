@@ -89,6 +89,5 @@
     "@typescript-eslint/parser": "^6.9.0",
     "eslint": "^8.52.0",
     "eslint-plugin-react-hooks": "^4.6.0"
-  },
-  "proxy": "http://localhost:8000"
+  }
 }

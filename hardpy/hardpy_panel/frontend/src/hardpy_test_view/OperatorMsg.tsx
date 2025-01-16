@@ -96,8 +96,6 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
     if (props.is_visible) {
       setOperatorMessageOpen(true);
     }
-    console.log("is op message open in use effect", operatorMessageOpen);
-    console.log("is visible in use effect", props.is_visible)
 
     const handleKeyDown = (event: KeyboardEvent) => {
       const keyboardEvent =
@@ -114,9 +112,6 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
     };
   }, [props.msg, props.id]);
 
-  console.log("is op message open before return ", operatorMessageOpen);
-  console.log("is visible before return ", props.is_visible)
-  console.log("text ", props.msg)
   return (
     <Dialog
       title={props.title || "Message"}
