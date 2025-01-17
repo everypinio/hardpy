@@ -5,7 +5,7 @@ import * as React from "react";
 import _, { Dictionary } from "lodash";
 import { H1, H2, H4, Tag, Divider } from "@blueprintjs/core";
 
-import { TestItem, TestSuite as TestSuiteComponent } from "./TestSuite_v3";
+import { TestItem, TestSuite as TestSuiteComponent } from "./TestSuite";
 import StartOperatorMsgDialog from "hardpy_test_view/OperatorMsg";
 
 /**
