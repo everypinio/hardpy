@@ -2,9 +2,10 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
-* Change waiting for socket data through thread.
+* Add the ability to add images to operator messages like a dialog box.
 * Add non-blocking mode for operator message.
 * Add `clear_operator_message` function for closing operator message.
+* Change socket data processing.
 
 ## HardPy 0.8.0
 
