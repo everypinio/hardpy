@@ -29,3 +29,7 @@ class DatabaseField(str, Enum):
     ATTEMPT = "attempt"
     LOCATION = "location"
     HW_ID = "hw_id"
+    TITLE = "title"
+    VISIBLE = "visible"
+    IMAGE = "image"
+    ID = "id"

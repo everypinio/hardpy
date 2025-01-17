@@ -25,6 +25,8 @@ interface Props {
   image_base64?: string;
   image_width?: number;
   image_border?: number;
+  is_visible?: boolean;
+  id?: string;
 }
 
 export enum WidgetType {
@@ -66,7 +68,7 @@ interface WidgetInfo {
 }
 
 export function StartConfirmationDialog(props: Props) {
-  const [dialogOpen, setDialogOpen] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [inputText, setInputText] = useState("");
   const [selectedRadioButton, setSelectedRadioButton] = useState("");
   const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
@@ -189,11 +191,34 @@ export function StartConfirmationDialog(props: Props) {
     }
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      handleConfirm();
-    }
-  };
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+      const key = event.key;
+    
+      if (key === "Enter") {
+        handleConfirm();
+      }
+    
+      if (props.widget_info?.fields) {
+        if (widgetType === WidgetType.RadioButton) {
+          const index = props.widget_info.fields.findIndex(option => option.startsWith(key));
+          if (index >= 0) {
+            setSelectedRadioButton(props.widget_info.fields[index]);
+          }
+        }
+    
+        if (widgetType === WidgetType.Checkbox) {
+          const index = props.widget_info.fields.findIndex(option => option.startsWith(key));
+          if (index >= 0) {
+            const option = props.widget_info.fields[index];
+            if (selectedCheckboxes.includes(option)) {
+              setSelectedCheckboxes(selectedCheckboxes.filter(item => item !== option));
+            } else {
+              setSelectedCheckboxes([...selectedCheckboxes, option]);
+            }
+          }
+        }
+      }
+    };
 
   const calculateDimensions = (
     naturalWidth: number,
@@ -255,6 +280,12 @@ export function StartConfirmationDialog(props: Props) {
     display: "block",
     margin: "0 auto",
   };
+
+  useEffect(() => {
+    if (props.is_visible) {
+      setDialogOpen(true);
+    }
+  }, [props.is_visible, props.id]);
 
   useEffect(() => {
     if (widgetType === WidgetType.Multistep) {
@@ -358,6 +389,7 @@ export function StartConfirmationDialog(props: Props) {
                   label={option}
                   checked={selectedRadioButton === option}
                   onChange={() => setSelectedRadioButton(option)}
+                  onKeyDown={handleKeyDown}
                   autoFocus={option === (props.widget_info?.fields ?? [])[0]}
                 />
               ))}
@@ -373,6 +405,7 @@ export function StartConfirmationDialog(props: Props) {
                   label={option}
                   checked={selectedCheckboxes.includes(option)}
                   autoFocus={option === (props.widget_info?.fields ?? [])[0]}
+                  onKeyDown={handleKeyDown}
                   onChange={() => {
                     if (selectedCheckboxes.includes(option)) {
                       setSelectedCheckboxes(

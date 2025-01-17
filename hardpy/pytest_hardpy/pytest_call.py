@@ -5,7 +5,7 @@ from __future__ import annotations
 import socket
 from dataclasses import dataclass
 from os import environ
-from time import sleep
+from select import select
 from typing import Any
 from uuid import uuid4
 
@@ -25,6 +25,7 @@ from hardpy.pytest_hardpy.utils import (
     DuplicateSerialNumberError,
     DuplicateTestStandLocationError,
     DuplicateTestStandNameError,
+    ImageComponent,
 )
 
 
@@ -306,52 +307,69 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
         current_test.case_id,
         DF.DIALOG_BOX,
     )
-
-    reporter.set_doc_value(key, {}, statestore_only=True)
-    reporter.update_db_by_doc()
-    debounce_time = 0.2
-    sleep(debounce_time)
+    _cleanup_widget(reporter, key)
 
     reporter.set_doc_value(key, dialog_box_data.to_dict(), statestore_only=True)
     reporter.update_db_by_doc()
 
+    # get socket data
     input_dbx_data = _get_socket_raw_data()
 
-    # cleanup widget
-    reporter.set_doc_value(key, {}, statestore_only=True)
-    reporter.update_db_by_doc()
+    _cleanup_widget(reporter, key)
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
 
-def set_operator_message(msg: str, title: str | None = None) -> None:
+def set_operator_message(
+    msg: str,
+    title: str | None = None,
+    block: bool = True,
+    image: ImageComponent | None = None,
+) -> None:
     """Set operator message.
 
     The function should be used to handle events outside of testing.
     For messages to the operator during testing, there is the function `run_dialog_box`.
 
     Args:
-        msg (str): Message
-        title (str | None): Title
+        msg (str): message
+        title (str | None): title
+        image (ImageComponent | None): operator message info
+        block (bool): if True, the function will block until the message is closed
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.OPERATOR_MSG)
+    _cleanup_widget(reporter, key)
+
+    msg_data = {
+        DF.MSG: msg,
+        DF.TITLE: title,
+        DF.VISIBLE: True,
+        DF.IMAGE: image.to_dict() if image else None,
+        DF.ID: str(uuid4()),
+    }
+    reporter.set_doc_value(key, msg_data, statestore_only=True)
+    reporter.update_db_by_doc()
+
+    if block:
+        # get socket data
+        is_msg_visible = _get_socket_raw_data()
+
+        msg_data[DF.VISIBLE] = is_msg_visible
+        reporter.set_doc_value(key, msg_data, statestore_only=True)
+        reporter.update_db_by_doc()
+
+        _cleanup_widget(reporter, key)
+
+
+def clear_operator_message() -> None:
+    """Clear operator message.
+
+    Clears the current message to the operator if it exists, otherwise does nothing.
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.OPERATOR_MSG)
 
-    reporter.set_doc_value(key, {}, statestore_only=True)
-    reporter.update_db_by_doc()
-    debounce_time = 0.2
-    sleep(debounce_time)
-
-    msg_data = {"msg": msg, "title": title, "visible": True}
-    reporter.set_doc_value(key, msg_data, statestore_only=True)
-    reporter.update_db_by_doc()
-    is_msg_visible = _get_socket_raw_data()
-    msg_data["visible"] = is_msg_visible
-    reporter.set_doc_value(key, msg_data, statestore_only=True)
-    reporter.update_db_by_doc()
-
-    # cleanup widget
-    reporter.set_doc_value(key, {}, statestore_only=True)
-    reporter.update_db_by_doc()
+    _cleanup_widget(reporter, key)
 
 
 def get_current_attempt() -> int:
@@ -391,25 +409,37 @@ def _get_current_test() -> CurrentTestInfo:
 
 def _get_socket_raw_data() -> str:
     # create socket connection
-    server = socket.socket()
-    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    con_data = ConnectionData()
+    with socket.socket() as server:
+        server.setblocking(False)
+        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-    try:
-        server.bind((con_data.socket_host, con_data.socket_port))
-    except OSError as exc:
-        msg = "Socket creating error"
+        con_data = ConnectionData()
+        try:
+            server.bind((con_data.socket_host, con_data.socket_port))
+        except OSError as exc:
+            msg = "Socket creating error"
+            server.close()
+            raise RuntimeError(msg) from exc
+        server.listen(1)
+
+        client = None
+        while True:
+            ready_to_read, _, _ = select([server], [], [], 0.5)
+            if ready_to_read:
+                client, _ = server.accept()
+                break
+
+        # receive data
+        max_input_data_len = 1024
+        socket_data = client.recv(max_input_data_len).decode("utf-8")
+
+        # close connection
+        client.close()
         server.close()
-        raise RuntimeError(msg) from exc
-    server.listen(1)
-    client, _ = server.accept()
 
-    # receive data
-    max_input_data_len = 1024
-    socket_data = client.recv(max_input_data_len).decode("utf-8")
+        return socket_data
 
-    # close connection
-    client.close()
-    server.close()
 
-    return socket_data
+def _cleanup_widget(reporter: RunnerReporter, key: str) -> None:
+    reporter.set_doc_value(key, {}, statestore_only=True)
+    reporter.update_db_by_doc()

@@ -9,6 +9,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Final
+from uuid import uuid4
 
 from hardpy.pytest_hardpy.utils.exception import ImageError, WidgetInfoError
 
@@ -328,6 +329,8 @@ class DialogBox:
         self.image: ImageComponent | None = image
         self.dialog_text: str = dialog_text
         self.title_bar: str | None = title_bar
+        self.visible: bool = True
+        self.id = str(uuid4())
 
     def to_dict(self) -> dict:
         """Convert DialogBox to dictionary.

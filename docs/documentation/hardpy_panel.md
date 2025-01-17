@@ -172,6 +172,14 @@ Allows steps with text and image.
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_step_with_image.png" alt="dialog_box_with_step_with_image">
     </h1>
 
+### Operator message
+
+The messages to the operator are similar to [dialog boxes](#dialog-box), 
+but do not contain a **Confirm** button and can be called outside 
+the execution of the test plan, for example in case of exception 
+catching in the `conftest.py` file. 
+For more information, see the example [operator message](./../examples/operator_msg.md)
+or in the function description [set_operator_message](./pytest_hardpy.md#set_operator_message).
 
 #### warning window
 
@@ -189,12 +197,3 @@ the tests will be stopped, an error message will be displayed.
 <h1 align="center">
     <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_notification.png" alt="notification">
 </h1>
-
-### Operator message
-
-The messages to the operator are similar to [dialog boxes](#dialog-box), 
-but do not contain a **Confirm** button and should be called outside 
-the execution of the test plan, for example in case of exception 
-catching in the `conftest.py` file. 
-For more information, see the example [operator message](./../examples/operator_msg.md)
-or in the function description [set_operator_message](./pytest_hardpy.md#set_operator_message).

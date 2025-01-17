@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from hardpy.pytest_hardpy.pytest_call import (
+    clear_operator_message,
     get_current_attempt,
     get_current_report,
     run_dialog_box,
@@ -52,6 +53,7 @@ __all__ = [
     "RadiobuttonWidget",
     "StepWidget",
     "TextInputWidget",
+    "clear_operator_message",
     "get_current_attempt",
     "get_current_report",
     "run_dialog_box",
