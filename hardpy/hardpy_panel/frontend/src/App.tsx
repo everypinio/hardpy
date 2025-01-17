@@ -17,8 +17,8 @@ import {
 } from '@blueprintjs/core';
 
 import StartStopButton from './button/StartStop';
-import { SuiteList as SuiteList_v3 } from './hardpy_test_view/SuiteList_v3';
-import { TestRunI } from './hardpy_test_view/SuiteList_v3';
+import { SuiteList as SuiteList } from './hardpy_test_view/SuiteList';
+import { TestRunI } from './hardpy_test_view/SuiteList';
 import ProgressView from './progress/ProgressView';
 import TestStatus from 'hardpy_test_view/TestStatus';
 import ReloadAlert from './restart_alert/RestartAlert';
@@ -122,7 +122,7 @@ function App(): JSX.Element {
                         marginTop: '20px',
                         marginBottom: '20px',
                     }}>
-                        <SuiteList_v3 db_state={row.doc as TestRunI} defaultClose={!ultrawide}></SuiteList_v3>
+                        <SuiteList db_state={row.doc as TestRunI} defaultClose={!ultrawide}></SuiteList>
                     </Card>
                     }
                     {use_debug_info &&

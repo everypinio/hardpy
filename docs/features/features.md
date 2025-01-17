@@ -21,4 +21,4 @@ It allows you to use a browser to view and interact with your tests and write te
 
 ## Modern python
 
-**HardPy** is based on the **python 3.10** and supports versions **3.11**, **3.12**.
+**HardPy** is based on the **python 3.10** and supports versions **3.11**, **3.12**, **3.13**.

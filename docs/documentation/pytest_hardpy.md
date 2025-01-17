@@ -222,14 +222,13 @@ def test_message():
 #### set_operator_message
 
 Sets an operator message in the **statestore** database and updates the database.
-The function should be used to handle events outside of testing.
-For messages to the operator during testing,
-there is the function [run_dialog_box](#run_dialog_box).
+Does not provide user interaction unlike the [run_dialog_box](#run_dialog_box) function.
 
 **Arguments:**
 
 - `msg` *(str)*: The message to be displayed.
 - `title` *(str | None)*: The optional title for the message.
+- `block` *(bool=True)*: if True, the function will block until the message is closed.
 
 **Example:**
 
@@ -240,6 +239,22 @@ def test_set_operator_msg():
     set_operator_message(msg="This is a sample operator message.", title="Important Notice")
 ```
 
+#### clear_operator_message
+
+Clears the current message to the operator if it exists, otherwise does nothing.
+
+**Example:**
+
+```python
+from time import sleep
+from hardpy import set_operator_message, clear_operator_message
+
+def test_clear_operator_msg():
+    hardpy.set_operator_message(msg="Clearing operator message.", title="Operator message", block=False)
+    sleep(2)
+    clear_operator_message()
+```
+
 #### run_dialog_box
 
 Displays a dialog box and updates the `dialog_box` field in the **statestore** database.
@@ -247,29 +262,6 @@ Displays a dialog box and updates the `dialog_box` field in the **statestore** d
 **Arguments:**
 
 - `dialog_box_data` *(DialogBox)*: Data for the dialog box.
-
-DialogBox attributes:
-
-- `dialog_text` *(str)*: The text of the dialog box.
-- `title_bar` *(str | None)*: The title bar of the dialog box.
-If the title_bar field is missing, it is the case name.
-- `widget` *(IWidget | None)*: Widget information.
-- `image` *(ImageComponent | None)*: Image information.
-
-ImageComponent attributes:
-
-- `address` *(str)*: Image address.
-- `width` *(int | None)*: Image width in %.
-- `border` *(int | None)*: Image border width.
-
-Widget list:
-
-- Base, only dialog text;
-- Text input, `TextInputWidget`;
-- Numeric input, `NumericInputWidget`;
-- Radiobutton, `RadiobuttonWidget`;
-- Checkbox, `CheckboxWidget`;
-- Multistep, `MultistepWidget`.
 
 **Returns:**
 
@@ -339,6 +331,171 @@ def test_attempt_message():
 ```
 
 ## Class
+
+#### DialogBox
+
+The class is used to configure the dialogue box and is used with
+the [run_dialog_box](#run_dialog_box) function.
+
+**Arguments:**
+
+- `dialog_text` *(str)*: The text of the dialog box.
+- `title_bar` *(str | None)*: The title bar of the dialog box.
+If the title_bar field is missing, it is the case name.
+- `widget` *(IWidget | None)*: Widget information.
+- `image` *([ImageComponent](#imagecomponent) | None)*: Image information.
+
+Widget list:
+
+- Base, only dialog text;
+- Text input, [TextInputWidget](#textinputwidget);
+- Numeric input, [NumericInputWidget](#numericinputwidget);
+- Radiobutton, [RadiobuttonWidget](#radiobuttonwidget);
+- Checkbox, [CheckboxWidget](#checkboxwidget);
+- Multistep, [MultistepWidget](#multistepwidget).
+
+**Example:**
+
+```python
+    DialogBox(title_bar="Example title", dialog_text="Example text")
+```
+
+#### TextInputWidget
+
+The class is used to configure text input widget in [dialog box](#dialogbox).
+Further information can be found in section
+[text input field](./hardpy_panel.md/#text-input-field).
+Widget returns a string when using [run_dialog_box](#run_dialog_box).
+
+**Example:**
+
+```python
+    dbx = DialogBox(
+        dialog_text="Type 'ok' and press the Confirm button",
+        title_bar="Example of text input",
+        widget=TextInputWidget(),
+    )
+    response = run_dialog_box(dbx)
+```
+
+#### NumericInputWidget
+
+The class is used to configure numeric input widget in [dialog box](#dialogbox).
+Further information can be found in section
+[numeric input field](./hardpy_panel.md/#number-input-field).
+Widget returns a float when using [run_dialog_box](#run_dialog_box).
+
+**Example:**
+
+```python
+    dbx = DialogBox(
+        dialog_text=f"Enter the number {test_num} and press the Confirm button",
+        title_bar="Example of entering a number",
+        widget=NumericInputWidget(),
+    )
+    response = int(run_dialog_box(dbx))
+```
+
+#### RadiobuttonWidget
+
+The class is used to configure radiobutton widget in [dialog box](#dialogbox).
+Further information can be found in section
+[radiobutton](./hardpy_panel.md/#radiobutton).
+Widget returns a string with the selected radiobutton value
+[run_dialog_box](#run_dialog_box).
+
+**Arguments:**
+
+- `fields` *(list[str])*: Radiobutton fields.
+
+**Example:**
+
+```python
+    dbx = DialogBox(
+        dialog_text='Select item "one" out of several and click Confirm.',
+        title_bar="Radiobutton example",
+        widget=RadiobuttonWidget(fields=["one", "two", "three"]),
+    )
+    response = run_dialog_box(dbx)
+```
+
+#### CheckboxWidget
+
+The class is used to configure checkbox widget in [dialog box](#dialogbox).
+Further information can be found in section
+[checkbox](./hardpy_panel.md/#checkbox).
+Widget returns a list of string with the selected checkbox value
+[run_dialog_box](#run_dialog_box).
+
+**Arguments:**
+
+- `fields` *(list[str])*: Checkbox fields.
+
+**Example:**
+
+```python
+    dbx = DialogBox(
+        dialog_text='Select items "one" and "two" and click the Confirm button',
+        title_bar="Checkbox example",
+        widget=CheckboxWidget(fields=["one", "two", "three"]),
+    )
+    response = run_dialog_box(dbx)
+```
+
+#### StepWidget
+
+The class is used to configure the step for the
+[multistep](#multistepwidget) widget in [dialog box](#dialogbox).
+
+**Arguments:**
+
+- `title` *(str)*: Step title.
+- `text` *(str | None)*: Step text.
+- `image` *([ImageComponent](#imagecomponent) | None)*: Step image.
+
+**Example:**
+
+```python
+    StepWidget("Step 1", text="Content for step")
+```
+
+#### MultistepWidget
+
+The class is used to configure multistep widget in [dialog box](#dialogbox).
+Further information can be found in section
+[multiple steps](./hardpy_panel.md/#multiple-steps).
+
+**Arguments:**
+
+- `steps` *(list[[StepWidget](#stepwidget)])*: A list with info about the steps.
+
+**Example:**
+
+```python
+    steps = [
+        StepWidget("Step 1", text="Content for step"),
+        StepWidget("Step 2", text="Content for step 2", image=ImageComponent(address="assets/image.png", width=100)),
+    ]
+    dbx = DialogBox(dialog_text="Follow the steps and click Confirm", widget=MultistepWidget(steps))
+    response = run_dialog_box(dbx)
+```
+
+#### ImageComponent
+
+A class for configuring an image for a dialogue box or operator message box and is used with
+the [run_dialog_box](#run_dialog_box) and [set_operator_message](#set_operator_message) functions.
+
+**Arguments:**
+
+- `address` *(str)*: Image address.
+- `width` *(int | None)*: Image width in %.
+- `border` *(int | None)*: Image border width.
+
+**Example:**
+
+```python
+    ImageComponent(address="assets/image.png", width=100)
+```
 
 #### CouchdbLoader
 
@@ -470,7 +627,8 @@ def test_two():
 If a test is marked `attempt`, it will be repeated if it fails the number of
 attempts specified by the mark.
 The test will be repeated until it is passed.
-For more information, see the example [attempts](./../examples/attempts.md)
+There is a 1 second pause between attempts.
+For more information, see the example [attempts](./../examples/attempts.md).
 
 **Example:**
 

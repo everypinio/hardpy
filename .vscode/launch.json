@@ -136,6 +136,17 @@
                 "run",
                 "examples/attempts"
             ]
-        }
+        },
+        {
+            "name": "Python: Example Operator Message",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "run",
+                "examples/operator_msg"
+            ]
+        },
     ]
 }

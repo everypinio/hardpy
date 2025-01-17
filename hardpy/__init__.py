@@ -3,6 +3,7 @@
 
 from hardpy.common.stand_cloud import StandCloudError
 from hardpy.pytest_hardpy.pytest_call import (
+    clear_operator_message,
     get_current_attempt,
     get_current_report,
     run_dialog_box,
@@ -55,6 +56,7 @@ __all__ = [
     "StandCloudLoader",
     "StepWidget",
     "TextInputWidget",
+    "clear_operator_message",
     "get_current_attempt",
     "get_current_report",
     "run_dialog_box",
