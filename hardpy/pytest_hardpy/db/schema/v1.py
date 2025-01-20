@@ -44,7 +44,8 @@ class CaseStateStore(IBaseResult):
             "type": "textinput"
           },
           visible: true,
-          id: "af6ac3e7-7ce8-4a6b-bb9d-88c3e10b5c7a"
+          id: "af6ac3e7-7ce8-4a6b-bb9d-88c3e10b5c7a",
+          font_size: 10
         }
       }
     }
@@ -271,7 +272,8 @@ class ResultStateStore(IBaseResult):
                   "type": "textinput"
                 },
                 visible: true,
-                id: "f45bc1e7-2c18-4a4b-2b9d-8863e30bcc78"
+                id: "f45bc1e7-2c18-4a4b-2b9d-8863e30bcc78",
+                font_size: 10
               }
             },
             "test_minute_parity": {

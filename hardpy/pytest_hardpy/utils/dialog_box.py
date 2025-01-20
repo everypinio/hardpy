@@ -316,6 +316,7 @@ class DialogBox:
         title_bar (str | None): title bar
         widget (IWidget | None): widget info
         image (ImageComponent | None): image
+        font_size (int): font size
     """
 
     def __init__(
@@ -324,6 +325,7 @@ class DialogBox:
         title_bar: str | None = None,
         widget: IWidget | None = None,
         image: ImageComponent | None = None,
+        font_size: int = 10,
     ) -> None:
         self.widget: IWidget = BaseWidget() if widget is None else widget
         self.image: ImageComponent | None = image
@@ -331,6 +333,7 @@ class DialogBox:
         self.title_bar: str | None = title_bar
         self.visible: bool = True
         self.id = str(uuid4())
+        self.font_size = font_size
 
     def to_dict(self) -> dict:
         """Convert DialogBox to dictionary.
