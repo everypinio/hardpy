@@ -230,7 +230,8 @@ The **operator_msg** block contains the following fields:
   - **msg**: message for operator;
   - **title**: the title of operator message dialog box;
   - **visible**: should a message be displayed on the operator panel;
-  - **id**: operator message id.
+  - **id**: operator message id;
+  - **font_size**: operator message font size.
 
 The **modules** block contains the following fields:
 
@@ -260,8 +261,8 @@ The **modules** block contains the following fields:
             - **border**: image border in pixels;
             - **base64**: image in base64 code;
           - **visible**: should a dialog box be displayed on the operator panel;
-          - **id**: dialog box id.
-
+          - **id**: dialog box id;
+          - **font_size**: dialog box font size.
 
 Example of a **current** document:
 

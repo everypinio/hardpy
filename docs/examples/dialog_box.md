@@ -1,7 +1,7 @@
 # Dialog Box
 
 This is an example of testing dialog boxes using the **HardPy** library.
-The code for this example can be seen inside the hardpy package 
+The code for this example can be seen inside the hardpy package
 [Dialog Box](https://github.com/everypinio/hardpy/tree/main/examples/dialog_box).
 
 Contains some examples of valid tests for dialog boxes.
@@ -63,6 +63,7 @@ def test_text_input_with_image():
         title_bar="Example of text input",
         widget=TextInputWidget(),
         image=ImageComponent(address="assets/test.png", width=50),
+        font_size=14,
     )
     response = run_dialog_box(dbx)
     set_message(f"Entered text {response}")
