@@ -27,6 +27,7 @@ def test_not_block_operator_message():
         title="Operator message",
         image=ImageComponent(address="assets/image.png", width=100),
         block=False,
+        font_size=14,
     )
     for i in range(3, 0, -1):
         set_message(f"Time left to complete test case {i} s", "updated_status")
