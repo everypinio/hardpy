@@ -334,7 +334,7 @@ def test_attempt_message():
 
 #### DialogBox
 
-The class is used to configure the dialogue box and is used with 
+The class is used to configure the dialogue box and is used with
 the [run_dialog_box](#run_dialog_box) function.
 
 **Arguments:**
@@ -444,7 +444,7 @@ Widget returns a list of string with the selected checkbox value
 
 #### StepWidget
 
-The class is used to configure the step for the 
+The class is used to configure the step for the
 [multistep](#multistepwidget) widget in [dialog box](#dialogbox).
 
 **Arguments:**
@@ -482,7 +482,7 @@ Further information can be found in section
 
 #### ImageComponent
 
-A class for configuring an image for a dialogue box or operator message box and is used with 
+A class for configuring an image for a dialogue box or operator message box and is used with
 the [run_dialog_box](#run_dialog_box) and [set_operator_message](#set_operator_message) functions.
 
 **Arguments:**
@@ -602,7 +602,8 @@ def test_two():
 If a test is marked `attempt`, it will be repeated if it fails the number of
 attempts specified by the mark.
 The test will be repeated until it is passed.
-For more information, see the example [attempts](./../examples/attempts.md)
+There is a 1 second pause between attempts.
+For more information, see the example [attempts](./../examples/attempts.md).
 
 **Example:**
 
