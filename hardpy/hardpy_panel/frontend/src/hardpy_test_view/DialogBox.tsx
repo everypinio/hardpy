@@ -94,7 +94,7 @@ export function StartConfirmationDialog(props: Props) {
   const baseDialogDimensions = { width: 100, height: 100 };
   const maxSize = 0.6;
   const minSize = 0.25;
-  const lineHeight = 10;
+  const lineHeight = 10 * (props.font_size ? props.font_size : 14) / 14;
 
   const handleClose = () => {
     setDialogOpen(false);
