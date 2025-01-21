@@ -342,13 +342,17 @@ def set_operator_message(
     key = reporter.generate_key(DF.OPERATOR_MSG)
     _cleanup_widget(reporter, key)
 
+    if font_size < 1:
+        msg = "The 'font_size' argument cannot be less than 1"
+        raise ValueError(msg)
+
     msg_data = {
         DF.MSG: msg,
         DF.TITLE: title,
         DF.VISIBLE: True,
         DF.IMAGE: image.to_dict() if image else None,
         DF.ID: str(uuid4()),
-        DF.FONT_SIZE: font_size,
+        DF.FONT_SIZE: int(font_size),
     }
     reporter.set_doc_value(key, msg_data, statestore_only=True)
     reporter.update_db_by_doc()

@@ -335,6 +335,10 @@ class DialogBox:
         self.id = str(uuid4())
         self.font_size = font_size
 
+        if font_size < 1:
+            msg = "The 'font_size' argument cannot be less than 1"
+            raise ValueError(msg)
+
     def to_dict(self) -> dict:
         """Convert DialogBox to dictionary.
 
