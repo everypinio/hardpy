@@ -45,7 +45,7 @@ class CaseStateStore(IBaseResult):
           },
           visible: true,
           id: "af6ac3e7-7ce8-4a6b-bb9d-88c3e10b5c7a",
-          font_size: 10
+          font_size: 14
         }
       }
     }
@@ -273,7 +273,7 @@ class ResultStateStore(IBaseResult):
                 },
                 visible: true,
                 id: "f45bc1e7-2c18-4a4b-2b9d-8863e30bcc78",
-                font_size: 10
+                font_size: 14
               }
             },
             "test_minute_parity": {

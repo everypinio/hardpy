@@ -324,7 +324,7 @@ def set_operator_message(
     title: str | None = None,
     block: bool = True,
     image: ImageComponent | None = None,
-    font_size: int = 10,
+    font_size: int = 14,
 ) -> None:
     """Set operator message.
 

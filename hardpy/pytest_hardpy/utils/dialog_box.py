@@ -325,7 +325,7 @@ class DialogBox:
         title_bar: str | None = None,
         widget: IWidget | None = None,
         image: ImageComponent | None = None,
-        font_size: int = 10,
+        font_size: int = 14,
     ) -> None:
         self.widget: IWidget = BaseWidget() if widget is None else widget
         self.image: ImageComponent | None = image
