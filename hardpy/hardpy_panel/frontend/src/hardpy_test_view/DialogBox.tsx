@@ -27,6 +27,7 @@ interface Props {
   image_border?: number;
   is_visible?: boolean;
   id?: string;
+  font_size?: number;
 }
 
 export enum WidgetType {
@@ -335,7 +336,7 @@ export function StartConfirmationDialog(props: Props) {
         minHeight: screenHeight * minSize,
         maxWidth: screenWidth * maxSize,
         maxHeight: screenHeight * maxSize,
-        fontSize: "1rem",
+        fontSize: `${props.font_size}px`,
       }}
     >
       <div

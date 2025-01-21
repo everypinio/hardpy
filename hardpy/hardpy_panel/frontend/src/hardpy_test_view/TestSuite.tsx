@@ -47,6 +47,7 @@ interface DialogBoxProps {
   image?: ImageInfo;
   visible: boolean;
   id: string;
+  font_size?: number;
 }
 
 interface Case {
@@ -340,6 +341,7 @@ export class TestSuite extends React.Component<Props, State> {
               image_border={image_border}
               is_visible={test.dialog_box.visible}
               id={test.dialog_box.id}
+              font_size={test.dialog_box.font_size}
             />
           )}
         <TestStatus
