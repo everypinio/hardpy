@@ -18,7 +18,7 @@ def test_text_input():
         dialog_text="Type 'ok' and press the Confirm button",
         title_bar="Example of text input",
         widget=TextInputWidget(),
-        font_size=14,
+        font_size=18,
     )
     response = run_dialog_box(dbx)
     set_message(f"Entered text {response}")
@@ -32,7 +32,7 @@ def test_text_input_with_image():
         title_bar="Example of text input",
         widget=TextInputWidget(),
         image=ImageComponent(address="assets/image.png", width=100),
-        font_size=14,
+        font_size=18,
     )
     response = run_dialog_box(dbx)
     set_message(f"Entered text {response}")

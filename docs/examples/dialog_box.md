@@ -63,7 +63,7 @@ def test_text_input_with_image():
         title_bar="Example of text input",
         widget=TextInputWidget(),
         image=ImageComponent(address="assets/test.png", width=50),
-        font_size=14,
+        font_size=18,
     )
     response = run_dialog_box(dbx)
     set_message(f"Entered text {response}")

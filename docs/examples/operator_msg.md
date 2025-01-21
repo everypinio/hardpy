@@ -78,7 +78,7 @@ def test_block_operator_message():
     assert True
 
 def test_not_block_operator_message():
-    set_operator_message(msg="Test not blocking operator message", title="Operator message", block=False, font_size=14)
+    set_operator_message(msg="Test not blocking operator message", title="Operator message", block=False, font_size=18)
     for i in range(3, 0, -1):
         set_message(f"Time left to complete test case {i} s", "updated_status")
         sleep(1)
