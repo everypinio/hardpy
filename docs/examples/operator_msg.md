@@ -4,14 +4,14 @@ The [set_operator_message](./../documentation/pytest_hardpy.md/#set_operator_mes
 function is intended for sending messages to the operator.
 Operator messages can be used before, after, and during tests.
 
-**set_operator_message** can be used in conjunction with images. 
-To do this, the user can set the argument `image` with the 
+**set_operator_message** can be used in conjunction with images.
+To do this, the user can set the argument `image` with the
 [ImageComponent](./../documentation/pytest_hardpy.md/#imagecomponent) class.
 
 The default message to the operator blocks further execution of the code,
 but the user can set the argument `block=False` and the function will display the message
 and continue execution of the test.
-In this case, the user can clear the operator message with the 
+In this case, the user can clear the operator message with the
 [clear_operator_message](./../documentation/pytest_hardpy.md/#clear_operator_message) function.
 
 The [clear_operator_message](./../documentation/pytest_hardpy.md/#clear_operator_message)
@@ -78,7 +78,7 @@ def test_block_operator_message():
     assert True
 
 def test_not_block_operator_message():
-    set_operator_message(msg="Test not blocking operator message", title="Operator message", block=False)
+    set_operator_message(msg="Test not blocking operator message", title="Operator message", block=False, font_size=18)
     for i in range(3, 0, -1):
         set_message(f"Time left to complete test case {i} s", "updated_status")
         sleep(1)
