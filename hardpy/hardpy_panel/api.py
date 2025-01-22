@@ -1,6 +1,7 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+import os
 import re
 from enum import Enum
 from pathlib import Path
@@ -119,11 +120,12 @@ def confirm_operator_msg(is_msg_visible: str) -> dict:
     return {"status": Status.ERROR}
 
 
-app.mount(
-    "/",
-    StaticFiles(
-        directory=Path(__file__).parent / "frontend/dist",
-        html=True,
-    ),
-    name="static",
-)
+if "DEBUG" not in os.environ:
+    app.mount(
+        "/",
+        StaticFiles(
+            directory=Path(__file__).parent / "frontend/dist",
+            html=True,
+        ),
+        name="static",
+    )
