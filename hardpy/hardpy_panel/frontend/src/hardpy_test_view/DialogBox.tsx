@@ -391,6 +391,7 @@ export function StartConfirmationDialog(props: Props) {
                   checked={selectedRadioButton === option}
                   onChange={() => setSelectedRadioButton(option)}
                   onKeyDown={handleKeyDown}
+                  fontSize={`${props.font_size}px`}
                   autoFocus={option === (props.widget_info?.fields ?? [])[0]}
                 />
               ))}
@@ -407,6 +408,7 @@ export function StartConfirmationDialog(props: Props) {
                   checked={selectedCheckboxes.includes(option)}
                   autoFocus={option === (props.widget_info?.fields ?? [])[0]}
                   onKeyDown={handleKeyDown}
+                  fontSize={`${props.font_size}px`}
                   onChange={() => {
                     if (selectedCheckboxes.includes(option)) {
                       setSelectedCheckboxes(
@@ -427,6 +429,7 @@ export function StartConfirmationDialog(props: Props) {
                 id={step.info?.title}
                 key={step.info?.title}
                 title={step.info?.title}
+                fontSize={`${props.font_size}px`}
                 panel={
                   <div className="step-container">
                     <div className="step-content">
