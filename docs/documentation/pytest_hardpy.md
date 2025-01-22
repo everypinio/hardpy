@@ -229,6 +229,7 @@ Does not provide user interaction unlike the [run_dialog_box](#run_dialog_box) f
 - `msg` *(str)*: The message to be displayed.
 - `title` *(str | None)*: The optional title for the message.
 - `block` *(bool=True)*: If True, the function will block until the message is closed.
+- `image` *([ImageComponent](#imagecomponent) | None)*: Image information.
 - `font_size`: *(int=14)*: Text font size.
 
 **Example:**
