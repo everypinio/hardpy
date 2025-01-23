@@ -7,6 +7,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 * Add the ability to add images to operator messages like a dialog box.
 * Add non-blocking mode for operator message.
 * Add `clear_operator_message` function for closing operator message.
+* Add **font_size** parameter for operator message and dialog box text.
 * Add a 1 second pause between attempts in the `attempt` marker.
 * Fix an issue where operator messages and dialog boxes sometimes did not
   open before the browser page reloaded.

@@ -27,6 +27,7 @@ interface Props {
   image_border?: number;
   is_visible?: boolean;
   id?: string;
+  font_size?: number;
 }
 
 export enum WidgetType {
@@ -93,7 +94,7 @@ export function StartConfirmationDialog(props: Props) {
   const baseDialogDimensions = { width: 100, height: 100 };
   const maxSize = 0.6;
   const minSize = 0.25;
-  const lineHeight = 10;
+  const lineHeight = 10 * (props.font_size ? props.font_size : 14) / 14;
 
   const handleClose = () => {
     setDialogOpen(false);
@@ -335,7 +336,7 @@ export function StartConfirmationDialog(props: Props) {
         minHeight: screenHeight * minSize,
         maxWidth: screenWidth * maxSize,
         maxHeight: screenHeight * maxSize,
-        fontSize: "1rem",
+        fontSize: `${props.font_size}px`,
       }}
     >
       <div
@@ -390,6 +391,7 @@ export function StartConfirmationDialog(props: Props) {
                   checked={selectedRadioButton === option}
                   onChange={() => setSelectedRadioButton(option)}
                   onKeyDown={handleKeyDown}
+                  style={{ fontSize: `${props.font_size}px` }}
                   autoFocus={option === (props.widget_info?.fields ?? [])[0]}
                 />
               ))}
@@ -406,6 +408,7 @@ export function StartConfirmationDialog(props: Props) {
                   checked={selectedCheckboxes.includes(option)}
                   autoFocus={option === (props.widget_info?.fields ?? [])[0]}
                   onKeyDown={handleKeyDown}
+                  style={{ fontSize: `${props.font_size}px` }}
                   onChange={() => {
                     if (selectedCheckboxes.includes(option)) {
                       setSelectedCheckboxes(
@@ -426,6 +429,7 @@ export function StartConfirmationDialog(props: Props) {
                 id={step.info?.title}
                 key={step.info?.title}
                 title={step.info?.title}
+                style={{ fontSize: `${props.font_size}px` }}
                 panel={
                   <div className="step-container">
                     <div className="step-content">
