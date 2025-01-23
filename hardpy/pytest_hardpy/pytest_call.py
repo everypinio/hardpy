@@ -324,6 +324,7 @@ def set_operator_message(
     title: str | None = None,
     block: bool = True,
     image: ImageComponent | None = None,
+    font_size: int = 14,
 ) -> None:
     """Set operator message.
 
@@ -335,10 +336,15 @@ def set_operator_message(
         title (str | None): title
         image (ImageComponent | None): operator message info
         block (bool): if True, the function will block until the message is closed
+        font_size (int): font size
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.OPERATOR_MSG)
     _cleanup_widget(reporter, key)
+
+    if font_size < 1:
+        msg = "The 'font_size' argument cannot be less than 1"
+        raise ValueError(msg)
 
     msg_data = {
         DF.MSG: msg,
@@ -346,6 +352,7 @@ def set_operator_message(
         DF.VISIBLE: True,
         DF.IMAGE: image.to_dict() if image else None,
         DF.ID: str(uuid4()),
+        DF.FONT_SIZE: int(font_size),
     }
     reporter.set_doc_value(key, msg_data, statestore_only=True)
     reporter.update_db_by_doc()

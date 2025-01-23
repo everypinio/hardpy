@@ -13,6 +13,7 @@ interface StartOperatorMsgDialogProps {
   image_border?: number;
   is_visible?: boolean;
   id?: string;
+  font_size?: number;
 }
 
 export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
@@ -26,7 +27,7 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
   const baseOperatorMessageDimensions = { width: 100, height: 100 };
   const maxSize = 0.6;
   const minSize = 0.25;
-  const lineHeight = 10;
+  const lineHeight = 10 * (props.font_size ? props.font_size : 14) / 14;
 
   const handleClose = async ()  => {
     setOperatorMessageOpen(false);
@@ -128,7 +129,7 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
         minHeight: screenHeight * minSize,
         maxWidth: screenWidth * maxSize,
         maxHeight: screenHeight * maxSize,
-        fontSize: "1rem",
+        fontSize: `${props.font_size}px`,
       }}
     >
       <div

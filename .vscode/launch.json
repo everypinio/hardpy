@@ -112,5 +112,29 @@
                 "examples/operator_msg"
             ]
         },
+        {
+            "name": "Run Frontend",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/hardpy/hardpy_panel/frontend",
+            "runtimeExecutable": "yarn",
+            "runtimeArgs": [
+                "start-dev"
+            ],
+            "env": {
+                "DEBUG": "1",
+                "DANGEROUSLY_DISABLE_HOST_CHECK": "true"
+            },
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Debug Frontend",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}/hardpy/hardpy_panel/frontend",
+            "sourceMaps": true,
+            "timeout": 30000
+        }
     ]
 }
