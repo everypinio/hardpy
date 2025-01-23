@@ -228,8 +228,10 @@ The **dut** block contains the following fields:
 The **operator_msg** block contains the following fields:
 
   - **msg**: message for operator;
-  - **title**: the title of operator message dialog box.
-  - **visible**: should a message be displayed on the operator panel.
+  - **title**: the title of operator message dialog box;
+  - **visible**: should a message be displayed on the operator panel;
+  - **id**: operator message id;
+  - **font_size**: operator message font size.
 
 The **modules** block contains the following fields:
 
@@ -257,8 +259,10 @@ The **modules** block contains the following fields:
             - **address**: image address;
             - **width**: image width in percent;
             - **border**: image border in pixels;
-            - **base64**: image in base64 code.
-
+            - **base64**: image in base64 code;
+          - **visible**: should a dialog box be displayed on the operator panel;
+          - **id**: dialog box id;
+          - **font_size**: dialog box font size.
 
 Example of a **current** document:
 
@@ -298,7 +302,8 @@ Example of a **current** document:
       "operator_msg": {
         "msg": "Operator message",
         "title": "Message",
-        "visible": "True"
+        "visible": true,
+        "id": "f45ac1e7-2ce8-4a6b-bb9d-8863e30bcc78"
       },
       "modules": {
         "test_1_a": {
@@ -328,7 +333,9 @@ Example of a **current** document:
                   "address": "assets/test.png",
                   "width": 100,
                   "border": 0,
-                }               
+                },
+                "visible": true,
+                "id": "b57ab1e7-8cf8-4a6a-bb9d-8863ea0bcc78"
               }
             },
             "test_minute_parity": {
