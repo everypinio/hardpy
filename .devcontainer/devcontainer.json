@@ -1,0 +1,40 @@
+{
+	"name": "Ubuntu",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"forwardPorts": [
+		"8000:8000", // API
+		"3000:3000" // App
+	],
+	// debuild puts its artifact to project's parent directory
+	"postCreateCommand": "sudo chown $(whoami):$(whoami) /workspaces",
+	"postAttachCommand": "sudo apt-get install -y nodejs npm; sudo apt-get remove -y yarn; npm install yarn@1.22.19 && mise exec -- python3 -m venv .venv && .venv/bin/python3 -m pip install -e .[dev] && cd hardpy/hardpy_panel/frontend && corepack yarn install",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"rvest.vs-code-prettier-eslint",
+				"dbaeumer.vscode-eslint",
+				"codeandstuff.package-json-upgrade",
+				"tamasfe.even-better-toml",
+				"nefrob.vscode-just-syntax",
+				"ms-python.python",
+				"ms-python.debugpy",
+				"charliermarsh.ruff",
+				"mhutchie.git-graph",
+				"hverlin.mise-vscode"
+			],
+			"settings": {
+				"terminal.integrated.detectLocale": "off"
+			}
+		}
+	},
+	"runArgs": [
+		"-e",
+		"DISPLAY=${localEnv:DISPLAY}", // Wayland socket endpoint
+		"-v",
+		"/tmp/.X11-unix:/tmp/.X11-unix", // X11 socket
+		"--hostname",
+		"hardpy-devcontainer"
+	]
+}

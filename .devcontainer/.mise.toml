@@ -1,0 +1,2 @@
+[tools]
+python = '3.10' # must be after pipenv so the pipenv bin is first in PATH
