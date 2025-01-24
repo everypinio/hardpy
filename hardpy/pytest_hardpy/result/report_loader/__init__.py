@@ -4,7 +4,11 @@
 from hardpy.pytest_hardpy.result.report_loader.couchdb_loader import (
     CouchdbLoader,
 )
+from hardpy.pytest_hardpy.result.report_loader.stand_cloud_loader import (
+    StandCloudLoader,
+)
 
 __all__ = [
     "CouchdbLoader",
+    "StandCloudLoader",
 ]

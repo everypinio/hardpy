@@ -74,6 +74,18 @@ def pytest_addoption(parser: Parser) -> None:
         default=False,
         help="enable pytest-hardpy plugin",
     )
+    parser.addoption(
+        "--standcloud-api",
+        action="store",
+        default=con_data.stand_cloud_api,
+        help="StandCloud API url",
+    )
+    parser.addoption(
+        "--standcloud-auth",
+        action="store",
+        default=con_data.stand_cloud_auth,
+        help="StandCloud authorization url",
+    )
 
 
 # Bootstrapping hooks
@@ -125,6 +137,14 @@ class HardpyPlugin:
         socket_host = config.getoption("--hardpy-sh")
         if socket_host:
             con_data.socket_host = str(socket_host)  # type: ignore
+
+        stand_cloud_api = config.getoption("--standcloud-api")
+        if stand_cloud_api:
+            con_data.stand_cloud_api = str(stand_cloud_api)  # type: ignore
+
+        stand_cloud_auth = config.getoption("--standcloud-auth")
+        if stand_cloud_auth:
+            con_data.stand_cloud_auth = str(stand_cloud_auth)  # type: ignore
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
@@ -334,9 +354,10 @@ class HardpyPlugin:
             self._results[module_id][case_id] = None
 
     def _collect_module_result(self, module_id: str) -> None:
-        if TestStatus.ERROR in self._results[module_id].values():
-            status = TestStatus.ERROR
-        elif TestStatus.FAILED in self._results[module_id].values():
+        if (
+            TestStatus.FAILED in self._results[module_id].values()
+            or TestStatus.ERROR in self._results[module_id].values()
+        ):
             status = TestStatus.FAILED
         elif TestStatus.SKIPPED in self._results[module_id].values():
             status = TestStatus.SKIPPED
@@ -356,7 +377,7 @@ class HardpyPlugin:
                 self._stop_tests()
                 return TestStatus.STOPPED
             case _:
-                return TestStatus.ERROR
+                return TestStatus.FAILED
 
     def _stop_tests(self) -> None:
         """Update module and case statuses from READY or RUN to STOPPED."""
