@@ -63,7 +63,7 @@ it is mandatory to populate some fields in the HardPy database.
 2. Test stand name. Fills with the
    [set_stand_name](./pytest_hardpy.md#set_stand_name) function.
 
-So, a minimal example of a test to successfully complete **StandCloud**:
+So, a minimal example of a test plan for successfully filling a **StandCloud** database::
 
 ```python
 import hardpy
@@ -74,6 +74,8 @@ def test_example():
 ```
 
 These database fields are required for minimal **StandCloud** analytics.
+Other required database fields are automatically filled by HardPy.
+See **HardPy** database specification in [Runstore](./database.md#runstore-scheme) section.
 
 ### General guidelines
 
@@ -88,8 +90,10 @@ Some tips for getting the best analytics in **StandCloud**.
    [set_module_artifact](./pytest_hardpy.md#set_module_artifact),
    and [set_run_artifact](./pytest_hardpy.md#set_run_artifact)
    to store important information, such as measurement results or case attempt.
-   Artifacts are not displayed in the operator panel,
-   but they are saved in the final report and can be used for data analysis.
+   Artifacts are not displayed in the operator panel.
+   They can contain more complex data structures and can be used
+   for data analysis, unlike [set_message](./pytest_hardpy.md#set_message)
+   which only stores strings.
 3. Use the [set_stand_info](./pytest_hardpy.md#set_stand_info),
    [set_dut_info](./pytest_hardpy.md#set_dut_info) and
    [set_driver_info](./pytest_hardpy.md#set_driver_info)
