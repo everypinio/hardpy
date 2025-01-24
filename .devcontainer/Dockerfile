@@ -2,7 +2,6 @@ FROM ubuntu:24.10 AS build-env
 
 USER root
 
-RUN apt-get update && apt-get install -y yarn
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
 <<EOR
@@ -26,6 +25,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         git \
         || exit 1
 EOR
+
+RUN apt-get update && corepack enable && yarn init -2
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \

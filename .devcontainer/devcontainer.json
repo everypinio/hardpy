@@ -9,7 +9,7 @@
 	],
 	// debuild puts its artifact to project's parent directory
 	"postCreateCommand": "sudo chown $(whoami):$(whoami) /workspaces",
-	"postAttachCommand": "sudo apt-get install -y nodejs npm; sudo apt-get remove -y yarn; npm install yarn@1.22.19 && mise exec -- python3 -m venv .venv && .venv/bin/python3 -m pip install -e .[dev] && cd hardpy/hardpy_panel/frontend && corepack yarn install",
+	"postAttachCommand": "mise exec -- python3 -m venv .venv && .venv/bin/python3 -m pip install -e .[dev] && cd hardpy/hardpy_panel/frontend && corepack yarn install",
 	"customizations": {
 		"vscode": {
 			"extensions": [
