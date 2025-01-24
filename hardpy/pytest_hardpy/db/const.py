@@ -34,3 +34,4 @@ class DatabaseField(str, Enum):
     IMAGE = "image"
     ID = "id"
     FONT_SIZE = "font_size"
+    STAND_CLOUD = "stand_cloud"
