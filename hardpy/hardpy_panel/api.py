@@ -10,16 +10,14 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 from hardpy.common.config import ConfigManager
-from hardpy.common.stand_cloud_wrapper import StandCloudWrapper
 from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
 
 app = FastAPI()
 app.state.pytest_wrp = PyTestWrapper()
-app.state.stand_cloud_wrp = StandCloudWrapper()
 
 
 class Status(str, Enum):
-    """Application run status.
+    """Pytest run status.
 
     Statuses, that can be returned by HardPy to frontend.
     """
@@ -126,11 +124,9 @@ def stand_cloud_register() -> dict:
     """Register to StandCloud.
 
     Returns:
-        dict[str, RunStatus]: run status
+        dict: registration info
     """
-    if app.state.stand_cloud_wrp.register():
-        return {"status": Status.BUSY}
-    return {"status": Status.ERROR}
+    return {"auth_address": "https://standcloud.io/"}
 
 
 @app.get("/api/standcloud/check_connection")
@@ -138,23 +134,9 @@ def stand_cloud_check_connection() -> dict:
     """Check connection to StandCloud.
 
     Returns:
-        dict[str, RunStatus]: run status
+        dict: StandCloud connection status
     """
-    if app.state.stand_cloud_wrp.check_connection():
-        return {"status": Status.BUSY}
-    return {"status": Status.ERROR}
-
-
-@app.get("/api/standcloud/close_window")
-def stand_cloud_close_window() -> dict:
-    """Check connection to StandCloud.
-
-    Returns:
-        dict[str, RunStatus]: run status
-    """
-    if app.state.stand_cloud_wrp.close_window():
-        return {"status": Status.BUSY}
-    return {"status": Status.ERROR}
+    return {"connection_status": "Connection STUB"}
 
 
 app.mount(

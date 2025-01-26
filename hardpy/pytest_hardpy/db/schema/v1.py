@@ -204,24 +204,6 @@ class TestStand(BaseModel):
     location: str | None = None
 
 
-class StandCloud(BaseModel):
-    """StandCloud info description.
-
-    Example:
-    ```
-    {
-      "stand_cloud": {
-        "msg": "message",
-      }
-    }
-    ```
-    """
-
-    model_config = ConfigDict(extra="forbid")
-
-    msg: str | None = None
-
-
 class ResultStateStore(IBaseResult):
     """Test run description.
 
@@ -258,9 +240,6 @@ class ResultStateStore(IBaseResult):
           }
         },
         "location": "Belgrade_1"
-      },
-      "stand_cloud": {
-        "msg": "message",
       },
       "operator_msg": {
         "msg": "Operator message",
@@ -322,7 +301,6 @@ class ResultStateStore(IBaseResult):
     progress: int
     test_stand: TestStand
     dut: Dut
-    stand_cloud: StandCloud
     modules: dict[str, ModuleStateStore] = {}
     operator_msg: dict = {}
 
