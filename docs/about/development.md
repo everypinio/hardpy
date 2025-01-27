@@ -89,6 +89,14 @@ pip install -r requirements.txt
 python -m build
 ```
 
+## Frontend development in VSCode
+
+To edit the frontend, you can use the debugging mode in Visual Studio Code (VSCode). To do this, you need to run the following configurations in the VSCode debugger:
+
+1. **Run Frontend**: This configuration is responsible for starting the frontend application.
+2. **Debug Frontend**: This configuration is used to debug the frontend application in the Chrome browser. 
+3. Any example, such as a Dialog Box (the backend should be running beforehand).
+
 ## Launch
 
 1. Install dependencies or create environment.
