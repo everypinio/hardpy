@@ -69,3 +69,23 @@ RUN --mount=type=cache,target=/$USERNAME/.cache/mise,sharing=locked \
     mise trust --yes .mise.toml
     mise install
 EOR
+
+COPY pyproject.toml /workspaces/pyproject.toml
+RUN python3 -m venv /workspaces/.venv && \
+    /workspaces/.venv/bin/python3 -m pip install --upgrade pip && \
+    /workspaces/.venv/bin/python3 -m pip install -e /workspaces[dev]
+
+
+FROM couchdb
+
+COPY .devcontainers/local.ini /opt/couchdb/etc/local.ini
+
+ENV COUCHDB_USER=dev
+ENV COUCHDB_PASSWORD=dev
+
+RUN echo "[httpd]\nport = 5984\n" >> /opt/couchdb/etc/local.ini
+
+EXPOSE 5984
+
+CMD ["service", "couchdb", "start"]
+
