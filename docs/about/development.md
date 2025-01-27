@@ -95,7 +95,7 @@ To edit the frontend, you can use the debugging mode in Visual Studio Code (VSCo
 
 1. **Run Frontend**: This configuration is responsible for starting the frontend application.
 2. **Debug Frontend**: This configuration is used to debug the frontend application in the Chrome browser. 
-3. Any example, such as a Dialog Box (the backend should be running beforehand).
+3. Any example, such as a Dialog Box (the DB should be running beforehand).
 
 ## Launch
 
