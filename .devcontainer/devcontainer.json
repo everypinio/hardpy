@@ -5,11 +5,12 @@
 	},
 	"forwardPorts": [
 		"8000:8000", // API
-		"3000:3000" // App
+		"3000:3000", // App
+		"5984:5984"
 	],
 	// debuild puts its artifact to project's parent directory
 	"postCreateCommand": "sudo chown $(whoami):$(whoami) /workspaces",
-	"postAttachCommand": "mise exec -- python3 -m venv .venv && .venv/bin/python3 -m pip install -e .[dev] && cd hardpy/hardpy_panel/frontend && corepack yarn install && service couchdb start",
+	"postAttachCommand": "python3 -m venv .venv && .venv/bin/python3 -m pip install -e .[dev] && cd hardpy/hardpy_panel/frontend && corepack yarn install",
 	"customizations": {
 		"vscode": {
 			"extensions": [
