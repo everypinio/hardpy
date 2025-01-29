@@ -120,7 +120,7 @@ def confirm_operator_msg(is_msg_visible: str) -> dict:
     return {"status": Status.ERROR}
 
 
-if "DEBUG" not in os.environ:
+if "DEBUG_FRONTEND" not in os.environ:
     app.mount(
         "/",
         StaticFiles(
