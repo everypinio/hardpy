@@ -149,7 +149,8 @@
             "python": "/usr/local/bin/python3",  // Adjust this path if necessary
             "cwd": "/workspace",  // Adjust this to your workspace directory in the container
             "env": {
-                "PYTHONPATH": "/workspace"  // Adjust if your Python path is different
+                "PYTHONPATH": "/workspace",  // Adjust if your Python path is different
+                "DEBUG_FRONTEND": "1",
             }
         }
     ]
