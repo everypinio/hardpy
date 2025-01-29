@@ -85,9 +85,6 @@
             "request": "launch",
             "module": "hardpy.cli.cli",
             "console": "integratedTerminal",
-            "env": {
-                "DEBUG_FRONTEND": "1"
-            },
             "args": [
                 "run",
                 "examples/dialog_box"

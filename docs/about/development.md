@@ -87,6 +87,12 @@ Navigate to the frontend directory and run the following commands:
 yarn && DANGEROUSLY_DISABLE_HOST_CHECK=true yarn start-dev
 ```
 
+You can specify your own port by adding it as an environment variable:
+```bash
+PORT=4000
+```
+By default, the frontend opens on port 3000 at the address [http://localhost:3000/](http://localhost:3000/).
+
 ### 2. Debugging the Frontend
 To debug the frontend application in the Chrome browser, use the **Debug Frontend** configuration in VSCode.
 
