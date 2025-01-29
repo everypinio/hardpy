@@ -140,7 +140,7 @@ def stand_cloud_check_connection() -> dict:
     return {"connection_status": "Connection STUB"}
 
 
-if "DEBUG" not in os.environ:
+if "DEBUG_FRONTEND" not in os.environ:
     app.mount(
         "/",
         StaticFiles(
