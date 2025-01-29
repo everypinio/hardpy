@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PRJ=hardpy
-
+DEBUG_FRONTEND=0
 cd ..
 
 # Uninstall package
