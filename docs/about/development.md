@@ -64,7 +64,8 @@ pip install -r requirements-doc.txt
 ## Frontend
 
 ### Overview
-The frontend of the project can be developed, debugged, and built using Visual Studio Code (VSCode) or command-line tools. Below are the steps to run, debug, and build the frontend application.
+The frontend of the project can be developed, debugged, and built using Visual Studio Code (VSCode) or command-line tools. 
+Below are the steps to run, debug, and build the frontend application.
 
 **node.js** and **yarn** are required to build the frontend.
 
@@ -83,9 +84,7 @@ This will:
 #### Manually:
 Navigate to the frontend directory and run the following commands:
 ```bash
-cd hardpy/hardpy_panel/frontend
-yarn
-DANGEROUSLY_DISABLE_HOST_CHECK=true yarn start-dev
+yarn && DANGEROUSLY_DISABLE_HOST_CHECK=true yarn start-dev
 ```
 
 ### 2. Debugging the Frontend
@@ -134,68 +133,44 @@ pip install -r requirements.txt
 python -m build
 ```
 
-### VSCode Configuration Files
-Below are the configurations for `tasks.json` and `launch.json` to streamline the development process in VSCode.
+### 4. Setting the `DEBUG_FRONTEND` Variable
+To enable debugging for the frontend application, you must set the `DEBUG_FRONTEND` environment variable. 
+Without this variable, the frontend will not run in debug mode, and the **Run Frontend** and **Debug Frontend** configurations will not work as expected.
 
-#### `tasks.json`:
-This file defines tasks for installing dependencies and building the frontend.
+#### Option 1: Setting `DEBUG_FRONTEND` in VSCode Configuration
+You can specify the `DEBUG_FRONTEND` variable directly in the VSCode launch configuration. 
+Here’s an example of how to include it in a test configuration:
+
 ```json
 {
-    "version": "2.0.0",
-    "outDir": "\"${workspaceRoot}\\bin\"",
-    "tasks": [
-        {
-            "label": "yarn install",
-            "type": "shell",
-            "command": "yarn",
-            "args": [],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "options": {
-                "cwd": "${workspaceFolder}/hardpy/hardpy_panel/frontend"
-            },
-            "problemMatcher": []
-        }
+    "name": "Python: Example Dialog box",
+    "type": "debugpy",
+    "request": "launch",
+    "module": "hardpy.cli.cli",
+    "console": "integratedTerminal",
+    "env": {
+        "DEBUG_FRONTEND": "1"
+    },
+    "args": [
+        "run",
+        "examples/dialog_box"
     ]
 }
 ```
 
-#### `launch.json`:
-This file defines configurations for running and debugging the frontend.
-```json
-{
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Run Frontend",
-            "type": "node",
-            "request": "launch",
-            "cwd": "${workspaceFolder}/hardpy/hardpy_panel/frontend",
-            "runtimeExecutable": "yarn",
-            "runtimeArgs": [
-                "start-dev"
-            ],
-            "env": {
-                "DEBUG": "1",
-                "DANGEROUSLY_DISABLE_HOST_CHECK": "true"
-            },
-            "console": "integratedTerminal",
-            "preLaunchTask": "yarn install"
-        },
-        {
-            "name": "Debug Frontend",
-            "type": "chrome",
-            "request": "launch",
-            "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}/hardpy/hardpy_panel/frontend",
-            "sourceMaps": true,
-            "timeout": 30000
-        }
-    ]
-}
+This configuration ensures that the frontend runs in debug mode when the test is executed.
+
+#### Option 2: Setting `DEBUG_FRONTEND` in `.env` File
+Alternatively, you can define the `DEBUG_FRONTEND` variable in a `.env` file located in the root of your project. 
+
+1. Create a `.env` file in the root directory of your project (if it doesn’t already exist).
+2. Add the following line to the `.env` file:
+
+```env
+DEBUG_FRONTEND=1
 ```
+
+3. Ensure your VSCode or runtime environment loads the `.env` file. Many tools and frameworks (e.g., `python-dotenv`) automatically load variables from `.env`.
 
 ## Launch
 
