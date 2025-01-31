@@ -29,20 +29,6 @@ EOR
 
 RUN apt-get update && corepack enable && yarn init -2
 
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-<<EOR
-    install -dm 755 /etc/apt/keyrings
-
-    wget -qO - https://mise.jdx.dev/gpg-key.pub \
-        | gpg --dearmor | tee /etc/apt/keyrings/mise-archive-keyring.gpg 1> /dev/null
-
-    echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" \
-        | tee /etc/apt/sources.list.d/mise.list
-
-    apt-get update
-    apt-get install -y mise
-EOR
 
 FROM build-env AS dev-env
 
@@ -62,31 +48,5 @@ RUN <<EOR
     chmod 0440 /etc/sudoers.d/$USERNAME
 EOR
 
-USER $USERNAME
 
-RUN --mount=type=cache,target=/$USERNAME/.cache/mise,sharing=locked \
-    --mount=type=bind,source=.mise.toml,target=.mise.toml,readonly \
-<<EOR
-    mise trust --yes .mise.toml
-    mise install
-EOR
-
-# COPY pyproject.toml /workspaces/pyproject.toml
-# RUN python3 -m venv /workspaces/.venv && \
-#     /workspaces/.venv/bin/python3 -m pip install --upgrade pip && \
-#     /workspaces/.venv/bin/python3 -m pip install -e /workspaces[dev]
-
-
-# FROM couchdb
-
-# COPY .devcontainer/local.ini /opt/couchdb/etc/local.ini
-
-# ENV COUCHDB_USER=dev
-# ENV COUCHDB_PASSWORD=dev
-
-# RUN echo "[httpd]\nport = 5984\n" >> /opt/couchdb/etc/local.ini
-
-# EXPOSE 5984
-
-# CMD ["service", "couchdb", "start"]
 
