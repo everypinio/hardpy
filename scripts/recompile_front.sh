@@ -16,4 +16,4 @@ rm -rf __pycache__
 
 # Build
 pip install -r requirements.txt
-python3 -m build
+python -m build

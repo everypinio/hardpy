@@ -26,6 +26,3 @@ sudo cp .devcontainer/couchdb.ini /opt/couchdb/etc/local.ini
 sudo service couchdb start
 
 sudo service couchdb stop
-
-
-
