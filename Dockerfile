@@ -35,6 +35,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         gpg \
         wget \
         git \
+        net-tools \
         && rm -rf /var/lib/apt/lists/*
 EOR
 

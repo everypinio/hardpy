@@ -2,13 +2,14 @@
 	"name": "Ubuntu",
 	"build": {
 	  "dockerfile": "../Dockerfile"
+	//   ./database/couchdb.ini:/opt/couchdb/etc/local.ini
 	},
 	"forwardPorts": [
-		8000 // API
+		5984 // API
 	],
 
-	"postCreateCommand": "sudo chown $(whoami):$(whoami) /workspaces && sudo apt update && sudo apt install -y curl apt-transport-https gnupg && curl https://couchdb.apache.org/repo/keys.asc | gpg --dearmor | sudo tee /usr/share/keyrings/couchdb-archive-keyring.gpg >/dev/null 2>&1 && . /etc/os-release && echo \"deb [signed-by=/usr/share/keyrings/couchdb-archive-keyring.gpg] https://apache.jfrog.io/artifactory/couchdb-deb/ ${VERSION_CODENAME} main\" | sudo tee /etc/apt/sources.list.d/couchdb.list >/dev/null && sudo apt update && sudo apt install -y couchdb",	
-	"postAttachCommand": "pip3 install --upgrade pip && pip3 install -e .[dev] --break-system-packages && cd hardpy/hardpy_panel/frontend && corepack yarn install",
+	"postCreateCommand": "bash ./.devcontainer/postcreate.sh",
+	"postAttachCommand": "bash ./.devcontainer/postattach.sh",
 	"customizations": {
 	  "vscode": {
 		"extensions": [

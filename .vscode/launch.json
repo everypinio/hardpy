@@ -77,10 +77,7 @@
             "args": [
                 "run",
                 "examples/minute_parity"
-            ],
-            "env": {
-                "DEBUG_FRONTEND": "1",
-            }
+            ]
         },
         {
             "name": "Python: Example Dialog box",
@@ -91,10 +88,7 @@
             "args": [
                 "run",
                 "examples/dialog_box"
-            ],
-            "env": {
-                "DEBUG_FRONTEND": "1",
-            }
+            ]
         },
         {
             "name": "Python: Example Attempts",
@@ -141,23 +135,6 @@
             "webRoot": "${workspaceFolder}/hardpy/hardpy_panel/frontend",
             "sourceMaps": true,
             "timeout": 30000
-        },
-        {
-            "name": "Python: Example Dialog box (DevContainer)",
-            "type": "debugpy",
-            "request": "launch",
-            "module": "hardpy.cli.cli",
-            "console": "integratedTerminal",
-            "args": [
-                "run",
-                "examples/dialog_box"
-            ],
-            "python": "/usr/local/bin/python3",  // Adjust this path if necessary
-            "cwd": "/workspace",  // Adjust this to your workspace directory in the container
-            "env": {
-                "PYTHONPATH": "/workspace",  // Adjust if your Python path is different
-                "DEBUG_FRONTEND": "1",
-            }
         }
     ]
 }
