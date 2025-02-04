@@ -1,0 +1,42 @@
+{
+	"name": "Ubuntu",
+	"build": {
+	  "dockerfile": "../Dockerfile"
+	//   ./database/couchdb.ini:/opt/couchdb/etc/local.ini
+	},
+	"forwardPorts": [
+		5984 // API
+	],
+
+	"postCreateCommand": "bash ./.devcontainer/postcreate.sh",
+	"postAttachCommand": "bash ./.devcontainer/postattach.sh",
+	"customizations": {
+	  "vscode": {
+		"extensions": [
+		  "rvest.vs-code-prettier-eslint",
+		  "dbaeumer.vscode-eslint",
+		  "codeandstuff.package-json-upgrade",
+		  "tamasfe.even-better-toml",
+		  "nefrob.vscode-just-syntax",
+		  "ms-python.python",
+		  "ms-python.debugpy",
+		  "charliermarsh.ruff",
+		  "mhutchie.git-graph",
+		  "njpwerner.autodocstring",
+		  "bungcip.better-toml",
+		  "esbenp.prettier-vscode"
+		],
+		"settings": {
+		  "terminal.integrated.detectLocale": "off"
+		}
+	  }
+	},
+	"runArgs": [
+	  "-e",
+	  "DISPLAY=${localEnv:DISPLAY}", // Wayland socket endpoint
+	  "-v",
+	  "/tmp/.X11-unix:/tmp/.X11-unix", // X11 socket
+	  "--hostname",
+	  "hardpy-devcontainer"
+	]
+}
