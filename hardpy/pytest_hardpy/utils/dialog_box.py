@@ -318,16 +318,18 @@ class HTMLComponent:
 
     def __init__(
         self,
-        html_str: str,
+        html: str,
         width: int = 100,
         border: int = 0,
+        is_raw_html: bool = True,
     ) -> None:
         """Initialize the HTML component.
 
         Args:
-            html_str (str): raw html string
+            html (str): html string or URL
             width (int): html component width
             border (int): html component border
+            is_raw_html (bool): True if the html code is raw, else False
 
         Raises:
             HTMLError: If raw html code is invalid
@@ -340,13 +342,15 @@ class HTMLComponent:
             msg = "Border must be non-negative"
             raise WidgetInfoError(msg)
 
-        soup = BeautifulSoup(html_str, "html.parser")
-        if html_str != str(soup):
-            msg = "The html code is invalid"
-            raise HTMLError(msg)
-        self.html_str = html_str
+        if is_raw_html:
+            soup = BeautifulSoup(html, "html.parser")
+            if html != str(soup):
+                msg = "The html code is invalid"
+                raise HTMLError(msg)
+        self.html = html
         self.width = width
         self.border = border
+        self.is_raw_html = is_raw_html
 
     def to_dict(self) -> dict:
         """Convert ImageComponent to dictionary.
@@ -355,9 +359,10 @@ class HTMLComponent:
             dict: ImageComponent dictionary.
         """
         return {
-            "html_str": self.html_str,
+            "code_or_url": self.html,
             "width": self.width,
             "border": self.border,
+            "is_raw_html": self.is_raw_html,
         }
 
 
