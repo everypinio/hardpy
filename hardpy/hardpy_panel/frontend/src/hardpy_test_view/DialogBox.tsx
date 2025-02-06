@@ -93,7 +93,7 @@ export function StartConfirmationDialog(props: Props) {
   const screenHeight = window.screen.height;
 
   const baseDialogDimensions = { width: 100, height: 100 };
-  const maxSize = 0.6;
+  const maxSize = 0.8;
   const minSize = 0.25;
   const lineHeight = (10 * (props.font_size ? props.font_size : 14)) / 14;
 
@@ -488,11 +488,13 @@ export function StartConfirmationDialog(props: Props) {
         {props.html && (
           <iframe
             srcDoc={props.html}
-            height={screenHeight * maxSize}
-            width={screenWidth * maxSize}
-            style={{ border: "none" }}
+            height={screenHeight * maxSize * 0.75}
+            width={screenWidth * maxSize * 0.9}
+            style={{
+              border: "none"
+            }}
             title="HTML Code"
-          />
+          />        
         )}
       </div>
       <div className={Classes.DIALOG_FOOTER}>
