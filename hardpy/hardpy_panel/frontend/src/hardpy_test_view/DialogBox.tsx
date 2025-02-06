@@ -28,7 +28,8 @@ interface Props {
   is_visible?: boolean;
   id?: string;
   font_size?: number;
-  html?: string;
+  html_url?: string;
+  html_code?: string
 }
 
 export enum WidgetType {
@@ -485,9 +486,9 @@ export function StartConfirmationDialog(props: Props) {
             />
           </div>
         )}
-        {props.html && (
+        {props.html_code && (
           <iframe
-            srcDoc={props.html}
+            srcDoc={props.html_code}
             height={screenHeight * maxSize * 0.75}
             width={screenWidth * maxSize * 0.9}
             style={{
@@ -495,6 +496,17 @@ export function StartConfirmationDialog(props: Props) {
             }}
             title="HTML Code"
           />        
+        )}
+        {props.html_url && (
+        <iframe
+          src={props.html_url}
+          height={screenHeight * maxSize * 0.75}
+          width={screenWidth * maxSize * 0.9}
+          style={{
+            border: "none"
+          }}
+          title="HTML Link"
+        />             
         )}
       </div>
       <div className={Classes.DIALOG_FOOTER}>

@@ -342,21 +342,21 @@ class HTMLComponent:
             msg = "Border must be non-negative"
             raise WidgetInfoError(msg)
 
-        if is_raw_html:
-            soup = BeautifulSoup(html, "html.parser")
-            if html != str(soup):
-                msg = "The html code is invalid"
-                raise HTMLError(msg)
+        # if is_raw_html:
+        #     soup = BeautifulSoup(html, "html.parser")
+        #     if html != str(soup):
+        #         msg = "The html code is invalid"
+        #         raise HTMLError(msg)
         self.html = html
         self.width = width
         self.border = border
         self.is_raw_html = is_raw_html
 
     def to_dict(self) -> dict:
-        """Convert ImageComponent to dictionary.
+        """Convert HtmlComponent to dictionary.
 
         Returns:
-            dict: ImageComponent dictionary.
+            dict: HtmlComponent dictionary.
         """
         return {
             "code_or_url": self.html,
