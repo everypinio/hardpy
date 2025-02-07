@@ -6,8 +6,8 @@ pytestmark = pytest.mark.module_name("Dialog box with HTML")
 
 
 @pytest.mark.case_name("Base dialog box with html code")
-def test_dialog_box_with_html_code(generate_bokeh_html):
-    test_html = open("plot.html", "r").read()
+def test_dialog_box_with_html_code(generate_bokeh_html):  # noqa: ANN001
+    test_html = generate_bokeh_html
 
     dbx = DialogBox(
         title_bar="Operator check",
