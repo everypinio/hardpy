@@ -4,6 +4,7 @@
         "njpwerner.autodocstring",
         "charliermarsh.ruff",
         "bungcip.better-toml",
-        "esbenp.prettier-vscode"
+        "esbenp.prettier-vscode",
+        "spmeesseman.vscode-taskexplorer"
     ]
 }

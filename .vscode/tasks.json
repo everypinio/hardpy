@@ -1,0 +1,20 @@
+{
+    "version": "2.0.0",
+    "outDir": "\"${workspaceRoot}\\bin\"",
+    "tasks": [
+        {
+            "label": "yarn install",
+            "type": "shell",
+            "command": "yarn",
+            "args": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/hardpy/hardpy_panel/frontend"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
