@@ -20,7 +20,6 @@ from hardpy.pytest_hardpy.utils.exception import (
     DuplicateSerialNumberError,
     DuplicateTestStandLocationError,
     DuplicateTestStandNameError,
-    HTMLError,
     ImageError,
     WidgetInfoError,
 )
@@ -39,7 +38,6 @@ __all__ = [
     "DuplicateTestStandLocationError",
     "DuplicateTestStandNameError",
     "HTMLComponent",
-    "HTMLError",
     "ImageComponent",
     "ImageError",
     "MultistepWidget",
