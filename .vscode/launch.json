@@ -94,6 +94,20 @@
             },
         },
         {
+            "name": "Python: Example HTML Plot",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "run",
+                "examples/html_plot"
+            ],
+            "env": {
+                "DEBUG_FRONTEND": "1"
+            },
+        },
+        {
             "name": "Python: Example Attempts",
             "type": "debugpy",
             "request": "launch",
