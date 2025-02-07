@@ -28,6 +28,8 @@ interface Props {
   is_visible?: boolean;
   id?: string;
   font_size?: number;
+  html_url?: string;
+  html_code?: string
 }
 
 export enum WidgetType {
@@ -92,9 +94,9 @@ export function StartConfirmationDialog(props: Props) {
   const screenHeight = window.screen.height;
 
   const baseDialogDimensions = { width: 100, height: 100 };
-  const maxSize = 0.6;
+  const maxSize = 0.8;
   const minSize = 0.25;
-  const lineHeight = 10 * (props.font_size ? props.font_size : 14) / 14;
+  const lineHeight = (10 * (props.font_size ? props.font_size : 14)) / 14;
 
   const handleClose = () => {
     setDialogOpen(false);
@@ -192,34 +194,40 @@ export function StartConfirmationDialog(props: Props) {
     }
   };
 
-    const handleKeyDown = (event: React.KeyboardEvent) => {
-      const key = event.key;
-    
-      if (key === "Enter") {
-        handleConfirm();
-      }
-    
-      if (props.widget_info?.fields) {
-        if (widgetType === WidgetType.RadioButton) {
-          const index = props.widget_info.fields.findIndex(option => option.startsWith(key));
-          if (index >= 0) {
-            setSelectedRadioButton(props.widget_info.fields[index]);
-          }
-        }
-    
-        if (widgetType === WidgetType.Checkbox) {
-          const index = props.widget_info.fields.findIndex(option => option.startsWith(key));
-          if (index >= 0) {
-            const option = props.widget_info.fields[index];
-            if (selectedCheckboxes.includes(option)) {
-              setSelectedCheckboxes(selectedCheckboxes.filter(item => item !== option));
-            } else {
-              setSelectedCheckboxes([...selectedCheckboxes, option]);
-            }
-          }
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    const key = event.key;
+
+    if (key === "Enter") {
+      handleConfirm();
+    }
+
+    if (props.widget_info?.fields) {
+      if (widgetType === WidgetType.RadioButton) {
+        const index = props.widget_info.fields.findIndex((option) =>
+          option.startsWith(key)
+        );
+        if (index >= 0) {
+          setSelectedRadioButton(props.widget_info.fields[index]);
         }
       }
-    };
+
+      if (widgetType === WidgetType.Checkbox) {
+        const index = props.widget_info.fields.findIndex((option) =>
+          option.startsWith(key)
+        );
+        if (index >= 0) {
+          const option = props.widget_info.fields[index];
+          if (selectedCheckboxes.includes(option)) {
+            setSelectedCheckboxes(
+              selectedCheckboxes.filter((item) => item !== option)
+            );
+          } else {
+            setSelectedCheckboxes([...selectedCheckboxes, option]);
+          }
+        }
+      }
+    }
+  };
 
   const calculateDimensions = (
     naturalWidth: number,
@@ -477,6 +485,28 @@ export function StartConfirmationDialog(props: Props) {
               }}
             />
           </div>
+        )}
+        {props.html_code && (
+          <iframe
+            srcDoc={props.html_code}
+            height={screenHeight * maxSize * 0.75}
+            width={screenWidth * maxSize * 0.9}
+            style={{
+              border: "none"
+            }}
+            title="HTML Code"
+          />        
+        )}
+        {props.html_url && (
+        <iframe
+          src={props.html_url}
+          height={screenHeight * maxSize * 0.75}
+          width={screenWidth * maxSize * 0.9}
+          style={{
+            border: "none"
+          }}
+          title="HTML Link"
+        />             
         )}
       </div>
       <div className={Classes.DIALOG_FOOTER}>

@@ -343,10 +343,10 @@ class HTMLComponent:
         self.is_raw_html = is_raw_html
 
     def to_dict(self) -> dict:
-        """Convert ImageComponent to dictionary.
+        """Convert HtmlComponent to dictionary.
 
         Returns:
-            dict: ImageComponent dictionary.
+            dict: HtmlComponent dictionary.
         """
         return {
             "code_or_url": self.code_or_url,
