@@ -11,9 +11,7 @@ from enum import Enum
 from typing import Any, Final
 from uuid import uuid4
 
-from bs4 import BeautifulSoup
-
-from hardpy.pytest_hardpy.utils.exception import HTMLError, ImageError, WidgetInfoError
+from hardpy.pytest_hardpy.utils.exception import ImageError, WidgetInfoError
 
 
 class WidgetType(Enum):
@@ -330,9 +328,6 @@ class HTMLComponent:
             width (int): html component width
             border (int): html component border
             is_raw_html (bool): True if the html code is raw, else False
-
-        Raises:
-            HTMLError: If raw html code is invalid
         """
         if width < 1:
             msg = "Width must be positive"
@@ -342,12 +337,7 @@ class HTMLComponent:
             msg = "Border must be non-negative"
             raise WidgetInfoError(msg)
 
-        if is_raw_html:
-            soup = BeautifulSoup(html, "html.parser")
-            if html != str(soup):
-                msg = "The html code is invalid"
-                raise HTMLError(msg)
-        self.html = html
+        self.code_or_url = html
         self.width = width
         self.border = border
         self.is_raw_html = is_raw_html
@@ -359,7 +349,7 @@ class HTMLComponent:
             dict: ImageComponent dictionary.
         """
         return {
-            "code_or_url": self.html,
+            "code_or_url": self.code_or_url,
             "width": self.width,
             "border": self.border,
             "is_raw_html": self.is_raw_html,
