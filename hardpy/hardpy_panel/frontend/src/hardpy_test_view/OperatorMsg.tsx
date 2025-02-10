@@ -15,7 +15,9 @@ interface StartOperatorMsgDialogProps {
   id?: string;
   font_size?: number;
   html_url?: string;
-  html_code?: string
+  html_code?: string;
+  html_width?: number;
+  html_border?: number
 }
 
 export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
@@ -172,10 +174,10 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
         {props.html_code && (
           <iframe
             srcDoc={props.html_code}
-            height={screenHeight * maxSize * 0.75}
-            width={screenWidth * maxSize * 0.9}
+            height={screenHeight * maxSize * 0.75 * ((props.html_width ?? 100) / 100)}
+            width={screenWidth * maxSize * 0.9 * ((props.html_width ?? 100) / 100)}      
             style={{
-              border: "none"
+              border: `${props.html_border}px solid black`
             }}
             title="HTML Code"
           />        
@@ -183,10 +185,10 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
         {props.html_url && (
         <iframe
           src={props.html_url}
-          height={screenHeight * maxSize * 0.75}
-          width={screenWidth * maxSize * 0.9}
+          height={screenHeight * maxSize * 0.75 * ((props.html_width ?? 100) / 100)}
+          width={screenWidth * maxSize * 0.9 * ((props.html_width ?? 100) / 100)}      
           style={{
-            border: "none"
+            border: `${props.html_border}px solid black`
           }}
           title="HTML Link"
         />             

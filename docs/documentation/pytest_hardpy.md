@@ -230,6 +230,7 @@ Does not provide user interaction unlike the [run_dialog_box](#run_dialog_box) f
 - `title` *(str | None)*: The optional title for the message.
 - `block` *(bool=True)*: If True, the function will block until the message is closed.
 - `image` *([ImageComponent](#imagecomponent) | None)*: Image information.
+- `html` *([HTMLComponent](#htmlcomponent) | None)*: HTML informetion.
 - `font_size`: *(int=14)*: Text font size.
 
 **Example:**
@@ -346,6 +347,7 @@ the [run_dialog_box](#run_dialog_box) function.
 If the title_bar field is missing, it is the case name.
 - `widget` *(IWidget | None)*: Widget information.
 - `image` *([ImageComponent](#imagecomponent) | None)*: Image information.
+- `html` *([HTMLComponent](#htmlcomponent) | None)*: HTML informetion.
 - `font_size`: *(int=14)*: Text font size.
 
 Widget list:
@@ -498,6 +500,24 @@ the [run_dialog_box](#run_dialog_box) and [set_operator_message](#set_operator_m
 
 ```python
     ImageComponent(address="assets/image.png", width=100)
+```
+
+#### HTMLComponent
+
+A class for configurating HTML for a dialogue box or operator message box and is used with
+the [run_dialog_box](#run_dialog_box) and [set_operator_message](#set_operator_message) functions.
+
+**Arguments:**
+
+- `code_or_url` *(str)*: HTML code or link.
+- `width` *(int | None)*: HTML width in %.
+- `border` *(int | None)*: HTML border width.
+- `is_raw_html` *(bool)*: Is HTML code is raw.
+
+**Example:**
+
+```python
+    HTMLComponent(code_or_url="https://en.wikipedia.org/wiki/Main_Page", width=100, is_raw_html=False)
 ```
 
 #### CouchdbLoader

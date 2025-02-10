@@ -40,3 +40,19 @@ def test_base_dialog_box_with_html_link():
     )
     response = run_dialog_box(dbx)
     assert response
+
+
+@pytest.mark.case_name("Base dialog box with html link")
+def test_base_dialog_box_with_html_link_and_border():
+    dbx = DialogBox(
+        title_bar="Operator check",
+        dialog_text="Press the Confirm button",
+        html=HTMLComponent(
+            html="https://en.wikipedia.org/wiki/Main_Page",
+            is_raw_html=False,
+            border=10,
+            width=30,
+        ),
+    )
+    response = run_dialog_box(dbx)
+    assert response

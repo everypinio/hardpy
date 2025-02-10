@@ -127,7 +127,10 @@
             "args": [
                 "run",
                 "examples/operator_msg"
-            ]
+            ],
+            "env": {
+                "DEBUG_FRONTEND": "1"
+            },
         },
         {
             "name": "Run Frontend",
