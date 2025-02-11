@@ -12,9 +12,10 @@ def test_base_dialog_box_with_html_code():
     <html>
     <body>
 
-    <h1>My First Heading</h1>
+    <h1>Test HTML Page</h1>
 
-    <p>My first paragraph.</p>
+    <p>It is testing page.</p>
+    <p>You can put anything on it.</p>
 
     </body>
     </html>
@@ -22,7 +23,7 @@ def test_base_dialog_box_with_html_code():
     dbx = DialogBox(
         title_bar="Operator check",
         dialog_text="Press the Confirm button",
-        html=HTMLComponent(html=test_html, is_raw_html=True),
+        html=HTMLComponent(html=test_html, is_raw_html=True, width=50),
     )
     response = run_dialog_box(dbx)
     assert response
@@ -34,8 +35,9 @@ def test_base_dialog_box_with_html_link():
         title_bar="Operator check",
         dialog_text="Press the Confirm button",
         html=HTMLComponent(
-            html="https://en.wikipedia.org/wiki/Main_Page",
+            html="https://everypinio.github.io/hardpy/",
             is_raw_html=False,
+            width=50,
         ),
     )
     response = run_dialog_box(dbx)
@@ -48,10 +50,9 @@ def test_base_dialog_box_with_html_link_and_border():
         title_bar="Operator check",
         dialog_text="Press the Confirm button",
         html=HTMLComponent(
-            html="https://en.wikipedia.org/wiki/Main_Page",
+            html="https://everypinio.github.io/hardpy/",
             is_raw_html=False,
-            border=10,
-            width=30,
+            border=3,
         ),
     )
     response = run_dialog_box(dbx)

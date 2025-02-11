@@ -49,6 +49,13 @@ interface ImageComponent {
   border?: number;
 }
 
+interface HTMLComponent {
+  code_or_url?: string;
+  is_raw_html?: boolean;
+  width?: number;
+  border?: number;
+}
+
 interface StepWidgetInfo {
   type: string;
   info: WidgetInfo;
@@ -59,6 +66,7 @@ interface StepInfo {
   text?: string;
   widget?: StepWidgetInfo;
   image?: ImageComponent;
+  html?: HTMLComponent;
 }
 
 interface Step {
@@ -460,6 +468,28 @@ export function StartConfirmationDialog(props: Props) {
                             ...imageStyle,
                           }}
                         />
+                      )}
+                      {step.info.html?.code_or_url && step.info.html?.is_raw_html == true && (
+                        <iframe
+                          srcDoc={step.info.html?.code_or_url}
+                          height={(imageStepDimensions.height + baseDialogDimensions.height) * 0.75 * ((step.info.html?.width ?? 100) / 100)}
+                          width={(imageStepDimensions.width + baseDialogDimensions.width) * 0.9 * ((step.info.html?.width ?? 100) / 100)}      
+                          style={{
+                            border: `${step.info.html?.border}px solid black` || "none"
+                          }}
+                          title="HTML Code"
+                        />        
+                      )}
+                      {step.info.html?.code_or_url && step.info.html?.is_raw_html == false && (
+                      <iframe
+                        src={step.info.html?.code_or_url}
+                        height={(imageStepDimensions.height + baseDialogDimensions.height) * 0.75 * ((step.info.html?.width ?? 100) / 100)}
+                        width={(imageStepDimensions.width + baseDialogDimensions.width) * 0.9 * ((step.info.html?.width ?? 100) / 100)}      
+                        style={{
+                          border: `${step.info.html?.border}px solid black` || "none"
+                        }}
+                        title="HTML Link"
+                      />             
                       )}
                     </div>
                   </div>

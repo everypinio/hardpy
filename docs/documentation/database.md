@@ -243,7 +243,6 @@ The **operator_msg** block contains the following fields:
     - **width**: html width in percent;
     - **border**: html border in pixels.
 
-
 The **modules** block contains the following fields:
 
   - **test_{module_name}**: an object containing information about a specific module. Contains the following fields:

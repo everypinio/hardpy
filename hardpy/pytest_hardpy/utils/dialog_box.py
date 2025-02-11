@@ -198,8 +198,8 @@ class StepWidget(IWidget):
         html: HTMLComponent | None = None,
     ) -> None:
         super().__init__(WidgetType.STEP)
-        if text is None and image is None:
-            msg = "Text or image must be provided"
+        if text is None and image is None and html is None:
+            msg = "Text, image and html must be provided"
             raise WidgetInfoError(msg)
         self.info["title"] = title
         if isinstance(text, str):

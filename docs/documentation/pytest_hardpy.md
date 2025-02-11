@@ -479,7 +479,7 @@ Further information can be found in section
 ```python
     steps = [
         StepWidget("Step 1", text="Content for step"),
-        StepWidget("Step 2", text="Content for step 2", image=ImageComponent(address="assets/image.png", width=100)),
+        StepWidget("Step 2", text="Content for step 2", image=ImageComponent(address="assets/test.png", width=100)),
     ]
     dbx = DialogBox(dialog_text="Follow the steps and click Confirm", widget=MultistepWidget(steps))
     response = run_dialog_box(dbx)
@@ -499,7 +499,7 @@ the [run_dialog_box](#run_dialog_box) and [set_operator_message](#set_operator_m
 **Example:**
 
 ```python
-    ImageComponent(address="assets/image.png", width=100)
+    ImageComponent(address="assets/test.png", width=100)
 ```
 
 #### HTMLComponent

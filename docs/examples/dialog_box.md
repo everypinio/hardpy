@@ -31,7 +31,7 @@ def test_base_dialog_box_with_image():
     dbx = DialogBox(
         title_bar="Operator check",
         dialog_text="Press the Confirm button",
-        image=ImageComponent(address="assets/image.png", width=100, border=1),
+        image=ImageComponent(address="assets/test.png", width=100, border=1),
     )
     response = run_dialog_box(dbx)
     assert response
@@ -160,18 +160,14 @@ from hardpy import DialogBox, HTMLComponent, run_dialog_box
 
 pytestmark = pytest.mark.module_name("Dialog box with HTML")
 
-
 @pytest.mark.case_name("Base dialog box with html code")
 def test_base_dialog_box_with_html_code():
     test_html = """
     <!DOCTYPE html>
     <html>
     <body>
-
     <h1>My First Heading</h1>
-
     <p>My first paragraph.</p>
-
     </body>
     </html>
     """
@@ -182,7 +178,6 @@ def test_base_dialog_box_with_html_code():
     )
     response = run_dialog_box(dbx)
     assert response
-
 
 @pytest.mark.case_name("Base dialog box with html link")
 def test_base_dialog_box_with_html_link():
