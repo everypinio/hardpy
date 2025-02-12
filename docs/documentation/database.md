@@ -350,7 +350,7 @@ Example of a **current** document:
                   "border": 0,
                 },
                 "html": {
-                  "code_or_url": "https://en.wikipedia.org/wiki/Main_Page",
+                  "code_or_url": "https://everypinio.github.io/hardpy/",
                   "width": 100,
                   "border": 0,
                   "is_raw_html": false

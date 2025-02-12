@@ -230,7 +230,7 @@ Does not provide user interaction unlike the [run_dialog_box](#run_dialog_box) f
 - `title` *(str | None)*: The optional title for the message.
 - `block` *(bool=True)*: If True, the function will block until the message is closed.
 - `image` *([ImageComponent](#imagecomponent) | None)*: Image information.
-- `html` *([HTMLComponent](#htmlcomponent) | None)*: HTML informetion.
+- `html` *([HTMLComponent](#htmlcomponent) | None)*: HTML information.
 - `font_size`: *(int=14)*: Text font size.
 
 **Example:**
@@ -347,7 +347,7 @@ the [run_dialog_box](#run_dialog_box) function.
 If the title_bar field is missing, it is the case name.
 - `widget` *(IWidget | None)*: Widget information.
 - `image` *([ImageComponent](#imagecomponent) | None)*: Image information.
-- `html` *([HTMLComponent](#htmlcomponent) | None)*: HTML informetion.
+- `html` *([HTMLComponent](#htmlcomponent) | None)*: HTML information.
 - `font_size`: *(int=14)*: Text font size.
 
 Widget list:
@@ -481,7 +481,7 @@ Further information can be found in section
     steps = [
         StepWidget("Step 1", text="Content for step"),
         StepWidget("Step 2", text="Content for step 2", image=ImageComponent(address="assets/test.png", width=100)),
-        StepWidget("Step 3", text="Content for step 3", html=HTMLComponent(address="assets/test.png", width=50)),
+        StepWidget("Step 3", text="Content for step 3", html=HTMLComponent(html="https://everypinio.github.io/hardpy/", width=50)),
     ]
     dbx = DialogBox(dialog_text="Follow the steps and click Confirm", widget=MultistepWidget(steps))
     response = run_dialog_box(dbx)
