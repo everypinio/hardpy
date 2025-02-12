@@ -457,6 +457,7 @@ The class is used to configure the step for the
 - `title` *(str)*: Step title.
 - `text` *(str | None)*: Step text.
 - `image` *([ImageComponent](#imagecomponent) | None)*: Step image.
+- `html` *([HTMLComponent](#htmlcomponent) | None)*: Step HTML.
 
 **Example:**
 
@@ -480,6 +481,7 @@ Further information can be found in section
     steps = [
         StepWidget("Step 1", text="Content for step"),
         StepWidget("Step 2", text="Content for step 2", image=ImageComponent(address="assets/test.png", width=100)),
+        StepWidget("Step 3", text="Content for step 3", html=HTMLComponent(address="assets/test.png", width=50)),
     ]
     dbx = DialogBox(dialog_text="Follow the steps and click Confirm", widget=MultistepWidget(steps))
     response = run_dialog_box(dbx)
@@ -517,7 +519,7 @@ the [run_dialog_box](#run_dialog_box) and [set_operator_message](#set_operator_m
 **Example:**
 
 ```python
-    HTMLComponent(code_or_url="https://en.wikipedia.org/wiki/Main_Page", width=100, is_raw_html=False)
+    HTMLComponent(code_or_url="https://everypinio.github.io/hardpy/", width=100, is_raw_html=False)
 ```
 
 #### CouchdbLoader
@@ -544,7 +546,6 @@ def finish_executing():
     if report:
         loader = CouchdbLoader(CouchdbConfig())
         loader.load(report)
-
 
 @pytest.fixture(scope="session", autouse=True)
 def fill_actions_after_test(post_run_functions: list):

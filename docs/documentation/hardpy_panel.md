@@ -78,6 +78,16 @@ Contains an instruction or question and a `confirm` button for confirmation.
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/base_dbx_with_image.png" alt="base_dialog_box_with_image">
     </h1>
 
+=== "Widget with HTML with link"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_html_link.png" alt="base_dialog_box_with_html_link">
+    </h1>
+
+=== "Widget with HTML with raw code"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_html_raw_code.png" alt="base_dialog_box_with_html_raw_code">
+    </h1>
+
 
 #### text input field
 
@@ -94,6 +104,10 @@ The text is transmitted in UTF-8 encoding.
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_text_input_and_image.png" alt="text_input_dialog_box_with_image">
     </h1>
 
+=== "Widget with HTML"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_text_input_and_html.png" alt="text_input_dialog_box_with_html">
+    </h1>
 
 #### number input field
 
@@ -112,6 +126,11 @@ Contains an instruction or question, a number input field, and a `confirm` butto
 === "Widget with image"
     <h1 align="center">
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_num_input_and_image.png" alt="num_input_dialog_box_with_image">
+    </h1>
+
+=== "Widget with html"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_num_input_and_html.png" alt="num_input_dialog_box_with_html">
     </h1>
 
 
@@ -133,6 +152,11 @@ Contains radiobutton widget.
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_radio_and_image.png" alt="radiobutton_dialog_box_with_image">
     </h1>
 
+=== "Widget with html"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_radio_and_html.png" alt="radiobutton_dialog_box_with_html">
+    </h1>
+
 #### checkbox
 
 Contains checkbox widget.
@@ -151,6 +175,10 @@ Contains checkbox widget.
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_checkbox_and_image.png" alt="checkbox_dialog_box_with_image">
     </h1>
 
+=== "Widget with html"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_checkbox_and_html.png" alt="checkbox_dialog_box_with_html">
+    </h1>
 
 #### multiple steps
 
@@ -164,12 +192,12 @@ Allows steps with text and image.
 
 === "Step 2"
     <h1 align="center">
-        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_multistep_and_image.png" alt="dialog_box_with_step_with_image_and_text">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_step_with_image.png" alt="dialog_box_with_step_with_image">
     </h1>
 
 === "Step 3"
     <h1 align="center">
-        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_step_with_image.png" alt="dialog_box_with_step_with_image">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_step_with_html.png" alt="dialog_box_with_step_with_html">
     </h1>
 
 ### Operator message
