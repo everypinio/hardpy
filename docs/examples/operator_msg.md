@@ -157,8 +157,12 @@ def test_operator_message_with_html():
     <!DOCTYPE html>
     <html>
     <body>
-    <h1>My First Heading</h1>
-    <p>My first paragraph.</p>
+
+    <h1>Test HTML Page</h1>
+
+    <p>It is testing page.</p>
+    <p>You can put anything on it.</p>
+
     </body>
     </html>
     """
@@ -178,8 +182,12 @@ def test_operator_message_with_html_and_border():
     <!DOCTYPE html>
     <html>
     <body>
-    <h1>My First Heading</h1>
-    <p>My first paragraph.</p>
+
+    <h1>Test HTML Page</h1>
+
+    <p>It is testing page.</p>
+    <p>You can put anything on it.</p>
+
     </body>
     </html>
     """
