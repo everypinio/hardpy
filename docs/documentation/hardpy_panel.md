@@ -133,7 +133,6 @@ Contains an instruction or question, a number input field, and a `confirm` butto
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_num_input_and_html.png" alt="num_input_dialog_box_with_html">
     </h1>
 
-
 #### radiobutton
 
 Contains radiobutton widget.
