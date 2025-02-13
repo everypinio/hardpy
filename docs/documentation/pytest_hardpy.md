@@ -688,20 +688,11 @@ Option to clean **statestore** and **runstore** databases before running pytest.
 --hardpy-clear-database
 ```
 
-#### standcloud-api
+#### standcloud-addr
 
-**StandCloud** API address. 
-The default is *api.standcloud.localhost*.
-
-```bash
---standcloud-api
-```
-
-#### standcloud-auth
-
-**StandCloud** authorization address. 
-The default is *auth.standcloud.localhost*.
+**StandCloud** address.
+The default is *everypin.standcloud.localhost*.
 
 ```bash
---standcloud-auth
+--standcloud-addr
 ```

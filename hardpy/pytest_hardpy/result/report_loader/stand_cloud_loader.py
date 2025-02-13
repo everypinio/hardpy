@@ -29,8 +29,7 @@ class StandCloudLoader:
         connection_data = ConnectionData()
         self._verify_ssl = verify_ssl
         self._sc_connector = StandCloudConnector(
-            connection_data.stand_cloud_api,
-            connection_data.stand_cloud_auth,
+            connection_data.stand_cloud_addr,
             verify_ssl,
         )
 

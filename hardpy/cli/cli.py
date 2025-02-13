@@ -60,13 +60,9 @@ def init(  # noqa: PLR0913
         default_config.socket.port,
         help="Specify a socket port.",
     ),
-    stand_cloud_api: str = typer.Option(
-        default_config.stand_cloud.api,
-        help="Specify a StandCloud api address.",
-    ),
-    stand_cloud_auth: str = typer.Option(
-        default_config.stand_cloud.auth,
-        help="Specify a StandCloud authorization address.",
+    stand_cloud_addr: str = typer.Option(
+        default_config.stand_cloud.addr,
+        help="Specify a StandCloud address.",
     ),
 ) -> None:
     """Initialize HardPy tests directory.
@@ -82,8 +78,7 @@ def init(  # noqa: PLR0913
         frontend_port (int): Panel operator port
         socket_host (str): Socket host
         socket_port (int): Socket port
-        stand_cloud_api (str): StandCloud API address
-        stand_cloud_auth (str): StandCloud authorization address
+        stand_cloud_addr (str): StandCloud address
     """
     _tests_dir = tests_dir if tests_dir else default_config.tests_dir
     ConfigManager().init_config(
@@ -96,8 +91,7 @@ def init(  # noqa: PLR0913
         frontend_port=frontend_port,
         socket_host=socket_host,
         socket_port=socket_port,
-        stand_cloud_api=stand_cloud_api,
-        stand_cloud_auth=stand_cloud_auth,
+        stand_cloud_addr=stand_cloud_addr,
     )
     # create tests directory
     dir_path = Path(Path.cwd() / _tests_dir)
@@ -189,8 +183,7 @@ def sc_register(
 
     if check:
         sc_connector = StandCloudConnector(
-            stand_cloud_api=config.stand_cloud.api,
-            stand_cloud_auth=config.stand_cloud.auth,
+            addr=config.stand_cloud.addr,
             verify_ssl=verify_ssl,
         )
         try:
@@ -200,11 +193,7 @@ def sc_register(
             sys.exit()
         print("StandCloud connection success")
         sys.exit()
-    auth_register(
-        verify_ssl=verify_ssl,
-        api_addr=config.stand_cloud.api,
-        auth_addr=config.stand_cloud.auth,
-    )
+    auth_register(verify_ssl=verify_ssl, addr=config.stand_cloud.addr)
 
 
 if __name__ == "__main__":

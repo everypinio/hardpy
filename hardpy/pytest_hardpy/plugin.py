@@ -75,16 +75,10 @@ def pytest_addoption(parser: Parser) -> None:
         help="enable pytest-hardpy plugin",
     )
     parser.addoption(
-        "--standcloud-api",
+        "--standcloud-addr",
         action="store",
-        default=con_data.stand_cloud_api,
+        default=con_data.stand_cloud_addr,
         help="StandCloud API url",
-    )
-    parser.addoption(
-        "--standcloud-auth",
-        action="store",
-        default=con_data.stand_cloud_auth,
-        help="StandCloud authorization url",
     )
 
 
@@ -138,13 +132,9 @@ class HardpyPlugin:
         if socket_host:
             con_data.socket_host = str(socket_host)  # type: ignore
 
-        stand_cloud_api = config.getoption("--standcloud-api")
-        if stand_cloud_api:
-            con_data.stand_cloud_api = str(stand_cloud_api)  # type: ignore
-
-        stand_cloud_auth = config.getoption("--standcloud-auth")
-        if stand_cloud_auth:
-            con_data.stand_cloud_auth = str(stand_cloud_auth)  # type: ignore
+        stand_cloud_addr = config.getoption("--standcloud-addr")
+        if stand_cloud_addr:
+            con_data.stand_cloud_addr = str(stand_cloud_addr)  # type: ignore
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")

@@ -28,13 +28,15 @@ if TYPE_CHECKING:
     from requests_oauth2client import BearerToken
 
 
-def register(verify_ssl: bool, api_addr: str, auth_addr: str) -> None:
+def register(verify_ssl: bool, addr: str) -> None:
     """Register HardPy in StandCloud."""
     # TODO (xorialexandrov): Fix magic numbers
     # OAuth client configuration
     client_id = "hardpy-report-uploader"
     client = WebApplicationClient(client_id)
 
+    auth_addr = addr + "/auth"
+    api_addr = addr + "/api/v1"
     # URLs
     authorization_url = f"https://{auth_addr}/api/oidc/authorization"
     par_url = f"https://{auth_addr}/api/oidc/pushed-authorization-request"

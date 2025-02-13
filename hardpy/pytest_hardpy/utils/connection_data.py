@@ -13,5 +13,4 @@ class ConnectionData(metaclass=SingletonMeta):
         self.database_url: str = "http://dev:dev@localhost:5984/"
         self.socket_host: str = gethostname()
         self.socket_port: int = 6525
-        self.stand_cloud_api: str = "api.standcloud.localhost"
-        self.stand_cloud_auth: str = "auth.standcloud.localhost"
+        self.stand_cloud_addr: str = "everypin.standcloud.localhost"

@@ -55,8 +55,7 @@ class StandCloudConfig(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    api: str = "api.standcloud.localhost"
-    auth: str = "auth.standcloud.localhost"
+    addr: str = "everypin.standcloud.localhost"
 
 class HardpyConfig(BaseModel):
     """HardPy configuration."""
@@ -89,8 +88,7 @@ class ConfigManager:
         frontend_port: int,
         socket_host: str,
         socket_port: int,
-        stand_cloud_api: str,
-        stand_cloud_auth: str,
+        stand_cloud_addr: str,
     ) -> None:
         """Initialize HardPy configuration.
 
@@ -104,8 +102,7 @@ class ConfigManager:
             frontend_port (int): Operator panel port.
             socket_host (str): Socket host.
             socket_port (int): Socket port.
-            stand_cloud_api (str): StandCloud API address.
-            stand_cloud_auth (str): StandCloud authorization address.
+            stand_cloud_addr (str): StandCloud address.
         """
         cls.obj.tests_dir = str(tests_dir)
         cls.obj.database.user = database_user
@@ -116,8 +113,7 @@ class ConfigManager:
         cls.obj.frontend.port = frontend_port
         cls.obj.socket.host = socket_host
         cls.obj.socket.port = socket_port
-        cls.obj.stand_cloud.api = stand_cloud_api
-        cls.obj.stand_cloud.auth = stand_cloud_auth
+        cls.obj.stand_cloud.addr = stand_cloud_addr
 
     @classmethod
     def create_config(cls, parent_dir: Path) -> None:
