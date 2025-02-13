@@ -54,7 +54,7 @@ class StandCloudLoader:
         except InvalidGrantError as exc:
             raise StandCloudError(exc.description)
         except HTTPError as exc:
-            raise StandCloudError(exc.strerror)
+            raise StandCloudError(exc.args) # type: ignore
 
         if resp.status_code != HTTPStatus.CREATED:
             msg = f"Report not uploaded to StandCloud, response code {resp.status_code}"
