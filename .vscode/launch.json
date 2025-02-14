@@ -54,7 +54,6 @@
             "console": "integratedTerminal",
             "args": [
                 "sc-register",
-                "--no-verify-ssl",
                 "examples/stand_cloud"
             ]
         },
@@ -66,7 +65,6 @@
             "console": "integratedTerminal",
             "args": [
                 "sc-register",
-                "--no-verify-ssl",
                 "--check",
                 "examples/stand_cloud"
             ]
