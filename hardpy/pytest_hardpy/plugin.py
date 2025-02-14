@@ -31,6 +31,7 @@ from pytest import (
     skip,
 )
 
+from hardpy.common.stand_cloud.connector import StandCloudConnector
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import (
     ConnectionData,
@@ -40,6 +41,11 @@ from hardpy.pytest_hardpy.utils import (
 )
 from hardpy.pytest_hardpy.utils.node_info import TestDependencyInfo
 
+if __debug__:
+    from urllib3 import disable_warnings
+    from urllib3.exceptions import InsecureRequestWarning
+
+    disable_warnings(InsecureRequestWarning)
 
 def pytest_addoption(parser: Parser) -> None:
     """Register argparse-style options."""
@@ -78,7 +84,13 @@ def pytest_addoption(parser: Parser) -> None:
         "--standcloud-addr",
         action="store",
         default=con_data.stand_cloud_addr,
-        help="StandCloud API url",
+        help="StandCloud address",
+    )
+    parser.addoption(
+        "--standcloud-check",
+        action="store_true",
+        default=con_data.stand_cloud_check,
+        help="check StandCloud availability",
     )
 
 
@@ -135,6 +147,10 @@ class HardpyPlugin:
         stand_cloud_addr = config.getoption("--standcloud-addr")
         if stand_cloud_addr:
             con_data.stand_cloud_addr = str(stand_cloud_addr)  # type: ignore
+
+        stand_cloud_check = config.getoption("--standcloud-check")
+        if stand_cloud_check:
+            con_data.stand_cloud_check = bool(stand_cloud_check)  # type: ignore
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
@@ -211,6 +227,19 @@ class HardpyPlugin:
         if session.config.option.collectonly:
             # ignore collect only mode
             return True
+
+        con_data = ConnectionData()
+
+        if con_data.stand_cloud_check:  # check
+            sc_connector = StandCloudConnector(addr=con_data.stand_cloud_addr)
+            try:
+                sc_connector.healthcheck()
+            except Exception as exc:  # noqa: BLE001
+                addr = con_data.stand_cloud_addr
+                msg = f"StandCloud service at the address {addr} not available: {exc}"
+                self._reporter.set_alert(msg)
+                self._reporter.update_db_by_doc()
+                exit(msg)
 
         # testrun entrypoint
         self._reporter.start()
