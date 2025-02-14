@@ -696,3 +696,12 @@ The default is *everypin.standcloud.localhost*.
 ```bash
 --standcloud-addr
 ```
+
+#### standcloud-check
+
+Check **StandCloud** service availability.
+The default is *False*.
+
+```bash
+--standcloud-check
+```
