@@ -27,19 +27,17 @@ class StandCloudConnector:
     def __init__(
         self,
         addr: str,
-        verify_ssl: bool = True,
     ) -> None:
         """Create StandCLoud loader.
 
         Args:
             addr (str | None, optional): StandCloud address.
-            verify_ssl (bool, optional): Skips SSL checks.
             The option only for development and debug. Defaults to True.
         """
         self._api_addr = addr + "/api/v1"
         self._auth_addr = "/auth"
         self._api_url = f"https://{self._api_addr}/"
-        self._verify_ssl = verify_ssl
+        self._verify_ssl = not __debug__
         self._log = getLogger(__name__)
 
     def get_api(self, endpoint: str) -> ApiClient:

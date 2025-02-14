@@ -19,19 +19,11 @@ if TYPE_CHECKING:
 class StandCloudLoader:
     """StandCloud report generator."""
 
-    def __init__(self, verify_ssl: bool = True) -> None:
-        """Create StandCLoud loader.
-
-        Args:
-            verify_ssl (bool, optional): Skips SSL checks.
-            The option only for development and debug. Defaults to True.
-        """
+    def __init__(self) -> None:
+        """Create StandCLoud loader."""
         connection_data = ConnectionData()
-        self._verify_ssl = verify_ssl
-        self._sc_connector = StandCloudConnector(
-            connection_data.stand_cloud_addr,
-            verify_ssl,
-        )
+        self._verify_ssl = not __debug__
+        self._sc_connector = StandCloudConnector(connection_data.stand_cloud_addr)
 
     def load(self, report: ResultRunStore) -> None:
         """Load report to the StandCloud.

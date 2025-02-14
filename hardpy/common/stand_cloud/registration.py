@@ -28,7 +28,7 @@ if TYPE_CHECKING:
     from requests_oauth2client import BearerToken
 
 
-def register(verify_ssl: bool, addr: str) -> None:
+def register(addr: str) -> None:
     """Register HardPy in StandCloud."""
     # TODO (xorialexandrov): Fix magic numbers
     # OAuth client configuration
@@ -37,6 +37,8 @@ def register(verify_ssl: bool, addr: str) -> None:
 
     auth_addr = addr + "/auth"
     api_addr = addr + "/api/v1"
+    verify_ssl = not __debug__
+
     # URLs
     authorization_url = f"https://{auth_addr}/api/oidc/authorization"
     par_url = f"https://{auth_addr}/api/oidc/pushed-authorization-request"

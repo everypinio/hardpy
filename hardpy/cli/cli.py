@@ -17,6 +17,12 @@ from hardpy.common.stand_cloud import (
     register as auth_register,
 )
 
+if __debug__:
+    from urllib3 import disable_warnings
+    from urllib3.exceptions import InsecureRequestWarning
+
+    disable_warnings(InsecureRequestWarning)
+
 cli = typer.Typer(add_completion=False)
 default_config = ConfigManager().get_config()
 
@@ -64,6 +70,10 @@ def init(  # noqa: PLR0913
         default_config.stand_cloud.addr,
         help="Specify a StandCloud address.",
     ),
+    check_stand_cloud: bool = typer.Option(
+        True,
+        help="Check StandCloud service availability.",
+    ),
 ) -> None:
     """Initialize HardPy tests directory.
 
@@ -79,6 +89,7 @@ def init(  # noqa: PLR0913
         socket_host (str): Socket host
         socket_port (int): Socket port
         stand_cloud_addr (str): StandCloud address
+        check_stand_cloud (bool): Flag to check StandCloud service availability
     """
     _tests_dir = tests_dir if tests_dir else default_config.tests_dir
     ConfigManager().init_config(
@@ -92,6 +103,7 @@ def init(  # noqa: PLR0913
         socket_host=socket_host,
         socket_port=socket_port,
         stand_cloud_addr=stand_cloud_addr,
+        stand_cloud_check=check_stand_cloud,
     )
     # create tests directory
     dir_path = Path(Path.cwd() / _tests_dir)
@@ -154,10 +166,6 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
 @cli.command()
 def sc_register(
     tests_dir: Annotated[Optional[str], typer.Argument()] = None,
-    verify_ssl: bool = typer.Option(
-        True,
-        help="Skips SSL checks. The option only for development and debug.",
-    ),
     check: bool = typer.Option(
         False,
         help="Check StandCloud connection.",
@@ -171,7 +179,6 @@ def sc_register(
 
     Args:
         tests_dir (str | None): Tests directory. Current directory + `tests` by default.
-        verify_ssl (bool): Skips SSL checks. The option only for development and debug.
         check (bool): Check StandCloud connection.
     """
     dir_path = Path.cwd() / tests_dir if tests_dir else Path.cwd()
@@ -182,10 +189,7 @@ def sc_register(
         sys.exit()
 
     if check:
-        sc_connector = StandCloudConnector(
-            addr=config.stand_cloud.addr,
-            verify_ssl=verify_ssl,
-        )
+        sc_connector = StandCloudConnector(addr=config.stand_cloud.addr)
         try:
             sc_connector.healthcheck()
         except StandCloudError:
@@ -193,7 +197,7 @@ def sc_register(
             sys.exit()
         print("StandCloud connection success")
         sys.exit()
-    auth_register(verify_ssl=verify_ssl, addr=config.stand_cloud.addr)
+    auth_register(addr=config.stand_cloud.addr)
 
 
 if __name__ == "__main__":

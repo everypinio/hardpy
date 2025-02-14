@@ -14,3 +14,4 @@ class ConnectionData(metaclass=SingletonMeta):
         self.socket_host: str = gethostname()
         self.socket_port: int = 6525
         self.stand_cloud_addr: str = "everypin.standcloud.localhost"
+        self.stand_cloud_check: bool = False
