@@ -178,9 +178,9 @@ def test_cli_init_socket_port(tmp_path: Path):
         assert socket_info in content, "hardpy.toml does not contain the expected port."
 
 
-def test_cli_init_stand_cloud_api(tmp_path: Path):
+def test_cli_init_stand_cloud_addr(tmp_path: Path):
     subprocess.run(
-        [*HARDPY_COMMAND, tmp_path, "--stand-cloud-api", stand_cloud_no_default_addr],
+        [*HARDPY_COMMAND, tmp_path, "--stand-cloud-addr", stand_cloud_no_default_addr],
         check=True,
     )
     hardpy_toml_path = tmp_path / "hardpy.toml"
