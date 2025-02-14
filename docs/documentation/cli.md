@@ -2,7 +2,7 @@
 
 **HardPy** uses the CLI (command line interface) as an entry point.
 
-For more information use: 
+For more information use:
 
 ```bash
 hardpy --help
@@ -21,18 +21,18 @@ It consists of:
 * `hardpy.toml` - **HardPy** configuration file;
 * `docker-compose.yaml` - docker-compose file for running the database;
 * `database` - CouchDB database directory;
-* `couchdb.ini` - the couchdb configuration .ini file in the database directory; 
+* `couchdb.ini` - the couchdb configuration .ini file in the database directory;
 
-You can run `hardpy init <test_bench_name>`, where `<test_bench_name>` is the name of your test bench.  
+You can run `hardpy init <test_bench_name>`, where `<test_bench_name>` is the name of your test bench.
 
-The `hardpy init` command allows you to change the initial **HardPy** settings. 
-More info in [hardpy config](./hardpy_config.md). 
+The `hardpy init` command allows you to change the initial **HardPy** settings.
+More info in [hardpy config](./hardpy_config.md).
 
 ```bash
- Usage: hardpy init [OPTIONS] [TESTS_DIR]                                                                     
-                                                                                                              
- Initialize HardPy tests directory.                                                                           
-                                                                                                              
+ Usage: hardpy init [OPTIONS] [TESTS_DIR]
+
+ Initialize HardPy tests directory.
+
 ╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
 │   tests_dir      [TESTS_DIR]  [default: None]                                                              │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
@@ -47,15 +47,15 @@ More info in [hardpy config](./hardpy_config.md).
 │ --frontend-host                                TEXT     Specify a frontend host. [default: localhost]      │
 │ --socket-host                                  TEXT     Specify a socket host. [default: localhost]        │
 │ --socket-port                                  INTEGER  Specify a socket port. [default: 6525]             │
-│ --stand-cloud-api                              TEXT     Specify a StandCloud api address.                  │
-│                                                         [default: api.standcloud.localhost]                │
-│ --stand-cloud-auth                             TEXT     Specify a StandCloud authorization address.        │
-│                                                         [default: auth.standcloud.localhost]               │
+│ --stand-cloud-addr                             TEXT     Specify a StandCloud address.                      │
+│                                                         [default: everypin.standcloud.localhost]           │
+│ --check-stand-cloud    --no-check-stand-cloud           Check StandCloud service availability.             │
+|                                                         [default: check-stand-cloud]                       │
 │ --help                                                  Show this message and exit.                        │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-To obtain this information, use: 
+To obtain this information, use:
 
 ```bash
 hardpy init --help
@@ -66,14 +66,14 @@ hardpy init --help
 The `hardpy run` command is used to start the operator panel server.
 By default, it starts **HardPy** in the current directory.
 
-You can run the `hardpy run <tests_directory>` command, where `<tests_directory>` 
+You can run the `hardpy run <tests_directory>` command, where `<tests_directory>`
 is the path to the directory with your tests.
 
 ```bash
- Usage: hardpy run [OPTIONS] [TESTS_DIR]                                                                      
-                                                                                                              
- Run HardPy server.                                                                                           
-                                                                                                              
+ Usage: hardpy run [OPTIONS] [TESTS_DIR]
+
+ Run HardPy server.
+
 ╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
 │   tests_dir      [TESTS_DIR]  [default: None]                                                              │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
@@ -82,7 +82,7 @@ is the path to the directory with your tests.
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-To obtain this information, use: 
+To obtain this information, use:
 
 ```bash
 hardpy run --help
@@ -93,26 +93,24 @@ hardpy run --help
 The `hardpy sc-register` command is used to register in **StandCloud**.
 By default, it registers **HardPy** tests from the current directory.
 
-You can run the `hardpy sc-register <tests_directory>` command, where `<tests_directory>` 
+You can run the `hardpy sc-register <tests_directory>` command, where `<tests_directory>`
 is the path to the directory with your tests.
 
 ```bash
- Usage: hardpy sc-register [OPTIONS] [TESTS_DIR]                                                              
-                                                                                                              
- Register HardPy in StandCloud.                                                                               
-                                                                                                              
+ Usage: hardpy sc-register [OPTIONS] [TESTS_DIR]
+
+ Register HardPy in StandCloud.
+
 ╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
 │   tests_dir      [TESTS_DIR]  [default: None]                                                              │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --verify-ssl    --no-verify-ssl      Skips SSL checks. The option only for development and debug.          │
-│                                      [default: verify-ssl]                                                 │
 │ --check         --no-check           Check StandCloud connection. [default: no-check]                      │
 │ --help                               Show this message and exit.                                           │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-To obtain this information, use: 
+To obtain this information, use:
 
 ```bash
 hardpy run --help
