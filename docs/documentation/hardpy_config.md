@@ -116,3 +116,5 @@ To obtain one, contact **info@everypin.io**.
 Boolean variable, if set to `true`, **HardPy** will check the connection
 to the **StandCloud** service at each startup before running tests.
 The default value is `false`.
+
+If the connection fails, the tests will not run.
