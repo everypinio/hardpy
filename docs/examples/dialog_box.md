@@ -32,7 +32,7 @@ def test_base_dialog_box_with_image():
         title_bar="Operator check",
         dialog_text="Press the Confirm button",
         image=ImageComponent(address="assets/test.png", width=100, border=1),
-        html=HTMLComponent(code_or_url="https://everypinio.github.io/hardpy/", width=50, is_raw_html=False),
+        html=HTMLComponent(html="https://everypinio.github.io/hardpy/", width=50, is_raw_html=False),
     )
     response = run_dialog_box(dbx)
     assert response
@@ -141,7 +141,7 @@ def test_multiple_steps():
         StepWidget(
             "Step 3",
             text=None,
-            html=HTMLComponent(code_or_url="https://everypinio.github.io/hardpy/", width=50, is_raw_html=False),
+            html=HTMLComponent(html="https://everypinio.github.io/hardpy/", width=50, is_raw_html=False),
         ),
     ]
     dbx = DialogBox(
