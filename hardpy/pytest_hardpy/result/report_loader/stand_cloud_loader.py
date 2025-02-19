@@ -19,11 +19,18 @@ if TYPE_CHECKING:
 class StandCloudLoader:
     """StandCloud report generator."""
 
-    def __init__(self) -> None:
-        """Create StandCLoud loader."""
-        connection_data = ConnectionData()
+    def __init__(self, address: str | None = None) -> None:
+        """Create StandCLoud loader.
+
+        Args:
+            address (str | None, optional): StandCloud address.
+                     Defaults to None (the value is taken from the.toml).
+                     Can be used outside of HardPy applications.
+        """
         self._verify_ssl = not __debug__
-        self._sc_connector = StandCloudConnector(connection_data.stand_cloud_addr)
+        connection_data = ConnectionData()
+        sc_addr = address if address else connection_data.stand_cloud_addr
+        self._sc_connector = StandCloudConnector(sc_addr)
 
     def load(self, report: ResultRunStore) -> None:
         """Load report to the StandCloud.
@@ -45,7 +52,7 @@ class StandCloudLoader:
         except InvalidGrantError as exc:
             raise StandCloudError(exc.description)
         except HTTPError as exc:
-            raise StandCloudError(exc.args) # type: ignore
+            raise StandCloudError(exc.args)  # type: ignore
 
         if resp.status_code != HTTPStatus.CREATED:
             msg = f"Report not uploaded to StandCloud, response code {resp.status_code}"

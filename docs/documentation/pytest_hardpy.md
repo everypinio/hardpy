@@ -536,6 +536,11 @@ def fill_actions_after_test(post_run_functions: list):
 
 Used to write reports to the **StandCloud**.
 
+**Arguments:**
+
+- `address` *(str | None)*: StandCloud address. Defaults to None
+  (the value is taken from [hardpy.toml](./hardpy_config.md)). Can be used outside of **HardPy** applications.
+
 **Example:**
 
 ```python
