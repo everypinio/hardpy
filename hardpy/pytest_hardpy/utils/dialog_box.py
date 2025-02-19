@@ -184,6 +184,7 @@ class StepWidget(IWidget):
         title (str): Step title
         text (str | None): Step text
         image (ImageComponent | None): Step image
+        html (HTMLComponent | None): Step html
 
     Raises:
         WidgetInfoError: If the text or widget are not provided.
@@ -194,16 +195,19 @@ class StepWidget(IWidget):
         title: str,
         text: str | None,
         image: ImageComponent | None = None,
+        html: HTMLComponent | None = None,
     ) -> None:
         super().__init__(WidgetType.STEP)
-        if text is None and image is None:
-            msg = "Text or image must be provided"
+        if text is None and image is None and html is None:
+            msg = "Text, image and html must be provided"
             raise WidgetInfoError(msg)
         self.info["title"] = title
         if isinstance(text, str):
             self.info["text"] = text
         if isinstance(image, ImageComponent):
             self.info["image"] = image.__dict__
+        if isinstance(html, HTMLComponent):
+            self.info["html"] = html.__dict__
 
     def convert_data(self, input_data: str) -> bool:  # noqa: ARG002
         """Get the step widget data in the correct format.
@@ -264,7 +268,7 @@ class ImageComponent:
         width: int = 100,
         border: int = 0,
     ) -> None:
-        """Validate the image fields and defines the base64 if it does not exist.
+        """Initialize the image component.
 
         Args:
             address (str): image address
@@ -272,7 +276,7 @@ class ImageComponent:
             border (int): image border
 
         Raises:
-            ImageError: If both address and base64data are specified.
+            ImageError: If both address and base64data are specified
         """
         if width < 1:
             msg = "Width must be positive"
@@ -297,13 +301,58 @@ class ImageComponent:
         """Convert ImageComponent to dictionary.
 
         Returns:
-            dict: ImageComponent dictionary.
+            dict: ImageComponent dictionary
         """
         return {
             "address": self.address,
             "width": self.width,
             "base64": self.base64,
             "border": self.border,
+        }
+
+
+class HTMLComponent:
+    """HTML component."""
+
+    def __init__(
+        self,
+        html: str,
+        width: int = 100,
+        border: int = 0,
+        is_raw_html: bool = True,
+    ) -> None:
+        """Initialize the HTML component.
+
+        Args:
+            html (str): html string or URL
+            width (int): html component width
+            border (int): html component border
+            is_raw_html (bool): True if the html code is raw, else False
+        """
+        if width < 1:
+            msg = "Width must be positive"
+            raise WidgetInfoError(msg)
+
+        if border < 0:
+            msg = "Border must be non-negative"
+            raise WidgetInfoError(msg)
+
+        self.code_or_url = html
+        self.width = width
+        self.border = border
+        self.is_raw_html = is_raw_html
+
+    def to_dict(self) -> dict:
+        """Convert HtmlComponent to dictionary.
+
+        Returns:
+            dict: HtmlComponent dictionary.
+        """
+        return {
+            "code_or_url": self.code_or_url,
+            "width": self.width,
+            "border": self.border,
+            "is_raw_html": self.is_raw_html,
         }
 
 
@@ -319,16 +368,18 @@ class DialogBox:
         font_size (int): font size
     """
 
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         dialog_text: str,
         title_bar: str | None = None,
         widget: IWidget | None = None,
         image: ImageComponent | None = None,
+        html: HTMLComponent | None = None,
         font_size: int = 14,
     ) -> None:
         self.widget: IWidget = BaseWidget() if widget is None else widget
         self.image: ImageComponent | None = image
+        self.html: HTMLComponent | None = html
         self.dialog_text: str = dialog_text
         self.title_bar: str | None = title_bar
         self.visible: bool = True
@@ -349,4 +400,6 @@ class DialogBox:
         dbx_dict["widget"] = deepcopy(self.widget.__dict__)
         if self.image:
             dbx_dict["image"] = deepcopy(self.image.__dict__)
+        if self.html:
+            dbx_dict["html"] = deepcopy(self.html.__dict__)
         return dbx_dict

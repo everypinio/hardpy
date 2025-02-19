@@ -32,5 +32,6 @@ class DatabaseField(str, Enum):
     TITLE = "title"
     VISIBLE = "visible"
     IMAGE = "image"
+    HTML = "html"
     ID = "id"
     FONT_SIZE = "font_size"

@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add the ability to add html-pages to dialog boxes and operator messages.
+
 ## HardPy 0.9.0
 
 * Add the ability to add images to operator messages like a dialog box.
