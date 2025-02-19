@@ -165,7 +165,7 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
 
 @cli.command()
 def sc_register(
-    tests_dir: Annotated[Optional[str], typer.Argument()] = None,
+    addr: Annotated[str, typer.Argument()],
     check: bool = typer.Option(
         False,
         help="Check StandCloud connection.",
@@ -178,18 +178,11 @@ def sc_register(
     HardPy to upload test reports from your identity.
 
     Args:
-        tests_dir (str | None): Tests directory. Current directory + `tests` by default.
-        check (bool): Check StandCloud connection.
+        addr (str): StandCloud address
+        check (bool): Check StandCloud connection
     """
-    dir_path = Path.cwd() / tests_dir if tests_dir else Path.cwd()
-    config = ConfigManager().read_config(dir_path)
-
-    if not config:
-        print(f"Config at path {dir_path} not found.")
-        sys.exit()
-
     if check:
-        sc_connector = StandCloudConnector(addr=config.stand_cloud.addr)
+        sc_connector = StandCloudConnector(addr)
         try:
             sc_connector.healthcheck()
         except StandCloudError:
@@ -197,7 +190,7 @@ def sc_register(
             sys.exit()
         print("StandCloud connection success")
         sys.exit()
-    auth_register(addr=config.stand_cloud.addr)
+    auth_register(addr)
 
 
 if __name__ == "__main__":
