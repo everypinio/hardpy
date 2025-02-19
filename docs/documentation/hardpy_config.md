@@ -95,3 +95,24 @@ The user can change this value with the `hardpy init --socket-host` option.
 
 Socket port number. The default is `6525`.
 The user can change this value with the `hardpy init --socket-port` option.
+
+### stand_cloud
+
+[StandCloud](./stand_cloud.md) settings.
+
+```toml
+[stand_cloud]
+addr = "everypin.standcloud.localhost"
+check = true
+```
+
+#### addr
+
+**StandCloud** service address.
+To obtain one, contact **info@everypin.io**.
+
+#### check
+
+Boolean variable, if set to `true`, **HardPy** will check the connection
+to the **StandCloud** service at each startup before running tests.
+The default value is `false`.

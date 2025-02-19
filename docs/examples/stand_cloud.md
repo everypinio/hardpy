@@ -13,17 +13,27 @@ The code for this example can be seen inside the hardpy package
 1. Launch `hardpy init stand_cloud`.
 2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
-4. Modify the **StandCloud** API and authorization addresses in the **hardpy.toml** file.
+4. Add the **StandCloud** service address in the **hardpy.toml** file.
+    ```toml
+    [stand_cloud]
+    addr = "everypin.standcloud.localhost"
+    check = true
+    ```
+    Change the `everypin.standcloud.localhost' to the address you have been assigned.
+
+    You can remove `check = true` if you don't want to check the **StandCloud** connection before each **HardPy** start.
 5. Register in the **StandCloud**:
     ```bash
-    hardpy sc-register stand_cloud
+    hardpy sc-register <stand_cloud_addr>
     ```
+
+    `<stand_cloud_addr>` is the **StandCloud** service address.
 
     The duration of the authorization is defined in the **StandCloud** service itself.
     Registration must be completed once, then you can check authorization
     using the command:
     ```
-    harpy sc-register --check stand_cloud
+    harpy sc-register --check <stand_cloud_addr>
     ```
 
     Learn more in the [StandCloud](./../documentation/stand_cloud.md) section.
@@ -38,10 +48,8 @@ Contains settings and fixtures for all tests:
 - The function to generate a report and record it in the **StandCloud** `finish_executing`;
 - The example of devices used as a fixture in `driver_example`;
 - The list of actions that will be performed after testing is filled in function `fill_actions_after_test`;
-- The module log is created in fixture `module_log`;
 
 ```python
-import logging
 import pytest
 from driver_example import DriverExample
 from hardpy import (
@@ -51,16 +59,10 @@ from hardpy import (
     set_operator_message,
 )
 
-@pytest.fixture(scope="module")
-def module_log(request: pytest.FixtureRequest):
-    log_name = request.module.__name__
-    yield logging.getLogger(log_name)
-
 @pytest.fixture(scope="session")
 def driver_example():
     example = DriverExample()
     yield example
-    example.random_method()
 
 def finish_executing():
     report = get_current_report()
@@ -86,19 +88,12 @@ The driver returns the current minute in the OS.
 
 ```python
 import datetime
-from logging import getLogger
 
 class DriverExample:
-    def __init__(self) -> None:
-        self._log = getLogger(__name__)
-
     @property
     def current_minute(self):
         current_time = datetime.datetime.now()
         return int(current_time.strftime("%M"))
-
-    def random_method(self):
-        self._log.warning("Random method")
 ```
 
 ### test_1.py
@@ -111,7 +106,6 @@ Contains tests related to preparation for the testing process:
 - The test stand info is store in the database in `test_stand_info`;
 
 ```python
-import logging
 from uuid import uuid4
 import pytest
 import hardpy
@@ -119,9 +113,8 @@ import hardpy
 pytestmark = pytest.mark.module_name("Testing preparation")
 
 @pytest.mark.case_name("DUT info")
-def test_dut_info(module_log: logging.Logger):
+def test_dut_info():
     serial_number = str(uuid4())[:6]
-    module_log.info(f"DUT serial number {serial_number}")
     hardpy.set_dut_serial_number(serial_number)
     hardpy.set_dut_part_number("part_number_1")
     info = {"batch": "test_batch", "board_rev": "rev_1"}
@@ -129,14 +122,11 @@ def test_dut_info(module_log: logging.Logger):
     assert True
 
 @pytest.mark.case_name("Test stand info")
-def test_stand_info(module_log: logging.Logger):
+def test_stand_info():
     test_stand_name = "Stand 1"
-    module_log.info(f"Stand name: {test_stand_name}")
     hardpy.set_stand_name(test_stand_name)
     hardpy.set_stand_location("Moon")
-    info = {
-        "some_info": "123",
-    }
+    info = {"some_info": "123"}
     hardpy.set_stand_info(info)
     assert True
 ```

@@ -16,18 +16,22 @@ For more information, visit the **StandCloud** [website](https://everypin.io/sta
 For an example of StandCloud and HardPy integration,
 see [StandCloud example](../examples/stand_cloud.md).
 
-To authorize in **StandCloud**, you need to know 2 addresses:
-The API address and the authorization address.
-To get them, contact **info@everypin.io**.
+To authorize in **StandCloud** you need to know the address of your **StandCloud** service.
+To obtain one, contact **info@everypin.io**.
 
-Both addresses must be added to **hardpy.toml**.
+Address must be added to **hardpy.toml** in `stand_cloud` section:
+
+```toml
+[stand_cloud]
+addr = "everypin.standcloud.localhost"
+```
 
 You need to run the command.
 
 ```bash
-hardpy sc-register <tests_path>
+hardpy sc-register <stand_cloud_addr>
 ```
-where <tests_path> is the real tests path.
+where <stand_cloud_addr> is the **StandCloud** service address.
 Then go to the authorization link in the terminal and open the link to the browser.
 You will need to enter your StandCloud login and password.
 After successful authorization, you should press the `Accept` button.
@@ -43,7 +47,7 @@ the start of the registration.
 To check the **StandCloud** connection status, run the command.
 
 ```bash
-hardpy sc-register --check <tests_path>
+hardpy sc-register --check <stand_cloud_addr>
 ```
 
 The **StandCloud** authentication time is updated each time you interact with **StandCloud**.

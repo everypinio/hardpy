@@ -102,7 +102,7 @@ is the path to the directory with your tests.
  Register HardPy in StandCloud.
 
 ╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
-│   tests_dir      [TESTS_DIR]  [default: None]                                                              │
+│   addr      TEXT  [default: None] [required]                                                               │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ --check         --no-check           Check StandCloud connection. [default: no-check]                      │
