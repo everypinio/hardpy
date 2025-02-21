@@ -113,5 +113,24 @@ is the path to the directory with your tests.
 To obtain this information, use:
 
 ```bash
-hardpy run --help
+hardpy sc-register --help
+```
+
+## sc-unregister
+
+The `hardpy sc-unregister` command is used to unregister from **StandCloud**.
+
+```bash
+ Usage: hardpy sc-unregister [OPTIONS]
+
+ Unregister HardPy from StandCloud.
+ Unregister HardPy from all StandCloud accounts.
+
+╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and                                                                      │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+```bash
+hardpy sc-unregister --help
 ```

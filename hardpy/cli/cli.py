@@ -15,6 +15,7 @@ from hardpy.common.stand_cloud import (
     StandCloudConnector,
     StandCloudError,
     register as auth_register,
+    unregister as auth_unregister,
 )
 
 if __debug__:
@@ -191,6 +192,18 @@ def sc_register(
         print("StandCloud connection success")
     else:
         auth_register(address)
+
+
+@cli.command()
+def sc_unregister() -> None:
+    """Unregister HardPy from StandCloud.
+
+    Unregister HardPy from all StandCloud accounts.
+    """
+    if auth_unregister():
+        print("HardPy unregistering success")
+    else:
+        print("HardPy unregistering failed")
 
 
 if __name__ == "__main__":

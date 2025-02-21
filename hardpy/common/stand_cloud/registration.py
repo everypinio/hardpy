@@ -17,6 +17,7 @@ from typing import TYPE_CHECKING
 from urllib.parse import urlencode
 
 import requests
+from keyring import delete_password, get_credential
 from keyring.errors import KeyringError
 from oauthlib.common import urldecode
 from oauthlib.oauth2 import WebApplicationClient
@@ -29,8 +30,11 @@ if TYPE_CHECKING:
 
 
 def register(addr: str) -> None:
-    """Register HardPy in StandCloud."""
-    # TODO (xorialexandrov): Fix magic numbers
+    """Register HardPy in StandCloud.
+
+    Args:
+        addr (str): StandCloud address
+    """
     # OAuth client configuration
     client_id = "hardpy-report-uploader"
     client = WebApplicationClient(client_id)
@@ -120,6 +124,22 @@ def register(addr: str) -> None:
         sys.exit(1)
 
     _store_password(client.token)
+
+
+def unregister() -> bool:
+    """Unregister HardPy from StandCloud.
+
+    Returns:
+        bool: True if successful else False
+    """
+    service_name = "HardPy"
+
+    try:
+        while cred := get_credential(service_name, None):
+            delete_password(service_name, cred.username)
+    except KeyringError:
+        return False
+    return True
 
 
 def _redirect_uri(port: str) -> str:

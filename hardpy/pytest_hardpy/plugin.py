@@ -234,9 +234,12 @@ class HardpyPlugin:
             sc_connector = StandCloudConnector(addr=con_data.sc_address)
             try:
                 sc_connector.healthcheck()
-            except Exception as exc:  # noqa: BLE001
+            except Exception:  # noqa: BLE001
                 addr = con_data.sc_address
-                msg = f"StandCloud service at the address {addr} not available: {exc}"
+                msg = (
+                    f"StandCloud service at the address {addr} "
+                    "not available or HardPy user is not authorized"
+                )
                 self._reporter.set_alert(msg)
                 self._reporter.update_db_by_doc()
                 exit(msg)
