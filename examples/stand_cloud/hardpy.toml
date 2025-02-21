@@ -1,5 +1,5 @@
 title = "HardPy TOML config"
-tests_dir = "minute_parity"
+tests_dir = "stand_cloud"
 
 [database]
 user = "dev"
