@@ -23,15 +23,15 @@ Address must be added to **hardpy.toml** in `stand_cloud` section:
 
 ```toml
 [stand_cloud]
-addr = "everypin.standcloud.localhost"
+address = "everypin.standcloud.localhost"
 ```
 
 You need to run the command.
 
 ```bash
-hardpy sc-register <stand_cloud_addr>
+hardpy sc-register <stand_cloud_address>
 ```
-where <stand_cloud_addr> is the **StandCloud** service address.
+where <stand_cloud_address> is the **StandCloud** service address.
 Then go to the authorization link in the terminal and open the link to the browser.
 You will need to enter your StandCloud login and password.
 After successful authorization, you should press the `Accept` button.
@@ -47,7 +47,7 @@ the start of the registration.
 To check the **StandCloud** connection status, run the command.
 
 ```bash
-hardpy sc-register --check <stand_cloud_addr>
+hardpy sc-register --check <stand_cloud_address>
 ```
 
 The **StandCloud** authentication time is updated each time you interact with **StandCloud**.

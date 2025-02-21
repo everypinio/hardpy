@@ -47,9 +47,9 @@ More info in [hardpy config](./hardpy_config.md).
 │ --frontend-host                                TEXT     Specify a frontend host. [default: localhost]      │
 │ --socket-host                                  TEXT     Specify a socket host. [default: localhost]        │
 │ --socket-port                                  INTEGER  Specify a socket port. [default: 6525]             │
-│ --stand-cloud-addr                             TEXT     Specify a StandCloud address.                      │
+│ --sc-address                                   TEXT     Specify a StandCloud address.                      │
 │                                                         [default: everypin.standcloud.localhost]           │
-│ --check-stand-cloud    --no-check-stand-cloud           Check StandCloud service availability.             │
+│ --sc-connection-only --no-sc-connection-only            Check StandCloud service availability before start.│
 |                                                         [default: check-stand-cloud]                       │
 │ --help                                                  Show this message and exit.                        │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
@@ -102,7 +102,7 @@ is the path to the directory with your tests.
  Register HardPy in StandCloud.
 
 ╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
-│   addr      TEXT  [default: None] [required]                                                               │
+│   address   TEXT  [default: None] [required]                                                               │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ --check         --no-check           Check StandCloud connection. [default: no-check]                      │

@@ -10,36 +10,28 @@ The code for this example can be seen inside the hardpy package
 
 ### how to start
 
-1. Launch `hardpy init stand_cloud`.
-2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
-3. Modify the files described below.
-4. Add the **StandCloud** service address in the **hardpy.toml** file.
-    ```toml
-    [stand_cloud]
-    addr = "everypin.standcloud.localhost"
-    check = true
-    ```
-    Change the `everypin.standcloud.localhost' to the address you have been assigned.
-
-    You can remove `check = true` if you don't want to check the **StandCloud** connection before each **HardPy** start.
-5. Register in the **StandCloud**:
+1. Get your own **StandCloud** service address by contacting **info@everypin.io**, e.g. `everypin.standcloud.localhost`.
+2. Launch `hardpy init stand_cloud --sc-adress everypin.standcloud.localhost --sc-connection-only`.
+3. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
+4. Modify the files described below.
+5. You can remove `connection_only = true` if you don't want to check the
+    **StandCloud** connection before each **HardPy** start.
+6. Register in the **StandCloud**:
     ```bash
-    hardpy sc-register <stand_cloud_addr>
+    hardpy sc-register everypin.standcloud.localhost
     ```
-
-    `<stand_cloud_addr>` is the **StandCloud** service address.
 
     The duration of the authorization is defined in the **StandCloud** service itself.
     Registration must be completed once, then you can check authorization
     using the command:
     ```
-    harpy sc-register --check <stand_cloud_addr>
+    harpy sc-register --check everypin.standcloud.localhost
     ```
 
     Learn more in the [StandCloud](./../documentation/stand_cloud.md) section.
 
 
-6. Launch `hardpy run stand_cloud`.
+7. Launch `hardpy run stand_cloud`.
 
 ### conftest.py
 

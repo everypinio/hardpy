@@ -102,16 +102,16 @@ The user can change this value with the `hardpy init --socket-port` option.
 
 ```toml
 [stand_cloud]
-addr = "everypin.standcloud.localhost"
-check = true
+address = "everypin.standcloud.localhost"
+connection_only = true
 ```
 
-#### addr
+#### address
 
 **StandCloud** service address.
 To obtain one, contact **info@everypin.io**.
 
-#### check
+#### connection_only
 
 Boolean variable, if set to `true`, **HardPy** will check the connection
 to the **StandCloud** service at each startup before running tests.

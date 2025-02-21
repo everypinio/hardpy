@@ -693,20 +693,20 @@ Option to clean **statestore** and **runstore** databases before running pytest.
 --hardpy-clear-database
 ```
 
-#### standcloud-addr
+#### sc-address
 
 **StandCloud** address.
-The default is *everypin.standcloud.localhost*.
+The default is empty string.
 
 ```bash
---standcloud-addr
+--sc-address
 ```
 
-#### standcloud-check
+#### sc-connection-only
 
 Check **StandCloud** service availability.
 The default is *False*.
 
 ```bash
---standcloud-check
+--sc-connection-only
 ```
