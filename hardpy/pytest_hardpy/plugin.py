@@ -81,15 +81,15 @@ def pytest_addoption(parser: Parser) -> None:
         help="enable pytest-hardpy plugin",
     )
     parser.addoption(
-        "--standcloud-addr",
+        "--sc-address",
         action="store",
-        default=con_data.stand_cloud_addr,
+        default=con_data.sc_address,
         help="StandCloud address",
     )
     parser.addoption(
-        "--standcloud-check",
+        "--sc-connection-only",
         action="store_true",
-        default=con_data.stand_cloud_check,
+        default=con_data.sc_connection_only,
         help="check StandCloud availability",
     )
 
@@ -144,13 +144,13 @@ class HardpyPlugin:
         if socket_host:
             con_data.socket_host = str(socket_host)  # type: ignore
 
-        stand_cloud_addr = config.getoption("--standcloud-addr")
-        if stand_cloud_addr:
-            con_data.stand_cloud_addr = str(stand_cloud_addr)  # type: ignore
+        sc_address = config.getoption("--sc-address")
+        if sc_address:
+            con_data.sc_address = str(sc_address)  # type: ignore
 
-        stand_cloud_check = config.getoption("--standcloud-check")
-        if stand_cloud_check:
-            con_data.stand_cloud_check = bool(stand_cloud_check)  # type: ignore
+        sc_connection_only = config.getoption("--sc-connection-only")
+        if sc_connection_only:
+            con_data.sc_connection_only = bool(sc_connection_only)  # type: ignore
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
@@ -230,12 +230,12 @@ class HardpyPlugin:
 
         con_data = ConnectionData()
 
-        if con_data.stand_cloud_check:  # check
-            sc_connector = StandCloudConnector(addr=con_data.stand_cloud_addr)
+        if con_data.sc_connection_only:  # check
+            sc_connector = StandCloudConnector(addr=con_data.sc_address)
             try:
                 sc_connector.healthcheck()
             except Exception as exc:  # noqa: BLE001
-                addr = con_data.stand_cloud_addr
+                addr = con_data.sc_address
                 msg = f"StandCloud service at the address {addr} not available: {exc}"
                 self._reporter.set_alert(msg)
                 self._reporter.update_db_by_doc()

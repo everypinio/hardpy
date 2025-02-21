@@ -12,7 +12,11 @@ from oauthlib.oauth2.rfc6749.errors import (
     MissingTokenError,
     TokenExpiredError,
 )
-from requests.exceptions import ConnectionError as RequestConnectionError, HTTPError
+from requests.exceptions import (
+    ConnectionError as RequestConnectionError,
+    HTTPError,
+    InvalidURL,
+)
 from requests_oauth2client import ApiClient, BearerToken
 from requests_oauth2client.tokens import ExpiredAccessToken
 from requests_oauthlib import OAuth2Session
@@ -161,9 +165,12 @@ class StandCloudConnector:
             except InvalidGrantError as exc:
                 raise StandCloudError(exc.description)
             except RequestConnectionError as exc:
-                raise StandCloudError(exc.strerror)
+                raise StandCloudError(exc.strerror)  # type: ignore
             except MissingTokenError as exc:
                 raise StandCloudError(exc.description)
+            except InvalidURL:
+                msg = "Authentication URL is not available"
+                raise StandCloudError(msg)
             self._token_update(ret)  # type: ignore
 
         return ApiClient(self._api_url + endpoint, session=session, timeout=10)

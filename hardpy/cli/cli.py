@@ -31,48 +31,48 @@ default_config = ConfigManager().get_config()
 def init(  # noqa: PLR0913
     tests_dir: Annotated[Optional[str], typer.Argument()] = None,
     create_database: bool = typer.Option(
-        True,
+        default=True,
         help="Create CouchDB database.",
     ),
     database_user: str = typer.Option(
-        default_config.database.user,
+        default=default_config.database.user,
         help="Specify a database user.",
     ),
     database_password: str = typer.Option(
-        default_config.database.password,
+        default=default_config.database.password,
         help="Specify a database user password.",
     ),
     database_host: str = typer.Option(
-        default_config.database.host,
+        default=default_config.database.host,
         help="Specify a database host.",
     ),
     database_port: int = typer.Option(
-        default_config.database.port,
+        default=default_config.database.port,
         help="Specify a database port.",
     ),
     frontend_host: str = typer.Option(
-        default_config.frontend.host,
+        default=default_config.frontend.host,
         help="Specify a frontend host.",
     ),
     frontend_port: int = typer.Option(
-        default_config.frontend.port,
+        default=default_config.frontend.port,
         help="Specify a frontend port.",
     ),
     socket_host: str = typer.Option(
-        default_config.socket.host,
+        default=default_config.socket.host,
         help="Specify a socket host.",
     ),
     socket_port: int = typer.Option(
-        default_config.socket.port,
+        default=default_config.socket.port,
         help="Specify a socket port.",
     ),
-    stand_cloud_addr: str = typer.Option(
-        default_config.stand_cloud.addr,
+    sc_address: str = typer.Option(
+        default="",
         help="Specify a StandCloud address.",
     ),
-    check_stand_cloud: bool = typer.Option(
-        True,
-        help="Check StandCloud service availability.",
+    sc_connection_only: bool = typer.Option(
+        default=False,
+        help="Check StandCloud service availability before start.",
     ),
 ) -> None:
     """Initialize HardPy tests directory.
@@ -88,8 +88,8 @@ def init(  # noqa: PLR0913
         frontend_port (int): Panel operator port
         socket_host (str): Socket host
         socket_port (int): Socket port
-        stand_cloud_addr (str): StandCloud address
-        check_stand_cloud (bool): Flag to check StandCloud service availability
+        sc_address (str): StandCloud address
+        sc_connection_only (bool): Flag to check StandCloud service availability
     """
     _tests_dir = tests_dir if tests_dir else default_config.tests_dir
     ConfigManager().init_config(
@@ -102,8 +102,8 @@ def init(  # noqa: PLR0913
         frontend_port=frontend_port,
         socket_host=socket_host,
         socket_port=socket_port,
-        stand_cloud_addr=stand_cloud_addr,
-        stand_cloud_check=check_stand_cloud,
+        sc_address=sc_address,
+        sc_connection_only=sc_connection_only,
     )
     # create tests directory
     dir_path = Path(Path.cwd() / _tests_dir)
@@ -165,7 +165,7 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
 
 @cli.command()
 def sc_register(
-    addr: Annotated[str, typer.Argument()],
+    address: Annotated[str, typer.Argument()],
     check: bool = typer.Option(
         False,
         help="Check StandCloud connection.",
@@ -178,19 +178,19 @@ def sc_register(
     HardPy to upload test reports from your identity.
 
     Args:
-        addr (str): StandCloud address
+        address (str): StandCloud address
         check (bool): Check StandCloud connection
     """
     if check:
-        sc_connector = StandCloudConnector(addr)
+        sc_connector = StandCloudConnector(address)
         try:
             sc_connector.healthcheck()
         except StandCloudError:
             print("StandCloud connection failed")
             sys.exit()
         print("StandCloud connection success")
-        sys.exit()
-    auth_register(addr)
+    else:
+        auth_register(address)
 
 
 if __name__ == "__main__":

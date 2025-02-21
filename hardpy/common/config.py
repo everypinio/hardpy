@@ -55,8 +55,8 @@ class StandCloudConfig(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    addr: str = "everypin.standcloud.localhost"
-    check: bool = False
+    address: str = ""
+    connection_only: bool = False
 
 class HardpyConfig(BaseModel):
     """HardPy configuration."""
@@ -89,8 +89,8 @@ class ConfigManager:
         frontend_port: int,
         socket_host: str,
         socket_port: int,
-        stand_cloud_addr: str,
-        stand_cloud_check: bool = False,
+        sc_address: str = "",
+        sc_connection_only: bool = False,
     ) -> None:
         """Initialize HardPy configuration.
 
@@ -104,8 +104,8 @@ class ConfigManager:
             frontend_port (int): Operator panel port.
             socket_host (str): Socket host.
             socket_port (int): Socket port.
-            stand_cloud_addr (str): StandCloud address.
-            stand_cloud_check (bool): StandCloud check availability.
+            sc_address (str): StandCloud address.
+            sc_connection_only (bool): StandCloud check availability.
         """
         cls.obj.tests_dir = str(tests_dir)
         cls.obj.database.user = database_user
@@ -116,8 +116,8 @@ class ConfigManager:
         cls.obj.frontend.port = frontend_port
         cls.obj.socket.host = socket_host
         cls.obj.socket.port = socket_port
-        cls.obj.stand_cloud.addr = stand_cloud_addr
-        cls.obj.stand_cloud.check = stand_cloud_check
+        cls.obj.stand_cloud.address = sc_address
+        cls.obj.stand_cloud.connection_only = sc_connection_only
 
     @classmethod
     def create_config(cls, parent_dir: Path) -> None:
@@ -126,6 +126,8 @@ class ConfigManager:
         Args:
             parent_dir (Path): Configuration file parent directory.
         """
+        if not cls.obj.stand_cloud.address:
+            del cls.obj.stand_cloud
         config_str = tomli_w.dumps(cls.obj.model_dump())
         with Path.open(parent_dir / "hardpy.toml", "w") as file:
             file.write(config_str)

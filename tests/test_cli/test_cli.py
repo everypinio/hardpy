@@ -180,14 +180,14 @@ def test_cli_init_socket_port(tmp_path: Path):
 
 def test_cli_init_stand_cloud_addr(tmp_path: Path):
     subprocess.run(
-        [*HARDPY_COMMAND, tmp_path, "--stand-cloud-addr", stand_cloud_no_default_addr],
+        [*HARDPY_COMMAND, tmp_path, "--sc-address", stand_cloud_no_default_addr],
         check=True,
     )
     hardpy_toml_path = tmp_path / "hardpy.toml"
     with Path.open(hardpy_toml_path) as f:
         content = f.read()
         stand_cloud_info = f"""[stand_cloud]
-addr = "{stand_cloud_no_default_addr}"
+address = "{stand_cloud_no_default_addr}"
 """
         assert_msg = "hardpy.toml does not contain the expected host."
         assert stand_cloud_info in content, assert_msg

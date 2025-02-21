@@ -29,7 +29,7 @@ class StandCloudLoader:
         """
         self._verify_ssl = not __debug__
         connection_data = ConnectionData()
-        sc_addr = address if address else connection_data.stand_cloud_addr
+        sc_addr = address if address else connection_data.sc_address
         self._sc_connector = StandCloudConnector(sc_addr)
 
     def load(self, report: ResultRunStore) -> None:
