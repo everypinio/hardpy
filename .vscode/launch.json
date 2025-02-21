@@ -34,6 +34,10 @@
             "request": "launch",
             "module": "hardpy.cli.cli",
             "console": "integratedTerminal",
+            "args": [
+                "init",
+                "template"
+            ]
         },
         {
             "name": "HardPy: Run template",
