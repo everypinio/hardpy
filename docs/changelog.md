@@ -6,7 +6,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 
 * Add the `[stand_cloud]` section to the **harpy.toml** configuration file.
 * Add the `StandCloudLoader` class to append the test result to the **StandCloud**.
-* Add **StandCloud** authorization support.
+* Add support for **StandCloud** login and logout with `sc-login` and `sc-logout` commands.
 * Added **alert** field in **statestore** database.
 * Add alert to control panel by calling `set_alert` method in `HardpyPlugin`.
 
