@@ -88,18 +88,17 @@ To obtain this information, use:
 hardpy run --help
 ```
 
-## sc-register
+## sc-login
 
-The `hardpy sc-register` command is used to register in **StandCloud**.
-By default, it registers **HardPy** tests from the current directory.
+The `hardpy sc-login` command is used to login in **StandCloud**.
 
-You can run the `hardpy sc-register <tests_directory>` command, where `<tests_directory>`
-is the path to the directory with your tests.
+You can run the `hardpy sc-login <stand_cloud_address>` command, where `<stand_cloud_address>`
+is the **StandCloud** service address.
 
 ```bash
- Usage: hardpy sc-register [OPTIONS] [TESTS_DIR]
+ Usage: hardpy sc-login [OPTIONS] [TESTS_DIR]
 
- Register HardPy in StandCloud.
+ Login HardPy in StandCloud.
 
 ╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
 │   address   TEXT  [default: None] [required]                                                               │
@@ -113,18 +112,18 @@ is the path to the directory with your tests.
 To obtain this information, use:
 
 ```bash
-hardpy sc-register --help
+hardpy sc-login --help
 ```
 
-## sc-unregister
+## sc-logout
 
-The `hardpy sc-unregister` command is used to unregister from **StandCloud**.
+The `hardpy sc-logout` command is used to logout from **StandCloud**.
 
 ```bash
- Usage: hardpy sc-unregister [OPTIONS]
+ Usage: hardpy sc-logout [OPTIONS]
 
- Unregister HardPy from StandCloud.
- Unregister HardPy from all StandCloud accounts.
+ Logout HardPy from StandCloud.
+ Logout HardPy from all StandCloud accounts.
 
 ╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ --help          Show this message and                                                                      │
@@ -132,5 +131,5 @@ The `hardpy sc-unregister` command is used to unregister from **StandCloud**.
 ```
 
 ```bash
-hardpy sc-unregister --help
+hardpy sc-logout --help
 ```

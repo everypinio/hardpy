@@ -29,7 +29,7 @@ address = "everypin.standcloud.localhost"
 You need to run the command.
 
 ```bash
-hardpy sc-register <stand_cloud_address>
+hardpy sc-login <stand_cloud_address>
 ```
 where <stand_cloud_address> is the **StandCloud** service address.
 Then go to the authorization link in the terminal and open the link to the browser.
@@ -47,13 +47,19 @@ the start of the registration.
 To check the **StandCloud** connection status, run the command.
 
 ```bash
-hardpy sc-register --check <stand_cloud_address>
+hardpy sc-login --check <stand_cloud_address>
 ```
 
 The **StandCloud** authentication time is updated each time you interact with **StandCloud**.
 If you do not use StandCloud services, the authentication will be canceled and the
-`hardpy sc-register` function must be called again.
+`hardpy sc-login` function must be called again.
 To clarify and edit your authentication time case, you can contact **info@everypin.io**.
+
+To logout from **StandCloud** service run the command.
+
+```bash
+hardpy sc-logout
+```
 
 ## HardPy rules
 
