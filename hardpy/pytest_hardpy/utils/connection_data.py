@@ -13,3 +13,5 @@ class ConnectionData(metaclass=SingletonMeta):
         self.database_url: str = "http://dev:dev@localhost:5984/"
         self.socket_host: str = gethostname()
         self.socket_port: int = 6525
+        self.sc_address: str = ""
+        self.sc_connection_only: bool = False
