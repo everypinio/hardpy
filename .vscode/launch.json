@@ -51,26 +51,24 @@
             ]
         },
         {
-            "name": "StandCloud register",
+            "name": "StandCloud login",
             "type": "debugpy",
             "request": "launch",
             "module": "hardpy.cli.cli",
             "console": "integratedTerminal",
             "args": [
-                "sc-register",
+                "sc-login",
                 "everypin.standcloud.localhost"
             ]
         },
         {
-            "name": "StandCloud check connection",
+            "name": "StandCloud logout",
             "type": "debugpy",
             "request": "launch",
             "module": "hardpy.cli.cli",
             "console": "integratedTerminal",
             "args": [
-                "sc-register",
-                "--check",
-                "everypin.standcloud.localhost"
+                "sc-logout",
             ]
         },
         {
