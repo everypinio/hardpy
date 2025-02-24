@@ -19,7 +19,6 @@ frontend_default_host = "localhost"
 frontend_default_port = "8000"
 socket_default_host = "localhost"
 socket_default_port = "6525"
-stand_cloud_default_addr = "everypin.standcloud.localhost"
 
 
 def test_cli_init(tmp_path: Path):
