@@ -26,7 +26,7 @@ Address must be added to **hardpy.toml** in `stand_cloud` section:
 address = "demo.standcloud.localhost"
 ```
 
-You need to run the command.
+You need to run the command:
 
 ```bash
 hardpy sc-login <stand_cloud_address>
@@ -44,7 +44,7 @@ The browser can be closed.
 The `Registration completed` message should appear in the terminal with
 the start of the registration.
 
-To check the **StandCloud** connection status, run the command.
+To check the **StandCloud** connection status, run the command:
 
 ```bash
 hardpy sc-login --check <stand_cloud_address>
@@ -55,7 +55,7 @@ If you do not use StandCloud services, the authentication will be canceled and t
 `hardpy sc-login` function must be called again.
 To clarify and edit your authentication time case, you can contact **info@everypin.io**.
 
-To logout from **StandCloud** service run the command.
+To logout from **StandCloud** service run the command:
 
 ```bash
 hardpy sc-logout
@@ -73,7 +73,7 @@ it is mandatory to populate some fields in the HardPy database.
 2. Test stand name. Fills with the
    [set_stand_name](./pytest_hardpy.md#set_stand_name) function.
 
-So, a minimal example of a test plan for successfully filling a **StandCloud** database::
+So, a minimal example of a test plan for successfully filling a **StandCloud** database:
 
 ```python
 import hardpy
