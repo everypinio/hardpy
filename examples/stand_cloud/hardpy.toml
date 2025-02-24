@@ -16,5 +16,5 @@ host = "localhost"
 port = 6525
 
 [stand_cloud]
-address = "everypin.standcloud.localhost"
+address = "demo.standcloud.localhost"
 connection_only = true
