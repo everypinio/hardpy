@@ -29,8 +29,8 @@ if TYPE_CHECKING:
     from requests_oauth2client import BearerToken
 
 
-def register(addr: str) -> None:
-    """Register HardPy in StandCloud.
+def login(addr: str) -> None:
+    """Login HardPy in StandCloud.
 
     Args:
         addr (str): StandCloud address
@@ -126,8 +126,8 @@ def register(addr: str) -> None:
     _store_password(client.token)
 
 
-def unregister() -> bool:
-    """Unregister HardPy from StandCloud.
+def logout() -> bool:
+    """Logout HardPy from StandCloud.
 
     Returns:
         bool: True if successful else False

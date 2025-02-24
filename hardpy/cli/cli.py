@@ -14,8 +14,8 @@ from hardpy.common.config import ConfigManager
 from hardpy.common.stand_cloud import (
     StandCloudConnector,
     StandCloudError,
-    register as auth_register,
-    unregister as auth_unregister,
+    login as auth_login,
+    logout as auth_logout,
 )
 
 if __debug__:
@@ -165,14 +165,14 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
 
 
 @cli.command()
-def sc_register(
+def sc_login(
     address: Annotated[str, typer.Argument()],
     check: bool = typer.Option(
         False,
         help="Check StandCloud connection.",
     ),
 ) -> None:
-    """Register HardPy in StandCloud.
+    """Login HardPy in StandCloud.
 
     The command opens an authentication and authorization portal of StandCloud
     where you will be requested for your credentials and consents to authorize
@@ -191,19 +191,16 @@ def sc_register(
             sys.exit()
         print("StandCloud connection success")
     else:
-        auth_register(address)
+        auth_login(address)
 
 
 @cli.command()
-def sc_unregister() -> None:
-    """Unregister HardPy from StandCloud.
-
-    Unregister HardPy from all StandCloud accounts.
-    """
-    if auth_unregister():
-        print("HardPy unregistering success")
+def sc_logout() -> None:
+    """Logout HardPy from all StandCloud accounts."""
+    if auth_logout():
+        print("HardPy logout success")
     else:
-        print("HardPy unregistering failed")
+        print("HardPy logout failed")
 
 
 if __name__ == "__main__":
