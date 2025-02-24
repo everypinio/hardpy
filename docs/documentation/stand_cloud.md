@@ -23,7 +23,7 @@ Address must be added to **hardpy.toml** in `stand_cloud` section:
 
 ```toml
 [stand_cloud]
-address = "everypin.standcloud.localhost"
+address = "demo.standcloud.localhost"
 ```
 
 You need to run the command.

@@ -48,7 +48,6 @@ More info in [hardpy config](./hardpy_config.md).
 │ --socket-host                                  TEXT     Specify a socket host. [default: localhost]        │
 │ --socket-port                                  INTEGER  Specify a socket port. [default: 6525]             │
 │ --sc-address                                   TEXT     Specify a StandCloud address.                      │
-│                                                         [default: everypin.standcloud.localhost]           │
 │ --sc-connection-only --no-sc-connection-only            Check StandCloud service availability before start.│
 |                                                         [default: check-stand-cloud]                       │
 │ --help                                                  Show this message and exit.                        │

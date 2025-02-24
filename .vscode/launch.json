@@ -58,7 +58,7 @@
             "console": "integratedTerminal",
             "args": [
                 "sc-login",
-                "everypin.standcloud.localhost"
+                "demo.standcloud.localhost"
             ]
         },
         {

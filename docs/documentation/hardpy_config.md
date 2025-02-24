@@ -102,7 +102,7 @@ The user can change this value with the `hardpy init --socket-port` option.
 
 ```toml
 [stand_cloud]
-address = "everypin.standcloud.localhost"
+address = "demo.standcloud.localhost"
 connection_only = true
 ```
 
