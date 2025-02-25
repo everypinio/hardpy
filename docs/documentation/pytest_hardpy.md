@@ -532,6 +532,36 @@ def fill_actions_after_test(post_run_functions: list):
     yield
 ```
 
+#### StandCloudLoader
+
+Used to write reports to the **StandCloud**.
+
+**Arguments:**
+
+- `address` *(str | None)*: StandCloud address. Defaults to None
+  (the value is taken from [hardpy.toml](./hardpy_config.md)). Can be used outside of **HardPy** applications.
+
+**Example:**
+
+```python
+# conftest
+def finish_executing():
+    report = get_current_report()
+    if report:
+        loader = StandCloudLoader()
+        try:
+            loader.healthcheck()
+            loader.load(report)
+        except StandCloudError as exc:
+            set_operator_message(f"{exc}")
+            return
+
+@pytest.fixture(scope="session", autouse=True)
+def fill_actions_after_test(post_run_functions: list):
+    post_run_functions.append(finish_executing)
+    yield
+```
+
 ## Fixture
 
 #### post_run_functions
@@ -661,4 +691,22 @@ Option to clean **statestore** and **runstore** databases before running pytest.
 
 ```bash
 --hardpy-clear-database
+```
+
+#### sc-address
+
+**StandCloud** address.
+The default is empty string.
+
+```bash
+--sc-address
+```
+
+#### sc-connection-only
+
+Check **StandCloud** service availability.
+The default is *False*.
+
+```bash
+--sc-connection-only
 ```
