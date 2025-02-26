@@ -2,7 +2,6 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
-from http import HTTPStatus
 from typing import TYPE_CHECKING
 
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError, TokenExpiredError
@@ -13,6 +12,8 @@ from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudE
 from hardpy.pytest_hardpy.utils import ConnectionData
 
 if TYPE_CHECKING:
+    from requests import Response
+
     from hardpy.pytest_hardpy.db.schema import ResultRunStore
 
 
@@ -32,11 +33,14 @@ class StandCloudLoader:
         sc_addr = address if address else connection_data.sc_address
         self._sc_connector = StandCloudConnector(sc_addr)
 
-    def load(self, report: ResultRunStore) -> None:
+    def load(self, report: ResultRunStore) -> Response:
         """Load report to the StandCloud.
 
         Args:
             report (ResultRunStore): report
+
+        Returns:
+            Response: StandCloud load response, must be 201
 
         Raises:
             StandCloudError: if report not uploaded to StandCloud
@@ -52,16 +56,17 @@ class StandCloudLoader:
         except InvalidGrantError as exc:
             raise StandCloudError(exc.description)
         except HTTPError as exc:
-            raise StandCloudError(exc.args)  # type: ignore
+            return exc.response  # type: ignore
 
-        if resp.status_code != HTTPStatus.CREATED:
-            msg = f"Report not uploaded to StandCloud, response code {resp.status_code}"
-            raise StandCloudError(msg)
+        return resp
 
-    def healthcheck(self) -> None:
+    def healthcheck(self) -> Response:
         """Healthcheck of StandCloud API.
+
+        Returns:
+            Response: StandCloud healthcheck response, must be 200
 
         Raises:
             StandCloudError: if StandCloud is unavailable
         """
-        self._sc_connector.healthcheck()
+        return self._sc_connector.healthcheck()

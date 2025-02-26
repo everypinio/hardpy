@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timedelta, timezone
-from http import HTTPStatus
 from logging import getLogger
+from typing import TYPE_CHECKING
 
 from oauthlib.oauth2.rfc6749.errors import (
     InvalidGrantError,
@@ -23,6 +23,9 @@ from requests_oauthlib import OAuth2Session
 
 from hardpy.common.stand_cloud.exception import StandCloudError
 from hardpy.common.stand_cloud.token_storage import get_token_store
+
+if TYPE_CHECKING:
+    from requests import Response
 
 
 class StandCloudConnector:
@@ -55,8 +58,11 @@ class StandCloudConnector:
         """
         return self._get_api(endpoint)
 
-    def healthcheck(self) -> None:
+    def healthcheck(self) -> Response:
         """Healthcheck of StandCloud API.
+
+        Returns:
+            Response: healthcheck response
 
         Raises:
             StandCloudError: if StandCloud is unavailable
@@ -72,11 +78,9 @@ class StandCloudConnector:
         except InvalidGrantError as exc:
             raise StandCloudError(exc.description)
         except HTTPError as exc:
-            raise StandCloudError(exc.strerror)
+            raise StandCloudError(exc.strerror) # type: ignore
 
-        if resp.status_code != HTTPStatus.OK:
-            msg = f"StandCloud is unavailable, response code {resp.status_code}"
-            raise StandCloudError(msg)
+        return resp
 
     def _token_update(self, token: BearerToken) -> None:
         storage_keyring, mem_keyring = get_token_store()
