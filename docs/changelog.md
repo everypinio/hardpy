@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add script for launching Hardpy on the Raspberry Pi.
+
 ## HardPy 0.10.0
 
 * Add the `[stand_cloud]` section to the **harpy.toml** configuration file.
