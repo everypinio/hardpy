@@ -120,6 +120,26 @@ def confirm_operator_msg(is_msg_visible: str) -> dict:
     return {"status": Status.ERROR}
 
 
+@app.get("/api/standcloud/register")
+def stand_cloud_register() -> dict:
+    """Register to StandCloud.
+
+    Returns:
+        dict: registration info
+    """
+    return {"auth_address": "https://standcloud.io/"}
+
+
+@app.get("/api/standcloud/check_connection")
+def stand_cloud_check_connection() -> dict:
+    """Check connection to StandCloud.
+
+    Returns:
+        dict: StandCloud connection status
+    """
+    return {"connection_status": "Connection STUB"}
+
+
 if "DEBUG_FRONTEND" not in os.environ:
     app.mount(
         "/",

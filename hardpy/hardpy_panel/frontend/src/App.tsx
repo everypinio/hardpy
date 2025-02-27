@@ -23,6 +23,9 @@ import ProgressView from './progress/ProgressView';
 import TestStatus from 'hardpy_test_view/TestStatus';
 import ReloadAlert from './restart_alert/RestartAlert';
 import PlaySound from 'hardpy_test_view/PlaySound';
+import {
+    StartStandCloudWindow
+  } from "hardpy_test_view/StandCloudWindow";
 
 import { useAllDocs } from 'use-pouchdb'
 
@@ -38,6 +41,7 @@ function App(): JSX.Element {
     const [lastRunStatus, setLastRunStatus] = React.useState('');
     const [lastProgress, setProgress] = React.useState(0);
     const [isAuthenticated, setIsAuthenticated] = React.useState(true);
+    const [isStandCloudWindowOpen, setStandCloudWindowOpen] = React.useState(false);
 
     const useWindowWide = (size: number) => {
         const [width, setWidth] = React.useState(0)
@@ -157,6 +161,13 @@ function App(): JSX.Element {
                     id='use_debug_info'
                     onClick={() => setUseDebugInfo(!use_debug_info)}
                 />
+                <MenuItem
+                    shouldDismissPopover={false}
+                    text={'StandCloud'}
+                    icon={'cloud'}
+                    id='standcloud'
+                    onClick={() => setStandCloudWindowOpen(true)}
+                />
             </Menu>
         );
     }
@@ -233,6 +244,12 @@ function App(): JSX.Element {
                     <StartStopButton testing_status={lastRunStatus} is_authenticated={isAuthenticated}/>
                 </div>
             </div>
+        {isStandCloudWindowOpen && (
+            <StartStandCloudWindow
+                isOpen={isStandCloudWindowOpen}
+                onClose={() => setStandCloudWindowOpen(false)}
+            />
+        )}
         </div>
     );
 
