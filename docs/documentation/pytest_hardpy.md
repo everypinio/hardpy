@@ -515,6 +515,9 @@ This allows for easy identification and sorting of reports.
 * Valid report name: `report_1726496218_1234567890`
 * Valid report name (no serial number): `report_1726496218_no_serial_808007`
 
+**Functions:**
+- `load` *(ResultRunStore)*: Load report to the CouchDB **report** database.
+
 **Example:**
 
 ```python
@@ -541,6 +544,14 @@ Used to write reports to the **StandCloud**.
 - `address` *(str | None)*: StandCloud address. Defaults to None
   (the value is taken from [hardpy.toml](./hardpy_config.md)). Can be used outside of **HardPy** applications.
 
+**Functions:**
+
+- `healthcheck`: Healthcheck of StandCloud API.
+  Returns the `requests.Response` object.
+- `load` *(ResultRunStore)*: Load report to the StandCloud.
+  Returns the `requests.Response` object.
+  Status code 201 is considered a successful status
+
 **Example:**
 
 ```python
@@ -550,11 +561,15 @@ def finish_executing():
     if report:
         loader = StandCloudLoader()
         try:
-            loader.healthcheck()
-            loader.load(report)
+            response = loader.load(report)
+            if response.status_code != HTTPStatus.CREATED:
+                msg = (
+                    "Report not uploaded to StandCloud, "
+                    f"status code: {response.status_code}, text: {response.text}",
+                )
+                set_operator_message(msg[0])
         except StandCloudError as exc:
             set_operator_message(f"{exc}")
-            return
 
 @pytest.fixture(scope="session", autouse=True)
 def fill_actions_after_test(post_run_functions: list):
