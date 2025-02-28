@@ -8,10 +8,6 @@ sudo apt update && sudo apt install -y couchdb
 sudo cp ./default.ini /opt/couchdb/etc/default.ini && sudo cp ./local.ini /opt/couchdb/etc/local.ini
 sudo service couchdb restart
 
-# Set up the firewall (UFW) and allow necessary ports for CouchDB and other services
-sudo apt install -y ufw && sudo ufw enable
-sudo ufw allow 5984/tcp && sudo ufw allow 8000/tcp && sudo ufw allow 6525/tcp
-
 # Install the HardPy Python package
 pip3 install hardpy --break-system-packages
 

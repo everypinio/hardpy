@@ -20,11 +20,8 @@ All the files for this guideline can be seen inside the hardpy package
     * Choose the appropriate OS image (e.g., Raspberry Pi OS Lite or Raspberry Pi OS with Desktop).  
     Python on the selected OS must be at least 3.10.
     Lite is recommended for headless server setups.
+    * Set up login/password, login/password for WiFi, enable SSH.
     * Flash the chosen image onto your microSD card using the Imager.
-    * Before ejecting the microSD card, enable SSH access:
-        - Open the microSD card on your computer.
-        - Create an empty file named `ssh` (no extension) in the root directory of the microSD card.  
-        This enables SSH on the first boot.
     * Insert the microSD card into your Raspberry Pi and boot it up. 
     Follow the on-screen instructions for initial setup (setting username, password, hostname, etc.).
 
@@ -32,17 +29,24 @@ All the files for this guideline can be seen inside the hardpy package
 * Find the IP address of your Raspberry Pi:
   - If you are on the same network, you can use tools like `nmap` or check your router's connected devices list.
   - Alternatively, use a network scanner app on your smartphone.
+* Copy files for script before launching:
+  ```bash
+  scp /file/path/script.sh [login]@<RASPBERRY_PI_IP_ADDRESS>:/home/[login]/
+  scp /file/path/local.ini [login]@<RASPBERRY_PI_IP_ADDRESS>:/home/[login]/
+  scp /file/path/default.ini [login]@<RASPBERRY_PI_IP_ADDRESS>:/home/[login]/
+  ```
 * Open your SSH client and connect to the Raspberry Pi:
   ```bash
-  ssh pi@<RASPBERRY_PI_IP_ADDRESS>
+  ssh [login]@<RASPBERRY_PI_IP_ADDRESS>
   ```
-  The default username is `pi`, and the default password is `raspberry`.
 * Once logged in, update the system:
   ```bash
   sudo apt update && sudo apt upgrade -y
   ```
+* Make the script executable: `chmod +x /home/[login]/script.sh`
 
-3. **Prepare the Installation Script:**
+
+3. **Prepare the Installation Script without SSH:**
 
     * Create a directory for your Hardpy installation.
     * Inside this directory, create the `script.sh` file and paste the provided script content into it.
@@ -87,7 +91,6 @@ The script performs the following actions:
 * **Updates package lists and installs dependencies:** Installs `curl`, `apt-transport-https`, `gnupg`, CouchDB, and ufw.
 * **Configures CouchDB:** Creates a shared memory directory for CouchDB and copies the provided `default.ini` and `local.ini` configuration files.  
 These files configure CouchDB to bind to all network interfaces and set the initial username and password (which should be changed for production).
-* **Configures Firewall (ufw):** Enables the ufw firewall and opens ports 5984 (CouchDB), 8000 (Hardpy Frontend), and 6525 (Hardpy Socket).
 * **Installs Hardpy:** Installs the Hardpy package using `pip3`. 
 The `--break-system-packages` is included to bypass any potential conflicts.
 * **Reboots the system:**  Reboots the Raspberry Pi to ensure all changes are applied.
