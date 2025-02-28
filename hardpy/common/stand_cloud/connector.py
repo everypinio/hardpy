@@ -41,7 +41,7 @@ class StandCloudConnector:
             addr (str | None, optional): StandCloud address.
             The option only for development and debug. Defaults to True.
         """
-        self._api_addr = addr + "/api/v1"
+        self._api_addr = self._get_service_name(addr) + "/api/v1"
         self._auth_addr = "/auth"
         self._api_url = f"https://{self._api_addr}/"
         self._verify_ssl = not __debug__
@@ -78,7 +78,7 @@ class StandCloudConnector:
         except InvalidGrantError as exc:
             raise StandCloudError(exc.description)
         except HTTPError as exc:
-            raise StandCloudError(exc.strerror) # type: ignore
+            raise StandCloudError(exc.strerror)  # type: ignore
 
         return resp
 
@@ -190,3 +190,12 @@ class StandCloudConnector:
             expires_at=expires_at,
             expires_in=expires_in,
         )
+
+    def _get_service_name(self, addr: str) -> str:
+        addr_parts = addr.split(".")
+        number_of_parts = 3
+        service_position_in_address = 1
+        if isinstance(addr_parts, list) and len(addr_parts) >= number_of_parts:
+            return "/" + addr_parts[service_position_in_address]
+        msg = f"Invalid StandCloud address: {addr}"
+        raise StandCloudError(msg)
