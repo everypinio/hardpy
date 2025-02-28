@@ -559,8 +559,8 @@ Used to write reports to the **StandCloud**.
 def finish_executing():
     report = get_current_report()
     if report:
-        loader = StandCloudLoader()
         try:
+            loader = StandCloudLoader()
             response = loader.load(report)
             if response.status_code != HTTPStatus.CREATED:
                 msg = (
