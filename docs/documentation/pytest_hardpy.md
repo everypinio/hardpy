@@ -550,7 +550,7 @@ Used to write reports to the **StandCloud**.
   Returns the `requests.Response` object.
 - `load` *(ResultRunStore)*: Load report to the StandCloud.
   Returns the `requests.Response` object.
-  Status code 201 is considered a successful status
+  Status code 201 is considered a successful status.
 
 **Example:**
 
