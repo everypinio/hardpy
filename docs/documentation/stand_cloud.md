@@ -84,6 +84,7 @@ def test_example():
 ```
 
 These database fields are required for minimal **StandCloud** analytics.
+The `StandCloudLoader.load()` function will return a code **422** if these fields are not filled in.
 Other required database fields are automatically filled by HardPy.
 See **HardPy** database specification in [Runstore](./database.md#runstore-scheme) section.
 
