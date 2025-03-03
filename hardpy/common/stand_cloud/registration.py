@@ -193,7 +193,7 @@ def _par_data(code_verifier: str, client_id: str, port: str, state: str, api_url
     Returns:
         dict: pushed authorization request data
     """
-    # Code Challange Data
+    # Code Challenge Data
     code_challenge = _code_challenge(code_verifier)
 
     # pushed authorization request
