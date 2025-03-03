@@ -515,6 +515,9 @@ This allows for easy identification and sorting of reports.
 * Valid report name: `report_1726496218_1234567890`
 * Valid report name (no serial number): `report_1726496218_no_serial_808007`
 
+**Functions:**
+- `load` *(ResultRunStore)*: Load report to the CouchDB **report** database.
+
 **Example:**
 
 ```python
@@ -525,6 +528,48 @@ def finish_executing():
         loader = CouchdbLoader(CouchdbConfig())
         loader.load(report)
 
+
+@pytest.fixture(scope="session", autouse=True)
+def fill_actions_after_test(post_run_functions: list):
+    post_run_functions.append(finish_executing)
+    yield
+```
+
+#### StandCloudLoader
+
+Used to write reports to the **StandCloud**.
+
+**Arguments:**
+
+- `address` *(str | None)*: StandCloud address. Defaults to None
+  (the value is taken from [hardpy.toml](./hardpy_config.md)). Can be used outside of **HardPy** applications.
+
+**Functions:**
+
+- `healthcheck`: Healthcheck of StandCloud API.
+  Returns the `requests.Response` object.
+- `load` *(ResultRunStore)*: Load report to the StandCloud.
+  Returns the `requests.Response` object.
+  Status code 201 is considered a successful status.
+
+**Example:**
+
+```python
+# conftest
+def finish_executing():
+    report = get_current_report()
+    if report:
+        try:
+            loader = StandCloudLoader()
+            response = loader.load(report)
+            if response.status_code != HTTPStatus.CREATED:
+                msg = (
+                    "Report not uploaded to StandCloud, "
+                    f"status code: {response.status_code}, text: {response.text}",
+                )
+                set_operator_message(msg[0])
+        except StandCloudError as exc:
+            set_operator_message(f"{exc}")
 
 @pytest.fixture(scope="session", autouse=True)
 def fill_actions_after_test(post_run_functions: list):
@@ -661,4 +706,22 @@ Option to clean **statestore** and **runstore** databases before running pytest.
 
 ```bash
 --hardpy-clear-database
+```
+
+#### sc-address
+
+**StandCloud** address.
+The default is empty string.
+
+```bash
+--sc-address
+```
+
+#### sc-connection-only
+
+Check **StandCloud** service availability.
+The default is *False*.
+
+```bash
+--sc-connection-only
 ```
