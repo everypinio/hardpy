@@ -23,6 +23,7 @@ from oauthlib.common import urldecode
 from oauthlib.oauth2 import WebApplicationClient
 from oauthlib.oauth2.rfc6749.errors import InvalidClientIdError
 
+from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
 from hardpy.common.stand_cloud.token_storage import get_token_store
 
 if TYPE_CHECKING:
@@ -38,62 +39,33 @@ def login(addr: str) -> None:
     # OAuth client configuration
     client_id = "hardpy-report-uploader"
     client = WebApplicationClient(client_id)
+    try:
+        sc_connector = StandCloudConnector(addr=addr)
+    except StandCloudError as exc:
+        print(str(exc))
+        sys.exit(1)
 
-    auth_addr = addr + "/auth"
-    api_addr = addr + "/api/v1"
     verify_ssl = not __debug__
-
-    # URLs
-    authorization_url = f"https://{auth_addr}/api/oidc/authorization"
-    par_url = f"https://{auth_addr}/api/oidc/pushed-authorization-request"
-    token_url = f"https://{auth_addr}/api/oidc/token"
-    api_url = f"https://{api_addr}/"
 
     # Auth requests
     port = _reserve_socket_port()
     callback_process = _create_callback_process(port)
-
     state = secrets.token_urlsafe(16)
-
-    # Code Challange Data
     code_verifier = _code_verifier()
-    code_challenge = _code_challenge(code_verifier)
-
-    # # pushed authorization request
-    data = {
-        "scope": "authelia.bearer.authz offline_access",
-        "response_type": "code",
-        "client_id": client_id,
-        "redirect_uri": _redirect_uri(port),
-        "code_challenge": code_challenge,
-        "code_challenge_method": "S256",
-        "state": state,
-        "audience": api_url,
-    }
-
+    data = _par_data(code_verifier, client_id, port, state, sc_connector.url.api)
     timeout = 10
 
+    # fmt: off
     # pushed authorization response
     try:
-        response = json.loads(
-            requests.post(
-                par_url,
-                data=data,
-                verify=verify_ssl,
-                timeout=timeout,
-            ).content,
-        )
+        response = json.loads(requests.post(sc_connector.url.par, data=data, verify=verify_ssl, timeout=timeout).content)
     except Exception as e:  # noqa: BLE001
         print(f"Authentication server is unavailable: {e}")
         sys.exit(1)
-    url = (
-        authorization_url
-        + "?"
-        + urlencode({"client_id": client_id, "request_uri": response["request_uri"]})
-    )
+    url = (sc_connector.url.auth + "?" + urlencode({"client_id": client_id, "request_uri": response["request_uri"]}))
 
     # OAuth authorization code request
-    print(f"\nOpen the provided URL and authorize HardPy to use StandCloud\n{url}\n")
+    print(f"\nOpen the provided URL and authorize HardPy to use StandCloud\n\n{url}")
 
     # use subprocess
     first_line = next(callback_process.stdout)  # type: ignore
@@ -105,16 +77,14 @@ def login(addr: str) -> None:
 
     _check_incorrect_response(response, state)
 
-    data = client.prepare_request_body(
-        code=response["code"],
-        client_id=client_id,
-        redirect_uri=_redirect_uri(port),
-        code_verifier=code_verifier,
-    )
+    code = response["code"]
+    uri = _redirect_uri(port)
+    data = client.prepare_request_body(code=code, client_id=client_id, redirect_uri=uri, code_verifier=code_verifier)
 
     # OAuth access token request
     data = dict(urldecode(data))
-    response = requests.post(token_url, data=data, verify=verify_ssl, timeout=timeout)
+    response = requests.post(sc_connector.url.token, data=data, verify=verify_ssl, timeout=timeout)
+    # fmt: on
 
     try:
         # OAuth access token grant
@@ -203,7 +173,7 @@ def _store_password(token: BearerToken) -> None:
     except KeyringError as e:
         print(e)
         return
-    print("\nRegistration completed")
+    print("\nRegistration completed successfully")
 
 
 def _check_incorrect_response(response: dict, state: str) -> None:
@@ -216,3 +186,24 @@ def _check_incorrect_response(response: dict, state: str) -> None:
         error_description = response["error_description"]
         print(f"{error}: {error_description}")
         sys.exit(1)
+
+def _par_data(code_verifier: str, client_id: str, port: str, state: str, api_url: str) -> dict:
+    """Create pushed authorization request data.
+
+    Returns:
+        dict: pushed authorization request data
+    """
+    # Code Challenge Data
+    code_challenge = _code_challenge(code_verifier)
+
+    # pushed authorization request
+    return {
+        "scope": "authelia.bearer.authz offline_access",
+        "response_type": "code",
+        "client_id": client_id,
+        "redirect_uri": _redirect_uri(port),
+        "code_challenge": code_challenge,
+        "code_challenge_method": "S256",
+        "state": state,
+        "audience": api_url,
+    }

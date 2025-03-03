@@ -183,7 +183,11 @@ def sc_login(
         check (bool): Check StandCloud connection
     """
     if check:
-        sc_connector = StandCloudConnector(address)
+        try:
+            sc_connector = StandCloudConnector(address)
+        except StandCloudError as exc:
+            print(str(exc))
+            sys.exit()
         try:
             sc_connector.healthcheck()
         except StandCloudError:

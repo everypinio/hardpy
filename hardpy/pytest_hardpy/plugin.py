@@ -31,7 +31,7 @@ from pytest import (
     skip,
 )
 
-from hardpy.common.stand_cloud.connector import StandCloudConnector
+from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import (
     ConnectionData,
@@ -231,7 +231,12 @@ class HardpyPlugin:
         con_data = ConnectionData()
 
         if con_data.sc_connection_only:  # check
-            sc_connector = StandCloudConnector(addr=con_data.sc_address)
+            try:
+                sc_connector = StandCloudConnector(addr=con_data.sc_address)
+            except StandCloudError as exc:
+                msg = str(exc)
+                self._reporter.set_alert(msg)
+                exit(msg)
             try:
                 sc_connector.healthcheck()
             except Exception:  # noqa: BLE001

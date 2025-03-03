@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timedelta, timezone
-from http import HTTPStatus
 from logging import getLogger
+from typing import TYPE_CHECKING, NamedTuple
 
 from oauthlib.oauth2.rfc6749.errors import (
     InvalidGrantError,
@@ -24,6 +24,23 @@ from requests_oauthlib import OAuth2Session
 from hardpy.common.stand_cloud.exception import StandCloudError
 from hardpy.common.stand_cloud.token_storage import get_token_store
 
+if TYPE_CHECKING:
+    from requests import Response
+
+
+class StandCloudURL(NamedTuple):
+    """URL.
+
+    api: API address
+    token: token address
+    par: pushed-authorization-request address
+    auth: auth address
+    """
+
+    api: str
+    token: str
+    par: str
+    auth: str
 
 class StandCloudConnector:
     """StandCloud API connector."""
@@ -38,11 +55,23 @@ class StandCloudConnector:
             addr (str | None, optional): StandCloud address.
             The option only for development and debug. Defaults to True.
         """
-        self._api_addr = addr + "/api/v1"
-        self._auth_addr = "/auth"
-        self._api_url = f"https://{self._api_addr}/"
+        https_prefix = "https://"
+        auth_addr = addr + "/auth"
+
+        self._url: StandCloudURL = StandCloudURL(
+            api=https_prefix + addr + self._get_service_name(addr) + "/api/v1",
+            token=https_prefix + auth_addr + "/api/oidc/token",
+            par=https_prefix + auth_addr + "/api/oidc/pushed-authorization-request",
+            auth=https_prefix + auth_addr + "/api/oidc/authorization",
+        )
+
         self._verify_ssl = not __debug__
         self._log = getLogger(__name__)
+
+    @property
+    def url(self) -> StandCloudURL:
+        """Get StandCloud URL."""
+        return self._url
 
     def get_api(self, endpoint: str) -> ApiClient:
         """Get StandCloud API client.
@@ -55,8 +84,11 @@ class StandCloudConnector:
         """
         return self._get_api(endpoint)
 
-    def healthcheck(self) -> None:
+    def healthcheck(self) -> Response:
         """Healthcheck of StandCloud API.
+
+        Returns:
+            Response: healthcheck response
 
         Raises:
             StandCloudError: if StandCloud is unavailable
@@ -72,11 +104,9 @@ class StandCloudConnector:
         except InvalidGrantError as exc:
             raise StandCloudError(exc.description)
         except HTTPError as exc:
-            raise StandCloudError(exc.strerror)
+            raise StandCloudError(exc.strerror)  # type: ignore
 
-        if resp.status_code != HTTPStatus.OK:
-            msg = f"StandCloud is unavailable, response code {resp.status_code}"
-            raise StandCloudError(msg)
+        return resp
 
     def _token_update(self, token: BearerToken) -> None:
         storage_keyring, mem_keyring = get_token_store()
@@ -134,7 +164,7 @@ class StandCloudConnector:
 
         extra = {
             "client_id": client_id,
-            "audience": self._api_url,
+            "audience": self._url.api,
             "redirect_uri": "http://localhost/oauth2/callback",
         }
 
@@ -157,7 +187,7 @@ class StandCloudConnector:
         if is_need_refresh:
             try:
                 ret = session.refresh_token(
-                    token_url=f"https://{self._auth_addr}/api/oidc/token",
+                    token_url=self._url.token,
                     refresh_token=self._get_refresh_token(),
                     verify=False,
                     **extra,
@@ -173,7 +203,7 @@ class StandCloudConnector:
                 raise StandCloudError(msg)
             self._token_update(ret)  # type: ignore
 
-        return ApiClient(self._api_url + endpoint, session=session, timeout=10)
+        return ApiClient(self._url.api + "/" + endpoint, session=session, timeout=10)
 
     def _get_token(self) -> BearerToken:
         access_token, expires_at = self._get_access_token_info()
@@ -186,3 +216,12 @@ class StandCloudConnector:
             expires_at=expires_at,
             expires_in=expires_in,
         )
+
+    def _get_service_name(self, addr: str) -> str:
+        addr_parts = addr.split(".")
+        number_of_parts = 3
+        service_position_in_address = 1
+        if isinstance(addr_parts, list) and len(addr_parts) >= number_of_parts:
+            return "/" + addr_parts[service_position_in_address]
+        msg = f"Invalid StandCloud address: {addr}"
+        raise StandCloudError(msg)
