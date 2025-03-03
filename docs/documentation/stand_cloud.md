@@ -23,7 +23,7 @@ Address must be added to **hardpy.toml** in `stand_cloud` section:
 
 ```toml
 [stand_cloud]
-address = "demo.standcloud.localhost"
+address = "demo.standcloud.io"
 ```
 
 You need to run the command:
@@ -36,7 +36,9 @@ Then go to the authorization link in the terminal and open the link to the brows
 You will need to enter your StandCloud login and password.
 After successful authorization, you should press the `Accept` button.
 
-![stand_cloud_auth](../img/stand_cloud/stand_cloud_auth.png)
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/stand_cloud/stand_cloud_auth.png" alt="stand_cloud_auth" style="width:300px;">
+</h1>
 
 After which a page will appear in the browser informing about successfully issued token.
 Otherwise, an error message will appear on the page.
