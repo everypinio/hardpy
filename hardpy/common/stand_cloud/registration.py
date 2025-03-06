@@ -12,6 +12,8 @@ import secrets
 import socket
 import subprocess
 import sys
+from contextlib import suppress
+from platform import system
 from time import sleep
 from typing import TYPE_CHECKING
 from urllib.parse import urlencode
@@ -109,6 +111,12 @@ def logout() -> bool:
             delete_password(service_name, cred.username)
     except KeyringError:
         return False
+    # TODO(xorialexandrov): fix keyring clearing
+    # Windows does not clear refresh token by itself
+    if system() == "Windows":
+        storage_keyring, _ = get_token_store()
+        with suppress(KeyringError):
+            storage_keyring.delete_password(service_name, "refresh_token")
     return True
 
 
@@ -147,6 +155,18 @@ def _create_callback_process(port: str) -> subprocess.Popen:
         "--log-level=error",
     ]
 
+    if system() == "Windows":
+        env = os.environ.copy()
+        env["PYTHONUNBUFFERED"] = "1"
+
+        return subprocess.Popen(  # noqa: S603
+            args,
+            stdout=subprocess.PIPE,
+            bufsize=1,
+            universal_newlines=True,
+            env=env,
+            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,  # type: ignore
+        )
     return subprocess.Popen(  # noqa: S603
         args,
         stdout=subprocess.PIPE,
@@ -187,7 +207,14 @@ def _check_incorrect_response(response: dict, state: str) -> None:
         print(f"{error}: {error_description}")
         sys.exit(1)
 
-def _par_data(code_verifier: str, client_id: str, port: str, state: str, api_url: str) -> dict:
+
+def _par_data(
+    code_verifier: str,
+    client_id: str,
+    port: str,
+    state: str,
+    api_url: str,
+) -> dict:
     """Create pushed authorization request data.
 
     Returns:
