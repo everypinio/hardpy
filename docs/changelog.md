@@ -2,6 +2,10 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## HardPy 0.10.1
+
+* Fix **StandCloud** authorization process in Windows.
+
 ## HardPy 0.10.0
 
 * Add the `[stand_cloud]` section to the **hardpy.toml** configuration file.
