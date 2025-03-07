@@ -191,6 +191,46 @@ Addresses:
 - HardPy panel: http://localhost:8000/
 - CouchDB: http://localhost:5984/_utils/
 
+## Dev Container
+
+Ensure that Docker is running and functioning correctly before starting the container build. 
+
+### Step 1: Build the Container
+
+1. Open the project in Visual Studio Code (VSCode).
+2. Press `Ctrl+Shift+P` to open the command palette.
+3. Type and select the command: **Dev Containers: Rebuild Container**.
+4. Wait for the container build process to complete.
+
+### Step 2: Configure CouchDB
+
+During the container build, CouchDB will be installed. You will be prompted with configuration questions:
+
+- You can respond arbitrarily to most questions (for example, by entering `1`).
+- **Important**: For the question **"CouchDB interface bind address:"**, you must respond with `0.0.0.0`.
+
+### Step 3: Run the Project
+
+After successfully building the container, you can work with the project as usual. The following methods are available for running the project:
+
+#### Running via Script
+- Use the `recompile_front.sh` script to rebuild and run the frontend.
+- Execute the command in the terminal:
+  ```bash
+  hardpy run [example]
+  ```
+
+#### Running via VSCode Configurations
+- The following run configurations are available in VSCode:
+  - **Run Frontend**
+  - **Debug Frontend**
+  - Any of the examples with the addition of the argument:
+    ```json
+    "env": {
+      "DEBUG_FRONTEND": "1"
+    }
+    ```
+
 ## Documentation
 
 ### Server
