@@ -47,6 +47,11 @@ class PyTestWrapper:
                     str(self.config.socket.port),
                     "--hardpy-sh",
                     self.config.socket.host,
+                    "--sc-address",
+                    self.config.stand_cloud.address,
+                    "--sc-connection-only"
+                    if self.config.stand_cloud.connection_only
+                    else "",
                     "--hardpy-pt",
                 ],
                 cwd=ConfigManager().get_tests_path(),
@@ -63,6 +68,11 @@ class PyTestWrapper:
                     str(self.config.socket.port),
                     "--hardpy-sh",
                     self.config.socket.host,
+                    "--sc-address",
+                    self.config.stand_cloud.address,
+                    "--sc-connection-only"
+                    if self.config.stand_cloud.connection_only
+                    else "",
                     "--hardpy-pt",
                 ],
                 cwd=ConfigManager().get_tests_path(),

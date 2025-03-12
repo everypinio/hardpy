@@ -35,3 +35,4 @@ class DatabaseField(str, Enum):
     HTML = "html"
     ID = "id"
     FONT_SIZE = "font_size"
+    ALERT = "alert"

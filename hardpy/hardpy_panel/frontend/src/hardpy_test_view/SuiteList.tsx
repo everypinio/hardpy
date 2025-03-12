@@ -75,6 +75,7 @@ export interface TestRunI {
   drivers?: DriversInfo;
   artifact?: Record<string, unknown>;
   operator_msg?: OperatorMsgProps;
+  alert?: string;
 }
 
 /**
@@ -109,6 +110,7 @@ export class SuiteList extends React.Component<Props> {
       ? new Date(db_state.stop_time * 1000).toLocaleString()
       : "";
     const start_tz = db_state.timezone ? db_state.timezone : "";
+    const alert = db_state.alert;
 
     let module_names: string[] = [];
     let modules: Modules = {};
@@ -142,6 +144,11 @@ export class SuiteList extends React.Component<Props> {
           {stop && (
             <Tag minimal style={TAG_ELEMENT_STYLE}>
               Finish time: {stop + start_tz}
+            </Tag>
+          )}
+          {alert && (
+            <Tag minimal style={TAG_ELEMENT_STYLE}>
+              Alert: {alert}
             </Tag>
           )}
           <Divider />

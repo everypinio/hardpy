@@ -32,9 +32,9 @@ is intended for clearing current operator message.
 
 Contains settings and fixtures for all tests:
 
-- The `finish_executing` function generates a report and saves it to the database.
-- The `test_end_message` function shows message about completing of testing.
-- The `fill_list_functions_after_test` function populates a list of actions to be performed post-test. You may rename this function as you want.
+- The `finish_executing` function generates a report and saves it to the database;
+- The `test_end_message` function shows message about completing of testing;
+- The `fill_list_functions_after_test` function populates a list of actions to be performed post-test. You may rename this function as you want;
 
 If the report database doesn't exist, the report won't be saved, and an error message will be displayed to the operator. Otherwise, a success message will be shown indicating successful report saving.
 
