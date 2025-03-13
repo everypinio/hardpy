@@ -44,7 +44,7 @@ def test_base_dialog_box_with_html_link():
     assert response
 
 
-@pytest.mark.case_name("Base dialog box with html link")
+@pytest.mark.case_name("Base dialog box with html link and border")
 def test_base_dialog_box_with_html_link_and_border():
     dbx = DialogBox(
         title_bar="Operator check",

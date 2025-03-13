@@ -125,9 +125,6 @@
                 "run",
                 "examples/dialog_box"
             ],
-            "env": {
-                "DEBUG_FRONTEND": "1"
-            },
         },
         {
             "name": "Python: Example HTML Plot",
@@ -139,9 +136,6 @@
                 "run",
                 "examples/html_plot"
             ],
-            "env": {
-                "DEBUG_FRONTEND": "1"
-            },
         },
         {
             "name": "Python: Example Attempts",
@@ -164,9 +158,6 @@
                 "run",
                 "examples/operator_msg"
             ],
-            "env": {
-                "DEBUG_FRONTEND": "1"
-            },
         },
         {
             "name": "Run Frontend",

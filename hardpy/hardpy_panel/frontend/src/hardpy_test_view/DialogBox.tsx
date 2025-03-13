@@ -106,6 +106,8 @@ export function StartConfirmationDialog(props: Props) {
   const baseDialogDimensions = { width: 100, height: 100 };
   const maxSize = 0.8;
   const minSize = 0.25;
+  const htmlHeightIndex = 0.75;
+  const htmlWidthIndex = 0.9;
   const lineHeight = (10 * (props.font_size ? props.font_size : 14)) / 14;
 
   const handleClose = () => {
@@ -286,9 +288,9 @@ export function StartConfirmationDialog(props: Props) {
       (widgetType === WidgetType.Multistep
         ? maxDimensions.current.height + baseDialogDimensions.height
         : imageDimensions.height) +
-        baseDialogDimensions.height +
-        textHeight +
-        textStepHeight,
+      baseDialogDimensions.height +
+      textHeight +
+      textStepHeight,
       screenHeight * maxSize
     ),
     screenHeight * minSize
@@ -472,24 +474,24 @@ export function StartConfirmationDialog(props: Props) {
                       {step.info.html?.code_or_url && step.info.html?.is_raw_html == true && (
                         <iframe
                           srcDoc={step.info.html?.code_or_url}
-                          height={(imageStepDimensions.height + baseDialogDimensions.height) * 0.75 * ((step.info.html?.width ?? 100) / 100)}
-                          width={(imageStepDimensions.width + baseDialogDimensions.width) * 0.9 * ((step.info.html?.width ?? 100) / 100)}      
+                          height={(imageStepDimensions.height + baseDialogDimensions.height) * htmlHeightIndex * ((step.info.html?.width ?? 100) / 100)}
+                          width={(imageStepDimensions.width + baseDialogDimensions.width) * htmlWidthIndex * ((step.info.html?.width ?? 100) / 100)}
                           style={{
                             border: `${step.info.html?.border}px solid black` || "none"
                           }}
                           title="HTML Code"
-                        />        
+                        />
                       )}
                       {step.info.html?.code_or_url && step.info.html?.is_raw_html == false && (
-                      <iframe
-                        src={step.info.html?.code_or_url}
-                        height={(imageStepDimensions.height + baseDialogDimensions.height) * 0.75 * ((step.info.html?.width ?? 100) / 100)}
-                        width={(imageStepDimensions.width + baseDialogDimensions.width) * 0.9 * ((step.info.html?.width ?? 100) / 100)}      
-                        style={{
-                          border: `${step.info.html?.border}px solid black` || "none"
-                        }}
-                        title="HTML Link"
-                      />             
+                        <iframe
+                          src={step.info.html?.code_or_url}
+                          height={(imageStepDimensions.height + baseDialogDimensions.height) * htmlHeightIndex * ((step.info.html?.width ?? 100) / 100)}
+                          width={(imageStepDimensions.width + baseDialogDimensions.width) * htmlWidthIndex * ((step.info.html?.width ?? 100) / 100)}
+                          style={{
+                            border: `${step.info.html?.border}px solid black` || "none"
+                          }}
+                          title="HTML Link"
+                        />
                       )}
                     </div>
                   </div>
@@ -521,24 +523,24 @@ export function StartConfirmationDialog(props: Props) {
         {props.html_code && (
           <iframe
             srcDoc={props.html_code}
-            height={screenHeight * maxSize * 0.75 * ((props.html_width ?? 100) / 100)}
-            width={screenWidth * maxSize * 0.9 * ((props.html_width ?? 100) / 100)}      
+            height={screenHeight * maxSize * htmlHeightIndex * ((props.html_width ?? 100) / 100)}
+            width={screenWidth * maxSize * htmlWidthIndex * ((props.html_width ?? 100) / 100)}
             style={{
               border: `${props.html_border}px solid black` || "none"
             }}
             title="HTML Code"
-          />        
+          />
         )}
         {props.html_url && (
-        <iframe
-          src={props.html_url}
-          height={screenHeight * maxSize * 0.75 * ((props.html_width ?? 100) / 100)}
-          width={screenWidth * maxSize * 0.9 * ((props.html_width ?? 100) / 100)}      
-          style={{
-            border: `${props.html_border}px solid black` || "none"
-          }}
-          title="HTML Link"
-        />             
+          <iframe
+            src={props.html_url}
+            height={screenHeight * maxSize * htmlHeightIndex * ((props.html_width ?? 100) / 100)}
+            width={screenWidth * maxSize * htmlWidthIndex * ((props.html_width ?? 100) / 100)}
+            style={{
+              border: `${props.html_border}px solid black` || "none"
+            }}
+            title="HTML Link"
+          />
         )}
       </div>
       <div className={Classes.DIALOG_FOOTER}>

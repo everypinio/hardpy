@@ -13,9 +13,10 @@ def test_operator_message_with_html():
     <html>
     <body>
 
-    <h1>My First Heading</h1>
+    <h1>Test HTML Page</h1>
 
-    <p>My first paragraph.</p>
+    <p>It is testing page.</p>
+    <p>You can put anything on it.</p>
 
     </body>
     </html>
@@ -37,9 +38,10 @@ def test_operator_message_with_html_and_border():
     <html>
     <body>
 
-    <h1>My First Heading</h1>
+    <h1>Test HTML Page</h1>
 
-    <p>My first paragraph.</p>
+    <p>It is testing page.</p>
+    <p>You can put anything on it.</p>
 
     </body>
     </html>

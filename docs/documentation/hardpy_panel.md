@@ -68,7 +68,7 @@ Each dialog box can contain an image.
 
 Contains an instruction or question and a `confirm` button for confirmation.
 
-=== "Widget without image"
+=== "Widget"
     <h1 align="center">
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/base_dialog_box.png" alt="base_dialog_box">
     </h1>
