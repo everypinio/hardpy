@@ -12,21 +12,22 @@ from hardpy import (
 pytestmark = pytest.mark.module_name("Multiple steps dialog box")
 
 
+test_html = """
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Test HTML Page</h1>
+
+<p>It is testing page.</p>
+<p>You can put anything on it.</p>
+
+</body>
+</html>
+"""
+
 @pytest.mark.case_name("Multistep")
 def test_multiple_steps():
-    test_html = """
-    <!DOCTYPE html>
-    <html>
-    <body>
-
-    <h1>Test HTML Page</h1>
-
-    <p>It is testing page.</p>
-    <p>You can put anything on it.</p>
-
-    </body>
-    </html>
-    """
     steps = [
         StepWidget("Step 1", text="Content for step"),
         StepWidget(
@@ -53,19 +54,6 @@ def test_multiple_steps():
 
 @pytest.mark.case_name("Multistep with image")
 def test_multiple_steps_with_main_image():
-    test_html = """
-    <!DOCTYPE html>
-    <html>
-    <body>
-
-    <h1>Test HTML Page</h1>
-
-    <p>It is testing page.</p>
-    <p>You can put anything on it.</p>
-
-    </body>
-    </html>
-    """
     steps = [
         StepWidget("Step 1", text="Content for step"),
         StepWidget(
@@ -107,19 +95,6 @@ def test_multiple_steps_with_main_image():
 
 @pytest.mark.case_name("Multistep with html")
 def test_multiple_steps_with_main_html():
-    test_html = """
-    <!DOCTYPE html>
-    <html>
-    <body>
-
-    <h1>Test HTML Page</h1>
-
-    <p>It is testing page.</p>
-    <p>You can put anything on it.</p>
-
-    </body>
-    </html>
-    """
     steps = [
         StepWidget("Step 1", text="Content for step"),
         StepWidget(
@@ -164,19 +139,6 @@ def test_multiple_steps_with_main_html():
 
 @pytest.mark.case_name("Multistep with html and image")
 def test_multiple_steps_with_main_html_and_main_image():
-    test_html = """
-    <!DOCTYPE html>
-    <html>
-    <body>
-
-    <h1>Test HTML Page</h1>
-
-    <p>It is testing page.</p>
-    <p>You can put anything on it.</p>
-
-    </body>
-    </html>
-    """
     steps = [
         StepWidget("Step 1", text="Content for step"),
         StepWidget(

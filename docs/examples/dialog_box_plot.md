@@ -6,6 +6,10 @@ The plot is generated as an HTML component and embedded into a dialog box, which
 The process involves generating a plot using `matplotlib`, converting it to HTML using `mpld3`, and then embedding the HTML into a dialog box. 
 This approach is particularly useful for scenarios where visual data needs to be presented to the user or tester in an interactive manner.
 
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_plot.png" alt="plot">
+</h1>
+
 ### How to Start
 
 1. Launch `hardpy init html_plot`.

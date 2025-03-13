@@ -12,6 +12,19 @@ from hardpy import (
 
 pytestmark = pytest.mark.module_name("Choice control dialog boxes")
 
+test_html = """
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Test HTML Page</h1>
+
+<p>It is testing page.</p>
+<p>You can put anything on it.</p>
+
+</body>
+</html>
+"""
 
 @pytest.mark.case_name("Test dialog box with radiobutton")
 def test_radiobutton():
@@ -40,19 +53,6 @@ def test_radiobutton_with_image():
 
 @pytest.mark.case_name("Test dialog box with radiobutton with html")
 def test_radiobutton_with_html():
-    test_html = """
-    <!DOCTYPE html>
-    <html>
-    <body>
-
-    <h1>Test HTML Page</h1>
-
-    <p>It is testing page.</p>
-    <p>You can put anything on it.</p>
-
-    </body>
-    </html>
-    """
     dbx = DialogBox(
         dialog_text='Select item "one" out of several and click Confirm.',
         title_bar="Radiobutton example",
@@ -97,19 +97,6 @@ def test_checkbox_with_image():
 
 @pytest.mark.case_name("Test dialog box with checkbox with html")
 def test_checkbox_with_html():
-    test_html = """
-    <!DOCTYPE html>
-    <html>
-    <body>
-
-    <h1>Test HTML Page</h1>
-
-    <p>It is testing page.</p>
-    <p>You can put anything on it.</p>
-
-    </body>
-    </html>
-    """
     dbx = DialogBox(
         dialog_text='Select items "one" and "two" and click the Confirm button',
         title_bar="Checkbox example",

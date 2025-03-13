@@ -12,6 +12,19 @@ from hardpy import (
 
 pytestmark = pytest.mark.module_name("Input field dialog boxes")
 
+test_html = """
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Test HTML Page</h1>
+
+<p>It is testing page.</p>
+<p>You can put anything on it.</p>
+
+</body>
+</html>
+"""
 
 @pytest.mark.case_name("Text input")
 def test_text_input():
@@ -42,19 +55,6 @@ def test_text_input_with_image():
 
 @pytest.mark.case_name("Text input with html")
 def test_text_input_with_html():
-    test_html = """
-    <!DOCTYPE html>
-    <html>
-    <body>
-
-    <h1>Test HTML Page</h1>
-
-    <p>It is testing page.</p>
-    <p>You can put anything on it.</p>
-
-    </body>
-    </html>
-    """
     dbx = DialogBox(
         dialog_text="Type 'ok' and press the Confirm button",
         title_bar="Example of text input",
@@ -100,19 +100,6 @@ def test_num_input_with_image():
 
 @pytest.mark.case_name("Numeric input with html")
 def test_num_input_with_html():
-    test_html = """
-    <!DOCTYPE html>
-    <html>
-    <body>
-
-    <h1>Test HTML Page</h1>
-
-    <p>It is testing page.</p>
-    <p>You can put anything on it.</p>
-
-    </body>
-    </html>
-    """
     test_num = 123
     dbx = DialogBox(
         dialog_text=f"Enter the number {test_num} and press the Confirm button",

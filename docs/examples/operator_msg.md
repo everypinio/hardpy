@@ -152,20 +152,21 @@ def test_clear_operator_message():
 from time import sleep
 from hardpy import HTMLComponent, set_message, set_operator_message
 
+test_html = """
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Test HTML Page</h1>
+
+<p>It is testing page.</p>
+<p>You can put anything on it.</p>
+
+</body>
+</html>
+"""
+
 def test_operator_message_with_html():
-    test_html = """
-    <!DOCTYPE html>
-    <html>
-    <body>
-
-    <h1>Test HTML Page</h1>
-
-    <p>It is testing page.</p>
-    <p>You can put anything on it.</p>
-
-    </body>
-    </html>
-    """
     set_operator_message(
         msg="Test operator message with html",
         title="Operator message",
@@ -178,19 +179,6 @@ def test_operator_message_with_html():
     assert True
 
 def test_operator_message_with_html_and_border():
-    test_html = """
-    <!DOCTYPE html>
-    <html>
-    <body>
-
-    <h1>Test HTML Page</h1>
-
-    <p>It is testing page.</p>
-    <p>You can put anything on it.</p>
-
-    </body>
-    </html>
-    """
     set_operator_message(
         msg="Test operator message with html",
         title="Operator message",
