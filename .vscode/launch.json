@@ -124,18 +124,7 @@
             "args": [
                 "run",
                 "examples/dialog_box"
-            ],
-        },
-        {
-            "name": "Python: Example HTML Plot",
-            "type": "debugpy",
-            "request": "launch",
-            "module": "hardpy.cli.cli",
-            "console": "integratedTerminal",
-            "args": [
-                "run",
-                "examples/html_plot"
-            ],
+            ]
         },
         {
             "name": "Python: Example Attempts",
@@ -157,7 +146,7 @@
             "args": [
                 "run",
                 "examples/operator_msg"
-            ],
+            ]
         },
         {
             "name": "Run Frontend",
