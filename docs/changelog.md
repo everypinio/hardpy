@@ -2,6 +2,18 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## HardPy 0.10.1
+
+* Fix **StandCloud** authorization process in Windows.
+
+## HardPy 0.10.0
+
+* Add the `[stand_cloud]` section to the **hardpy.toml** configuration file.
+* Add the `StandCloudLoader` class to append the test result to the **StandCloud**.
+* Add support for **StandCloud** login and logout with `sc-login` and `sc-logout` commands.
+* Add **alert** field in **statestore** database.
+* Add alert to control panel by calling `set_alert` method in `HardpyPlugin`.
+
 ## HardPy 0.9.0
 
 * Add the ability to add images to operator messages like a dialog box.

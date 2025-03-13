@@ -31,6 +31,7 @@ from pytest import (
     skip,
 )
 
+from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import (
     ConnectionData,
@@ -40,6 +41,11 @@ from hardpy.pytest_hardpy.utils import (
 )
 from hardpy.pytest_hardpy.utils.node_info import TestDependencyInfo
 
+if __debug__:
+    from urllib3 import disable_warnings
+    from urllib3.exceptions import InsecureRequestWarning
+
+    disable_warnings(InsecureRequestWarning)
 
 def pytest_addoption(parser: Parser) -> None:
     """Register argparse-style options."""
@@ -73,6 +79,18 @@ def pytest_addoption(parser: Parser) -> None:
         action="store_true",
         default=False,
         help="enable pytest-hardpy plugin",
+    )
+    parser.addoption(
+        "--sc-address",
+        action="store",
+        default=con_data.sc_address,
+        help="StandCloud address",
+    )
+    parser.addoption(
+        "--sc-connection-only",
+        action="store_true",
+        default=con_data.sc_connection_only,
+        help="check StandCloud availability",
     )
 
 
@@ -125,6 +143,14 @@ class HardpyPlugin:
         socket_host = config.getoption("--hardpy-sh")
         if socket_host:
             con_data.socket_host = str(socket_host)  # type: ignore
+
+        sc_address = config.getoption("--sc-address")
+        if sc_address:
+            con_data.sc_address = str(sc_address)  # type: ignore
+
+        sc_connection_only = config.getoption("--sc-connection-only")
+        if sc_connection_only:
+            con_data.sc_connection_only = bool(sc_connection_only)  # type: ignore
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
@@ -201,6 +227,27 @@ class HardpyPlugin:
         if session.config.option.collectonly:
             # ignore collect only mode
             return True
+
+        con_data = ConnectionData()
+
+        if con_data.sc_connection_only:  # check
+            try:
+                sc_connector = StandCloudConnector(addr=con_data.sc_address)
+            except StandCloudError as exc:
+                msg = str(exc)
+                self._reporter.set_alert(msg)
+                exit(msg)
+            try:
+                sc_connector.healthcheck()
+            except Exception:  # noqa: BLE001
+                addr = con_data.sc_address
+                msg = (
+                    f"StandCloud service at the address {addr} "
+                    "not available or HardPy user is not authorized"
+                )
+                self._reporter.set_alert(msg)
+                self._reporter.update_db_by_doc()
+                exit(msg)
 
         # testrun entrypoint
         self._reporter.start()
@@ -334,9 +381,10 @@ class HardpyPlugin:
             self._results[module_id][case_id] = None
 
     def _collect_module_result(self, module_id: str) -> None:
-        if TestStatus.ERROR in self._results[module_id].values():
-            status = TestStatus.ERROR
-        elif TestStatus.FAILED in self._results[module_id].values():
+        if (
+            TestStatus.FAILED in self._results[module_id].values()
+            or TestStatus.ERROR in self._results[module_id].values()
+        ):
             status = TestStatus.FAILED
         elif TestStatus.SKIPPED in self._results[module_id].values():
             status = TestStatus.SKIPPED
@@ -356,7 +404,7 @@ class HardpyPlugin:
                 self._stop_tests()
                 return TestStatus.STOPPED
             case _:
-                return TestStatus.ERROR
+                return TestStatus.FAILED
 
     def _stop_tests(self) -> None:
         """Update module and case statuses from READY or RUN to STOPPED."""
