@@ -18,7 +18,7 @@ To test images, create an `assets` folder in the `dialog_box` folder with the im
 
 ```python
 import pytest
-from hardpy import DialogBox, run_dialog_box
+from hardpy import DialogBox, HTMLComponent, ImageComponent, run_dialog_box
 
 pytestmark = pytest.mark.module_name("Base dialog box")
 
@@ -31,7 +31,8 @@ def test_base_dialog_box_with_image():
     dbx = DialogBox(
         title_bar="Operator check",
         dialog_text="Press the Confirm button",
-        image=ImageComponent(address="assets/image.png", width=100, border=1),
+        image=ImageComponent(address="assets/test.png", width=100, border=1),
+        html=HTMLComponent(html="https://everypinio.github.io/hardpy/", width=50, is_raw_html=False),
     )
     response = run_dialog_box(dbx)
     assert response
@@ -124,7 +125,7 @@ def test_checkbox():
 
 ```python
 import pytest
-from hardpy import DialogBox, ImageComponent, MultistepWidget, StepWidget, run_dialog_box
+from hardpy import DialogBox, HTMLComponent, ImageComponent, MultistepWidget, StepWidget, run_dialog_box
 
 pytestmark = pytest.mark.module_name("Multiple steps dialog box")
 
@@ -140,7 +141,7 @@ def test_multiple_steps():
         StepWidget(
             "Step 3",
             text=None,
-            image=ImageComponent(address="assets/test.png", width=50),
+            html=HTMLComponent(html="https://everypinio.github.io/hardpy/", width=50, is_raw_html=False),
         ),
     ]
     dbx = DialogBox(
@@ -150,3 +151,49 @@ def test_multiple_steps():
     response = run_dialog_box(dbx)
     assert response
 ```
+
+### test_5_html.py
+
+```python
+import pytest
+
+from hardpy import DialogBox, HTMLComponent, run_dialog_box
+
+pytestmark = pytest.mark.module_name("Dialog box with HTML")
+
+@pytest.mark.case_name("Base dialog box with html code")
+def test_base_dialog_box_with_html_code():
+    test_html = """
+    <!DOCTYPE html>
+    <html>
+    <body>
+
+    <h1>Test HTML Page</h1>
+
+    <p>It is testing page.</p>
+    <p>You can put anything on it.</p>
+
+    </body>
+    </html>
+    """
+    dbx = DialogBox(
+        title_bar="Operator check",
+        dialog_text="Press the Confirm button",
+        html=HTMLComponent(html=test_html, is_raw_html=True, width=50),
+    )
+    response = run_dialog_box(dbx)
+    assert response
+
+@pytest.mark.case_name("Base dialog box with html link")
+def test_base_dialog_box_with_html_link():
+    dbx = DialogBox(
+        title_bar="Operator check",
+        dialog_text="Press the Confirm button",
+        html=HTMLComponent(
+            html="https://everypinio.github.io/hardpy/",
+            is_raw_html=False,
+            border=2,
+        ),
+    )
+    response = run_dialog_box(dbx)
+    assert response

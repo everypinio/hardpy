@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add the ability to add html-pages to dialog boxes and operator messages.
+
 ## HardPy 0.10.1
 
 * Fix **StandCloud** authorization process in Windows.

@@ -25,6 +25,7 @@ from hardpy.pytest_hardpy.utils import (
     DuplicateSerialNumberError,
     DuplicateTestStandLocationError,
     DuplicateTestStandNameError,
+    HTMLComponent,
     ImageComponent,
 )
 
@@ -279,6 +280,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
           If the title_bar field is missing, it is the case name.
         - widget (DialogBoxWidget | None): Widget information.
         - image (ImageComponent | None): Image information.
+        - html (HTMLComponent | None): HTML information.
 
     Returns:
         Any: An object containing the user's response.
@@ -319,11 +321,12 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
 
-def set_operator_message(
+def set_operator_message(  # noqa: PLR0913
     msg: str,
     title: str | None = None,
     block: bool = True,
     image: ImageComponent | None = None,
+    html: HTMLComponent | None = None,
     font_size: int = 14,
 ) -> None:
     """Set operator message.
@@ -334,7 +337,8 @@ def set_operator_message(
     Args:
         msg (str): message
         title (str | None): title
-        image (ImageComponent | None): operator message info
+        image (ImageComponent | None): operator message image
+        html (HTMLComponent | None): operator message html page
         block (bool): if True, the function will block until the message is closed
         font_size (int): font size
     """
@@ -351,6 +355,7 @@ def set_operator_message(
         DF.TITLE: title,
         DF.VISIBLE: True,
         DF.IMAGE: image.to_dict() if image else None,
+        DF.HTML: html.to_dict() if html else None,
         DF.ID: str(uuid4()),
         DF.FONT_SIZE: int(font_size),
     }

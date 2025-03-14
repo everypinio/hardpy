@@ -40,6 +40,13 @@ interface ImageInfo {
   border?: number;
 }
 
+interface HTMLInfo {
+  code_or_url?: string;
+  is_raw_html?: boolean;
+  width?: number;
+  border?: number;
+}
+
 interface DialogBoxProps {
   title_bar?: string;
   dialog_text: string;
@@ -48,6 +55,7 @@ interface DialogBoxProps {
   visible: boolean;
   id: string;
   font_size?: number;
+  html?: HTMLInfo
 }
 
 interface Case {
@@ -342,6 +350,10 @@ export class TestSuite extends React.Component<Props, State> {
               is_visible={test.dialog_box.visible}
               id={test.dialog_box.id}
               font_size={test.dialog_box.font_size}
+              html_code={test.dialog_box.html?.is_raw_html == true ? test.dialog_box.html?.code_or_url : undefined}
+              html_url={test.dialog_box.html?.is_raw_html == false ? test.dialog_box.html?.code_or_url : undefined}
+              html_width={test.dialog_box.html?.width}
+              html_border={test.dialog_box.html?.border}
             />
           )}
         <TestStatus
