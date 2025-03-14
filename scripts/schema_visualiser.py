@@ -1,5 +1,7 @@
 # Database schema visualiser for documentation.  # noqa: INP001
 # need to install erdantic: https://github.com/drivendataorg/erdantic
+# Installation:
+# conda install erdantic -c conda-forge
 
 import erdantic as erd
 
