@@ -59,14 +59,6 @@ def init(  # noqa: PLR0913
         default=default_config.frontend.port,
         help="Specify a frontend port.",
     ),
-    socket_host: str = typer.Option(
-        default=default_config.socket.host,
-        help="Specify a socket host.",
-    ),
-    socket_port: int = typer.Option(
-        default=default_config.socket.port,
-        help="Specify a socket port.",
-    ),
     sc_address: str = typer.Option(
         default="",
         help="Specify a StandCloud address.",
@@ -87,8 +79,6 @@ def init(  # noqa: PLR0913
         database_port (int): Database port
         frontend_host (str): Panel operator host
         frontend_port (int): Panel operator port
-        socket_host (str): Socket host
-        socket_port (int): Socket port
         sc_address (str): StandCloud address
         sc_connection_only (bool): Flag to check StandCloud service availability
     """
@@ -101,8 +91,6 @@ def init(  # noqa: PLR0913
         database_port=database_port,
         frontend_host=frontend_host,
         frontend_port=frontend_port,
-        socket_host=socket_host,
-        socket_port=socket_port,
         sc_address=sc_address,
         sc_connection_only=sc_connection_only,
     )

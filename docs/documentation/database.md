@@ -209,6 +209,7 @@ The **current** document of the **statestore** database contains the following f
 - **test_stand**: information about the test stand in the form of a dictionary;
 - **modules**: module information;
 - **alert**: operator panel alert information;
+- **operator_data** operator panel data, like a dialog box data;
 - **operator_msg**: operator message.
 
 The **test_stand** block containt the following fields:
@@ -291,6 +292,7 @@ Example of a **current** document:
       "start_time": 1695817263,
       "status": "failed",
       "alert": "",
+      "operator_data": "",
       "name": "hardpy-stand",
       "dut": {
         "serial_number": "92c5a4bb-ecb0-42c5-89ac-e0caca0919fd",
