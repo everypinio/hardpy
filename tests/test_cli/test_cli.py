@@ -139,7 +139,7 @@ def test_cli_init_frontend_port(tmp_path: Path):
         frontend_info = (
             f"[frontend]\n"
             f'host = "localhost"\n'
-            f"port = {frontend_no_default_port}\n\n"
+            f"port = {frontend_no_default_port}\n"
         ).format(frontend_no_default_port)
         assert (
             frontend_info in content
