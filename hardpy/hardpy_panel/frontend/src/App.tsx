@@ -23,6 +23,7 @@ import ProgressView from "./progress/ProgressView";
 import TestStatus from "hardpy_test_view/TestStatus";
 import ReloadAlert from "./restart_alert/RestartAlert";
 import PlaySound from "hardpy_test_view/PlaySound";
+import { StartStandCloudWindow } from "hardpy_test_view/StandCloudWindow";
 
 import { useAllDocs } from "use-pouchdb";
 
@@ -38,6 +39,8 @@ function App(): JSX.Element {
   const [lastRunStatus, setLastRunStatus] = React.useState("");
   const [lastProgress, setProgress] = React.useState(0);
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
+  const [isStandCloudWindowOpen, setStandCloudWindowOpen] =
+    React.useState(false);
 
   const useWindowWide = (size: number) => {
     const [width, setWidth] = React.useState(0);
@@ -172,16 +175,21 @@ function App(): JSX.Element {
           id="use_debug_info"
           onClick={() => setUseDebugInfo(!use_debug_info)}
         />
+        <MenuItem
+          shouldDismissPopover={false}
+          text={"StandCloud"}
+          icon={"cloud"}
+          id="standcloud"
+          onClick={() => setStandCloudWindowOpen(true)}
+        />
       </Menu>
     );
   };
-
   return (
     <div className="App" style={{ minWidth: "310px", margin: "auto" }}>
       {/* Popout elements */}
       <ReloadAlert reload_timeout_s={3} />
       {/* <Notification /> */}
-
       {/* Header */}
       <Navbar
         fixedToTop={true}
@@ -196,9 +204,7 @@ function App(): JSX.Element {
               </div>
             )}
           </Navbar.Heading>
-
           {wide && <Navbar.Divider />}
-
           <Navbar.Heading id={"last-exec-heading"}>
             <div>Last run:</div>
           </Navbar.Heading>
@@ -208,24 +214,19 @@ function App(): JSX.Element {
               <PlaySound key="sound" status={lastRunStatus} />
             )}
           </div>
-
           <Navbar.Divider />
         </Navbar.Group>
-
         <Navbar.Group align={Alignment.RIGHT}>
           <Popover content={renderSettingsMenu()}>
             <Button className="bp3-minimal" icon="cog" />
           </Popover>
         </Navbar.Group>
       </Navbar>
-
       {/* Tests panel */}
       <div className={Classes.DRAWER_BODY} style={{ marginBottom: "60px" }}>
         {useRenderDb()}
       </div>
-
       {/* Footer */}
-
       <div
         className={Classes.DRAWER_FOOTER}
         style={{
@@ -257,8 +258,13 @@ function App(): JSX.Element {
           />
         </div>
       </div>
+      {isStandCloudWindowOpen && (
+        <StartStandCloudWindow
+          isOpen={isStandCloudWindowOpen}
+          onClose={() => setStandCloudWindowOpen(false)}
+        />
+      )}
     </div>
   );
 }
-
 export default App;
