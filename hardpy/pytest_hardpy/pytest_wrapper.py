@@ -6,9 +6,10 @@ import signal
 import subprocess
 import sys
 from platform import system
-from socket import socket
 
 from hardpy.common.config import ConfigManager
+from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
+from hardpy.pytest_hardpy.reporter import RunnerReporter
 
 
 class PyTestWrapper:
@@ -16,6 +17,7 @@ class PyTestWrapper:
 
     def __init__(self) -> None:
         self._proc = None
+        self._reporter = RunnerReporter()
         self.python_executable = sys.executable
 
         # Make sure test structure is stored in DB
@@ -144,10 +146,9 @@ class PyTestWrapper:
             bool: True if dialog box was confirmed/closed, else False
         """
         try:
-            with socket() as client:
-                client.connect((self.config.socket.host, self.config.socket.port))
-                client.sendall(data.encode("utf-8"))
-                client.close()
+            self._reporter.update_doc_by_db()
+            self._reporter.set_doc_value(DF.OPERATOR_DATA, data, statestore_only=True)
+            self._reporter.update_db_by_doc()
         except Exception:  # noqa: BLE001
             return False
         return True

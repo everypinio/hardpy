@@ -36,8 +36,8 @@ class BaseStore(BaseConnector):
         """
         return glom(self._doc, key)
 
-    def update_doc(self, key: str, value: Any) -> None:  # noqa: ANN401
-        """Update document.
+    def update_doc_value(self, key: str, value: Any) -> None:  # noqa: ANN401
+        """Update document value.
 
         HardPy collecting uses a simple key without dots.
         Assign is used to update a document.
@@ -59,6 +59,11 @@ class BaseStore(BaseConnector):
         except Conflict:
             self._doc["_rev"] = self._db.get(self._doc_id)["_rev"]
             self._doc = self._db.save(self._doc)
+
+    def update_doc(self) -> None:
+        """Update current document by database."""
+        self._doc["_rev"] = self._db.get(self._doc_id)["_rev"]
+        self._doc = self._db.get(self._doc_id)
 
     def get_document(self) -> ModelMetaclass:
         """Get document by schema.
