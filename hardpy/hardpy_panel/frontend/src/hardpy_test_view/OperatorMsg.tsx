@@ -17,7 +17,7 @@ interface StartOperatorMsgDialogProps {
   html_url?: string;
   html_code?: string;
   html_width?: number;
-  html_border?: number
+  html_border?: number;
 }
 
 export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
@@ -31,9 +31,9 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
   const baseOperatorMessageDimensions = { width: 100, height: 100 };
   const maxSize = 0.6;
   const minSize = 0.25;
-  const lineHeight = 10 * (props.font_size ? props.font_size : 14) / 14;
+  const lineHeight = (10 * (props.font_size ? props.font_size : 14)) / 14;
 
-  const handleClose = async ()  => {
+  const handleClose = async () => {
     setOperatorMessageOpen(false);
 
     try {
@@ -96,7 +96,7 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
     display: "block",
     margin: "0 auto",
   };
-  
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const keyboardEvent =
@@ -174,24 +174,32 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
         {props.html_code && (
           <iframe
             srcDoc={props.html_code}
-            height={screenHeight * maxSize * 0.75 * ((props.html_width ?? 100) / 100)}
-            width={screenWidth * maxSize * 0.9 * ((props.html_width ?? 100) / 100)}      
+            height={
+              screenHeight * maxSize * 0.75 * ((props.html_width ?? 100) / 100)
+            }
+            width={
+              screenWidth * maxSize * 0.9 * ((props.html_width ?? 100) / 100)
+            }
             style={{
-              border: `${props.html_border}px solid black`
+              border: `${props.html_border}px solid black`,
             }}
             title="HTML Code"
-          />        
+          />
         )}
         {props.html_url && (
-        <iframe
-          src={props.html_url}
-          height={screenHeight * maxSize * 0.75 * ((props.html_width ?? 100) / 100)}
-          width={screenWidth * maxSize * 0.9 * ((props.html_width ?? 100) / 100)}      
-          style={{
-            border: `${props.html_border}px solid black`
-          }}
-          title="HTML Link"
-        />             
+          <iframe
+            src={props.html_url}
+            height={
+              screenHeight * maxSize * 0.75 * ((props.html_width ?? 100) / 100)
+            }
+            width={
+              screenWidth * maxSize * 0.9 * ((props.html_width ?? 100) / 100)
+            }
+            style={{
+              border: `${props.html_border}px solid black`,
+            }}
+            title="HTML Link"
+          />
         )}
       </div>
     </Dialog>

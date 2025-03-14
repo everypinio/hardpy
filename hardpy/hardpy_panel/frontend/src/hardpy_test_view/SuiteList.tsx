@@ -59,7 +59,7 @@ interface OperatorMsgProps {
   image?: ImageInfo;
   id?: string;
   font_size?: number;
-  html?: HTMLInfo
+  html?: HTMLInfo;
 }
 
 export interface TestRunI {
@@ -170,8 +170,16 @@ export class SuiteList extends React.Component<Props> {
                 is_visible={this.props.db_state.operator_msg?.visible}
                 id={this.props.db_state.operator_msg?.id}
                 font_size={this.props.db_state.operator_msg?.font_size}
-                html_code={this.props.db_state.operator_msg?.html?.is_raw_html == true ? this.props.db_state.operator_msg?.html?.code_or_url : undefined}
-                html_url={this.props.db_state.operator_msg?.html?.is_raw_html == false ? this.props.db_state.operator_msg?.html?.code_or_url : undefined}
+                html_code={
+                  this.props.db_state.operator_msg?.html?.is_raw_html == true
+                    ? this.props.db_state.operator_msg?.html?.code_or_url
+                    : undefined
+                }
+                html_url={
+                  this.props.db_state.operator_msg?.html?.is_raw_html == false
+                    ? this.props.db_state.operator_msg?.html?.code_or_url
+                    : undefined
+                }
                 html_width={this.props.db_state.operator_msg?.html?.width}
                 html_border={this.props.db_state.operator_msg?.html?.border}
               />
