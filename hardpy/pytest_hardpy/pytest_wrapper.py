@@ -45,10 +45,6 @@ class PyTestWrapper:
                     "pytest",
                     "--hardpy-db-url",
                     self.config.database.connection_url(),
-                    "--hardpy-sp",
-                    str(self.config.socket.port),
-                    "--hardpy-sh",
-                    self.config.socket.host,
                     "--sc-address",
                     self.config.stand_cloud.address,
                     "--sc-connection-only"
@@ -66,10 +62,6 @@ class PyTestWrapper:
                     "pytest",
                     "--hardpy-db-url",
                     self.config.database.connection_url(),
-                    "--hardpy-sp",
-                    str(self.config.socket.port),
-                    "--hardpy-sh",
-                    self.config.socket.host,
                     "--sc-address",
                     self.config.stand_cloud.address,
                     "--sc-connection-only"
@@ -119,10 +111,6 @@ class PyTestWrapper:
             "--collect-only",
             "--hardpy-db-url",
             self.config.database.connection_url(),
-            "--hardpy-sp",
-            str(self.config.socket.port),
-            "--hardpy-sh",
-            self.config.socket.host,
             "--hardpy-pt",
         ]
 
