@@ -4,9 +4,10 @@ The [set_operator_message](./../documentation/pytest_hardpy.md/#set_operator_mes
 function is intended for sending messages to the operator.
 Operator messages can be used before, after, and during tests.
 
-**set_operator_message** can be used in conjunction with images.
+**set_operator_message** can be used in conjunction with images and html pages.
 To do this, the user can set the argument `image` with the
-[ImageComponent](./../documentation/pytest_hardpy.md/#imagecomponent) class.
+[ImageComponent](./../documentation/pytest_hardpy.md/#imagecomponent) class 
+and the argument `html` with the [HTMLComponent](./../documentation/pytest_hardpy.md/#htmlcomponent) class.
 
 The default message to the operator blocks further execution of the code,
 but the user can set the argument `block=False` and the function will display the message
@@ -107,7 +108,7 @@ def test_block_operator_message():
     set_operator_message(
         msg="Test blocking operator message",
         title="Operator message",
-        image=ImageComponent(address="assets/image.png", width=100),
+        image=ImageComponent(address="assets/test.png", width=100),
     )
     for i in range(3, 0, -1):
         set_message(f"Time left to complete test case {i} s", "updated_status")
@@ -119,7 +120,7 @@ def test_not_block_operator_message():
     set_operator_message(
         msg="Test not blocking operator message",
         title="Operator message",
-        image=ImageComponent(address="assets/image.png", width=100),
+        image=ImageComponent(address="assets/test.png", width=100),
         block=False,
     )
     for i in range(3, 0, -1):
@@ -142,5 +143,50 @@ def test_clear_operator_message():
     clear_operator_message()
     set_message("Test case finished", "updated_status")
     sleep(2)
+    assert True
+```
+
+### test_3.py
+
+```python
+from time import sleep
+from hardpy import HTMLComponent, set_message, set_operator_message
+
+test_html = """
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Test HTML Page</h1>
+
+<p>It is testing page.</p>
+<p>You can put anything on it.</p>
+
+</body>
+</html>
+"""
+
+def test_operator_message_with_html():
+    set_operator_message(
+        msg="Test operator message with html",
+        title="Operator message",
+        html=HTMLComponent(html=test_html, is_raw_html=True),
+    )
+    for i in range(3, 0, -1):
+        set_message(f"Time left to complete test case {i} s", "updated_status")
+        sleep(1)
+    set_message("Test case finished", "updated_status")
+    assert True
+
+def test_operator_message_with_html_and_border():
+    set_operator_message(
+        msg="Test operator message with html",
+        title="Operator message",
+        html=HTMLComponent(html=test_html, is_raw_html=True, border=10, width=20),
+    )
+    for i in range(3, 0, -1):
+        set_message(f"Time left to complete test case {i} s", "updated_status")
+        sleep(1)
+    set_message("Test case finished", "updated_status")
     assert True
 ```

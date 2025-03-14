@@ -230,6 +230,7 @@ Does not provide user interaction unlike the [run_dialog_box](#run_dialog_box) f
 - `title` *(str | None)*: The optional title for the message.
 - `block` *(bool=True)*: If True, the function will block until the message is closed.
 - `image` *([ImageComponent](#imagecomponent) | None)*: Image information.
+- `html` *([HTMLComponent](#htmlcomponent) | None)*: HTML information.
 - `font_size`: *(int=14)*: Text font size.
 
 **Example:**
@@ -346,6 +347,7 @@ the [run_dialog_box](#run_dialog_box) function.
 If the title_bar field is missing, it is the case name.
 - `widget` *(IWidget | None)*: Widget information.
 - `image` *([ImageComponent](#imagecomponent) | None)*: Image information.
+- `html` *([HTMLComponent](#htmlcomponent) | None)*: HTML information.
 - `font_size`: *(int=14)*: Text font size.
 
 Widget list:
@@ -455,6 +457,7 @@ The class is used to configure the step for the
 - `title` *(str)*: Step title.
 - `text` *(str | None)*: Step text.
 - `image` *([ImageComponent](#imagecomponent) | None)*: Step image.
+- `html` *([HTMLComponent](#htmlcomponent) | None)*: Step HTML.
 
 **Example:**
 
@@ -477,7 +480,8 @@ Further information can be found in section
 ```python
     steps = [
         StepWidget("Step 1", text="Content for step"),
-        StepWidget("Step 2", text="Content for step 2", image=ImageComponent(address="assets/image.png", width=100)),
+        StepWidget("Step 2", text="Content for step 2", image=ImageComponent(address="assets/test.png", width=100)),
+        StepWidget("Step 3", text="Content for step 3", html=HTMLComponent(html="https://everypinio.github.io/hardpy/", width=50)),
     ]
     dbx = DialogBox(dialog_text="Follow the steps and click Confirm", widget=MultistepWidget(steps))
     response = run_dialog_box(dbx)
@@ -497,7 +501,25 @@ the [run_dialog_box](#run_dialog_box) and [set_operator_message](#set_operator_m
 **Example:**
 
 ```python
-    ImageComponent(address="assets/image.png", width=100)
+    ImageComponent(address="assets/test.png", width=100)
+```
+
+#### HTMLComponent
+
+A class for configurating HTML for a dialogue box or operator message box and is used with
+the [run_dialog_box](#run_dialog_box) and [set_operator_message](#set_operator_message) functions.
+
+**Arguments:**
+
+- `code_or_url` *(str)*: HTML code or link.
+- `width` *(int | None)*: HTML width in %.
+- `border` *(int | None)*: HTML border width.
+- `is_raw_html` *(bool)*: Is HTML code is raw.
+
+**Example:**
+
+```python
+    HTMLComponent(code_or_url="https://everypinio.github.io/hardpy/", width=100, is_raw_html=False)
 ```
 
 #### CouchdbLoader
@@ -527,7 +549,6 @@ def finish_executing():
     if report:
         loader = CouchdbLoader(CouchdbConfig())
         loader.load(report)
-
 
 @pytest.fixture(scope="session", autouse=True)
 def fill_actions_after_test(post_run_functions: list):
