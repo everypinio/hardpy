@@ -208,6 +208,7 @@ The **current** document of the **statestore** database contains the following f
 - **dut**: DUT information containing the serial number and additional information;
 - **test_stand**: information about the test stand in the form of a dictionary;
 - **modules**: module information;
+- **alert**: operator panel alert information;
 - **operator_msg**: operator message.
 
 The **test_stand** block containt the following fields:
@@ -231,7 +232,17 @@ The **operator_msg** block contains the following fields:
   - **title**: the title of operator message dialog box;
   - **visible**: should a message be displayed on the operator panel;
   - **id**: operator message id;
-  - **font_size**: operator message font size.
+  - **font_size**: operator message font size;
+  - **image**: information about image;
+    - **address**: image address;
+    - **width**: image width in percent;
+    - **border**: image border in pixels;
+    - **base64**: image in base64 code;
+  - **html**: information about html;
+    - **code_or_url**: html code or link;
+    - **is_raw_html**: is html code is raw;
+    - **width**: html width in percent;
+    - **border**: html border in pixels.
 
 The **modules** block contains the following fields:
 
@@ -260,6 +271,11 @@ The **modules** block contains the following fields:
             - **width**: image width in percent;
             - **border**: image border in pixels;
             - **base64**: image in base64 code;
+          - **html**: information about html;
+            - **code_or_url**: html code or link;
+            - **is_raw_html**: is html code is raw;
+            - **width**: html width in percent;
+            - **border**: html border in pixels;
           - **visible**: should a dialog box be displayed on the operator panel;
           - **id**: dialog box id;
           - **font_size**: dialog box font size.
@@ -274,6 +290,7 @@ Example of a **current** document:
       "stop_time": 1695817266,
       "start_time": 1695817263,
       "status": "failed",
+      "alert": "",
       "name": "hardpy-stand",
       "dut": {
         "serial_number": "92c5a4bb-ecb0-42c5-89ac-e0caca0919fd",
@@ -333,6 +350,12 @@ Example of a **current** document:
                   "address": "assets/test.png",
                   "width": 100,
                   "border": 0,
+                },
+                "html": {
+                  "code_or_url": "https://everypinio.github.io/hardpy/",
+                  "width": 100,
+                  "border": 0,
+                  "is_raw_html": false
                 },
                 "visible": true,
                 "id": "b57ab1e7-8cf8-4a6a-bb9d-8863ea0bcc78"

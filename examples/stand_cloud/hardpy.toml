@@ -1,0 +1,20 @@
+title = "HardPy TOML config"
+tests_dir = "stand_cloud"
+
+[database]
+user = "dev"
+password = "dev"
+host = "localhost"
+port = 5984
+
+[frontend]
+host = "localhost"
+port = 8000
+
+[socket]
+host = "localhost"
+port = 6525
+
+[stand_cloud]
+address = "demo.standcloud.localhost"
+connection_only = true

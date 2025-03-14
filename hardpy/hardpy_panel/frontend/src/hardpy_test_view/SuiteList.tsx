@@ -45,6 +45,13 @@ interface ImageInfo {
   border?: number;
 }
 
+interface HTMLInfo {
+  code_or_url?: string;
+  is_raw_html?: boolean;
+  width?: number;
+  border?: number;
+}
+
 interface OperatorMsgProps {
   msg: string;
   title?: string;
@@ -52,6 +59,7 @@ interface OperatorMsgProps {
   image?: ImageInfo;
   id?: string;
   font_size?: number;
+  html?: HTMLInfo;
 }
 
 export interface TestRunI {
@@ -67,6 +75,7 @@ export interface TestRunI {
   drivers?: DriversInfo;
   artifact?: Record<string, unknown>;
   operator_msg?: OperatorMsgProps;
+  alert?: string;
 }
 
 /**
@@ -101,6 +110,7 @@ export class SuiteList extends React.Component<Props> {
       ? new Date(db_state.stop_time * 1000).toLocaleString()
       : "";
     const start_tz = db_state.timezone ? db_state.timezone : "";
+    const alert = db_state.alert;
 
     let module_names: string[] = [];
     let modules: Modules = {};
@@ -136,6 +146,11 @@ export class SuiteList extends React.Component<Props> {
               Finish time: {stop + start_tz}
             </Tag>
           )}
+          {alert && (
+            <Tag minimal style={TAG_ELEMENT_STYLE}>
+              Alert: {alert}
+            </Tag>
+          )}
           <Divider />
           {_.map([...module_names], (name: string, index: number) =>
             this.suiteRender(index, { name: name, test: modules[name] })
@@ -155,6 +170,18 @@ export class SuiteList extends React.Component<Props> {
                 is_visible={this.props.db_state.operator_msg?.visible}
                 id={this.props.db_state.operator_msg?.id}
                 font_size={this.props.db_state.operator_msg?.font_size}
+                html_code={
+                  this.props.db_state.operator_msg?.html?.is_raw_html == true
+                    ? this.props.db_state.operator_msg?.html?.code_or_url
+                    : undefined
+                }
+                html_url={
+                  this.props.db_state.operator_msg?.html?.is_raw_html == false
+                    ? this.props.db_state.operator_msg?.html?.code_or_url
+                    : undefined
+                }
+                html_width={this.props.db_state.operator_msg?.html?.width}
+                html_border={this.props.db_state.operator_msg?.html?.border}
               />
             )}
         </div>
