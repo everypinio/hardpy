@@ -94,7 +94,7 @@ Contains an instruction or question and a `confirm` button for confirmation.
 Contains an instruction or question, a text input field, and a `confirm` button for confirmation.
 The text is transmitted in UTF-8 encoding.
 
-=== "Widget without image"
+=== "Widget"
     <h1 align="center">
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/text_input_dialog_box.png" alt="text_input_dialog_box">
     </h1>
@@ -118,7 +118,7 @@ Contains an instruction or question, a number input field, and a `confirm` butto
 * Allows numbers to be entered using **E notation** with `e`, e.g. `2e3`.
 * The entered numbers will be converted to float.
 
-=== "Widget without image"
+=== "Widget"
     <h1 align="center">
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/num_input_dialog_box.png" alt="num_input_dialog_box">
     </h1>
@@ -141,7 +141,7 @@ Contains radiobutton widget.
 * Returns the contents of the selected item as a string.
 
 
-=== "Widget without image"
+=== "Widget"
     <h1 align="center">
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/radiobutton_dialog_box.png" alt="radiobutton_dialog_box">
     </h1>
@@ -164,7 +164,7 @@ Contains checkbox widget.
 * Returns a list with the contents of the selected items.
 
 
-=== "Widget without image"
+=== "Widget"
     <h1 align="center">
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/checkbox_dialog_box.png" alt="checkbox_dialog_box">
     </h1>
