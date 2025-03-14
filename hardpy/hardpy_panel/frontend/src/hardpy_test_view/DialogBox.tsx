@@ -31,7 +31,7 @@ interface Props {
   html_url?: string;
   html_code?: string;
   html_width?: number;
-  html_border?: number
+  html_border?: number;
 }
 
 export enum WidgetType {
@@ -288,9 +288,9 @@ export function StartConfirmationDialog(props: Props) {
       (widgetType === WidgetType.Multistep
         ? maxDimensions.current.height + baseDialogDimensions.height
         : imageDimensions.height) +
-      baseDialogDimensions.height +
-      textHeight +
-      textStepHeight,
+        baseDialogDimensions.height +
+        textHeight +
+        textStepHeight,
       screenHeight * maxSize
     ),
     screenHeight * minSize
@@ -471,28 +471,54 @@ export function StartConfirmationDialog(props: Props) {
                           }}
                         />
                       )}
-                      {step.info.html?.code_or_url && step.info.html?.is_raw_html == true && (
-                        <iframe
-                          srcDoc={step.info.html?.code_or_url}
-                          height={(imageStepDimensions.height + baseDialogDimensions.height) * htmlHeightIndex * ((step.info.html?.width ?? 100) / 100)}
-                          width={(imageStepDimensions.width + baseDialogDimensions.width) * htmlWidthIndex * ((step.info.html?.width ?? 100) / 100)}
-                          style={{
-                            border: `${step.info.html?.border}px solid black` || "none"
-                          }}
-                          title="HTML Code"
-                        />
-                      )}
-                      {step.info.html?.code_or_url && step.info.html?.is_raw_html == false && (
-                        <iframe
-                          src={step.info.html?.code_or_url}
-                          height={(imageStepDimensions.height + baseDialogDimensions.height) * htmlHeightIndex * ((step.info.html?.width ?? 100) / 100)}
-                          width={(imageStepDimensions.width + baseDialogDimensions.width) * htmlWidthIndex * ((step.info.html?.width ?? 100) / 100)}
-                          style={{
-                            border: `${step.info.html?.border}px solid black` || "none"
-                          }}
-                          title="HTML Link"
-                        />
-                      )}
+                      {step.info.html?.code_or_url &&
+                        step.info.html?.is_raw_html == true && (
+                          <iframe
+                            srcDoc={step.info.html?.code_or_url}
+                            height={
+                              (imageStepDimensions.height +
+                                baseDialogDimensions.height) *
+                              htmlHeightIndex *
+                              ((step.info.html?.width ?? 100) / 100)
+                            }
+                            width={
+                              (imageStepDimensions.width +
+                                baseDialogDimensions.width) *
+                              htmlWidthIndex *
+                              ((step.info.html?.width ?? 100) / 100)
+                            }
+                            style={{
+                              border:
+                                `${step.info.html?.border}px solid black` ||
+                                "none",
+                            }}
+                            title="HTML Code"
+                          />
+                        )}
+                      {step.info.html?.code_or_url &&
+                        step.info.html?.is_raw_html == false && (
+                          <iframe
+                            src={step.info.html?.code_or_url}
+                            height={
+                              (imageStepDimensions.height +
+                                baseDialogDimensions.height) *
+                              htmlHeightIndex *
+                              ((step.info.html?.width ?? 100) / 100)
+                            }
+                            width={
+                              (imageStepDimensions.width +
+                                baseDialogDimensions.width) *
+                              htmlWidthIndex *
+                              ((step.info.html?.width ?? 100) / 100)
+                            }
+                            style={{
+                              border:
+                                `${step.info.html?.border}px solid black` ||
+                                "none",
+                            }}
+                            title="HTML Link"
+                          />
+                        )}
                     </div>
                   </div>
                 }
@@ -523,10 +549,20 @@ export function StartConfirmationDialog(props: Props) {
         {props.html_code && (
           <iframe
             srcDoc={props.html_code}
-            height={screenHeight * maxSize * htmlHeightIndex * ((props.html_width ?? 100) / 100)}
-            width={screenWidth * maxSize * htmlWidthIndex * ((props.html_width ?? 100) / 100)}
+            height={
+              screenHeight *
+              maxSize *
+              htmlHeightIndex *
+              ((props.html_width ?? 100) / 100)
+            }
+            width={
+              screenWidth *
+              maxSize *
+              htmlWidthIndex *
+              ((props.html_width ?? 100) / 100)
+            }
             style={{
-              border: `${props.html_border}px solid black` || "none"
+              border: `${props.html_border}px solid black` || "none",
             }}
             title="HTML Code"
           />
@@ -534,10 +570,20 @@ export function StartConfirmationDialog(props: Props) {
         {props.html_url && (
           <iframe
             src={props.html_url}
-            height={screenHeight * maxSize * htmlHeightIndex * ((props.html_width ?? 100) / 100)}
-            width={screenWidth * maxSize * htmlWidthIndex * ((props.html_width ?? 100) / 100)}
+            height={
+              screenHeight *
+              maxSize *
+              htmlHeightIndex *
+              ((props.html_width ?? 100) / 100)
+            }
+            width={
+              screenWidth *
+              maxSize *
+              htmlWidthIndex *
+              ((props.html_width ?? 100) / 100)
+            }
             style={{
-              border: `${props.html_border}px solid black` || "none"
+              border: `${props.html_border}px solid black` || "none",
             }}
             title="HTML Link"
           />
