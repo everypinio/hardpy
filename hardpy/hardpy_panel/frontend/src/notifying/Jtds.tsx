@@ -4,6 +4,9 @@
 import Ajv, { AnySchema, JTDSchemaType } from "ajv/dist/jtd";
 const ajv = new Ajv();
 
+/**
+ * Represents a common notification object.
+ */
 interface NotificationCommon {
   message: string;
   level: "INFO" | "WARN" | "ERROR" | "CRITICAL" | "DEBUG";
@@ -12,6 +15,9 @@ interface NotificationCommon {
   additional_info?: string;
 }
 
+/**
+ * Represents a notification object for test results.
+ */
 interface NotificationTestResult {
   status: "PASS" | "FAIL" | "SKIP";
   case_number?: number;
@@ -20,6 +26,9 @@ interface NotificationTestResult {
   suite_name?: string;
 }
 
+/**
+ * Schema for validating NotificationCommon objects.
+ */
 const schemaNotificationCommon: JTDSchemaType<NotificationCommon> = {
   properties: {
     message: { type: "string" },
@@ -32,6 +41,9 @@ const schemaNotificationCommon: JTDSchemaType<NotificationCommon> = {
   },
 };
 
+/**
+ * Schema for validating NotificationTestResult objects.
+ */
 const schemaNotificationTestResult: JTDSchemaType<NotificationTestResult> = {
   properties: {
     status: { enum: ["PASS", "FAIL", "SKIP"] },
@@ -45,17 +57,17 @@ const schemaNotificationTestResult: JTDSchemaType<NotificationTestResult> = {
 };
 
 /**
- * Checks Data Type
+ * Validates data against a given schema.
  *
- * Usage:
+ * @param {unknown} data - The data to validate.
+ * @param {AnySchema} schema - The schema to validate the data against.
+ * @returns {boolean | Promise<unknown>} - Returns `true` if the data is valid according to the schema, otherwise `false` or a promise that resolves to the validation result.
  *
- * Pass any Data and one of predefined Schema
- *
- * @param data: unknown
- * @param schema: T
- * @returns schema_validator : ValidateFunction
+ * @example
+ * const data = { message: "Test", level: "INFO", source: "Test Source" };
+ * const isValid = is_valid(data, schemaNotificationCommon);
+ * console.log(isValid); // true or false
  */
-
 function is_valid(
   data: unknown,
   schema: AnySchema

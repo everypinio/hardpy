@@ -3,9 +3,19 @@
 
 import * as React from "react";
 interface Props {
+  /**
+   * The numeric value to be displayed.
+   */
   val: number;
 }
 
+/**
+ * A React functional component that renders a numeric value.
+ *
+ * @param {Props} props - The props passed to the component.
+ * @param {number} props.val - The numeric value to be displayed.
+ * @returns {React.ReactElement} A React element that displays the provided numeric value.
+ */
 export function TestNumber(props: Props): React.ReactElement {
   return <>{props.val}</>;
 }
