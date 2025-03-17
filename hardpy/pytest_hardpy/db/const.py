@@ -36,3 +36,5 @@ class DatabaseField(str, Enum):
     ID = "id"
     FONT_SIZE = "font_size"
     ALERT = "alert"
+    OPERATOR_DATA = "operator_data"
+    DIALOG = "dialog"

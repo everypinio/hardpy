@@ -45,8 +45,6 @@ More info in [hardpy config](./hardpy_config.md).
 │ --database-port                                INTEGER  Specify a database port. [default: 5984]           │
 │ --frontend-port                                INTEGER  Specify a frontend port. [default: 8000]           │
 │ --frontend-host                                TEXT     Specify a frontend host. [default: localhost]      │
-│ --socket-host                                  TEXT     Specify a socket host. [default: localhost]        │
-│ --socket-port                                  INTEGER  Specify a socket port. [default: 6525]             │
 │ --sc-address                                   TEXT     Specify a StandCloud address.                      │
 │ --sc-connection-only --no-sc-connection-only            Check StandCloud service availability before start.│
 |                                                         [default: check-stand-cloud]                       │
