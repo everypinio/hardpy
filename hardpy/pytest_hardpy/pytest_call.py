@@ -424,11 +424,13 @@ def _get_operator_data() -> str:
     reporter = RunnerReporter()
 
     data = ""
+    key = reporter.generate_key(DF.OPERATOR_DATA, DF.DIALOG)
     while not data:
         reporter.update_doc_by_db()
-        data = reporter.get_field(DF.OPERATOR_DATA)
+
+        data = reporter.get_field(key)
         if data:
-            reporter.set_doc_value(DF.OPERATOR_DATA, "", statestore_only=True)
+            reporter.set_doc_value(key, "", statestore_only=True)
             break
         sleep(0.1)
     return data

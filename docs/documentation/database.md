@@ -292,7 +292,9 @@ Example of a **current** document:
       "start_time": 1695817263,
       "status": "failed",
       "alert": "",
-      "operator_data": "",
+      "operator_data": {
+        "dialog": ""
+      },
       "name": "hardpy-stand",
       "dut": {
         "serial_number": "92c5a4bb-ecb0-42c5-89ac-e0caca0919fd",

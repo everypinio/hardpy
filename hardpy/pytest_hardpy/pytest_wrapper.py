@@ -135,7 +135,8 @@ class PyTestWrapper:
         """
         try:
             self._reporter.update_doc_by_db()
-            self._reporter.set_doc_value(DF.OPERATOR_DATA, data, statestore_only=True)
+            key = self._reporter.generate_key(DF.OPERATOR_DATA, DF.DIALOG)
+            self._reporter.set_doc_value(key, data, statestore_only=True)
             self._reporter.update_db_by_doc()
         except Exception:  # noqa: BLE001
             return False
