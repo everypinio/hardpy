@@ -10,6 +10,10 @@ type Props = {
   is_authenticated: boolean;
 };
 
+/**
+ * A React component that renders a start/stop button for controlling a testing process.
+ * The button's behavior and appearance depend on the testing status and authentication state.
+ */
 export class StartStopButton extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
@@ -17,6 +21,11 @@ export class StartStopButton extends React.Component<Props> {
     this.hardpy_stop = this.hardpy_stop.bind(this);
   }
 
+  /**
+   * Makes a fetch call to the specified URI.
+   * @param {string} uri - The URI to which the fetch request is made.
+   * @private
+   */
   private hardpy_call(uri: string) {
     fetch(uri)
       .then((response) => {
@@ -31,15 +40,29 @@ export class StartStopButton extends React.Component<Props> {
       });
   }
 
+  /**
+   * Initiates the start process by making a call to the 'api/start' endpoint.
+   * @private
+   */
   private hardpy_start(): void {
     this.hardpy_call("api/start");
   }
 
+  /**
+   * Initiates the stop process by making a call to the 'api/stop' endpoint.
+   * @private
+   */
   private hardpy_stop(): void {
     this.hardpy_call("api/stop");
   }
 
-  private hardpy_start_with_space = (event: KeyboardEvent) => {
+  /**
+   * Handles the keydown event to start the process when the spacebar is pressed.
+   * The process starts only if testing is not in progress and the user is authenticated.
+   * @param {KeyboardEvent} event - The keyboard event object.
+   * @private
+   */
+  private readonly hardpy_start_with_space = (event: KeyboardEvent) => {
     const is_testing_in_progress = this.props.testing_status == "run";
     if (
       event.key === " " &&
@@ -50,7 +73,12 @@ export class StartStopButton extends React.Component<Props> {
     }
   };
 
-  private handleButtonClick = (): void => {
+  /**
+   * Handles the button click event to start the process.
+   * If the user is not authenticated, it logs a message indicating that authentication is required.
+   * @private
+   */
+  private readonly handleButtonClick = (): void => {
     if (this.props.is_authenticated) {
       this.hardpy_start();
     } else {
@@ -58,14 +86,24 @@ export class StartStopButton extends React.Component<Props> {
     }
   };
 
+  /**
+   * Adds an event listener for the keydown event when the component is mounted.
+   */
   componentDidMount(): void {
     window.addEventListener("keydown", this.hardpy_start_with_space);
   }
 
+  /**
+   * Removes the event listener for the keydown event when the component is unmounted.
+   */
   componentWillUnmount(): void {
     window.removeEventListener("keydown", this.hardpy_start_with_space);
   }
 
+  /**
+   * Renders the Start/Stop button with appropriate properties based on the testing status and authentication state.
+   * @returns {React.ReactNode} The rendered button component.
+   */
   render(): React.ReactNode {
     const is_authenticated = this.props.is_authenticated == true;
     const is_testing_in_progress = this.props.testing_status == "run";

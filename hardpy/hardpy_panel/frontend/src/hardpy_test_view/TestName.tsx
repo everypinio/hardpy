@@ -7,6 +7,13 @@ interface Props {
   name: string;
 }
 
+/**
+ * Renders the provided name inside a React Fragment.
+ * 
+ * @param {Props} props - The props object containing the name to be displayed.
+ * @param {string} props.name - The name to be rendered.
+ * @returns {React.ReactElement} A React element containing the provided name.
+ */
 export function TestName(props: Props): React.ReactElement {
   return <React.Fragment>{props.name}</React.Fragment>;
 }

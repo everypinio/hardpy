@@ -92,6 +92,10 @@ interface Props {
 export class SuiteList extends React.Component<Props> {
   elements_count: number = 0;
 
+  /**
+   * Renders the SuiteList component.
+   * @returns {React.ReactElement} The rendered component.
+   */
   render(): React.ReactElement {
     if (this.props.db_state.name == undefined) {
       return (
@@ -189,6 +193,12 @@ export class SuiteList extends React.Component<Props> {
     );
   }
 
+  /**
+   * Renders a single suite component.
+   * @param {number} index - The index of the suite.
+   * @param {Suite} suite - The suite object containing name and test details.
+   * @returns {React.ReactElement} The rendered suite component.
+   */
   private suiteRender(index: number, suite: Suite) {
     return (
       <TestSuiteComponent
