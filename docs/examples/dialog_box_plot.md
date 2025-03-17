@@ -14,10 +14,9 @@ This approach is particularly useful for scenarios where visual data needs to be
 
 1. Launch `hardpy init html_plot`.
 2. Install Required Packages `pip install matplotlib mpld3`.
-3. Create your `conftest.py` file with the provided fixture.
-4. Create your `test_plot.py` file with the test case.
-5. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
-6. Launch `hardpy run html_plot`.
+3. Create your `test_plot.py` file with the test case.
+4. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
+5. Launch `hardpy run html_plot`.
 
 ### test_plot.py
 
