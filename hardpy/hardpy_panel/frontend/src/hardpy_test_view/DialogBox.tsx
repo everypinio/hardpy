@@ -80,6 +80,14 @@ interface WidgetInfo {
   steps?: Step[];
 }
 
+/**
+ * StartConfirmationDialog is a React component that renders a dialog box with various types of input widgets.
+ * It supports text input, numeric input, radio buttons, checkboxes, and multi-step forms.
+ *
+ * @param {Props} props - The properties passed to the component.
+ * @returns {JSX.Element} - The rendered dialog box.
+ */
+
 export function StartConfirmationDialog(props: Props) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [inputText, setInputText] = useState("");
@@ -110,6 +118,10 @@ export function StartConfirmationDialog(props: Props) {
   const htmlWidthIndex = 0.9;
   const lineHeight = (10 * (props.font_size ? props.font_size : 14)) / 14;
 
+  /**
+   * Handles the close event of the dialog box.
+   * Sends a request to stop the tests and displays a notification.
+   */
   const handleClose = () => {
     setDialogOpen(false);
     fetch("api/stop")
@@ -129,6 +141,10 @@ export function StartConfirmationDialog(props: Props) {
     });
   };
 
+  /**
+   * Handles the confirm event of the dialog box.
+   * Validates the input and sends the confirmed data to the server.
+   */
   const handleConfirm = async () => {
     if (props.widget_type) {
       switch (props.widget_type) {
@@ -162,6 +178,12 @@ export function StartConfirmationDialog(props: Props) {
     setDialogOpen(false);
     let textToSend = "";
 
+    /**
+     * Encodes a URL component, replacing special characters with their hexadecimal equivalents.
+     *
+     * @param {string} str - The string to encode.
+     * @returns {string} - The encoded string.
+     */
     function processEncodeURLComponent(str: string) {
       return encodeURIComponent(str).replace(
         /[!-'()*+,/:;<=>?@[\]^`{|}~]/g,
@@ -206,6 +228,11 @@ export function StartConfirmationDialog(props: Props) {
     }
   };
 
+  /**
+   * Handles keydown events for the dialog box.
+   *
+   * @param {React.KeyboardEvent} event - The keyboard event.
+   */
   const handleKeyDown = (event: React.KeyboardEvent) => {
     const key = event.key;
 
@@ -241,6 +268,14 @@ export function StartConfirmationDialog(props: Props) {
     }
   };
 
+  /**
+   * Calculates the dimensions of an image based on its natural dimensions and a width factor.
+   *
+   * @param {number} naturalWidth - The natural width of the image.
+   * @param {number} naturalHeight - The natural height of the image.
+   * @param {number} widthFactor - The width factor to scale the image by.
+   * @returns {{width: number, height: number}} - The calculated dimensions.
+   */
   const calculateDimensions = (
     naturalWidth: number,
     naturalHeight: number,
@@ -250,6 +285,11 @@ export function StartConfirmationDialog(props: Props) {
     height: (naturalHeight * (widthFactor || 100)) / 100,
   });
 
+  /**
+   * Handles the load event of an image, calculating its dimensions and updating the state.
+   *
+   * @param {React.SyntheticEvent<HTMLImageElement>} event - The image load event.
+   */
   const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
     const { naturalWidth, naturalHeight } = event.target as HTMLImageElement;
     setImageDimensions(
@@ -257,6 +297,13 @@ export function StartConfirmationDialog(props: Props) {
     );
   };
 
+  /**
+   * Calculates the number of text lines required to display a given text within a specified width.
+   *
+   * @param {string} text - The text to measure.
+   * @param {number} width - The width within which the text should fit.
+   * @returns {number} - The number of lines required.
+   */
   const calculateTextLines = (text: string, width: number) => {
     const context = document.createElement("canvas").getContext("2d");
     if (context) {
