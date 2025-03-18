@@ -18,7 +18,7 @@ type State = {
  * The timer starts when the component is mounted and the status is "run".
  */
 export class RunTimer extends React.Component<Props, State> {
-  private startTime: number;
+  private readonly startTime: number;
 
   /**
    * Constructs the RunTimer component.
@@ -76,13 +76,13 @@ export class RunTimer extends React.Component<Props, State> {
    */
   private updateClock() {
     const now = new Date();
-
+  
     if (this.props.status == "run" && this.props.commonTestRunStatus == "run") {
       this.setState({ elapsedTime: now.getTime() - this.startTime });
-    } else {
-      if (this.state.clock) {
-        clearInterval(this.state.clock);
-      }
+    }
+  
+    if (this.state.clock) {
+      clearInterval(this.state.clock);
     }
   }
 

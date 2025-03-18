@@ -25,7 +25,7 @@ interface StartOperatorMsgDialogProps {
  * @param {StartOperatorMsgDialogProps} props - The properties for the dialog.
  * @returns {JSX.Element} The rendered dialog component.
  */
-export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps): JSX.Element {
+export function StartOperatorMsgDialog(props: Readonly<StartOperatorMsgDialogProps>): JSX.Element {
   const [operatorMessageOpen, setOperatorMessageOpen] = useState(false);
   const [imageDimensions, setImageDimensions] = useState({
     width: 0,
@@ -107,7 +107,7 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps): JSX.
   );
 
   const textHeight =
-    (calculateTextLines(props.msg, operatorMessageWidth) || 1) * lineHeight;
+    (calculateTextLines(props.msg, operatorMessageWidth) ?? 1) * lineHeight;
 
   const operatorMessageHeight = Math.max(
     Math.min(
@@ -120,7 +120,7 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps): JSX.
   );
 
   const imageStyle = {
-    border: `${props.image_border || 0}px solid black`,
+    border: `${props.image_border ?? 0}px solid black`,
     display: "block",
     margin: "0 auto",
   };
@@ -193,7 +193,7 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps): JSX.
           <div className="image-container">
             <img
               src={`data:image/image;base64,${props.image_base64}`}
-              alt="Image"
+              alt={""} // Use a more descriptive text or an empty string if not available
               onLoad={handleImageLoad}
               style={{
                 width: `${props.image_width}%`,
@@ -201,7 +201,7 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps): JSX.
                 maxWidth: `${operatorMessageWidth - baseOperatorMessageDimensions.width / 2}px`,
                 maxHeight: `${operatorMessageHeight - baseOperatorMessageDimensions.height / 2}px`,
                 objectFit: "scale-down",
-                transform: `scale(${(props.image_width || 100) / 100})`,
+                transform: `scale(${(props.image_width ?? 100) / 100})`,
                 transformOrigin: `top center`,
                 ...imageStyle,
               }}

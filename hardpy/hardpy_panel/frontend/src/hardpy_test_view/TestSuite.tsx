@@ -81,7 +81,6 @@ export interface TestItem {
 }
 
 type Props = {
-  key: string;
   index: number;
   test: TestItem;
   defaultOpen: boolean;
@@ -99,13 +98,15 @@ const SUITE_NAME_STUB = "Lorem ipsum";
  * It includes functionality to render test names, statuses, and data.
  */
 export class TestSuite extends React.Component<Props, State> {
-  private static LOADING_ICON = (
+  private static readonly LOADING_ICON = (
     <div style={{ margin: 30 }}>
       <LoadingOutlined spin />
     </div>
   );
 
-  static defaultProps: { defaultOpen: boolean };
+  static defaultProps: Partial<Props> = {
+    defaultOpen: true,
+  };
 
   /**
    * Renders the TestSuite component.
@@ -401,9 +402,9 @@ export class TestSuite extends React.Component<Props, State> {
         {test.dialog_box.dialog_text &&
           test.status === "run" &&
           this.props.commonTestRunStatus === "run" &&
-          test.dialog_box.visible == true && (
+          test.dialog_box.visible && (
             <StartConfirmationDialog
-              title_bar={test.dialog_box.title_bar || test.name}
+              title_bar={test.dialog_box.title_bar ?? test.name}
               dialog_text={test.dialog_box.dialog_text}
               widget_info={widget_info}
               widget_type={widget_type}
@@ -414,12 +415,12 @@ export class TestSuite extends React.Component<Props, State> {
               id={test.dialog_box.id}
               font_size={test.dialog_box.font_size}
               html_code={
-                test.dialog_box.html?.is_raw_html == true
+                test.dialog_box.html?.is_raw_html
                   ? test.dialog_box.html?.code_or_url
                   : undefined
               }
               html_url={
-                test.dialog_box.html?.is_raw_html == false
+                !test.dialog_box.html?.is_raw_html
                   ? test.dialog_box.html?.code_or_url
                   : undefined
               }

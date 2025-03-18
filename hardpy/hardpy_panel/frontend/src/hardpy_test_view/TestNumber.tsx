@@ -16,7 +16,7 @@ interface Props {
  * @param {number} props.val - The numeric value to be displayed.
  * @returns {React.ReactElement} A React element that displays the provided numeric value.
  */
-export function TestNumber(props: Props): React.ReactElement {
+export function TestNumber(props: Readonly<Props>): React.ReactElement {
   return <>{props.val}</>;
 }
 

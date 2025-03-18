@@ -508,7 +508,7 @@ export function StartConfirmationDialog(props: Readonly<Props>) {
                           style={{
                             maxWidth: `${imageStepDimensions.width + baseDialogDimensions.width}px`,
                             maxHeight: `${imageStepDimensions.height + baseDialogDimensions.height}px`,
-                            transform: `scale(${(step.info.image?.width || 100) / 100})`,
+                            transform: `scale(${(step.info.image?.width ?? 100) / 100})`,
                             transformOrigin: `top center`,
                             ...imageStyle,
                           }}
@@ -536,7 +536,7 @@ export function StartConfirmationDialog(props: Readonly<Props>) {
                         />
                       )}
                       {step.info.html?.code_or_url &&
-                        step.info.html?.is_raw_html == false && (
+                        !step.info.html?.is_raw_html && (
                           <iframe
                             src={step.info.html?.code_or_url}
                             height={
@@ -552,9 +552,7 @@ export function StartConfirmationDialog(props: Readonly<Props>) {
                               ((step.info.html?.width ?? 100) / 100)
                             }
                             style={{
-                              border:
-                                `${step.info.html?.border}px solid black` ||
-                                "none",
+                              border:`${step.info.html?.border ?? 0}px solid black`,
                             }}
                             title="HTML Link"
                           />
@@ -579,7 +577,7 @@ export function StartConfirmationDialog(props: Readonly<Props>) {
                 maxWidth: `${dialogWidth - baseDialogDimensions.width / 2}px`,
                 maxHeight: `${dialogHeight - baseDialogDimensions.height / 2}px`,
                 objectFit: "scale-down",
-                transform: `scale(${(props.image_width || 100) / 100})`,
+                transform: `scale(${(props.image_width ?? 100) / 100})`,
                 transformOrigin: `top center`,
                 ...imageStyle,
               }}
@@ -602,7 +600,7 @@ export function StartConfirmationDialog(props: Readonly<Props>) {
               ((props.html_width ?? 100) / 100)
             }
             style={{
-              border: `${props.html_border}px solid black` || "none",
+              border:`${props.html_border ?? 0}px solid black`,
             }}
             title="HTML Code"
           />
@@ -623,7 +621,7 @@ export function StartConfirmationDialog(props: Readonly<Props>) {
               ((props.html_width ?? 100) / 100)
             }
             style={{
-              border: `${props.html_border}px solid black` || "none",
+              border:`${props.html_border ?? 0}px solid black`,
             }}
             title="HTML Link"
           />

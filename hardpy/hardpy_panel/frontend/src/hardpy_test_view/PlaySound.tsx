@@ -43,7 +43,6 @@ const SOUND_DURATION = 0.3;
  * @property {string} status - The status of the component, which determines the sound to play ("failed" or "passed").
  */
 interface Props {
-  key: string;
   status: string;
 }
 
@@ -68,7 +67,7 @@ function playSounds(sounds: Sound[], duration: number) {
  * @param {Props} props - The props for the PlaySound component.
  * @returns {React.ReactElement} - An empty React element (no visual rendering).
  */
-export function PlaySound(props: Props): React.ReactElement {
+export function PlaySound(props: Readonly<Props>): React.ReactElement {
   /**
    * React effect hook to play sounds when the status changes.
    */
