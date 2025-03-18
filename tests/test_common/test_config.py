@@ -7,7 +7,6 @@ from hardpy.common.config import (
     DatabaseConfig,
     FrontendConfig,
     HardpyConfig,
-    SocketConfig,
     StandCloudConfig,
 )
 
@@ -17,8 +16,6 @@ db_no_default_host = "localhost1"
 db_no_default_port = 5985
 frontend_no_default_host = "localhost1"
 frontend_no_default_port = 8001
-socket_no_default_host = "localhost1"
-socket_no_default_port = 6526
 stand_cloud_no_default_addr = "everypin1.standcloud.localhost"
 
 db_default_user = "dev"
@@ -27,8 +24,6 @@ db_default_host = "localhost"
 db_default_port = 5984
 frontend_default_host = "localhost"
 frontend_default_port = 8000
-socket_default_host = "localhost"
-socket_default_port = 6525
 stand_cloud_default_addr = ""
 
 
@@ -42,8 +37,6 @@ def test_config_manager_init(tmp_path: Path):
         database_port=db_no_default_port,
         frontend_host=frontend_no_default_host,
         frontend_port=frontend_no_default_port,
-        socket_host=socket_no_default_host,
-        socket_port=socket_no_default_port,
         sc_address=stand_cloud_no_default_addr,
     )
     config = ConfigManager.get_config()
@@ -55,8 +48,6 @@ def test_config_manager_init(tmp_path: Path):
     assert config.database.port == db_no_default_port
     assert config.frontend.host == frontend_no_default_host
     assert config.frontend.port == frontend_no_default_port
-    assert config.socket.host == socket_no_default_host
-    assert config.socket.port == socket_no_default_port
     assert config.stand_cloud.address == stand_cloud_no_default_addr
 
 
@@ -80,12 +71,6 @@ def test_frontend_config():
     assert config.port == frontend_default_port
 
 
-def test_socket_config():
-    config = SocketConfig()
-    assert config.host == socket_default_host
-    assert config.port == socket_default_port
-
-
 def test_stand_cloud_config():
     config = StandCloudConfig()
     assert config.address == stand_cloud_default_addr
@@ -97,7 +82,6 @@ def test_hardpy_config():
         tests_dir="tests",
         database=DatabaseConfig(),
         frontend=FrontendConfig(),
-        socket=SocketConfig(),
         stand_cloud=StandCloudConfig(),
     )
     assert config.title == "HardPy TOML config"
@@ -108,8 +92,6 @@ def test_hardpy_config():
     assert config.database.port == db_default_port
     assert config.frontend.host == frontend_default_host
     assert config.frontend.port == frontend_default_port
-    assert config.socket.host == socket_default_host
-    assert config.socket.port == socket_default_port
     assert config.stand_cloud.address == stand_cloud_default_addr
 
 
@@ -125,8 +107,6 @@ def test_config_manager_create_config(tmp_path: Path):
         database_port=db_default_port,
         frontend_host=frontend_default_host,
         frontend_port=frontend_default_port,
-        socket_host=socket_default_host,
-        socket_port=socket_default_port,
         sc_address=stand_cloud_default_addr,
     )
 
@@ -149,7 +129,6 @@ def test_read_config_success(tmp_path: Path):
             "port": db_default_port,
         },
         "frontend": {"host": frontend_default_host, "port": frontend_default_port},
-        "socket": {"host": socket_default_host, "port": socket_default_port},
         "stand_cloud": {
             "address": stand_cloud_default_addr,
         },
@@ -169,6 +148,4 @@ def test_read_config_success(tmp_path: Path):
     assert config.database.port == test_config_data["database"]["port"]
     assert config.frontend.host == test_config_data["frontend"]["host"]
     assert config.frontend.port == test_config_data["frontend"]["port"]
-    assert config.socket.host == test_config_data["socket"]["host"]
-    assert config.socket.port == test_config_data["socket"]["port"]
     assert config.stand_cloud.address == test_config_data["stand_cloud"]["address"]
