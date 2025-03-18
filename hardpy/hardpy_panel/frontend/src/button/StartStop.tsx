@@ -12,7 +12,7 @@ type Props = {
 
 /**
  * A React component that renders a start/stop button for controlling a testing process.
- * The button's behavior and appearance depend on the testing status and authentication state.
+ * The button's behavior and appearance depend on the testing status.
  */
 export class StartStopButton extends React.Component<Props> {
   constructor(props: Props) {
@@ -58,7 +58,7 @@ export class StartStopButton extends React.Component<Props> {
 
   /**
    * Handles the keydown event to start the process when the spacebar is pressed.
-   * The process starts only if testing is not in progress and the user is authenticated.
+   * The process starts only if testing is not in progress.
    * @param {KeyboardEvent} event - The keyboard event object.
    * @private
    */
@@ -75,7 +75,6 @@ export class StartStopButton extends React.Component<Props> {
 
   /**
    * Handles the button click event to start the process.
-   * If the user is not authenticated, it logs a message indicating that authentication is required.
    * @private
    */
   private readonly handleButtonClick = (): void => {
