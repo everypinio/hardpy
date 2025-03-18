@@ -101,7 +101,7 @@ export class StartStopButton extends React.Component<Props> {
   }
 
   /**
-   * Renders the Start/Stop button with appropriate properties based on the testing status and authentication state.
+   * Renders the Start/Stop button with appropriate properties based on the testing status.
    * @returns {React.ReactNode} The rendered button component.
    */
   render(): React.ReactNode {

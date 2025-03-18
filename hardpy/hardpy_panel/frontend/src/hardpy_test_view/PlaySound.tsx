@@ -6,12 +6,11 @@ import * as Tone from "tone";
 
 /**
  * Represents a sound with a specific note and duration.
- * @typedef {Object} Sound
- * @property {string} note - The musical note to play (e.g., "C4").
- * @property {number} duration - The delay (in seconds) before the note is played.
  */
-
-type Sound = { note: string; duration: number };
+interface Sound {
+  note: string;
+  duration: number;
+}
 
 /**
  * Array of sounds to play when a failure occurs.

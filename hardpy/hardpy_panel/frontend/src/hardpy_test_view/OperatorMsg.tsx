@@ -25,7 +25,7 @@ interface StartOperatorMsgDialogProps {
  * @param {StartOperatorMsgDialogProps} props - The properties for the dialog.
  * @returns {JSX.Element} The rendered dialog component.
  */
-export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
+export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps): JSX.Element {
   const [operatorMessageOpen, setOperatorMessageOpen] = useState(false);
   const [imageDimensions, setImageDimensions] = useState({
     width: 0,

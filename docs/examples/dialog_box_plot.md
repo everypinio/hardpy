@@ -1,9 +1,9 @@
 # Plot in the dialog box
 
-This example demonstrates how to create and display a plot within a dialog box using `matplotlib` and `mpld3`. 
+This example demonstrates how to create and display a plot within a dialog box using `matplotlib` and `mpld3`.
 The plot is generated as an HTML component and embedded into a dialog box, which can be used for testing or user interaction purposes.
 
-The process involves generating a plot using `matplotlib`, converting it to HTML using `mpld3`, and then embedding the HTML into a dialog box. 
+The process involves generating a plot using `matplotlib`, converting it to HTML using `mpld3`, and then embedding the HTML into a dialog box.
 This approach is particularly useful for scenarios where visual data needs to be presented to the user or tester in an interactive manner.
 
 <h1 align="center">
