@@ -88,7 +88,7 @@ interface WidgetInfo {
  * @returns {JSX.Element} - The rendered dialog box.
  */
 
-export function StartConfirmationDialog(props: Props) {
+export function StartConfirmationDialog(props: Readonly<Props>) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [inputText, setInputText] = useState("");
   const [selectedRadioButton, setSelectedRadioButton] = useState("");
@@ -105,7 +105,7 @@ export function StartConfirmationDialog(props: Props) {
 
   const HEX_BASE = 16;
 
-  const widgetType = props.widget_type || WidgetType.Base;
+  const widgetType = props.widget_type ?? WidgetType.Base;
   const inputPlaceholder = "enter answer";
 
   const screenWidth = window.screen.width;
@@ -324,10 +324,10 @@ export function StartConfirmationDialog(props: Props) {
   );
 
   const textHeight =
-    (calculateTextLines(props.dialog_text, dialogWidth) || 1) * lineHeight;
+    (calculateTextLines(props.dialog_text, dialogWidth) ?? 1) * lineHeight;
   const step = props.widget_info?.steps?.[0];
   const textStepHeight = step?.info?.text
-    ? (calculateTextLines(step.info.text, dialogWidth) || 1) * lineHeight
+    ? (calculateTextLines(step.info.text, dialogWidth) ?? 1) * lineHeight
     : lineHeight * 2;
 
   const dialogHeight = Math.max(
@@ -344,7 +344,7 @@ export function StartConfirmationDialog(props: Props) {
   );
 
   const imageStyle = {
-    border: `${props.image_border || 0}px solid black`,
+    border: `${props.image_border ?? 0}px solid black`,
     display: "block",
     margin: "0 auto",
   };
@@ -381,7 +381,7 @@ export function StartConfirmationDialog(props: Props) {
           const image = new Image();
           image.src = base64Src;
           image.onload = () =>
-            handleStepImageLoad(image, step.info.image?.width || 100);
+            handleStepImageLoad(image, step.info.image?.width ?? 100);
         }
       });
     }
@@ -449,44 +449,40 @@ export function StartConfirmationDialog(props: Props) {
 
         {widgetType === WidgetType.RadioButton && (
           <>
-            {props.widget_info &&
-              props.widget_info.fields &&
-              props.widget_info.fields.map((option: string) => (
-                <Radio
-                  key={option}
-                  label={option}
-                  checked={selectedRadioButton === option}
-                  onChange={() => setSelectedRadioButton(option)}
-                  onKeyDown={handleKeyDown}
-                  style={{ fontSize: `${props.font_size}px` }}
-                  autoFocus={option === (props.widget_info?.fields ?? [])[0]}
-                />
-              ))}
+            {props.widget_info?.fields?.map((option: string) => (
+              <Radio
+                key={option}
+                label={option}
+                checked={selectedRadioButton === option}
+                onChange={() => setSelectedRadioButton(option)}
+                onKeyDown={handleKeyDown}
+                style={{ fontSize: `${props.font_size}px` }}
+                autoFocus={option === (props.widget_info?.fields ?? [])[0]}
+              />
+            ))}
           </>
         )}
         {widgetType === WidgetType.Checkbox && (
           <>
-            {props.widget_info &&
-              props.widget_info.fields &&
-              props.widget_info.fields.map((option: string) => (
-                <Checkbox
-                  key={option}
-                  label={option}
-                  checked={selectedCheckboxes.includes(option)}
-                  autoFocus={option === (props.widget_info?.fields ?? [])[0]}
-                  onKeyDown={handleKeyDown}
-                  style={{ fontSize: `${props.font_size}px` }}
-                  onChange={() => {
-                    if (selectedCheckboxes.includes(option)) {
-                      setSelectedCheckboxes(
-                        selectedCheckboxes.filter((item) => item !== option)
-                      );
-                    } else {
-                      setSelectedCheckboxes([...selectedCheckboxes, option]);
-                    }
-                  }}
-                />
-              ))}
+            {props.widget_info?.fields?.map((option: string) => (
+              <Checkbox
+                key={option}
+                label={option}
+                checked={selectedCheckboxes.includes(option)}
+                autoFocus={option === (props.widget_info?.fields ?? [])[0]}
+                onKeyDown={handleKeyDown}
+                style={{ fontSize: `${props.font_size}px` }}
+                onChange={() => {
+                  if (selectedCheckboxes.includes(option)) {
+                    setSelectedCheckboxes(
+                      selectedCheckboxes.filter((item) => item !== option)
+                    );
+                  } else {
+                    setSelectedCheckboxes([...selectedCheckboxes, option]);
+                  }
+                }}
+              />
+            ))}
           </>
         )}
         {widgetType === WidgetType.Multistep && (
@@ -508,7 +504,7 @@ export function StartConfirmationDialog(props: Props) {
                       {step.info.image && (
                         <img
                           src={`data:image/image;base64,${step.info.image?.base64}`}
-                          alt="Image"
+                          alt={""} // or alt={step.info.image?.description} if you have a description
                           style={{
                             maxWidth: `${imageStepDimensions.width + baseDialogDimensions.width}px`,
                             maxHeight: `${imageStepDimensions.height + baseDialogDimensions.height}px`,
@@ -518,30 +514,27 @@ export function StartConfirmationDialog(props: Props) {
                           }}
                         />
                       )}
-                      {step.info.html?.code_or_url &&
-                        step.info.html?.is_raw_html == true && (
-                          <iframe
-                            srcDoc={step.info.html?.code_or_url}
-                            height={
-                              (imageStepDimensions.height +
-                                baseDialogDimensions.height) *
-                              htmlHeightIndex *
-                              ((step.info.html?.width ?? 100) / 100)
-                            }
-                            width={
-                              (imageStepDimensions.width +
-                                baseDialogDimensions.width) *
-                              htmlWidthIndex *
-                              ((step.info.html?.width ?? 100) / 100)
-                            }
-                            style={{
-                              border:
-                                `${step.info.html?.border}px solid black` ||
-                                "none",
-                            }}
-                            title="HTML Code"
-                          />
-                        )}
+                      {step.info.html?.code_or_url && step.info.html?.is_raw_html && (
+                        <iframe
+                          srcDoc={step.info.html?.code_or_url}
+                          height={
+                            (imageStepDimensions.height +
+                              baseDialogDimensions.height) *
+                            htmlHeightIndex *
+                            ((step.info.html?.width ?? 100) / 100)
+                          }
+                          width={
+                            (imageStepDimensions.width +
+                              baseDialogDimensions.width) *
+                            htmlWidthIndex *
+                            ((step.info.html?.width ?? 100) / 100)
+                          }
+                          style={{
+                            border: step.info.html?.border ? `${step.info.html?.border}px solid black` : "none",
+                          }}
+                          title="HTML Code"
+                        />
+                      )}
                       {step.info.html?.code_or_url &&
                         step.info.html?.is_raw_html == false && (
                           <iframe
@@ -578,7 +571,7 @@ export function StartConfirmationDialog(props: Props) {
           <div className="image-container">
             <img
               src={`data:image/image;base64,${props.image_base64}`}
-              alt="Image"
+              alt={''} // Set alt to an empty string if no alt text is provided
               onLoad={handleImageLoad}
               style={{
                 width: `${props.image_width}%`,
