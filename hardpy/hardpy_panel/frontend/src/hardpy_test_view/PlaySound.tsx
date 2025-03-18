@@ -34,7 +34,7 @@ const SUCCESS_SOUNDS: Sound[] = [
  * The duration (in seconds) for which the sound is sustained.
  * @type {number}
  */
-const SOUND_DURATION = 0.3;
+const SOUND_DURATION: number = 0.3;
 
 /**
  * Props for the PlaySound component.

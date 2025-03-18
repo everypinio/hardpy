@@ -198,7 +198,7 @@ export class SuiteList extends React.Component<Props> {
    * @param {Suite} suite - The suite object containing name and test details.
    * @returns {React.ReactElement} The rendered suite component.
    */
-  private suiteRender(index: number, suite: Suite) {
+  private suiteRender(index: number, suite: Suite): React.ReactElement {
     return (
       <TestSuiteComponent
         key={`${suite.name}_${index}`}

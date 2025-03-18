@@ -88,7 +88,7 @@ interface WidgetInfo {
  * @returns {JSX.Element} - The rendered dialog box.
  */
 
-export function StartConfirmationDialog(props: Readonly<Props>) {
+export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [inputText, setInputText] = useState("");
   const [selectedRadioButton, setSelectedRadioButton] = useState("");
@@ -184,7 +184,7 @@ export function StartConfirmationDialog(props: Readonly<Props>) {
      * @param {string} str - The string to encode.
      * @returns {string} - The encoded string.
      */
-    function processEncodeURLComponent(str: string) {
+    function processEncodeURLComponent(str: string): string {
       return encodeURIComponent(str).replace(
         /[!-'()*+,/:;<=>?@[\]^`{|}~]/g,
         function (c) {
@@ -238,32 +238,70 @@ export function StartConfirmationDialog(props: Readonly<Props>) {
 
     if (key === "Enter") {
       handleConfirm();
+      return;
     }
 
     if (props.widget_info?.fields) {
-      if (widgetType === WidgetType.RadioButton) {
-        const index = props.widget_info.fields.findIndex((option) =>
-          option.startsWith(key)
-        );
-        if (index >= 0) {
-          setSelectedRadioButton(props.widget_info.fields[index]);
-        }
+        handleWidgetKeyDown(key);
       }
+    };
 
-      if (widgetType === WidgetType.Checkbox) {
-        const index = props.widget_info.fields.findIndex((option) =>
-          option.startsWith(key)
+  /**
+   * Handles keydown events for widget-specific actions.
+   *
+   * @param {string} key - The key that was pressed.
+   */
+  const handleWidgetKeyDown = (key: string) => {
+    const index = findFieldIndexByKey(key);
+
+    if (index >= 0) {
+      if (widgetType === WidgetType.RadioButton) {
+        handleRadioButtonKeyDown(index);
+      } else if (widgetType === WidgetType.Checkbox) {
+        handleCheckboxKeyDown(index);
+      }
+    }
+  };
+
+  /**
+   * Finds the index of the field that starts with the given key.
+   *
+   * @param {string} key - The key to search for.
+   * @returns {number} The index of the field, or -1 if not found.
+   */
+  const findFieldIndexByKey = (key: string): number => {
+    return (
+      props.widget_info?.fields?.findIndex((option) =>
+        option.startsWith(key)
+      ) ?? -1
+    );
+  };
+
+  /**
+   * Handles keydown events for RadioButton widget.
+   *
+   * @param {number} index - The index of the selected field.
+   */
+  const handleRadioButtonKeyDown = (index: number) => {
+    if (props.widget_info?.fields) {
+      setSelectedRadioButton(props.widget_info.fields[index]);
+    }
+  };
+
+  /**
+   * Handles keydown events for Checkbox widget.
+   *
+   * @param {number} index - The index of the selected field.
+   */
+  const handleCheckboxKeyDown = (index: number) => {
+    if (props.widget_info?.fields) {
+      const option = props.widget_info.fields[index];
+      if (selectedCheckboxes.includes(option)) {
+        setSelectedCheckboxes(
+          selectedCheckboxes.filter((item) => item !== option)
         );
-        if (index >= 0) {
-          const option = props.widget_info.fields[index];
-          if (selectedCheckboxes.includes(option)) {
-            setSelectedCheckboxes(
-              selectedCheckboxes.filter((item) => item !== option)
-            );
-          } else {
-            setSelectedCheckboxes([...selectedCheckboxes, option]);
-          }
-        }
+      } else {
+        setSelectedCheckboxes([...selectedCheckboxes, option]);
       }
     }
   };
@@ -280,7 +318,7 @@ export function StartConfirmationDialog(props: Readonly<Props>) {
     naturalWidth: number,
     naturalHeight: number,
     widthFactor: number
-  ) => ({
+  ): { width: number; height: number; } => ({
     width: (naturalWidth * (widthFactor || 100)) / 100,
     height: (naturalHeight * (widthFactor || 100)) / 100,
   });
@@ -304,7 +342,7 @@ export function StartConfirmationDialog(props: Readonly<Props>) {
    * @param {number} width - The width within which the text should fit.
    * @returns {number} - The number of lines required.
    */
-  const calculateTextLines = (text: string, width: number) => {
+  const calculateTextLines = (text: string, width: number): number | undefined => {
     const context = document.createElement("canvas").getContext("2d");
     if (context) {
       context.font = "10px sans-serif";
@@ -417,8 +455,8 @@ export function StartConfirmationDialog(props: Readonly<Props>) {
           padding: "10px",
         }}
       >
-        {props.dialog_text.split("\n").map((line, index) => (
-          <p key={index} style={{ textAlign: "left" }}>
+        {props.dialog_text.split("\n").map((line) => (
+          <p key={line.trim()} style={{ textAlign: "left" }}>
             {line}
           </p>
         ))}
@@ -496,8 +534,8 @@ export function StartConfirmationDialog(props: Readonly<Props>) {
                 panel={
                   <div className="step-container">
                     <div className="step-content">
-                      {step.info?.text?.split("\n").map((line, index) => (
-                        <p key={index} style={{ textAlign: "left" }}>
+                      {step.info?.text?.split("\n").map((line) => (
+                        <p key={line} style={{ textAlign: "left" }}>
                           {line}
                         </p>
                       ))}
@@ -514,27 +552,30 @@ export function StartConfirmationDialog(props: Readonly<Props>) {
                           }}
                         />
                       )}
-                      {step.info.html?.code_or_url && step.info.html?.is_raw_html && (
-                        <iframe
-                          srcDoc={step.info.html?.code_or_url}
-                          height={
-                            (imageStepDimensions.height +
-                              baseDialogDimensions.height) *
-                            htmlHeightIndex *
-                            ((step.info.html?.width ?? 100) / 100)
-                          }
-                          width={
-                            (imageStepDimensions.width +
-                              baseDialogDimensions.width) *
-                            htmlWidthIndex *
-                            ((step.info.html?.width ?? 100) / 100)
-                          }
-                          style={{
-                            border: step.info.html?.border ? `${step.info.html?.border}px solid black` : "none",
-                          }}
-                          title="HTML Code"
-                        />
-                      )}
+                      {step.info.html?.code_or_url &&
+                        step.info.html?.is_raw_html && (
+                          <iframe
+                            srcDoc={step.info.html?.code_or_url}
+                            height={
+                              (imageStepDimensions.height +
+                                baseDialogDimensions.height) *
+                              htmlHeightIndex *
+                              ((step.info.html?.width ?? 100) / 100)
+                            }
+                            width={
+                              (imageStepDimensions.width +
+                                baseDialogDimensions.width) *
+                              htmlWidthIndex *
+                              ((step.info.html?.width ?? 100) / 100)
+                            }
+                            style={{
+                              border: step.info.html?.border
+                                ? `${step.info.html?.border}px solid black`
+                                : "none",
+                            }}
+                            title="HTML Code"
+                          />
+                        )}
                       {step.info.html?.code_or_url &&
                         !step.info.html?.is_raw_html && (
                           <iframe
@@ -552,7 +593,7 @@ export function StartConfirmationDialog(props: Readonly<Props>) {
                               ((step.info.html?.width ?? 100) / 100)
                             }
                             style={{
-                              border:`${step.info.html?.border ?? 0}px solid black`,
+                              border: `${step.info.html?.border ?? 0}px solid black`,
                             }}
                             title="HTML Link"
                           />
@@ -569,7 +610,7 @@ export function StartConfirmationDialog(props: Readonly<Props>) {
           <div className="image-container">
             <img
               src={`data:image/image;base64,${props.image_base64}`}
-              alt={''} // Set alt to an empty string if no alt text is provided
+              alt={""} // Set alt to an empty string if no alt text is provided
               onLoad={handleImageLoad}
               style={{
                 width: `${props.image_width}%`,
@@ -600,7 +641,7 @@ export function StartConfirmationDialog(props: Readonly<Props>) {
               ((props.html_width ?? 100) / 100)
             }
             style={{
-              border:`${props.html_border ?? 0}px solid black`,
+              border: `${props.html_border ?? 0}px solid black`,
             }}
             title="HTML Code"
           />
@@ -621,7 +662,7 @@ export function StartConfirmationDialog(props: Readonly<Props>) {
               ((props.html_width ?? 100) / 100)
             }
             style={{
-              border:`${props.html_border ?? 0}px solid black`,
+              border: `${props.html_border ?? 0}px solid black`,
             }}
             title="HTML Link"
           />

@@ -49,7 +49,7 @@ export class RunTimer extends React.Component<Props, State> {
    * @param {number} ms - The time in milliseconds.
    * @returns {string} The formatted time in seconds.
    */
-  private formatMilliseconds(ms: number) {
+  private formatMilliseconds(ms: number): string {
     return (ms / 1000).toFixed(1);
   }
 

@@ -179,7 +179,7 @@ export class TestSuite extends React.Component<Props, State> {
    * @param {number} test_number - The number of the test suite.
    * @returns {React.ReactElement} The rendered name element.
    */
-  private renderName(name: string, test_number: number) {
+  private renderName(name: string, test_number: number): React.ReactElement {
     const is_loading = _.isEmpty(name);
 
     return (
@@ -199,7 +199,7 @@ export class TestSuite extends React.Component<Props, State> {
    * @param {Cases} test_topics - The test cases to render.
    * @returns {React.ReactElement} The rendered test cases.
    */
-  private renderTests(test_topics: Cases) {
+  private renderTests(test_topics: Cases): React.ReactElement {
     let case_names: string[] = [];
 
     if (test_topics) {
@@ -260,7 +260,7 @@ export class TestSuite extends React.Component<Props, State> {
    * @param {TestItem} test_topics - The test item containing cases.
    * @returns {React.ReactElement} The rendered right panel.
    */
-  private renderTestSuiteRightPanel(test_topics: TestItem) {
+  private renderTestSuiteRightPanel(test_topics: TestItem): React.ReactElement {
     return (
       <div
         className={Classes.ALIGN_RIGHT}
@@ -300,8 +300,8 @@ export class TestSuite extends React.Component<Props, State> {
   private commonCellRender(
     cell_content: React.ReactElement,
     key: string,
-    is_loading = false
-  ) {
+    is_loading: boolean = false
+  ): React.ReactElement {
     return (
       <div
         className={is_loading ? Classes.SKELETON : undefined}
@@ -324,7 +324,7 @@ export class TestSuite extends React.Component<Props, State> {
     test_topics: Case[],
     row_: string,
     rowIndex: number
-  ) {
+  ): React.ReactElement {
     return this.commonCellRender(
       <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
         <TestNumber val={rowIndex + 1} />
@@ -344,7 +344,7 @@ export class TestSuite extends React.Component<Props, State> {
     test_topics: Case[],
     row_: string,
     rowIndex: number
-  ) {
+  ): React.ReactElement {
     const test = test_topics[rowIndex];
     return this.commonCellRender(
       <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
@@ -365,7 +365,7 @@ export class TestSuite extends React.Component<Props, State> {
     test_topics: Case[],
     row_: string,
     rowIndex: number
-  ) {
+  ): React.ReactElement {
     const test = test_topics[rowIndex];
 
     return this.commonCellRender(
@@ -387,7 +387,7 @@ export class TestSuite extends React.Component<Props, State> {
     test_topics: Case[],
     row_: string,
     rowIndex: number
-  ) {
+  ): React.ReactElement {
     const test = test_topics[rowIndex];
     const { info: widget_info, type: widget_type } =
       test.dialog_box.widget || {};
