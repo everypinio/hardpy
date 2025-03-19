@@ -45,18 +45,23 @@ class BaseReporter:
             msg = "Both runstore_only and statestore_only cannot be True"
             raise ValueError(msg)
         if runstore_only:
-            self._runstore.update_doc(key, value)
+            self._runstore.update_doc_value(key, value)
             return
         if statestore_only:
-            self._statestore.update_doc(key, value)
+            self._statestore.update_doc_value(key, value)
             return
-        self._runstore.update_doc(key, value)
-        self._statestore.update_doc(key, value)
+        self._runstore.update_doc_value(key, value)
+        self._statestore.update_doc_value(key, value)
 
     def update_db_by_doc(self) -> None:
         """Update database by current document."""
         self._statestore.update_db()
         self._runstore.update_db()
+
+    def update_doc_by_db(self) -> None:
+        """Update document by current database."""
+        self._statestore.update_doc()
+        self._runstore.update_doc()
 
     def generate_key(self, *args: Any) -> str:  # noqa: ANN401
         """Generate key for database.

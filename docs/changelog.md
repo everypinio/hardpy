@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Remove the internal **HardPy** socket on port 6525. Pytest plugin arguments `--hardpy-sh` and `--hardpy-sp`
+  are left for backward compatibility with version below 0.10.1.
 * Add the ability to add html-pages to dialog boxes and operator messages.
 
 ## HardPy 0.10.1

@@ -10,15 +10,11 @@ db_no_default_host = "localhost1"
 db_no_default_port = "5985"
 frontend_no_default_host = "localhost1"
 frontend_no_default_port = "8001"
-socket_no_default_host = "localhost1"
-socket_no_default_port = "6526"
 stand_cloud_no_default_addr = "everypin1.standcloud.localhost"
 
 db_default_port = "5984"
 frontend_default_host = "localhost"
 frontend_default_port = "8000"
-socket_default_host = "localhost"
-socket_default_port = "6525"
 
 
 def test_cli_init(tmp_path: Path):
@@ -143,38 +139,11 @@ def test_cli_init_frontend_port(tmp_path: Path):
         frontend_info = (
             f"[frontend]\n"
             f'host = "localhost"\n'
-            f"port = {frontend_no_default_port}\n\n"
+            f"port = {frontend_no_default_port}\n"
         ).format(frontend_no_default_port)
         assert (
             frontend_info in content
         ), "hardpy.toml does not contain the expected port."
-
-
-def test_cli_init_socket_host(tmp_path: Path):
-    subprocess.run(
-        [*HARDPY_COMMAND, tmp_path, "--socket-host", socket_no_default_host],
-        check=True,
-    )
-    hardpy_toml_path = tmp_path / "hardpy.toml"
-    with Path.open(hardpy_toml_path) as f:
-        content = f.read()
-        socket_info = f"""[socket]
-host = "{socket_no_default_host}"
-port = 6525
-"""
-        assert socket_info in content, "hardpy.toml does not contain the expected host."
-
-
-def test_cli_init_socket_port(tmp_path: Path):
-    subprocess.run(
-        [*HARDPY_COMMAND, tmp_path, "--socket-port", socket_no_default_port],
-        check=True,
-    )
-    hardpy_toml_path = tmp_path / "hardpy.toml"
-    with Path.open(hardpy_toml_path) as f:
-        content = f.read()
-        socket_info = f'[socket]\nhost = "localhost"\nport = {socket_no_default_port}\n'
-        assert socket_info in content, "hardpy.toml does not contain the expected port."
 
 
 def test_cli_init_stand_cloud_addr(tmp_path: Path):

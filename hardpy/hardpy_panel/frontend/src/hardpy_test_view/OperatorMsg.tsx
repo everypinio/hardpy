@@ -20,7 +20,12 @@ interface StartOperatorMsgDialogProps {
   html_border?: number;
 }
 
-export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
+/**
+ * A React component that displays a dialog with a message, optional image, and optional HTML content.
+ * @param {StartOperatorMsgDialogProps} props - The properties for the dialog.
+ * @returns {JSX.Element} The rendered dialog component.
+ */
+export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps): JSX.Element {
   const [operatorMessageOpen, setOperatorMessageOpen] = useState(false);
   const [imageDimensions, setImageDimensions] = useState({
     width: 0,
@@ -33,6 +38,11 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
   const minSize = 0.25;
   const lineHeight = (10 * (props.font_size ? props.font_size : 14)) / 14;
 
+  /**
+   * Handles the closing of the dialog and sends a confirmation to the server.
+   * @async
+   * @returns {Promise<void>}
+   */
   const handleClose = async () => {
     setOperatorMessageOpen(false);
 
@@ -46,6 +56,13 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
     }
   };
 
+  /**
+   * Calculates the dimensions of the image based on its natural dimensions and a width factor.
+   * @param {number} naturalWidth - The natural width of the image.
+   * @param {number} naturalHeight - The natural height of the image.
+   * @param {number} widthFactor - The factor to scale the width by.
+   * @returns {{width: number, height: number}} The calculated dimensions.
+   */
   const calculateDimensions = (
     naturalWidth: number,
     naturalHeight: number,
@@ -55,6 +72,11 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
     height: (naturalHeight * (widthFactor || 100)) / 100,
   });
 
+  /**
+   * Handles the loading of the image and sets its dimensions.
+   * @param {React.SyntheticEvent<HTMLImageElement>} event - The image load event.
+   * @returns {void}
+   */
   const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
     const { naturalWidth, naturalHeight } = event.target as HTMLImageElement;
     setImageDimensions(
@@ -62,6 +84,12 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
     );
   };
 
+  /**
+   * Calculates the number of lines of text based on the text content and available width.
+   * @param {string} text - The text content.
+   * @param {number} width - The available width for the text.
+   * @returns {number | undefined} The number of lines of text.
+   */
   const calculateTextLines = (text: string, width: number) => {
     const context = document.createElement("canvas").getContext("2d");
     if (context) {
@@ -98,6 +126,11 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
   };
 
   useEffect(() => {
+    /**
+     * Handles the keydown event to close the dialog when the Escape key is pressed.
+     * @param {KeyboardEvent} event - The keydown event.
+     * @returns {void}
+     */
     const handleKeyDown = (event: KeyboardEvent) => {
       const keyboardEvent =
         event as unknown as React.KeyboardEvent<HTMLInputElement>;
@@ -114,6 +147,10 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
   });
 
   useEffect(() => {
+    /**
+     * Sets the dialog visibility based on the `is_visible` prop.
+     * @returns {void}
+     */
     if (props.is_visible) {
       setOperatorMessageOpen(true);
     }

@@ -703,24 +703,6 @@ The default is `http://dev:dev@localhost:5984/`.
 --hardpy-db-url
 ```
 
-#### hardpy-sp
-
-Internal socket port for passing backend data (such as a dialog box) to running pytest tests.
-The default is *6525*.
-
-```bash
---hardpy-sp
-```
-
-#### hardpy-sh
-
-Internal socket host for passing backend data (such as a dialog box) to running pytest tests.
-The default is *localhost*.
-
-```bash
---hardpy-sh
-```
-
 #### hardpy-clear-database
 
 Option to clean **statestore** and **runstore** databases before running pytest.
