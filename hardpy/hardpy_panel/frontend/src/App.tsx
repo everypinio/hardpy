@@ -266,7 +266,6 @@ function App(): JSX.Element {
         <div style={{ flexDirection: "column" }}>
           <StartStopButton
             testing_status={lastRunStatus}
-            is_authenticated={isAuthenticated}
           />
         </div>
       </div>

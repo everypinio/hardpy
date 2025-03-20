@@ -2,13 +2,9 @@
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import * as React from "react";
-import { Tooltip } from "antd";
 import { AnchorButton, AnchorButtonProps } from "@blueprintjs/core";
 
-type Props = {
-  testing_status: string;
-  is_authenticated: boolean;
-};
+type Props = { testing_status: string };
 
 /**
  * A React component that renders a start/stop button for controlling a testing process.
@@ -64,11 +60,7 @@ export class StartStopButton extends React.Component<Props> {
    */
   private readonly hardpy_start_with_space = (event: KeyboardEvent) => {
     const is_testing_in_progress = this.props.testing_status == "run";
-    if (
-      event.key === " " &&
-      !is_testing_in_progress &&
-      this.props.is_authenticated
-    ) {
+    if (event.key === " " && !is_testing_in_progress) {
       this.hardpy_start();
     }
   };
@@ -78,11 +70,7 @@ export class StartStopButton extends React.Component<Props> {
    * @private
    */
   private readonly handleButtonClick = (): void => {
-    if (this.props.is_authenticated) {
-      this.hardpy_start();
-    } else {
-      console.log("Authentication required");
-    }
+    this.hardpy_start();
   };
 
   /**
@@ -101,46 +89,31 @@ export class StartStopButton extends React.Component<Props> {
 
   /**
    * Renders the Start/Stop button with appropriate properties based on the testing status.
-   * @returns {React.ReactNode} The rendered button component.
+   * @returns {React.ReactNode} The Start/Stop button component.
    */
   render(): React.ReactNode {
-    const is_authenticated = this.props.is_authenticated;
-    const is_testing_in_progress = this.props.testing_status == "run";
+    const is_testing: boolean = this.props.testing_status == "run";
+    const button_id: string = "start-stop-button";
 
-    const intent = is_testing_in_progress ? "danger" : undefined;
-    const props: AnchorButtonProps = is_testing_in_progress
-      ? {
-          text: "Stop",
-          intent: "danger",
-          large: true,
-          rightIcon: "stop",
-          onClick: this.hardpy_stop,
-          id: "start-stop-button",
-        }
-      : {
-          text: "Start",
-          intent: is_authenticated ? "primary" : intent,
-          large: true,
-          rightIcon: "play",
-          onClick: is_authenticated
-            ? this.handleButtonClick
-            : () => {
-                console.log("Authentication required");
-              },
-          id: "start-stop-button",
-        };
+    const stop_button: AnchorButtonProps = {
+      text: "Stop",
+      intent: "danger",
+      large: true,
+      rightIcon: "stop",
+      onClick: this.hardpy_stop,
+      id: button_id,
+    };
 
-    return (
-      <Tooltip
-        title="It is impossible to connect to the database"
-        key="leftButton"
-        placement="top"
-        trigger="hover"
-        open={!is_authenticated}
-      >
-        <AnchorButton {...props} />
-      </Tooltip>
-    );
+    const start_button: AnchorButtonProps = {
+      text: "Start",
+      intent: is_testing ? undefined : "primary",
+      large: true,
+      rightIcon: "play",
+      onClick: this.handleButtonClick,
+      id: button_id,
+    };
+
+    return <AnchorButton {...(is_testing ? stop_button : start_button)} />;
   }
 }
 
