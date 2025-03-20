@@ -80,6 +80,126 @@ interface WidgetInfo {
   steps?: Step[];
 }
 
+interface TextInputComponentProps {
+  inputText: string;
+  setInputText: (value: string) => void;
+  handleKeyDown: (event: React.KeyboardEvent) => void;
+  inputPlaceholder: string;
+  type: string;
+}
+
+interface RadioButtonComponentProps {
+  fields: string[];
+  selectedRadioButton: string;
+  setSelectedRadioButton: (value: string) => void;
+  handleKeyDown: (event: React.KeyboardEvent) => void;
+  fontSize: number;
+}
+
+interface CheckboxComponentProps {
+  fields: string[]; // Add this line
+  selectedCheckboxes: string[];
+  setSelectedCheckboxes: (value: string[]) => void;
+  handleKeyDown: (event: React.KeyboardEvent) => void;
+  fontSize: number;
+}
+
+/**
+ * TextInputComponent is a reusable input component that allows users to enter text.
+ * @param {string} inputText - The current value of the input field.
+ * @returns {JSX.Element} - A controlled input component with auto-focus enabled.
+ */
+const TextInputComponent = ({
+  inputText,
+  setInputText,
+  handleKeyDown,
+  inputPlaceholder,
+  type,
+}: TextInputComponentProps): JSX.Element => (
+  <InputGroup
+    value={inputText}
+    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+      setInputText(event.target.value)
+    }
+    onKeyDown={handleKeyDown}
+    placeholder={inputPlaceholder}
+    type={type}
+    autoFocus={true}
+  />
+);
+
+/**
+ * RadioButtonComponent is a reusable component that renders a group of radio buttons.
+ * @param {string[]} fields - An array of options to display as radio buttons.
+ * @param {function} setSelectedRadioButton - A function to update the selected radio button.
+ * @param {function} handleKeyDown - A function to handle keydown events on the radio buttons.
+ * @param {number} fontSize - The font size for the radio button labels.
+ * @returns {JSX.Element} - A group of radio buttons with dynamic styling and auto-focus on the first option.
+ */
+/** */
+const RadioButtonComponent = ({
+  fields,
+  selectedRadioButton,
+  setSelectedRadioButton,
+  handleKeyDown,
+  fontSize,
+}: RadioButtonComponentProps): JSX.Element => (
+  <>
+    {fields?.map((option: string) => (
+      <Radio
+        key={option}
+        label={option}
+        checked={selectedRadioButton === option}
+        onChange={() => setSelectedRadioButton(option)}
+        onKeyDown={handleKeyDown}
+        style={{ fontSize: `${fontSize}px` }}
+        autoFocus={option === fields[0]}
+      />
+    ))}
+  </>
+);
+
+/**
+ * CheckboxComponent is a reusable component that renders a group of checkboxes.
+ *
+ * @param {string[]} fields - An array of options to display as checkboxes.
+ * @param {string[]} selectedCheckboxes - An array of currently selected checkbox values.
+ * @param {function} setSelectedCheckboxes - A function to update the selected checkboxes.
+ * @param {function} handleKeyDown - A function to handle keydown events on the checkboxes.
+ * @param {number} fontSize - The font size for the checkbox labels.
+ * @returns {JSX.Element} - A group of checkboxes with dynamic styling and auto-focus on the first option.
+ */
+/** */
+const CheckboxComponent = ({
+  fields,
+  selectedCheckboxes,
+  setSelectedCheckboxes,
+  handleKeyDown,
+  fontSize,
+}: CheckboxComponentProps): JSX.Element => (
+  <>
+    {fields?.map((option: string) => (
+      <Checkbox
+        key={option}
+        label={option}
+        checked={selectedCheckboxes.includes(option)}
+        autoFocus={option === fields[0]}
+        onKeyDown={handleKeyDown}
+        style={{ fontSize: `${fontSize}px` }}
+        onChange={() => {
+          if (selectedCheckboxes.includes(option)) {
+            setSelectedCheckboxes(
+              selectedCheckboxes.filter((item) => item !== option)
+            );
+          } else {
+            setSelectedCheckboxes([...selectedCheckboxes, option]);
+          }
+        }}
+      />
+    ))}
+  </>
+);
+
 /**
  * StartConfirmationDialog is a React component that renders a dialog box with various types of input widgets.
  * It supports text input, numeric input, radio buttons, checkboxes, and multi-step forms.
@@ -87,7 +207,6 @@ interface WidgetInfo {
  * @param {Props} props - The properties passed to the component.
  * @returns {JSX.Element} - The rendered dialog box.
  */
-
 export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [inputText, setInputText] = useState("");
@@ -242,9 +361,9 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
     }
 
     if (props.widget_info?.fields) {
-        handleWidgetKeyDown(key);
-      }
-    };
+      handleWidgetKeyDown(key);
+    }
+  };
 
   /**
    * Handles keydown events for widget-specific actions.
@@ -318,7 +437,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
     naturalWidth: number,
     naturalHeight: number,
     widthFactor: number
-  ): { width: number; height: number; } => ({
+  ): { width: number; height: number } => ({
     width: (naturalWidth * (widthFactor || 100)) / 100,
     height: (naturalHeight * (widthFactor || 100)) / 100,
   });
@@ -342,7 +461,10 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
    * @param {number} width - The width within which the text should fit.
    * @returns {number} - The number of lines required.
    */
-  const calculateTextLines = (text: string, width: number): number | undefined => {
+  const calculateTextLines = (
+    text: string,
+    width: number
+  ): number | undefined => {
     const context = document.createElement("canvas").getContext("2d");
     if (context) {
       context.font = "10px sans-serif";
@@ -461,67 +583,40 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
           </p>
         ))}
         {widgetType === WidgetType.TextInput && (
-          <InputGroup
-            value={inputText}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setInputText(event.target.value)
-            }
-            onKeyDown={handleKeyDown}
-            placeholder={inputPlaceholder}
+          <TextInputComponent
+            inputText={inputText}
+            setInputText={setInputText}
+            handleKeyDown={handleKeyDown}
+            inputPlaceholder={inputPlaceholder}
             type="text"
-            autoFocus={true}
           />
         )}
         {widgetType === WidgetType.NumericInput && (
-          <InputGroup
-            value={inputText}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setInputText(event.target.value)
-            }
-            onKeyDown={handleKeyDown}
-            placeholder={inputPlaceholder}
+          <TextInputComponent
+            inputText={inputText}
+            setInputText={setInputText}
+            handleKeyDown={handleKeyDown}
+            inputPlaceholder={inputPlaceholder}
             type="number"
-            autoFocus={true}
           />
         )}
-
         {widgetType === WidgetType.RadioButton && (
-          <>
-            {props.widget_info?.fields?.map((option: string) => (
-              <Radio
-                key={option}
-                label={option}
-                checked={selectedRadioButton === option}
-                onChange={() => setSelectedRadioButton(option)}
-                onKeyDown={handleKeyDown}
-                style={{ fontSize: `${props.font_size}px` }}
-                autoFocus={option === (props.widget_info?.fields ?? [])[0]}
-              />
-            ))}
-          </>
+          <RadioButtonComponent
+            fields={props.widget_info?.fields ?? []}
+            selectedRadioButton={selectedRadioButton}
+            setSelectedRadioButton={setSelectedRadioButton}
+            handleKeyDown={handleKeyDown}
+            fontSize={props.font_size ?? 12}
+          />
         )}
         {widgetType === WidgetType.Checkbox && (
-          <>
-            {props.widget_info?.fields?.map((option: string) => (
-              <Checkbox
-                key={option}
-                label={option}
-                checked={selectedCheckboxes.includes(option)}
-                autoFocus={option === (props.widget_info?.fields ?? [])[0]}
-                onKeyDown={handleKeyDown}
-                style={{ fontSize: `${props.font_size}px` }}
-                onChange={() => {
-                  if (selectedCheckboxes.includes(option)) {
-                    setSelectedCheckboxes(
-                      selectedCheckboxes.filter((item) => item !== option)
-                    );
-                  } else {
-                    setSelectedCheckboxes([...selectedCheckboxes, option]);
-                  }
-                }}
-              />
-            ))}
-          </>
+          <CheckboxComponent
+            fields={props.widget_info?.fields ?? []}
+            selectedCheckboxes={selectedCheckboxes}
+            setSelectedCheckboxes={setSelectedCheckboxes}
+            handleKeyDown={handleKeyDown}
+            fontSize={props.font_size ?? 12}
+          />
         )}
         {widgetType === WidgetType.Multistep && (
           <Tabs id={props.title_bar}>
@@ -542,7 +637,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
                       {step.info.image && (
                         <img
                           src={`data:image/image;base64,${step.info.image?.base64}`}
-                          alt={""} // or alt={step.info.image?.description} if you have a description
+                          alt={""}
                           style={{
                             maxWidth: `${imageStepDimensions.width + baseDialogDimensions.width}px`,
                             maxHeight: `${imageStepDimensions.height + baseDialogDimensions.height}px`,
@@ -610,7 +705,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
           <div className="image-container">
             <img
               src={`data:image/image;base64,${props.image_base64}`}
-              alt={""} // Set alt to an empty string if no alt text is provided
+              alt={""}
               onLoad={handleImageLoad}
               style={{
                 width: `${props.image_width}%`,
