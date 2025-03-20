@@ -113,9 +113,7 @@ export class StartStopButton extends React.Component<Props> {
       id: button_id,
     };
 
-    const props: AnchorButtonProps = is_testing ? stop_button : start_button;
-
-    return <AnchorButton {...props} />;
+    return <AnchorButton {...(is_testing ? stop_button : start_button)} />;
   }
 }
 
