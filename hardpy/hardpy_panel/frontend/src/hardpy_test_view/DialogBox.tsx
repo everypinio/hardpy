@@ -136,7 +136,6 @@ const TextInputComponent = ({
  * @param {number} fontSize - The font size for the radio button labels.
  * @returns {JSX.Element} - A group of radio buttons with dynamic styling and auto-focus on the first option.
  */
-/** */
 const RadioButtonComponent = ({
   fields,
   selectedRadioButton,
@@ -169,7 +168,6 @@ const RadioButtonComponent = ({
  * @param {number} fontSize - The font size for the checkbox labels.
  * @returns {JSX.Element} - A group of checkboxes with dynamic styling and auto-focus on the first option.
  */
-/** */
 const CheckboxComponent = ({
   fields,
   selectedCheckboxes,
