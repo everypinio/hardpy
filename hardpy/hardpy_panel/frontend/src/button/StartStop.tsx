@@ -104,9 +104,10 @@ export class StartStopButton extends React.Component<Props> {
    * @returns {React.ReactNode} The rendered button component.
    */
   render(): React.ReactNode {
-    const is_authenticated = this.props.is_authenticated == true;
+    const is_authenticated = this.props.is_authenticated;
     const is_testing_in_progress = this.props.testing_status == "run";
 
+    const intent = is_testing_in_progress ? "danger" : undefined;
     const props: AnchorButtonProps = is_testing_in_progress
       ? {
           text: "Stop",
@@ -118,11 +119,7 @@ export class StartStopButton extends React.Component<Props> {
         }
       : {
           text: "Start",
-          intent: is_authenticated
-            ? "primary"
-            : is_testing_in_progress
-              ? "danger"
-              : undefined,
+          intent: is_authenticated ? "primary" : intent,
           large: true,
           rightIcon: "play",
           onClick: is_authenticated
@@ -139,7 +136,7 @@ export class StartStopButton extends React.Component<Props> {
         key="leftButton"
         placement="top"
         trigger="hover"
-        visible={!is_authenticated}
+        open={!is_authenticated}
       >
         <AnchorButton {...props} />
       </Tooltip>

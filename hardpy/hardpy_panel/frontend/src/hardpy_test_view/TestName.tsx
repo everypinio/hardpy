@@ -14,7 +14,7 @@ interface Props {
  * @param {string} props.name - The name to be rendered.
  * @returns {React.ReactElement} A React element containing the provided name.
  */
-export function TestName(props: Props): React.ReactElement {
+export function TestName(props: Readonly<Props>): React.ReactElement {
   return <React.Fragment>{props.name}</React.Fragment>;
 }
 

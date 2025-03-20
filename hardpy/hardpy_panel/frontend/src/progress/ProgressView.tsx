@@ -31,7 +31,7 @@ export class ProgressView extends React.Component<Props> {
      * @param {string} status - The status of the progress.
      * @returns {Intent} The intent corresponding to the status.
      */
-    const intent = (status: string) => {
+    const intent = (status: string): Intent => {
       switch (status) {
         case "run":
           return Intent.PRIMARY;
