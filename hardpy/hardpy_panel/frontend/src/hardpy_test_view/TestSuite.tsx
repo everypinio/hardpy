@@ -40,6 +40,13 @@ interface ImageInfo {
   border?: number;
 }
 
+interface HTMLInfo {
+  code_or_url?: string;
+  is_raw_html?: boolean;
+  width?: number;
+  border?: number;
+}
+
 interface DialogBoxProps {
   title_bar?: string;
   dialog_text: string;
@@ -48,6 +55,7 @@ interface DialogBoxProps {
   visible: boolean;
   id: string;
   font_size?: number;
+  html?: HTMLInfo;
 }
 
 interface Case {
@@ -86,6 +94,10 @@ type State = {
 
 const SUITE_NAME_STUB = "Lorem ipsum";
 
+/**
+ * TestSuite component displays a collapsible test suite with test cases.
+ * It includes functionality to render test names, statuses, and data.
+ */
 export class TestSuite extends React.Component<Props, State> {
   private static LOADING_ICON = (
     <div style={{ margin: 30 }}>
@@ -95,6 +107,10 @@ export class TestSuite extends React.Component<Props, State> {
 
   static defaultProps: { defaultOpen: boolean };
 
+  /**
+   * Renders the TestSuite component.
+   * @returns {React.ReactElement} The rendered component.
+   */
   render(): React.ReactElement {
     return (
       <Callout style={{ padding: 0, borderRadius: 0 }} className="test-suite">
@@ -142,6 +158,10 @@ export class TestSuite extends React.Component<Props, State> {
     );
   }
 
+  /**
+   * Constructs the TestSuite component.
+   * @param {Props} props - The properties passed to the component.
+   */
   constructor(props: Props) {
     super(props);
 
@@ -152,6 +172,12 @@ export class TestSuite extends React.Component<Props, State> {
     this.handleClick = this.handleClick.bind(this);
   }
 
+  /**
+   * Renders the name of the test suite.
+   * @param {string} name - The name of the test suite.
+   * @param {number} test_number - The number of the test suite.
+   * @returns {React.ReactElement} The rendered name element.
+   */
   private renderName(name: string, test_number: number) {
     const is_loading = _.isEmpty(name);
 
@@ -167,6 +193,11 @@ export class TestSuite extends React.Component<Props, State> {
     );
   }
 
+  /**
+   * Renders the test cases within the test suite.
+   * @param {Cases} test_topics - The test cases to render.
+   * @returns {React.ReactElement} The rendered test cases.
+   */
   private renderTests(test_topics: Cases) {
     let case_names: string[] = [];
 
@@ -223,6 +254,11 @@ export class TestSuite extends React.Component<Props, State> {
     );
   }
 
+  /**
+   * Renders the right panel of the test suite.
+   * @param {TestItem} test_topics - The test item containing cases.
+   * @returns {React.ReactElement} The rendered right panel.
+   */
   private renderTestSuiteRightPanel(test_topics: TestItem) {
     return (
       <div
@@ -253,6 +289,13 @@ export class TestSuite extends React.Component<Props, State> {
     );
   }
 
+  /**
+   * Common method to render a cell with optional loading skeleton.
+   * @param {React.ReactElement} cell_content - The content to render in the cell.
+   * @param {string} key - The unique key for the cell.
+   * @param {boolean} is_loading - Whether to show a loading skeleton.
+   * @returns {React.ReactElement} The rendered cell.
+   */
   private commonCellRender(
     cell_content: React.ReactElement,
     key: string,
@@ -269,6 +312,13 @@ export class TestSuite extends React.Component<Props, State> {
     );
   }
 
+  /**
+   * Renders the test number in a cell.
+   * @param {Case[]} test_topics - The test cases.
+   * @param {string} row_ - The row data.
+   * @param {number} rowIndex - The index of the row.
+   * @returns {React.ReactElement} The rendered test number cell.
+   */
   private cellRendererNumber(
     test_topics: Case[],
     row_: string,
@@ -282,6 +332,13 @@ export class TestSuite extends React.Component<Props, State> {
     );
   }
 
+  /**
+   * Renders the test name in a cell.
+   * @param {Case[]} test_topics - The test cases.
+   * @param {string} row_ - The row data.
+   * @param {number} rowIndex - The index of the row.
+   * @returns {React.ReactElement} The rendered test name cell.
+   */
   private cellRendererName(
     test_topics: Case[],
     row_: string,
@@ -296,6 +353,13 @@ export class TestSuite extends React.Component<Props, State> {
     );
   }
 
+  /**
+   * Renders the test data in a cell.
+   * @param {Case[]} test_topics - The test cases.
+   * @param {string} row_ - The row data.
+   * @param {number} rowIndex - The index of the row.
+   * @returns {React.ReactElement} The rendered test data cell.
+   */
   private cellRendererData(
     test_topics: Case[],
     row_: string,
@@ -311,6 +375,13 @@ export class TestSuite extends React.Component<Props, State> {
     );
   }
 
+  /**
+   * Renders the test status in a cell.
+   * @param {Case[]} test_topics - The test cases.
+   * @param {string} row_ - The row data.
+   * @param {number} rowIndex - The index of the row.
+   * @returns {React.ReactElement} The rendered test status cell.
+   */
   private cellRendererStatus(
     test_topics: Case[],
     row_: string,
@@ -342,6 +413,18 @@ export class TestSuite extends React.Component<Props, State> {
               is_visible={test.dialog_box.visible}
               id={test.dialog_box.id}
               font_size={test.dialog_box.font_size}
+              html_code={
+                test.dialog_box.html?.is_raw_html == true
+                  ? test.dialog_box.html?.code_or_url
+                  : undefined
+              }
+              html_url={
+                test.dialog_box.html?.is_raw_html == false
+                  ? test.dialog_box.html?.code_or_url
+                  : undefined
+              }
+              html_width={test.dialog_box.html?.width}
+              html_border={test.dialog_box.html?.border}
             />
           )}
         <TestStatus
@@ -357,7 +440,10 @@ export class TestSuite extends React.Component<Props, State> {
     );
   }
 
-  private handleClick = () =>
+  /**
+   * Handles the click event to toggle the collapse state of the test suite.
+   */
+  private readonly handleClick = () =>
     this.setState((state: State) => ({ isOpen: !state.isOpen }));
 }
 

@@ -230,6 +230,7 @@ Does not provide user interaction unlike the [run_dialog_box](#run_dialog_box) f
 - `title` *(str | None)*: The optional title for the message.
 - `block` *(bool=True)*: If True, the function will block until the message is closed.
 - `image` *([ImageComponent](#imagecomponent) | None)*: Image information.
+- `html` *([HTMLComponent](#htmlcomponent) | None)*: HTML information.
 - `font_size`: *(int=14)*: Text font size.
 
 **Example:**
@@ -346,6 +347,7 @@ the [run_dialog_box](#run_dialog_box) function.
 If the title_bar field is missing, it is the case name.
 - `widget` *(IWidget | None)*: Widget information.
 - `image` *([ImageComponent](#imagecomponent) | None)*: Image information.
+- `html` *([HTMLComponent](#htmlcomponent) | None)*: HTML information.
 - `font_size`: *(int=14)*: Text font size.
 
 Widget list:
@@ -455,6 +457,7 @@ The class is used to configure the step for the
 - `title` *(str)*: Step title.
 - `text` *(str | None)*: Step text.
 - `image` *([ImageComponent](#imagecomponent) | None)*: Step image.
+- `html` *([HTMLComponent](#htmlcomponent) | None)*: Step HTML.
 
 **Example:**
 
@@ -477,7 +480,8 @@ Further information can be found in section
 ```python
     steps = [
         StepWidget("Step 1", text="Content for step"),
-        StepWidget("Step 2", text="Content for step 2", image=ImageComponent(address="assets/image.png", width=100)),
+        StepWidget("Step 2", text="Content for step 2", image=ImageComponent(address="assets/test.png", width=100)),
+        StepWidget("Step 3", text="Content for step 3", html=HTMLComponent(html="https://everypinio.github.io/hardpy/", width=50)),
     ]
     dbx = DialogBox(dialog_text="Follow the steps and click Confirm", widget=MultistepWidget(steps))
     response = run_dialog_box(dbx)
@@ -497,7 +501,25 @@ the [run_dialog_box](#run_dialog_box) and [set_operator_message](#set_operator_m
 **Example:**
 
 ```python
-    ImageComponent(address="assets/image.png", width=100)
+    ImageComponent(address="assets/test.png", width=100)
+```
+
+#### HTMLComponent
+
+A class for configurating HTML for a dialogue box or operator message box and is used with
+the [run_dialog_box](#run_dialog_box) and [set_operator_message](#set_operator_message) functions.
+
+**Arguments:**
+
+- `code_or_url` *(str)*: HTML code or link.
+- `width` *(int | None)*: HTML width in %.
+- `border` *(int | None)*: HTML border width.
+- `is_raw_html` *(bool)*: Is HTML code is raw.
+
+**Example:**
+
+```python
+    HTMLComponent(code_or_url="https://everypinio.github.io/hardpy/", width=100, is_raw_html=False)
 ```
 
 #### CouchdbLoader
@@ -515,6 +537,9 @@ This allows for easy identification and sorting of reports.
 * Valid report name: `report_1726496218_1234567890`
 * Valid report name (no serial number): `report_1726496218_no_serial_808007`
 
+**Functions:**
+- `load` *(ResultRunStore)*: Load report to the CouchDB **report** database.
+
 **Example:**
 
 ```python
@@ -524,7 +549,6 @@ def finish_executing():
     if report:
         loader = CouchdbLoader(CouchdbConfig())
         loader.load(report)
-
 
 @pytest.fixture(scope="session", autouse=True)
 def fill_actions_after_test(post_run_functions: list):
@@ -541,6 +565,14 @@ Used to write reports to the **StandCloud**.
 - `address` *(str | None)*: StandCloud address. Defaults to None
   (the value is taken from [hardpy.toml](./hardpy_config.md)). Can be used outside of **HardPy** applications.
 
+**Functions:**
+
+- `healthcheck`: Healthcheck of StandCloud API.
+  Returns the `requests.Response` object.
+- `load` *(ResultRunStore)*: Load report to the StandCloud.
+  Returns the `requests.Response` object.
+  Status code 201 is considered a successful status.
+
 **Example:**
 
 ```python
@@ -548,13 +580,17 @@ Used to write reports to the **StandCloud**.
 def finish_executing():
     report = get_current_report()
     if report:
-        loader = StandCloudLoader()
         try:
-            loader.healthcheck()
-            loader.load(report)
+            loader = StandCloudLoader()
+            response = loader.load(report)
+            if response.status_code != HTTPStatus.CREATED:
+                msg = (
+                    "Report not uploaded to StandCloud, "
+                    f"status code: {response.status_code}, text: {response.text}",
+                )
+                set_operator_message(msg[0])
         except StandCloudError as exc:
             set_operator_message(f"{exc}")
-            return
 
 @pytest.fixture(scope="session", autouse=True)
 def fill_actions_after_test(post_run_functions: list):
@@ -665,24 +701,6 @@ The default is `http://dev:dev@localhost:5984/`.
 
 ```bash
 --hardpy-db-url
-```
-
-#### hardpy-sp
-
-Internal socket port for passing backend data (such as a dialog box) to running pytest tests.
-The default is *6525*.
-
-```bash
---hardpy-sp
-```
-
-#### hardpy-sh
-
-Internal socket host for passing backend data (such as a dialog box) to running pytest tests.
-The default is *localhost*.
-
-```bash
---hardpy-sh
 ```
 
 #### hardpy-clear-database

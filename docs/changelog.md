@@ -2,9 +2,17 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Remove the internal **HardPy** socket on port 6525. Pytest plugin arguments `--hardpy-sh` and `--hardpy-sp`
+  are left for backward compatibility with version below 0.10.1.
+* Add the ability to add html-pages to dialog boxes and operator messages.
+
+## HardPy 0.10.1
+
+* Fix **StandCloud** authorization process in Windows.
+
 ## HardPy 0.10.0
 
-* Add the `[stand_cloud]` section to the **harpy.toml** configuration file.
+* Add the `[stand_cloud]` section to the **hardpy.toml** configuration file.
 * Add the `StandCloudLoader` class to append the test result to the **StandCloud**.
 * Add support for **StandCloud** login and logout with `sc-login` and `sc-logout` commands.
 * Add **alert** field in **statestore** database.

@@ -28,6 +28,10 @@ interface Props {
   is_visible?: boolean;
   id?: string;
   font_size?: number;
+  html_url?: string;
+  html_code?: string;
+  html_width?: number;
+  html_border?: number;
 }
 
 export enum WidgetType {
@@ -45,6 +49,13 @@ interface ImageComponent {
   border?: number;
 }
 
+interface HTMLComponent {
+  code_or_url?: string;
+  is_raw_html?: boolean;
+  width?: number;
+  border?: number;
+}
+
 interface StepWidgetInfo {
   type: string;
   info: WidgetInfo;
@@ -55,6 +66,7 @@ interface StepInfo {
   text?: string;
   widget?: StepWidgetInfo;
   image?: ImageComponent;
+  html?: HTMLComponent;
 }
 
 interface Step {
@@ -67,6 +79,14 @@ interface WidgetInfo {
   text?: string;
   steps?: Step[];
 }
+
+/**
+ * StartConfirmationDialog is a React component that renders a dialog box with various types of input widgets.
+ * It supports text input, numeric input, radio buttons, checkboxes, and multi-step forms.
+ *
+ * @param {Props} props - The properties passed to the component.
+ * @returns {JSX.Element} - The rendered dialog box.
+ */
 
 export function StartConfirmationDialog(props: Props) {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -92,10 +112,16 @@ export function StartConfirmationDialog(props: Props) {
   const screenHeight = window.screen.height;
 
   const baseDialogDimensions = { width: 100, height: 100 };
-  const maxSize = 0.6;
+  const maxSize = 0.8;
   const minSize = 0.25;
-  const lineHeight = 10 * (props.font_size ? props.font_size : 14) / 14;
+  const htmlHeightIndex = 0.75;
+  const htmlWidthIndex = 0.9;
+  const lineHeight = (10 * (props.font_size ? props.font_size : 14)) / 14;
 
+  /**
+   * Handles the close event of the dialog box.
+   * Sends a request to stop the tests and displays a notification.
+   */
   const handleClose = () => {
     setDialogOpen(false);
     fetch("api/stop")
@@ -115,6 +141,10 @@ export function StartConfirmationDialog(props: Props) {
     });
   };
 
+  /**
+   * Handles the confirm event of the dialog box.
+   * Validates the input and sends the confirmed data to the server.
+   */
   const handleConfirm = async () => {
     if (props.widget_type) {
       switch (props.widget_type) {
@@ -148,6 +178,12 @@ export function StartConfirmationDialog(props: Props) {
     setDialogOpen(false);
     let textToSend = "";
 
+    /**
+     * Encodes a URL component, replacing special characters with their hexadecimal equivalents.
+     *
+     * @param {string} str - The string to encode.
+     * @returns {string} - The encoded string.
+     */
     function processEncodeURLComponent(str: string) {
       return encodeURIComponent(str).replace(
         /[!-'()*+,/:;<=>?@[\]^`{|}~]/g,
@@ -192,35 +228,54 @@ export function StartConfirmationDialog(props: Props) {
     }
   };
 
-    const handleKeyDown = (event: React.KeyboardEvent) => {
-      const key = event.key;
-    
-      if (key === "Enter") {
-        handleConfirm();
-      }
-    
-      if (props.widget_info?.fields) {
-        if (widgetType === WidgetType.RadioButton) {
-          const index = props.widget_info.fields.findIndex(option => option.startsWith(key));
-          if (index >= 0) {
-            setSelectedRadioButton(props.widget_info.fields[index]);
-          }
-        }
-    
-        if (widgetType === WidgetType.Checkbox) {
-          const index = props.widget_info.fields.findIndex(option => option.startsWith(key));
-          if (index >= 0) {
-            const option = props.widget_info.fields[index];
-            if (selectedCheckboxes.includes(option)) {
-              setSelectedCheckboxes(selectedCheckboxes.filter(item => item !== option));
-            } else {
-              setSelectedCheckboxes([...selectedCheckboxes, option]);
-            }
-          }
-        }
-      }
-    };
+  /**
+   * Handles keydown events for the dialog box.
+   *
+   * @param {React.KeyboardEvent} event - The keyboard event.
+   */
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    const key = event.key;
 
+    if (key === "Enter") {
+      handleConfirm();
+    }
+
+    if (props.widget_info?.fields) {
+      if (widgetType === WidgetType.RadioButton) {
+        const index = props.widget_info.fields.findIndex((option) =>
+          option.startsWith(key)
+        );
+        if (index >= 0) {
+          setSelectedRadioButton(props.widget_info.fields[index]);
+        }
+      }
+
+      if (widgetType === WidgetType.Checkbox) {
+        const index = props.widget_info.fields.findIndex((option) =>
+          option.startsWith(key)
+        );
+        if (index >= 0) {
+          const option = props.widget_info.fields[index];
+          if (selectedCheckboxes.includes(option)) {
+            setSelectedCheckboxes(
+              selectedCheckboxes.filter((item) => item !== option)
+            );
+          } else {
+            setSelectedCheckboxes([...selectedCheckboxes, option]);
+          }
+        }
+      }
+    }
+  };
+
+  /**
+   * Calculates the dimensions of an image based on its natural dimensions and a width factor.
+   *
+   * @param {number} naturalWidth - The natural width of the image.
+   * @param {number} naturalHeight - The natural height of the image.
+   * @param {number} widthFactor - The width factor to scale the image by.
+   * @returns {{width: number, height: number}} - The calculated dimensions.
+   */
   const calculateDimensions = (
     naturalWidth: number,
     naturalHeight: number,
@@ -230,6 +285,11 @@ export function StartConfirmationDialog(props: Props) {
     height: (naturalHeight * (widthFactor || 100)) / 100,
   });
 
+  /**
+   * Handles the load event of an image, calculating its dimensions and updating the state.
+   *
+   * @param {React.SyntheticEvent<HTMLImageElement>} event - The image load event.
+   */
   const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
     const { naturalWidth, naturalHeight } = event.target as HTMLImageElement;
     setImageDimensions(
@@ -237,6 +297,13 @@ export function StartConfirmationDialog(props: Props) {
     );
   };
 
+  /**
+   * Calculates the number of text lines required to display a given text within a specified width.
+   *
+   * @param {string} text - The text to measure.
+   * @param {number} width - The width within which the text should fit.
+   * @returns {number} - The number of lines required.
+   */
   const calculateTextLines = (text: string, width: number) => {
     const context = document.createElement("canvas").getContext("2d");
     if (context) {
@@ -451,6 +518,54 @@ export function StartConfirmationDialog(props: Props) {
                           }}
                         />
                       )}
+                      {step.info.html?.code_or_url &&
+                        step.info.html?.is_raw_html == true && (
+                          <iframe
+                            srcDoc={step.info.html?.code_or_url}
+                            height={
+                              (imageStepDimensions.height +
+                                baseDialogDimensions.height) *
+                              htmlHeightIndex *
+                              ((step.info.html?.width ?? 100) / 100)
+                            }
+                            width={
+                              (imageStepDimensions.width +
+                                baseDialogDimensions.width) *
+                              htmlWidthIndex *
+                              ((step.info.html?.width ?? 100) / 100)
+                            }
+                            style={{
+                              border:
+                                `${step.info.html?.border}px solid black` ||
+                                "none",
+                            }}
+                            title="HTML Code"
+                          />
+                        )}
+                      {step.info.html?.code_or_url &&
+                        step.info.html?.is_raw_html == false && (
+                          <iframe
+                            src={step.info.html?.code_or_url}
+                            height={
+                              (imageStepDimensions.height +
+                                baseDialogDimensions.height) *
+                              htmlHeightIndex *
+                              ((step.info.html?.width ?? 100) / 100)
+                            }
+                            width={
+                              (imageStepDimensions.width +
+                                baseDialogDimensions.width) *
+                              htmlWidthIndex *
+                              ((step.info.html?.width ?? 100) / 100)
+                            }
+                            style={{
+                              border:
+                                `${step.info.html?.border}px solid black` ||
+                                "none",
+                            }}
+                            title="HTML Link"
+                          />
+                        )}
                     </div>
                   </div>
                 }
@@ -477,6 +592,48 @@ export function StartConfirmationDialog(props: Props) {
               }}
             />
           </div>
+        )}
+        {props.html_code && (
+          <iframe
+            srcDoc={props.html_code}
+            height={
+              screenHeight *
+              maxSize *
+              htmlHeightIndex *
+              ((props.html_width ?? 100) / 100)
+            }
+            width={
+              screenWidth *
+              maxSize *
+              htmlWidthIndex *
+              ((props.html_width ?? 100) / 100)
+            }
+            style={{
+              border: `${props.html_border}px solid black` || "none",
+            }}
+            title="HTML Code"
+          />
+        )}
+        {props.html_url && (
+          <iframe
+            src={props.html_url}
+            height={
+              screenHeight *
+              maxSize *
+              htmlHeightIndex *
+              ((props.html_width ?? 100) / 100)
+            }
+            width={
+              screenWidth *
+              maxSize *
+              htmlWidthIndex *
+              ((props.html_width ?? 100) / 100)
+            }
+            style={{
+              border: `${props.html_border}px solid black` || "none",
+            }}
+            title="HTML Link"
+          />
         )}
       </div>
       <div className={Classes.DIALOG_FOOTER}>

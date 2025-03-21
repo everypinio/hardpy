@@ -25,7 +25,7 @@ The code for this example can be seen inside the hardpy package
     Registration must be completed once, then you can check authorization
     using the command:
     ```
-    harpy sc-login --check demo.standcloud.localhost
+    hardpy sc-login --check demo.standcloud.localhost
     ```
 
     Learn more in the [StandCloud](./../documentation/stand_cloud.md) section.
@@ -42,8 +42,11 @@ Contains settings and fixtures for all tests:
 - The list of actions that will be performed after testing is filled in function `fill_actions_after_test`;
 
 ```python
+from http import HTTPStatus
+
 import pytest
 from driver_example import DriverExample
+
 from hardpy import (
     StandCloudError,
     StandCloudLoader,
@@ -59,13 +62,17 @@ def driver_example():
 def finish_executing():
     report = get_current_report()
     if report:
-        loader = StandCloudLoader()
         try:
-            loader.healthcheck()
-            loader.load(report)
+            loader = StandCloudLoader()
+            response = loader.load(report)
+            if response.status_code != HTTPStatus.CREATED:
+                msg = (
+                    "Report not uploaded to StandCloud, "
+                    f"status code: {response.status_code}, text: {response.text}",
+                )
+                set_operator_message(msg[0])
         except StandCloudError as exc:
             set_operator_message(f"{exc}")
-            return
 
 @pytest.fixture(scope="session", autouse=True)
 def fill_actions_after_test(post_run_functions: list):

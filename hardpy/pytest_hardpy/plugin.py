@@ -31,7 +31,7 @@ from pytest import (
     skip,
 )
 
-from hardpy.common.stand_cloud.connector import StandCloudConnector
+from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import (
     ConnectionData,
@@ -56,17 +56,17 @@ def pytest_addoption(parser: Parser) -> None:
         default=con_data.database_url,
         help="database url",
     )
+    # TODO (xorialexandrov): Remove --hardpy-sp and --hardpy-sh in HardPy major version.
+    # Addoptions left for compatibility with version 0.10.1 and below
     parser.addoption(
         "--hardpy-sp",
         action="store",
-        default=con_data.socket_port,
-        help="internal socket port",
+        help="DEPRECATED, UNUSED: internal socket port",
     )
     parser.addoption(
         "--hardpy-sh",
         action="store",
-        default=con_data.socket_host,
-        help="internal socket host",
+        help="DEPRECATED, UNUSED: internal socket host",
     )
     parser.addoption(
         "--hardpy-clear-database",
@@ -135,14 +135,6 @@ class HardpyPlugin:
             con_data.database_url = str(database_url)  # type: ignore
 
         is_clear_database = config.getoption("--hardpy-clear-database")
-
-        socket_port = config.getoption("--hardpy-sp")
-        if socket_port:
-            con_data.socket_port = int(socket_port)  # type: ignore
-
-        socket_host = config.getoption("--hardpy-sh")
-        if socket_host:
-            con_data.socket_host = str(socket_host)  # type: ignore
 
         sc_address = config.getoption("--sc-address")
         if sc_address:
@@ -231,7 +223,12 @@ class HardpyPlugin:
         con_data = ConnectionData()
 
         if con_data.sc_connection_only:  # check
-            sc_connector = StandCloudConnector(addr=con_data.sc_address)
+            try:
+                sc_connector = StandCloudConnector(addr=con_data.sc_address)
+            except StandCloudError as exc:
+                msg = str(exc)
+                self._reporter.set_alert(msg)
+                exit(msg)
             try:
                 sc_connector.healthcheck()
             except Exception:  # noqa: BLE001

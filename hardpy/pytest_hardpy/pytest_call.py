@@ -2,10 +2,9 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
-import socket
 from dataclasses import dataclass
 from os import environ
-from select import select
+from time import sleep
 from typing import Any
 from uuid import uuid4
 
@@ -19,12 +18,12 @@ from hardpy.pytest_hardpy.db import (
 )
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
-    ConnectionData,
     DialogBox,
     DuplicatePartNumberError,
     DuplicateSerialNumberError,
     DuplicateTestStandLocationError,
     DuplicateTestStandNameError,
+    HTMLComponent,
     ImageComponent,
 )
 
@@ -279,6 +278,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
           If the title_bar field is missing, it is the case name.
         - widget (DialogBoxWidget | None): Widget information.
         - image (ImageComponent | None): Image information.
+        - html (HTMLComponent | None): HTML information.
 
     Returns:
         Any: An object containing the user's response.
@@ -312,18 +312,18 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     reporter.set_doc_value(key, dialog_box_data.to_dict(), statestore_only=True)
     reporter.update_db_by_doc()
 
-    # get socket data
-    input_dbx_data = _get_socket_raw_data()
+    input_dbx_data = _get_operator_data()
 
     _cleanup_widget(reporter, key)
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
 
-def set_operator_message(
+def set_operator_message(  # noqa: PLR0913
     msg: str,
     title: str | None = None,
     block: bool = True,
     image: ImageComponent | None = None,
+    html: HTMLComponent | None = None,
     font_size: int = 14,
 ) -> None:
     """Set operator message.
@@ -334,7 +334,8 @@ def set_operator_message(
     Args:
         msg (str): message
         title (str | None): title
-        image (ImageComponent | None): operator message info
+        image (ImageComponent | None): operator message image
+        html (HTMLComponent | None): operator message html page
         block (bool): if True, the function will block until the message is closed
         font_size (int): font size
     """
@@ -351,6 +352,7 @@ def set_operator_message(
         DF.TITLE: title,
         DF.VISIBLE: True,
         DF.IMAGE: image.to_dict() if image else None,
+        DF.HTML: html.to_dict() if html else None,
         DF.ID: str(uuid4()),
         DF.FONT_SIZE: int(font_size),
     }
@@ -358,10 +360,9 @@ def set_operator_message(
     reporter.update_db_by_doc()
 
     if block:
-        # get socket data
-        is_msg_visible = _get_socket_raw_data()
-
+        is_msg_visible = _get_operator_data()
         msg_data[DF.VISIBLE] = is_msg_visible
+
         reporter.set_doc_value(key, msg_data, statestore_only=True)
         reporter.update_db_by_doc()
 
@@ -414,37 +415,25 @@ def _get_current_test() -> CurrentTestInfo:
     return CurrentTestInfo(module_id=module_id, case_id=case_id)
 
 
-def _get_socket_raw_data() -> str:
-    # create socket connection
-    with socket.socket() as server:
-        server.setblocking(False)
-        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+def _get_operator_data() -> str:
+    """Get operator panel data.
 
-        con_data = ConnectionData()
-        try:
-            server.bind((con_data.socket_host, con_data.socket_port))
-        except OSError as exc:
-            msg = "Socket creating error"
-            server.close()
-            raise RuntimeError(msg) from exc
-        server.listen(1)
+    Returns:
+        str: operator panel data
+    """
+    reporter = RunnerReporter()
 
-        client = None
-        while True:
-            ready_to_read, _, _ = select([server], [], [], 0.5)
-            if ready_to_read:
-                client, _ = server.accept()
-                break
+    data = ""
+    key = reporter.generate_key(DF.OPERATOR_DATA, DF.DIALOG)
+    while not data:
+        reporter.update_doc_by_db()
 
-        # receive data
-        max_input_data_len = 1024
-        socket_data = client.recv(max_input_data_len).decode("utf-8")
-
-        # close connection
-        client.close()
-        server.close()
-
-        return socket_data
+        data = reporter.get_field(key)
+        if data:
+            reporter.set_doc_value(key, "", statestore_only=True)
+            break
+        sleep(0.1)
+    return data
 
 
 def _cleanup_widget(reporter: RunnerReporter, key: str) -> None:
