@@ -15,6 +15,16 @@ import {
 } from "@blueprintjs/core";
 import { notification } from "antd";
 
+const BASE_DIALOG_BOX_DIMENSIONS = { width: 100, height: 100 };
+const MAX_SIZE_FACTOR = 0.8;
+const MIN_SIZE_FACTOR = 0.25;
+const LINE_HEIGHT_FACTOR = 10;
+const BASE_FONT_SIZE = 14;
+const HTML_IFRAME_SCALE_FACTOR = 0.75;
+const HTML_IFRAME_WIDTH_FACTOR = 0.9;
+const IMAGE_SCALE_FACTOR = 100;
+const HEX_BASE = 16;
+
 interface Props {
   title_bar: string;
   dialog_text: string;
@@ -393,7 +403,7 @@ const renderMultistep = (
                   style={{
                     maxWidth: `${imageStepDimensions.width + baseDialogDimensions.width}px`,
                     maxHeight: `${imageStepDimensions.height + baseDialogDimensions.height}px`,
-                    transform: `scale(${(step.info.image?.width ?? 100) / 100})`,
+                    transform: `scale(${(step.info.image?.width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR})`,
                     transformOrigin: `top center`,
                     ...imageStyle,
                   }}
@@ -405,10 +415,12 @@ const renderMultistep = (
                   step.info.html.code_or_url,
                   (imageStepDimensions.height + baseDialogDimensions.height) *
                     htmlHeightIndex *
-                    ((step.info.html?.width ?? 100) / 100),
+                    ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) /
+                      IMAGE_SCALE_FACTOR),
                   (imageStepDimensions.width + baseDialogDimensions.width) *
                     htmlWidthIndex *
-                    ((step.info.html?.width ?? 100) / 100),
+                    ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) /
+                      IMAGE_SCALE_FACTOR),
                   step.info.html?.border ?? 0
                 )}
               {step.info.html?.code_or_url &&
@@ -417,10 +429,12 @@ const renderMultistep = (
                   step.info.html.code_or_url,
                   (imageStepDimensions.height + baseDialogDimensions.height) *
                     htmlHeightIndex *
-                    ((step.info.html?.width ?? 100) / 100),
+                    ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) /
+                      IMAGE_SCALE_FACTOR),
                   (imageStepDimensions.width + baseDialogDimensions.width) *
                     htmlWidthIndex *
-                    ((step.info.html?.width ?? 100) / 100),
+                    ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) /
+                      IMAGE_SCALE_FACTOR),
                   step.info.html?.border ?? 0
                 )}
             </div>
@@ -491,30 +505,23 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
   const [inputText, setInputText] = useState("");
   const [selectedRadioButton, setSelectedRadioButton] = useState("");
   const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
-  const [imageDimensions, setImageDimensions] = useState({
-    width: 0,
-    height: 0,
-  });
-  const [imageStepDimensions, setStepImageDimensions] = useState({
-    width: 0,
-    height: 0,
-  });
-  const maxDimensions = useRef({ width: 0, height: 0 });
-
-  const HEX_BASE = 16;
+  const [imageDimensions, setImageDimensions] = useState(
+    BASE_DIALOG_BOX_DIMENSIONS
+  );
+  const [imageStepDimensions, setStepImageDimensions] = useState(
+    BASE_DIALOG_BOX_DIMENSIONS
+  );
+  const maxDimensions = useRef(BASE_DIALOG_BOX_DIMENSIONS);
 
   const widgetType = props.widget_type ?? WidgetType.Base;
-  const inputPlaceholder = "enter answer";
 
   const screenWidth = window.screen.width;
   const screenHeight = window.screen.height;
 
-  const baseDialogDimensions = { width: 100, height: 100 };
-  const maxSize = 0.8;
-  const minSize = 0.25;
-  const htmlHeightIndex = 0.75;
-  const htmlWidthIndex = 0.9;
-  const lineHeight = (10 * (props.font_size ? props.font_size : 14)) / 14;
+  const lineHeight =
+    (LINE_HEIGHT_FACTOR *
+      (props.font_size ? props.font_size : BASE_FONT_SIZE)) /
+    BASE_FONT_SIZE;
 
   /**
    * Handles the close event of the dialog box.
@@ -717,8 +724,11 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
     naturalHeight: number,
     widthFactor: number
   ): { width: number; height: number } => ({
-    width: (naturalWidth * (widthFactor || 100)) / 100,
-    height: (naturalHeight * (widthFactor || 100)) / 100,
+    width:
+      (naturalWidth * (widthFactor || IMAGE_SCALE_FACTOR)) / IMAGE_SCALE_FACTOR,
+    height:
+      (naturalHeight * (widthFactor || IMAGE_SCALE_FACTOR)) /
+      IMAGE_SCALE_FACTOR,
   });
 
   /**
@@ -729,7 +739,11 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
   const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
     const { naturalWidth, naturalHeight } = event.target as HTMLImageElement;
     setImageDimensions(
-      calculateDimensions(naturalWidth, naturalHeight, props.image_width ?? 100)
+      calculateDimensions(
+        naturalWidth,
+        naturalHeight,
+        props.image_width ?? IMAGE_SCALE_FACTOR
+      )
     );
   };
 
@@ -758,8 +772,8 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
     (widgetType === WidgetType.Multistep
       ? maxDimensions.current
       : imageDimensions
-    ).width + baseDialogDimensions.width,
-    screenWidth * maxSize
+    ).width + BASE_DIALOG_BOX_DIMENSIONS.width,
+    screenWidth * MAX_SIZE_FACTOR
   );
 
   const textHeight =
@@ -775,11 +789,11 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
       widgetType,
       maxDimensions.current,
       imageDimensions,
-      baseDialogDimensions,
+      BASE_DIALOG_BOX_DIMENSIONS,
       screenWidth,
       screenHeight,
-      maxSize,
-      minSize,
+      MAX_SIZE_FACTOR,
+      MIN_SIZE_FACTOR,
       textHeight,
       textStepHeight
     );
@@ -806,11 +820,11 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
 
         maxDimensions.current.width = Math.max(
           maxDimensions.current.width,
-          naturalWidth * (widthFactor / 100)
+          naturalWidth * (widthFactor / IMAGE_SCALE_FACTOR)
         );
         maxDimensions.current.height = Math.max(
           maxDimensions.current.height,
-          naturalHeight * (widthFactor / 100)
+          naturalHeight * (widthFactor / IMAGE_SCALE_FACTOR)
         );
         setStepImageDimensions(maxDimensions.current);
       };
@@ -822,7 +836,10 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
           const image = new Image();
           image.src = base64Src;
           image.onload = () =>
-            handleStepImageLoad(image, step.info.image?.width ?? 100);
+            handleStepImageLoad(
+              image,
+              step.info.image?.width ?? IMAGE_SCALE_FACTOR
+            );
         }
       });
     }
@@ -840,10 +857,10 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
           widgetType === WidgetType.Multistep ? `${dialogWidth}px` : "auto",
         height:
           widgetType === WidgetType.Multistep ? `${dialogHeight}px` : "auto",
-        minWidth: screenWidth * minSize,
-        minHeight: screenHeight * minSize,
-        maxWidth: screenWidth * maxSize,
-        maxHeight: screenHeight * maxSize,
+        minWidth: screenWidth * MIN_SIZE_FACTOR,
+        minHeight: screenHeight * MIN_SIZE_FACTOR,
+        maxWidth: screenWidth * MAX_SIZE_FACTOR,
+        maxHeight: screenHeight * MAX_SIZE_FACTOR,
         fontSize: `${props.font_size}px`,
       }}
     >
@@ -852,9 +869,9 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
         style={{
           wordWrap: "break-word",
           wordBreak: "break-word",
-          maxHeight: screenHeight * maxSize,
+          maxHeight: screenHeight * MAX_SIZE_FACTOR,
           overflowY: "auto",
-          maxWidth: screenWidth * maxSize,
+          maxWidth: screenWidth * MAX_SIZE_FACTOR,
           padding: "10px",
         }}
       >
@@ -885,9 +902,9 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
           renderMultistep(
             props,
             imageStepDimensions,
-            baseDialogDimensions,
-            htmlHeightIndex,
-            htmlWidthIndex,
+            BASE_DIALOG_BOX_DIMENSIONS,
+            HTML_IFRAME_SCALE_FACTOR,
+            HTML_IFRAME_WIDTH_FACTOR,
             imageStyle
           )}
         <p> </p>
@@ -900,10 +917,10 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
               style={{
                 width: `${props.image_width}%`,
                 height: `${props.image_width}%`,
-                maxWidth: `${dialogWidth - baseDialogDimensions.width / 2}px`,
-                maxHeight: `${dialogHeight - baseDialogDimensions.height / 2}px`,
+                maxWidth: `${dialogWidth - BASE_DIALOG_BOX_DIMENSIONS.width / 2}px`,
+                maxHeight: `${dialogHeight - BASE_DIALOG_BOX_DIMENSIONS.height / 2}px`,
                 objectFit: "scale-down",
-                transform: `scale(${(props.image_width ?? 100) / 100})`,
+                transform: `scale(${(props.image_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR})`,
                 transformOrigin: `top center`,
                 ...imageStyle,
               }}
@@ -914,26 +931,26 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
           renderHTMLCode(
             props.html_code,
             screenHeight *
-              maxSize *
-              htmlHeightIndex *
-              ((props.html_width ?? 100) / 100),
+              MAX_SIZE_FACTOR *
+              HTML_IFRAME_SCALE_FACTOR *
+              ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
             screenWidth *
-              maxSize *
-              htmlWidthIndex *
-              ((props.html_width ?? 100) / 100),
+              MAX_SIZE_FACTOR *
+              HTML_IFRAME_WIDTH_FACTOR *
+              ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
             props.html_border ?? 0
           )}
         {props.html_url &&
           renderHTMLLink(
             props.html_url,
             screenHeight *
-              maxSize *
-              htmlHeightIndex *
-              ((props.html_width ?? 100) / 100),
+              MAX_SIZE_FACTOR *
+              HTML_IFRAME_SCALE_FACTOR *
+              ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
             screenWidth *
-              maxSize *
-              htmlWidthIndex *
-              ((props.html_width ?? 100) / 100),
+              MAX_SIZE_FACTOR *
+              HTML_IFRAME_WIDTH_FACTOR *
+              ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
             props.html_border ?? 0
           )}
       </div>

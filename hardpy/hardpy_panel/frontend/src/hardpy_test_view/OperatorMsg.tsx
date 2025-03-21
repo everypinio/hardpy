@@ -20,6 +20,15 @@ interface StartOperatorMsgDialogProps {
   html_border?: number;
 }
 
+const BASE_OPERATOR_MESSAGE_DIMENSIONS = { width: 100, height: 100 };
+const MAX_SIZE_FACTOR = 0.6;
+const MIN_SIZE_FACTOR = 0.25;
+const LINE_HEIGHT_FACTOR = 10;
+const BASE_FONT_SIZE = 14;
+const HTML_IFRAME_SCALE_FACTOR = 0.75;
+const HTML_IFRAME_WIDTH_FACTOR = 0.9;
+const IMAGE_SCALE_FACTOR = 100;
+
 /**
  * Renders an HTML code iframe.
  * @param {string} htmlCode - The HTML code to render.
@@ -79,16 +88,13 @@ export function StartOperatorMsgDialog(
   props: Readonly<StartOperatorMsgDialogProps>
 ): JSX.Element {
   const [operatorMessageOpen, setOperatorMessageOpen] = useState(false);
-  const [imageDimensions, setImageDimensions] = useState({
-    width: 0,
-    height: 0,
-  });
+  const [imageDimensions, setImageDimensions] = useState(
+    BASE_OPERATOR_MESSAGE_DIMENSIONS
+  );
   const screenWidth = window.screen.width;
   const screenHeight = window.screen.height;
-  const baseOperatorMessageDimensions = { width: 100, height: 100 };
-  const maxSize = 0.6;
-  const minSize = 0.25;
-  const lineHeight = (10 * (props.font_size ? props.font_size : 14)) / 14;
+  const lineHeight =
+    (LINE_HEIGHT_FACTOR * (props.font_size ?? BASE_FONT_SIZE)) / BASE_FONT_SIZE;
 
   /**
    * Handles the closing of the dialog and sends a confirmation to the server.
@@ -120,8 +126,11 @@ export function StartOperatorMsgDialog(
     naturalHeight: number,
     widthFactor: number
   ): { width: number; height: number } => ({
-    width: (naturalWidth * (widthFactor || 100)) / 100,
-    height: (naturalHeight * (widthFactor || 100)) / 100,
+    width:
+      (naturalWidth * (widthFactor || IMAGE_SCALE_FACTOR)) / IMAGE_SCALE_FACTOR,
+    height:
+      (naturalHeight * (widthFactor || IMAGE_SCALE_FACTOR)) /
+      IMAGE_SCALE_FACTOR,
   });
 
   /**
@@ -134,7 +143,11 @@ export function StartOperatorMsgDialog(
   ): void => {
     const { naturalWidth, naturalHeight } = event.target as HTMLImageElement;
     setImageDimensions(
-      calculateDimensions(naturalWidth, naturalHeight, props.image_width ?? 100)
+      calculateDimensions(
+        naturalWidth,
+        naturalHeight,
+        props.image_width ?? IMAGE_SCALE_FACTOR
+      )
     );
   };
 
@@ -159,8 +172,8 @@ export function StartOperatorMsgDialog(
   };
 
   const operatorMessageWidth = Math.min(
-    imageDimensions.width + baseOperatorMessageDimensions.width,
-    screenWidth * maxSize
+    imageDimensions.width + BASE_OPERATOR_MESSAGE_DIMENSIONS.width,
+    screenWidth * MAX_SIZE_FACTOR
   );
 
   const textHeight =
@@ -169,11 +182,11 @@ export function StartOperatorMsgDialog(
   const operatorMessageHeight = Math.max(
     Math.min(
       imageDimensions.height +
-        baseOperatorMessageDimensions.height +
+        BASE_OPERATOR_MESSAGE_DIMENSIONS.height +
         textHeight,
-      screenHeight * maxSize
+      screenHeight * MAX_SIZE_FACTOR
     ),
-    screenHeight * minSize
+    screenHeight * MIN_SIZE_FACTOR
   );
 
   const imageStyle = {
@@ -223,10 +236,10 @@ export function StartOperatorMsgDialog(
       style={{
         width: "auto",
         height: "auto",
-        minWidth: screenWidth * minSize,
-        minHeight: screenHeight * minSize,
-        maxWidth: screenWidth * maxSize,
-        maxHeight: screenHeight * maxSize,
+        minWidth: screenWidth * MIN_SIZE_FACTOR,
+        minHeight: screenHeight * MIN_SIZE_FACTOR,
+        maxWidth: screenWidth * MAX_SIZE_FACTOR,
+        maxHeight: screenHeight * MAX_SIZE_FACTOR,
         fontSize: `${props.font_size}px`,
       }}
     >
@@ -235,9 +248,9 @@ export function StartOperatorMsgDialog(
         style={{
           wordWrap: "break-word",
           wordBreak: "break-word",
-          maxHeight: screenHeight * maxSize,
+          maxHeight: screenHeight * MAX_SIZE_FACTOR,
           overflowY: "auto",
-          maxWidth: screenWidth * maxSize,
+          maxWidth: screenWidth * MAX_SIZE_FACTOR,
           padding: "10px",
         }}
       >
@@ -255,10 +268,10 @@ export function StartOperatorMsgDialog(
               style={{
                 width: `${props.image_width}%`,
                 height: `${props.image_width}%`,
-                maxWidth: `${operatorMessageWidth - baseOperatorMessageDimensions.width / 2}px`,
-                maxHeight: `${operatorMessageHeight - baseOperatorMessageDimensions.height / 2}px`,
+                maxWidth: `${operatorMessageWidth - BASE_OPERATOR_MESSAGE_DIMENSIONS.width / 2}px`,
+                maxHeight: `${operatorMessageHeight - BASE_OPERATOR_MESSAGE_DIMENSIONS.height / 2}px`,
                 objectFit: "scale-down",
-                transform: `scale(${(props.image_width ?? 100) / 100})`,
+                transform: `scale(${(props.image_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR})`,
                 transformOrigin: `top center`,
                 ...imageStyle,
               }}
@@ -268,17 +281,29 @@ export function StartOperatorMsgDialog(
         {props.html_code &&
           renderHTMLCode(
             props.html_code,
-            screenHeight * maxSize * 0.75 * ((props.html_width ?? 100) / 100),
-            screenWidth * maxSize * 0.9 * ((props.html_width ?? 100) / 100),
+            screenHeight *
+              MAX_SIZE_FACTOR *
+              HTML_IFRAME_SCALE_FACTOR *
+              ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
+            screenWidth *
+              MAX_SIZE_FACTOR *
+              HTML_IFRAME_WIDTH_FACTOR *
+              ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
             props.html_border ?? 0
           )}
         {props.html_url &&
           renderHTMLLink(
             props.html_url,
-            screenHeight * maxSize * 0.75 * ((props.html_width ?? 100) / 100),
-            screenWidth * maxSize * 0.9 * ((props.html_width ?? 100) / 100),
+            screenHeight *
+              MAX_SIZE_FACTOR *
+              HTML_IFRAME_SCALE_FACTOR *
+              ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
+            screenWidth *
+              MAX_SIZE_FACTOR *
+              HTML_IFRAME_WIDTH_FACTOR *
+              ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
             props.html_border ?? 0
-        )}
+          )}
       </div>
     </Dialog>
   );

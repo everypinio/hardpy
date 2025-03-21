@@ -27,6 +27,11 @@ import { useAllDocs } from "use-pouchdb";
 
 import "./App.css";
 
+const WINDOW_WIDTH_THRESHOLDS = {
+  ULTRAWIDE: 490,
+  WIDE: 400,
+};
+
 /**
  * Main component of the GUI.
  * @returns {JSX.Element} The main application component.
@@ -64,8 +69,8 @@ function App(): JSX.Element {
     return width > size;
   };
 
-  const ultrawide = useWindowWide(490);
-  const wide = useWindowWide(400);
+  const ultrawide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.ULTRAWIDE);
+  const wide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.WIDE);
 
   /**
    * Custom hook to render data from the database.
