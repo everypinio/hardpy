@@ -21,6 +21,56 @@ interface StartOperatorMsgDialogProps {
 }
 
 /**
+ * Renders an HTML code iframe.
+ * @param {string} htmlCode - The HTML code to render.
+ * @param {number} height - The height of the iframe.
+ * @param {number} width - The width of the iframe.
+ * @param {number} border - The border size of the iframe.
+ * @returns {JSX.Element} - An iframe element with the specified HTML code.
+ */
+const renderHTMLCode = (
+  htmlCode: string,
+  height: number,
+  width: number,
+  border: number
+): JSX.Element => (
+  <iframe
+    srcDoc={htmlCode}
+    height={height}
+    width={width}
+    style={{
+      border: `${border}px solid black`,
+    }}
+    title="HTML Code"
+  />
+);
+
+/**
+ * Renders an HTML link iframe.
+ * @param {string} htmlUrl - The URL to render.
+ * @param {number} height - The height of the iframe.
+ * @param {number} width - The width of the iframe.
+ * @param {number} border - The border size of the iframe.
+ * @returns {JSX.Element} - An iframe element with the specified URL.
+ */
+const renderHTMLLink = (
+  htmlUrl: string,
+  height: number,
+  width: number,
+  border: number
+): JSX.Element => (
+  <iframe
+    src={htmlUrl}
+    height={height}
+    width={width}
+    style={{
+      border: `${border}px solid black`,
+    }}
+    title="HTML Link"
+  />
+);
+
+/**
  * A React component that displays a dialog with a message, optional image, and optional HTML content.
  * @param {StartOperatorMsgDialogProps} props - The properties for the dialog.
  * @returns {JSX.Element} The rendered dialog component.
@@ -215,35 +265,19 @@ export function StartOperatorMsgDialog(
             />
           </div>
         )}
-        {props.html_code && (
-          <iframe
-            srcDoc={props.html_code}
-            height={
-              screenHeight * maxSize * 0.75 * ((props.html_width ?? 100) / 100)
-            }
-            width={
-              screenWidth * maxSize * 0.9 * ((props.html_width ?? 100) / 100)
-            }
-            style={{
-              border: `${props.html_border}px solid black`,
-            }}
-            title="HTML Code"
-          />
-        )}
-        {props.html_url && (
-          <iframe
-            src={props.html_url}
-            height={
-              screenHeight * maxSize * 0.75 * ((props.html_width ?? 100) / 100)
-            }
-            width={
-              screenWidth * maxSize * 0.9 * ((props.html_width ?? 100) / 100)
-            }
-            style={{
-              border: `${props.html_border}px solid black`,
-            }}
-            title="HTML Link"
-          />
+        {props.html_code &&
+          renderHTMLCode(
+            props.html_code,
+            screenHeight * maxSize * 0.75 * ((props.html_width ?? 100) / 100),
+            screenWidth * maxSize * 0.9 * ((props.html_width ?? 100) / 100),
+            props.html_border ?? 0
+          )}
+        {props.html_url &&
+          renderHTMLLink(
+            props.html_url,
+            screenHeight * maxSize * 0.75 * ((props.html_width ?? 100) / 100),
+            screenWidth * maxSize * 0.9 * ((props.html_width ?? 100) / 100),
+            props.html_border ?? 0
         )}
       </div>
     </Dialog>
