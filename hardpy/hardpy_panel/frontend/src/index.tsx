@@ -11,14 +11,22 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
-function getSyncURL() {
-  return fetch("/api/couch")
-    .then((response) => response.json())
-    .then((data) => `${data.connection_str}/statestore`)
-    .catch((error) => {
-      console.error(error);
-      undefined;
-    });
+/**
+ * Fetches the synchronization URL for PouchDB from the backend API.
+ *
+ * @returns {Promise<string | undefined>} A promise that resolves to the sync URL as a string if successful,
+ * or undefined if an error occurs.
+ * @throws {Error} If the fetch request fails or the response cannot be parsed.
+ */
+async function getSyncURL(): Promise<string | undefined> {
+  try {
+    const response = await fetch("/api/couch");
+    const data = await response.json();
+    return `${data.connection_str}/statestore`;
+  } catch (error) {
+    console.error(error);
+    return undefined;
+  }
 }
 
 const root = ReactDOM.createRoot(
@@ -29,6 +37,11 @@ const syncURL = await getSyncURL();
 if (syncURL !== undefined) {
   const db = new PouchDB(syncURL);
 
+  /**
+   * Renders the main application wrapped in a PouchDB Provider and React StrictMode.
+   *
+   * @param {PouchDB.Database} db - The PouchDB database instance to be provided to the application.
+   */
   root.render(
     <StrictMode>
       <Provider pouchdb={db}>
@@ -37,6 +50,9 @@ if (syncURL !== undefined) {
     </StrictMode>
   );
 } else {
+  /**
+   * Renders an error message if the PouchDB sync URL could not be retrieved.
+   */
   root.render(
     <>
       <h1>No PouchDB sync URL</h1>

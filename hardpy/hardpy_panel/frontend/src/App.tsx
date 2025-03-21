@@ -17,8 +17,7 @@ import {
 } from "@blueprintjs/core";
 
 import StartStopButton from "./button/StartStop";
-import { SuiteList as SuiteList } from "./hardpy_test_view/SuiteList";
-import { TestRunI } from "./hardpy_test_view/SuiteList";
+import { SuiteList, TestRunI } from "./hardpy_test_view/SuiteList";
 import ProgressView from "./progress/ProgressView";
 import TestStatus from "hardpy_test_view/TestStatus";
 import ReloadAlert from "./restart_alert/RestartAlert";
@@ -29,7 +28,8 @@ import { useAllDocs } from "use-pouchdb";
 import "./App.css";
 
 /**
- * Main component of GUI
+ * Main component of the GUI.
+ * @returns {JSX.Element} The main application component.
  */
 function App(): JSX.Element {
   const [use_end_test_sound, setUseEndTestSound] = React.useState(false);
@@ -39,7 +39,12 @@ function App(): JSX.Element {
   const [lastProgress, setProgress] = React.useState(0);
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
 
-  const useWindowWide = (size: number) => {
+  /**
+   * Custom hook to determine if the window width is greater than a specified size.
+   * @param {number} size - The width threshold to compare against.
+   * @returns {boolean} True if the window width is greater than the specified size, otherwise false.
+   */
+  const useWindowWide = (size: number): boolean => {
     const [width, setWidth] = React.useState(0);
 
     React.useEffect(() => {
@@ -62,7 +67,11 @@ function App(): JSX.Element {
   const ultrawide = useWindowWide(490);
   const wide = useWindowWide(400);
 
-  const useRenderDb = () => {
+  /**
+   * Custom hook to render data from the database.
+   * @returns {JSX.Element} The rendered database content or a loading/error message.
+   */
+  const useRenderDb = (): JSX.Element => {
     const { rows, state, loading, error } = useAllDocs({
       include_docs: true,
     });
@@ -151,7 +160,11 @@ function App(): JSX.Element {
     );
   };
 
-  const renderSettingsMenu = () => {
+  /**
+   * Renders the settings menu.
+   * @returns {JSX.Element} The settings menu component.
+   */
+  const renderSettingsMenu = (): JSX.Element => {
     return (
       <Menu>
         <MenuItem
@@ -253,7 +266,6 @@ function App(): JSX.Element {
         <div style={{ flexDirection: "column" }}>
           <StartStopButton
             testing_status={lastRunStatus}
-            is_authenticated={isAuthenticated}
           />
         </div>
       </div>

@@ -1,9 +1,9 @@
 # Plot in the dialog box
 
-This example demonstrates how to create and display a plot within a dialog box using `matplotlib` and `mpld3`. 
+This example demonstrates how to create and display a plot within a dialog box using `matplotlib` and `mpld3`.
 The plot is generated as an HTML component and embedded into a dialog box, which can be used for testing or user interaction purposes.
 
-The process involves generating a plot using `matplotlib`, converting it to HTML using `mpld3`, and then embedding the HTML into a dialog box. 
+The process involves generating a plot using `matplotlib`, converting it to HTML using `mpld3`, and then embedding the HTML into a dialog box.
 This approach is particularly useful for scenarios where visual data needs to be presented to the user or tester in an interactive manner.
 
 <h1 align="center">
@@ -14,10 +14,9 @@ This approach is particularly useful for scenarios where visual data needs to be
 
 1. Launch `hardpy init html_plot`.
 2. Install Required Packages `pip install matplotlib mpld3`.
-3. Create your `conftest.py` file with the provided fixture.
-4. Create your `test_plot.py` file with the test case.
-5. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
-6. Launch `hardpy run html_plot`.
+3. Create your `test_plot.py` file with the test case.
+4. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
+5. Launch `hardpy run html_plot`.
 
 ### test_plot.py
 
