@@ -22,7 +22,7 @@ const TAG_ELEMENT_STYLE = { margin: 2 };
  * @param {string | null} props.assertion_msg - An assertion message to display as a warning tag.
  * @returns {React.ReactElement} A React element representing the component.
  */
-export function TestData(props: Props): React.ReactElement {
+export function TestData(props: Readonly<Props>): React.ReactElement {
   return (
     <div className="test-data">
       {_.map(props.msg, (value: string, key: string) => {
