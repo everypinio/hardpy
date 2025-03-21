@@ -1,24 +1,91 @@
 # Features
 
-## Based on pytest
+## Viewing tests in the operator panel
 
-**HardPy** includes the pytest-hardpy plugin for **pytest**.
-Compatible with pytest versions above 7.
-You can run tests not only through the operator panel but also through the **pytest** itself.
+The operator panel allows you to view the test hierarchy with **test folder/test file/function** levels.
+User can launch operator panel using [hardpy run](./../documentation/cli.md#hardpy-run) command.
 
-## Document-oriented NoSQL database
+## Running tests
 
-**HardPy** uses [CouchDB](https://couchdb.apache.org/) as its database but you can write
-final result to any database because **CouchDB** stores data in a simple document.
-Developers can create their adapter for any database and store the test report in a way that suits them.
-By default **HardPy** allows you to store all reports in **CouchDB**.
-**HardPy** is compatible with **CouchDB** versions above 3.2.
+Based on pytest **HardPy** allows you to run pytest tests in the browser or command line.
+For running tests in browser run tests using [hardpy run](./../documentation/cli.md#hardpy-run) command
 
-## Tests view in browser
+```bash
+hardpy run
+```
 
-**HardPy** includes a **React** application - **HardPy operator panel**.
-It allows you to use a browser to view and interact with your tests and write test results to a database.
+and press the **Start** button.
+Alternatively, the user can start the operator panel with the “Start” button and run tests with pytest.
 
-## Modern python
+```bash
+python -m pytest
+```
 
-**HardPy** is based on the **python 3.10** and supports versions **3.11**, **3.12**, **3.13**.
+The user can also run tests without the operator panel, just through pytest.
+This method may be appropriate if the user does not need the operator panel.
+
+## Stopping the tests
+
+The user can stop the tests during execution from the operator panel by clicking on the **Stop** button.
+It is possible to stop tests from the console by sending an interrupt, e.g. “Ctrl-C” in Linux.
+
+## Storing tests result in database
+
+**HardPy** does not allow you to run tests without a running **CouchDB** database.
+This is a NoSQL database that ensures that the results of the current test run are committed,
+even if the tests are aborted early.
+
+To save the report history, the user must configure the **conftest.py** file using the
+[CouchdbLoader](./../documentation/pytest_hardpy.md#couchdbloader) or another adapter to save the data.
+By default, only the current report in the [runstore](./../documentation/database.md#runstore-scheme)
+database is stored in **CouchDB**.
+
+An example of configuring **conftest.py** to store test run history can be found in several examples,
+including the [couchdb_load](./../examples/couchdb_load.md) and
+[minute_parity](./../examples/minute_parity.md).
+
+## Creating template project
+
+The **HardPy** can create template project using the [hardpy init](./../documentation/cli.md#hardpy-init)
+command. An example of usage can be found in the **how to init** section among the examples, e.g. in
+[minute parity](./../examples/minute_parity.md#how-to-start).
+
+```bash
+hardpy init minute_parity
+```
+
+## Interacting with tests in the operator panel
+
+The user can interact with the tests through dialog boxes in the operator panel.
+**HardPy** provides the ability to enter [text](./../documentation/hardpy_panel.md#text-input-field) or
+[numbers](./../documentation/hardpy_panel.md#number-input-field), make selections using
+[checkboxes](./../documentation/hardpy_panel.md#checkbox) or
+[radio buttons](./../documentation/hardpy_panel.md#radiobutton),
+guide the user through [multiple steps](./../documentation/hardpy_panel.md#multiple-steps)
+in a single window, display [images](./../documentation/pytest_hardpy.md#imagecomponent) to the user,
+and insert [HTML components](./../documentation/pytest_hardpy.md#htmlcomponent) into the dialog box using iframes.
+
+In dialog boxes, the user must confirm their action by clicking the **Confirm** button.
+Closing the dialog box prematurely will abort the test.
+
+If the user only needs to provide information, an
+[operator message](./../documentation/hardpy_panel.md#operator-message) can be used.
+Unlike dialog boxes, the user cannot enter any information, only close the window.
+User can also close the operator message from within the test code and run it in non-blocking mode,
+so that displaying the window does not stop the test.
+
+## Multi attempts
+
+The **HardPy** allows the user to attach an [attempt](./../documentation/pytest_hardpy.md#attempt)
+marker to a test, which allows the test to be repeated as many times as specified in
+the marker's content in the event of failure.
+
+## Skipping the tests
+
+The **HardPy** allows the user to skip tests on [dependency](./../documentation/pytest_hardpy.md#dependency)
+markers. The user can specify that a test or an entire module depends on another test.
+In this way, tests can be defined whose failure will prevent the marked tests from running.
+
+## Running some instance in single stand
+
+## StandCloud
