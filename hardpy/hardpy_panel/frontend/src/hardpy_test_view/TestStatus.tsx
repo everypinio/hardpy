@@ -15,7 +15,7 @@ interface Props {
  * @param {string} props.status - The status to display. Possible values: "ready", "run", "passed", "failed", "", or any other value.
  * @returns {React.ReactElement} - A React element representing the status icon or spinner.
  */
-export function TestStatus(props: Props): React.ReactElement {
+export function TestStatus(props: Readonly<Props>): React.ReactElement {
   switch (props.status) {
     case "ready":
       return (

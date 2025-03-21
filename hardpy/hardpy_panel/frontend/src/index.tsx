@@ -18,14 +18,15 @@ import reportWebVitals from "./reportWebVitals";
  * or undefined if an error occurs.
  * @throws {Error} If the fetch request fails or the response cannot be parsed.
  */
-function getSyncURL() {
-  return fetch("/api/couch")
-    .then((response) => response.json())
-    .then((data) => `${data.connection_str}/statestore`)
-    .catch((error) => {
-      console.error(error);
-      undefined;
-    });
+async function getSyncURL(): Promise<string | undefined> {
+  try {
+    const response = await fetch("/api/couch");
+    const data = await response.json();
+    return `${data.connection_str}/statestore`;
+  } catch (error) {
+    console.error(error);
+    return undefined;
+  }
 }
 
 const root = ReactDOM.createRoot(

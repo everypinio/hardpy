@@ -81,7 +81,6 @@ export interface TestItem {
 }
 
 type Props = {
-  key: string;
   index: number;
   test: TestItem;
   defaultOpen: boolean;
@@ -99,13 +98,15 @@ const SUITE_NAME_STUB = "Lorem ipsum";
  * It includes functionality to render test names, statuses, and data.
  */
 export class TestSuite extends React.Component<Props, State> {
-  private static LOADING_ICON = (
+  private static readonly LOADING_ICON = (
     <div style={{ margin: 30 }}>
       <LoadingOutlined spin />
     </div>
   );
 
-  static defaultProps: { defaultOpen: boolean };
+  static defaultProps: Partial<Props> = {
+    defaultOpen: true,
+  };
 
   /**
    * Renders the TestSuite component.
@@ -178,7 +179,7 @@ export class TestSuite extends React.Component<Props, State> {
    * @param {number} test_number - The number of the test suite.
    * @returns {React.ReactElement} The rendered name element.
    */
-  private renderName(name: string, test_number: number) {
+  private renderName(name: string, test_number: number): React.ReactElement {
     const is_loading = _.isEmpty(name);
 
     return (
@@ -198,7 +199,7 @@ export class TestSuite extends React.Component<Props, State> {
    * @param {Cases} test_topics - The test cases to render.
    * @returns {React.ReactElement} The rendered test cases.
    */
-  private renderTests(test_topics: Cases) {
+  private renderTests(test_topics: Cases): React.ReactElement {
     let case_names: string[] = [];
 
     if (test_topics) {
@@ -259,7 +260,7 @@ export class TestSuite extends React.Component<Props, State> {
    * @param {TestItem} test_topics - The test item containing cases.
    * @returns {React.ReactElement} The rendered right panel.
    */
-  private renderTestSuiteRightPanel(test_topics: TestItem) {
+  private renderTestSuiteRightPanel(test_topics: TestItem): React.ReactElement {
     return (
       <div
         className={Classes.ALIGN_RIGHT}
@@ -299,8 +300,8 @@ export class TestSuite extends React.Component<Props, State> {
   private commonCellRender(
     cell_content: React.ReactElement,
     key: string,
-    is_loading = false
-  ) {
+    is_loading: boolean = false
+  ): React.ReactElement {
     return (
       <div
         className={is_loading ? Classes.SKELETON : undefined}
@@ -323,7 +324,7 @@ export class TestSuite extends React.Component<Props, State> {
     test_topics: Case[],
     row_: string,
     rowIndex: number
-  ) {
+  ): React.ReactElement {
     return this.commonCellRender(
       <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
         <TestNumber val={rowIndex + 1} />
@@ -343,7 +344,7 @@ export class TestSuite extends React.Component<Props, State> {
     test_topics: Case[],
     row_: string,
     rowIndex: number
-  ) {
+  ): React.ReactElement {
     const test = test_topics[rowIndex];
     return this.commonCellRender(
       <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
@@ -364,7 +365,7 @@ export class TestSuite extends React.Component<Props, State> {
     test_topics: Case[],
     row_: string,
     rowIndex: number
-  ) {
+  ): React.ReactElement {
     const test = test_topics[rowIndex];
 
     return this.commonCellRender(
@@ -386,7 +387,7 @@ export class TestSuite extends React.Component<Props, State> {
     test_topics: Case[],
     row_: string,
     rowIndex: number
-  ) {
+  ): React.ReactElement {
     const test = test_topics[rowIndex];
     const { info: widget_info, type: widget_type } =
       test.dialog_box.widget || {};
@@ -401,9 +402,9 @@ export class TestSuite extends React.Component<Props, State> {
         {test.dialog_box.dialog_text &&
           test.status === "run" &&
           this.props.commonTestRunStatus === "run" &&
-          test.dialog_box.visible == true && (
+          test.dialog_box.visible && (
             <StartConfirmationDialog
-              title_bar={test.dialog_box.title_bar || test.name}
+              title_bar={test.dialog_box.title_bar ?? test.name}
               dialog_text={test.dialog_box.dialog_text}
               widget_info={widget_info}
               widget_type={widget_type}
@@ -414,12 +415,12 @@ export class TestSuite extends React.Component<Props, State> {
               id={test.dialog_box.id}
               font_size={test.dialog_box.font_size}
               html_code={
-                test.dialog_box.html?.is_raw_html == true
+                test.dialog_box.html?.is_raw_html
                   ? test.dialog_box.html?.code_or_url
                   : undefined
               }
               html_url={
-                test.dialog_box.html?.is_raw_html == false
+                !test.dialog_box.html?.is_raw_html
                   ? test.dialog_box.html?.code_or_url
                   : undefined
               }
