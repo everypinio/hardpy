@@ -88,4 +88,11 @@ In this way, tests can be defined whose failure will prevent the marked tests fr
 
 ## Running some instance in single stand
 
+A user can run multiple **HardPy** instances on a single stand.
+The startup is described in the [Multiple Stand](./../examples/multiple_stands.md) example.
+
 ## StandCloud
+
+**HardPy** allows you to send test results to **StandCloud**, a data storage and analysis platform.
+See the [StandCloud](./../documentation/stand_cloud.md) section and the
+[StandCloud example](./../examples/stand_cloud.md) for more information.
