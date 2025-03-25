@@ -263,15 +263,15 @@ The container will be deleted after use.
 
 ### Running CouchDB with binary packages in Linux
 
-1. Use this [instruction](https://docs.couchdb.org/en/stable/install/unix.html#installation-using-the-apache-couchdb-convenience-binary-packages) to install CouchDB
+1. Use this [instruction](https://docs.couchdb.org/en/stable/install/unix.html#installation-using-the-apache-couchdb-convenience-binary-packages) to install CouchDB.
 2. The installer asks you if you want to install CouchDB as a standalone
 application or in a clustered configuration.
 Select `Standalone` and press Enter.
 3. You are prompted to enter the Erlang Node Name.
-You can ask it in Terminal with the command `hostname -f`
+You can ask it in Terminal with the command `hostname -f`.
 4. Set the Erlang Magic Cookie.
-This is a unique identifier, for example, `test1234`
-5. Configure the network interfaces on which CouchDB will be bound.
+This is a unique identifier, for example, `test1234`.
+5. Configure the network interfaces on which CouchDB will be bound
 `localhost` is fine.
 6. Enter an admin password of your choice for CouchDB, press `Enter`, re-type the password
 and press `Enter` again to continue the installation.
@@ -279,8 +279,8 @@ and press `Enter` again to continue the installation.
 address http://localhost:5984/_utils/.
 Open it.
 8. First of all, in the `User Management` section in the `Create Admins` tab,
-create a user with the login `dev` and password `dev`
-9. In the `Config` choose `CORS` and appoint `Enable CORS` with `All domains`
+create a user with the login `dev` and password `dev`.
+9. In the `Config` choose `CORS` and appoint `Enable CORS` with `All domains`.
 
 #### To disable the CouchDB service:
 
@@ -307,10 +307,10 @@ systemctl reset-failed
 
 ### Running CouchDB with binary packages in Windows
 
-1. Use this [instruction](https://docs.couchdb.org/en/stable/install/windows.html#installation-on-windows) to install CouchDB
+1. Use this [instruction](https://docs.couchdb.org/en/stable/install/windows.html#installation-on-windows) to install CouchDB.
 2. Be sure to install CouchDB to a path with no spaces, such as `C:\CouchDB`.
 3. Create a user with the login `dev` and password `dev` during the installation steps. Validate Credentials.
 4. Generate Random Cookie.
 5. After launching the database, it becomes available at the following address http://localhost:5984/_utils/.
 Open it.
-6. In the `Config` choose `CORS` and appoint `Enable CORS` with `All domains`
+6. In the `Config` choose `CORS` and appoint `Enable CORS` with `All domains`.

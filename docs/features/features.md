@@ -8,7 +8,7 @@ User can launch operator panel using [hardpy run](./../documentation/cli.md#hard
 ## Running tests
 
 Based on pytest **HardPy** allows you to run pytest tests in the browser or command line.
-For running tests in browser run tests using [hardpy run](./../documentation/cli.md#hardpy-run) command
+For running tests in browser run tests using [hardpy run](./../documentation/cli.md#hardpy-run) command.
 
 ```bash
 hardpy run
