@@ -6,8 +6,8 @@ Data synchronization uses the replication mechanism of CouchDB and PouchDB.
 object that stores the current state of the test run without artifacts.
 The plugin updates the document as testing progresses using the **StateStore** class.
 - The [runstore](./../documentation/database.md#runstore-scheme) database contains the document
-  **current**, which is a JSON object that stores the current state of the test run with
-  artifacts - a report on the current test run.
+**current**, which is a JSON object that stores the current state of the test run with
+artifacts - a report on the current test run.
 
 ## Statestore scheme
 
