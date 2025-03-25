@@ -469,8 +469,16 @@ const calculateDialogDimensions = (
   maxSize: number,
   minSize: number,
   textHeight: number,
-  textStepHeight: number
+  textStepHeight: number,
+  hasHTML: boolean
 ): { width: number; height: number } => {
+  if (widgetType === WidgetType.Multistep && hasHTML) {
+    return {
+      width: screenWidth * maxSize,
+      height: screenHeight * maxSize
+    };
+  }
+
   const dialogWidth = Math.min(
     (widgetType === WidgetType.Multistep ? maxDimensions : imageDimensions)
       .width + baseDialogDimensions.width,
@@ -522,6 +530,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
     (LINE_HEIGHT_FACTOR *
       (props.font_size ? props.font_size : BASE_FONT_SIZE)) /
     BASE_FONT_SIZE;
+  const [hasHTML, setHasHTML] = useState(false);
 
   /**
    * Handles the close event of the dialog box.
@@ -795,7 +804,8 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
       MAX_SIZE_FACTOR,
       MIN_SIZE_FACTOR,
       textHeight,
-      textStepHeight
+      textStepHeight,
+      hasHTML
     );
 
   const imageStyle = {
@@ -812,6 +822,8 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
 
   useEffect(() => {
     if (widgetType === WidgetType.Multistep) {
+      let htmlFound = false;
+
       const handleStepImageLoad = (
         image: HTMLImageElement,
         widthFactor: number
@@ -841,7 +853,12 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
               step.info.image?.width ?? IMAGE_SCALE_FACTOR
             );
         }
+        if (step.info.html?.code_or_url) {
+          htmlFound = true;
+        }
       });
+      
+      setHasHTML(htmlFound);
     }
   }, [props.widget_info, widgetType]);
 
