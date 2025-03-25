@@ -29,7 +29,7 @@ This method may be appropriate if the user does not need the operator panel.
 The user can stop the tests during execution from the operator panel by clicking on the **Stop** button.
 It is possible to stop tests from the console by sending an interrupt, e.g. “Ctrl-C” in Linux.
 
-## Storing tests result in database
+## Storing test result in database
 
 **HardPy** does not allow you to run tests without a running **CouchDB** database.
 This is a NoSQL database that ensures that the results of the current test run are committed,
@@ -74,7 +74,7 @@ Unlike dialog boxes, the user cannot enter any information, only close the windo
 User can also close the operator message from within the test code and run it in non-blocking mode,
 so that displaying the window does not stop the test.
 
-## Multi attempts
+## Running multiple test attempts
 
 The **HardPy** allows the user to attach an [attempt](./../documentation/pytest_hardpy.md#attempt)
 marker to a test, which allows the test to be repeated as many times as specified in
@@ -91,7 +91,7 @@ In this way, tests can be defined whose failure will prevent the marked tests fr
 A user can run multiple **HardPy** instances on a single stand.
 The startup is described in the [Multiple Stand](./../examples/multiple_stands.md) example.
 
-## StandCloud
+## Storing test result to StandCloud
 
 **HardPy** allows you to send test results to **StandCloud**, a data storage and analysis platform.
 See the [StandCloud](./../documentation/stand_cloud.md) section and the
