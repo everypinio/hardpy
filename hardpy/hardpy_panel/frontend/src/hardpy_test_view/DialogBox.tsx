@@ -457,6 +457,7 @@ const renderMultistep = (
  * @param {number} minSize - The minimum size multiplier for the dialog.
  * @param {number} textHeight - The height of the text within the dialog.
  * @param {number} textStepHeight - The height of the text step within the dialog.
+ * @param {boolean} hasHTML - A flag indicating whether HTML content is present in the dialog.
  * @returns {Object} - An object containing the calculated width and height of the dialog.
  */
 const calculateDialogDimensions = (
