@@ -117,8 +117,13 @@ interface CheckboxComponentProps {
 /**
  * TextInputComponent is a reusable input component that allows users to enter text.
  * @param {string} inputText - The current value of the input field.
+ * @param {function} setInputText - A function to update the input field value.
+ * @param {function} handleKeyDown - A function to handle keydown events on the input field.
+ * @param {string} inputPlaceholder - The placeholder text to display in the input field.
+ * @param {string} type - The type of the input field.
  * @returns {JSX.Element} - A controlled input component with auto-focus enabled.
  */
+/** */
 const TextInputComponent = ({
   inputText,
   setInputText,
@@ -141,6 +146,7 @@ const TextInputComponent = ({
 /**
  * RadioButtonComponent is a reusable component that renders a group of radio buttons.
  * @param {string[]} fields - An array of options to display as radio buttons.
+ * @param {string} selectedRadioButton - The currently selected radio button value.
  * @param {function} setSelectedRadioButton - A function to update the selected radio button.
  * @param {function} handleKeyDown - A function to handle keydown events on the radio buttons.
  * @param {number} fontSize - The font size for the radio button labels.
@@ -301,17 +307,6 @@ const renderCheckbox = (
     fontSize={props.font_size ?? 12}
   />
 );
-
-/**
- * Renders a multistep component with tabs, each containing text, images, or HTML content.
- * @param {Props} props - The properties passed to the component.
- * @param {Object} imageStepDimensions - The dimensions of the image step.
- * @param {Object} baseDialogDimensions - The base dimensions of the dialog.
- * @param {number} htmlHeightIndex - The height index for HTML content.
- * @param {number} htmlWidthIndex - The width index for HTML content.
- * @param {React.CSSProperties} imageStyle - The style properties for the image.
- * @returns {JSX.Element} - A multistep component with tabs containing various content types.
- */
 
 /**
  * Renders an HTML code iframe.
