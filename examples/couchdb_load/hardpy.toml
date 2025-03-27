@@ -10,7 +10,3 @@ port = 5984
 [frontend]
 host = "localhost"
 port = 8000
-
-[socket]
-host = "localhost"
-port = 6525

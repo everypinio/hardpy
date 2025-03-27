@@ -14,9 +14,20 @@ interface StartOperatorMsgDialogProps {
   is_visible?: boolean;
   id?: string;
   font_size?: number;
+  html_url?: string;
+  html_code?: string;
+  html_width?: number;
+  html_border?: number;
 }
 
-export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
+/**
+ * A React component that displays a dialog with a message, optional image, and optional HTML content.
+ * @param {StartOperatorMsgDialogProps} props - The properties for the dialog.
+ * @returns {JSX.Element} The rendered dialog component.
+ */
+export function StartOperatorMsgDialog(
+  props: Readonly<StartOperatorMsgDialogProps>
+): JSX.Element {
   const [operatorMessageOpen, setOperatorMessageOpen] = useState(false);
   const [imageDimensions, setImageDimensions] = useState({
     width: 0,
@@ -27,9 +38,14 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
   const baseOperatorMessageDimensions = { width: 100, height: 100 };
   const maxSize = 0.6;
   const minSize = 0.25;
-  const lineHeight = 10 * (props.font_size ? props.font_size : 14) / 14;
+  const lineHeight = (10 * (props.font_size ? props.font_size : 14)) / 14;
 
-  const handleClose = async ()  => {
+  /**
+   * Handles the closing of the dialog and sends a confirmation to the server.
+   * @async
+   * @returns {Promise<void>}
+   */
+  const handleClose = async (): Promise<void> => {
     setOperatorMessageOpen(false);
 
     try {
@@ -42,23 +58,46 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
     }
   };
 
+  /**
+   * Calculates the dimensions of the image based on its natural dimensions and a width factor.
+   * @param {number} naturalWidth - The natural width of the image.
+   * @param {number} naturalHeight - The natural height of the image.
+   * @param {number} widthFactor - The factor to scale the width by.
+   * @returns {{width: number, height: number}} The calculated dimensions.
+   */
   const calculateDimensions = (
     naturalWidth: number,
     naturalHeight: number,
     widthFactor: number
-  ) => ({
+  ): { width: number; height: number } => ({
     width: (naturalWidth * (widthFactor || 100)) / 100,
     height: (naturalHeight * (widthFactor || 100)) / 100,
   });
 
-  const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
+  /**
+   * Handles the loading of the image and sets its dimensions.
+   * @param {React.SyntheticEvent<HTMLImageElement>} event - The image load event.
+   * @returns {void}
+   */
+  const handleImageLoad = (
+    event: React.SyntheticEvent<HTMLImageElement>
+  ): void => {
     const { naturalWidth, naturalHeight } = event.target as HTMLImageElement;
     setImageDimensions(
       calculateDimensions(naturalWidth, naturalHeight, props.image_width ?? 100)
     );
   };
 
-  const calculateTextLines = (text: string, width: number) => {
+  /**
+   * Calculates the number of lines of text based on the text content and available width.
+   * @param {string} text - The text content.
+   * @param {number} width - The available width for the text.
+   * @returns {number | undefined} The number of lines of text.
+   */
+  const calculateTextLines = (
+    text: string,
+    width: number
+  ): number | undefined => {
     const context = document.createElement("canvas").getContext("2d");
     if (context) {
       context.font = "10px sans-serif";
@@ -75,7 +114,7 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
   );
 
   const textHeight =
-    (calculateTextLines(props.msg, operatorMessageWidth) || 1) * lineHeight;
+    (calculateTextLines(props.msg, operatorMessageWidth) ?? 1) * lineHeight;
 
   const operatorMessageHeight = Math.max(
     Math.min(
@@ -88,13 +127,18 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
   );
 
   const imageStyle = {
-    border: `${props.image_border || 0}px solid black`,
+    border: `${props.image_border ?? 0}px solid black`,
     display: "block",
     margin: "0 auto",
   };
-  
+
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
+    /**
+     * Handles the keydown event to close the dialog when the Escape key is pressed.
+     * @param {KeyboardEvent} event - The keydown event.
+     * @returns {void}
+     */
+    const handleKeyDown = (event: KeyboardEvent): void => {
       const keyboardEvent =
         event as unknown as React.KeyboardEvent<HTMLInputElement>;
       if (keyboardEvent.key === "Escape") {
@@ -110,6 +154,10 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
   });
 
   useEffect(() => {
+    /**
+     * Sets the dialog visibility based on the `is_visible` prop.
+     * @returns {void}
+     */
     if (props.is_visible) {
       setOperatorMessageOpen(true);
     }
@@ -143,8 +191,8 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
           padding: "10px",
         }}
       >
-        {props.msg.split("\n").map((line, index) => (
-          <p key={index} style={{ textAlign: "left" }}>
+        {props.msg.split("\n").map((line) => (
+          <p key={line} style={{ textAlign: "left" }}>
             {line}
           </p>
         ))}
@@ -152,7 +200,7 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
           <div className="image-container">
             <img
               src={`data:image/image;base64,${props.image_base64}`}
-              alt="Image"
+              alt={""} // Use a more descriptive text or an empty string if not available
               onLoad={handleImageLoad}
               style={{
                 width: `${props.image_width}%`,
@@ -160,12 +208,42 @@ export function StartOperatorMsgDialog(props: StartOperatorMsgDialogProps) {
                 maxWidth: `${operatorMessageWidth - baseOperatorMessageDimensions.width / 2}px`,
                 maxHeight: `${operatorMessageHeight - baseOperatorMessageDimensions.height / 2}px`,
                 objectFit: "scale-down",
-                transform: `scale(${(props.image_width || 100) / 100})`,
+                transform: `scale(${(props.image_width ?? 100) / 100})`,
                 transformOrigin: `top center`,
                 ...imageStyle,
               }}
             />
           </div>
+        )}
+        {props.html_code && (
+          <iframe
+            srcDoc={props.html_code}
+            height={
+              screenHeight * maxSize * 0.75 * ((props.html_width ?? 100) / 100)
+            }
+            width={
+              screenWidth * maxSize * 0.9 * ((props.html_width ?? 100) / 100)
+            }
+            style={{
+              border: `${props.html_border}px solid black`,
+            }}
+            title="HTML Code"
+          />
+        )}
+        {props.html_url && (
+          <iframe
+            src={props.html_url}
+            height={
+              screenHeight * maxSize * 0.75 * ((props.html_width ?? 100) / 100)
+            }
+            width={
+              screenWidth * maxSize * 0.9 * ((props.html_width ?? 100) / 100)
+            }
+            style={{
+              border: `${props.html_border}px solid black`,
+            }}
+            title="HTML Link"
+          />
         )}
       </div>
     </Dialog>

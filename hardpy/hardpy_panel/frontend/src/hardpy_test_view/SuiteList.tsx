@@ -45,6 +45,13 @@ interface ImageInfo {
   border?: number;
 }
 
+interface HTMLInfo {
+  code_or_url?: string;
+  is_raw_html?: boolean;
+  width?: number;
+  border?: number;
+}
+
 interface OperatorMsgProps {
   msg: string;
   title?: string;
@@ -52,6 +59,7 @@ interface OperatorMsgProps {
   image?: ImageInfo;
   id?: string;
   font_size?: number;
+  html?: HTMLInfo;
 }
 
 export interface TestRunI {
@@ -84,6 +92,10 @@ interface Props {
 export class SuiteList extends React.Component<Props> {
   elements_count: number = 0;
 
+  /**
+   * Renders the SuiteList component.
+   * @returns {React.ReactElement} The rendered component.
+   */
   render(): React.ReactElement {
     if (this.props.db_state.name == undefined) {
       return (
@@ -149,19 +161,30 @@ export class SuiteList extends React.Component<Props> {
           )}
         </div>
         <div>
-          {this.props.db_state.operator_msg &&
-            this.props.db_state.operator_msg.msg &&
+          {this.props.db_state.operator_msg?.msg &&
             this.props.db_state.operator_msg.msg.length > 0 &&
-            this.props.db_state.operator_msg.visible == true && (
+            this.props.db_state.operator_msg.visible && (
               <StartOperatorMsgDialog
                 msg={this.props.db_state.operator_msg?.msg}
-                title={this.props.db_state.operator_msg?.title || "Message"}
+                title={this.props.db_state.operator_msg?.title ?? "Message"}
                 image_base64={this.props.db_state.operator_msg?.image?.base64}
                 image_width={this.props.db_state.operator_msg?.image?.width}
                 image_border={this.props.db_state.operator_msg?.image?.border}
                 is_visible={this.props.db_state.operator_msg?.visible}
                 id={this.props.db_state.operator_msg?.id}
                 font_size={this.props.db_state.operator_msg?.font_size}
+                html_code={
+                  this.props.db_state.operator_msg?.html?.is_raw_html
+                    ? this.props.db_state.operator_msg?.html?.code_or_url
+                    : undefined
+                }
+                html_url={
+                  !this.props.db_state.operator_msg?.html?.is_raw_html
+                    ? this.props.db_state.operator_msg?.html?.code_or_url
+                    : undefined
+                }
+                html_width={this.props.db_state.operator_msg?.html?.width}
+                html_border={this.props.db_state.operator_msg?.html?.border}
               />
             )}
         </div>
@@ -169,14 +192,20 @@ export class SuiteList extends React.Component<Props> {
     );
   }
 
-  private suiteRender(index: number, suite: Suite) {
+  /**
+   * Renders a single suite component.
+   * @param {number} index - The index of the suite.
+   * @param {Suite} suite - The suite object containing name and test details.
+   * @returns {React.ReactElement} The rendered suite component.
+   */
+  private suiteRender(index: number, suite: Suite): React.ReactElement {
     return (
       <TestSuiteComponent
         key={`${suite.name}_${index}`}
         index={index}
         test={suite.test}
         defaultOpen={
-          this.elements_count < 5 && this.props.defaultClose == false
+          this.elements_count < 5 && !this.props.defaultClose
         }
         commonTestRunStatus={this.props.db_state.status}
       />

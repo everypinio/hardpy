@@ -42,14 +42,6 @@ class FrontendConfig(BaseModel):
     port: int = 8000
 
 
-class SocketConfig(BaseModel):
-    """Socket configuration."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    host: str = "localhost"
-    port: int = 6525
-
 class StandCloudConfig(BaseModel):
     """StandCloud configuration."""
 
@@ -58,7 +50,7 @@ class StandCloudConfig(BaseModel):
     address: str = ""
     connection_only: bool = False
 
-class HardpyConfig(BaseModel):
+class HardpyConfig(BaseModel, extra="allow"):
     """HardPy configuration."""
 
     model_config = ConfigDict(extra="forbid")
@@ -67,7 +59,6 @@ class HardpyConfig(BaseModel):
     tests_dir: str = "tests"
     database: DatabaseConfig = DatabaseConfig()
     frontend: FrontendConfig = FrontendConfig()
-    socket: SocketConfig = SocketConfig()
     stand_cloud: StandCloudConfig = StandCloudConfig()
 
 
@@ -87,8 +78,6 @@ class ConfigManager:
         database_port: int,
         frontend_host: str,
         frontend_port: int,
-        socket_host: str,
-        socket_port: int,
         sc_address: str = "",
         sc_connection_only: bool = False,
     ) -> None:
@@ -102,8 +91,6 @@ class ConfigManager:
             database_port (int): Database port.
             frontend_host (str): Operator panel host.
             frontend_port (int): Operator panel port.
-            socket_host (str): Socket host.
-            socket_port (int): Socket port.
             sc_address (str): StandCloud address.
             sc_connection_only (bool): StandCloud check availability.
         """
@@ -114,8 +101,6 @@ class ConfigManager:
         cls.obj.database.port = database_port
         cls.obj.frontend.host = frontend_host
         cls.obj.frontend.port = frontend_port
-        cls.obj.socket.host = socket_host
-        cls.obj.socket.port = socket_port
         cls.obj.stand_cloud.address = sc_address
         cls.obj.stand_cloud.connection_only = sc_connection_only
 
@@ -149,13 +134,18 @@ class ConfigManager:
             return None
         try:
             with Path.open(toml_path / "hardpy.toml", "rb") as f:
-                cls.obj = HardpyConfig(**tomli.load(f))
-            return cls.obj  # noqa: TRY300
-        except tomli.TOMLDecodeError:
-            logger.exception("Error parsing TOML")
+                toml_data = tomli.load(f)
+        except tomli.TOMLDecodeError as exc:
+            msg = f"Error parsing TOML: {exc}"
+            logger.exception(msg)
+            return None
+
+        try:
+            cls.obj = HardpyConfig(**toml_data)
         except ValidationError:
             logger.exception("Error parsing TOML")
-        return None
+            return None
+        return cls.obj
 
     @classmethod
     def get_config(cls) -> HardpyConfig:
