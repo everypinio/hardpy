@@ -8,4 +8,12 @@ export default {
   server: {
     port: 3000,
   },
+  define: {
+    // By default, Vite doesn't include shims for NodeJS/
+    // necessary for segment analytics lib to work
+    global: {},
+  },
+  build: {
+    target: 'esnext' //browsers can handle the latest ES features
+  }
 } satisfies UserConfig;
