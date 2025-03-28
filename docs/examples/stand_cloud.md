@@ -66,11 +66,10 @@ def finish_executing():
             loader = StandCloudLoader()
             response = loader.load(report)
             if response.status_code != HTTPStatus.CREATED:
-                msg = (
+                set_operator_message(
                     "Report not uploaded to StandCloud, "
                     f"status code: {response.status_code}, text: {response.text}",
                 )
-                set_operator_message(msg[0])
         except StandCloudError as exc:
             set_operator_message(f"{exc}")
 
