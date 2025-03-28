@@ -4,6 +4,19 @@
 import React, { useState, useEffect } from "react";
 import { Classes, Dialog } from "@blueprintjs/core";
 import axios from "axios";
+import {
+  BASE_DIALOG_DIMENSIONS,
+  MAX_SIZE_FACTOR,
+  MIN_SIZE_FACTOR,
+  LINE_HEIGHT_FACTOR,
+  BASE_FONT_SIZE,
+  HTML_IFRAME_SCALE_FACTOR,
+  HTML_IFRAME_WIDTH_FACTOR,
+  IMAGE_SCALE_FACTOR,
+  calculateDimensions,
+  calculateTextLines,
+  calculateDialogDimensions
+} from "./DialogUtils";
 
 interface StartOperatorMsgDialogProps {
   title: string;
@@ -19,15 +32,6 @@ interface StartOperatorMsgDialogProps {
   html_width?: number;
   html_border?: number;
 }
-
-const BASE_OPERATOR_MESSAGE_DIMENSIONS = { width: 100, height: 100 };
-const MAX_SIZE_FACTOR = 0.6;
-const MIN_SIZE_FACTOR = 0.25;
-const LINE_HEIGHT_FACTOR = 10;
-const BASE_FONT_SIZE = 14;
-const HTML_IFRAME_SCALE_FACTOR = 0.75;
-const HTML_IFRAME_WIDTH_FACTOR = 0.9;
-const IMAGE_SCALE_FACTOR = 100;
 
 /**
  * Renders an HTML code iframe.
@@ -89,12 +93,10 @@ export function StartOperatorMsgDialog(
 ): JSX.Element {
   const [operatorMessageOpen, setOperatorMessageOpen] = useState(false);
   const [imageDimensions, setImageDimensions] = useState(
-    BASE_OPERATOR_MESSAGE_DIMENSIONS
+    BASE_DIALOG_DIMENSIONS
   );
   const screenWidth = window.screen.width;
   const screenHeight = window.screen.height;
-  const lineHeight =
-    (LINE_HEIGHT_FACTOR * (props.font_size ?? BASE_FONT_SIZE)) / BASE_FONT_SIZE;
 
   /**
    * Handles the closing of the dialog and sends a confirmation to the server.
@@ -115,25 +117,6 @@ export function StartOperatorMsgDialog(
   };
 
   /**
-   * Calculates the dimensions of the image based on its natural dimensions and a width factor.
-   * @param {number} naturalWidth - The natural width of the image.
-   * @param {number} naturalHeight - The natural height of the image.
-   * @param {number} widthFactor - The factor to scale the width by.
-   * @returns {{width: number, height: number}} The calculated dimensions.
-   */
-  const calculateDimensions = (
-    naturalWidth: number,
-    naturalHeight: number,
-    widthFactor: number
-  ): { width: number; height: number } => ({
-    width:
-      (naturalWidth * (widthFactor || IMAGE_SCALE_FACTOR)) / IMAGE_SCALE_FACTOR,
-    height:
-      (naturalHeight * (widthFactor || IMAGE_SCALE_FACTOR)) /
-      IMAGE_SCALE_FACTOR,
-  });
-
-  /**
    * Handles the loading of the image and sets its dimensions.
    * @param {React.SyntheticEvent<HTMLImageElement>} event - The image load event.
    * @returns {void}
@@ -151,45 +134,57 @@ export function StartOperatorMsgDialog(
     );
   };
 
-  /**
-   * Calculates the number of lines of text based on the text content and available width.
-   * @param {string} text - The text content.
-   * @param {number} width - The available width for the text.
-   * @returns {number | undefined} The number of lines of text.
-   */
-  const calculateTextLines = (
-    text: string,
-    width: number
-  ): number | undefined => {
-    const context = document.createElement("canvas").getContext("2d");
-    if (context) {
-      context.font = "10px sans-serif";
-      const linesCount = Math.ceil(
-        (text.length * context.measureText("M").width) / width
-      );
-      return linesCount;
-    }
-  };
-
-  const operatorMessageWidth = Math.min(
-    imageDimensions.width + BASE_OPERATOR_MESSAGE_DIMENSIONS.width,
+/**
+ * Calculates the line height based on font size and scaling factor.
+ * Uses base font size for proportional scaling.
+ * @type {number}
+ */
+  const lineHeight: number =
+    (LINE_HEIGHT_FACTOR * (props.font_size ?? BASE_FONT_SIZE)) / BASE_FONT_SIZE;
+/**
+ * Calculates the optimal dialog width for text content.
+ * Ensures the width doesn't exceed maximum screen size factor.
+ * @type {number}
+ */
+  const dialogWidthForText: number = Math.min(
+    imageDimensions.width + BASE_DIALOG_DIMENSIONS.width,
     screenWidth * MAX_SIZE_FACTOR
   );
 
-  const textHeight =
-    (calculateTextLines(props.msg, operatorMessageWidth) ?? 1) * lineHeight;
+/**
+ * Calculates the total text height based on line count and line height.
+ * Uses canvas text measurement for accurate line count estimation.
+ * @type {number}
+ */
+  const textHeight: number =
+    (calculateTextLines(props.msg, dialogWidthForText) ?? 1) * lineHeight;
 
-  const operatorMessageHeight = Math.max(
-    Math.min(
-      imageDimensions.height +
-        BASE_OPERATOR_MESSAGE_DIMENSIONS.height +
-        textHeight,
-      screenHeight * MAX_SIZE_FACTOR
-    ),
-    screenHeight * MIN_SIZE_FACTOR
-  );
+/**
+ * Calculates final dialog dimensions considering all content elements.
+ * Handles special cases for HTML content and maintains aspect ratios.
+ * @type {Dimensions}
+ */
+  const { width: operatorMessageWidth, height: operatorMessageHeight } =
+    calculateDialogDimensions(
+      "base",
+      imageDimensions,
+      imageDimensions,
+      BASE_DIALOG_DIMENSIONS,
+      screenWidth,
+      screenHeight,
+      MAX_SIZE_FACTOR,
+      MIN_SIZE_FACTOR,
+      textHeight,
+      0,
+      !!props.html_code || !!props.html_url
+    );
 
-  const imageStyle = {
+/**
+ * Defines base styling for displayed images.
+ * Includes border configuration and centering properties.
+ * @type {React.CSSProperties}
+ */
+  const imageStyle: React.CSSProperties = {
     border: `${props.image_border ?? 0}px solid black`,
     display: "block",
     margin: "0 auto",
@@ -268,8 +263,8 @@ export function StartOperatorMsgDialog(
               style={{
                 width: `${props.image_width}%`,
                 height: `${props.image_width}%`,
-                maxWidth: `${operatorMessageWidth - BASE_OPERATOR_MESSAGE_DIMENSIONS.width / 2}px`,
-                maxHeight: `${operatorMessageHeight - BASE_OPERATOR_MESSAGE_DIMENSIONS.height / 2}px`,
+                maxWidth: `${operatorMessageWidth - BASE_DIALOG_DIMENSIONS.width / 2}px`,
+                maxHeight: `${operatorMessageHeight - BASE_DIALOG_DIMENSIONS.height / 2}px`,
                 objectFit: "scale-down",
                 transform: `scale(${(props.image_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR})`,
                 transformOrigin: `top center`,

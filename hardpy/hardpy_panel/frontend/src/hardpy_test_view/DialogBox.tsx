@@ -14,15 +14,18 @@ import {
   Tabs,
 } from "@blueprintjs/core";
 import { notification } from "antd";
+import {
+  BASE_DIALOG_DIMENSIONS,
+  MAX_SIZE_FACTOR,
+  MIN_SIZE_FACTOR,
+  LINE_HEIGHT_FACTOR,
+  BASE_FONT_SIZE,
+  HTML_IFRAME_SCALE_FACTOR,
+  HTML_IFRAME_WIDTH_FACTOR,
+  IMAGE_SCALE_FACTOR,
+  calculateDialogDimensions,
+} from "./DialogUtils";
 
-const BASE_DIALOG_BOX_DIMENSIONS = { width: 100, height: 100 };
-const MAX_SIZE_FACTOR = 0.8;
-const MIN_SIZE_FACTOR = 0.25;
-const LINE_HEIGHT_FACTOR = 10;
-const BASE_FONT_SIZE = 14;
-const HTML_IFRAME_SCALE_FACTOR = 0.75;
-const HTML_IFRAME_WIDTH_FACTOR = 0.9;
-const IMAGE_SCALE_FACTOR = 100;
 const HEX_BASE = 16;
 
 interface Props {
@@ -441,63 +444,6 @@ const renderMultistep = (
 );
 
 /**
- * Calculates the dimensions of the dialog based on various parameters.
- * @param {WidgetType} widgetType - The type of widget being rendered.
- * @param {Object} maxDimensions - The maximum dimensions allowed for the dialog.
- * @param {Object} imageDimensions - The dimensions of the image within the dialog.
- * @param {Object} baseDialogDimensions - The base dimensions of the dialog.
- * @param {number} screenWidth - The width of the screen.
- * @param {number} screenHeight - The height of the screen.
- * @param {number} maxSize - The maximum size multiplier for the dialog.
- * @param {number} minSize - The minimum size multiplier for the dialog.
- * @param {number} textHeight - The height of the text within the dialog.
- * @param {number} textStepHeight - The height of the text step within the dialog.
- * @param {boolean} hasHTML - A flag indicating whether HTML content is present in the dialog.
- * @returns {Object} - An object containing the calculated width and height of the dialog.
- */
-const calculateDialogDimensions = (
-  widgetType: WidgetType,
-  maxDimensions: { width: number; height: number },
-  imageDimensions: { width: number; height: number },
-  baseDialogDimensions: { width: number; height: number },
-  screenWidth: number,
-  screenHeight: number,
-  maxSize: number,
-  minSize: number,
-  textHeight: number,
-  textStepHeight: number,
-  hasHTML: boolean
-): { width: number; height: number } => {
-  if (widgetType === WidgetType.Multistep && hasHTML) {
-    return {
-      width: screenWidth * maxSize,
-      height: screenHeight * maxSize
-    };
-  }
-
-  const dialogWidth = Math.min(
-    (widgetType === WidgetType.Multistep ? maxDimensions : imageDimensions)
-      .width + baseDialogDimensions.width,
-    screenWidth * maxSize
-  );
-
-  const dialogHeight = Math.max(
-    Math.min(
-      (widgetType === WidgetType.Multistep
-        ? maxDimensions.height + baseDialogDimensions.height
-        : imageDimensions.height) +
-        baseDialogDimensions.height +
-        textHeight +
-        textStepHeight,
-      screenHeight * maxSize
-    ),
-    screenHeight * minSize
-  );
-
-  return { width: dialogWidth, height: dialogHeight };
-};
-
-/**
  * StartConfirmationDialog is a React component that renders a dialog box with various types of input widgets.
  * It supports text input, numeric input, radio buttons, checkboxes, and multi-step forms.
  *
@@ -510,12 +456,13 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
   const [selectedRadioButton, setSelectedRadioButton] = useState("");
   const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
   const [imageDimensions, setImageDimensions] = useState(
-    BASE_DIALOG_BOX_DIMENSIONS
+    BASE_DIALOG_DIMENSIONS
   );
   const [imageStepDimensions, setStepImageDimensions] = useState(
-    BASE_DIALOG_BOX_DIMENSIONS
+    BASE_DIALOG_DIMENSIONS
   );
-  const maxDimensions = useRef(BASE_DIALOG_BOX_DIMENSIONS);
+  const [hasHTML, setHasHTML] = useState(false);
+  const maxDimensions = useRef(BASE_DIALOG_DIMENSIONS);
 
   const widgetType = props.widget_type ?? WidgetType.Base;
 
@@ -526,7 +473,6 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
     (LINE_HEIGHT_FACTOR *
       (props.font_size ? props.font_size : BASE_FONT_SIZE)) /
     BASE_FONT_SIZE;
-  const [hasHTML, setHasHTML] = useState(false);
 
   /**
    * Handles the close event of the dialog box.
@@ -628,6 +574,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
     if (props.onConfirm) {
       props.onConfirm(textToSend);
     }
+
     try {
       const response = await axios.post(
         `/api/confirm_dialog_box/${textToSend}`
@@ -777,7 +724,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
     (widgetType === WidgetType.Multistep
       ? maxDimensions.current
       : imageDimensions
-    ).width + BASE_DIALOG_BOX_DIMENSIONS.width,
+    ).width + BASE_DIALOG_DIMENSIONS.width,
     screenWidth * MAX_SIZE_FACTOR
   );
 
@@ -794,7 +741,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
       widgetType,
       maxDimensions.current,
       imageDimensions,
-      BASE_DIALOG_BOX_DIMENSIONS,
+      BASE_DIALOG_DIMENSIONS,
       screenWidth,
       screenHeight,
       MAX_SIZE_FACTOR,
@@ -853,7 +800,6 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
           htmlFound = true;
         }
       });
-      
       setHasHTML(htmlFound);
     }
   }, [props.widget_info, widgetType]);
@@ -915,7 +861,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
           renderMultistep(
             props,
             imageStepDimensions,
-            BASE_DIALOG_BOX_DIMENSIONS,
+            BASE_DIALOG_DIMENSIONS,
             HTML_IFRAME_SCALE_FACTOR,
             HTML_IFRAME_WIDTH_FACTOR,
             imageStyle
@@ -930,8 +876,8 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
               style={{
                 width: `${props.image_width}%`,
                 height: `${props.image_width}%`,
-                maxWidth: `${dialogWidth - BASE_DIALOG_BOX_DIMENSIONS.width / 2}px`,
-                maxHeight: `${dialogHeight - BASE_DIALOG_BOX_DIMENSIONS.height / 2}px`,
+                maxWidth: `${dialogWidth - BASE_DIALOG_DIMENSIONS.width / 2}px`,
+                maxHeight: `${dialogHeight - BASE_DIALOG_DIMENSIONS.height / 2}px`,
                 objectFit: "scale-down",
                 transform: `scale(${(props.image_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR})`,
                 transformOrigin: `top center`,
