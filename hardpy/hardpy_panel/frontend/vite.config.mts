@@ -32,7 +32,12 @@ export default {
     // necessary for segment analytics lib to work
     global: {},
   },
+  optimizeDeps: {
+    esbuildOptions: {
+      target: 'esnext'
+    }
+  },
   build: {
-    target: 'esnext' //browsers can handle the latest ES features
-  }
+    target: 'esnext'
+  },
 } satisfies UserConfig;
