@@ -124,10 +124,7 @@
             "args": [
                 "run",
                 "examples/dialog_box"
-            ],
-            "env": {
-                "DEBUG_FRONTEND": "1"
-            },
+            ]
         },
         {
             "name": "Python: Example Attempts",
