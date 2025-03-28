@@ -2,6 +2,9 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Transfer frontend from CRA to Vite
+  [[PR-122](https://github.com/everypinio/hardpy/pull/122)]
+
 ## HardPy 0.11.0
 
 * Remove the internal **HardPy** socket on port 6525. Pytest plugin arguments `--hardpy-sh` and `--hardpy-sp`

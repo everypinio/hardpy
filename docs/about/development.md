@@ -64,7 +64,7 @@ pip install -r requirements-doc.txt
 ## Frontend
 
 ### Overview
-The frontend of the project can be developed, debugged, and built using Visual Studio Code (VSCode) or command-line tools. 
+The frontend of the project can be developed, debugged, and built using Visual Studio Code (VSCode) or command-line tools.
 Below are the steps to run, debug, and build the frontend application.
 
 **node.js** and **yarn** are required to build the frontend.
@@ -84,7 +84,7 @@ This will:
 #### Manually:
 Navigate to the frontend directory and run the following commands:
 ```bash
-yarn && DANGEROUSLY_DISABLE_HOST_CHECK=true yarn start-dev
+yarn && npm run dev
 ```
 
 You can specify your own port by adding it as an environment variable:
