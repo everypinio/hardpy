@@ -19,6 +19,10 @@ jobs:
             node-version: 20.x
       - name: Set up Yarn
         run: corepack enable; yarn set version $YARN_VERSION
+      - name: Install frontend dependencies
+        run: |
+          yarn install
+          yarn build
       - name: Set up Python
         # This is the version of the action for setting up Python, not the Python version.
         uses: actions/setup-python@v5
