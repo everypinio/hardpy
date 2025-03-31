@@ -90,7 +90,7 @@ This will:
 Navigate to the frontend directory and run the following commands:
 
 ```bash
-yarn && npm run dev
+npm install && npm run dev
 ```
 
 You can specify your own port by adding it as an environment variable:
