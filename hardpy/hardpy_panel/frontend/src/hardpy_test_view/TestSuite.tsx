@@ -242,19 +242,6 @@ export class TestSuite extends React.Component<Props, State> {
       },
     ];
 
-    const customStyles = {
-      rows: {
-        style: {
-          fontSize: '16px',
-        },
-      },
-      headCells: {
-        style: {
-          fontSize: '16px',
-        },
-      },
-    };
-
     return (
       // compensation for 1px shadow of Table
       <div style={{ margin: "3px", paddingBottom: "4px", borderRadius: "2px" }}>
@@ -264,7 +251,6 @@ export class TestSuite extends React.Component<Props, State> {
           data={case_names}
           highlightOnHover={true}
           dense={true}
-          customStyles={customStyles}
         />
       </div>
     );
