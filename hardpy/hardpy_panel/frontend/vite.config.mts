@@ -6,6 +6,7 @@ export default {
   plugins: [react(), glsl()],
   publicDir: 'public',
   server: {
+    host: '0.0.0.0',
     port: 3000,
     proxy: {
       "/api": {
@@ -13,6 +14,11 @@ export default {
         changeOrigin: true,
         secure: false,
         ws: false,
+        /**
+         * A function that will be called with the proxy instance and options.
+         * @param proxy - The proxy instance.
+         * @param _options - The options that were passed to the proxy.
+         */
         configure: (proxy, _options) => {
           proxy.on("error", (err, _req, _res) => {
             console.log("proxy error", err);
