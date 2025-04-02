@@ -27,7 +27,7 @@ Look for an address in the format `192.168.x.x` or `10.x.x.x` (this is your loca
 
 ## 3. Configure Ports in Project Files
 
-### A. `hardpy.toml` Configuration
+### `hardpy.toml` Configuration
 
 Edit the file to include your computer's network address:
 
@@ -43,7 +43,7 @@ host = "0.0.0.0"  # Allows connections from any network interface
 port = 8000
 ```
 
-### B. `pytest.ini` Configuration
+### `pytest.ini` Configuration
 
 Update the database URL:
 
@@ -52,7 +52,7 @@ Update the database URL:
 addopts = --hardpy-db-url http://dev:dev@0.0.0.0:5984/
 ```
 
-### C. `couchdb.ini` Configuration
+### `couchdb.ini` Configuration
 
 Ensure CouchDB is accessible:
 
