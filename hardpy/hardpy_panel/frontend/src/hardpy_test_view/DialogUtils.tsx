@@ -1,5 +1,5 @@
 export const BASE_DIALOG_DIMENSIONS = { width: 100, height: 100 };
-export const MAX_SIZE_FACTOR = 0.8;
+export const MAX_SIZE_FACTOR = 0.85;
 export const MIN_SIZE_FACTOR = 0.25;
 export const LINE_HEIGHT_FACTOR = 10;
 export const BASE_FONT_SIZE = 14;
