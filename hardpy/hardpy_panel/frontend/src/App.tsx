@@ -20,9 +20,9 @@ import StartStopButton from './button/StartStop';
 import { SuiteList as SuiteList } from './hardpy_test_view/SuiteList';
 import { TestRunI } from './hardpy_test_view/SuiteList';
 import ProgressView from './progress/ProgressView';
-import TestStatus from 'hardpy_test_view/TestStatus';
+import TestStatus from './hardpy_test_view/TestStatus';
 import ReloadAlert from './restart_alert/RestartAlert';
-import PlaySound from 'hardpy_test_view/PlaySound';
+import PlaySound from './hardpy_test_view/PlaySound';
 
 import { useAllDocs } from 'use-pouchdb'
 
