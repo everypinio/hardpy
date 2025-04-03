@@ -12,7 +12,6 @@ All the files for this guideline can be seen inside the hardpy package
 * A computer with internet access to download the Raspberry Pi OS image.
 * A microSD card reader/writer.
 
-
 ## Installation Steps
 
 1. **Install Raspberry Pi OS:**
@@ -22,29 +21,35 @@ All the files for this guideline can be seen inside the hardpy package
     Lite is recommended for headless server setups.
     * Set up login/password, login/password for WiFi, enable SSH.
     * Flash the chosen image onto your microSD card using the Imager.
-    * Insert the microSD card into your Raspberry Pi and boot it up. 
+    * Insert the microSD card into your Raspberry Pi and boot it up.
     Follow the on-screen instructions for initial setup (setting username, password, hostname, etc.).
 
 2. **Connect to Raspberry Pi via SSH:**
+
 * Find the IP address of your Raspberry Pi:
   - If you are on the same network, you can use tools like `nmap` or check your router's connected devices list.
   - Alternatively, use a network scanner app on your smartphone.
 * Copy files for script before launching:
+
   ```bash
   scp /file/path/script.sh [login]@<RASPBERRY_PI_IP_ADDRESS>:/home/[login]/
   scp /file/path/local.ini [login]@<RASPBERRY_PI_IP_ADDRESS>:/home/[login]/
   scp /file/path/default.ini [login]@<RASPBERRY_PI_IP_ADDRESS>:/home/[login]/
   ```
+
 * Open your SSH client and connect to the Raspberry Pi:
+
   ```bash
   ssh [login]@<RASPBERRY_PI_IP_ADDRESS>
   ```
+
 * Once logged in, update the system:
+
   ```bash
   sudo apt update && sudo apt upgrade -y
   ```
-* Make the script executable: `chmod +x /home/[login]/script.sh`
 
+* Make the script executable: `chmod +x /home/[login]/script.sh`
 
 3. **Prepare the Installation Script without SSH:**
 
@@ -118,4 +123,3 @@ database_dir = ./../../dev/shm/couchdb
 ```
 
 3. Restart the database
-
