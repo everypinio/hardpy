@@ -17,7 +17,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import {
   StartConfirmationDialog,
   WidgetType,
-} from "hardpy_test_view/DialogBox";
+} from "./DialogBox";
 
 import { TestNumber } from "./TestNumber";
 import { TestName } from "./TestName";
