@@ -45,7 +45,7 @@ class StandCloudLoader:
         Raises:
             StandCloudError: if report not uploaded to StandCloud
         """
-        api = self._sc_connector.get_api("api/test_run")
+        api = self._sc_connector.get_api("test_run")
 
         try:
             resp = api.post(verify=self._verify_ssl, json=report.model_dump())
