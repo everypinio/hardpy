@@ -21,10 +21,6 @@ port = 5984
 [frontend]
 host = "localhost"
 port = 8000
-
-[socket]
-host = "localhost"
-port = 6525
 ```
 
 ## Configuration fields description
@@ -81,17 +77,25 @@ The user can change this value with the `hardpy init --frontend-host` option.
 Operator panel port number. The default is `8000`.
 The user can change this value with the `hardpy init --frontend-port` option.
 
-### socket
+### stand_cloud
 
-Socket settings.
-Internal socket port for passing backend data (such as a dialog box) to running pytest tests.
+[StandCloud](./stand_cloud.md) settings.
 
-#### host
+```toml
+[stand_cloud]
+address = "demo.standcloud.localhost"
+connection_only = true
+```
 
-Socket host name. The default is `localhost`.
-The user can change this value with the `hardpy init --socket-host` option.
+#### address
 
-#### port
+**StandCloud** service address.
+To obtain one, contact **info@everypin.io**.
 
-Socket port number. The default is `6525`.
-The user can change this value with the `hardpy init --socket-port` option.
+#### connection_only
+
+Boolean variable, if set to `true`, **HardPy** will check the connection
+to the **StandCloud** service at each startup before running tests.
+The default value is `false`.
+
+If the connection fails, the tests will not run.

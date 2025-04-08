@@ -37,12 +37,17 @@ class HookReporter(BaseReporter):
         self.set_doc_value(DF.PROGRESS, 0, statestore_only=True)
         self.set_doc_value(DF.ARTIFACT, {}, runstore_only=True)
         self.set_doc_value(DF.OPERATOR_MSG, {}, statestore_only=True)
+        self.set_doc_value(DF.ALERT, "", statestore_only=True)
+        self.set_doc_value(DF.OPERATOR_DATA, {}, statestore_only=True)
 
         test_stand_tz = self.generate_key(DF.TEST_STAND, DF.TIMEZONE)
         self.set_doc_value(test_stand_tz, str(get_localzone().key))
 
         test_stand_id_key = self.generate_key(DF.TEST_STAND, DF.HW_ID)
         self.set_doc_value(test_stand_id_key, machine_id())
+
+        operator_data_key = self.generate_key(DF.OPERATOR_DATA, DF.DIALOG)
+        self.set_doc_value(operator_data_key, "", statestore_only=True)
 
     def start(self) -> None:
         """Start test."""
@@ -51,6 +56,10 @@ class HookReporter(BaseReporter):
         self.set_doc_value(DF.START_TIME, start_time)
         self.set_doc_value(DF.STATUS, TestStatus.RUN)
         self.set_doc_value(DF.PROGRESS, 0, statestore_only=True)
+        self.set_doc_value(DF.ALERT, "", statestore_only=True)
+
+        operator_data_key = self.generate_key(DF.OPERATOR_DATA, DF.DIALOG)
+        self.set_doc_value(operator_data_key, "", statestore_only=True)
 
     def finish(self, status: TestStatus) -> None:
         """Finish test.
@@ -184,6 +193,14 @@ class HookReporter(BaseReporter):
             DF.ATTEMPT,
         )
         self.set_doc_value(key, attempt, statestore_only=True)
+
+    def set_alert(self, alert: str) -> None:
+        """Set alert message.
+
+        Args:
+            alert (str): alert message
+        """
+        self.set_doc_value(DF.ALERT, alert, statestore_only=True)
 
     def update_node_order(self, nodes: dict) -> None:
         """Update node order.

@@ -2,6 +2,32 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## HardPy 0.11.0
+
+* Remove the internal **HardPy** socket on port 6525. Pytest plugin arguments `--hardpy-sh` and `--hardpy-sp`
+  are left for backward compatibility with version below 0.10.1.
+  [[PR-114](https://github.com/everypinio/hardpy/pull/114)]
+* Add the ability to add HTML pages using `HTMLComponent` to dialog boxes and operator messages.
+  [[PR-104](https://github.com/everypinio/hardpy/pull/104)]
+
+## HardPy 0.10.1
+
+* Fix **StandCloud** authorization process in Windows.
+  [[PR-110](https://github.com/everypinio/hardpy/pull/110)]
+
+## HardPy 0.10.0
+
+* Add the `[stand_cloud]` section to the **hardpy.toml** configuration file.
+  [[PR-85](https://github.com/everypinio/hardpy/pull/85)]
+* Add the `StandCloudLoader` class to append the test result to the **StandCloud**.
+  [[PR-85](https://github.com/everypinio/hardpy/pull/85)]
+* Add support for **StandCloud** login and logout with `sc-login` and `sc-logout` commands.
+  [[PR-85](https://github.com/everypinio/hardpy/pull/85)]
+* Add **alert** field in **statestore** database.
+  [[PR-85](https://github.com/everypinio/hardpy/pull/85)]
+* Add alert to control panel by calling `set_alert` method in `HardpyPlugin`.
+  [[PR-85](https://github.com/everypinio/hardpy/pull/85)]
+
 ## HardPy 0.9.0
 
 * Add the ability to add images to operator messages like a dialog box.

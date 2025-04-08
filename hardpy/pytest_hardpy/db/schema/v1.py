@@ -204,6 +204,24 @@ class TestStand(BaseModel):
     location: str | None = None
 
 
+class OperatorData(BaseModel):
+    """Operator data from operator panel.
+
+    Example:
+    ```
+    {
+      "operator_data": {
+        "dialog": "hello",
+      }
+    }
+    ```
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    dialog: str | None = None
+
+
 class ResultStateStore(IBaseResult):
     """Test run description.
 
@@ -217,6 +235,10 @@ class ResultStateStore(IBaseResult):
       "start_time": 1695817263,
       "status": "failed",
       "name": "hardpy-stand",
+      "alert": "",
+      "operator_data": {
+        "dialog": ""
+      },
       "dut": {
         "serial_number": "92c5a4bb-ecb0-42c5-89ac-e0caca0919fd",
         "part_number": "part_1",
@@ -303,6 +325,8 @@ class ResultStateStore(IBaseResult):
     dut: Dut
     modules: dict[str, ModuleStateStore] = {}
     operator_msg: dict = {}
+    alert: str
+    operator_data: OperatorData
 
 
 class ResultRunStore(IBaseResult):

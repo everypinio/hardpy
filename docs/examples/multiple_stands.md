@@ -66,19 +66,6 @@ def fill_actions_after_test(post_run_functions: list):
 
 * `5986` - port of the database with reports
 
-### dialog box
-
-If you want to use the dialog box in multiple stands on the same computer, you need
-to modify a [socket port](./../documentation/cli.md#hardpy-init).
-By default, hardpy uses port *6525* to pass data to the running pytest.
-But if you run multiple stands, the *6525* socket port will be busy.
-
-Example:
-
-```bash
-hardpy init tests_2 --database-port 5985 --frontend-port 8001 --socket-port 6526
-```
-
 ### how to start
 
 1. Start all databases via **docker compose**.

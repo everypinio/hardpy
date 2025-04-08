@@ -34,6 +34,10 @@
             "request": "launch",
             "module": "hardpy.cli.cli",
             "console": "integratedTerminal",
+            "args": [
+                "init",
+                "template"
+            ]
         },
         {
             "name": "HardPy: Run template",
@@ -44,6 +48,27 @@
             "args": [
                 "run",
                 "template"
+            ]
+        },
+        {
+            "name": "StandCloud login",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "sc-login",
+                "demo.standcloud.localhost"
+            ]
+        },
+        {
+            "name": "StandCloud logout",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "sc-logout",
             ]
         },
         {
@@ -77,6 +102,17 @@
             "args": [
                 "run",
                 "examples/minute_parity"
+            ]
+        },
+        {
+            "name": "Python: Example StandCloud",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "run",
+                "examples/stand_cloud"
             ]
         },
         {

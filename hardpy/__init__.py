@@ -1,6 +1,7 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+from hardpy.common.stand_cloud import StandCloudError
 from hardpy.pytest_hardpy.pytest_call import (
     clear_operator_message,
     get_current_attempt,
@@ -19,7 +20,7 @@ from hardpy.pytest_hardpy.pytest_call import (
     set_stand_location,
     set_stand_name,
 )
-from hardpy.pytest_hardpy.result import CouchdbLoader
+from hardpy.pytest_hardpy.result import CouchdbLoader, StandCloudLoader
 from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig
 from hardpy.pytest_hardpy.utils import (
     BaseWidget,
@@ -29,6 +30,7 @@ from hardpy.pytest_hardpy.utils import (
     DuplicateSerialNumberError,
     DuplicateTestStandLocationError,
     DuplicateTestStandNameError,
+    HTMLComponent,
     ImageComponent,
     MultistepWidget,
     NumericInputWidget,
@@ -47,10 +49,13 @@ __all__ = [
     "DuplicateSerialNumberError",
     "DuplicateTestStandLocationError",
     "DuplicateTestStandNameError",
+    "HTMLComponent",
     "ImageComponent",
     "MultistepWidget",
     "NumericInputWidget",
     "RadiobuttonWidget",
+    "StandCloudError",
+    "StandCloudLoader",
     "StepWidget",
     "TextInputWidget",
     "clear_operator_message",
