@@ -15,7 +15,7 @@ import {
   IMAGE_SCALE_FACTOR,
   calculateDimensions,
   calculateTextLines,
-  calculateDialogDimensions
+  calculateDialogDimensions,
 } from "./DialogUtils";
 
 interface StartOperatorMsgDialogProps {
@@ -134,36 +134,36 @@ export function StartOperatorMsgDialog(
     );
   };
 
-/**
- * Calculates the line height based on font size and scaling factor.
- * Uses base font size for proportional scaling.
- * @type {number}
- */
+  /**
+   * Calculates the line height based on font size and scaling factor.
+   * Uses base font size for proportional scaling.
+   * @type {number}
+   */
   const lineHeight: number =
     (LINE_HEIGHT_FACTOR * (props.font_size ?? BASE_FONT_SIZE)) / BASE_FONT_SIZE;
-/**
- * Calculates the optimal dialog width for text content.
- * Ensures the width doesn't exceed maximum screen size factor.
- * @type {number}
- */
+  /**
+   * Calculates the optimal dialog width for text content.
+   * Ensures the width doesn't exceed maximum screen size factor.
+   * @type {number}
+   */
   const dialogWidthForText: number = Math.min(
     imageDimensions.width + BASE_DIALOG_DIMENSIONS.width,
     screenWidth * MAX_SIZE_FACTOR
   );
 
-/**
- * Calculates the total text height based on line count and line height.
- * Uses canvas text measurement for accurate line count estimation.
- * @type {number}
- */
+  /**
+   * Calculates the total text height based on line count and line height.
+   * Uses canvas text measurement for accurate line count estimation.
+   * @type {number}
+   */
   const textHeight: number =
     (calculateTextLines(props.msg, dialogWidthForText) ?? 1) * lineHeight;
 
-/**
- * Calculates final dialog dimensions considering all content elements.
- * Handles special cases for HTML content and maintains aspect ratios.
- * @type {Dimensions}
- */
+  /**
+   * Calculates final dialog dimensions considering all content elements.
+   * Handles special cases for HTML content and maintains aspect ratios.
+   * @type {Dimensions}
+   */
   const { width: operatorMessageWidth, height: operatorMessageHeight } =
     calculateDialogDimensions(
       "base",
@@ -179,11 +179,11 @@ export function StartOperatorMsgDialog(
       !!props.html_code || !!props.html_url
     );
 
-/**
- * Defines base styling for displayed images.
- * Includes border configuration and centering properties.
- * @type {React.CSSProperties}
- */
+  /**
+   * Defines base styling for displayed images.
+   * Includes border configuration and centering properties.
+   * @type {React.CSSProperties}
+   */
   const imageStyle: React.CSSProperties = {
     border: `${props.image_border ?? 0}px solid black`,
     display: "block",
@@ -221,6 +221,21 @@ export function StartOperatorMsgDialog(
     }
   }, [props.id, props.is_visible]);
 
+  useEffect(() => {
+    /**
+     * Manages the page scroll behavior when the modal dialog is opened or closed.
+     */
+    if (operatorMessageOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [operatorMessageOpen]);
+
   return (
     <Dialog
       title={props.title || "Message"}
@@ -245,6 +260,7 @@ export function StartOperatorMsgDialog(
           wordBreak: "break-word",
           maxHeight: screenHeight * MAX_SIZE_FACTOR,
           overflowY: "auto",
+          overflow: "hidden",
           maxWidth: screenWidth * MAX_SIZE_FACTOR,
           padding: "10px",
         }}
