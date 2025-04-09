@@ -168,7 +168,7 @@ def start(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
         tests_dir (Optional[str]): Test directory. Current directory by default
     """
     config = _get_config(tests_dir)
-    _healthcheck(config)
+    _check_config(config)
 
     url = f"http://{config.frontend.host}:{config.frontend.port}/api/start"
     _request_hardpy(url)
@@ -182,7 +182,7 @@ def stop(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
         tests_dir (Optional[str]): Test directory. Current directory by default
     """
     config = _get_config(tests_dir)
-    _healthcheck(config)
+    _check_config(config)
 
     url = f"http://{config.frontend.host}:{config.frontend.port}/api/stop"
     _request_hardpy(url)
@@ -196,7 +196,7 @@ def status(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None
         tests_dir (Optional[str]): Test directory. Current directory by default
     """
     config = _get_config(tests_dir)
-    _healthcheck(config)
+    _check_config(config)
 
     url = f"http://{config.frontend.host}:{config.frontend.port}/api/status"
     _request_hardpy(url)
@@ -256,8 +256,8 @@ def _get_config(tests_dir: str | None = None) -> HardpyConfig:
     return config
 
 
-def _healthcheck(config: HardpyConfig) -> None:
-    url = f"http://{config.frontend.host}:{config.frontend.port}/api/healthcheck"
+def _check_config(config: HardpyConfig) -> None:
+    url = f"http://{config.frontend.host}:{config.frontend.port}/api/hardpy_config"
     try:
         response = requests.get(url, timeout=2)
     except Exception:
