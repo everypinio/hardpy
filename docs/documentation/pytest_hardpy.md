@@ -702,6 +702,15 @@ The default is `http://dev:dev@localhost:5984/`.
 --hardpy-db-url
 ```
 
+#### hardpy-tests-name
+
+The **HardPy** tests name.
+The default value is **Tests**.
+
+```bash
+--hardpy-tests-name
+```
+
 #### hardpy-clear-database
 
 Option to clean **statestore** and **runstore** databases before running pytest.

@@ -23,6 +23,28 @@ host = "localhost"
 port = 8000
 ```
 
+## Maximum configuration file
+
+```toml
+title = "HardPy TOML config"
+tests_dir = "tests"
+tests_name "My tests"
+
+[database]
+user = "dev"
+password = "dev"
+host = "localhost"
+port = 5984
+
+[frontend]
+host = "localhost"
+port = 8000
+
+[stand_cloud]
+address = "demo.standcloud.io"
+connection_only = true
+```
+
 ## Configuration fields description
 
 ### common
@@ -38,6 +60,11 @@ The value is always `HardPy TOML config`.
 
 Tests directory. The default is `tests`.
 The user can change this value with the `hardpy init` argument.
+
+#### tests_name
+
+Tests name. The default is [tests_dir](#tests_dir).
+The user can change this value with the `hardpy init --tests-name` argument.
 
 ### database
 

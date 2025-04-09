@@ -37,6 +37,7 @@ More info in [hardpy config](./hardpy_config.md).
 │   tests_dir      [TESTS_DIR]  [default: None]                                                              │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --tests-name                                   TEXT     Specify a tests suite name.                        │
 │ --create-database      --no-create-database             Create CouchDB database.                           │
 │                                                         [default: create-database]                         │
 │ --database-user                                TEXT     Specify a database user. [default: dev]            │
