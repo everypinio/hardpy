@@ -12,6 +12,19 @@ export interface Dimensions {
   height: number;
 }
 
+const PHONE_MONITOR_SIZE = 0.7
+const MONITOR_SIZE = 0.6
+
+/**
+ * Gets the appropriate max size factor based on screen orientation
+ * @param {number} screenWidth - Current screen width
+ * @param {number} screenHeight - Current screen height
+ * @returns {number} - Adjusted max size factor
+ */
+const getMaxSizeFactor = (screenWidth: number, screenHeight: number): number => {
+  return screenWidth < screenHeight ? PHONE_MONITOR_SIZE : MONITOR_SIZE;
+};
+
 /**
  * Calculates scaled dimensions while maintaining aspect ratio
  * @param {number} naturalWidth - Original width of the element
@@ -78,17 +91,19 @@ export const calculateDialogDimensions = (
   textStepHeight: number,
   hasHTML: boolean
 ): Dimensions => {
+  const adjustedMaxSize = getMaxSizeFactor(screenWidth, screenHeight);
+  
   if (hasHTML) {
     return {
-      width: screenWidth * maxSize,
-      height: screenHeight * maxSize,
+      width: screenWidth * adjustedMaxSize,
+      height: screenHeight * adjustedMaxSize,
     };
   }
 
   const dialogWidth = Math.min(
     (widgetType === "multistep" ? maxDimensions : imageDimensions).width +
       baseDialogDimensions.width,
-    screenWidth * maxSize
+    screenWidth * adjustedMaxSize
   );
 
   const dialogHeight = Math.max(
@@ -99,7 +114,7 @@ export const calculateDialogDimensions = (
         baseDialogDimensions.height +
         textHeight +
         textStepHeight,
-      screenHeight * maxSize
+      screenHeight * adjustedMaxSize
     ),
     screenHeight * minSize
   );

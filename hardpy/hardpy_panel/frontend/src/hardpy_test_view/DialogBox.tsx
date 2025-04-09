@@ -27,6 +27,10 @@ import {
 } from "./DialogUtils";
 
 const HEX_BASE = 16;
+const screenWidth = window.screen.width;
+const screenHeight = window.screen.height;
+const PHONE_MONITOR_SIZE = 0.8
+const MONITOR_SIZE = 0.6
 
 interface Props {
   title_bar: string;
@@ -377,7 +381,8 @@ const renderMultistep = (
   baseDialogDimensions: { width: number; height: number },
   htmlHeightIndex: number,
   htmlWidthIndex: number,
-  imageStyle: React.CSSProperties
+  imageStyle: React.CSSProperties,
+  maxSizeFactor: number
 ): JSX.Element => (
   <Tabs id={props.title_bar}>
     {props.widget_info?.steps?.map((step: Step) => (
@@ -399,8 +404,14 @@ const renderMultistep = (
                   src={`data:image/image;base64,${step.info.image?.base64}`}
                   alt={""}
                   style={{
-                    maxWidth: `${imageStepDimensions.width + baseDialogDimensions.width}px`,
-                    maxHeight: `${imageStepDimensions.height + baseDialogDimensions.height}px`,
+                    maxWidth: `${Math.min(
+                      imageStepDimensions.width + baseDialogDimensions.width,
+                      screenWidth * maxSizeFactor
+                    )}px`,
+                    maxHeight: `${Math.min(
+                      imageStepDimensions.height + baseDialogDimensions.height,
+                      screenHeight * maxSizeFactor
+                    )}px`,
                     transform: `scale(${(step.info.image?.width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR})`,
                     transformOrigin: `top center`,
                     ...imageStyle,
@@ -411,28 +422,36 @@ const renderMultistep = (
                 step.info.html?.is_raw_html &&
                 renderHTMLCode(
                   step.info.html.code_or_url,
-                  (imageStepDimensions.height + baseDialogDimensions.height) *
-                    htmlHeightIndex *
-                    ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) /
-                      IMAGE_SCALE_FACTOR),
-                  (imageStepDimensions.width + baseDialogDimensions.width) *
-                    htmlWidthIndex *
-                    ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) /
-                      IMAGE_SCALE_FACTOR),
+                  Math.min(
+                    (imageStepDimensions.height + baseDialogDimensions.height) *
+                      htmlHeightIndex *
+                      ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
+                    screenHeight * maxSizeFactor
+                  ),
+                  Math.min(
+                    (imageStepDimensions.width + baseDialogDimensions.width) *
+                      htmlWidthIndex *
+                      ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
+                    screenWidth * maxSizeFactor
+                  ),
                   step.info.html?.border ?? 0
                 )}
               {step.info.html?.code_or_url &&
                 !step.info.html?.is_raw_html &&
                 renderHTMLLink(
                   step.info.html.code_or_url,
-                  (imageStepDimensions.height + baseDialogDimensions.height) *
-                    htmlHeightIndex *
-                    ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) /
-                      IMAGE_SCALE_FACTOR),
-                  (imageStepDimensions.width + baseDialogDimensions.width) *
-                    htmlWidthIndex *
-                    ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) /
-                      IMAGE_SCALE_FACTOR),
+                  Math.min(
+                    (imageStepDimensions.height + baseDialogDimensions.height) *
+                      htmlHeightIndex *
+                      ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
+                    screenHeight * maxSizeFactor
+                  ),
+                  Math.min(
+                    (imageStepDimensions.width + baseDialogDimensions.width) *
+                      htmlWidthIndex *
+                      ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
+                    screenWidth * maxSizeFactor
+                  ),
                   step.info.html?.border ?? 0
                 )}
             </div>
@@ -465,9 +484,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
   const maxDimensions = useRef(BASE_DIALOG_DIMENSIONS);
 
   const widgetType = props.widget_type ?? WidgetType.Base;
-
-  const screenWidth = window.screen.width;
-  const screenHeight = window.screen.height;
+  const maxSizeFactor = screenWidth < screenHeight ? PHONE_MONITOR_SIZE : MONITOR_SIZE;
 
   const lineHeight =
     (LINE_HEIGHT_FACTOR *
@@ -864,7 +881,8 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
             BASE_DIALOG_DIMENSIONS,
             HTML_IFRAME_SCALE_FACTOR,
             HTML_IFRAME_WIDTH_FACTOR,
-            imageStyle
+            imageStyle,
+            maxSizeFactor
           )}
         <p> </p>
         {props.image_base64 && (
@@ -890,11 +908,11 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
           renderHTMLCode(
             props.html_code,
             screenHeight *
-              MAX_SIZE_FACTOR *
+              (screenWidth < screenHeight ? PHONE_MONITOR_SIZE : MONITOR_SIZE) * // Dynamic size factor
               HTML_IFRAME_SCALE_FACTOR *
               ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
             screenWidth *
-              MAX_SIZE_FACTOR *
+              (screenWidth < screenHeight ? PHONE_MONITOR_SIZE : MONITOR_SIZE) * // Dynamic size factor
               HTML_IFRAME_WIDTH_FACTOR *
               ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
             props.html_border ?? 0
@@ -903,11 +921,11 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
           renderHTMLLink(
             props.html_url,
             screenHeight *
-              MAX_SIZE_FACTOR *
+              (screenWidth < screenHeight ? PHONE_MONITOR_SIZE : MONITOR_SIZE) * // Dynamic size factor
               HTML_IFRAME_SCALE_FACTOR *
               ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
             screenWidth *
-              MAX_SIZE_FACTOR *
+              (screenWidth < screenHeight ? PHONE_MONITOR_SIZE : MONITOR_SIZE) * // Dynamic size factor
               HTML_IFRAME_WIDTH_FACTOR *
               ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
             props.html_border ?? 0
