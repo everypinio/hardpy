@@ -12,8 +12,8 @@ export interface Dimensions {
   height: number;
 }
 
-const PHONE_MONITOR_SIZE = 0.7
-const MONITOR_SIZE = 0.6
+const PHONE_SCALE_FACTOR = 0.7
+const MONITOR_SCALE_FACTOR = 0.6
 
 /**
  * Gets the appropriate max size factor based on screen orientation
@@ -22,7 +22,7 @@ const MONITOR_SIZE = 0.6
  * @returns {number} - Adjusted max size factor
  */
 const getMaxSizeFactor = (screenWidth: number, screenHeight: number): number => {
-  return screenWidth < screenHeight ? PHONE_MONITOR_SIZE : MONITOR_SIZE;
+  return screenWidth < screenHeight ? PHONE_SCALE_FACTOR : MONITOR_SCALE_FACTOR;
 };
 
 /**

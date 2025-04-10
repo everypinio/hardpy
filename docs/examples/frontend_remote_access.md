@@ -1,8 +1,8 @@
-# Enabling Mobile Device Access to the Frontend
+# Enabling mobile device access to the frontend
 
 To allow other devices to connect to the frontend remotely, follow these steps:
 
-## 1. Open Required Ports on Your Computer
+## 1. Open required ports on your computer
 
 ### For Linux (using `ufw` firewall)
 
@@ -15,7 +15,7 @@ sudo ufw enable     # Enable the firewall if not already active
 sudo ufw status     # Verify the ports are open
 ```
 
-## 2. Find Your Computer's Network Address
+## 2. Find your computer's network address
 
 Use the `ifconfig` command to find your local IP address:
 
@@ -25,9 +25,9 @@ ifconfig | grep "inet "
 
 Look for an address in the format `192.168.x.x` or `10.x.x.x` (this is your local network IP).
 
-## 3. Configure Ports in Project Files
+## 3. Configure ports in project files
 
-### `hardpy.toml` Configuration
+### `hardpy.toml` configuration
 
 Edit the file to include your computer's network address:
 
@@ -43,41 +43,21 @@ host = "0.0.0.0"  # Allows connections from any network interface
 port = 8000
 ```
 
-### `pytest.ini` Configuration
-
-Update the database URL:
-
-```ini
-[pytest]
-addopts = --hardpy-db-url http://dev:dev@0.0.0.0:5984/
-```
-
-### `couchdb.ini` Configuration
-
-Ensure CouchDB is accessible:
-
-```ini
-[chttpd]
-port = 5984
-bind_address = 0.0.0.0  # Makes CouchDB accessible from network
-```
-
-## 4. Launch the Frontend
+## 4. Launch the frontend
 
 You can start the frontend using either method:
 
-### Option 1: Via Bash Script
+### Option 1: via bash script
 
 ```bash
-./recompile_front.sh
 hardpy run
 ```
 
-### Option 2: Through Debug Mode
+### Option 2: through debug mode
 
 Run the project in your IDE's debug mode with the configured settings.
 
-## Verification Steps
+## Verification steps
 
 1. On your mobile device, ensure it's connected to the same network as your computer
 2. Open a browser and navigate to: `http://[YOUR_COMPUTER_ADDRESS]:8000`
@@ -86,7 +66,7 @@ Run the project in your IDE's debug mode with the configured settings.
 ## Troubleshooting
 
 - If connection fails:
-  - Verify firewall settings (`sudo ufw status`)
-  - Check all services are running (CouchDB, frontend)
-  - Ensure no other devices are using the same ports
-  - Verify your mobile device and computer are on the same network
+  - Verify firewall settings (`sudo ufw status`).
+  - Check all services are running (CouchDB, frontend).
+  - Ensure no other devices are using the same ports.
+  - Verify your mobile device and computer are on the same network.

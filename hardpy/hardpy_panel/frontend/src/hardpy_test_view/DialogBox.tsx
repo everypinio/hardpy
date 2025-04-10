@@ -29,8 +29,8 @@ import {
 const HEX_BASE = 16;
 const screenWidth = window.screen.width;
 const screenHeight = window.screen.height;
-const PHONE_MONITOR_SIZE = 0.8
-const MONITOR_SIZE = 0.6
+const PHONE_SCALE_FACTOR = 0.8
+const MONITOR_SCALE_FACTOR = 0.6
 
 interface Props {
   title_bar: string;
@@ -484,7 +484,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
   const maxDimensions = useRef(BASE_DIALOG_DIMENSIONS);
 
   const widgetType = props.widget_type ?? WidgetType.Base;
-  const maxSizeFactor = screenWidth < screenHeight ? PHONE_MONITOR_SIZE : MONITOR_SIZE;
+  const maxSizeFactor = screenWidth < screenHeight ? PHONE_SCALE_FACTOR : MONITOR_SCALE_FACTOR;
 
   const lineHeight =
     (LINE_HEIGHT_FACTOR *
@@ -908,11 +908,11 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
           renderHTMLCode(
             props.html_code,
             screenHeight *
-              (screenWidth < screenHeight ? PHONE_MONITOR_SIZE : MONITOR_SIZE) * // Dynamic size factor
+              (screenWidth < screenHeight ? PHONE_SCALE_FACTOR : MONITOR_SCALE_FACTOR) * // Dynamic size factor
               HTML_IFRAME_SCALE_FACTOR *
               ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
             screenWidth *
-              (screenWidth < screenHeight ? PHONE_MONITOR_SIZE : MONITOR_SIZE) * // Dynamic size factor
+              (screenWidth < screenHeight ? PHONE_SCALE_FACTOR : MONITOR_SCALE_FACTOR) * // Dynamic size factor
               HTML_IFRAME_WIDTH_FACTOR *
               ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
             props.html_border ?? 0
@@ -921,11 +921,11 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
           renderHTMLLink(
             props.html_url,
             screenHeight *
-              (screenWidth < screenHeight ? PHONE_MONITOR_SIZE : MONITOR_SIZE) * // Dynamic size factor
+              (screenWidth < screenHeight ? PHONE_SCALE_FACTOR : MONITOR_SCALE_FACTOR) * // Dynamic size factor
               HTML_IFRAME_SCALE_FACTOR *
               ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
             screenWidth *
-              (screenWidth < screenHeight ? PHONE_MONITOR_SIZE : MONITOR_SIZE) * // Dynamic size factor
+              (screenWidth < screenHeight ? PHONE_SCALE_FACTOR : MONITOR_SCALE_FACTOR) * // Dynamic size factor
               HTML_IFRAME_WIDTH_FACTOR *
               ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
             props.html_border ?? 0

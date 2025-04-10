@@ -70,11 +70,11 @@ Below are the steps to run, debug, and build the frontend application.
 
 **node.js** and **yarn** are required to build the frontend.
 
-### 1. Running the Frontend for Hardpy Debugging
+### 1. Running the frontend for Hardpy debugging
 
 To run the frontend application for debugging purposes, you can use the **Run Frontend** configuration in VSCode or execute commands manually.
 
-#### Using VSCode:
+#### Using VSCode
 
 1. Open the "Run and Debug" in VSCode.
 2. Select the **Run Frontend** configuration.
@@ -85,7 +85,7 @@ This will:
 - Launch `yarn`.
 - Start the frontend application in development mode with debugging enabled.
 
-#### Manually:
+#### Manually
 
 Navigate to the frontend directory and run the following commands:
 
@@ -101,11 +101,11 @@ PORT=4000
 
 By default, the frontend opens on port 3000 at the address [http://localhost:3000/](http://localhost:3000/).
 
-### 2. Debugging the Frontend
+### 2. Debugging the frontend
 
 To debug the frontend application in the Chrome browser, use the **Debug Frontend** configuration in VSCode.
 
-#### Using VSCode:
+#### Using VSCode
 
 1. Ensure the frontend is running (use the **Run Frontend** configuration or manually start it).
 2. Open the "Run and Debug" in VSCode.
@@ -117,13 +117,13 @@ This will:
 - Launch Chrome and attach the debugger to the running frontend application at `http://localhost:3000`.
 - Enable source maps for easier debugging.
 
-#### Manually:
+#### Manually
 
 1. Start the frontend application (as described in the **Run Frontend** section).
 2. Open Chrome and navigate to `http://localhost:3000`.
 3. Use Chrome DevTools (`F12`) to debug the application.
 
-### 3. Building the Frontend for Hardpy Package
+### 3. Building the frontend for Hardpy package
 
 To build the frontend and include it in the Hardpy package, you can use the provided scripts or run the commands manually.
 
@@ -151,12 +151,12 @@ pip install -r requirements.txt
 python -m build
 ```
 
-### 4. Setting the `DEBUG_FRONTEND` Variable
+### 4. Setting the `DEBUG_FRONTEND` variable
 
 To enable debugging for the frontend application, you must set the `DEBUG_FRONTEND` environment variable.
 Without this variable, the frontend will not run in debug mode, and the **Run Frontend** and **Debug Frontend** configurations will not work as expected.
 
-#### Option 1: Setting `DEBUG_FRONTEND` in VSCode Configuration
+#### Option 1: setting `DEBUG_FRONTEND` in VSCode configuration
 
 You can specify the `DEBUG_FRONTEND` variable directly in the VSCode launch configuration.
 Here's an example of how to include it in a test configuration:
@@ -180,7 +180,7 @@ Here's an example of how to include it in a test configuration:
 
 This configuration ensures that the frontend runs in debug mode when the test is executed.
 
-#### Option 2: Setting `DEBUG_FRONTEND` in `.env` File
+#### Option 2: setting `DEBUG_FRONTEND` in `.env` file
 
 Alternatively, you can define the `DEBUG_FRONTEND` variable in a `.env` file located in the root of your project. 
 
