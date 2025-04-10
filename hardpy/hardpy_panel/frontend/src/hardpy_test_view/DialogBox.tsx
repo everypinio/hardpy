@@ -114,7 +114,7 @@ interface RadioButtonComponentProps {
 }
 
 interface CheckboxComponentProps {
-  fields: string[]; // Add this line
+  fields: string[];
   selectedCheckboxes: string[];
   setSelectedCheckboxes: (value: string[]) => void;
   handleKeyDown: (event: React.KeyboardEvent) => void;
