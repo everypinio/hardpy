@@ -4,7 +4,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 
 * Transfer frontend from CRA to Vite.
   [[PR-122](https://github.com/everypinio/hardpy/pull/122)]
-* Remove bag with scrolling tests with operator messages.
+* Remove bug with scrolling tests with operator messages.
   [[PR-122](https://github.com/everypinio/hardpy/pull/122)]
 
 ## HardPy 0.11.0
