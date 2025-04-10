@@ -37,6 +37,7 @@ More info in [hardpy config](./hardpy_config.md).
 │   tests_dir      [TESTS_DIR]  [default: None]                                                              │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --tests-name                                   TEXT     Specify a tests suite name.                        │
 │ --create-database      --no-create-database             Create CouchDB database.                           │
 │                                                         [default: create-database]                         │
 │ --database-user                                TEXT     Specify a database user. [default: dev]            │
@@ -83,6 +84,60 @@ To obtain this information, use:
 
 ```bash
 hardpy run --help
+```
+
+## hardpy start
+
+The `hardpy start` command is used to launch **HardPy** tests while the **HardPy** opener panel is running.
+By default, it starts tests in the current directory.
+
+```bash
+ Usage: hardpy start [OPTIONS] [TESTS_DIR]
+
+ Start HardPy tests.
+
+╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
+│   tests_dir      [TESTS_DIR]  [default: None]                                                              │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                                                │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+## hardpy stop
+
+The `hardpy stop` command is used to stop **HardPy** tests while the **HardPy** opener panel is running.
+By default, it stops tests in the current directory.
+
+```bash
+ Usage: hardpy stop [OPTIONS] [TESTS_DIR]
+
+ Stop HardPy tests.
+
+╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
+│   tests_dir      [TESTS_DIR]  [default: None]                                                              │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                                                │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+## hardpy status
+
+The `hardpy status` command is used to stop **HardPy** tests while the **HardPy** opener panel is running.
+By default, it stops tests in the current directory.
+
+```bash
+ Usage: hardpy status [OPTIONS] [TESTS_DIR]
+
+ Get HardPy test launch status.
+
+╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
+│   tests_dir      [TESTS_DIR]  [default: None]                                                              │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                                                │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 ## sc-login
