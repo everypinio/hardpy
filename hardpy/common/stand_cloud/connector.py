@@ -59,7 +59,7 @@ class StandCloudConnector:
         auth_addr = addr + "/auth"
 
         self._url: StandCloudURL = StandCloudURL(
-            api=https_prefix + addr + self._get_service_name(addr) + "/api/v1",
+            api=https_prefix + addr + "/hardpy/api/v1",
             token=https_prefix + auth_addr + "/api/oidc/token",
             par=https_prefix + auth_addr + "/api/oidc/pushed-authorization-request",
             auth=https_prefix + auth_addr + "/api/oidc/authorization",
@@ -216,12 +216,3 @@ class StandCloudConnector:
             expires_at=expires_at,
             expires_in=expires_in,
         )
-
-    def _get_service_name(self, addr: str) -> str:
-        addr_parts = addr.split(".")
-        number_of_parts = 3
-        service_position_in_address = 1
-        if isinstance(addr_parts, list) and len(addr_parts) >= number_of_parts:
-            return "/" + addr_parts[service_position_in_address]
-        msg = f"Invalid StandCloud address: {addr}"
-        raise StandCloudError(msg)
