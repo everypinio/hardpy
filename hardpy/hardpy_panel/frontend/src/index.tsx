@@ -7,11 +7,12 @@ import ReactDOM from "react-dom/client";
 import PouchDB from "pouchdb-browser";
 import { Provider } from "use-pouchdb";
 
+
 import "normalize.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
 
 /**
  * Fetches the synchronization URL for PouchDB from the backend API.

@@ -92,6 +92,7 @@ type State = {
 };
 
 const SUITE_NAME_STUB = "Lorem ipsum";
+const LOADING_ICON_MARGIN = 30;
 
 /**
  * TestSuite component displays a collapsible test suite with test cases.
@@ -99,7 +100,7 @@ const SUITE_NAME_STUB = "Lorem ipsum";
  */
 export class TestSuite extends React.Component<Props, State> {
   private static readonly LOADING_ICON = (
-    <div style={{ margin: 30 }}>
+    <div style={{ margin: LOADING_ICON_MARGIN }}>
       <LoadingOutlined spin />
     </div>
   );
@@ -230,7 +231,7 @@ export class TestSuite extends React.Component<Props, State> {
         name: "Name",
         selector: (row) => row,
         cell: this.cellRendererName.bind(this, case_array),
-        grow: 6,
+        grow: 6,  
       },
       {
         id: "data",
