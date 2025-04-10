@@ -28,7 +28,7 @@ port = 8000
 ```toml
 title = "HardPy TOML config"
 tests_dir = "tests"
-tests_name "My tests"
+tests_name = "My tests"
 
 [database]
 user = "dev"
