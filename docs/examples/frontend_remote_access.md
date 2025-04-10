@@ -2,9 +2,9 @@
 
 To allow other devices to connect to the frontend remotely, follow these steps:
 
-## 1. Find your computer's network address
+## 1. Determine IP address
 
-Use the `ifconfig` command to find your local IP address:
+Determine your computer's IP address. For Linux, you can use the `ifconfig` command:
 
 ```bash
 ifconfig | grep "inet "
@@ -26,7 +26,7 @@ host = "{YOUR_COMPUTER_NETWORK_ADDRESS}"  # Replace with address from step 2
 port = 5984
 
 [frontend]
-host = "0.0.0.0"  # Allows connections from any network interface
+host = "{YOUR_COMPUTER_NETWORK_ADDRESS}"  # Replace with the address from step 2 or insert "0.0.0.0"
 port = 8000
 ```
 
