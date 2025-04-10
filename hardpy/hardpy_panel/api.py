@@ -23,8 +23,6 @@ class Status(str, Enum):
     Statuses, that can be returned by HardPy API.
     """
 
-    OK = "ok"
-    NOT_RUNNING = "not running"
     STOPPED = "stopped"
     STARTED = "started"
     COLLECTED = "collected"
