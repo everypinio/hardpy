@@ -19,13 +19,18 @@ import {
 import StartStopButton from "./button/StartStop";
 import { SuiteList, TestRunI } from "./hardpy_test_view/SuiteList";
 import ProgressView from "./progress/ProgressView";
-import TestStatus from "hardpy_test_view/TestStatus";
+import TestStatus from "./hardpy_test_view/TestStatus";
 import ReloadAlert from "./restart_alert/RestartAlert";
-import PlaySound from "hardpy_test_view/PlaySound";
+import PlaySound from "./hardpy_test_view/PlaySound";
 
 import { useAllDocs } from "use-pouchdb";
 
 import "./App.css";
+
+const WINDOW_WIDTH_THRESHOLDS = {
+  ULTRAWIDE: 490,
+  WIDE: 400,
+};
 
 /**
  * Main component of the GUI.
@@ -64,8 +69,8 @@ function App(): JSX.Element {
     return width > size;
   };
 
-  const ultrawide = useWindowWide(490);
-  const wide = useWindowWide(400);
+  const ultrawide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.ULTRAWIDE);
+  const wide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.WIDE);
 
   /**
    * Custom hook to render data from the database.

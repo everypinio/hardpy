@@ -17,6 +17,7 @@ The code for this example can be seen inside the hardpy package
 5. You can remove `connection_only = true` if you don't want to check the
     **StandCloud** connection before each **HardPy** start.
 6. Login in the **StandCloud**:
+
     ```bash
     hardpy sc-login demo.standcloud.localhost
     ```
@@ -24,6 +25,7 @@ The code for this example can be seen inside the hardpy package
     The duration of the authorization is defined in the **StandCloud** service itself.
     Registration must be completed once, then you can check authorization
     using the command:
+
     ```
     hardpy sc-login --check demo.standcloud.localhost
     ```

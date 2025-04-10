@@ -3,6 +3,9 @@
 
 import * as React from "react";
 
+const CLOCK_UPDATE_INTERVAL = 100;
+const MILLISECONDS_TO_SECONDS = 1000;
+
 type Props = {
   commonTestRunStatus: string | undefined;
   status: string;
@@ -50,7 +53,7 @@ export class RunTimer extends React.Component<Props, State> {
    * @returns {string} The formatted time in seconds.
    */
   private formatMilliseconds(ms: number): string {
-    return (ms / 1000).toFixed(1);
+    return (ms / MILLISECONDS_TO_SECONDS).toFixed(1);
   }
 
   /**
@@ -90,7 +93,7 @@ export class RunTimer extends React.Component<Props, State> {
    * Initializes the clock by setting up an interval to update the elapsed time every 100ms.
    */
   private initClock() {
-    this.setState({ clock: setInterval(this.updateClock, 100) });
+    this.setState({ clock: setInterval(this.updateClock, CLOCK_UPDATE_INTERVAL) });
   }
 }
 

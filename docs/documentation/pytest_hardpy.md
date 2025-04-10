@@ -41,6 +41,7 @@ When called again, the information will be added to DB.
 def test_dut_info():
     set_dut_info({"batch": "test_batch", "board_rev": "rev_1"})
 ```
+
 #### set_dut_serial_number
 
 Writes a string with a serial number.
@@ -538,6 +539,7 @@ This allows for easy identification and sorting of reports.
 * Valid report name (no serial number): `report_1726496218_no_serial_808007`
 
 **Functions:**
+
 - `load` *(ResultRunStore)*: Load report to the CouchDB **report** database.
 
 **Example:**

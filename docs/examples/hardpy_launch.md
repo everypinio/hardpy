@@ -15,9 +15,11 @@ Initialize the **HardPy** project:
 #### 1. Operator panel
 
 1. Launch operator panel:
+
    ```
    hardpy run test_project
    ```
+
 2. Open the operator panel in your browser at: [http://localhost:8000/](http://localhost:8000/).
 3. Click the **Start** button.
 
