@@ -4,6 +4,19 @@
 import React, { useState, useEffect } from "react";
 import { Classes, Dialog } from "@blueprintjs/core";
 import axios from "axios";
+import {
+  BASE_DIALOG_DIMENSIONS,
+  MAX_SIZE_FACTOR,
+  MIN_SIZE_FACTOR,
+  LINE_HEIGHT_FACTOR,
+  BASE_FONT_SIZE,
+  HTML_IFRAME_SCALE_FACTOR,
+  HTML_IFRAME_WIDTH_FACTOR,
+  IMAGE_SCALE_FACTOR,
+  calculateDimensions,
+  calculateTextLines,
+  calculateDialogDimensions,
+} from "./DialogUtils";
 
 interface StartOperatorMsgDialogProps {
   title: string;
@@ -21,6 +34,56 @@ interface StartOperatorMsgDialogProps {
 }
 
 /**
+ * Renders an HTML code iframe.
+ * @param {string} htmlCode - The HTML code to render.
+ * @param {number} height - The height of the iframe.
+ * @param {number} width - The width of the iframe.
+ * @param {number} border - The border size of the iframe.
+ * @returns {JSX.Element} - An iframe element with the specified HTML code.
+ */
+const renderHTMLCode = (
+  htmlCode: string,
+  height: number,
+  width: number,
+  border: number
+): JSX.Element => (
+  <iframe
+    srcDoc={htmlCode}
+    height={height}
+    width={width}
+    style={{
+      border: `${border}px solid black`,
+    }}
+    title="HTML Code"
+  />
+);
+
+/**
+ * Renders an HTML link iframe.
+ * @param {string} htmlUrl - The URL to render.
+ * @param {number} height - The height of the iframe.
+ * @param {number} width - The width of the iframe.
+ * @param {number} border - The border size of the iframe.
+ * @returns {JSX.Element} - An iframe element with the specified URL.
+ */
+const renderHTMLLink = (
+  htmlUrl: string,
+  height: number,
+  width: number,
+  border: number
+): JSX.Element => (
+  <iframe
+    src={htmlUrl}
+    height={height}
+    width={width}
+    style={{
+      border: `${border}px solid black`,
+    }}
+    title="HTML Link"
+  />
+);
+
+/**
  * A React component that displays a dialog with a message, optional image, and optional HTML content.
  * @param {StartOperatorMsgDialogProps} props - The properties for the dialog.
  * @returns {JSX.Element} The rendered dialog component.
@@ -29,16 +92,11 @@ export function StartOperatorMsgDialog(
   props: Readonly<StartOperatorMsgDialogProps>
 ): JSX.Element {
   const [operatorMessageOpen, setOperatorMessageOpen] = useState(false);
-  const [imageDimensions, setImageDimensions] = useState({
-    width: 0,
-    height: 0,
-  });
+  const [imageDimensions, setImageDimensions] = useState(
+    BASE_DIALOG_DIMENSIONS
+  );
   const screenWidth = window.screen.width;
   const screenHeight = window.screen.height;
-  const baseOperatorMessageDimensions = { width: 100, height: 100 };
-  const maxSize = 0.6;
-  const minSize = 0.25;
-  const lineHeight = (10 * (props.font_size ? props.font_size : 14)) / 14;
 
   /**
    * Handles the closing of the dialog and sends a confirmation to the server.
@@ -59,22 +117,6 @@ export function StartOperatorMsgDialog(
   };
 
   /**
-   * Calculates the dimensions of the image based on its natural dimensions and a width factor.
-   * @param {number} naturalWidth - The natural width of the image.
-   * @param {number} naturalHeight - The natural height of the image.
-   * @param {number} widthFactor - The factor to scale the width by.
-   * @returns {{width: number, height: number}} The calculated dimensions.
-   */
-  const calculateDimensions = (
-    naturalWidth: number,
-    naturalHeight: number,
-    widthFactor: number
-  ): { width: number; height: number } => ({
-    width: (naturalWidth * (widthFactor || 100)) / 100,
-    height: (naturalHeight * (widthFactor || 100)) / 100,
-  });
-
-  /**
    * Handles the loading of the image and sets its dimensions.
    * @param {React.SyntheticEvent<HTMLImageElement>} event - The image load event.
    * @returns {void}
@@ -84,49 +126,65 @@ export function StartOperatorMsgDialog(
   ): void => {
     const { naturalWidth, naturalHeight } = event.target as HTMLImageElement;
     setImageDimensions(
-      calculateDimensions(naturalWidth, naturalHeight, props.image_width ?? 100)
+      calculateDimensions(
+        naturalWidth,
+        naturalHeight,
+        props.image_width ?? IMAGE_SCALE_FACTOR
+      )
     );
   };
 
   /**
-   * Calculates the number of lines of text based on the text content and available width.
-   * @param {string} text - The text content.
-   * @param {number} width - The available width for the text.
-   * @returns {number | undefined} The number of lines of text.
+   * Calculates the line height based on font size and scaling factor.
+   * Uses base font size for proportional scaling.
+   * @type {number}
    */
-  const calculateTextLines = (
-    text: string,
-    width: number
-  ): number | undefined => {
-    const context = document.createElement("canvas").getContext("2d");
-    if (context) {
-      context.font = "10px sans-serif";
-      const linesCount = Math.ceil(
-        (text.length * context.measureText("M").width) / width
-      );
-      return linesCount;
-    }
-  };
-
-  const operatorMessageWidth = Math.min(
-    imageDimensions.width + baseOperatorMessageDimensions.width,
-    screenWidth * maxSize
+  const lineHeight: number =
+    (LINE_HEIGHT_FACTOR * (props.font_size ?? BASE_FONT_SIZE)) / BASE_FONT_SIZE;
+  /**
+   * Calculates the optimal dialog width for text content.
+   * Ensures the width doesn't exceed maximum screen size factor.
+   * @type {number}
+   */
+  const dialogWidthForText: number = Math.min(
+    imageDimensions.width + BASE_DIALOG_DIMENSIONS.width,
+    screenWidth * MAX_SIZE_FACTOR
   );
 
-  const textHeight =
-    (calculateTextLines(props.msg, operatorMessageWidth) ?? 1) * lineHeight;
+  /**
+   * Calculates the total text height based on line count and line height.
+   * Uses canvas text measurement for accurate line count estimation.
+   * @type {number}
+   */
+  const textHeight: number =
+    (calculateTextLines(props.msg, dialogWidthForText) ?? 1) * lineHeight;
 
-  const operatorMessageHeight = Math.max(
-    Math.min(
-      imageDimensions.height +
-        baseOperatorMessageDimensions.height +
-        textHeight,
-      screenHeight * maxSize
-    ),
-    screenHeight * minSize
-  );
+  /**
+   * Calculates final dialog dimensions considering all content elements.
+   * Handles special cases for HTML content and maintains aspect ratios.
+   * @type {Dimensions}
+   */
+  const { width: operatorMessageWidth, height: operatorMessageHeight } =
+    calculateDialogDimensions(
+      "base",
+      imageDimensions,
+      imageDimensions,
+      BASE_DIALOG_DIMENSIONS,
+      screenWidth,
+      screenHeight,
+      MAX_SIZE_FACTOR,
+      MIN_SIZE_FACTOR,
+      textHeight,
+      0,
+      !!props.html_code || !!props.html_url
+    );
 
-  const imageStyle = {
+  /**
+   * Defines base styling for displayed images.
+   * Includes border configuration and centering properties.
+   * @type {React.CSSProperties}
+   */
+  const imageStyle: React.CSSProperties = {
     border: `${props.image_border ?? 0}px solid black`,
     display: "block",
     margin: "0 auto",
@@ -163,6 +221,21 @@ export function StartOperatorMsgDialog(
     }
   }, [props.id, props.is_visible]);
 
+  useEffect(() => {
+    /**
+     * Manages the page scroll behavior when the modal dialog is opened or closed.
+     */
+    if (operatorMessageOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [operatorMessageOpen]);
+
   return (
     <Dialog
       title={props.title || "Message"}
@@ -173,10 +246,10 @@ export function StartOperatorMsgDialog(
       style={{
         width: "auto",
         height: "auto",
-        minWidth: screenWidth * minSize,
-        minHeight: screenHeight * minSize,
-        maxWidth: screenWidth * maxSize,
-        maxHeight: screenHeight * maxSize,
+        minWidth: screenWidth * MIN_SIZE_FACTOR,
+        minHeight: screenHeight * MIN_SIZE_FACTOR,
+        maxWidth: screenWidth * MAX_SIZE_FACTOR,
+        maxHeight: screenHeight * MAX_SIZE_FACTOR,
         fontSize: `${props.font_size}px`,
       }}
     >
@@ -185,9 +258,10 @@ export function StartOperatorMsgDialog(
         style={{
           wordWrap: "break-word",
           wordBreak: "break-word",
-          maxHeight: screenHeight * maxSize,
+          maxHeight: screenHeight * MAX_SIZE_FACTOR,
           overflowY: "auto",
-          maxWidth: screenWidth * maxSize,
+          overflow: "hidden",
+          maxWidth: screenWidth * MAX_SIZE_FACTOR,
           padding: "10px",
         }}
       >
@@ -205,46 +279,42 @@ export function StartOperatorMsgDialog(
               style={{
                 width: `${props.image_width}%`,
                 height: `${props.image_width}%`,
-                maxWidth: `${operatorMessageWidth - baseOperatorMessageDimensions.width / 2}px`,
-                maxHeight: `${operatorMessageHeight - baseOperatorMessageDimensions.height / 2}px`,
+                maxWidth: `${operatorMessageWidth - BASE_DIALOG_DIMENSIONS.width / 2}px`,
+                maxHeight: `${operatorMessageHeight - BASE_DIALOG_DIMENSIONS.height / 2}px`,
                 objectFit: "scale-down",
-                transform: `scale(${(props.image_width ?? 100) / 100})`,
+                transform: `scale(${(props.image_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR})`,
                 transformOrigin: `top center`,
                 ...imageStyle,
               }}
             />
           </div>
         )}
-        {props.html_code && (
-          <iframe
-            srcDoc={props.html_code}
-            height={
-              screenHeight * maxSize * 0.75 * ((props.html_width ?? 100) / 100)
-            }
-            width={
-              screenWidth * maxSize * 0.9 * ((props.html_width ?? 100) / 100)
-            }
-            style={{
-              border: `${props.html_border}px solid black`,
-            }}
-            title="HTML Code"
-          />
-        )}
-        {props.html_url && (
-          <iframe
-            src={props.html_url}
-            height={
-              screenHeight * maxSize * 0.75 * ((props.html_width ?? 100) / 100)
-            }
-            width={
-              screenWidth * maxSize * 0.9 * ((props.html_width ?? 100) / 100)
-            }
-            style={{
-              border: `${props.html_border}px solid black`,
-            }}
-            title="HTML Link"
-          />
-        )}
+        {props.html_code &&
+          renderHTMLCode(
+            props.html_code,
+            screenHeight *
+              MAX_SIZE_FACTOR *
+              HTML_IFRAME_SCALE_FACTOR *
+              ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
+            screenWidth *
+              MAX_SIZE_FACTOR *
+              HTML_IFRAME_WIDTH_FACTOR *
+              ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
+            props.html_border ?? 0
+          )}
+        {props.html_url &&
+          renderHTMLLink(
+            props.html_url,
+            screenHeight *
+              MAX_SIZE_FACTOR *
+              HTML_IFRAME_SCALE_FACTOR *
+              ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
+            screenWidth *
+              MAX_SIZE_FACTOR *
+              HTML_IFRAME_WIDTH_FACTOR *
+              ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
+            props.html_border ?? 0
+          )}
       </div>
     </Dialog>
   );
