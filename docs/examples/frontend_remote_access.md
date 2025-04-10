@@ -32,17 +32,7 @@ port = 8000
 
 ## 3. Launch the frontend
 
-You can start the frontend using either method:
-
-### Option 1: via bash script
-
-```bash
-hardpy run
-```
-
-### Option 2: through debug mode
-
-Run the project in your IDE's debug mode with the configured settings.
+You can start the frontend using `hardpy run`.
 
 ## Verification steps
 
@@ -52,12 +42,12 @@ Run the project in your IDE's debug mode with the configured settings.
 
 ## Troubleshooting
 
-- If connection fails:
-  - Open required ports on your computer.
-  - Verify firewall settings (`sudo ufw status`).
-  - Check all services are running (CouchDB, frontend).
-  - Ensure no other devices are using the same ports.
-  - Verify your mobile device and computer are on the same network.
+If connection fails:
+
+- [Open required ports](#open-required-ports-on-your-computer) on your computer.
+- Check all services are running (CouchDB, frontend).
+- Ensure no other devices are using the same ports.
+- Verify your mobile device and computer are on the same network.
 
 ### Open required ports on your computer
 
