@@ -258,15 +258,16 @@ def _get_config(tests_dir: str | None = None) -> HardpyConfig:
 
 def _check_config(config: HardpyConfig) -> None:
     url = f"http://{config.frontend.host}:{config.frontend.port}/api/hardpy_config"
+    error_msg = f"HardPy in directory {config.tests_dir} does not run."
     try:
         response = requests.get(url, timeout=2)
     except Exception:
-        print(f"HardPy in directory {config.tests_dir} does not run.")
+        print(error_msg)
         sys.exit()
 
     running_config: dict = response.json()
     if config.model_dump() != running_config:
-        print(f"HardPy in directory {config.tests_dir} does not run.")
+        print(error_msg)
         sys.exit()
 
 
@@ -279,9 +280,9 @@ def _request_hardpy(url: str) -> None:
     try:
         status: dict = response.json().get("status", "ERROR")
     except ValueError:
-        print(f"Hardpy internal error: {response}")
+        print(f"Hardpy internal error: {response}.")
         sys.exit()
-    print(f"HardPy status: {status}")
+    print(f"HardPy status: {status}.")
 
 
 if __name__ == "__main__":
