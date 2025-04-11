@@ -10,7 +10,7 @@ export default {
     port: 3000,
     proxy: {
       "/api": {
-        target: "http://localhost:8000",
+        target: "http://couchdb.localhost:5984",
         changeOrigin: true,
         secure: false,
         ws: false,

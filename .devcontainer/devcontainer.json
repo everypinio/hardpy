@@ -1,14 +1,15 @@
 {
 	"name": "Ubuntu",
-	"build": {
-	  "dockerfile": "../Dockerfile"
-	//   ./database/couchdb.ini:/opt/couchdb/etc/local.ini
-	},
-	"forwardPorts": [
-		5984 // API
-	],
 
-	"postCreateCommand": "bash ./.devcontainer/postcreate.sh",
+	// "forwardPorts": [
+	// 	5984 // API
+	// ],
+
+	"dockerComposeFile": [
+		"./docker-compose.yaml"
+	],
+	"service": "hardpy",
+	"workspaceFolder": "/workspaces/hardpy",
 	"postAttachCommand": "bash ./.devcontainer/postattach.sh",
 	"customizations": {
 	  "vscode": {

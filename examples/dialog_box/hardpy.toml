@@ -4,7 +4,7 @@ tests_dir = "dialog_box"
 [database]
 user = "dev"
 password = "dev"
-host = "localhost"
+host = "couchdb.localhost"
 port = 5984
 
 [frontend]

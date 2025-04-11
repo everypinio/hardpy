@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+
+  traefik:
+    image: traefik:v3.3.2
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  couchserver:
+    hostname: couchdb.localhost
+    image: couchdb:3.4
+    ports:
+      - "5984:5984"
+    environment:
+      COUCHDB_USER: dev
+      COUCHDB_PASSWORD: dev
+    volumes:
+      - ./database/dbdata:/opt/couchdb/data
+      - ./database/couchdb.ini:/opt/couchdb/etc/local.ini:rw
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`couchdb.localhost`)"
+      - "traefik.http.routers.whoami.entrypoints=web"
+      
+  hardpy:
+    hostname: hardpy-devcontainer
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+      target: dev-env
+    environment:
+      DISPLAY: ${DISPLAY:-localEnv}
+    ports:
+      - "8000:8000"
+      - "3000:3000"
+    volumes:
+      - ..:/workspaces/hardpy:cached
+    command: sleep infinity
+
+    
+
