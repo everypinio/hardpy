@@ -1,12 +1,10 @@
 import datetime
-from logging import getLogger
+from hardpy import set_operator_message
 
 
 class DriverExample:
     """Driver example."""
 
-    def __init__(self) -> None:
-        self._log = getLogger(__name__)
 
     @property
     def current_minute(self):
@@ -16,4 +14,7 @@ class DriverExample:
 
     def random_method(self):
         """Example of random method."""
-        self._log.warning("Random method")
+        set_operator_message(
+            msg="Result of random method",
+            title="Random method",
+        )
