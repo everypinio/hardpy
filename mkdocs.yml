@@ -73,6 +73,7 @@ nav:
       - Minute parity: examples/minute_parity.md
       - Multiple stands: examples/multiple_stands.md
       - Operator message: examples/operator_msg.md
+      - Remote access: examples/frontend_remote_access.md
       - Skip test: examples/skip_test.md
       - StandCloud: examples/stand_cloud.md
   - About:

@@ -14,6 +14,23 @@ import {
   Tabs,
 } from "@blueprintjs/core";
 import { notification } from "antd";
+import {
+  BASE_DIALOG_DIMENSIONS,
+  MAX_SIZE_FACTOR,
+  MIN_SIZE_FACTOR,
+  LINE_HEIGHT_FACTOR,
+  BASE_FONT_SIZE,
+  HTML_IFRAME_SCALE_FACTOR,
+  HTML_IFRAME_WIDTH_FACTOR,
+  IMAGE_SCALE_FACTOR,
+  calculateDialogDimensions,
+} from "./DialogUtils";
+
+const HEX_BASE = 16;
+const screenWidth = window.screen.width;
+const screenHeight = window.screen.height;
+const PHONE_SCALE_FACTOR = 0.8
+const MONITOR_SCALE_FACTOR = 0.6
 
 interface Props {
   title_bar: string;
@@ -97,7 +114,7 @@ interface RadioButtonComponentProps {
 }
 
 interface CheckboxComponentProps {
-  fields: string[]; // Add this line
+  fields: string[];
   selectedCheckboxes: string[];
   setSelectedCheckboxes: (value: string[]) => void;
   handleKeyDown: (event: React.KeyboardEvent) => void;
@@ -107,8 +124,13 @@ interface CheckboxComponentProps {
 /**
  * TextInputComponent is a reusable input component that allows users to enter text.
  * @param {string} inputText - The current value of the input field.
+ * @param {function} setInputText - A function to update the input field value.
+ * @param {function} handleKeyDown - A function to handle keydown events on the input field.
+ * @param {string} inputPlaceholder - The placeholder text to display in the input field.
+ * @param {string} type - The type of the input field.
  * @returns {JSX.Element} - A controlled input component with auto-focus enabled.
  */
+/** */
 const TextInputComponent = ({
   inputText,
   setInputText,
@@ -131,11 +153,13 @@ const TextInputComponent = ({
 /**
  * RadioButtonComponent is a reusable component that renders a group of radio buttons.
  * @param {string[]} fields - An array of options to display as radio buttons.
+ * @param {string} selectedRadioButton - The currently selected radio button value.
  * @param {function} setSelectedRadioButton - A function to update the selected radio button.
  * @param {function} handleKeyDown - A function to handle keydown events on the radio buttons.
  * @param {number} fontSize - The font size for the radio button labels.
  * @returns {JSX.Element} - A group of radio buttons with dynamic styling and auto-focus on the first option.
  */
+/** */
 const RadioButtonComponent = ({
   fields,
   selectedRadioButton,
@@ -168,6 +192,7 @@ const RadioButtonComponent = ({
  * @param {number} fontSize - The font size for the checkbox labels.
  * @returns {JSX.Element} - A group of checkboxes with dynamic styling and auto-focus on the first option.
  */
+/** */
 const CheckboxComponent = ({
   fields,
   selectedCheckboxes,
@@ -199,6 +224,245 @@ const CheckboxComponent = ({
 );
 
 /**
+ * Renders a text input component.
+ * @param {Props} props - The properties passed to the component.
+ * @param {string} inputText - The current value of the input field.
+ * @param {function} setInputText - A function to update the value of the input field.
+ * @param {function} handleKeyDown - A function to handle keydown events on the input field.
+ * @returns {JSX.Element} - A text input component with specified properties.
+ */
+const renderTextInput = (
+  props: Props,
+  inputText: string,
+  setInputText: (value: string) => void,
+  handleKeyDown: (event: React.KeyboardEvent) => void
+): JSX.Element => (
+  <TextInputComponent
+    inputText={inputText}
+    setInputText={setInputText}
+    handleKeyDown={handleKeyDown}
+    inputPlaceholder="enter answer"
+    type="text"
+  />
+);
+
+/**
+ * Renders a numeric input component.
+ * @param {Props} props - The properties passed to the component.
+ * @param {string} inputText - The current value of the input field.
+ * @param {function} setInputText - A function to update the value of the input field.
+ * @param {function} handleKeyDown - A function to handle keydown events on the input field.
+ * @returns {JSX.Element} - A numeric input component with specified properties.
+ */
+const renderNumericInput = (
+  props: Props,
+  inputText: string,
+  setInputText: (value: string) => void,
+  handleKeyDown: (event: React.KeyboardEvent) => void
+): JSX.Element => (
+  <TextInputComponent
+    inputText={inputText}
+    setInputText={setInputText}
+    handleKeyDown={handleKeyDown}
+    inputPlaceholder="enter answer"
+    type="number"
+  />
+);
+
+/**
+ * Renders a radio button component.
+ * @param {Props} props - The properties passed to the component.
+ * @param {string} selectedRadioButton - The currently selected radio button.
+ * @param {function} setSelectedRadioButton - A function to update the selected radio button.
+ * @param {function} handleKeyDown - A function to handle keydown events on the radio buttons.
+ * @returns {JSX.Element} - A radio button component with specified properties.
+ */
+const renderRadioButton = (
+  props: Props,
+  selectedRadioButton: string,
+  setSelectedRadioButton: (value: string) => void,
+  handleKeyDown: (event: React.KeyboardEvent) => void
+): JSX.Element => (
+  <RadioButtonComponent
+    fields={props.widget_info?.fields ?? []}
+    selectedRadioButton={selectedRadioButton}
+    setSelectedRadioButton={setSelectedRadioButton}
+    handleKeyDown={handleKeyDown}
+    fontSize={props.font_size ?? 12}
+  />
+);
+
+/**
+ * Renders a checkbox component.
+ * @param {Props} props - The properties passed to the component.
+ * @param {string[]} selectedCheckboxes - An array of currently selected checkbox values.
+ * @param {function} setSelectedCheckboxes - A function to update the selected checkboxes.
+ * @param {function} handleKeyDown - A function to handle keydown events on the checkboxes.
+ * @returns {JSX.Element} - A checkbox component with specified properties.
+ */
+const renderCheckbox = (
+  props: Props,
+  selectedCheckboxes: string[],
+  setSelectedCheckboxes: (value: string[]) => void,
+  handleKeyDown: (event: React.KeyboardEvent) => void
+): JSX.Element => (
+  <CheckboxComponent
+    fields={props.widget_info?.fields ?? []}
+    selectedCheckboxes={selectedCheckboxes}
+    setSelectedCheckboxes={setSelectedCheckboxes}
+    handleKeyDown={handleKeyDown}
+    fontSize={props.font_size ?? 12}
+  />
+);
+
+/**
+ * Renders an HTML code iframe.
+ * @param {string} htmlCode - The HTML code to render.
+ * @param {number} height - The height of the iframe.
+ * @param {number} width - The width of the iframe.
+ * @param {number} border - The border size of the iframe.
+ * @returns {JSX.Element} - An iframe element with the specified HTML code.
+ */
+const renderHTMLCode = (
+  htmlCode: string,
+  height: number,
+  width: number,
+  border: number
+): JSX.Element => (
+  <iframe
+    srcDoc={htmlCode}
+    height={height}
+    width={width}
+    style={{
+      border: `${border}px solid black`,
+    }}
+    title="HTML Code"
+  />
+);
+
+/**
+ * Renders an HTML link iframe.
+ * @param {string} htmlUrl - The URL to render.
+ * @param {number} height - The height of the iframe.
+ * @param {number} width - The width of the iframe.
+ * @param {number} border - The border size of the iframe.
+ * @returns {JSX.Element} - An iframe element with the specified URL.
+ */
+const renderHTMLLink = (
+  htmlUrl: string,
+  height: number,
+  width: number,
+  border: number
+): JSX.Element => (
+  <iframe
+    src={htmlUrl}
+    height={height}
+    width={width}
+    style={{
+      border: `${border}px solid black`,
+    }}
+    title="HTML Link"
+  />
+);
+
+/**
+ * Renders a multistep component with tabs, each containing text, images, or HTML content.
+ * @param {Props} props - The properties passed to the component.
+ * @param {Object} imageStepDimensions - The dimensions of the image step.
+ * @param {Object} baseDialogDimensions - The base dimensions of the dialog.
+ * @param {number} htmlHeightIndex - The height index for HTML content.
+ * @param {number} htmlWidthIndex - The width index for HTML content.
+ * @param {React.CSSProperties} imageStyle - The style properties for the image.
+ * @returns {JSX.Element} - A multistep component with tabs containing various content types.
+ */
+const renderMultistep = (
+  props: Props,
+  imageStepDimensions: { width: number; height: number },
+  baseDialogDimensions: { width: number; height: number },
+  htmlHeightIndex: number,
+  htmlWidthIndex: number,
+  imageStyle: React.CSSProperties,
+  maxSizeFactor: number
+): JSX.Element => (
+  <Tabs id={props.title_bar}>
+    {props.widget_info?.steps?.map((step: Step) => (
+      <Tab
+        id={step.info?.title}
+        key={step.info?.title}
+        title={step.info?.title}
+        style={{ fontSize: `${props.font_size}px` }}
+        panel={
+          <div className="step-container">
+            <div className="step-content">
+              {step.info?.text?.split("\n").map((line) => (
+                <p key={line} style={{ textAlign: "left" }}>
+                  {line}
+                </p>
+              ))}
+              {step.info.image && (
+                <img
+                  src={`data:image/image;base64,${step.info.image?.base64}`}
+                  alt={""}
+                  style={{
+                    maxWidth: `${Math.min(
+                      imageStepDimensions.width + baseDialogDimensions.width,
+                      screenWidth * maxSizeFactor
+                    )}px`,
+                    maxHeight: `${Math.min(
+                      imageStepDimensions.height + baseDialogDimensions.height,
+                      screenHeight * maxSizeFactor
+                    )}px`,
+                    transform: `scale(${(step.info.image?.width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR})`,
+                    transformOrigin: `top center`,
+                    ...imageStyle,
+                  }}
+                />
+              )}
+              {step.info.html?.code_or_url &&
+                step.info.html?.is_raw_html &&
+                renderHTMLCode(
+                  step.info.html.code_or_url,
+                  Math.min(
+                    (imageStepDimensions.height + baseDialogDimensions.height) *
+                      htmlHeightIndex *
+                      ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
+                    screenHeight * maxSizeFactor
+                  ),
+                  Math.min(
+                    (imageStepDimensions.width + baseDialogDimensions.width) *
+                      htmlWidthIndex *
+                      ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
+                    screenWidth * maxSizeFactor
+                  ),
+                  step.info.html?.border ?? 0
+                )}
+              {step.info.html?.code_or_url &&
+                !step.info.html?.is_raw_html &&
+                renderHTMLLink(
+                  step.info.html.code_or_url,
+                  Math.min(
+                    (imageStepDimensions.height + baseDialogDimensions.height) *
+                      htmlHeightIndex *
+                      ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
+                    screenHeight * maxSizeFactor
+                  ),
+                  Math.min(
+                    (imageStepDimensions.width + baseDialogDimensions.width) *
+                      htmlWidthIndex *
+                      ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
+                    screenWidth * maxSizeFactor
+                  ),
+                  step.info.html?.border ?? 0
+                )}
+            </div>
+          </div>
+        }
+      ></Tab>
+    ))}
+  </Tabs>
+);
+
+/**
  * StartConfirmationDialog is a React component that renders a dialog box with various types of input widgets.
  * It supports text input, numeric input, radio buttons, checkboxes, and multi-step forms.
  *
@@ -210,30 +474,22 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
   const [inputText, setInputText] = useState("");
   const [selectedRadioButton, setSelectedRadioButton] = useState("");
   const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
-  const [imageDimensions, setImageDimensions] = useState({
-    width: 0,
-    height: 0,
-  });
-  const [imageStepDimensions, setStepImageDimensions] = useState({
-    width: 0,
-    height: 0,
-  });
-  const maxDimensions = useRef({ width: 0, height: 0 });
-
-  const HEX_BASE = 16;
+  const [imageDimensions, setImageDimensions] = useState(
+    BASE_DIALOG_DIMENSIONS
+  );
+  const [imageStepDimensions, setStepImageDimensions] = useState(
+    BASE_DIALOG_DIMENSIONS
+  );
+  const [hasHTML, setHasHTML] = useState(false);
+  const maxDimensions = useRef(BASE_DIALOG_DIMENSIONS);
 
   const widgetType = props.widget_type ?? WidgetType.Base;
-  const inputPlaceholder = "enter answer";
+  const maxSizeFactor = screenWidth < screenHeight ? PHONE_SCALE_FACTOR : MONITOR_SCALE_FACTOR;
 
-  const screenWidth = window.screen.width;
-  const screenHeight = window.screen.height;
-
-  const baseDialogDimensions = { width: 100, height: 100 };
-  const maxSize = 0.8;
-  const minSize = 0.25;
-  const htmlHeightIndex = 0.75;
-  const htmlWidthIndex = 0.9;
-  const lineHeight = (10 * (props.font_size ? props.font_size : 14)) / 14;
+  const lineHeight =
+    (LINE_HEIGHT_FACTOR *
+      (props.font_size ? props.font_size : BASE_FONT_SIZE)) /
+    BASE_FONT_SIZE;
 
   /**
    * Handles the close event of the dialog box.
@@ -335,6 +591,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
     if (props.onConfirm) {
       props.onConfirm(textToSend);
     }
+
     try {
       const response = await axios.post(
         `/api/confirm_dialog_box/${textToSend}`
@@ -436,8 +693,11 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
     naturalHeight: number,
     widthFactor: number
   ): { width: number; height: number } => ({
-    width: (naturalWidth * (widthFactor || 100)) / 100,
-    height: (naturalHeight * (widthFactor || 100)) / 100,
+    width:
+      (naturalWidth * (widthFactor || IMAGE_SCALE_FACTOR)) / IMAGE_SCALE_FACTOR,
+    height:
+      (naturalHeight * (widthFactor || IMAGE_SCALE_FACTOR)) /
+      IMAGE_SCALE_FACTOR,
   });
 
   /**
@@ -448,7 +708,11 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
   const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
     const { naturalWidth, naturalHeight } = event.target as HTMLImageElement;
     setImageDimensions(
-      calculateDimensions(naturalWidth, naturalHeight, props.image_width ?? 100)
+      calculateDimensions(
+        naturalWidth,
+        naturalHeight,
+        props.image_width ?? IMAGE_SCALE_FACTOR
+      )
     );
   };
 
@@ -473,33 +737,36 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
     }
   };
 
-  const dialogWidth = Math.min(
+  const dialogWidthForText = Math.min(
     (widgetType === WidgetType.Multistep
       ? maxDimensions.current
       : imageDimensions
-    ).width + baseDialogDimensions.width,
-    screenWidth * maxSize
+    ).width + BASE_DIALOG_DIMENSIONS.width,
+    screenWidth * MAX_SIZE_FACTOR
   );
 
   const textHeight =
-    (calculateTextLines(props.dialog_text, dialogWidth) ?? 1) * lineHeight;
+    (calculateTextLines(props.dialog_text, dialogWidthForText) ?? 1) *
+    lineHeight;
   const step = props.widget_info?.steps?.[0];
   const textStepHeight = step?.info?.text
-    ? (calculateTextLines(step.info.text, dialogWidth) ?? 1) * lineHeight
+    ? (calculateTextLines(step.info.text, dialogWidthForText) ?? 1) * lineHeight
     : lineHeight * 2;
 
-  const dialogHeight = Math.max(
-    Math.min(
-      (widgetType === WidgetType.Multistep
-        ? maxDimensions.current.height + baseDialogDimensions.height
-        : imageDimensions.height) +
-        baseDialogDimensions.height +
-        textHeight +
-        textStepHeight,
-      screenHeight * maxSize
-    ),
-    screenHeight * minSize
-  );
+  const { width: dialogWidth, height: dialogHeight } =
+    calculateDialogDimensions(
+      widgetType,
+      maxDimensions.current,
+      imageDimensions,
+      BASE_DIALOG_DIMENSIONS,
+      screenWidth,
+      screenHeight,
+      MAX_SIZE_FACTOR,
+      MIN_SIZE_FACTOR,
+      textHeight,
+      textStepHeight,
+      hasHTML
+    );
 
   const imageStyle = {
     border: `${props.image_border ?? 0}px solid black`,
@@ -515,6 +782,8 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
 
   useEffect(() => {
     if (widgetType === WidgetType.Multistep) {
+      let htmlFound = false;
+
       const handleStepImageLoad = (
         image: HTMLImageElement,
         widthFactor: number
@@ -523,11 +792,11 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
 
         maxDimensions.current.width = Math.max(
           maxDimensions.current.width,
-          naturalWidth * (widthFactor / 100)
+          naturalWidth * (widthFactor / IMAGE_SCALE_FACTOR)
         );
         maxDimensions.current.height = Math.max(
           maxDimensions.current.height,
-          naturalHeight * (widthFactor / 100)
+          naturalHeight * (widthFactor / IMAGE_SCALE_FACTOR)
         );
         setStepImageDimensions(maxDimensions.current);
       };
@@ -539,9 +808,16 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
           const image = new Image();
           image.src = base64Src;
           image.onload = () =>
-            handleStepImageLoad(image, step.info.image?.width ?? 100);
+            handleStepImageLoad(
+              image,
+              step.info.image?.width ?? IMAGE_SCALE_FACTOR
+            );
+        }
+        if (step.info.html?.code_or_url) {
+          htmlFound = true;
         }
       });
+      setHasHTML(htmlFound);
     }
   }, [props.widget_info, widgetType]);
 
@@ -557,10 +833,10 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
           widgetType === WidgetType.Multistep ? `${dialogWidth}px` : "auto",
         height:
           widgetType === WidgetType.Multistep ? `${dialogHeight}px` : "auto",
-        minWidth: screenWidth * minSize,
-        minHeight: screenHeight * minSize,
-        maxWidth: screenWidth * maxSize,
-        maxHeight: screenHeight * maxSize,
+        minWidth: screenWidth * MIN_SIZE_FACTOR,
+        minHeight: screenHeight * MIN_SIZE_FACTOR,
+        maxWidth: screenWidth * MAX_SIZE_FACTOR,
+        maxHeight: screenHeight * MAX_SIZE_FACTOR,
         fontSize: `${props.font_size}px`,
       }}
     >
@@ -569,9 +845,9 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
         style={{
           wordWrap: "break-word",
           wordBreak: "break-word",
-          maxHeight: screenHeight * maxSize,
+          maxHeight: screenHeight * MAX_SIZE_FACTOR,
           overflowY: "auto",
-          maxWidth: screenWidth * maxSize,
+          maxWidth: screenWidth * MAX_SIZE_FACTOR,
           padding: "10px",
         }}
       >
@@ -580,124 +856,34 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
             {line}
           </p>
         ))}
-        {widgetType === WidgetType.TextInput && (
-          <TextInputComponent
-            inputText={inputText}
-            setInputText={setInputText}
-            handleKeyDown={handleKeyDown}
-            inputPlaceholder={inputPlaceholder}
-            type="text"
-          />
-        )}
-        {widgetType === WidgetType.NumericInput && (
-          <TextInputComponent
-            inputText={inputText}
-            setInputText={setInputText}
-            handleKeyDown={handleKeyDown}
-            inputPlaceholder={inputPlaceholder}
-            type="number"
-          />
-        )}
-        {widgetType === WidgetType.RadioButton && (
-          <RadioButtonComponent
-            fields={props.widget_info?.fields ?? []}
-            selectedRadioButton={selectedRadioButton}
-            setSelectedRadioButton={setSelectedRadioButton}
-            handleKeyDown={handleKeyDown}
-            fontSize={props.font_size ?? 12}
-          />
-        )}
-        {widgetType === WidgetType.Checkbox && (
-          <CheckboxComponent
-            fields={props.widget_info?.fields ?? []}
-            selectedCheckboxes={selectedCheckboxes}
-            setSelectedCheckboxes={setSelectedCheckboxes}
-            handleKeyDown={handleKeyDown}
-            fontSize={props.font_size ?? 12}
-          />
-        )}
-        {widgetType === WidgetType.Multistep && (
-          <Tabs id={props.title_bar}>
-            {props.widget_info?.steps?.map((step: Step) => (
-              <Tab
-                id={step.info?.title}
-                key={step.info?.title}
-                title={step.info?.title}
-                style={{ fontSize: `${props.font_size}px` }}
-                panel={
-                  <div className="step-container">
-                    <div className="step-content">
-                      {step.info?.text?.split("\n").map((line) => (
-                        <p key={line} style={{ textAlign: "left" }}>
-                          {line}
-                        </p>
-                      ))}
-                      {step.info.image && (
-                        <img
-                          src={`data:image/image;base64,${step.info.image?.base64}`}
-                          alt={""}
-                          style={{
-                            maxWidth: `${imageStepDimensions.width + baseDialogDimensions.width}px`,
-                            maxHeight: `${imageStepDimensions.height + baseDialogDimensions.height}px`,
-                            transform: `scale(${(step.info.image?.width ?? 100) / 100})`,
-                            transformOrigin: `top center`,
-                            ...imageStyle,
-                          }}
-                        />
-                      )}
-                      {step.info.html?.code_or_url &&
-                        step.info.html?.is_raw_html && (
-                          <iframe
-                            srcDoc={step.info.html?.code_or_url}
-                            height={
-                              (imageStepDimensions.height +
-                                baseDialogDimensions.height) *
-                              htmlHeightIndex *
-                              ((step.info.html?.width ?? 100) / 100)
-                            }
-                            width={
-                              (imageStepDimensions.width +
-                                baseDialogDimensions.width) *
-                              htmlWidthIndex *
-                              ((step.info.html?.width ?? 100) / 100)
-                            }
-                            style={{
-                              border: step.info.html?.border
-                                ? `${step.info.html?.border}px solid black`
-                                : "none",
-                            }}
-                            title="HTML Code"
-                          />
-                        )}
-                      {step.info.html?.code_or_url &&
-                        !step.info.html?.is_raw_html && (
-                          <iframe
-                            src={step.info.html?.code_or_url}
-                            height={
-                              (imageStepDimensions.height +
-                                baseDialogDimensions.height) *
-                              htmlHeightIndex *
-                              ((step.info.html?.width ?? 100) / 100)
-                            }
-                            width={
-                              (imageStepDimensions.width +
-                                baseDialogDimensions.width) *
-                              htmlWidthIndex *
-                              ((step.info.html?.width ?? 100) / 100)
-                            }
-                            style={{
-                              border: `${step.info.html?.border ?? 0}px solid black`,
-                            }}
-                            title="HTML Link"
-                          />
-                        )}
-                    </div>
-                  </div>
-                }
-              ></Tab>
-            ))}
-          </Tabs>
-        )}
+        {widgetType === WidgetType.TextInput &&
+          renderTextInput(props, inputText, setInputText, handleKeyDown)}
+        {widgetType === WidgetType.NumericInput &&
+          renderNumericInput(props, inputText, setInputText, handleKeyDown)}
+        {widgetType === WidgetType.RadioButton &&
+          renderRadioButton(
+            props,
+            selectedRadioButton,
+            setSelectedRadioButton,
+            handleKeyDown
+          )}
+        {widgetType === WidgetType.Checkbox &&
+          renderCheckbox(
+            props,
+            selectedCheckboxes,
+            setSelectedCheckboxes,
+            handleKeyDown
+          )}
+        {widgetType === WidgetType.Multistep &&
+          renderMultistep(
+            props,
+            imageStepDimensions,
+            BASE_DIALOG_DIMENSIONS,
+            HTML_IFRAME_SCALE_FACTOR,
+            HTML_IFRAME_WIDTH_FACTOR,
+            imageStyle,
+            maxSizeFactor
+          )}
         <p> </p>
         {props.image_base64 && (
           <div className="image-container">
@@ -708,58 +894,42 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
               style={{
                 width: `${props.image_width}%`,
                 height: `${props.image_width}%`,
-                maxWidth: `${dialogWidth - baseDialogDimensions.width / 2}px`,
-                maxHeight: `${dialogHeight - baseDialogDimensions.height / 2}px`,
+                maxWidth: `${dialogWidth - BASE_DIALOG_DIMENSIONS.width / 2}px`,
+                maxHeight: `${dialogHeight - BASE_DIALOG_DIMENSIONS.height / 2}px`,
                 objectFit: "scale-down",
-                transform: `scale(${(props.image_width ?? 100) / 100})`,
+                transform: `scale(${(props.image_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR})`,
                 transformOrigin: `top center`,
                 ...imageStyle,
               }}
             />
           </div>
         )}
-        {props.html_code && (
-          <iframe
-            srcDoc={props.html_code}
-            height={
-              screenHeight *
-              maxSize *
-              htmlHeightIndex *
-              ((props.html_width ?? 100) / 100)
-            }
-            width={
-              screenWidth *
-              maxSize *
-              htmlWidthIndex *
-              ((props.html_width ?? 100) / 100)
-            }
-            style={{
-              border: `${props.html_border ?? 0}px solid black`,
-            }}
-            title="HTML Code"
-          />
-        )}
-        {props.html_url && (
-          <iframe
-            src={props.html_url}
-            height={
-              screenHeight *
-              maxSize *
-              htmlHeightIndex *
-              ((props.html_width ?? 100) / 100)
-            }
-            width={
-              screenWidth *
-              maxSize *
-              htmlWidthIndex *
-              ((props.html_width ?? 100) / 100)
-            }
-            style={{
-              border: `${props.html_border ?? 0}px solid black`,
-            }}
-            title="HTML Link"
-          />
-        )}
+        {props.html_code &&
+          renderHTMLCode(
+            props.html_code,
+            screenHeight *
+              (screenWidth < screenHeight ? PHONE_SCALE_FACTOR : MONITOR_SCALE_FACTOR) * // Dynamic size factor
+              HTML_IFRAME_SCALE_FACTOR *
+              ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
+            screenWidth *
+              (screenWidth < screenHeight ? PHONE_SCALE_FACTOR : MONITOR_SCALE_FACTOR) * // Dynamic size factor
+              HTML_IFRAME_WIDTH_FACTOR *
+              ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
+            props.html_border ?? 0
+          )}
+        {props.html_url &&
+          renderHTMLLink(
+            props.html_url,
+            screenHeight *
+              (screenWidth < screenHeight ? PHONE_SCALE_FACTOR : MONITOR_SCALE_FACTOR) * // Dynamic size factor
+              HTML_IFRAME_SCALE_FACTOR *
+              ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
+            screenWidth *
+              (screenWidth < screenHeight ? PHONE_SCALE_FACTOR : MONITOR_SCALE_FACTOR) * // Dynamic size factor
+              HTML_IFRAME_WIDTH_FACTOR *
+              ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
+            props.html_border ?? 0
+          )}
       </div>
       <div className={Classes.DIALOG_FOOTER}>
         <Button
