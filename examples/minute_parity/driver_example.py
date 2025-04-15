@@ -1,5 +1,4 @@
 import datetime
-from hardpy import set_operator_message
 
 
 class DriverExample:
@@ -14,4 +13,4 @@ class DriverExample:
 
     def random_method(self):
         """Example of random method."""
-        pass
+        pass   # noqa: PIE790
