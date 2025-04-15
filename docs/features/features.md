@@ -96,3 +96,69 @@ The startup is described in the [Multiple Stand](./../examples/multiple_stands.m
 **HardPy** allows you to send test results to **StandCloud**, a data storage and analysis platform.
 See the [StandCloud](./../documentation/stand_cloud.md) section and the
 [StandCloud example](./../examples/stand_cloud.md) for more information.
+
+Here's the simplified version with your exact heading structure while removing the sub-headers:
+
+## Logging approaches in Hardpy
+
+Hardpy provides several methods for logging and user interaction during testing.
+Choose the appropriate method based on whether you need to store information in the database or just display messages to the operator.
+
+### Database logging with `set_message`
+
+Permanently stores log messages in the **reports** database.
+Messages without specified keys get auto-generated keys, while known keys update existing messages.
+Perfect for tracking test progress, recording measurements, system states, and verification results.
+
+```python
+def test_temperature_sensor():
+    temp = read_temperature()
+    if temp > 50:
+        set_message(f"Warning: High temperature {temp}°C", "temp_warning")
+    else:
+        set_message(f"Normal temperature {temp}°C")
+```
+
+### Interactive dialogs with `run_dialog_box`
+
+Creates dialog boxes for operator input with various widgets (text, numeric, checkboxes).
+Supports titles, images, and HTML content.
+Returns user responses for verification and updates statestore database.
+Essential for manual equipment verification, test configuration confirmation, and safety checks.
+
+```python
+def test_manual_calibration():
+    dialog = DialogBox(
+        dialog_text="Connect calibration device and press Confirm",
+        title_bar="Calibration Setup",
+        widget=RadioButtonWidget(options=["Ready", "Skip", "Abort"])
+    )
+    response = run_dialog_box(dialog)
+    assert response == "Ready", "Calibration was not confirmed"
+```
+
+### Operator messages with `set_operator_message`
+
+Displays non-interactive notifications without database storage.
+Supports titles, images, and HTML content, with optional blocking until dismissed.
+Ideal for equipment setup instructions, test phase transitions, and important warnings.
+
+```python
+def test_system_startup():
+    set_operator_message(
+        msg="Please power on all test equipment",
+        title="Initial Setup",
+        image=ImageComponent(address="assets/power_on.png"),
+        block=True
+    )
+```
+
+### Choosing the right method
+
+| Method                  | Database Storage | User Interaction | Best For |
+|-------------------------|------------------|------------------|----------|
+| `set_message`           | Yes              | No               | Permanent logs |
+| `run_dialog_box`        | No               | Yes              | Test steps requiring input |
+| `set_operator_message`  | No               | No               | Important notifications |
+
+**Remember:** For audit trails and test reports, always use `set_message` for critical information that needs to be preserved.
