@@ -112,27 +112,7 @@ def test_stand_info(module_log: logging.Logger):
     hardpy.set_stand_location("Moon")
     info = {
         "some_info": "123",
-        "stand_id": "ST-001",
-        "operator": "John Doe",
-        "temperature": "23.5°C",
-        "humidity": "45% RH",
-        "pressure": "101.3 kPa",
-        "voltage": "220 VAC",
-        "current": "5 A",
-        "firmware_version": "1.2.3",
-        "serial_number": "SN-123456",
-        "test_duration": "2 hours",
-        "power_rating": "1.1 kW",
-        "manufacturer": "SpaceTech Inc.",
-        "model": "X-2000",
-        "ip_address": "192.168.1.100",
-        "mac_address": "00:1A:2B:3C:4D:5E",
-        "last_calibration": "2023-11-15",
-        "next_calibration": "2024-11-15",
-        "safety_class": "Class A",
-        "operating_mode": "Automatic",
-        "battery_status": "85%",
-        "connection_type": "Ethernet"
+        "release": "1.0.0"
     }
     hardpy.set_stand_info(info)
     assert True
