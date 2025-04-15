@@ -56,6 +56,11 @@ def pytest_addoption(parser: Parser) -> None:
         default=con_data.database_url,
         help="database url",
     )
+    parser.addoption(
+        "--hardpy-tests-name",
+        action="store",
+        help="HardPy tests suite name",
+    )
     # TODO (xorialexandrov): Remove --hardpy-sp and --hardpy-sh in HardPy major version.
     # Addoptions left for compatibility with version 0.10.1 and below
     parser.addoption(
@@ -117,6 +122,7 @@ class HardpyPlugin:
         self._results = {}
         self._post_run_functions: list[Callable] = []
         self._dependencies = {}
+        self._tests_name: str = ""
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -133,6 +139,12 @@ class HardpyPlugin:
         database_url = config.getoption("--hardpy-db-url")
         if database_url:
             con_data.database_url = str(database_url)  # type: ignore
+
+        tests_name = config.getoption("--hardpy-tests-name")
+        if tests_name:
+            self._tests_name = str(tests_name)
+        else:
+            self._tests_name = str(PurePath(config.rootpath).name)
 
         is_clear_database = config.getoption("--hardpy-clear-database")
 
@@ -174,11 +186,11 @@ class HardpyPlugin:
     def pytest_collection_modifyitems(
         self,
         session: Session,
-        config: Config,
+        config: Config,  # noqa: ARG002
         items: list[Item],  # noqa: ARG002
     ) -> None:
         """Call after collection phase."""
-        self._reporter.init_doc(str(PurePath(config.rootpath).name))
+        self._reporter.init_doc(self._tests_name)
 
         nodes = {}
         modules = set()

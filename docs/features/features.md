@@ -21,13 +21,18 @@ Alternatively, the user can start the operator panel with the “Start” button
 python -m pytest
 ```
 
-The user can also run tests without the operator panel, just through pytest.
-This method may be appropriate if the user does not need the operator panel.
+The user can also run tests without the operator panel, just using the `hardpy start` command or
+using `pytest`.
 
 ## Stopping the tests
 
-The user can stop the tests during execution from the operator panel by clicking on the **Stop** button.
+The user can stop the tests during execution from the operator panel by clicking on the **Stop** button
+or using the `hardpy stop` command.
 It is possible to stop tests from the console by sending an interrupt, e.g. “Ctrl-C” in Linux.
+
+## Checking the status of tests
+
+The user can check the status of tests using the `hardpy status` command.
 
 ## Storing test result in database
 
