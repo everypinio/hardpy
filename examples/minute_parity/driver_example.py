@@ -14,7 +14,4 @@ class DriverExample:
 
     def random_method(self):
         """Example of random method."""
-        set_operator_message(
-            msg="Result of random method",
-            title="Random method",
-        )
+        pass
