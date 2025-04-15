@@ -36,7 +36,7 @@ The user can start/stop tests using the space key.
 
 ### Operator panel bar
 
-Displays key system status information in a compact tag-based format.
+Operator panel bar displays key system status information in a compact tag-based format.
 
 **Fields:**
 
