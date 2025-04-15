@@ -20,6 +20,7 @@ interface Suite {
 
 interface TestStand {
   name: string;
+  info: Record<string, unknown>;
 }
 
 interface DriversInfo {
@@ -154,6 +155,15 @@ export class SuiteList extends React.Component<Props> {
             <Tag minimal style={TAG_ELEMENT_STYLE}>
               Alert: {alert}
             </Tag>
+          )}
+          {db_state.test_stand?.info && Object.keys(db_state.test_stand.info).length > 0 && (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+              {Object.entries(db_state.test_stand.info).map(([key, value]) => (
+                <Tag key={key} minimal style={TAG_ELEMENT_STYLE}>
+                  Test stand {key}: {typeof value === 'string' ? value : JSON.stringify(value)}
+                </Tag>
+              ))}
+            </div>
           )}
           <Divider />
           {_.map([...module_names], (name: string, index: number) =>
