@@ -3,7 +3,7 @@
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
 * Add Stand info to Operator panel.
-  [[PR-](https://github.com/everypinio/hardpy/pull/)]
+  [[PR-127](https://github.com/everypinio/hardpy/pull/127)]
 
 ## HardPy 0.11.0
 
