@@ -56,7 +56,6 @@ Example of logging in a test function:
 def test_log(module_log: logging.Logger):
     module_log.info("DUT serial number logged")
     assert True
-
 ```
 
 ## Configuration
