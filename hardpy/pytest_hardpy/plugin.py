@@ -328,10 +328,13 @@ class HardpyPlugin:
 
     def pytest_runtest_logreport(self, report: TestReport) -> bool | None:
         """Call after call of each test item."""
-        if report.when != "call" and report.failed is False and report.skipped is False:
+        is_skipped_by_plugin: bool = False
+        if report.when == "setup" and report.skipped is True:
+            # plugin-skipped tests should not have start and stop times
+            is_skipped_by_plugin = True
+        elif report.when != "call" and report.failed is False:
             # ignore setup and teardown phase or continue processing setup
-            # ignore teardown failure (fixture exception handler)
-            # if test is skipped, create logreport
+            # and teardown failure (fixture exception handler)
             return True
 
         module_id = Path(report.fspath).stem
@@ -342,8 +345,8 @@ class HardpyPlugin:
             case_id,
             TestStatus(report.outcome),
         )
-        # update case stop_time in not skipped tests
-        if report.skipped is False:
+        # update case stop_time in non-skipped tests or user-skipped tests
+        if report.skipped is False or is_skipped_by_plugin is False:
             self._reporter.set_case_stop_time(module_id, case_id)
 
         assertion_msg = self._decode_assertion_msg(report.longrepr)
