@@ -2,6 +2,27 @@
 
 How to add logging to your tests using Python's built-in `logging` package.
 
+Python's built-in `logging` package provides a flexible way to add logging to your tests, which can help with debugging and monitoring test execution.
+
+Logging in tests is valuable because it:
+
+- Provides visibility into test execution flow
+- Helps diagnose failures by capturing context
+- Creates an audit trail of test operations
+- Enables performance monitoring
+- Facilitates troubleshooting in CI/CD pipelines
+
+The logs will be written to:
+
+- Console output
+- CI/CD system logs if running in a pipeline
+
+While Python's `logging` package is versatile, **HardPy** offers additional specialized logging methods:
+
+- [Database Logging with set_message](/features/#database-logging-with-set_message)
+- [Interactive Dialogs with run_dialog_box](/features/#interactive-dialogs-with-run_dialog_box) 
+- [Operator Messages with set_operator_message](/features/#operator-messages-with-set_operator_message)
+
 ## How to implement logging
 
 ### Basic setup
@@ -19,13 +40,6 @@ How to add logging to your tests using Python's built-in `logging` package.
     def module_log(request: pytest.FixtureRequest):
         log_name = request.module.__name__
         yield logging.getLogger(log_name)
-    ```
-
-3. Initialize the logger in your test class:
-
-    ```python
-    def __init__(self) -> None:
-        self._log = getLogger(__name__)
     ```
 
 ### Using the logger
