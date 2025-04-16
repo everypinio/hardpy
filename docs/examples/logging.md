@@ -19,9 +19,9 @@ The logs will be written to:
 
 While Python's `logging` package is versatile, **HardPy** offers additional specialized logging methods:
 
-- [Database Logging with set_message](/features/#database-logging-with-set_message)
-- [Interactive Dialogs with run_dialog_box](/features/#interactive-dialogs-with-run_dialog_box) 
-- [Operator Messages with set_operator_message](/features/#operator-messages-with-set_operator_message)
+- [Database Logging with set_message](./../features/features.md/#database-logging-with-set_message)
+- [Interactive Dialogs with run_dialog_box](./../features/features.md/#interactive-dialogs-with-run_dialog_box) 
+- [Operator Messages with set_operator_message](./../features/features.md/#operator-messages-with-set_operator_message)
 
 ## How to implement logging
 
