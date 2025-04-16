@@ -104,9 +104,9 @@ Here's the simplified version with your exact heading structure while removing t
 Hardpy provides several methods for logging and user interaction during testing.
 Choose the appropriate method based on whether you need to store information in the database or just display messages to the operator.
 
-### Database logging with `set_message`
+### Database logging with set_message
 
-Permanently stores log messages in the **reports** database.
+The [set_message](./../documentation/pytest_hardpy.md#set_message) function stores the log message in the report.
 Messages without specified keys get auto-generated keys, while known keys update existing messages.
 Perfect for tracking test progress, recording measurements, system states, and verification results.
 
@@ -119,11 +119,12 @@ def test_temperature_sensor():
         set_message(f"Normal temperature {temp}°C")
 ```
 
-### Interactive dialogs with `run_dialog_box`
+### Interactive dialogs with run_dialog_box
 
 Creates dialog boxes for operator input with various widgets (text, numeric, checkboxes).
 Supports titles, images, and HTML content.
-Returns user responses for verification and updates statestore database.
+Can be used to notify and interact with the user, but does not save the information in the report. 
+The user can save the information separately using the [set_case_artifact](./../documentation/pytest_hardpy.md#set_case_artifact),  [set_module_artifact](./../documentation/pytest_hardpy.md#set_module_artifact) or [set_run_artifact](./../documentation/pytest_hardpy.md#set_run_artifact) functions.
 Essential for manual equipment verification, test configuration confirmation, and safety checks.
 
 ```python
@@ -137,9 +138,10 @@ def test_manual_calibration():
     assert response == "Ready", "Calibration was not confirmed"
 ```
 
-### Operator messages with `set_operator_message`
+### Operator messages with set_operator_message
 
-Displays non-interactive notifications without database storage.
+Can be used to notify and interact with the user, but does not save the information in the report. 
+The user can save the information separately using the [set_case_artifact](./../documentation/pytest_hardpy.md#set_case_artifact),  [set_module_artifact](./../documentation/pytest_hardpy.md#set_module_artifact) or [set_run_artifact](./../documentation/pytest_hardpy.md#set_run_artifact) functions.
 Supports titles, images, and HTML content, with optional blocking until dismissed.
 Ideal for equipment setup instructions, test phase transitions, and important warnings.
 
@@ -161,4 +163,3 @@ def test_system_startup():
 | `run_dialog_box`        | No               | Yes              | Test steps requiring input |
 | `set_operator_message`  | No               | No               | Important notifications |
 
-**Remember:** For audit trails and test reports, always use `set_message` for critical information that needs to be preserved.
