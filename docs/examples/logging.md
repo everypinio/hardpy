@@ -33,16 +33,16 @@ How to add logging to your tests using Python's built-in `logging` package.
 You can call logging commands anywhere in your tests:
 
 ```python
-self._log.warning("Random method")
+self._log.warning("Saving user credentials for registration test case")
 ```
 
 Example of logging in a test function:
 
 ```python
-def test_dut_info(module_log: logging.Logger):
-    serial_number = str(uuid4())[:6]
-    module_log.info(f"DUT serial number {serial_number}")
+def test_log(module_log: logging.Logger):
+    module_log.info("DUT serial number logged")
     assert True
+
 ```
 
 ## Configuration
@@ -57,6 +57,8 @@ log_cli_format = %(asctime)s [%(levelname)s] %(message)s
 log_cli_date_format = %H:%M:%S
 ```
 
+You can find the description in [Pytest Live Logs Documentation](https://docs.pytest.org/en/7.1.x/how-to/logging.html#live-logs)
+
 ### Explanation of configuration options
 
 - `log_cli = true`: Enables logging output during test execution
@@ -66,31 +68,3 @@ log_cli_date_format = %H:%M:%S
   - `[%(levelname)s]`: Log level (INFO, WARNING, etc.)
   - `%(message)s`: The actual log message
 - `log_cli_date_format = %H:%M:%S`: Sets the timestamp format to hours:minutes:seconds
-
-## Log Levels
-
-Logging supports standard Python logging levels with these recommended use cases:
-
-- **`INFO`**: General test progress information
-
-  ```python
-  self._log.info("Test started with parameters: %s", params)
-  ```
-
-- **`WARNING`**: Non-critical issues that don't fail the test
-
-  ```python
-  self._log.warning("Temperature approaching limit: %d°C", current_temp)
-  ```
-
-- **`ERROR`**: Recoverable errors that may affect test results
-
-  ```python
-  self._log.error("Sensor read failed, using cached value")
-  ```
-
-- **`CRITICAL`**: Severe issues requiring immediate attention
-
-  ```python
-  self._log.critical("Safety limit exceeded! Shutting down")
-  ```

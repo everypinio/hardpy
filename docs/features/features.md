@@ -97,14 +97,12 @@ The startup is described in the [Multiple Stand](./../examples/multiple_stands.m
 See the [StandCloud](./../documentation/stand_cloud.md) section and the
 [StandCloud example](./../examples/stand_cloud.md) for more information.
 
-Here's the simplified version with your exact heading structure while removing the sub-headers:
+## Logging approaches in HardPy
 
-## Logging approaches in Hardpy
-
-Hardpy provides several methods for logging and user interaction during testing.
+**HardPy** provides several methods for logging and user interaction during testing.
 Choose the appropriate method based on whether you need to store information in the database or just display messages to the operator.
 
-### Database logging with `set_message`
+### Database logging with set_message
 
 Permanently stores log messages in the **reports** database.
 Messages without specified keys get auto-generated keys, while known keys update existing messages.
@@ -121,7 +119,7 @@ def test_temperature_sensor():
 
 ### Interactive dialogs with `run_dialog_box`
 
-Creates dialog boxes for operator input with various widgets (text, numeric, checkboxes).
+The [run_dialog_box](./../documentation/pytest_hardpy.md#run_dialog_box) function creates dialog boxes for operator input with various widgets (text, numeric, checkboxes).
 Supports titles, images, and HTML content.
 Returns user responses for verification and updates statestore database.
 Essential for manual equipment verification, test configuration confirmation, and safety checks.
@@ -139,7 +137,7 @@ def test_manual_calibration():
 
 ### Operator messages with `set_operator_message`
 
-Displays non-interactive notifications without database storage.
+The [set_operator_message](./../documentation/pytest_hardpy.md#set_operator_message) function displays non-interactive notifications without database storage.
 Supports titles, images, and HTML content, with optional blocking until dismissed.
 Ideal for equipment setup instructions, test phase transitions, and important warnings.
 

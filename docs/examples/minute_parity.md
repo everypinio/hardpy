@@ -58,8 +58,6 @@ import datetime
 from hardpy import set_operator_message
 
 class DriverExample:
-    """Driver example."""
-
     @property
     def current_minute(self):
         """Example of driver method."""
