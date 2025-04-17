@@ -289,9 +289,9 @@ class ImageComponent:
         try:
             with open(address, "rb") as file:  # noqa: PTH123
                 file_data = file.read()
-        except FileNotFoundError:
+        except FileNotFoundError as exc:
             msg = "The image address is invalid"
-            raise ImageError(msg)  # noqa: B904
+            raise ImageError(msg) from exc
         self.address = address
         self.width = width
         self.border = border

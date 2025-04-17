@@ -4,9 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from oauthlib.oauth2.rfc6749.errors import InvalidGrantError, TokenExpiredError
+from oauthlib.oauth2.rfc6749.errors import OAuth2Error
 from requests.exceptions import HTTPError
-from requests_oauth2client.tokens import ExpiredAccessToken
 
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
 from hardpy.pytest_hardpy.utils import ConnectionData
@@ -45,16 +44,14 @@ class StandCloudLoader:
         Raises:
             StandCloudError: if report not uploaded to StandCloud
         """
-        api = self._sc_connector.get_api("test_run")
+        api = self._sc_connector.get_api("test_report")
 
         try:
             resp = api.post(verify=self._verify_ssl, json=report.model_dump())
-        except ExpiredAccessToken as exc:
-            raise StandCloudError(str(exc))  # type: ignore
-        except TokenExpiredError as exc:
-            raise StandCloudError(exc.description)
-        except InvalidGrantError as exc:
-            raise StandCloudError(exc.description)
+        except RuntimeError as exc:
+            raise StandCloudError(str(exc)) from exc
+        except OAuth2Error as exc:
+            raise StandCloudError(exc.description) from exc
         except HTTPError as exc:
             return exc.response  # type: ignore
 

@@ -58,17 +58,17 @@ class CouchdbConfig:
 
         try:
             response = requests.get(host_url, timeout=5)
-        except requests.exceptions.RequestException:
+        except requests.exceptions.RequestException as exc:
             msg = f"Error CouchDB connecting to {host_url}."
-            raise RuntimeError(msg)  # noqa: B904
+            raise RuntimeError(msg) from exc
 
         # fmt: off
         try:
             couchdb_dict = ast.literal_eval(response._content.decode("utf-8"))  # type: ignore # noqa: SLF001
             couchdb_dict.get("couchdb", False)
-        except Exception:  # noqa: BLE001
+        except Exception as exc:
             msg = f"Address {host_url} does not provide CouchDB attributes."
-            raise RuntimeError(msg)  # noqa: B904
+            raise RuntimeError(msg) from exc
         # fmt: on
 
         credentials = f"{self.user}:{self.password}"
@@ -93,8 +93,6 @@ class CouchdbConfig:
                 if requests.get(request, timeout=5).status_code == success:
                     return "http"
                 raise OSError  # noqa: TRY301
-            except OSError:
+            except OSError as exc:
                 msg = f"Error connecting to couchdb server {self.host}:{self.port}."
-                raise RuntimeError(  # noqa: B904
-                    msg,
-                )
+                raise RuntimeError(msg) from exc
