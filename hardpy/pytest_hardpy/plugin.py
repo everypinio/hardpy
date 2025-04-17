@@ -268,8 +268,8 @@ class HardpyPlugin:
 
         status = TestStatus.RUN
         is_skip_test = self._is_skip_test(node_info)
+        self._reporter.set_module_start_time(node_info.module_id)
         if not is_skip_test:
-            self._reporter.set_module_start_time(node_info.module_id)
             self._reporter.set_case_start_time(node_info.module_id, node_info.case_id)
         else:
             status = TestStatus.SKIPPED
