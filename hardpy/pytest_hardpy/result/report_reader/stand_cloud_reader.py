@@ -17,9 +17,15 @@ if TYPE_CHECKING:
     from requests_oauth2client import ApiClient
 
 
-
 class StandCloudReader:
-    """StandCloud data reader."""
+    """StandCloud data reader.
+
+    The link to the documentation can be obtained by address:
+    https://service_name/integration/api/v1/docs
+
+    For example:
+    https://demo.standcloud.io/integration/api/v1/docs
+    """
 
     def __init__(self, sc_connector: StandCloudConnector) -> None:
         """Create StandCloud reader.
@@ -30,34 +36,38 @@ class StandCloudReader:
         self._verify_ssl = not __debug__
         self._sc_connector = sc_connector
 
-    def raw_request(self, endpoint: str, params: dict[str, Any] | None = None) -> Response:  # noqa: E501
-        """Raw request to StandCloud API.
-
-        The user defines the endpoint himself.
-        Not recommended for use, if there is a request for a specific endpoint.
-        """
-        api = self._build_api(endpoint=endpoint, params=params)
-        return self._request(api)
-
-    def tested_dut(self, params: dict[str, Any]) -> Response:
-        """Get tested DUT data from '/tested_dut' endpoint.
+    def test_run(self, run_id: str) -> Response:
+        """Get run data from '/test_run' endpoint.
 
         Args:
-            params (dict[str, Any]): _description_
+            run_id (str): UUIDv4 test run identifier.
+                Example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 
         Returns:
             Response: tested dut data.
         """
-        api = self._build_api(endpoint="tested_dut", params=params)
-        return self._request(api)
+        return self._request(endpoint=f"test_run/{run_id}")
 
-    def _build_api(self, endpoint: str, params: dict | None = None) -> ApiClient:
-        if params is None:
-            return self._sc_connector.get_api(f"{endpoint}")
-        encoded_params = urlencode(params)
-        return self._sc_connector.get_api(f"{endpoint}?{encoded_params}")
+    def tested_dut(self, params: dict[str, Any]) -> Response:
+        """Get tested DUT's data from '/tested_dut' endpoint.
 
-    def _request(self, api: ApiClient) -> Response:
+        Args:
+            params (dict[str, Any]): tested DUT filters:
+                Examples: {
+                    "test_stand_name": "Stand 1",
+                    "part_number": "part_number_1",
+                    "dut_info_filters": {
+                        "firmware_version": "1.2.3",
+                    }
+                }
+
+        Returns:
+            Response: tested dut data.
+        """
+        return self._request(endpoint="tested_dut", params=params)
+
+    def _request(self, endpoint: str, params: dict[str, Any] | None = None) -> Response:
+        api = self._build_api(endpoint=endpoint, params=params)
         try:
             resp = api.get(verify=self._verify_ssl)
         except RuntimeError as exc:
@@ -68,3 +78,9 @@ class StandCloudReader:
             return exc.response  # type: ignore
 
         return resp
+
+    def _build_api(self, endpoint: str, params: dict | None = None) -> ApiClient:
+        if params is None:
+            return self._sc_connector.get_api(f"{endpoint}")
+        encoded_params = urlencode(params)
+        return self._sc_connector.get_api(f"{endpoint}?{encoded_params}")
