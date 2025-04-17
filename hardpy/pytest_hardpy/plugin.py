@@ -470,21 +470,20 @@ class HardpyPlugin:
         dependency_tests = self._dependencies.get(
             TestDependencyInfo(node_info.module_id, node_info.case_id),
         )
-        is_dependency_test_failed = False
         if dependency_tests:
             wrong_status = {TestStatus.FAILED, TestStatus.SKIPPED, TestStatus.ERROR}
             for dependency_test in dependency_tests:
                 module_id, case_id = dependency_test
-                if case_id is not None:
-                    is_dependency_test_failed = (
-                        self._results[module_id][case_id] in wrong_status
-                    )
-                else:
-                    result_set = set(self._results[module_id].values())
-                    is_dependency_test_failed = any(
-                        status in wrong_status for status in result_set
-                    )
-        return bool(dependency_tests and is_dependency_test_failed)
+                try:
+                    if case_id is not None:
+                        if self._results[module_id][case_id] in wrong_status:
+                            return True
+                    else:
+                        if any(status in wrong_status for status in self._results[module_id].values()):
+                            return True
+                except KeyError:
+                    return True
+        return False
 
     def _add_dependency(self, node_info: NodeInfo, nodes: dict) -> None:
         dependencies = node_info.dependency
@@ -499,13 +498,7 @@ class HardpyPlugin:
                 error_message = f"Error: Case dependency '{dependency}' not found."
                 exit(error_message, 1)
 
-            test_dependency_info = TestDependencyInfo(module_id, case_id)
-            if self._dependencies.get(test_dependency_info) is None:
-                self._dependencies[test_dependency_info] = set(dependency)
-            else:
-                current_dependency: set = self._dependencies[test_dependency_info]
-                current_dependency.add(dependency)
-                self._dependencies[test_dependency_info] = current_dependency
-            # self._dependencies[
-            #     TestDependencyInfo(node_info.module_id, node_info.case_id)
-            # ] = dependency
+            test_key = TestDependencyInfo(node_info.module_id, node_info.case_id)
+            if test_key not in self._dependencies:
+                self._dependencies[test_key] = set()
+            self._dependencies[test_key].add(dependency)

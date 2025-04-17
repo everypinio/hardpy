@@ -532,3 +532,425 @@ def test_module_dependency_with_different_situations(
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=5, failed=1, skipped=8)
+
+
+def test_multiple_dependencies_mixed_results(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        test_1="""
+        import pytest
+
+        def test_one():
+            assert True
+        """,
+    )
+    pytester.makepyfile(
+        test_2="""
+        import pytest
+
+        def test_two():
+            assert False
+        """,
+    )
+    pytester.makepyfile(
+        test_3="""
+        import pytest
+
+        pytestmark = [
+            pytest.mark.dependency("test_1::test_one"),
+            pytest.mark.dependency("test_2::test_two"),
+        ]
+
+        def test_three():
+            assert True
+        """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1, failed=1, skipped=1)
+
+
+def test_multiple_dependencies_all_passed(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        test_1="""
+        import pytest
+
+        def test_one():
+            assert True
+        """,
+    )
+    pytester.makepyfile(
+        test_2="""
+        import pytest
+
+        def test_two():
+            assert True
+        """,
+    )
+    pytester.makepyfile(
+        test_3="""
+        import pytest
+
+        pytestmark = [
+            pytest.mark.dependency("test_1::test_one"),
+            pytest.mark.dependency("test_2::test_two"),
+        ]
+
+        def test_three():
+            assert True
+        """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=3)
+
+
+def test_multiple_dependencies_all_failed(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        test_1="""
+        import pytest
+
+        def test_one():
+            assert False
+        """,
+    )
+    pytester.makepyfile(
+        test_2="""
+        import pytest
+
+        def test_two():
+            assert False
+        """,
+    )
+    pytester.makepyfile(
+        test_3="""
+        import pytest
+
+        pytestmark = [
+            pytest.mark.dependency("test_1::test_one"),
+            pytest.mark.dependency("test_2::test_two"),
+        ]
+
+        def test_three():
+            assert True
+        """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(failed=2, skipped=1)
+
+
+def test_complex_dependency_chain(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        test_1="""
+        import pytest
+
+        def test_one():
+            assert True
+            
+        def test_two():
+            assert False
+        """,
+    )
+    pytester.makepyfile(
+        test_2="""
+        import pytest
+
+        pytestmark = pytest.mark.dependency("test_1::test_one")
+
+        def test_one():
+            assert True
+            
+        def test_two():
+            assert False
+        """,
+    )
+    pytester.makepyfile(
+        test_3="""
+        import pytest
+
+        pytestmark = [
+            pytest.mark.dependency("test_1::test_two"),
+            pytest.mark.dependency("test_2::test_one"),
+        ]
+
+        def test_one():
+            assert True
+            
+        def test_two():
+            assert True
+        """,
+    )
+    pytester.makepyfile(
+        test_4="""
+        import pytest
+
+        pytestmark = [
+            pytest.mark.dependency("test_3::test_one"),
+            pytest.mark.dependency("test_3::test_two"),
+        ]
+
+        def test_one():
+            assert True
+        """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=2, failed=2, skipped=3)
+
+def test_four_dependencies_all_passed(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        test_1="""
+        import pytest
+
+        def test_one():
+            assert True
+        """,
+    )
+    pytester.makepyfile(
+        test_2="""
+        import pytest
+
+        def test_two():
+            assert True
+        """,
+    )
+    pytester.makepyfile(
+        test_3="""
+        import pytest
+
+        def test_three():
+            assert True
+        """,
+    )
+    pytester.makepyfile(
+        test_4="""
+        import pytest
+
+        def test_four():
+            assert True
+        """,
+    )
+    pytester.makepyfile(
+        test_5="""
+        import pytest
+
+        pytestmark = [
+            pytest.mark.dependency("test_1::test_one"),
+            pytest.mark.dependency("test_2::test_two"),
+            pytest.mark.dependency("test_3::test_three"),
+            pytest.mark.dependency("test_4::test_four"),
+        ]
+
+        def test_five():
+            assert True
+        """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=5)
+
+
+def test_four_dependencies_one_failed(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        test_1="""
+        import pytest
+
+        def test_one():
+            assert True
+        """,
+    )
+    pytester.makepyfile(
+        test_2="""
+        import pytest
+
+        def test_two():
+            assert True
+        """,
+    )
+    pytester.makepyfile(
+        test_3="""
+        import pytest
+
+        def test_three():
+            assert True
+        """,
+    )
+    pytester.makepyfile(
+        test_4="""
+        import pytest
+
+        def test_four():
+            assert False
+        """,
+    )
+    pytester.makepyfile(
+        test_5="""
+        import pytest
+
+        pytestmark = [
+            pytest.mark.dependency("test_1::test_one"),
+            pytest.mark.dependency("test_2::test_two"),
+            pytest.mark.dependency("test_3::test_three"),
+            pytest.mark.dependency("test_4::test_four"),
+        ]
+
+        def test_five():
+            assert True
+        """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=3, failed=1, skipped=1)
+
+
+def test_four_dependencies_two_failed(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        test_1="""
+        import pytest
+
+        def test_one():
+            assert True
+        """,
+    )
+    pytester.makepyfile(
+        test_2="""
+        import pytest
+
+        def test_two():
+            assert False
+        """,
+    )
+    pytester.makepyfile(
+        test_3="""
+        import pytest
+
+        def test_three():
+            assert True
+        """,
+    )
+    pytester.makepyfile(
+        test_4="""
+        import pytest
+
+        def test_four():
+            assert False
+        """,
+    )
+    pytester.makepyfile(
+        test_5="""
+        import pytest
+
+        pytestmark = [
+            pytest.mark.dependency("test_1::test_one"),
+            pytest.mark.dependency("test_2::test_two"),
+            pytest.mark.dependency("test_3::test_three"),
+            pytest.mark.dependency("test_4::test_four"),
+        ]
+
+        def test_five():
+            assert True
+        """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=2, failed=2, skipped=1)
+
+
+def test_four_dependencies_all_failed(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        test_1="""
+        import pytest
+
+        def test_one():
+            assert False
+        """,
+    )
+    pytester.makepyfile(
+        test_2="""
+        import pytest
+
+        def test_two():
+            assert False
+        """,
+    )
+    pytester.makepyfile(
+        test_3="""
+        import pytest
+
+        def test_three():
+            assert False
+        """,
+    )
+    pytester.makepyfile(
+        test_4="""
+        import pytest
+
+        def test_four():
+            assert False
+        """,
+    )
+    pytester.makepyfile(
+        test_5="""
+        import pytest
+
+        pytestmark = [
+            pytest.mark.dependency("test_1::test_one"),
+            pytest.mark.dependency("test_2::test_two"),
+            pytest.mark.dependency("test_3::test_three"),
+            pytest.mark.dependency("test_4::test_four"),
+        ]
+
+        def test_five():
+            assert True
+        """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(failed=4, skipped=1)
+
+
+def test_four_dependencies_with_module_level(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        test_1="""
+        import pytest
+
+        def test_one():
+            assert True
+            
+        def test_two():
+            assert False
+        """,
+    )
+    pytester.makepyfile(
+        test_2="""
+        import pytest
+
+        pytestmark = pytest.mark.dependency("test_1::test_one")
+
+        def test_one():
+            assert True
+            
+        def test_two():
+            assert False
+        """,
+    )
+    pytester.makepyfile(
+        test_3="""
+        import pytest
+
+        def test_one():
+            assert True
+            
+        def test_two():
+            assert True
+        """,
+    )
+    pytester.makepyfile(
+        test_4="""
+        import pytest
+
+        pytestmark = [
+            pytest.mark.dependency("test_1::test_two"),
+            pytest.mark.dependency("test_2::test_one"),
+            pytest.mark.dependency("test_3::test_one"),
+            pytest.mark.dependency("test_3::test_two"),
+        ]
+
+        def test_one():
+            assert True
+        """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=4, failed=2, skipped=1)

@@ -142,7 +142,6 @@ class NodeInfo:
             list[TestDependencyInfo] | None: Dependency information
         """
         dependency_value = self._get_human_names(markers, "dependency")
-        # dependency_value = self._get_human_name(markers, "dependency")
         dependencies = []
         for dependency in dependency_value:
             dependency_data = re.search(r"(\w+)::(\w+)", dependency)
@@ -150,10 +149,11 @@ class NodeInfo:
                 dependencies.append(TestDependencyInfo(*dependency_data.groups()))
             elif re.search(r"^\w+$", dependency):
                 dependencies.append(TestDependencyInfo(dependency, None))
-            elif dependency_data is None and dependency_value == "":
-                pass
+            elif not dependency:
+                continue
+            else:
+                raise ValueError(f"Invalid dependency format: {dependency}")
         return dependencies if dependencies else None
-        # raise ValueError
 
     def _get_attempt(self, markers: list[Mark]) -> int:
         """Get the number of attempts.
