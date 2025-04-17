@@ -58,11 +58,12 @@ class StandCloudConnector:
         """Create StandCLoud loader.
 
         Args:
-            addr (str | None, optional): StandCloud address.
-            The option only for development and debug. Defaults to True.
+            addr (str): StandCloud service name.
             api_mode (StandCloudAPIMode): StandCloud API mode,
-            hardpy for test stand, integration for third-party service.
-            api_version (int): StandCloud API version
+                hardpy for test stand, integration for third-party service.
+                Default: StandCloudAPIMode.HARDPY.
+            api_version (int): StandCloud API version.
+                Default: 1.
         """
         https_prefix = "https://"
         auth_addr = addr + "/auth"

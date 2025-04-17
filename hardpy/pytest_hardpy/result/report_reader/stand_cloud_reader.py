@@ -44,7 +44,7 @@ class StandCloudReader:
                 Example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 
         Returns:
-            Response: tested dut data.
+            Response: test run data.
         """
         return self._request(endpoint=f"test_run/{run_id}")
 
