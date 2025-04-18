@@ -627,7 +627,7 @@ For more information, see the example [StandCloud reader](./../examples/stand_cl
 - `test_run` *(run_id: str)* - get run data from `/test_run` endpoint.
   Return `requests.Response` class with test run data.
 - `tested_dut` *(params: dict[str, Any])* - get tested DUT's data from `/tested_dut` endpoint.
-  All tested dut's filters can view in REST docum
+  All tested dut's filters can view in REST documentation.
 
 **Examples:**
 

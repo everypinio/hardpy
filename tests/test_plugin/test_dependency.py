@@ -519,7 +519,7 @@ def test_last_case_skip_from_2_file(pytester: Pytester, hardpy_opts: list[str]):
     result.assert_outcomes(passed=0, failed=1, skipped=1)
 
 
-def test_penultimate_case_skip_from_2_file(pytester: Pytester, hardpy_opts: list[str]):
+def test_penultimate_case_skip_from_second_file(pytester: Pytester, hardpy_opts: list[str]):
     """Check module stop time.
 
     PR-129: https://github.com/everypinio/hardpy/pull/129

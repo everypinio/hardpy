@@ -6,9 +6,9 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
   [PR-131](https://github.com/everypinio/hardpy/pull/131)
 * Add `StandCloudReader` class for reading data from **StandCloud**.
   [PR-131](https://github.com/everypinio/hardpy/pull/131)
-* Fix the behavioral with empty module start time with skipped test.
+* Fix the behavior with empty module start time with skipped test.
   [PR-131](https://github.com/everypinio/hardpy/pull/131)
-* Fix the behavioral with empty module stop time with skipped test.
+* Fix the behavior with empty module stop time with skipped test.
   [PR-129](https://github.com/everypinio/hardpy/pull/129)
 * Add the `tests_name` field to **hardpy.toml**.
   The `tests_name` allows to name the test suite in the operator panel. [[PR-126](https://github.com/everypinio/hardpy/pull/126)]
