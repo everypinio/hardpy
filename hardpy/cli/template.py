@@ -132,10 +132,6 @@ headers = accept, authorization, content-type, origin, referer, x-csrf-token
 """  # noqa: E501
 
 pytest_ini = """[pytest]
-log_cli = true
-log_cli_level = INFO
-log_cli_format = %%(asctime)s [%%(levelname)s] %%(message)s
-log_cli_date_format = %H:%M:%S
 addopts = --hardpy-pt
           --hardpy-db-url http://{}:{}@{}:{}/
 """
