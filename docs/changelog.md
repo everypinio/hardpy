@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## HardPy 0.11.1
+
 * Change **StandCloud** URL for publish test report to `/test_report`.
   [PR-131](https://github.com/everypinio/hardpy/pull/131)
 * Add `StandCloudReader` class for reading data from **StandCloud**.
