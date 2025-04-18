@@ -124,8 +124,7 @@ By default, it stops tests in the current directory.
 
 ## hardpy status
 
-The `hardpy status` command is used to stop **HardPy** tests while the **HardPy** opener panel is running.
-By default, it stops tests in the current directory.
+The `hardpy status` command is used to get **HardPy** tests launch status.
 
 ```bash
  Usage: hardpy status [OPTIONS] [TESTS_DIR]

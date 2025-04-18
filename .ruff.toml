@@ -74,8 +74,6 @@ indent-width = 4
             "BLE001"  # bare except
         ]
         "hardpy/cli/template.py" = ["D102"]
-        "hardpy/pytest_hardpy/result/report_loader/stand_cloud_loader.py" = ["B904"] # raise ... from err
-        "hardpy/common/stand_cloud/connector.py" = ["B904"] # raise ... from err
         "hardpy/common/stand_cloud/registration.py" = [
             "T201",     # using print
             "E501"      # enable long lines
