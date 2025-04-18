@@ -72,6 +72,7 @@ Run **docker compose** in the root directory to launch DB.
 ```bash
 docker compose up
 ```
+
 To stop the database, run the command:
 
 ```bash
@@ -125,6 +126,7 @@ Run **docker compose** in the root directory to launch DB.
 ```bash
 docker compose up
 ```
+
 To stop the database, run the command:
 
 ```bash

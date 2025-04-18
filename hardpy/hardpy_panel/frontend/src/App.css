@@ -23,3 +23,30 @@
 html {
   height: inherit;
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8f8f8;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #f8f8f8;
+  border-radius: 5px;
+  border: 2px solid #f8f8f8;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #bbb;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
