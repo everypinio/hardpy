@@ -70,7 +70,7 @@ log_cli_format = %(asctime)s [%(levelname)s] %(message)s
 log_cli_date_format = %H:%M:%S
 ```
 
-You can find the description in [Pytest Live Logs Documentation](https://docs.pytest.org/en/7.1.x/how-to/logging.html#live-logs)
+You can find the description in [How to manage logging](https://docs.pytest.org/en/latest/how-to/logging.html)
 
 ### Explanation of configuration options
 
