@@ -152,7 +152,8 @@ class NodeInfo:
             elif not dependency:
                 continue
             else:
-                raise ValueError(f"Invalid dependency format: {dependency}")
+                error_msg = "Invalid dependency format: {0}".format(dependency)
+                raise ValueError(error_msg)
         return dependencies if dependencies else None
 
     def _get_attempt(self, markers: list[Mark]) -> int:

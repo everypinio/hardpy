@@ -478,9 +478,8 @@ class HardpyPlugin:
                     if case_id is not None:
                         if self._results[module_id][case_id] in wrong_status:
                             return True
-                    else:
-                        if any(status in wrong_status for status in self._results[module_id].values()):
-                            return True
+                    elif any(status in wrong_status for status in self._results[module_id].values()):  # noqa: E501
+                        return True
                 except KeyError:
                     return True
         return False

@@ -534,7 +534,7 @@ def test_module_dependency_with_different_situations(
     result.assert_outcomes(passed=5, failed=1, skipped=8)
 
 
-def test_multiple_dependencies_mixed_results(pytester: Pytester, hardpy_opts: list[str]):
+def test_multiple_dependencies_mixed_results(pytester: Pytester, hardpy_opts: list[str]):  # noqa: E501
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -643,7 +643,7 @@ def test_complex_dependency_chain(pytester: Pytester, hardpy_opts: list[str]):
 
         def test_one():
             assert True
-            
+
         def test_two():
             assert False
         """,
@@ -656,7 +656,7 @@ def test_complex_dependency_chain(pytester: Pytester, hardpy_opts: list[str]):
 
         def test_one():
             assert True
-            
+
         def test_two():
             assert False
         """,
@@ -672,7 +672,7 @@ def test_complex_dependency_chain(pytester: Pytester, hardpy_opts: list[str]):
 
         def test_one():
             assert True
-            
+
         def test_two():
             assert True
         """,
@@ -901,14 +901,14 @@ def test_four_dependencies_all_failed(pytester: Pytester, hardpy_opts: list[str]
     result.assert_outcomes(failed=4, skipped=1)
 
 
-def test_four_dependencies_with_module_level(pytester: Pytester, hardpy_opts: list[str]):
+def test_four_dependencies_with_module_level(pytester: Pytester, hardpy_opts: list[str]):  # noqa: E501
     pytester.makepyfile(
         test_1="""
         import pytest
 
         def test_one():
             assert True
-            
+
         def test_two():
             assert False
         """,
@@ -921,7 +921,7 @@ def test_four_dependencies_with_module_level(pytester: Pytester, hardpy_opts: li
 
         def test_one():
             assert True
-            
+
         def test_two():
             assert False
         """,
