@@ -16,7 +16,6 @@ If a test case/module that a test case/module depends on fails, errors or is ski
 A module is considered passed only if all module tests passed.
 If these dependencies are incorrect, the tests will not run.
 
-
 To use:
 
 - Add the line `@pytest.mark.dependency()` before independent tests.
@@ -82,14 +81,14 @@ def test_one():
     assert True
 
 def test_two():
-    assert False
-
-def test_three():
     assert True
 
-@pytest.mark.dependency(
-    depends=["test_1::test_one", "test_1::test_two", "test_1::test_three"]
-)
+def test_three():
+    assert False
+
+@pytest.mark.dependency("test_1::test_one")
+@pytest.mark.dependency("test_1::test_two")
+@pytest.mark.dependency("test_1::test_three")
 def test_four():
     assert True
 ```

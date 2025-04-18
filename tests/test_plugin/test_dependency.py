@@ -533,6 +533,32 @@ def test_module_dependency_with_different_situations(
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=5, failed=1, skipped=8)
 
+def test_multiple_tests_dependencies(
+    pytester: Pytester,
+    hardpy_opts: list[str],
+):
+    pytester.makepyfile(
+        test_1="""
+        import pytest
+
+        def test_one():
+            assert True
+
+        def test_two():
+            assert True
+
+        def test_three():
+            assert False
+
+        @pytest.mark.dependency("test_1::test_one")
+        @pytest.mark.dependency("test_1::test_two")
+        @pytest.mark.dependency("test_1::test_three")
+        def test_four():
+            assert True
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=2, failed=1, skipped=1)
 
 def test_multiple_dependencies_mixed_results(pytester: Pytester, hardpy_opts: list[str]):  # noqa: E501
     pytester.makepyfile(
