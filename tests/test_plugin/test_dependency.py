@@ -980,3 +980,57 @@ def test_four_dependencies_with_module_level(pytester: Pytester, hardpy_opts: li
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=4, failed=2, skipped=1)
+
+def test_four_dependencies_with_error(pytester: Pytester, hardpy_opts: list[str]):  # noqa: E501
+    pytester.makepyfile(
+        test_1="""
+        import pytest
+
+        def test_one():
+            assert True
+
+        def test_two():
+            assert False
+        """,
+    )
+    pytester.makepyfile(
+        test_2="""
+        import pytest
+
+        pytestmark = pytest.mark.dependency("test_1::test_one")
+
+        def test_one():
+            assert True
+
+        def test_two():
+            assert False
+        """,
+    )
+    pytester.makepyfile(
+        test_3="""
+        import pytest
+
+        def test_one():
+            assert True
+
+        def test_two():
+            assert True
+        """,
+    )
+    pytester.makepyfile(
+        test_4="""
+        import pytest
+
+        pytestmark = [
+            pytest.mark.dependency("test_1::test_two"),
+            pytest.mark.dependency("test_2::test_one"),
+            pytest.mark.dependency("test_3::test_one"),
+            pytest.mark.dependency("test_3::test_t"),
+        ]
+
+        def test_one():
+            assert True
+        """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes()

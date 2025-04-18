@@ -81,20 +81,16 @@ def test_one():
     assert True
 
 def test_two():
-    assert True
-
-def test_three():
     assert False
 
 @pytest.mark.dependency("test_1::test_one")
 @pytest.mark.dependency("test_1::test_two")
-@pytest.mark.dependency("test_1::test_three")
-def test_four():
+def test_three():
     assert True
 ```
 
-In this case, `test_four` depends on three other tests.
-Since `test_two` fails, `test_four` will be skipped.
+In this case, `test_three` depends on two other tests.
+Since `test_two` fails, `test_three` will be skipped.
 
 #### multiple module dependencies example
 
