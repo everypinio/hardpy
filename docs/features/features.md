@@ -3,6 +3,7 @@
 ## Viewing tests in the operator panel
 
 The operator panel allows you to view the test hierarchy with **test folder/test file/function** levels.
+See the [HardPy panel](./../documentation/hardpy_panel.md) for more information.
 User can launch operator panel using [hardpy run](./../documentation/cli.md#hardpy-run) command.
 
 ## Running tests
