@@ -60,12 +60,10 @@ from hardpy import set_operator_message
 class DriverExample:
     @property
     def current_minute(self):
-        """Example of driver method."""
         current_time = datetime.datetime.now()
         return int(current_time.strftime("%M"))
 
     def random_method(self):
-        """Example of random method."""
         pass
 ```
 

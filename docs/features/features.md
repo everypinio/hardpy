@@ -159,8 +159,5 @@ def test_system_startup():
 | Method                  | Database Storage | User Interaction | Best For |
 |-------------------------|------------------|------------------|----------|
 | `set_message`           | Yes              | No               | Permanent logs |
-| `set_case_artifact`           | Yes              | No               | Permanent logs |
-| `set_module_artifact`           | Yes              | No               | Permanent logs |
-| `set_run_artifact`           | Yes              | No               | Permanent logs |
 | `run_dialog_box`        | No               | Yes              | Test steps requiring input |
 | `set_operator_message`  | No               | No               | Important notifications |
