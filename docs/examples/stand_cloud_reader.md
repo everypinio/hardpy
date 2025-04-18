@@ -13,7 +13,7 @@ Example of documentation page address: https://demo.standcloud.io/integration/ap
 
 To access **StandCloud**, contact **info@everypin.io**.
 
-## Readable data
+## Functions
 
 ### test_run
 
