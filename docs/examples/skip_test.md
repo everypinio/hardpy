@@ -16,7 +16,6 @@ If a test case/module that a test case/module depends on fails, errors or is ski
 A module is considered passed only if all module tests passed.
 If these dependencies are incorrect, the tests will not run.
 
-
 To use:
 
 - Add the line `@pytest.mark.dependency()` before independent tests.
@@ -68,3 +67,60 @@ def test_one():
 
 Module `test_2` depends on module `test_1`.
 If an error occurs in module `test_1`, all tests in module `test_2` will be skipped.
+
+#### multiple test dependencies example
+
+You can specify multiple dependencies for a single test or module.
+The test will only run if ALL specified dependencies are successful.
+If any dependency fails, the test will be skipped.
+
+```python
+import pytest
+
+def test_one():
+    assert True
+
+def test_two():
+    assert False
+
+@pytest.mark.dependency("test_1::test_one")
+@pytest.mark.dependency("test_1::test_two")
+def test_three():
+    assert True
+```
+
+In this case, `test_three` depends on two other tests.
+Since `test_two` fails, `test_three` will be skipped.
+
+#### multiple module dependencies example
+
+##### test_1.py
+
+```python
+def test_one():
+    assert True
+```
+
+##### test_2.py
+
+```python
+def test_two():
+    assert False
+```
+
+##### test_3.py
+
+```python
+import pytest
+
+pytestmark = [
+    pytest.mark.dependency("test_1"),
+    pytest.mark.dependency("test_2"),
+]
+
+def test_three():
+    assert True
+```
+
+Here, the entire `test_3` module depends on both `test_1` and `test_2` modules.
+Since `test_2` fails, all tests in `test_3` will be skipped.
