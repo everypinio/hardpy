@@ -68,3 +68,64 @@ def test_one():
 
 Module `test_2` depends on module `test_1`.
 If an error occurs in module `test_1`, all tests in module `test_2` will be skipped.
+
+#### multiple test dependencies example
+
+You can specify multiple dependencies for a single test or module.
+The test will only run if ALL specified dependencies are successful.
+If any dependency fails, the test will be skipped.
+
+```python
+import pytest
+
+def test_one():
+    assert True
+
+def test_two():
+    assert False
+
+def test_three():
+    assert True
+
+@pytest.mark.dependency(
+    depends=["test_1::test_one", "test_1::test_two", "test_1::test_three"]
+)
+def test_four():
+    assert True
+```
+
+In this case, `test_four` depends on three other tests.
+Since `test_two` fails, `test_four` will be skipped.
+
+#### multiple module dependencies example
+
+##### test_1.py
+
+```python
+def test_one():
+    assert True
+```
+
+##### test_2.py
+
+```python
+def test_two():
+    assert False
+```
+
+##### test_3.py
+
+```python
+import pytest
+
+pytestmark = [
+    pytest.mark.dependency("test_1"),
+    pytest.mark.dependency("test_2"),
+]
+
+def test_three():
+    assert True
+```
+
+Here, the entire `test_3` module depends on both `test_1` and `test_2` modules.
+Since `test_2` fails, all tests in `test_3` will be skipped.

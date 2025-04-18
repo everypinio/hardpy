@@ -2,6 +2,9 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add the ability to add dependency from multiple tests.
+  [[PR-130](https://github.com/everypinio/hardpy/pull/130)]
+
 ## HardPy 0.11.0
 
 * Remove the internal **HardPy** socket on port 6525. Pytest plugin arguments `--hardpy-sh` and `--hardpy-sp`
