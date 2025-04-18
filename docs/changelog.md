@@ -2,6 +2,7 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add Stand info to Operator panel. [[PR-127](https://github.com/everypinio/hardpy/pull/127)]
 * Fix the behavioral with empty module stop time with skipped test.
   [PR-129](https://github.com/everypinio/hardpy/pull/129)
 * Add the `tests_name` field to **hardpy.toml**.
