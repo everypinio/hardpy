@@ -56,9 +56,7 @@ class StandCloudReader:
                 Examples: {
                     "test_stand_name": "Stand 1",
                     "part_number": "part_number_1",
-                    "dut_info_filters": {
-                        "firmware_version": "1.2.3",
-                    }
+                    "firmware_version": "1.2.3",
                 }
 
         Returns:

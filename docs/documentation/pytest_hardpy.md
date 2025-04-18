@@ -616,6 +616,7 @@ Used to create the **StandCloud** connection addresses.
 
 Used to read data from the **StandCloud**.
 A login to **StandCloud** is required to work.
+For more information, see the example [StandCloud reader](./../examples/stand_cloud_reader.md)
 
 **Arguments:**
 
@@ -626,6 +627,7 @@ A login to **StandCloud** is required to work.
 - `test_run` *(run_id: str)* - get run data from `/test_run` endpoint.
   Return `requests.Response` class with test run data.
 - `tested_dut` *(params: dict[str, Any])* - get tested DUT's data from `/tested_dut` endpoint.
+  All tested dut's filters can view in REST docum
 
 **Examples:**
 
@@ -637,7 +639,7 @@ A login to **StandCloud** is required to work.
     response_data = response.json()
     print(response_data)
 
-    param = {"part_number": "part_number_1", "status": "pass", "dut_info_filters": {"firmware_version": "1.2.3"}}
+    param = {"part_number": "part_number_1", "status": "pass", "firmware_version": "1.2.3"}
     response = reader.tested_dut(param)
     status_code = response.status_code
     response_data = response.json()
