@@ -559,6 +559,7 @@ def fill_actions_after_test(post_run_functions: list):
 #### StandCloudLoader
 
 Used to write reports to the **StandCloud**.
+A login to **StandCloud** is required to work.
 
 **Arguments:**
 
@@ -595,6 +596,54 @@ def finish_executing():
 def fill_actions_after_test(post_run_functions: list):
     post_run_functions.append(finish_executing)
     yield
+```
+
+#### StandCloudConnector
+
+Used to create the **StandCloud** connection addresses.
+
+**Arguments:**
+
+- `addr` *(str)*: StandCloud service name.
+  For example: **demo.standcloud.io**
+- `api_mode` *(StandCloudAPIMode)*: StandCloud API mode:
+  **hardpy** for test stand, **integration** for third-party service.
+  Default: `StandCloudAPIMode.HARDPY`
+- `api_version` *(int)*: StandCloud API version.
+  Default: 1.
+
+#### StandCloudReader
+
+Used to read data from the **StandCloud**.
+A login to **StandCloud** is required to work.
+For more information, see the example [StandCloud reader](./../examples/stand_cloud_reader.md)
+
+**Arguments:**
+
+- `sc_connector` ([StandCloudConnector](#standcloudconnector)): **StandCloud** connection data.
+
+**Functions:**
+
+- `test_run` *(run_id: str)* - get run data from `/test_run` endpoint.
+  Return `requests.Response` class with test run data.
+- `tested_dut` *(params: dict[str, Any])* - get tested DUT's data from `/tested_dut` endpoint.
+  All tested dut's filters can view in REST documentation.
+
+**Examples:**
+
+```python
+    reader = StandCloudReader(StandCloudConnector(addr="demo.standcloud.io"))
+
+    response = reader.test_run("0196434d-e8f7-7ce1-81f7-e16f20487494")
+    status_code = response.status_code
+    response_data = response.json()
+    print(response_data)
+
+    param = {"part_number": "part_number_1", "status": "pass", "firmware_version": "1.2.3"}
+    response = reader.tested_dut(param)
+    status_code = response.status_code
+    response_data = response.json()
+    print(response_data)
 ```
 
 ## Fixture
@@ -700,6 +749,15 @@ The default is `http://dev:dev@localhost:5984/`.
 
 ```bash
 --hardpy-db-url
+```
+
+#### hardpy-tests-name
+
+The **HardPy** tests name.
+The default value is **Tests**.
+
+```bash
+--hardpy-tests-name
 ```
 
 #### hardpy-clear-database

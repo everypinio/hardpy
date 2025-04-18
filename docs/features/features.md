@@ -3,6 +3,7 @@
 ## Viewing tests in the operator panel
 
 The operator panel allows you to view the test hierarchy with **test folder/test file/function** levels.
+See the [HardPy panel](./../documentation/hardpy_panel.md) for more information.
 User can launch operator panel using [hardpy run](./../documentation/cli.md#hardpy-run) command.
 
 ## Running tests
@@ -21,13 +22,18 @@ Alternatively, the user can start the operator panel with the “Start” button
 python -m pytest
 ```
 
-The user can also run tests without the operator panel, just through pytest.
-This method may be appropriate if the user does not need the operator panel.
+The user can also run tests without the operator panel, just using the `hardpy start` command or
+using `pytest`.
 
 ## Stopping the tests
 
-The user can stop the tests during execution from the operator panel by clicking on the **Stop** button.
+The user can stop the tests during execution from the operator panel by clicking on the **Stop** button
+or using the `hardpy stop` command.
 It is possible to stop tests from the console by sending an interrupt, e.g. “Ctrl-C” in Linux.
+
+## Checking the status of tests
+
+The user can check the status of tests using the `hardpy status` command.
 
 ## Storing test result in database
 
@@ -93,6 +99,11 @@ The startup is described in the [Multiple Stand](./../examples/multiple_stands.m
 
 ## Storing test result to StandCloud
 
-**HardPy** allows you to send test results to **StandCloud**, a data storage and analysis platform.
+**HardPy** allows user to send test results to **StandCloud**, a data storage and analysis platform.
 See the [StandCloud](./../documentation/stand_cloud.md) section and the
 [StandCloud example](./../examples/stand_cloud.md) for more information.
+
+## Reading test result from StandCloud
+
+**HardPy** allows user to read test result from **StandCloud**.
+See the [StandCloud reader](./../examples/stand_cloud_reader.md) for more information.

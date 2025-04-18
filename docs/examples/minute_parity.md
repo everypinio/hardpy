@@ -112,6 +112,7 @@ def test_stand_info(module_log: logging.Logger):
     hardpy.set_stand_location("Moon")
     info = {
         "some_info": "123",
+        "release": "1.0.0"
     }
     hardpy.set_stand_info(info)
     assert True
