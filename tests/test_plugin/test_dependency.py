@@ -932,7 +932,7 @@ def test_four_dependencies_with_module_level(pytester: Pytester, hardpy_opts: li
 
         def test_one():
             assert True
-            
+
         def test_two():
             assert True
         """,

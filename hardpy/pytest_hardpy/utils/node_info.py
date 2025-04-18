@@ -152,7 +152,7 @@ class NodeInfo:
             elif not dependency:
                 continue
             else:
-                error_msg = "Invalid dependency format: {0}".format(dependency)
+                error_msg = f"Invalid dependency format: {dependency}"
                 raise ValueError(error_msg)
         return dependencies if dependencies else None
 
