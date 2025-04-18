@@ -2,6 +2,12 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Change **StandCloud** URL for publish test report to `/test_report`.
+  [PR-131](https://github.com/everypinio/hardpy/pull/131)
+* Add `StandCloudReader` class for reading data from **StandCloud**.
+  [PR-131](https://github.com/everypinio/hardpy/pull/131)
+* Fix the behavioral with empty module start time with skipped test.
+  [PR-131](https://github.com/everypinio/hardpy/pull/131)
 * Fix the behavioral with empty module stop time with skipped test.
   [PR-129](https://github.com/everypinio/hardpy/pull/129)
 * Add the `tests_name` field to **hardpy.toml**.
