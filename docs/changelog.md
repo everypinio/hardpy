@@ -6,6 +6,8 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
   [[PR-122](https://github.com/everypinio/hardpy/pull/122)]
 * Remove bug with scrolling tests with operator messages.
   [[PR-122](https://github.com/everypinio/hardpy/pull/122)]
+  * Logging to **pytest.ini** is no longer configured during **HardPy** project initialization by `hardpy init`.
+  [[PR-122](https://github.com/everypinio/hardpy/pull/122)]
 
 ## HardPy 0.11.0
 
