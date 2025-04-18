@@ -10,10 +10,15 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
   [PR-131](https://github.com/everypinio/hardpy/pull/131)
 * Fix the behavior with empty module stop time with skipped test.
   [PR-129](https://github.com/everypinio/hardpy/pull/129)
+* Add Stand info to Operator panel.
+  [[PR-127](https://github.com/everypinio/hardpy/pull/127)]
 * Add the `tests_name` field to **hardpy.toml**.
-  The `tests_name` allows to name the test suite in the operator panel. [[PR-126](https://github.com/everypinio/hardpy/pull/126)]
-* Add CLI commands: `hardpy start`, `hardpy stop` and `hardpy status`. [[PR-126](https://github.com/everypinio/hardpy/pull/126)]
-* Change the StandCloud API address to `/hardpy/api`. [[PR-125](https://github.com/everypinio/hardpy/pull/125)]
+  The `tests_name` allows to name the test suite in the operator panel.
+  [[PR-126](https://github.com/everypinio/hardpy/pull/126)]
+* Add CLI commands: `hardpy start`, `hardpy stop` and `hardpy status`.
+  [[PR-126](https://github.com/everypinio/hardpy/pull/126)]
+* Change the StandCloud API address to `/hardpy/api`.
+  [[PR-125](https://github.com/everypinio/hardpy/pull/125)]
 
 ## HardPy 0.11.0
 

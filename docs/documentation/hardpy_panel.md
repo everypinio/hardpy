@@ -34,6 +34,21 @@ the pytest launcher (in a terminal or from another application).
 The operator panel contains a test start/stop button in the lower right corner of the screen.
 The user can start/stop tests using the space key.
 
+### Operator panel bar
+
+Operator panel bar displays key system status information in a compact tag-based format.
+
+**Fields:**
+
+- **Stand name** - Name of the test stand (from `db_state.test_stand.name`)  
+- **Status** - Current system status (from `db_state.status`)  
+- **Start time** - Test/operation start timestamp with timezone  
+- **Finish time** - Completion timestamp with timezone  
+- **Alert** - Active warning or error message  
+- **Test stand info** - Additional parameters from test stand configuration (dynamic key-value pairs)  
+
+All fields appear as minimal tags and only display when data is available.
+
 ### Settings
 
 The operator panel contains a setting button in the top right corner.
