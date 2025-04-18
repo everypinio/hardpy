@@ -17,7 +17,7 @@ To access **StandCloud**, contact **info@everypin.io**.
 
 ### test_run
 
-Allows the user to retrieve data about a specific test run by its id.
+Allows the user to retrieve data about a specific test run by its id from `/test_run` URL.
 User can get id from [StandCloudLoader.load()](./../documentation/pytest_hardpy.md#standcloudloader)
 function.
 
@@ -67,7 +67,7 @@ print(response.json())
 
 ### tested_dut
 
-Allows the user to retrieve data about a tested dut's by filters.
+Allows the user to retrieve data about a tested dut's by filters from `/tested_dut` URL.
 
 **Example:**
 
