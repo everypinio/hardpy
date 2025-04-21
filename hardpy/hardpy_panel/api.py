@@ -18,9 +18,9 @@ app.state.pytest_wrp = PyTestWrapper()
 
 
 class Status(str, Enum):
-    """Pytest run status.
+    """HardPy status.
 
-    Statuses, that can be returned by HardPy to frontend.
+    Statuses, that can be returned by HardPy API.
     """
 
     STOPPED = "stopped"
@@ -29,6 +29,16 @@ class Status(str, Enum):
     BUSY = "busy"
     READY = "ready"
     ERROR = "error"
+
+
+@app.get("/api/hardpy_config")
+def hardpy_config() -> dict:
+    """Get config of HardPy.
+
+    Returns:
+        dict: HardPy config
+    """
+    return app.state.pytest_wrp.get_config()
 
 
 @app.get("/api/start")
@@ -66,6 +76,18 @@ def collect_pytest() -> dict:
     if app.state.pytest_wrp.collect():
         return {"status": Status.COLLECTED}
     return {"status": Status.BUSY}
+
+
+@app.get("/api/status")
+def status() -> dict:
+    """Get pytest subprocess status.
+
+    Returns:
+        dict[str, RunStatus]: run status
+    """
+    is_running = app.state.pytest_wrp.is_running()
+    status = Status.BUSY if is_running else Status.READY
+    return {"status": status}
 
 
 @app.get("/api/couch")

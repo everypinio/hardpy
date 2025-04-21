@@ -45,6 +45,8 @@ class PyTestWrapper:
                     "pytest",
                     "--hardpy-db-url",
                     self.config.database.connection_url(),
+                    "--hardpy-tests-name",
+                    self.config.tests_name,
                     "--sc-address",
                     self.config.stand_cloud.address,
                     "--sc-connection-only"
@@ -62,6 +64,8 @@ class PyTestWrapper:
                     "pytest",
                     "--hardpy-db-url",
                     self.config.database.connection_url(),
+                    "--hardpy-tests-name",
+                    self.config.tests_name,
                     "--sc-address",
                     self.config.stand_cloud.address,
                     "--sc-connection-only"
@@ -111,6 +115,8 @@ class PyTestWrapper:
             "--collect-only",
             "--hardpy-db-url",
             self.config.database.connection_url(),
+            "--hardpy-tests-name",
+            self.config.tests_name,
             "--hardpy-pt",
         ]
 
@@ -149,3 +155,11 @@ class PyTestWrapper:
             bool | None: True if self._proc is not None
         """
         return self._proc and self._proc.poll() is None
+
+    def get_config(self) -> dict:
+        """Get HardPy configuration.
+
+        Returns:
+            dict: HardPy configuration
+        """
+        return ConfigManager().get_config().model_dump()
