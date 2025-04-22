@@ -9,6 +9,11 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 * Logging to **pytest.ini** is no longer configured during **HardPy** project initialization by `hardpy init`.
   [[PR-122](https://github.com/everypinio/hardpy/pull/122)]
 
+## HardPy 0.11.2
+
+* Fix StandCloud login support in version 3.12+.
+  [[PR-134](https://github.com/everypinio/hardpy/pull/134)]
+
 ## HardPy 0.11.1
 
 * Change **StandCloud** URL for publish test report to `/test_report`.
