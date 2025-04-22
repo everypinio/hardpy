@@ -2,6 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## HardPy 0.11.2
+
+* Fix StandCloud login support in version 3.12+.
+  [[PR-134](https://github.com/everypinio/hardpy/pull/134)]
+
 ## HardPy 0.11.1
 
 * Change **StandCloud** URL for publish test report to `/test_report`.
