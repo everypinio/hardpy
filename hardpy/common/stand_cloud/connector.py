@@ -69,7 +69,7 @@ class StandCloudConnector:
         auth_addr = addr + "/auth"
 
         self._url: StandCloudURL = StandCloudURL(
-            api=https_prefix + addr + f"/{api_mode}/api/v{api_version}",
+            api=https_prefix + addr + f"/{api_mode.value}/api/v{api_version}",
             token=https_prefix + auth_addr + "/api/oidc/token",
             par=https_prefix + auth_addr + "/api/oidc/pushed-authorization-request",
             auth=https_prefix + auth_addr + "/api/oidc/authorization",
