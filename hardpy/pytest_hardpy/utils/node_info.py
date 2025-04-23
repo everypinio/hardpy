@@ -131,7 +131,9 @@ class NodeInfo:
                 names.append(marker.args[0])  # noqa: PERF401
         return names
 
-    def _get_dependency_info(self, markers: list[Mark]) -> list[TestDependencyInfo] | None:  # noqa: E501
+    def _get_dependency_info(
+        self, markers: list[Mark],
+    ) -> list[TestDependencyInfo] | None:
         """Extract and parse dependency information.
 
         Args:

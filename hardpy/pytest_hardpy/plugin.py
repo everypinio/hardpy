@@ -47,6 +47,7 @@ if __debug__:
 
     disable_warnings(InsecureRequestWarning)
 
+
 def pytest_addoption(parser: Parser) -> None:
     """Register argparse-style options."""
     con_data = ConnectionData()
@@ -493,7 +494,10 @@ class HardpyPlugin:
                     if case_id is not None:
                         if self._results[module_id][case_id] in wrong_status:
                             return True
-                    elif any(status in wrong_status for status in self._results[module_id].values()):  # noqa: E501
+                    elif any(
+                        status in wrong_status
+                        for status in self._results[module_id].values()
+                    ):
                         return True
                 except KeyError:
                     return True
