@@ -96,3 +96,68 @@ The startup is described in the [Multiple Stand](./../examples/multiple_stands.m
 **HardPy** allows you to send test results to **StandCloud**, a data storage and analysis platform.
 See the [StandCloud](./../documentation/stand_cloud.md) section and the
 [StandCloud example](./../examples/stand_cloud.md) for more information.
+
+## Logging approaches in HardPy
+
+**HardPy** provides several methods for logging and user interaction during testing.
+Choose the appropriate method based on whether you need to store information in the database or just display messages to the operator.
+
+### Database logging with set_message
+
+The [set_message](./../documentation/pytest_hardpy.md#set_message) function stores the log message in the report.
+Messages without specified keys get auto-generated keys, while known keys update existing messages.
+Perfect for tracking test progress, recording measurements, system states, and verification results.
+
+```python
+def test_temperature_sensor():
+    temp = read_temperature()
+    if temp > 50:
+        set_message(f"Warning: High temperature {temp}°C", "temp_warning")
+    else:
+        set_message(f"Normal temperature {temp}°C")
+```
+
+### Interactive dialogs with run_dialog_box
+
+The [run_dialog_box](./../documentation/pytest_hardpy.md#run_dialog_box) function creates dialog boxes for operator input with various widgets (text, numeric, checkboxes).
+Supports titles, images, and HTML content.
+Can be used to notify and interact with the user, but does not save the information in the report.
+The user can save the information separately using the [set_case_artifact](./../documentation/pytest_hardpy.md#set_case_artifact),  [set_module_artifact](./../documentation/pytest_hardpy.md#set_module_artifact) or [set_run_artifact](./../documentation/pytest_hardpy.md#set_run_artifact) functions.
+Essential for manual equipment verification, test configuration confirmation, and safety checks.
+
+```python
+def test_manual_calibration():
+    dialog = DialogBox(
+        dialog_text="Connect calibration device and press Confirm",
+        title_bar="Calibration Setup",
+        widget=RadioButtonWidget(options=["Ready", "Skip", "Abort"])
+    )
+    response = run_dialog_box(dialog)
+    assert response == "Ready", "Calibration was not confirmed"
+```
+
+### Operator messages with set_operator_message
+
+The [set_operator_message](./../documentation/pytest_hardpy.md#set_operator_message) function displays non-interactive notifications without database storage.
+The user can save the information separately using the [set_case_artifact](./../documentation/pytest_hardpy.md#set_case_artifact),  [set_module_artifact](./../documentation/pytest_hardpy.md#set_module_artifact) or [set_run_artifact](./../documentation/pytest_hardpy.md#set_run_artifact) functions.
+Can be used to notify and interact with the user, but does not save the information in the report.
+Supports titles, images, and HTML content, with optional blocking until dismissed.
+Ideal for equipment setup instructions, test phase transitions, and important warnings.
+
+```python
+def test_system_startup():
+    set_operator_message(
+        msg="Please power on all test equipment",
+        title="Initial Setup",
+        image=ImageComponent(address="assets/power_on.png"),
+        block=True
+    )
+```
+
+### Choosing the right method
+
+| Method                  | Database Storage | User Interaction | Best For |
+|-------------------------|------------------|------------------|----------|
+| `set_message`           | Yes              | No               | Permanent logs |
+| `run_dialog_box`        | No               | Yes              | Test steps requiring input |
+| `set_operator_message`  | No               | No               | Important notifications |

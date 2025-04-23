@@ -20,10 +20,8 @@ Contains settings and fixtures for all tests:
 - The function of generating a report and recording it in the database `finish_executing`;
 - The example of devices used as a fixture in `driver_example`;
 - The list of actions that will be performed after testing is filled in function `fill_actions_after_test`;
-- The module log is created in fixture `module_log`;
 
 ```python
-import logging
 import pytest
 from driver_example import DriverExample
 from hardpy import (
@@ -31,11 +29,6 @@ from hardpy import (
     CouchdbLoader,
     get_current_report,
 )
-
-@pytest.fixture(scope="module")
-def module_log(request: pytest.FixtureRequest):
-    log_name = request.module.__name__
-    yield logging.getLogger(log_name)
 
 @pytest.fixture(scope="session")
 def driver_example():
@@ -62,19 +55,16 @@ The driver returns the current minute in the OS.
 
 ```python
 import datetime
-from logging import getLogger
+from hardpy import set_operator_message
 
 class DriverExample:
-    def __init__(self) -> None:
-        self._log = getLogger(__name__)
-
     @property
     def current_minute(self):
         current_time = datetime.datetime.now()
         return int(current_time.strftime("%M"))
 
     def random_method(self):
-        self._log.warning("Random method")
+        pass
 ```
 
 ### test_1.py
@@ -87,7 +77,6 @@ Contains tests related to preparation for the testing process:
 - The test stand info is store in the database in `test_stand_info`;
 
 ```python
-import logging
 from uuid import uuid4
 import pytest
 import hardpy
@@ -95,9 +84,8 @@ import hardpy
 pytestmark = pytest.mark.module_name("Testing preparation")
 
 @pytest.mark.case_name("DUT info")
-def test_dut_info(module_log: logging.Logger):
+def test_dut_info():
     serial_number = str(uuid4())[:6]
-    module_log.info(f"DUT serial number {serial_number}")
     hardpy.set_dut_serial_number(serial_number)
     hardpy.set_dut_part_number("part_number_1")
     info = {"batch": "test_batch", "board_rev": "rev_1"}
@@ -105,9 +93,8 @@ def test_dut_info(module_log: logging.Logger):
     assert True
 
 @pytest.mark.case_name("Test stand info")
-def test_stand_info(module_log: logging.Logger):
+def test_stand_info():
     test_stand_name = "Stand 1"
-    module_log.info(f"Stand name: {test_stand_name}")
     hardpy.set_stand_name(test_stand_name)
     hardpy.set_stand_location("Moon")
     info = {

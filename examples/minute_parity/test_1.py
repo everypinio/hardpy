@@ -1,4 +1,3 @@
-import logging
 from uuid import uuid4
 
 import pytest
@@ -9,9 +8,8 @@ pytestmark = pytest.mark.module_name("Testing preparation")
 
 
 @pytest.mark.case_name("DUT info")
-def test_dut_info(module_log: logging.Logger):
+def test_dut_info():
     serial_number = str(uuid4())[:6]
-    module_log.info(f"DUT serial number {serial_number}")
     hardpy.set_dut_serial_number(serial_number)
     hardpy.set_dut_part_number("part_number_1")
     info = {
@@ -23,9 +21,8 @@ def test_dut_info(module_log: logging.Logger):
 
 
 @pytest.mark.case_name("Test stand info")
-def test_stand_info(module_log: logging.Logger):
+def test_stand_info():
     test_stand_name = "Stand 1"
-    module_log.info(f"Stand name: {test_stand_name}")
     hardpy.set_stand_name(test_stand_name)
     hardpy.set_stand_location("Moon")
     info = {
