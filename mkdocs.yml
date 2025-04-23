@@ -77,6 +77,7 @@ nav:
       - Remote access: examples/frontend_remote_access.md
       - Skip test: examples/skip_test.md
       - StandCloud: examples/stand_cloud.md
+      - StandCloud read data: examples/stand_cloud_reader.md
   - About:
       - Development: about/development.md
       - Frontend data synchronization: about/fronted_sync.md
