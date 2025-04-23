@@ -4,19 +4,12 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timedelta, timezone
+from enum import Enum
 from logging import getLogger
 from typing import TYPE_CHECKING, NamedTuple
 
-from oauthlib.oauth2.rfc6749.errors import (
-    InvalidGrantError,
-    MissingTokenError,
-    TokenExpiredError,
-)
-from requests.exceptions import (
-    ConnectionError as RequestConnectionError,
-    HTTPError,
-    InvalidURL,
-)
+from oauthlib.oauth2.rfc6749.errors import OAuth2Error
+from requests.exceptions import RequestException
 from requests_oauth2client import ApiClient, BearerToken
 from requests_oauth2client.tokens import ExpiredAccessToken
 from requests_oauthlib import OAuth2Session
@@ -42,24 +35,41 @@ class StandCloudURL(NamedTuple):
     par: str
     auth: str
 
+
+class StandCloudAPIMode(str, Enum):
+    """StandCloud API mode.
+
+    HARDPY for test stand, integration for third-party service.
+    """
+
+    HARDPY = "hardpy"
+    INTEGRATION = "integration"
+
+
 class StandCloudConnector:
     """StandCloud API connector."""
 
     def __init__(
         self,
         addr: str,
+        api_mode: StandCloudAPIMode = StandCloudAPIMode.HARDPY,
+        api_version: int = 1,
     ) -> None:
         """Create StandCLoud loader.
 
         Args:
-            addr (str | None, optional): StandCloud address.
-            The option only for development and debug. Defaults to True.
+            addr (str): StandCloud service name.
+            api_mode (StandCloudAPIMode): StandCloud API mode,
+                hardpy for test stand, integration for third-party service.
+                Default: StandCloudAPIMode.HARDPY.
+            api_version (int): StandCloud API version.
+                Default: 1.
         """
         https_prefix = "https://"
         auth_addr = addr + "/auth"
 
         self._url: StandCloudURL = StandCloudURL(
-            api=https_prefix + addr + self._get_service_name(addr) + "/api/v1",
+            api=https_prefix + addr + f"/{api_mode.value}/api/v{api_version}",
             token=https_prefix + auth_addr + "/api/oidc/token",
             par=https_prefix + auth_addr + "/api/oidc/pushed-authorization-request",
             auth=https_prefix + auth_addr + "/api/oidc/authorization",
@@ -98,13 +108,11 @@ class StandCloudConnector:
         try:
             resp = api.get(verify=self._verify_ssl)
         except ExpiredAccessToken as exc:
-            raise StandCloudError(str(exc))
-        except TokenExpiredError as exc:
-            raise StandCloudError(exc.description)
-        except InvalidGrantError as exc:
-            raise StandCloudError(exc.description)
-        except HTTPError as exc:
-            raise StandCloudError(exc.strerror)  # type: ignore
+            raise StandCloudError(str(exc)) from exc
+        except OAuth2Error as exc:
+            raise StandCloudError(exc.description) from exc
+        except RequestException as exc:
+            raise StandCloudError(exc.strerror) from exc # type: ignore
 
         return resp
 
@@ -192,15 +200,10 @@ class StandCloudConnector:
                     verify=False,
                     **extra,
                 )
-            except InvalidGrantError as exc:
-                raise StandCloudError(exc.description)
-            except RequestConnectionError as exc:
-                raise StandCloudError(exc.strerror)  # type: ignore
-            except MissingTokenError as exc:
-                raise StandCloudError(exc.description)
-            except InvalidURL:
-                msg = "Authentication URL is not available"
-                raise StandCloudError(msg)
+            except OAuth2Error as exc:
+                raise StandCloudError(exc.description) from exc
+            except RequestException as exc:
+                raise StandCloudError(exc.strerror) from exc  # type: ignore
             self._token_update(ret)  # type: ignore
 
         return ApiClient(self._url.api + "/" + endpoint, session=session, timeout=10)
@@ -216,12 +219,3 @@ class StandCloudConnector:
             expires_at=expires_at,
             expires_in=expires_in,
         )
-
-    def _get_service_name(self, addr: str) -> str:
-        addr_parts = addr.split(".")
-        number_of_parts = 3
-        service_position_in_address = 1
-        if isinstance(addr_parts, list) and len(addr_parts) >= number_of_parts:
-            return "/" + addr_parts[service_position_in_address]
-        msg = f"Invalid StandCloud address: {addr}"
-        raise StandCloudError(msg)

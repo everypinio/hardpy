@@ -8,8 +8,33 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
   [[PR-122](https://github.com/everypinio/hardpy/pull/122)]
 * Remove bug with scrolling tests with operator messages.
   [[PR-122](https://github.com/everypinio/hardpy/pull/122)]
-  * Logging to **pytest.ini** is no longer configured during **HardPy** project initialization by `hardpy init`.
+* Logging to **pytest.ini** is no longer configured during **HardPy** project initialization by `hardpy init`.
   [[PR-122](https://github.com/everypinio/hardpy/pull/122)]
+
+## HardPy 0.11.2
+
+* Fix StandCloud login support in version 3.12+.
+  [[PR-134](https://github.com/everypinio/hardpy/pull/134)]
+
+## HardPy 0.11.1
+
+* Change **StandCloud** URL for publish test report to `/test_report`.
+  [[PR-131](https://github.com/everypinio/hardpy/pull/131)]
+* Add `StandCloudReader` class for reading data from **StandCloud**.
+  [[PR-131](https://github.com/everypinio/hardpy/pull/131)]
+* Fix the behavior with empty module start time with skipped test.
+  [[PR-131](https://github.com/everypinio/hardpy/pull/131)]
+* Fix the behavior with empty module stop time with skipped test.
+  [[PR-129](https://github.com/everypinio/hardpy/pull/129)]
+* Add Stand info to Operator panel.
+  [[PR-127](https://github.com/everypinio/hardpy/pull/127)]
+* Add the `tests_name` field to **hardpy.toml**.
+  The `tests_name` allows to name the test suite in the operator panel.
+  [[PR-126](https://github.com/everypinio/hardpy/pull/126)]
+* Add CLI commands: `hardpy start`, `hardpy stop` and `hardpy status`.
+  [[PR-126](https://github.com/everypinio/hardpy/pull/126)]
+* Change the StandCloud API address to `/hardpy/api`.
+  [[PR-125](https://github.com/everypinio/hardpy/pull/125)]
 
 ## HardPy 0.11.0
 
@@ -97,7 +122,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
   [[PR-66](https://github.com/everypinio/hardpy/pull/66)]
 * Change **timezone** from two strings to one string.
   [[PR-69](https://github.com/everypinio/hardpy/pull/69)]
-* Replace the **Flake8** linter with a **Ruff** linter.  
+* Replace the **Flake8** linter with a **Ruff** linter.
   [[PR-58](https://github.com/everypinio/hardpy/pull/58)]
 
 ## HardPy 0.6.1
