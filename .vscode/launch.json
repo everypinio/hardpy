@@ -51,6 +51,39 @@
             ]
         },
         {
+            "name": "HardPy: Start template",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "start",
+                "examples/template"
+            ]
+        },
+        {
+            "name": "HardPy: Stop template",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "stop",
+                "examples/template"
+            ]
+        },
+        {
+            "name": "HardPy: Status template",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "status",
+                "examples/template"
+            ]
+        },
+        {
             "name": "StandCloud login",
             "type": "debugpy",
             "request": "launch",

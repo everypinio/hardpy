@@ -6,11 +6,12 @@ import sys
 from pathlib import Path
 from typing import Annotated, Optional
 
+import requests
 import typer
 from uvicorn import run as uvicorn_run
 
 from hardpy.cli.template import TemplateGenerator
-from hardpy.common.config import ConfigManager
+from hardpy.common.config import ConfigManager, HardpyConfig
 from hardpy.common.stand_cloud import (
     StandCloudConnector,
     StandCloudError,
@@ -31,6 +32,10 @@ default_config = ConfigManager().get_config()
 @cli.command()
 def init(  # noqa: PLR0913
     tests_dir: Annotated[Optional[str], typer.Argument()] = None,
+    tests_name: str = typer.Option(
+        default="",
+        help="Specify a tests suite name.",
+    ),
     create_database: bool = typer.Option(
         default=True,
         help="Create CouchDB database.",
@@ -72,6 +77,7 @@ def init(  # noqa: PLR0913
 
     Args:
         tests_dir (str | None): Tests directory. Current directory + `tests` by default
+        tests_name (str): Tests suite name, "Tests" by default
         create_database (bool): Flag to create database
         database_user (str): Database user name
         database_password (str): Database password
@@ -83,8 +89,10 @@ def init(  # noqa: PLR0913
         sc_connection_only (bool): Flag to check StandCloud service availability
     """
     _tests_dir = tests_dir if tests_dir else default_config.tests_dir
+    _tests_name = tests_name if tests_name else default_config.tests_name
     ConfigManager().init_config(
         tests_dir=str(_tests_dir),
+        tests_name=_tests_name,
         database_user=database_user,
         database_password=database_password,
         database_host=database_host,
@@ -153,6 +161,48 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
 
 
 @cli.command()
+def start(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
+    """Start HardPy tests.
+
+    Args:
+        tests_dir (Optional[str]): Test directory. Current directory by default
+    """
+    config = _get_config(tests_dir)
+    _check_config(config)
+
+    url = f"http://{config.frontend.host}:{config.frontend.port}/api/start"
+    _request_hardpy(url)
+
+
+@cli.command()
+def stop(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
+    """Stop HardPy tests.
+
+    Args:
+        tests_dir (Optional[str]): Test directory. Current directory by default
+    """
+    config = _get_config(tests_dir)
+    _check_config(config)
+
+    url = f"http://{config.frontend.host}:{config.frontend.port}/api/stop"
+    _request_hardpy(url)
+
+
+@cli.command()
+def status(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
+    """Get HardPy test launch status.
+
+    Args:
+        tests_dir (Optional[str]): Test directory. Current directory by default
+    """
+    config = _get_config(tests_dir)
+    _check_config(config)
+
+    url = f"http://{config.frontend.host}:{config.frontend.port}/api/status"
+    _request_hardpy(url)
+
+
+@cli.command()
 def sc_login(
     address: Annotated[str, typer.Argument()],
     check: bool = typer.Option(
@@ -193,6 +243,46 @@ def sc_logout() -> None:
         print("HardPy logout success")
     else:
         print("HardPy logout failed")
+
+
+def _get_config(tests_dir: str | None = None) -> HardpyConfig:
+    dir_path = Path.cwd() / tests_dir if tests_dir else Path.cwd()
+    config = ConfigManager().read_config(dir_path)
+
+    if not config:
+        print(f"Config at path {dir_path} not found.")
+        sys.exit()
+
+    return config
+
+
+def _check_config(config: HardpyConfig) -> None:
+    url = f"http://{config.frontend.host}:{config.frontend.port}/api/hardpy_config"
+    error_msg = f"HardPy in directory {config.tests_dir} does not run."
+    try:
+        response = requests.get(url, timeout=2)
+    except Exception:
+        print(error_msg)
+        sys.exit()
+
+    running_config: dict = response.json()
+    if config.model_dump() != running_config:
+        print(error_msg)
+        sys.exit()
+
+
+def _request_hardpy(url: str) -> None:
+    try:
+        response = requests.get(url, timeout=2)
+    except Exception:
+        print("HardPy operator panel is not running.")
+        sys.exit()
+    try:
+        status: dict = response.json().get("status", "ERROR")
+    except ValueError:
+        print(f"Hardpy internal error: {response}.")
+        sys.exit()
+    print(f"HardPy status: {status}.")
 
 
 if __name__ == "__main__":
