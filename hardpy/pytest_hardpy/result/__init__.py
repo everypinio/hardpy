@@ -6,9 +6,13 @@ from hardpy.pytest_hardpy.result.report_loader.stand_cloud_loader import (
     StandCloudLoader,
 )
 from hardpy.pytest_hardpy.result.report_reader.couchdb_reader import CouchdbReader
+from hardpy.pytest_hardpy.result.report_reader.stand_cloud_reader import (
+    StandCloudReader,
+)
 
 __all__ = [
     "CouchdbLoader",
     "CouchdbReader",
     "StandCloudLoader",
+    "StandCloudReader",
 ]

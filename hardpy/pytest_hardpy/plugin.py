@@ -56,6 +56,11 @@ def pytest_addoption(parser: Parser) -> None:
         default=con_data.database_url,
         help="database url",
     )
+    parser.addoption(
+        "--hardpy-tests-name",
+        action="store",
+        help="HardPy tests suite name",
+    )
     # TODO (xorialexandrov): Remove --hardpy-sp and --hardpy-sh in HardPy major version.
     # Addoptions left for compatibility with version 0.10.1 and below
     parser.addoption(
@@ -117,6 +122,7 @@ class HardpyPlugin:
         self._results = {}
         self._post_run_functions: list[Callable] = []
         self._dependencies = {}
+        self._tests_name: str = ""
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -133,6 +139,12 @@ class HardpyPlugin:
         database_url = config.getoption("--hardpy-db-url")
         if database_url:
             con_data.database_url = str(database_url)  # type: ignore
+
+        tests_name = config.getoption("--hardpy-tests-name")
+        if tests_name:
+            self._tests_name = str(tests_name)
+        else:
+            self._tests_name = str(PurePath(config.rootpath).name)
 
         is_clear_database = config.getoption("--hardpy-clear-database")
 
@@ -174,11 +186,11 @@ class HardpyPlugin:
     def pytest_collection_modifyitems(
         self,
         session: Session,
-        config: Config,
+        config: Config,  # noqa: ARG002
         items: list[Item],  # noqa: ARG002
     ) -> None:
         """Call after collection phase."""
-        self._reporter.init_doc(str(PurePath(config.rootpath).name))
+        self._reporter.init_doc(self._tests_name)
 
         nodes = {}
         modules = set()
@@ -256,8 +268,8 @@ class HardpyPlugin:
 
         status = TestStatus.RUN
         is_skip_test = self._is_skip_test(node_info)
+        self._reporter.set_module_start_time(node_info.module_id)
         if not is_skip_test:
-            self._reporter.set_module_start_time(node_info.module_id)
             self._reporter.set_case_start_time(node_info.module_id, node_info.case_id)
         else:
             status = TestStatus.SKIPPED
@@ -316,7 +328,11 @@ class HardpyPlugin:
 
     def pytest_runtest_logreport(self, report: TestReport) -> bool | None:
         """Call after call of each test item."""
-        if report.when != "call" and report.failed is False:
+        is_skipped_by_plugin: bool = False
+        if report.when == "setup" and report.skipped is True:
+            # plugin-skipped tests should not have start and stop times
+            is_skipped_by_plugin = True
+        elif report.when != "call" and report.failed is False:
             # ignore setup and teardown phase or continue processing setup
             # and teardown failure (fixture exception handler)
             return True
@@ -329,10 +345,9 @@ class HardpyPlugin:
             case_id,
             TestStatus(report.outcome),
         )
-        self._reporter.set_case_stop_time(
-            module_id,
-            case_id,
-        )
+        # update case stop_time in non-skipped tests or user-skipped tests
+        if report.skipped is False or is_skipped_by_plugin is False:
+            self._reporter.set_case_stop_time(module_id, case_id)
 
         assertion_msg = self._decode_assertion_msg(report.longrepr)
         self._reporter.set_assertion_msg(module_id, case_id, assertion_msg)

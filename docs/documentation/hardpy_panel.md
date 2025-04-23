@@ -34,20 +34,36 @@ the pytest launcher (in a terminal or from another application).
 The operator panel contains a test start/stop button in the lower right corner of the screen.
 The user can start/stop tests using the space key.
 
+### Operator panel bar
+
+Operator panel bar displays key system status information in a compact tag-based format.
+
+**Fields:**
+
+- **Stand name** - name of the test stand;
+- **Status** - current system status;
+- **Start time** - test/operation start timestamp with timezone;
+- **Finish time** - completion timestamp with timezone;
+- **Alert** - active warning or error message;
+- **Test stand info** - additional test stand parameters
+  from [set_dut_info](./pytest_hardpy.md#set_dut_info) info;
+
+All fields appear as minimal tags and only display when data is available.
+
 ### Settings
 
 The operator panel contains a setting button in the top right corner.
 
 #### debug mode
 
-The user can view the **statestore** database online by clicking on 
+The user can view the **statestore** database online by clicking on
 the **Turn on the debug mode** button.
 
 Debug mode is disabled by default.
 
 #### sound
 
-The user can turn on the sound of the end of the test by clicking on 
+The user can turn on the sound of the end of the test by clicking on
 the **Turn on the sound** button.
 
 Sound is disabled by default.
@@ -201,10 +217,10 @@ Allows steps with text and image.
 
 ### Operator message
 
-The messages to the operator are similar to [dialog boxes](#dialog-box), 
-but do not contain a **Confirm** button and can be called outside 
-the execution of the test plan, for example in case of exception 
-catching in the `conftest.py` file. 
+The messages to the operator are similar to [dialog boxes](#dialog-box),
+but do not contain a **Confirm** button and can be called outside
+the execution of the test plan, for example in case of exception
+catching in the `conftest.py` file.
 For more information, see the example [operator message](./../examples/operator_msg.md)
 or in the function description [set_operator_message](./pytest_hardpy.md#set_operator_message).
 

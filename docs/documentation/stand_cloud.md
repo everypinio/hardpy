@@ -12,9 +12,11 @@ For more information, visit the **StandCloud** [website](https://everypin.io/sta
 
 ## StandCloud and HardPy integration
 
-**HardPy** allows test result data to be stored in the **StandCloud**.
+**HardPy** allows test result data to be stored in the **StandCloud** and
+read them from the **StandCloud**.
 For an example of StandCloud and HardPy integration,
-see [StandCloud example](../examples/stand_cloud.md).
+see [StandCloud example](../examples/stand_cloud.md) and
+[StandCloud readed example](../examples/stand_cloud_reader.md).
 
 To authorize in **StandCloud** you need to know the address of your **StandCloud** service.
 To obtain one, contact **info@everypin.io**.

@@ -57,6 +57,7 @@ class HardpyConfig(BaseModel, extra="allow"):
 
     title: str = "HardPy TOML config"
     tests_dir: str = "tests"
+    tests_name: str = ""
     database: DatabaseConfig = DatabaseConfig()
     frontend: FrontendConfig = FrontendConfig()
     stand_cloud: StandCloudConfig = StandCloudConfig()
@@ -72,6 +73,7 @@ class ConfigManager:
     def init_config(  # noqa: PLR0913
         cls,
         tests_dir: str,
+        tests_name: str,
         database_user: str,
         database_password: str,
         database_host: str,
@@ -85,6 +87,7 @@ class ConfigManager:
 
         Args:
             tests_dir (str): Tests directory.
+            tests_name (str): Tests suite name.
             database_user (str): Database user name.
             database_password (str): Database password.
             database_host (str): Database host.
@@ -95,6 +98,7 @@ class ConfigManager:
             sc_connection_only (bool): StandCloud check availability.
         """
         cls.obj.tests_dir = str(tests_dir)
+        cls.obj.tests_name = tests_name
         cls.obj.database.user = database_user
         cls.obj.database.password = database_password
         cls.obj.database.host = database_host
@@ -113,6 +117,8 @@ class ConfigManager:
         """
         if not cls.obj.stand_cloud.address:
             del cls.obj.stand_cloud
+        if not cls.obj.tests_name:
+            del cls.obj.tests_name
         config_str = tomli_w.dumps(cls.obj.model_dump())
         with Path.open(parent_dir / "hardpy.toml", "w") as file:
             file.write(config_str)
