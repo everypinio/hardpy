@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+import socket
 import sys
 from pathlib import Path
 from typing import Annotated, Optional
@@ -149,6 +150,14 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
         print(f"Config at path {dir_path} not found.")
         sys.exit()
 
+    try:
+        actual_port = find_free_port(start_port=config.frontend.port)
+        if actual_port != config.frontend.port:
+            print(f"Port {config.frontend.port} is busy, using {actual_port} instead.")
+    except RuntimeError as e:
+        print(f"Error: {str(e)}")
+        sys.exit(1)
+
     print("\nLaunch the HardPy operator panel...")
     print(f"http://{config.frontend.host}:{config.frontend.port}\n")
 
@@ -287,3 +296,15 @@ def _request_hardpy(url: str) -> None:
 
 if __name__ == "__main__":
     cli()
+
+
+def find_free_port(start_port: int = 8000, max_attempts: int = 100) -> int:
+    """Find the nearest available port starting from start_port."""
+    for port in range(start_port, start_port + max_attempts):
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.bind(("127.0.0.1", port))
+                return port
+        except OSError:
+            continue
+    raise RuntimeError(f"No free port found in range {start_port}-{start_port + max_attempts}")

@@ -3,6 +3,7 @@
 
 import os
 import re
+import socket
 from enum import Enum
 from pathlib import Path
 from urllib.parse import unquote
@@ -12,6 +13,17 @@ from fastapi.staticfiles import StaticFiles
 
 from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
+
+def find_free_port(start_port: int = 8000, max_attempts: int = 100) -> int:
+    """Finds the nearest free port starting from start_port."""
+    for port in range(start_port, start_port + max_attempts):
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.bind(("127.0.0.1", port))
+                return port
+        except OSError:
+            continue
+    raise RuntimeError(f"Unable to find a free port in the range {start_port}-{start_port + max_attempts}")
 
 app = FastAPI()
 app.state.pytest_wrp = PyTestWrapper()
@@ -151,3 +163,15 @@ if "DEBUG_FRONTEND" not in os.environ:
         ),
         name="static",
     )
+
+if __name__ == "__main__":
+    config = ConfigManager().get_config()
+    frontend_port = config.frontend.port
+
+    actual_port = find_free_port(start_port=frontend_port)
+
+    if actual_port != frontend_port:
+        print(f"Port {frontend_port} is busy, using {actual_port} instead.")
+
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=actual_port)
