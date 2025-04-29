@@ -732,6 +732,35 @@ def test_attempts():
     assert False
 ```
 
+#### critical
+
+Marks test or module as critical.
+Failing/skipped critical tests skip all subsequent tests.
+For implementation details see [critical tests example](./../examples/critical_test.md).
+
+**Example (test level):**
+
+```python
+@pytest.mark.critical
+def test_core_feature():
+    assert check_core_functionality()
+```
+
+**Example (module level):**
+
+```python
+pytestmark = pytest.mark.critical
+
+def test_db_connection():
+    assert connect_to_database()
+```
+
+**Behavior:**
+
+- Critical test passes → Continue normally
+- Critical test fails/skips → Skip all remaining tests
+- Any test fails in critical module → Skip all remaining tests
+
 ## Options
 
 **pytest-hardpy** has several options to run:

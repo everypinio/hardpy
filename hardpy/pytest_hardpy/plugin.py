@@ -507,7 +507,10 @@ class HardpyPlugin:
 
         is_critical_failed = False
         for module_id, module_data in self._results.items():
-            if module_data.get("module_status") == TestStatus.FAILED:
+            if module_data.get("module_status") in {
+                TestStatus.FAILED,
+                TestStatus.SKIPPED,
+            }:
                 # Check if module is critical
                 module_item = next(
                     (
@@ -525,7 +528,7 @@ class HardpyPlugin:
             for case_id, case_status in module_data.items():
                 if case_id == "module_status":
                     continue
-                if case_status == TestStatus.FAILED:
+                if case_status in {TestStatus.FAILED, TestStatus.SKIPPED}:
                     case_item = next(
                         (
                             item
