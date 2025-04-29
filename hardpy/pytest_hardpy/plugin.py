@@ -47,6 +47,7 @@ if __debug__:
 
     disable_warnings(InsecureRequestWarning)
 
+
 def pytest_addoption(parser: Parser) -> None:
     """Register argparse-style options."""
     con_data = ConnectionData()
@@ -123,6 +124,7 @@ class HardpyPlugin:
         self._post_run_functions: list[Callable] = []
         self._dependencies = {}
         self._tests_name: str = ""
+        self._session = None
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -160,6 +162,7 @@ class HardpyPlugin:
         config.addinivalue_line("markers", "module_name")
         config.addinivalue_line("markers", "dependency")
         config.addinivalue_line("markers", "attempt")
+        config.addinivalue_line("markers", "critical")
 
         # must be init after config data is set
         try:
@@ -190,6 +193,7 @@ class HardpyPlugin:
         items: list[Item],  # noqa: ARG002
     ) -> None:
         """Call after collection phase."""
+        self._session = session
         self._reporter.init_doc(self._tests_name)
 
         nodes = {}
@@ -482,6 +486,8 @@ class HardpyPlugin:
 
     def _is_skip_test(self, node_info: NodeInfo) -> bool:
         """Is need to skip a test because it depends on another test."""
+        if not hasattr(self, "_session") or self._session is None:
+            return False
         is_dependency_test_exist = self._dependencies.get(
             TestDependencyInfo(node_info.module_id, node_info.case_id),
         )
@@ -498,7 +504,47 @@ class HardpyPlugin:
                 is_dependency_test_failed = any(
                     status in wrong_status for status in result_set
                 )
-        return bool(is_dependency_test_exist and is_dependency_test_failed)
+
+        is_critical_failed = False
+        for module_id, module_data in self._results.items():
+            if module_data.get("module_status") == TestStatus.FAILED:
+                # Check if module is critical
+                module_item = next(
+                    (
+                        item
+                        for item in self._session.items
+                        if Path(item.fspath).stem == module_id
+                    ),
+                    None,
+                )
+                if module_item and NodeInfo(module_item).critical:
+                    is_critical_failed = True
+                    break
+
+            # Check individual critical tests
+            for case_id, case_status in module_data.items():
+                if case_id == "module_status":
+                    continue
+                if case_status == TestStatus.FAILED:
+                    case_item = next(
+                        (
+                            item
+                            for item in self._session.items
+                            if Path(item.fspath).stem == module_id
+                            and item.name == case_id
+                        ),
+                        None,
+                    )
+                    if case_item and NodeInfo(case_item).critical:
+                        is_critical_failed = True
+                        break
+            if is_critical_failed:
+                break
+
+        return bool(
+            (is_dependency_test_exist and is_dependency_test_failed)
+            or is_critical_failed,
+        )
 
     def _add_dependency(self, node_info: NodeInfo, nodes: dict) -> None:
         dependency = node_info.dependency
