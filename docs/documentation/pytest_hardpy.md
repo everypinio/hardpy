@@ -757,9 +757,9 @@ def test_db_connection():
 
 **Behavior:**
 
-- Critical test passes → Continue normally
-- Critical test fails/skips → Skip all remaining tests
-- Any test fails in critical module → Skip all remaining tests
+- Critical test passes - Continue normally
+- Critical test fails/skips - Skip all remaining tests
+- Any test fails in critical module - Skip all remaining tests
 
 ## Options
 
