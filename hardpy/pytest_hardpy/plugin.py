@@ -524,7 +524,6 @@ class HardpyPlugin:
                     is_critical_failed = True
                     break
 
-            # Check individual critical tests
             for case_id, case_status in module_data.items():
                 if case_id == "module_status":
                     continue
