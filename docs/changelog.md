@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add marker **critical**.
+  [[PR-135](https://github.com/everypinio/hardpy/pull/135)]
 * Transfer frontend from CRA to Vite.
   [[PR-122](https://github.com/everypinio/hardpy/pull/122)]
 * Remove bug with scrolling tests with operator messages.

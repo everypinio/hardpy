@@ -43,6 +43,8 @@ class NodeInfo:
 
         self._attempt = self._get_attempt(item.own_markers)
 
+        self._critical = self._get_critical(item.own_markers + item.parent.own_markers)
+
         self._module_id = Path(item.parent.nodeid).stem  # type: ignore
         self._case_id = item.name
 
@@ -100,6 +102,15 @@ class NodeInfo:
         """
         return self._attempt
 
+    @property
+    def critical(self) -> bool:
+        """Get critical status.
+
+        Returns:
+            bool: critical status
+        """
+        return self._critical
+
     def _get_human_name(self, markers: list[Mark], marker_name: str) -> str:
         """Get human name from markers.
 
@@ -152,3 +163,14 @@ class NodeInfo:
             msg = "The 'attempt' marker value must be a positive integer."
             raise ValueError(msg)
         return attempt
+
+    def _get_critical(self, markers: list[Mark]) -> bool:
+        """Check if test or module is marked as critical.
+
+        Args:
+            markers (list[Mark]): item markers list
+
+        Returns:
+            bool: True if test or module is critical, False otherwise
+        """
+        return any(marker.name == "critical" for marker in markers)

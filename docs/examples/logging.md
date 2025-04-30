@@ -1,4 +1,4 @@
-# Logging in Tests
+# Logging in tests
 
 How to add logging to your tests using Python's built-in `logging` package.
 

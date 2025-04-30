@@ -65,6 +65,7 @@ nav:
       - Attempts: examples/attempts.md
       - CouchDB in RAM: examples/db_in_ram.md
       - CouchDB load: examples/couchdb_load.md
+      - Critical test: examples/critical_test.md
       - Dialog box: examples/dialog_box.md
       - Dialog box plot: examples/dialog_box_plot.md
       - HardPy launch: examples/hardpy_launch.md
