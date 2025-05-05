@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+import os
 import socket
 import sys
 from pathlib import Path
@@ -19,6 +20,22 @@ from hardpy.common.stand_cloud import (
     login as auth_login,
     logout as auth_logout,
 )
+
+
+def find_free_port(start_port: int = 8000, max_attempts: int = 100) -> int:
+    """Find the nearest available port starting from start_port."""
+    if os.getenv("DEBUG_FRONTEND") == "1":
+        start_port = 3000
+        return start_port
+    else:
+        for port in range(start_port, start_port + max_attempts):
+            try:
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                    s.bind(("127.0.0.1", port))
+                    return port
+            except OSError:
+                continue
+        raise RuntimeError(f"No free port found in range {start_port}-{start_port + max_attempts}")
 
 if __debug__:
     from urllib3 import disable_warnings
@@ -154,6 +171,7 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
         actual_port = find_free_port(start_port=config.frontend.port)
         if actual_port != config.frontend.port:
             print(f"Port {config.frontend.port} is busy, using {actual_port} instead.")
+            config.frontend.port = actual_port
     except RuntimeError as e:
         print(f"Error: {str(e)}")
         sys.exit(1)
@@ -293,18 +311,5 @@ def _request_hardpy(url: str) -> None:
         sys.exit()
     print(f"HardPy status: {status}.")
 
-
 if __name__ == "__main__":
     cli()
-
-
-def find_free_port(start_port: int = 8000, max_attempts: int = 100) -> int:
-    """Find the nearest available port starting from start_port."""
-    for port in range(start_port, start_port + max_attempts):
-        try:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                s.bind(("127.0.0.1", port))
-                return port
-        except OSError:
-            continue
-    raise RuntimeError(f"No free port found in range {start_port}-{start_port + max_attempts}")
