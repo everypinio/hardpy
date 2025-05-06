@@ -39,7 +39,7 @@ class FrontendConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     host: str = "localhost"
-    port: int = 8000
+    port: int | None = None
 
 
 class StandCloudConfig(BaseModel):
@@ -79,7 +79,7 @@ class ConfigManager:
         database_host: str,
         database_port: int,
         frontend_host: str,
-        frontend_port: int,
+        frontend_port: int | None,
         sc_address: str = "",
         sc_connection_only: bool = False,
     ) -> None:
@@ -93,7 +93,7 @@ class ConfigManager:
             database_host (str): Database host.
             database_port (int): Database port.
             frontend_host (str): Operator panel host.
-            frontend_port (int): Operator panel port.
+            frontend_port (int | None): Operator panel port (number or None).
             sc_address (str): StandCloud address.
             sc_connection_only (bool): StandCloud check availability.
         """

@@ -22,20 +22,30 @@ from hardpy.common.stand_cloud import (
 )
 
 
-def find_free_port(start_port: int = 8000, max_attempts: int = 100) -> int:
-    """Find the nearest available port starting from start_port."""
-    if os.getenv("DEBUG_FRONTEND") == "1":
-        start_port = 3000
-        return start_port
-    else:
-        for port in range(start_port, start_port + max_attempts):
-            try:
-                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                    s.bind(("127.0.0.1", port))
-                    return port
-            except OSError:
-                continue
-        raise RuntimeError(f"No free port found in range {start_port}-{start_port + max_attempts}")
+def find_free_port(start_port: int | str = "auto") -> int:
+    if start_port == "auto":
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.bind(("127.0.0.1", 0))
+                return s.getsockname()[1]
+        except OSError as e:
+            raise RuntimeError("Could not find any available port") from e
+
+    # Case 2: Specific port requested
+    if start_port:
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.bind(("127.0.0.1", start_port))
+                return start_port
+        except OSError:
+            raise RuntimeError(f"Specified port {start_port} is already in use")
+
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.bind(("127.0.0.1", 0))
+            return s.getsockname()[1]
+    except OSError as e:
+        raise RuntimeError("Could not find any available port") from e
 
 if __debug__:
     from urllib3 import disable_warnings
@@ -78,9 +88,9 @@ def init(  # noqa: PLR0913
         default=default_config.frontend.host,
         help="Specify a frontend host.",
     ),
-    frontend_port: int = typer.Option(
+    frontend_port: int | None = typer.Option(
         default=default_config.frontend.port,
-        help="Specify a frontend port.",
+        help="Specify a frontend port (number or None for automatic selection).",
     ),
     sc_address: str = typer.Option(
         default="",
@@ -102,7 +112,7 @@ def init(  # noqa: PLR0913
         database_host (str): Database host
         database_port (int): Database port
         frontend_host (str): Panel operator host
-        frontend_port (int): Panel operator port
+        frontend_port (int | None): Panel operator port (number or None)
         sc_address (str): StandCloud address
         sc_connection_only (bool): Flag to check StandCloud service availability
     """
@@ -167,22 +177,28 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
         print(f"Config at path {dir_path} not found.")
         sys.exit()
 
+    print("\nLaunch the HardPy operator panel...")
+
     try:
-        actual_port = find_free_port(start_port=config.frontend.port)
-        if actual_port != config.frontend.port:
-            print(f"Port {config.frontend.port} is busy, using {actual_port} instead.")
+        if isinstance(config.frontend.port, int):
+            actual_port = find_free_port(start_port=config.frontend.port)
+            if actual_port != config.frontend.port:
+                print(f"Error: Port {config.frontend.port} is not available")
+                sys.exit(1)
+        else:
+            actual_port = find_free_port(start_port="auto")
+            print(f"Automatically selected port {actual_port}")
             config.frontend.port = actual_port
     except RuntimeError as e:
         print(f"Error: {str(e)}")
         sys.exit(1)
 
-    print("\nLaunch the HardPy operator panel...")
     print(f"http://{config.frontend.host}:{config.frontend.port}\n")
 
     uvicorn_run(
         "hardpy.hardpy_panel.api:app",
         host=config.frontend.host,
-        port=config.frontend.port,
+        port=config.frontend.port if isinstance(config.frontend.port, int) else actual_port,
         log_level="critical",
     )
 
