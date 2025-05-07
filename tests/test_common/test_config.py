@@ -71,7 +71,7 @@ def test_database_config():
 def test_frontend_config():
     config = FrontendConfig()
     assert config.host == frontend_default_host
-    assert config.port == frontend_default_port
+    assert config.port is None
 
 
 def test_stand_cloud_config():
@@ -96,7 +96,7 @@ def test_hardpy_config():
     assert config.database.host == db_default_host
     assert config.database.port == db_default_port
     assert config.frontend.host == frontend_default_host
-    assert config.frontend.port == frontend_default_port
+    assert config.frontend.port == None
     assert config.stand_cloud.address == stand_cloud_default_addr
 
 

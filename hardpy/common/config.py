@@ -119,6 +119,8 @@ class ConfigManager:
             del cls.obj.stand_cloud
         if not cls.obj.tests_name:
             del cls.obj.tests_name
+        if not cls.obj.frontend.port:
+            del cls.obj.frontend.port
         config_str = tomli_w.dumps(cls.obj.model_dump())
         with Path.open(parent_dir / "hardpy.toml", "w") as file:
             file.write(config_str)
