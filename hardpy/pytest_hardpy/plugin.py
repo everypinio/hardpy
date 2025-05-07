@@ -166,7 +166,7 @@ class HardpyPlugin:
         try:
             self._reporter = HookReporter(bool(is_clear_database))
         except RuntimeError as exc:
-            exit(str(exc), 1)
+            exit(str(exc), ExitCode.INTERNAL_ERROR)
 
     def pytest_sessionfinish(self, session: Session, exitstatus: int) -> None:
         """Call at the end of test session."""
@@ -207,7 +207,7 @@ class HardpyPlugin:
                 node_info = NodeInfo(item)
             except ValueError as exc:
                 error_msg = f"Error creating NodeInfo for item: {item}. {exc}"
-                exit(error_msg, 1)
+                exit(error_msg, ExitCode.NO_TESTS_COLLECTED)
 
             self._init_case_result(node_info.module_id, node_info.case_id)
             if node_info.module_id not in nodes:
@@ -241,7 +241,7 @@ class HardpyPlugin:
             except StandCloudError as exc:
                 msg = str(exc)
                 self._reporter.set_alert(msg)
-                exit(msg)
+                exit(msg, ExitCode.INTERNAL_ERROR)
             try:
                 sc_connector.healthcheck()
             except Exception:  # noqa: BLE001
@@ -252,7 +252,7 @@ class HardpyPlugin:
                 )
                 self._reporter.set_alert(msg)
                 self._reporter.update_db_by_doc()
-                exit(msg)
+                exit(msg, ExitCode.INTERNAL_ERROR)
 
         # testrun entrypoint
         self._reporter.start()
@@ -377,7 +377,7 @@ class HardpyPlugin:
     # Not hooks
 
     def _stop_handler(self, signum: int, frame: Any) -> None:  # noqa: ANN401, ARG002
-        exit("Tests stopped by user")
+        exit("Tests stopped by user", ExitCode.INTERRUPTED)
 
     def _init_case_result(self, module_id: str, case_id: str) -> None:
         if self._results.get(module_id) is None:
@@ -509,13 +509,12 @@ class HardpyPlugin:
             return
         for dependency in dependencies:
             module_id, case_id = dependency
+            # incorrect module id in dependency
             if module_id not in nodes:
-                error_message = f"Error: Module dependency '{dependency}' not found."
-                exit(error_message, 1)
-            elif case_id not in nodes[module_id] and case_id is not None:
-                error_message = f"Error: Case dependency '{dependency}' not found."
-                exit(error_message, 1)
-
+                continue
+            # incorrect case id in dependency
+            if case_id not in nodes[module_id] and case_id is not None:
+                continue
             test_key = TestDependencyInfo(node_info.module_id, node_info.case_id)
             if test_key not in self._dependencies:
                 self._dependencies[test_key] = set()
