@@ -69,11 +69,7 @@ https://demo.standcloud.io/integration/api/v1/docs
     "calibration_date": "2025-01-15"
   },
   "dut_info": {
-    "serial_number": "SN-98765",
-    "part_number": "PN-54321AB",
-    "info": {
-      "manufacturer": "ABC Corp"
-    }
+    "manufacturer": "ABC Corp"
   }
 }
 ```
