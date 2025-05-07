@@ -5,10 +5,6 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from pytest import Pytester
 
-status_test_header = """
-        import pytest
-        """
-
 
 def test_module_stop_time_first_case_skip(pytester: Pytester, hardpy_opts: list[str]):
     """Check module stop time.

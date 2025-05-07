@@ -5,13 +5,10 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from pytest import Pytester
 
-status_test_header = """
-        import pytest
-        """
-
 
 def test_multiple_dependencies_mixed_results(
-    pytester: Pytester, hardpy_opts: list[str],
+    pytester: Pytester,
+    hardpy_opts: list[str],
 ):
     """Verify handling of multiple dependencies with mixed results.
 
@@ -47,7 +44,8 @@ def test_multiple_dependencies_mixed_results(
 
 
 def test_four_dependencies_with_module_level(
-    pytester: Pytester, hardpy_opts: list[str],
+    pytester: Pytester,
+    hardpy_opts: list[str],
 ):
     """Verify complex dependencies with module-level markers.
 
@@ -80,7 +78,7 @@ def test_four_dependencies_with_module_level(
         """,
     )
     pytester.makepyfile(
-        test_3="""
+        test_4="""
         import pytest
 
         pytestmark = [
@@ -94,7 +92,7 @@ def test_four_dependencies_with_module_level(
         """,
     )
     result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(passed=1, failed=1, skipped=1)
+    result.assert_outcomes(passed=2, failed=1, skipped=1)
 
 
 def test_multiple_tests_dependencies(
