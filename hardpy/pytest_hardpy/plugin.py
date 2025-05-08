@@ -490,16 +490,12 @@ class HardpyPlugin:
             wrong_status = {TestStatus.FAILED, TestStatus.SKIPPED, TestStatus.ERROR}
             for dependency_test in dependency_tests:
                 module_id, case_id = dependency_test
-                try:
-                    if case_id is not None:
-                        if self._results[module_id][case_id] in wrong_status:
-                            return True
-                    elif any(
-                        status in wrong_status
-                        for status in self._results[module_id].values()
-                    ):
-                        return True
-                except KeyError:
+                module_data = self._results[module_id]
+                # case result is the reason for the skipping
+                if case_id is not None and module_data[case_id] in wrong_status:  # noqa: SIM114
+                    return True
+                # module result is the reason for the skipping
+                elif any(status in wrong_status for status in module_data.values()):  # noqa: RET505
                     return True
         return False
 
