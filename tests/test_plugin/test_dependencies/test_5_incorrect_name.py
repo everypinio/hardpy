@@ -8,11 +8,13 @@ if TYPE_CHECKING:
     from pytest import Pytester
 
 
-def test_case_dependency_incorrect_format(pytester: Pytester, hardpy_opts: list[str]):
+def test_case_dependency_incorrect_format(pytester: Pytester, hardpy_opts: list):
     # incorrect case dependencie format
     test_1 = """
         import pytest
+
         @pytest.mark.dependency(":::")
+
         def test_a():
             assert True
     """
@@ -34,7 +36,7 @@ def test_case_dependency_incorrect_format(pytester: Pytester, hardpy_opts: list[
     assert result.ret == ExitCode.NO_TESTS_COLLECTED
 
 
-def test_not_exist_case(pytester: Pytester, hardpy_opts: list[str]):
+def test_not_exist_case(pytester: Pytester, hardpy_opts: list):
     test_1="""
         import pytest
 
@@ -59,7 +61,7 @@ def test_not_exist_case(pytester: Pytester, hardpy_opts: list[str]):
     result.assert_outcomes(passed=1)
 
 
-def test_not_exist_module(pytester: Pytester, hardpy_opts: list[str]):
+def test_not_exist_module(pytester: Pytester, hardpy_opts: list):
     test_1="""
         import pytest
 
@@ -89,7 +91,7 @@ def test_not_exist_module(pytester: Pytester, hardpy_opts: list[str]):
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=2, failed=1)
 
-def test_not_exist_module_and_case(pytester: Pytester, hardpy_opts: list[str]):
+def test_not_exist_module_and_case(pytester: Pytester, hardpy_opts: list):
     test_1="""
         import pytest
 
