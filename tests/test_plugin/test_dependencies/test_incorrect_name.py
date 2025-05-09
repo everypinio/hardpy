@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 
 def test_case_dependency_incorrect_format(pytester: Pytester, hardpy_opts: list):
-    # incorrect case dependencie format
+    # incorrect case dependency format
     test_1 = """
         import pytest
 
@@ -22,7 +22,7 @@ def test_case_dependency_incorrect_format(pytester: Pytester, hardpy_opts: list)
     result = pytester.runpytest(*hardpy_opts)
     assert result.ret == ExitCode.NO_TESTS_COLLECTED
 
-    # incorrect module dependencie format
+    # incorrect module dependency format
     test_2="""
         import pytest
 

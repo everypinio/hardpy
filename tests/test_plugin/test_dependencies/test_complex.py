@@ -83,7 +83,6 @@ def test_multiple_module_dependencies_skipped(pytester: Pytester, hardpy_opts: l
 
 
 def test_module_by_module_skipped(pytester: Pytester, hardpy_opts: list):
-    """Verify module dependencie by module dependencie."""
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -130,7 +129,6 @@ def test_module_by_module_skipped(pytester: Pytester, hardpy_opts: list):
 
 
 def test_module_by_module_passed(pytester: Pytester, hardpy_opts: list):
-    """Verify module dependencie by module dependencie."""
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -177,7 +175,6 @@ def test_module_by_module_passed(pytester: Pytester, hardpy_opts: list):
 
 
 def test_module_by_module_failed(pytester: Pytester, hardpy_opts: list):
-    """Verify module dependencie by module dependencie."""
     pytester.makepyfile(
         test_1="""
         import pytest
