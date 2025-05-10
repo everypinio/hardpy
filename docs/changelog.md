@@ -2,6 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Change dependency behaviour when a case or module name does not exist. 
+  Such a test or module will be executed.
+  [[PR-130](https://github.com/everypinio/hardpy/pull/130)]
+* Add the ability to add dependency from multiple tests.
+  [[PR-130](https://github.com/everypinio/hardpy/pull/130)]
 * Transfer frontend from CRA to Vite.
   [[PR-122](https://github.com/everypinio/hardpy/pull/122)]
 * Remove bug with scrolling tests with operator messages.

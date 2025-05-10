@@ -703,6 +703,7 @@ pytestmark = pytest.mark.module_name("Module 1")
 
 Skips the test case/module if the main test fails/skipped/errored.
 For more information, see the example [skip test](./../examples/skip_test.md)
+and [skip feature description](./../features/features.md#skipping-the-tests).
 
 **Example:**
 
