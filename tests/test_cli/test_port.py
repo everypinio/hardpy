@@ -1,5 +1,6 @@
 import subprocess
 import time
+from pathlib import Path
 
 import requests
 
@@ -8,13 +9,16 @@ HARDPY_RUN_COMMAND = ["hardpy", "run"]
 PORT = 8000
 
 
-def test_basic_startup_simple():
+def test_basic_startup_simple(tmp_path: Path):
+    test1_dir = tmp_path / "test_1"
+    test1_dir.mkdir()
+
     subprocess.run(
-        [*HARDPY_COMMAND, "test_1", "--frontend-port", str(PORT)],
+        [*HARDPY_COMMAND, str(test1_dir), "--frontend-port", str(PORT)],
         check=True,
     )
     process = subprocess.Popen(
-        [*HARDPY_RUN_COMMAND, "test_1"],
+        [*HARDPY_RUN_COMMAND, str(test1_dir)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
@@ -25,10 +29,14 @@ def test_basic_startup_simple():
     process.kill()
     time.sleep(5)
     assert process.poll() in [-9, 1]
+
+    test2_dir = tmp_path / "test_2"
+    test2_dir.mkdir()
+
     subprocess.run(
         [
             *HARDPY_COMMAND,
-            "test_2",
+            str(test2_dir),
             "--frontend-port",
             str(PORT),
             "--tests-name",
@@ -37,7 +45,7 @@ def test_basic_startup_simple():
         check=True,
     )
     process = subprocess.Popen(
-        [*HARDPY_RUN_COMMAND, "test_2"],
+        [*HARDPY_RUN_COMMAND, str(test2_dir)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )

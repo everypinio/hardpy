@@ -96,7 +96,7 @@ def test_hardpy_config():
     assert config.database.host == db_default_host
     assert config.database.port == db_default_port
     assert config.frontend.host == frontend_default_host
-    assert config.frontend.port == None
+    assert config.frontend.port is None
     assert config.stand_cloud.address == stand_cloud_default_addr
 
 
