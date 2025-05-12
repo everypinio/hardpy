@@ -91,6 +91,40 @@ the marker's content in the event of failure.
 The **HardPy** allows the user to skip tests on [dependency](./../documentation/pytest_hardpy.md#dependency)
 markers. The user can specify that a test or an entire module depends on another test.
 In this way, tests can be defined whose failure will prevent the marked tests from running.
+The user can also create a dependency on several test cases or modules.
+If the name of the dependency does not exist, the test will be started.
+
+```python
+#test_1.py
+import pytest
+
+def test_a():
+    assert False
+
+@pytest.mark.dependency("test_1::test_a")
+def test_b():
+    assert True
+```
+
+```python
+#test_2.py
+import pytest
+
+pytestmark = pytest.mark.dependency("test_1")
+
+def test_a():
+    assert False
+
+def test_b():
+    assert True
+
+@pytest.mark.dependency("test_2::test_a")
+@pytest.mark.dependency("test_2::test_b")
+def test_c():
+    assert True
+```
+
+See the example [skip test](./../examples/skip_test.md) for more information.
 
 ## Running some instance in single stand
 
