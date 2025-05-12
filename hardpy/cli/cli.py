@@ -2,7 +2,6 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
-import os
 import socket
 import sys
 from pathlib import Path
@@ -43,13 +42,13 @@ def find_free_port(start_port: int | str = "auto") -> int:
         except OSError as e:
             raise RuntimeError(PORT_NOT_FOUND_ERROR) from e
 
-    # Case 2: Specific port requested
     if start_port:
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                s.bind(("127.0.0.1", int(start_port)))  # Convert start_port to int
+                s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                s.bind(("127.0.0.1", int(start_port)))
                 s.close()
-                return int(start_port)  # Return the integer value
+                return int(start_port)
         except OSError:
             msg = f"Specified port {start_port} is already in use"
             raise RuntimeError(msg)  # noqa: B904
