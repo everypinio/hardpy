@@ -52,7 +52,7 @@ The `hardpy run` command will terminate in this case.
 
 ### 3. Without specified port (automatic selection)
 
-When no port is specified:
+When no port is specified, **HardPy** automatically selects an available port.
 
 ```toml
 [frontend]
