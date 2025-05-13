@@ -85,11 +85,11 @@ class NodeInfo:
         return self._case_name
 
     @property
-    def dependency(self) -> TestDependencyInfo | str:
+    def dependency(self) -> list[TestDependencyInfo] | None:
         """Get dependency information.
 
         Returns:
-            TestDependencyInfo | str: Parsed dependency information.
+            list[TestDependencyInfo] | None: Dependency information
         """
         return self._dependency
 
@@ -126,7 +126,25 @@ class NodeInfo:
                 return marker.args[0]
         return ""
 
-    def _get_dependency_info(self, markers: list[Mark]) -> TestDependencyInfo | str:
+    def _get_human_names(self, markers: list[Mark], marker_name: str) -> list[str]:
+        """Get human names from markers.
+
+        Args:
+            markers (list[Mark]): item markers list
+            marker_name (str): marker name
+
+        Returns:
+            list[str]: human names by user
+        """
+        names = []
+        for marker in markers:
+            if marker.name == marker_name and marker.args:
+                names.append(marker.args[0])  # noqa: PERF401
+        return names
+
+    def _get_dependency_info(
+        self, markers: list[Mark],
+    ) -> list[TestDependencyInfo] | None:
         """Extract and parse dependency information.
 
         Args:
@@ -134,17 +152,22 @@ class NodeInfo:
             marker_name (str): marker name
 
         Returns:
-            TestDependencyInfo | str | None: Parsed dependency information.
+            list[TestDependencyInfo] | None: Dependency information
         """
-        dependency_value = self._get_human_name(markers, "dependency")
-        dependency_data = re.search(r"(\w+)::(\w+)", dependency_value)
-        if dependency_data:
-            return TestDependencyInfo(*dependency_data.groups())
-        elif re.search(r"^\w+$", dependency_value):  # noqa: RET505
-            return TestDependencyInfo(dependency_value, None)
-        elif dependency_data is None and dependency_value == "":
-            return ""
-        raise ValueError
+        dependency_value = self._get_human_names(markers, "dependency")
+        dependencies = []
+        for dependency in dependency_value:
+            dependency_data = re.search(r"(\w+)::(\w+)", dependency)
+            if dependency_data:
+                dependencies.append(TestDependencyInfo(*dependency_data.groups()))
+            elif re.search(r"^\w+$", dependency):
+                dependencies.append(TestDependencyInfo(dependency, None))
+            elif not dependency:
+                continue
+            else:
+                error_msg = f"Invalid dependency format: {dependency}"
+                raise ValueError(error_msg)
+        return dependencies if dependencies else None
 
     def _get_attempt(self, markers: list[Mark]) -> int:
         """Get the number of attempts.
