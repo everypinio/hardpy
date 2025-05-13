@@ -135,10 +135,7 @@
             "args": [
                 "run",
                 "examples/minute_parity"
-            ],
-            "env": {
-                "DEBUG_FRONTEND": "1"
-            }
+            ]
         },
         {
             "name": "Python: Example StandCloud",
