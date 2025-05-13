@@ -63,6 +63,7 @@ nav:
   - Examples:
       - examples/index.md
       - Attempts: examples/attempts.md
+      - Automatic port allocation: examples/automatic_port_allocation.md
       - CouchDB in RAM: examples/db_in_ram.md
       - CouchDB load: examples/couchdb_load.md
       - Dialog box: examples/dialog_box.md

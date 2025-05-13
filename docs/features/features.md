@@ -143,7 +143,7 @@ See the [StandCloud](./../documentation/stand_cloud.md) section and the
 
 ### Behavior based on configuration
 
-**When `[frontend]` section is empty in `hardpy.toml`:**
+**When port field in `[frontend]` section is empty in `hardpy.toml`:**
 
 - **HardPy** will automatically find and use an available port from the system's free ports.
 
