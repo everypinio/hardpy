@@ -137,6 +137,23 @@ The startup is described in the [Multiple Stand](./../examples/multiple_stands.m
 See the [StandCloud](./../documentation/stand_cloud.md) section and the
 [StandCloud example](./../examples/stand_cloud.md) for more information.
 
+## Automatic port allocation for frontend
+
+**HardPy** includes an automatic port allocation feature for the operator panel frontend when the specified port is unavailable.
+
+### Behavior based on configuration
+
+**When `[frontend]` section is empty in `hardpy.toml`:**
+
+- **HardPy** will automatically find and use an available port from the system's free ports.
+
+**When `[frontend]` section specifies a port in `hardpy.toml`:**
+
+- HardPy will attempt to use the specified port.
+- If the port is occupied, **HardPy** will:
+    - Notify the user about the port conflict.
+    - Terminate the `hardpy run` command execution.
+
 ## Logging approaches in HardPy
 
 **HardPy** provides several methods for logging and user interaction during testing.
