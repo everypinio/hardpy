@@ -4,7 +4,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 
 * Add marker **critical**.
   [[PR-135](https://github.com/everypinio/hardpy/pull/135)]
-* Change dependency behaviour when a case or module name does not exist. 
+* Change dependency behaviour when a case or module name does not exist.
   Such a test or module will be executed.
   [[PR-130](https://github.com/everypinio/hardpy/pull/130)]
 * Add the ability to add dependency from multiple tests.
