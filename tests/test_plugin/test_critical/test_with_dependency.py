@@ -282,23 +282,6 @@ def test_critical_module_with_dependency_failed(pytester: Pytester, hardpy_opts:
 
 def test_first_module_critical_failed(pytester: Pytester, hardpy_opts: list):
     """First module is critical and failed - check timing."""
-    # pytester.makeconftest(
-    #     f"""
-    #     {import_header}
-
-    #     def finish_executing():
-    #         report = hardpy.get_current_report()
-
-    #         module1 = report.modules["test_1"]
-    #         assert module1.stop_time >= module1.start_time
-
-    #         module2 = report.modules["test_2"]
-    #         assert module2.stop_time is None
-    #         assert module2.start_time is None
-
-    #     {conftest_actions_after}
-    # """,
-    # )
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -323,26 +306,6 @@ def test_first_module_critical_failed(pytester: Pytester, hardpy_opts: list):
 
 def test_middle_module_critical_failed(pytester: Pytester, hardpy_opts: list):
     """Middle module is critical and failed - check timing."""
-    # pytester.makeconftest(
-    #     f"""
-    #     {import_header}
-
-    #     def finish_executing():
-    #         report = hardpy.get_current_report()
-
-    #         module1 = report.modules["test_1"]
-    #         assert module1.stop_time >= module1.start_time
-
-    #         module2 = report.modules["test_2"]
-    #         assert module2.stop_time >= module2.start_time
-
-    #         module3 = report.modules["test_3"]
-    #         assert module3.stop_time is None
-    #         assert module3.start_time is None
-
-    #     {conftest_actions_after}
-    # """,
-    # )
     pytester.makepyfile(
         test_1="""
         import pytest
