@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+import socket
 import sys
 from pathlib import Path
 from typing import Annotated, Optional
@@ -18,6 +19,51 @@ from hardpy.common.stand_cloud import (
     login as auth_login,
     logout as auth_logout,
 )
+
+PORT_NOT_FOUND_ERROR = "Could not find any available port"
+
+def find_free_port(start_port: int | str = "auto") -> int:
+    """Find a free port on the local machine.
+
+    Args:
+        start_port (int | str): The port to start searching from. If "auto", a random available port will be returned.
+
+    Returns:
+        int: The free port number.
+
+    Raises:
+        RuntimeError: If no available port can be found.
+    """  # noqa: E501
+    if start_port == "auto":
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.bind(("127.0.0.1", 0))
+                return s.getsockname()[1]
+        except OSError as e:
+            raise RuntimeError(PORT_NOT_FOUND_ERROR) from e
+
+    if start_port:
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                s.bind(("127.0.0.1", int(start_port)))
+                s.close()
+                return int(start_port)
+        except OSError:
+            msg = f"Specified port {start_port} is already in use"
+            raise RuntimeError(msg)  # noqa: B904
+        except ValueError:
+            msg = f"Invalid port value: {start_port}"
+            raise ValueError(msg)  # noqa: B904
+
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.bind(("127.0.0.1", 0))
+            return s.getsockname()[1]
+    except OSError as e:
+        msg = "Could not find any available port"
+        raise RuntimeError(msg) from e
+
 
 if __debug__:
     from urllib3 import disable_warnings
@@ -60,9 +106,9 @@ def init(  # noqa: PLR0913
         default=default_config.frontend.host,
         help="Specify a frontend host.",
     ),
-    frontend_port: int = typer.Option(
+    frontend_port: int | None = typer.Option(
         default=default_config.frontend.port,
-        help="Specify a frontend port.",
+        help="Specify a frontend port (number or None for automatic selection).",
     ),
     sc_address: str = typer.Option(
         default="",
@@ -84,7 +130,7 @@ def init(  # noqa: PLR0913
         database_host (str): Database host
         database_port (int): Database port
         frontend_host (str): Panel operator host
-        frontend_port (int): Panel operator port
+        frontend_port (int | None): Panel operator port (number or None)
         sc_address (str): StandCloud address
         sc_connection_only (bool): Flag to check StandCloud service availability
     """
@@ -150,12 +196,29 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
         sys.exit()
 
     print("\nLaunch the HardPy operator panel...")
+
+    try:
+        if isinstance(config.frontend.port, int):
+            actual_port = find_free_port(start_port=config.frontend.port)
+            if actual_port != config.frontend.port:
+                print(f"Error: Port {config.frontend.port} is not available")
+                sys.exit(1)
+        else:
+            actual_port = find_free_port(start_port="auto")
+            print(f"Automatically selected port {actual_port}")
+            config.frontend.port = actual_port
+    except RuntimeError as e:
+        print(f"Error: {e!s}")
+        sys.exit(1)
+
     print(f"http://{config.frontend.host}:{config.frontend.port}\n")
 
     uvicorn_run(
         "hardpy.hardpy_panel.api:app",
         host=config.frontend.host,
-        port=config.frontend.port,
+        port=config.frontend.port
+        if isinstance(config.frontend.port, int)
+        else actual_port,
         log_level="critical",
     )
 

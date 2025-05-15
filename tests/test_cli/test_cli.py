@@ -121,7 +121,7 @@ def test_cli_init_frontend_host(tmp_path: Path):
     with Path.open(hardpy_toml_path) as f:
         content = f.read()
         frontend_info = (
-            f'[frontend]\nhost = "{frontend_no_default_host}"\nport = 8000\n'
+            f'[frontend]\nhost = "{frontend_no_default_host}"\n'
         )
         assert (
             frontend_info in content

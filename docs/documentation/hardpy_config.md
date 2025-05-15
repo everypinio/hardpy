@@ -103,6 +103,7 @@ The user can change this value with the `hardpy init --frontend-host` option.
 
 Operator panel port number. The default is `8000`.
 The user can change this value with the `hardpy init --frontend-port` option.
+If the port is not specified, it will be assigned automatically.
 
 ### stand_cloud
 
