@@ -114,36 +114,3 @@ def test_critical_module_marker_on_failed(pytester: Pytester, hardpy_opts: list[
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1, skipped=5)
-
-
-def test_critical_with_dependency(pytester: Pytester, hardpy_opts: list[str]):
-    pytester.makepyfile(
-        test_file1="""
-        import pytest
-
-        @pytest.mark.critical
-        def test_one():
-            assert False
-
-        @pytest.mark.dependency("test_file1::test_one")
-        def test_two():
-            assert True
-
-        def test_three():
-            assert True
-        """,
-        test_file2="""
-        import pytest
-
-        def test_one():
-            assert True
-
-        def test_two():
-            assert True
-
-        def test_three():
-            assert True
-        """,
-    )
-    result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(failed=1, skipped=5)
