@@ -1,13 +1,10 @@
 from __future__ import annotations
 
-from http import HTTPStatus
 from subprocess import PIPE, Popen, run as subprocess_run
 from typing import TYPE_CHECKING
-import getpass
 
 import psutil
 import pytest
-import requests
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -15,7 +12,7 @@ if TYPE_CHECKING:
 
 PORT = 8000
 RUN_CMD = ["hardpy", "run", "TEMPLATE_DIR"]
-INIT_CMD = ["hardpy", "init", "TEMPLATE_DIR", "--frontend-port", str(PORT), "--frontend-host", getpass.getuser()]
+INIT_CMD = ["hardpy", "init", "TEMPLATE_DIR", "--frontend-port", str(PORT)]
 ERROR_STR = f"Specified port {PORT} is already in use"
 
 
