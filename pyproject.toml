@@ -53,6 +53,7 @@
     [project.optional-dependencies]
         dev = ["wemake-python-styleguide>=0.19.2", "mypy>=1.11.0", "ruff==0.8.0"]
         build = ["build==1.0.3"]
+        tests = ["psutil~=7.0.0"]
 
     [project.urls]
         Homepage = "https://github.com/everypinio/hardpy/"
