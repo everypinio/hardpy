@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add prohibition to run tests on the port if the port is busy.
+  [[PR-136](https://github.com/everypinio/hardpy/pull/136)]
 * Add marker **critical**.
   [[PR-135](https://github.com/everypinio/hardpy/pull/135)]
 * Change dependency behaviour when a case or module name does not exist.

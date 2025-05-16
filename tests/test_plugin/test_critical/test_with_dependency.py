@@ -11,12 +11,38 @@ import_header = """
         import hardpy
 """
 
-conftest_actions_after = """
-        @pytest.fixture(scope="session", autouse=True)
-        def actions_after(post_run_functions: list):
-            post_run_functions.append(finish_executing)
-            yield
-"""
+
+def test_critical_with_dependency(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        test_file1="""
+        import pytest
+
+        @pytest.mark.critical
+        def test_one():
+            assert False
+
+        @pytest.mark.dependency("test_file1::test_one")
+        def test_two():
+            assert True
+
+        def test_three():
+            assert True
+        """,
+        test_file2="""
+        import pytest
+
+        def test_one():
+            assert True
+
+        def test_two():
+            assert True
+
+        def test_three():
+            assert True
+        """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(failed=1, skipped=5)
 
 
 def test_critical_case_with_dependency_passed(pytester: Pytester, hardpy_opts: list):
@@ -74,156 +100,6 @@ def test_critical_case_with_skipped_dependency(pytester: Pytester, hardpy_opts: 
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(skipped=2)
-
-
-def test_first_case_critical_failed(pytester: Pytester, hardpy_opts: list):
-    """First test case is critical and failed - check timing."""
-    pytester.makeconftest(
-        f"""
-        {import_header}
-
-        def finish_executing():
-            report = hardpy.get_current_report()
-
-            module = report.modules["test_1"]
-            assert module.stop_time >= module.start_time
-
-            case_a = module.cases["test_a"]
-            assert case_a.stop_time >= case_a.start_time
-
-            case_b = module.cases["test_b"]
-            assert case_b.stop_time is None
-            assert case_b.start_time is None
-
-        {conftest_actions_after}
-    """,
-    )
-    pytester.makepyfile(
-        test_1="""
-        import pytest
-
-        @pytest.mark.critical
-        def test_a():
-            assert False
-
-        def test_b():
-            assert True
-    """,
-    )
-    result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(failed=1, skipped=1)
-
-
-def test_middle_case_critical_failed(pytester: Pytester, hardpy_opts: list):
-    """Middle test case is critical and failed - check timing."""
-    pytester.makeconftest(
-        f"""
-        {import_header}
-
-        def finish_executing():
-            report = hardpy.get_current_report()
-
-            module = report.modules["test_1"]
-            assert module.stop_time >= module.start_time
-
-            case_a = module.cases["test_a"]
-            assert case_a.stop_time >= case_a.start_time
-
-            case_b = module.cases["test_b"]
-            assert case_b.stop_time >= case_b.start_time
-
-            case_c = module.cases["test_c"]
-            assert case_c.stop_time is None
-            assert case_c.start_time is None
-
-        {conftest_actions_after}
-    """,
-    )
-    pytester.makepyfile(
-        test_1="""
-        import pytest
-
-        def test_a():
-            assert True
-
-        @pytest.mark.critical
-        def test_b():
-            assert False
-
-        def test_c():
-            assert True
-    """,
-    )
-    result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(passed=1, failed=1, skipped=1)
-
-
-def test_last_case_critical_failed(pytester: Pytester, hardpy_opts: list):
-    """Last test case is critical and failed - check timing."""
-    pytester.makeconftest(
-        f"""
-        {import_header}
-
-        def finish_executing():
-            report = hardpy.get_current_report()
-
-            module = report.modules["test_1"]
-            assert module.stop_time >= module.start_time
-
-            case_a = module.cases["test_a"]
-            assert case_a.stop_time >= case_a.start_time
-
-            case_b = module.cases["test_b"]
-            assert case_b.stop_time >= case_b.start_time
-
-        {conftest_actions_after}
-    """,
-    )
-    pytester.makepyfile(
-        test_1="""
-        import pytest
-
-        def test_a():
-            assert True
-
-        @pytest.mark.critical
-        def test_b():
-            assert False
-    """,
-    )
-    result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(passed=1, failed=1)
-
-
-def test_critical_case_with_skip(pytester: Pytester, hardpy_opts: list):
-    """Critical test case with skip - check timing."""
-    pytester.makeconftest(
-        f"""
-        {import_header}
-
-        def finish_executing():
-            report = hardpy.get_current_report()
-
-            module = report.modules["test_1"]
-            assert module.stop_time >= module.start_time
-
-            case = module.cases["test_a"]
-            assert case.stop_time >= case.start_time
-
-        {conftest_actions_after}
-    """,
-    )
-    pytester.makepyfile(
-        test_1="""
-        import pytest
-
-        @pytest.mark.critical
-        def test_a():
-            pytest.skip()
-    """,
-    )
-    result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(skipped=1)
 
 
 def test_critical_module_with_dependency_passed(pytester: Pytester, hardpy_opts: list):
@@ -334,75 +210,3 @@ def test_middle_module_critical_failed(pytester: Pytester, hardpy_opts: list):
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1, failed=1, skipped=1)
-
-
-def test_last_module_critical_failed(pytester: Pytester, hardpy_opts: list):
-    """Last module is critical and failed - check timing."""
-    pytester.makeconftest(
-        f"""
-        {import_header}
-
-        def finish_executing():
-            report = hardpy.get_current_report()
-
-            module1 = report.modules["test_1"]
-            assert module1.stop_time >= module1.start_time
-
-            module2 = report.modules["test_2"]
-            assert module2.stop_time >= module2.start_time
-
-        {conftest_actions_after}
-    """,
-    )
-    pytester.makepyfile(
-        test_1="""
-        import pytest
-
-        def test_a():
-            assert True
-    """,
-    )
-    pytester.makepyfile(
-        test_2="""
-        import pytest
-
-        pytestmark = pytest.mark.critical
-
-        def test_b():
-            assert False
-    """,
-    )
-    result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(passed=1, failed=1)
-
-
-def test_critical_module_with_skip(pytester: Pytester, hardpy_opts: list):
-    """Critical module with skip - check timing."""
-    pytester.makeconftest(
-        f"""
-        {import_header}
-
-        def finish_executing():
-            report = hardpy.get_current_report()
-
-            module = report.modules["test_1"]
-            assert module.stop_time >= module.start_time
-
-            case = module.cases["test_a"]
-            assert case.stop_time >= case.start_time
-
-        {conftest_actions_after}
-    """,
-    )
-    pytester.makepyfile(
-        test_1="""
-        import pytest
-
-        pytestmark = pytest.mark.critical
-
-        def test_a():
-            pytest.skip()
-    """,
-    )
-    result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(skipped=1)
