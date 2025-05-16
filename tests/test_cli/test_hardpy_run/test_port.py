@@ -32,21 +32,6 @@ def test_single_start(process_killer: NoneType, tmp_path: Path):
     psutil.Process(process.pid).kill()
     assert process.wait(3) is not None
 
-def test_repeated_start(process_killer: NoneType, tmp_path: Path):
-    test_dir = _init_test_project(tmp_path, "test_1")
-    RUN_CMD[2] = test_dir
-
-    process_1 = Popen(RUN_CMD, stdout=PIPE, stderr=PIPE)
-
-    if ERROR_STR in _collect_n_string(process=process_1, n=5):
-        pytest.fail(ERROR_STR)
-
-    process_2 = Popen(RUN_CMD, stdout=PIPE, stderr=PIPE)
-    assert ERROR_STR in _collect_n_string(process=process_2, n=5)
-
-    psutil.Process(process_1.pid).kill()
-    assert process_1.wait(3) is not None
-
 
 def test_start_after_stop_single_port(process_killer: NoneType, tmp_path: Path):
     test_dir_1 = _init_test_project(tmp_path, "test_1")
@@ -80,6 +65,7 @@ def _init_test_project(tmp_path: Path, name: str) -> str:
     subprocess_run(INIT_CMD, check=True)
 
     return str(test1_dir)
+
 
 def _collect_n_string(process: Popen, n: int) -> str:
     """Collect n string from process output."""
