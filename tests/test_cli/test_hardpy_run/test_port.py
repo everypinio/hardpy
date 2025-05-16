@@ -10,10 +10,9 @@ if TYPE_CHECKING:
     from pathlib import Path
     from types import NoneType
 
-PORT = 8000
 RUN_CMD = ["hardpy", "run", "TEMPLATE_DIR"]
-INIT_CMD = ["hardpy", "init", "TEMPLATE_DIR", "--frontend-port", str(PORT)]
-ERROR_STR = f"Specified port {PORT} is already in use"
+INIT_CMD = ["hardpy", "init", "TEMPLATE_DIR", "--frontend-port", "8000"]
+ERROR_STR = "Specified port 8000 is already in use"
 
 
 def test_single_start(process_killer: NoneType, tmp_path: Path):
@@ -34,19 +33,24 @@ def test_single_start(process_killer: NoneType, tmp_path: Path):
     assert process.wait(3) is not None
 
 def test_repeated_start(process_killer: NoneType, tmp_path: Path):
-    test_dir = _init_test_project(tmp_path, "test_1")
-    RUN_CMD[2] = test_dir
+    test_dir_1 = _init_test_project(tmp_path, "test_1")
+    RUN_CMD[2] = test_dir_1
 
-    process_1 = Popen(RUN_CMD, stdout=PIPE, stderr=PIPE)
+    process = Popen(RUN_CMD, stdout=PIPE, stderr=PIPE)
 
-    if ERROR_STR in _collect_n_string(process=process_1, n=5):
+    if ERROR_STR in _collect_n_string(process=process, n=5):
         pytest.fail(ERROR_STR)
 
-    process_2 = Popen(RUN_CMD, stdout=PIPE, stderr=PIPE)
-    assert ERROR_STR in _collect_n_string(process=process_2, n=5)
+    test_dir_2 = _init_test_project(tmp_path, "test_2")
+    RUN_CMD[2] = test_dir_2
 
-    psutil.Process(process_1.pid).kill()
-    assert process_1.wait(3) is not None
+    process = Popen(RUN_CMD, stdout=PIPE, stderr=PIPE)
+
+    assert ERROR_STR in _collect_n_string(process=process, n=5)
+
+    psutil.Process(process.pid).kill()
+    assert process.wait(3) is not None
+
 
 
 def test_start_after_stop_single_port(process_killer: NoneType, tmp_path: Path):
