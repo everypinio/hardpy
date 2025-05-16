@@ -7,7 +7,6 @@ import sys
 from pathlib import Path
 from typing import Annotated, Optional
 
-import psutil
 import requests
 import typer
 from uvicorn import run as uvicorn_run
@@ -153,25 +152,10 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
 
     print("\nLaunch the HardPy operator panel...")
 
-    def _get_pid_by_port(port: int) -> int | None:
-        for conn in psutil.net_connections():
-            if conn.laddr and conn.laddr.port == port:
-                return conn.pid
-        return None
-
-    if _get_pid_by_port(config.frontend.port):
-        print(f"Error: Specified port {config.frontend.port} is already in use")
-        sys.exit(1)
-
-    # with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    #     try:
-    #         s.bind(("127.0.0.1", int(config.frontend.port)))
-    #     except ValueError:
-    #         print(f"Error: Invalid port value: {config.frontend.port}")
-    #         sys.exit(1)
-    #     except OSError:
-    #         print(f"Error: Specified port {config.frontend.port} is already in use")
-    #         sys.exit(1)
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        if s.connect_ex((config.frontend.host, config.frontend.port)) == 0:
+            print(f"Error: Specified port {config.frontend.port} is already in use")
+            sys.exit(1)
 
     print(f"http://{config.frontend.host}:{config.frontend.port}\n")
 
