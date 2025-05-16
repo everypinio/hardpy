@@ -11,13 +11,6 @@ import_header = """
         import hardpy
 """
 
-# conftest_actions_after = """
-#         @pytest.fixture(scope="session", autouse=True)
-#         def actions_after(post_run_functions: list):
-#             post_run_functions.append(finish_executing)
-#             yield
-# """
-
 
 def test_critical_with_dependency(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
