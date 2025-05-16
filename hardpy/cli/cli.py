@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+import socket
 import sys
 from pathlib import Path
 from typing import Annotated, Optional
@@ -150,6 +151,18 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
         sys.exit()
 
     print("\nLaunch the HardPy operator panel...")
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        try:
+            s.bind(("127.0.0.1", int(config.frontend.port)))
+        except ValueError:
+            print(f"Error: Invalid port value: {config.frontend.port}")
+            sys.exit(1)
+        except OSError:
+            print(f"Error: Specified port {config.frontend.port} is already in use")
+            sys.exit(1)
+
     print(f"http://{config.frontend.host}:{config.frontend.port}\n")
 
     uvicorn_run(

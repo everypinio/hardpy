@@ -1,4 +1,4 @@
-# Dialog Box
+# Dialog box
 
 This is an example of testing dialog boxes using the **HardPy** library.
 The code for this example can be seen inside the hardpy package

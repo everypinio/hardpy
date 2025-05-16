@@ -120,5 +120,3 @@ def test_not_exist_module_and_case(pytester: Pytester, hardpy_opts: list):
     pytester.makepyfile(test_2)
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=2, failed=1)
-
-

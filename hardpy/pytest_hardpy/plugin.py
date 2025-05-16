@@ -124,6 +124,7 @@ class HardpyPlugin:
         self._post_run_functions: list[Callable] = []
         self._dependencies = {}
         self._tests_name: str = ""
+        self._session = None
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -156,11 +157,13 @@ class HardpyPlugin:
         sc_connection_only = config.getoption("--sc-connection-only")
         if sc_connection_only:
             con_data.sc_connection_only = bool(sc_connection_only)  # type: ignore
+        self._critical_failed = False
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
         config.addinivalue_line("markers", "dependency")
         config.addinivalue_line("markers", "attempt")
+        config.addinivalue_line("markers", "critical")
 
         # must be init after config data is set
         try:
@@ -191,6 +194,7 @@ class HardpyPlugin:
         items: list[Item],  # noqa: ARG002
     ) -> None:
         """Call after collection phase."""
+        self._session = session
         self._reporter.init_doc(self._tests_name)
 
         nodes = {}
@@ -341,6 +345,22 @@ class HardpyPlugin:
         module_id = Path(report.fspath).stem
         case_id = report.nodeid.rpartition("::")[2]
 
+        if report.outcome in {TestStatus.FAILED, TestStatus.SKIPPED, TestStatus.ERROR}:
+            if self._session is not None:
+                item = next(
+                    (
+                        item
+                        for item in self._session.items
+                        if item.nodeid == report.nodeid
+                    ),
+                    None,
+                )
+            else:
+                msg = "self._session is None"
+                raise ValueError(msg)
+            if item and NodeInfo(item).critical:
+                self._critical_failed = True
+
         self._reporter.set_case_status(
             module_id,
             case_id,
@@ -483,6 +503,8 @@ class HardpyPlugin:
 
     def _is_skip_test(self, node_info: NodeInfo) -> bool:
         """Is need to skip a test because it depends on another test."""
+        if self._critical_failed:
+            return True
         dependency_tests = self._dependencies.get(
             TestDependencyInfo(node_info.module_id, node_info.case_id),
         )

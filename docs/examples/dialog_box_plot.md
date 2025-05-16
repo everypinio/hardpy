@@ -10,7 +10,7 @@ This approach is particularly useful for scenarios where visual data needs to be
     <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_plot.png" alt="plot">
 </h1>
 
-### How to Start
+### how to start
 
 1. Launch `hardpy init html_plot`.
 2. Install Required Packages `pip install matplotlib mpld3`.
