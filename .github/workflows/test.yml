@@ -10,7 +10,7 @@ permissions:
 jobs:
   test:
     name: PyTest
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     # Service containers to run with `container-job`
     services:
       # Label used to access the service container
