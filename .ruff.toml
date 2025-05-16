@@ -59,7 +59,7 @@ indent-width = 4
             "PT022",   # Using yield
             "PLR2004", # Magic value used in comparison
         ]
-        "tests/test_cli/test_hardpy_run.py" = [
+        "tests/test_cli/test_hardpy_run/*" = [
             "ARG001",  # Unused function argument (fixture in pytest)
         ]
         "examples/*" = [
