@@ -1,2 +1,2 @@
 # Install the package and deps
---editable .[dev,build]
+--editable .[dev,build,tests]

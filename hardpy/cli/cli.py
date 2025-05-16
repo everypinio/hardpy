@@ -153,13 +153,7 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
     print("\nLaunch the HardPy operator panel...")
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        try:
-            s.bind(("127.0.0.1", int(config.frontend.port)))
-        except ValueError:
-            print(f"Error: Invalid port value: {config.frontend.port}")
-            sys.exit(1)
-        except OSError:
+        if s.connect_ex((config.frontend.host, config.frontend.port)) == 0:
             print(f"Error: Specified port {config.frontend.port} is already in use")
             sys.exit(1)
 
