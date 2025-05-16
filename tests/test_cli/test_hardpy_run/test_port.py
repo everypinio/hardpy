@@ -27,7 +27,7 @@ def test_single_start(process_killer: NoneType, tmp_path: Path):
     if ERROR_STR in collected_str:
         pytest.fail(ERROR_STR)
 
-    launch_str = "Launch the HardPy operator panel"
+    launch_str = "test session starts"
     assert launch_str in collected_str
 
     psutil.Process(process.pid).kill()
