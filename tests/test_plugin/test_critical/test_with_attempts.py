@@ -11,7 +11,8 @@ status_test_header = """
 
 
 def test_critical_with_attempt_passed_on_retry(
-    pytester: Pytester, hardpy_opts: list[str]
+    pytester: Pytester,
+    hardpy_opts: list[str],
 ):
     """Critical test with attempt marker that passes on a retry."""
     pytester.makepyfile(
