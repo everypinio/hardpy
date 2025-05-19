@@ -19,6 +19,7 @@ from hardpy.pytest_hardpy.pytest_call import (
     set_stand_info,
     set_stand_location,
     set_stand_name,
+    set_stand_number,
 )
 from hardpy.pytest_hardpy.result import (
     CouchdbLoader,
@@ -34,12 +35,14 @@ from hardpy.pytest_hardpy.utils import (
     DuplicateSerialNumberError,
     DuplicateTestStandLocationError,
     DuplicateTestStandNameError,
+    DuplicateTestStandNumberError,
     HTMLComponent,
     ImageComponent,
     MultistepWidget,
     NumericInputWidget,
     RadiobuttonWidget,
     StepWidget,
+    TestStandNumberError,
     TextInputWidget,
 )
 
@@ -53,6 +56,7 @@ __all__ = [
     "DuplicateSerialNumberError",
     "DuplicateTestStandLocationError",
     "DuplicateTestStandNameError",
+    "DuplicateTestStandNumberError",
     "HTMLComponent",
     "ImageComponent",
     "MultistepWidget",
@@ -63,6 +67,7 @@ __all__ = [
     "StandCloudLoader",
     "StandCloudReader",
     "StepWidget",
+    "TestStandNumberError",
     "TextInputWidget",
     "clear_operator_message",
     "get_current_attempt",
@@ -80,4 +85,5 @@ __all__ = [
     "set_stand_info",
     "set_stand_location",
     "set_stand_name",
+    "set_stand_number",
 ]

@@ -118,6 +118,23 @@ def test_stand_info():
     set_stand_location("Moon")
 ```
 
+#### set_stand_number
+
+Writes a integer number with a test stand number.
+When called again, the exception `DuplicateTestStandNumberError` will be caused.
+When called with negative or non-integer number, the exception `TestStandNumberError` will be caused.
+
+**Arguments:**
+
+- `number` *(int)*: test stand number
+
+**Example:**
+
+```python
+def test_stand_number():
+    set_stand_number(3)
+```
+
 #### set_driver_info
 
 The function records a dictionary containing information about the test stand driver.
