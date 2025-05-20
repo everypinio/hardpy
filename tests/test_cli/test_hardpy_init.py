@@ -159,6 +159,3 @@ address = "{stand_cloud_no_default_addr}"
 """
         assert_msg = "hardpy.toml does not contain the expected host."
         assert stand_cloud_info in content, assert_msg
-
-
-# TODO(@RiByryn): cli hardpy run
