@@ -81,7 +81,7 @@ When called again, the exception `DuplicateTestStandNameError` will be caused.
 
 **Arguments:**
 
-- `location` *(str)*: test stand location
+- `name` *(str)*: test stand name
 
 **Example:**
 
@@ -103,7 +103,7 @@ When called again, the information will be added to DB.
 
 ```python
 def test_stand_info():
-    set_stand_info({"geo": "Belgrade"})
+    set_stand_info({"some_info": "123"})
 ```
 
 #### set_stand_location

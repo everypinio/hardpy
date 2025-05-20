@@ -9,8 +9,8 @@ The **hardpy panel** or operator panel is a web interface that displays and cont
 - Start and stop testing;
 - Interact with [dialog box](hardpy_panel.md#dialog-box) during testing;
 - Browse:
-    - Test run name.
-    - Test run status.
+    - Test suite name.
+    - Last test run status.
     - Test module name.
     - Duration of test modules execution.
     - Test module status.
