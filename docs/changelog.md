@@ -2,6 +2,10 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Update database scheme description.
+  [[PR-140](https://github.com/everypinio/hardpy/pull/140)]
+* Add test stand number by using `set_stand_number` function.
+  [[PR-140](https://github.com/everypinio/hardpy/pull/140)]
 * Add prohibition to run tests on the port if the port is busy.
   [[PR-136](https://github.com/everypinio/hardpy/pull/136)]
 * Add marker **critical**.

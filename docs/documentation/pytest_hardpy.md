@@ -81,7 +81,7 @@ When called again, the exception `DuplicateTestStandNameError` will be caused.
 
 **Arguments:**
 
-- `location` *(str)*: test stand location
+- `name` *(str)*: test stand name
 
 **Example:**
 
@@ -103,7 +103,7 @@ When called again, the information will be added to DB.
 
 ```python
 def test_stand_info():
-    set_stand_info({"geo": "Belgrade"})
+    set_stand_info({"some_info": "123"})
 ```
 
 #### set_stand_location
@@ -116,6 +116,23 @@ When called again, the exception `DuplicateTestStandLocationError` will be cause
 ```python
 def test_stand_info():
     set_stand_location("Moon")
+```
+
+#### set_stand_number
+
+Writes a integer number with a test stand number.
+When called again, the exception `DuplicateTestStandNumberError` will be caused.
+When called with negative or non-integer number, the exception `TestStandNumberError` will be caused.
+
+**Arguments:**
+
+- `number` *(int)*: test stand number
+
+**Example:**
+
+```python
+def test_stand_number():
+    set_stand_number(3)
 ```
 
 #### set_driver_info
