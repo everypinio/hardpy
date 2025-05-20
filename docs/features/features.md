@@ -46,6 +46,9 @@ To save the report history, the user must configure the **conftest.py** file usi
 By default, only the current report in the [runstore](./../documentation/database.md#runstore-scheme)
 database is stored in **CouchDB**.
 
+The test report format (database scheme) is described in the
+[database runstore](./../documentation/database.md#runstore-scheme) section.
+
 An example of configuring **conftest.py** to store test run history can be found in several examples,
 including the [couchdb_load](./../examples/couchdb_load.md) and
 [minute_parity](./../examples/minute_parity.md).
