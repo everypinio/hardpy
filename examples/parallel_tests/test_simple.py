@@ -2,65 +2,53 @@ import time
 from datetime import datetime
 
 import hardpy
+from examples.parallel_tests.conftest import ProcessController
 
 
-def test_start_process_1(process_controller):
-    test_start = datetime.now()
-    time.sleep(8)
-    hardpy.set_message(f"Test test_start_process_1 started at {test_start}")
-
-    process_controller.add_process("proc_1", 'sleep 5; echo "Result for process_1"')
-
-    test_end = datetime.now()
-    hardpy.set_message(
-        f"Test test_start_process_1 finished at {test_end}, duration: {(test_end-test_start).total_seconds():.2f}s"
-    )
-
-
-def test_start_process_2(process_controller):
-    test_start = datetime.now()
-    time.sleep(6)
-    hardpy.set_message(f"Test test_start_process_2 started at {test_start}")
-
-    process_controller.add_process("proc_2", 'sleep 7; echo "Result for process_2"')
-
-    test_end = datetime.now()
-    hardpy.set_message(
-        f"Test test_start_process_2 finished at {test_end}, duration: {(test_end-test_start).total_seconds():.2f}s"
-    )
+def test_start_process_1(process_controller: ProcessController):
+    hardpy.set_message(f"Start test_start_process_1 at {datetime.now()}")
+    python_script = """
+import time
+import sys
+print("Result for process_1")
+sys.stdout.flush()
+"""
+    process_controller.add_process("proc_1", python_script)
+    time.sleep(1)
 
 
-def test_check_results(process_controller):
-    test_start = datetime.now()
-    hardpy.set_message(f"Test test_check_results started at {test_start}")
+def test_start_process_2(process_controller: ProcessController):
+    hardpy.set_message(f"Start test_start_process_2 at {datetime.now()}")
+    python_script = """
+import time
+import sys
+print("Result for process_2")
+sys.stdout.flush()
+"""
+    process_controller.add_process("proc_2", python_script)
+    time.sleep(1)
 
-    timeout = 20
+
+def test_check_results(process_controller: ProcessController):
     start_time = time.time()
+    hardpy.set_message(f"Start test_check_results at {datetime.now()}")
+    timeout = 20
 
-    while True:
-        results = []
-        for name in ["proc_1", "proc_2"]:
-            if not process_controller.is_process_alive(name):
-                result = process_controller.get_result(name)
-                if result and "Result for" in result:
-                    results.append(
-                        result.splitlines()[-1]
-                    )
+    while time.time() - start_time < timeout:
+        for name in process_controller.process_names:
+            process_controller.collect_output(name)
 
-        if len(results) == 2:
-            assert sorted(results) == sorted(
-                ["Result for process_1", "Result for process_2"]
-            )
-            break
+        if len(process_controller.results) == len(process_controller.process_names):
+            expected = {
+                "proc_1": "Result for process_1",
+                "proc_2": "Result for process_2",
+            }
+            assert process_controller.results == expected
+            hardpy.set_message("All results received successfully!")
+            return
 
-        if time.time() - start_time > timeout:
-            process_controller.terminate_all()
-            msg = f"Processes didn't finish in time. Current results: {results}"
-            raise TimeoutError(msg)
+        time.sleep(0.2)
 
-        time.sleep(0.5)
-
-    test_end = datetime.now()
-    hardpy.set_message(
-        f"Test test_check_results finished at {test_end}, duration: {(test_end-test_start).total_seconds():.2f}s"
-    )
+    process_controller.terminate_all()
+    msg = f"Timeout reached. Results: {process_controller.results}"
+    raise TimeoutError(msg)
