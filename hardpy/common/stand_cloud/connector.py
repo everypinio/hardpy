@@ -26,14 +26,14 @@ class StandCloudURL(NamedTuple):
 
     api: API address
     token: token address
-    par: pushed-authorization-request address
     auth: auth address
+    device: device-authorization address
     """
 
     api: str
     token: str
-    par: str
     auth: str
+    device: str
 
 
 class StandCloudAPIMode(str, Enum):
@@ -71,11 +71,12 @@ class StandCloudConnector:
         self._url: StandCloudURL = StandCloudURL(
             api=https_prefix + addr + f"/{api_mode.value}/api/v{api_version}",
             token=https_prefix + auth_addr + "/api/oidc/token",
-            par=https_prefix + auth_addr + "/api/oidc/pushed-authorization-request",
             auth=https_prefix + auth_addr + "/api/oidc/authorization",
+            device=https_prefix + auth_addr + "/api/oidc/device-authorization",
         )
 
-        self._verify_ssl = not __debug__
+        self.client_id = "hardpy-report-uploader"
+        self.verify_ssl = not __debug__
         self._log = getLogger(__name__)
 
     @property
@@ -106,13 +107,13 @@ class StandCloudConnector:
         api = self._get_api("healthcheck")
 
         try:
-            resp = api.get(verify=self._verify_ssl)
+            resp = api.get(verify=self.verify_ssl)
         except ExpiredAccessToken as exc:
             raise StandCloudError(str(exc)) from exc
         except OAuth2Error as exc:
             raise StandCloudError(exc.description) from exc
         except RequestException as exc:
-            raise StandCloudError(exc.strerror) from exc # type: ignore
+            raise StandCloudError(exc.strerror) from exc  # type: ignore
 
         return resp
 
@@ -168,16 +169,9 @@ class StandCloudConnector:
 
     def _get_api(self, endpoint: str) -> ApiClient:
         token = self._get_token()
-        client_id = "hardpy-report-uploader"
-
-        extra = {
-            "client_id": client_id,
-            "audience": self._url.api,
-            "redirect_uri": "http://localhost/oauth2/callback",
-        }
 
         session = OAuth2Session(
-            client_id,
+            self.client_id,
             token=token.as_dict(),
             token_updater=self._token_update,
         )
@@ -193,6 +187,11 @@ class StandCloudConnector:
             is_need_refresh = True
 
         if is_need_refresh:
+            extra = {
+                "client_id": self.client_id,
+                "audience": self._url.api,
+                "redirect_uri": "http://localhost/oauth2/callback",
+            }
             try:
                 ret = session.refresh_token(
                     token_url=self._url.token,
