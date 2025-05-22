@@ -37,6 +37,20 @@ class DuplicateTestStandLocationError(HardpyError):
         super().__init__(self.__doc__)  # type: ignore
 
 
+class DuplicateTestStandNumberError(HardpyError):
+    """The test stand number has already been determined."""
+
+    def __init__(self) -> None:
+        super().__init__(self.__doc__)  # type: ignore
+
+
+class TestStandNumberError(HardpyError):
+    """The test stand number is in the incorrect format."""
+
+    def __init__(self) -> None:
+        super().__init__(self.__doc__)  # type: ignore
+
+
 class WidgetInfoError(HardpyError):
     """The widget info is not correct."""
 

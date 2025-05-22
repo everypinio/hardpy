@@ -124,6 +124,7 @@ class HardpyPlugin:
         self._post_run_functions: list[Callable] = []
         self._dependencies = {}
         self._tests_name: str = ""
+        self._is_critical_failed = False
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -161,6 +162,7 @@ class HardpyPlugin:
         config.addinivalue_line("markers", "module_name")
         config.addinivalue_line("markers", "dependency")
         config.addinivalue_line("markers", "attempt")
+        config.addinivalue_line("markers", "critical")
 
         # must be init after config data is set
         try:
@@ -268,7 +270,7 @@ class HardpyPlugin:
         node_info = NodeInfo(item)
 
         status = TestStatus.RUN
-        is_skip_test = self._is_skip_test(node_info)
+        is_skip_test = self._is_critical_failed or self._is_skip_test(node_info)
         self._reporter.set_module_start_time(node_info.module_id)
         if not is_skip_test:
             self._reporter.set_case_start_time(node_info.module_id, node_info.case_id)
@@ -288,11 +290,7 @@ class HardpyPlugin:
     def pytest_runtest_call(self, item: Item) -> None:
         """Call the test item."""
         node_info = NodeInfo(item)
-        self._reporter.set_case_attempt(
-            node_info.module_id,
-            node_info.case_id,
-            1,
-        )
+        self._reporter.set_case_attempt(node_info.module_id, node_info.case_id, 1)
         self._reporter.update_db_by_doc()
 
     def pytest_runtest_makereport(self, item: Item, call: CallInfo) -> None:
@@ -304,6 +302,9 @@ class HardpyPlugin:
         attempt = node_info.attempt
         module_id = node_info.module_id
         case_id = node_info.case_id
+
+        if node_info.critical:
+            self._is_critical_failed = True
 
         # first attempt was in pytest_runtest_call
         for current_attempt in range(2, attempt + 1):
@@ -318,6 +319,7 @@ class HardpyPlugin:
             try:
                 item.runtest()
                 call.excinfo = None
+                self._is_critical_failed = False
                 self._reporter.set_case_status(module_id, case_id, TestStatus.PASSED)
                 break
             except AssertionError:
@@ -341,11 +343,7 @@ class HardpyPlugin:
         module_id = Path(report.fspath).stem
         case_id = report.nodeid.rpartition("::")[2]
 
-        self._reporter.set_case_status(
-            module_id,
-            case_id,
-            TestStatus(report.outcome),
-        )
+        self._reporter.set_case_status(module_id, case_id, TestStatus(report.outcome))
         # update case stop_time in non-skipped tests or user-skipped tests
         if report.skipped is False or is_skipped_by_plugin is False:
             self._reporter.set_case_stop_time(module_id, case_id)

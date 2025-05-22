@@ -20,7 +20,9 @@ from hardpy.pytest_hardpy.utils.exception import (
     DuplicateSerialNumberError,
     DuplicateTestStandLocationError,
     DuplicateTestStandNameError,
+    DuplicateTestStandNumberError,
     ImageError,
+    TestStandNumberError,
     WidgetInfoError,
 )
 from hardpy.pytest_hardpy.utils.machineid import machine_id
@@ -37,6 +39,7 @@ __all__ = [
     "DuplicateSerialNumberError",
     "DuplicateTestStandLocationError",
     "DuplicateTestStandNameError",
+    "DuplicateTestStandNumberError",
     "HTMLComponent",
     "ImageComponent",
     "ImageError",
@@ -47,6 +50,7 @@ __all__ = [
     "RadiobuttonWidget",
     "SingletonMeta",
     "StepWidget",
+    "TestStandNumberError",
     "TestStatus",
     "TextInputWidget",
     "WidgetInfoError",
