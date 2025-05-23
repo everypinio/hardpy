@@ -4,9 +4,8 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timedelta, timezone
-from enum import Enum
 from logging import getLogger
-from typing import TYPE_CHECKING, NamedTuple
+from typing import TYPE_CHECKING
 
 from oauthlib.oauth2.rfc6749.errors import OAuth2Error
 from requests.exceptions import RequestException
@@ -15,35 +14,14 @@ from requests_oauth2client.tokens import ExpiredAccessToken
 from requests_oauthlib import OAuth2Session
 
 from hardpy.common.stand_cloud.exception import StandCloudError
-from hardpy.common.stand_cloud.token_storage import get_token_store
+from hardpy.common.stand_cloud.utils import (
+    StandCloudAPIMode,
+    StandCloudURL,
+    get_token_store,
+)
 
 if TYPE_CHECKING:
     from requests import Response
-
-
-class StandCloudURL(NamedTuple):
-    """URL.
-
-    api: API address
-    token: token address
-    auth: auth address
-    device: device-authorization address
-    """
-
-    api: str
-    token: str
-    auth: str
-    device: str
-
-
-class StandCloudAPIMode(str, Enum):
-    """StandCloud API mode.
-
-    HARDPY for test stand, integration for third-party service.
-    """
-
-    HARDPY = "hardpy"
-    INTEGRATION = "integration"
 
 
 class StandCloudConnector:

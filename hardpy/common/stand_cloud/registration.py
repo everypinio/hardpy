@@ -19,7 +19,7 @@ from requests_oauth2client.tokens import ExpiredAccessToken
 
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
 from hardpy.common.stand_cloud.oauth2 import SERVICE_NAME, OAuth2
-from hardpy.common.stand_cloud.token_storage import get_token_store
+from hardpy.common.stand_cloud.utils import get_token_store
 
 
 def login(addr: str) -> None:

@@ -9,7 +9,7 @@ import sys
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 from time import sleep
-from typing import TYPE_CHECKING, Final
+from typing import TYPE_CHECKING
 
 import qrcode
 import requests
@@ -18,21 +18,21 @@ from requests.auth import AuthBase
 from requests_oauth2client import BearerToken
 from requests_oauthlib import OAuth2Session
 
-from hardpy.common.stand_cloud.token_storage import get_token_store
+from hardpy.common.stand_cloud.utils import SERVICE_NAME, get_token_store
 
 if TYPE_CHECKING:
     from requests_oauth2client import ApiClient
 
-    from hardpy.common.stand_cloud.connector import StandCloudConnector
-
-SERVICE_NAME: Final = "HardPy"
+    from hardpy.common.stand_cloud.utils import StandCloudURL
 
 
 class OAuth2(AuthBase):
     """Authorize HardPy using the device flow of OAuth 2.0."""
 
-    def __init__(self, sc_connector: StandCloudConnector):
-        self._sc_connector = sc_connector
+    def __init__(self, sc_url: StandCloudURL, client_id: str, verify_ssl: bool = True):
+        self._sc_url = sc_url
+        self._client_id = client_id
+        self._verify_ssl = verify_ssl
 
         try:
             token = self._read_token_info()
@@ -52,10 +52,10 @@ class OAuth2(AuthBase):
         return req
 
     def _check_token(self, token: BearerToken) -> ApiClient:
-        refresh_url = self._sc_connector.url.token
+        refresh_url = self._sc_url.token
 
         session = OAuth2Session(
-            self._sc_connector.client_id,
+            self._client_id,
             token=token.as_dict(),
             token_updater=self._save_token_info,
         )
@@ -70,8 +70,8 @@ class OAuth2(AuthBase):
 
         if is_need_refresh:
             extra = {
-                "client_id": self._sc_connector.client_id,
-                "audience": self._sc_connector.url.api,
+                "client_id": self._client_id,
+                "audience": self._sc_url.api,
             }
             ret = session.refresh_token(
                 token_url=refresh_url,
@@ -86,13 +86,13 @@ class OAuth2(AuthBase):
 
     def _get_new_token(self) -> BearerToken:
         req = requests.post(
-            self._sc_connector.url.device,
+            self._sc_url.device,
             data={
-                "client_id": self._sc_connector.client_id,
+                "client_id": self._client_id,
                 "scope": "offline_access authelia.bearer.authz",
-                "audience": self._sc_connector.url.api,
+                "audience": self._sc_url.api,
             },
-            verify=self._sc_connector.verify_ssl,
+            verify=self._verify_ssl,
             timeout=10,
         )
         response = json.loads(req.content)
@@ -100,7 +100,7 @@ class OAuth2(AuthBase):
 
         interval = response["interval"]
         data = {
-            "client_id": self._sc_connector.client_id,
+            "client_id": self._client_id,
             "grant_type": "urn:ietf:params:oauth:grant-type:device_code",
             "device_code": response["device_code"],
         }
@@ -113,9 +113,9 @@ class OAuth2(AuthBase):
             sleep(interval)
 
             req = requests.post(
-                self._sc_connector.url.token,
+                self._sc_url.token,
                 data=auth_info,
-                verify=self._sc_connector.verify_ssl,
+                verify=self._verify_ssl,
                 timeout=interval,
             )
             response = json.loads(req.content)
