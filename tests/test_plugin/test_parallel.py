@@ -94,7 +94,6 @@ import time
 from datetime import datetime
 import pytest
 import hardpy
-from examples.parallel_tests.conftest import ProcessController
 """
 
 TEST_CHECK_RESULTS = """
