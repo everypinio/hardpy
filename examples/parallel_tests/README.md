@@ -1,3 +1,3 @@
-# Hello HardPy
+# Parallel tests
 
-Example documentation: https://everypinio.github.io/hardpy/examples/hello_hardpy/
+Example documentation: https://everypinio.github.io/hardpy/examples/parallel_tests/

@@ -1,5 +1,5 @@
 title = "HardPy TOML config"
-tests_dir = "hello_hardpy"
+tests_dir = "parallel_test"
 
 [database]
 user = "dev"

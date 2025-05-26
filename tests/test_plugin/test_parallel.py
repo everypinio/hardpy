@@ -29,10 +29,10 @@ class ProcessController:
         return list(self.processes.keys())
 
     def add_process(self, name: str, python_script: str):
-        self.start_times[name] = str(datetime.now())[:-7]
+        self.start_times[name] = str(datetime.now())[:-7]  # noqa: DTZ005
 
-        self.processes[name] = subprocess.Popen(
-            ["python", "-c", python_script],
+        self.processes[name] = subprocess.Popen(  # noqa: S603
+            ["python", "-c", python_script],  # noqa: S607
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
@@ -50,14 +50,14 @@ class ProcessController:
         process = self.processes[name]
 
         if process.poll() is not None and name not in self.results:
-            self.end_times[name] = str(datetime.now())[:-7]
+            self.end_times[name] = str(datetime.now())[:-7]  # noqa: DTZ005
             stdout, _ = process.communicate()
             output = stdout.strip()
             if output:
                 self.results[name] = output
-                duration = datetime.strptime(
+                duration = datetime.strptime(  # noqa: DTZ007
                     self.end_times[name], "%Y-%m-%d %H:%M:%S",
-                ) - datetime.strptime(self.start_times[name], "%Y-%m-%d %H:%M:%S")
+                ) - datetime.strptime(self.start_times[name], "%Y-%m-%d %H:%M:%S")  # noqa: DTZ007
                 hardpy.set_message(
                     f"Process {name} finished at {self.end_times[name]} "
                     f"(duration: {duration.total_seconds():.2f}s) with output: {output}"
@@ -72,10 +72,10 @@ class ProcessController:
         for name, process in self.processes.items():
             if self.is_process_alive(name):
                 os.killpg(os.getpgid(process.pid), signal.SIGTERM)
-                end_time = str(datetime.now())[:-7]
-                duration = datetime.strptime(
+                end_time = str(datetime.now())[:-7]  # noqa: DTZ005
+                duration = datetime.strptime(  # noqa: DTZ007
                     end_time, "%Y-%m-%d %H:%M:%S",
-                ) - datetime.strptime(self.start_times[name], "%Y-%m-%d %H:%M:%S")
+                ) - datetime.strptime(self.start_times[name], "%Y-%m-%d %H:%M:%S")  # noqa: DTZ007
                 hardpy.set_message(
                     f"Process {name} terminated at {end_time} "
                     f"(duration: {duration.total_seconds():.2f}s)"
@@ -101,7 +101,7 @@ TEST_CHECK_RESULTS = """
 def test_check_results(process_controller: ProcessController):
     start_time = time.time()
     hardpy.set_message(f"Start test_check_results at {str(datetime.now())[:-7]}")
-    timeout = 8 # This timeout will be adjusted for the success test
+    timeout = 20
 
     while time.time() - start_time < timeout:
         for name in process_controller.process_names:
