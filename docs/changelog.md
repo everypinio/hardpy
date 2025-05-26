@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Update parallel tests example.
+  [[PR-141](https://github.com/everypinio/hardpy/pull/141)]
 * Update database scheme description.
   [[PR-140](https://github.com/everypinio/hardpy/pull/140)]
 * Add test stand number by using `set_stand_number` function.

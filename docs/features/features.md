@@ -160,6 +160,13 @@ def test_c():
 
 See the example [critical](./../examples/critical_test.md) for more information.
 
+## Parallel test execution
+
+The **HardPy** supports parallel execution of tests through a custom process controller implementation.
+This allows running multiple test processes simultaneously, which can significantly reduce total test execution time.
+
+See the example [parallel_tests](./../examples/parallel_tests.md) for more information.
+
 ## Running some instance in single stand
 
 A user can run multiple **HardPy** instances on a single stand.
