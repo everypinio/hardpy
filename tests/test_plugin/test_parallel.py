@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from pytest import Pytester
 
 
-COMMON_CONFTEST = """
+CONFTEST = """
 import os
 import signal
 import subprocess
@@ -101,7 +101,7 @@ TEST_CHECK_RESULTS = """
 def test_check_results(process_controller: ProcessController):
     start_time = time.time()
     hardpy.set_message(f"Start test_check_results at {str(datetime.now())[:-7]}")
-    timeout = 20
+    timeout = 5
 
     while time.time() - start_time < timeout:
         for name in process_controller.process_names:
@@ -135,12 +135,12 @@ def test_start_process_1(process_controller: ProcessController):
     python_script = '''
 import time
 import sys
-time.sleep(3)
+time.sleep(1)
 print("Result for process_1")
 sys.stdout.flush()
 '''
     process_controller.add_process("proc_1", python_script)
-    time.sleep(6)
+    time.sleep(1)
 
 
 def test_start_process_2(process_controller: ProcessController):
@@ -148,7 +148,7 @@ def test_start_process_2(process_controller: ProcessController):
     python_script = '''
 import time
 import sys
-time.sleep(3)
+time.sleep(1)
 print("Result for process_2")
 sys.stdout.flush()
 '''
@@ -157,7 +157,7 @@ sys.stdout.flush()
 
 {TEST_CHECK_RESULTS}
         """,
-        conftest=COMMON_CONFTEST,
+        conftest=CONFTEST,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=3)
@@ -174,7 +174,7 @@ def test_start_process_1(process_controller: ProcessController):
     python_script = '''
 import time
 import sys
-time.sleep(3)
+time.sleep(1)
 print("Result for process_1")
 sys.stdout.flush()
 '''
@@ -187,7 +187,7 @@ def test_start_process_2(process_controller: ProcessController):
     python_script = '''
 import time
 import sys
-time.sleep(6)
+time.sleep(1)
 print("Result for process_2")
 sys.stdout.flush()
 '''
@@ -196,7 +196,7 @@ sys.stdout.flush()
 
 {TEST_CHECK_RESULTS}
         """,
-        conftest=COMMON_CONFTEST,
+        conftest=CONFTEST,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=3)
@@ -213,7 +213,7 @@ def test_start_process_1(process_controller: ProcessController):
     python_script = '''
 import time
 import sys
-time.sleep(3)
+time.sleep(1)
 print("Result for process_1")
 sys.stdout.flush()
 '''
@@ -226,7 +226,7 @@ def test_start_process_2(process_controller: ProcessController):
     python_script = '''
 import time
 import sys
-time.sleep(6)
+time.sleep(1)
 print("Result for process_2")
 sys.stdout.flush()
 '''
@@ -235,7 +235,7 @@ sys.stdout.flush()
 
 {TEST_CHECK_RESULTS}
         """,
-        conftest=COMMON_CONFTEST,
+        conftest=CONFTEST,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=3)
@@ -252,7 +252,7 @@ def test_start_process_1(process_controller: ProcessController):
     python_script = '''
 import time
 import sys
-time.sleep(3)
+time.sleep(1)
 print("Result for process_1")
 sys.stdout.flush()
 '''
@@ -265,7 +265,7 @@ def test_start_process_2(process_controller: ProcessController):
     python_script = '''
 import time
 import sys
-time.sleep(6)
+time.sleep(1)
 print("Result for process_2")
 sys.stdout.flush()
 '''
@@ -274,7 +274,7 @@ sys.stdout.flush()
 
 {TEST_CHECK_RESULTS}
         """,
-        conftest=COMMON_CONFTEST,
+        conftest=CONFTEST,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=3)

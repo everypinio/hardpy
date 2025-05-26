@@ -165,3 +165,13 @@ def test_check_results(process_controller: ProcessController):
     msg = f"Timeout reached. Results: {process_controller.results}"
     raise TimeoutError(msg)
 ```
+
+## Explanation why we can't use pytest-xdist
+
+1. **Test order violation**:  
+   Hardpy relies on strict test execution order, but `pytest-xdist` runs tests in parallel in random order (even within modules/groups).
+   This breaks **Hardpy** sequential dependency requirements.
+
+2. **Dependency and critical tests incompatibility**:  
+   **Hardpy** uses `pytest-dependency` to manage test dependencies.
+   `pytest-xdist` is incompatible with dependency plugins, as parallel execution cannot guarantee dependent tests run after their prerequisites.
