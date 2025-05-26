@@ -124,7 +124,7 @@ class HardpyPlugin:
         self._post_run_functions: list[Callable] = []
         self._dependencies = {}
         self._tests_name: str = ""
-        self._is_critical_failed = False
+        self._is_critical_not_passed = False
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -270,7 +270,7 @@ class HardpyPlugin:
         node_info = NodeInfo(item)
 
         status = TestStatus.RUN
-        is_skip_test = self._is_critical_failed or self._is_skip_test(node_info)
+        is_skip_test = self._is_critical_not_passed or self._is_skip_test(node_info)
         self._reporter.set_module_start_time(node_info.module_id)
         if not is_skip_test:
             self._reporter.set_case_start_time(node_info.module_id, node_info.case_id)
@@ -304,7 +304,7 @@ class HardpyPlugin:
         case_id = node_info.case_id
 
         if node_info.critical:
-            self._is_critical_failed = True
+            self._is_critical_not_passed = True
 
         # first attempt was in pytest_runtest_call
         for current_attempt in range(2, attempt + 1):
@@ -319,7 +319,7 @@ class HardpyPlugin:
             try:
                 item.runtest()
                 call.excinfo = None
-                self._is_critical_failed = False
+                self._is_critical_not_passed = False
                 self._reporter.set_case_status(module_id, case_id, TestStatus.PASSED)
                 break
             except AssertionError:
@@ -484,6 +484,7 @@ class HardpyPlugin:
         dependency_tests = self._dependencies.get(
             TestDependencyInfo(node_info.module_id, node_info.case_id),
         )
+        is_skip = False
         if dependency_tests:
             wrong_status = {TestStatus.FAILED, TestStatus.SKIPPED, TestStatus.ERROR}
             for dependency_test in dependency_tests:
@@ -491,11 +492,15 @@ class HardpyPlugin:
                 module_data = self._results[module_id]
                 # case result is the reason for the skipping
                 if case_id is not None and module_data[case_id] in wrong_status:  # noqa: SIM114
-                    return True
+                    is_skip = True
+                    break
                 # module result is the reason for the skipping
-                elif any(status in wrong_status for status in module_data.values()):  # noqa: RET505
-                    return True
-        return False
+                elif any(status in wrong_status for status in module_data.values()):  # noqa: RET508
+                    is_skip = True
+                    break
+            if is_skip and node_info.critical is True:
+                self._is_critical_not_passed = True
+        return is_skip
 
     def _add_dependency(self, node_info: NodeInfo, nodes: dict) -> None:
         dependencies = node_info.dependency

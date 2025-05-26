@@ -77,10 +77,13 @@ def test_critical_case_with_dependency_failed(pytester: Pytester, hardpy_opts: l
         @pytest.mark.dependency("test_1::test_a")
         def test_b():
             assert True
+
+        def test_c():
+            assert True
     """,
     )
     result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(failed=1, skipped=1)
+    result.assert_outcomes(failed=1, skipped=2)
 
 
 def test_critical_case_with_skipped_dependency(pytester: Pytester, hardpy_opts: list):
@@ -152,8 +155,16 @@ def test_critical_module_with_dependency_failed(pytester: Pytester, hardpy_opts:
             assert True
     """,
     )
+    pytester.makepyfile(
+        test_3="""
+        import pytest
+
+        def test_a():
+            assert False
+    """,
+    )
     result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(failed=1, skipped=1)
+    result.assert_outcomes(failed=1, skipped=2)
 
 
 def test_first_module_critical_failed(pytester: Pytester, hardpy_opts: list):
