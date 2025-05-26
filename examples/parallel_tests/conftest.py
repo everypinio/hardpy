@@ -56,7 +56,7 @@ class ProcessController:
                 ) - datetime.strptime(self.start_times[name], "%Y-%m-%d %H:%M:%S")  # noqa: DTZ007
                 hardpy.set_message(
                     f"Process {name} finished at {self.end_times[name]} "
-                    f"(duration: {duration.total_seconds():.2f}s) with output: {output}"
+                    f"(duration: {duration.total_seconds():.2f}s) with output: {output}",  # noqa: E501
                 )
                 return True
         return False
@@ -76,7 +76,7 @@ class ProcessController:
                 ) - datetime.strptime(self.start_times[name], "%Y-%m-%d %H:%M:%S")  # noqa: DTZ007
                 hardpy.set_message(
                     f"Process {name} terminated at {end_time} "
-                    f"(duration: {duration.total_seconds():.2f}s)"
+                    f"(duration: {duration.total_seconds():.2f}s)",
                 )
 
 
