@@ -495,7 +495,7 @@ class HardpyPlugin:
                     is_skip = True
                     break
                 # module result is the reason for the skipping
-                elif any(status in wrong_status for status in module_data.values()):  # noqa: RET508
+                elif case_id is None and module_data["module_status"] in wrong_status:  # noqa: RET508
                     is_skip = True
                     break
             if is_skip and node_info.critical is True:
