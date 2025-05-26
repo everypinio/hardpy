@@ -169,9 +169,9 @@ def test_check_results(process_controller: ProcessController):
 ## Explanation why we can't use pytest-xdist
 
 1. **Test order violation**:  
-   Hardpy relies on strict test execution order, but `pytest-xdist` runs tests in parallel in random order (even within modules/groups).
-   This breaks **Hardpy** sequential dependency requirements.
+   **HardPy** relies on tests being executed in a specific order, but `pytest-xdist` runs tests in parallel in a random order (even within modules/groups).
+   This breaks **HardPy's** sequential dependency requirements.
 
 2. **Dependency and critical tests incompatibility**:  
-   **Hardpy** uses `pytest-dependency` to manage test dependencies.
-   `pytest-xdist` is incompatible with dependency plugins, as parallel execution cannot guarantee dependent tests run after their prerequisites.
+   **HardPy** uses `pytest-dependency` to manage test dependencies.
+   However, `pytest-xdist` is incompatible with dependency plugins because parallel execution cannot guarantee that dependent tests will run after their prerequisites.
