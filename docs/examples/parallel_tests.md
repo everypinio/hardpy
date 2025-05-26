@@ -20,9 +20,7 @@ import os
 import signal
 import subprocess
 from datetime import datetime
-
 import pytest
-
 import hardpy
 
 
@@ -42,10 +40,10 @@ class ProcessController:
 
     def add_process(self, name: str, python_script: str):
         """Starts a new process."""
-        self.start_times[name] = str(datetime.now())[:-7]  # noqa: DTZ005
+        self.start_times[name] = str(datetime.now())[:-7]
 
-        self.processes[name] = subprocess.Popen(  # noqa: S603
-            ["python", "-c", python_script],  # noqa: S607
+        self.processes[name] = subprocess.Popen(
+            ["python", "-c", python_script],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
@@ -64,14 +62,14 @@ class ProcessController:
         process = self.processes[name]
 
         if process.poll() is not None and name not in self.results:
-            self.end_times[name] = str(datetime.now())[:-7]  # noqa: DTZ005
+            self.end_times[name] = str(datetime.now())[:-7]
             stdout, _ = process.communicate()
             output = stdout.strip()
             if output:
                 self.results[name] = output
-                duration = datetime.strptime(  # noqa: DTZ007
+                duration = datetime.strptime(
                     self.end_times[name], "%Y-%m-%d %H:%M:%S",
-                ) - datetime.strptime(self.start_times[name], "%Y-%m-%d %H:%M:%S")  # noqa: DTZ007
+                ) - datetime.strptime(self.start_times[name], "%Y-%m-%d %H:%M:%S")
                 hardpy.set_message(
                     f"Process {name} finished at {self.end_times[name]} "
                     f"(duration: {duration.total_seconds():.2f}s) with output: {output}"
@@ -88,10 +86,10 @@ class ProcessController:
         for name, process in self.processes.items():
             if self.is_process_alive(name):
                 os.killpg(os.getpgid(process.pid), signal.SIGTERM)
-                end_time = str(datetime.now())[:-7]  # noqa: DTZ005
-                duration = datetime.strptime(  # noqa: DTZ007
+                end_time = str(datetime.now())[:-7]
+                duration = datetime.strptime(
                     end_time, "%Y-%m-%d %H:%M:%S",
-                ) - datetime.strptime(self.start_times[name], "%Y-%m-%d %H:%M:%S")  # noqa: DTZ007
+                ) - datetime.strptime(self.start_times[name], "%Y-%m-%d %H:%M:%S")
                 hardpy.set_message(
                     f"Process {name} terminated at {end_time} "
                     f"(duration: {duration.total_seconds():.2f}s)"
@@ -118,7 +116,7 @@ from examples.parallel_tests.conftest import ProcessController
 
 
 def test_start_process_1(process_controller: ProcessController):
-    hardpy.set_message(f"Start test_start_process_1 at {str(datetime.now())[:-7]}")  # noqa: DTZ005
+    hardpy.set_message(f"Start test_start_process_1 at {str(datetime.now())[:-7]}")
     python_script = """
 import time
 import sys
@@ -131,7 +129,7 @@ sys.stdout.flush()
 
 
 def test_start_process_2(process_controller: ProcessController):
-    hardpy.set_message(f"Start test_start_process_2 at {str(datetime.now())[:-7]}")  # noqa: DTZ005
+    hardpy.set_message(f"Start test_start_process_2 at {str(datetime.now())[:-7]}")
     python_script = """
 import time
 import sys
@@ -145,7 +143,7 @@ sys.stdout.flush()
 
 def test_check_results(process_controller: ProcessController):
     start_time = time.time()
-    hardpy.set_message(f"Start test_check_results at {str(datetime.now())[:-7]}")  # noqa: DTZ005
+    hardpy.set_message(f"Start test_check_results at {str(datetime.now())[:-7]}")
     timeout = 20
 
     while time.time() - start_time < timeout:
