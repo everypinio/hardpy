@@ -126,6 +126,7 @@ def test_stand_info():
     test_stand_name = "Stand 1"
     hardpy.set_stand_name(test_stand_name)
     hardpy.set_stand_location("Moon")
+    hardpy.set_stand_number(3)
     info = {"some_info": "123"}
     hardpy.set_stand_info(info)
     assert True

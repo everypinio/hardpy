@@ -38,3 +38,4 @@ class DatabaseField(str, Enum):
     ALERT = "alert"
     OPERATOR_DATA = "operator_data"
     DIALOG = "dialog"
+    NUMBER = "number"

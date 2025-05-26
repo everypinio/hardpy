@@ -142,6 +142,3 @@ def test_module_dependency_from_module(pytester: Pytester, hardpy_opts: list):
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1, skipped=2)
-
-
-

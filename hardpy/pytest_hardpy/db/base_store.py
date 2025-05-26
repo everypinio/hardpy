@@ -100,6 +100,7 @@ class BaseStore(BaseConnector):
                     DF.NAME: None,
                     DF.TIMEZONE: None,
                     DF.LOCATION: None,
+                    DF.NUMBER: None,
                     DF.DRIVERS: {},
                     DF.INFO: {},
                 },
@@ -120,6 +121,7 @@ class BaseStore(BaseConnector):
             DF.NAME: None,
             DF.TIMEZONE: None,
             DF.LOCATION: None,
+            DF.NUMBER: None,
             DF.DRIVERS: {},
             DF.INFO: {},
         }
