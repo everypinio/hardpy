@@ -17,10 +17,13 @@ def test_case_passed(pytester: Pytester, hardpy_opts: list):
         @pytest.mark.dependency("test_1::test_a")
         def test_b():
             assert True
+
+        def test_c():
+            assert True
     """,
     )
     result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(passed=2)
+    result.assert_outcomes(passed=3)
 
 
 def test_case_failed(pytester: Pytester, hardpy_opts: list):
@@ -34,10 +37,13 @@ def test_case_failed(pytester: Pytester, hardpy_opts: list):
         @pytest.mark.dependency("test_1::test_a")
         def test_b():
             assert True
+
+        def test_c():
+            assert True
     """,
     )
     result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(failed=1, skipped=1)
+    result.assert_outcomes(failed=1, skipped=1, passed=1)
 
 
 def test_case_skipped(pytester: Pytester, hardpy_opts: list):
@@ -113,6 +119,9 @@ def test_module_skipped(pytester: Pytester, hardpy_opts: list):
 
         def test_a():
             assert False
+
+        def test_b():
+            assert True
     """,
     )
     pytester.makepyfile(
@@ -128,4 +137,4 @@ def test_module_skipped(pytester: Pytester, hardpy_opts: list):
     """,
     )
     result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(failed=1, skipped=1, passed=1)
+    result.assert_outcomes(failed=1, skipped=1, passed=2)

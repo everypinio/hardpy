@@ -188,7 +188,8 @@ class TestStand(BaseModel):
             "port": 8000
           }
         },
-        "location": "Belgrade_1"
+        "location": "Belgrade_1",
+        "number": 2
       }
     }
     ```
@@ -202,6 +203,7 @@ class TestStand(BaseModel):
     drivers: dict = {}
     info: dict = {}
     location: str | None = None
+    number: int | None = None
 
 
 class OperatorData(BaseModel):
@@ -261,7 +263,8 @@ class ResultStateStore(IBaseResult):
             "port": 8000
           }
         },
-        "location": "Belgrade_1"
+        "location": "Belgrade_1",
+        "number": 2
       },
       "operator_msg": {
         "msg": "Operator message",
@@ -363,7 +366,8 @@ class ResultRunStore(IBaseResult):
             "port": 8000
           }
         },
-        "location": "Belgrade_1"
+        "location": "Belgrade_1",
+        "number": 2
       },
       "artifact": {},
       "modules": {
