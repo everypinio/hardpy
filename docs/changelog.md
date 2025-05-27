@@ -10,7 +10,8 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
   [[PR-136](https://github.com/everypinio/hardpy/pull/136)]
 * Add marker **critical**.
   [[PR-135](https://github.com/everypinio/hardpy/pull/135)],
-  [[PR-142](https://github.com/everypinio/hardpy/pull/142)]
+  [[PR-142](https://github.com/everypinio/hardpy/pull/142)],
+  [[PR-143](https://github.com/everypinio/hardpy/pull/143)]
 * Change dependency behaviour when a case or module name does not exist.
   Such a test or module will be executed.
   [[PR-130](https://github.com/everypinio/hardpy/pull/130)]
