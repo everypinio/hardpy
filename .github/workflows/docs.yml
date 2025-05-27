@@ -7,8 +7,6 @@ on:
       - main
     paths:
       - 'docs/**'
-      - '.github/workflows/docs.yml'
-      - 'requirements-doc.txt'
 
 jobs:
   docs: 
