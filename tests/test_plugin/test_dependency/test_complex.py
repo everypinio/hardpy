@@ -257,14 +257,14 @@ def test_module_failed_case_dependencies_passed(pytester: Pytester, hardpy_opts:
         test_1="""
         import pytest
 
-        def test_one():
+        def test_a():
             assert True
 
-        def test_two():
+        def test_b():
             assert False
 
-        @pytest.mark.dependency("test_1::test_one")
-        def test_three() -> None:
+        @pytest.mark.dependency("test_1::test_a")
+        def test_c() -> None:
             assert True
     """,
     )
@@ -272,14 +272,14 @@ def test_module_failed_case_dependencies_passed(pytester: Pytester, hardpy_opts:
         test_2="""
         import pytest
 
-        @pytest.mark.dependency("test_1::test_one")
-        def test_one():
+        @pytest.mark.dependency("test_1::test_a")
+        def test_a():
             assert True
 
-        def test_two():
+        def test_b():
             assert True
 
-        def test_three() -> None:
+        def test_c() -> None:
             assert True
     """,
     )
@@ -293,14 +293,14 @@ def test_module_failed_case_dependencies_skipped(pytester: Pytester, hardpy_opts
         test_1="""
         import pytest
 
-        def test_one():
+        def test_a():
             assert False
 
-        def test_two():
+        def test_b():
             assert False
 
-        @pytest.mark.dependency("test_1::test_one")
-        def test_three() -> None:
+        @pytest.mark.dependency("test_1::test_a")
+        def test_c() -> None:
             assert True
     """,
     )
@@ -308,14 +308,14 @@ def test_module_failed_case_dependencies_skipped(pytester: Pytester, hardpy_opts
         test_2="""
         import pytest
 
-        @pytest.mark.dependency("test_1::test_one")
-        def test_one():
+        @pytest.mark.dependency("test_1::test_a")
+        def test_a():
             assert True
 
-        def test_two():
+        def test_b():
             assert True
 
-        def test_three() -> None:
+        def test_c() -> None:
             assert True
     """,
     )
