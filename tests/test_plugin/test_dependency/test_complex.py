@@ -250,3 +250,74 @@ def test_multiple_case_dependencies(pytester: Pytester, hardpy_opts: list):
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=3, failed=1, skipped=1)
+
+def test_module_failed_case_dependencies_passed(pytester: Pytester, hardpy_opts: list):
+    """Added by https://github.com/everypinio/hardpy/pull/143 PR-143."""
+    pytester.makepyfile(
+        test_1="""
+        import pytest
+
+        def test_one():
+            assert True
+
+        def test_two():
+            assert False
+
+        @pytest.mark.dependency("test_1::test_one")
+        def test_three() -> None:
+            assert True
+    """,
+    )
+    pytester.makepyfile(
+        test_2="""
+        import pytest
+
+        @pytest.mark.dependency("test_1::test_one")
+        def test_one():
+            assert True
+
+        def test_two():
+            assert True
+
+        def test_three() -> None:
+            assert True
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(failed=1, passed=5)
+
+
+def test_module_failed_case_dependencies_skipped(pytester: Pytester, hardpy_opts: list):
+    """Added by https://github.com/everypinio/hardpy/pull/143 PR-143."""
+    pytester.makepyfile(
+        test_1="""
+        import pytest
+
+        def test_one():
+            assert False
+
+        def test_two():
+            assert False
+
+        @pytest.mark.dependency("test_1::test_one")
+        def test_three() -> None:
+            assert True
+    """,
+    )
+    pytester.makepyfile(
+        test_2="""
+        import pytest
+
+        @pytest.mark.dependency("test_1::test_one")
+        def test_one():
+            assert True
+
+        def test_two():
+            assert True
+
+        def test_three() -> None:
+            assert True
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(failed=2, passed=2, skipped=2)
