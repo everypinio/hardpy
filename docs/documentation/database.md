@@ -241,9 +241,11 @@ The module's name is the same as the file's name.
       - **assertion_msg**: assert or error message if the test case fails. The variable is assigned automatically.
         However, the user can write their own message in case of an assertion, which will be written to this variable.
         For example:
+
         ```python
         assert False, "This is an example"
         ```
+
         The **assertion_msg** is displayed in the operator panel next to the test case in which it was called.
       - **msg**: the log message is displayed in the operator panel next to the test case in which it was called.
         The user can specify and update current message by using [set_message](./pytest_hardpy.md#set_message) function.
@@ -359,6 +361,7 @@ methods = GET, PUT, POST, HEAD, DELETE
 credentials = true
 headers = accept, authorization, content-type, origin, referer, x-csrf-token
 ```
+
 3. Create a `docker-compose.yaml` file in project's root directory.
 
 ```yaml
