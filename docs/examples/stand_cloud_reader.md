@@ -18,6 +18,12 @@ To access **StandCloud**, contact **info@everypin.io**.
 
 ### test_run
 
+Provides access to 2 endpoints: `/test_run/{test_run_id}` and `/test_run`.
+This function does not allow two arguments to be used at the same time.
+The argument must be either `run_id` or the filter `params`.
+
+**run_id**
+
 Allows the user to retrieve data about a specific test run by its id from `/test_run` URL.
 User can get id from [StandCloudLoader.load()](./../documentation/pytest_hardpy.md#standcloudloader)
 function.
@@ -30,7 +36,7 @@ import hardpy
 sc_connector = hardpy.StandCloudConnector(addr="demo.standcloud.io")
 reader = hardpy.StandCloudReader(sc_connector)
 
-response = reader.test_run("0196434d-e8f7-7ce1-81f7-e16f20487494")
+response = reader.test_run(run_id="0196434d-e8f7-7ce1-81f7-e16f20487494")
 print(response.json())
 ```
 
@@ -78,9 +84,76 @@ https://demo.standcloud.io/integration/api/v1/docs
 }
 ```
 
+**params**
+
+Allows the user to retrieve data about a test run by by filters from `/test_run` URL.
+Filters are specified as parameters. A special place is occupied by the filter by field `dut.info`,
+which allows to add fields `dut.info` as keys for the filter in the parameters.
+
+**Example:**
+
+```python
+import hardpy
+
+sc_connector = hardpy.StandCloudConnector(addr="demo.standcloud.io")
+reader = hardpy.StandCloudReader(sc_connector)
+
+param = {
+    "part_number": "PN-54321AB",
+    "status": "pass",
+    "manufacturer": "ABC_Corp",
+}
+response = reader.test_run(params=param)
+print(response.json())
+```
+
+Request URL of this example:
+
+```bash
+https://demo.standcloud.io/hardpy/api/v1/test_run?part_number=PN-54321AB&status=pass&manufacturer=ABC_Corp
+```
+
+REST API documentation page of this example:
+
+```bash
+https://demo.standcloud.io/integration/api/v1/docs
+```
+
+**Response data example:**
+
+```json
+{
+  "test_run_id": "0196434d-e8f7-7ce1-81f7-e16f20487494",
+  "test_plan_name": "Test Plan A",
+  "serial_number": "SN-98765",
+  "part_number": "PN-54321AB",
+  "status": "FAIL",
+  "status_icon": "❌",
+  "number_of_attempt": 1,
+  "start_time": "2024-02-20T14:23:45Z",
+  "stop_time": "2024-02-20T14:23:45Z",
+  "duration": "00:12:34",
+  "test_stand_name": "EMC Chamber #2",
+  "test_stand_hw_id": "TS-CH45",
+  "test_run_artifact": {
+    "test_run_parameter": "test_run_value"
+  },
+  "test_stand_info": {
+    "calibration_date": "2025-01-15"
+  },
+  "dut_info": {
+    "serial_number": "SN-98765",
+    "part_number": "PN-54321AB",
+    "info": {
+      "manufacturer": "ABC Corp"
+    }
+  }
+}
+```
+
 ### tested_dut
 
-Allows the user to retrieve data about a tested dut's by filters from `/tested_dut` URL.
+Allows the user to retrieve data about a **last** tested dut's by filters from `/tested_dut` URL.
 Filters are specified as parameters. A special place is occupied by the filter by field `dut.info`,
 which allows to add fields `dut.info` as keys for the filter in the parameters.
 
@@ -124,6 +197,7 @@ https://demo.standcloud.io/integration/api/v1/docs
     "status": "pass",
     "status_icon": "✅",
     "attempt_count": 1,
+    "attempt_count": 1,
     "start_time": "2025-03-28T09:34:05Z",
     "finish_time": "2025-03-28T09:34:55Z",
     "duration": "PT50S",
@@ -145,6 +219,7 @@ https://demo.standcloud.io/integration/api/v1/docs
     "part_number": "PN-54321AB",
     "status": "pass",
     "status_icon": "✅",
+    "attempt_count": 1,
     "attempt_count": 1,
     "start_time": "2025-03-28T09:35:05Z",
     "finish_time": "2025-03-28T09:35:55Z",
