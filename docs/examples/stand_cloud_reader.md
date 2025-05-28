@@ -90,6 +90,9 @@ Allows the user to retrieve data about a test run by by filters from `/test_run`
 Filters are specified as parameters. A special place is occupied by the filter by field `dut.info`,
 which allows to add fields `dut.info` as keys for the filter in the parameters.
 
+The difference between the test run with filters and the tested DUT is described in the
+[StandCloudReader](./../documentation/pytest_hardpy.md#standcloudreader) documentation.
+
 **Example:**
 
 ```python
@@ -156,6 +159,9 @@ https://demo.standcloud.io/integration/api/v1/docs
 Allows the user to retrieve data about a **last** tested dut's by filters from `/tested_dut` URL.
 Filters are specified as parameters. A special place is occupied by the filter by field `dut.info`,
 which allows to add fields `dut.info` as keys for the filter in the parameters.
+
+The difference between the test run with filters and the tested DUT is described in the
+[StandCloudReader](./../documentation/pytest_hardpy.md#standcloudreader) documentation.
 
 **Example:**
 

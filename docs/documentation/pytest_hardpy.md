@@ -650,6 +650,12 @@ For more information, see the example [StandCloud reader](./../examples/stand_cl
   All tested dut's filters can view in REST documentation.
   Return `requests.Response` class with tested DUT's data.
 
+In terms of filters, the difference between `test_run` and `tested_dut` in terms of filters
+is that in test_run allows you to request a filter for the number of runs - `number_of_attempt`,
+while tested_dut allows you to request a filter for the number of runs - `attempt_count`.
+In other words, `tested_dut` will return the last run with the specified number of runs specified in `attempt_count`,
+and `test_run` will return the runs whose start number is equal to the `number_of_attempt` specified in the filter.
+
 **Examples:**
 
 ```python
