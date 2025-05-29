@@ -105,6 +105,7 @@ param = {
     "part_number": "PN-54321AB",
     "status": "pass",
     "manufacturer": "ABC_Corp",
+    "number_of_attempt": 2,
 }
 response = reader.test_run(params=param)
 print(response.json())
@@ -113,7 +114,7 @@ print(response.json())
 Request URL of this example:
 
 ```bash
-https://demo.standcloud.io/hardpy/api/v1/test_run?part_number=PN-54321AB&status=pass&manufacturer=ABC_Corp
+https://demo.standcloud.io/hardpy/api/v1/test_run?part_number=PN-54321AB&status=pass&manufacturer=ABC_Corp&number_of_attempt=2
 ```
 
 REST API documentation page of this example:
@@ -175,6 +176,7 @@ param = {
     "part_number": "PN-54321AB",
     "status": "pass",
     "manufacturer": "ABC_Corp",
+    "attempt_count": 3,
 }
 response = reader.tested_dut(param)
 print(response.json())
@@ -183,7 +185,7 @@ print(response.json())
 Request URL of this example:
 
 ```bash
-https://demo.standcloud.io/hardpy/api/v1/tested_dut?part_number=PN-54321AB&status=pass&manufacturer=ABC_Corp
+https://demo.standcloud.io/hardpy/api/v1/tested_dut?part_number=PN-54321AB&status=pass&manufacturer=ABC_Corp&attempt_count=3
 ```
 
 REST API documentation page of this example:
