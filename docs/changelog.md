@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## HardPy 0.12.0
+
 * Update `test_run` **StandCloudReader** function.
   The `test_run` function provides access to 2 endpoints: `/test_run/{test_run_id}` and `/test_run`.
   [[PR-145](https://github.com/everypinio/hardpy/pull/145)]
