@@ -86,7 +86,7 @@ https://demo.standcloud.io/integration/api/v1/docs
 
 **params**
 
-Allows the user to retrieve data about a test run by by filters from `/test_run` URL.
+Allows the user to retrieve data about a test run by filters from `/test_run` URL.
 Filters are specified as parameters. A special place is occupied by the filter by field `dut.info`,
 which allows to add fields `dut.info` as keys for the filter in the parameters.
 
@@ -157,7 +157,7 @@ https://demo.standcloud.io/integration/api/v1/docs
 
 ### tested_dut
 
-Allows the user to retrieve data about a **last** tested dut's by filters from `/tested_dut` URL.
+Allows the user to retrieve data about the **last** tested dut's by filters from `/tested_dut` URL.
 Filters are specified as parameters. A special place is occupied by the filter by field `dut.info`,
 which allows to add fields `dut.info` as keys for the filter in the parameters.
 
