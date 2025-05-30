@@ -2,6 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## HardPy 0.12.1
+
+* Fix the situation in which the module and case stop times stop updating when the user stops the tests.
+  [[PR-146](https://github.com/everypinio/hardpy/pull/146)]
+
 ## HardPy 0.12.0
 
 * Update `test_run` **StandCloudReader** function.
