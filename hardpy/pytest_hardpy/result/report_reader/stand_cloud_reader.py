@@ -36,17 +36,41 @@ class StandCloudReader:
         self._verify_ssl = not __debug__
         self._sc_connector = sc_connector
 
-    def test_run(self, run_id: str) -> Response:
+    def request(self, endpoint: str, params: dict[str, Any] | None = None) -> Response:
+        """Get data from endpoint.
+
+        Args:
+            endpoint (str): endpoint address.
+            params (dict[str, Any] | None, optional): endpoint parameters.
+                Defaults to None.
+
+        Returns:
+            Response: endpoint data.
+        """
+        return self._request(endpoint=endpoint, params=params)
+
+    def test_run(
+        self,
+        run_id: str | None = None,
+        params: dict[str, Any] | None = None,
+    ) -> Response:
         """Get run data from '/test_run' endpoint.
 
         Args:
             run_id (str): UUIDv4 test run identifier.
                 Example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+            params (dict[str, Any] | None, optional): test_run parameters.
+                Defaults to None.
 
         Returns:
             Response: test run data.
         """
-        return self._request(endpoint=f"test_run/{run_id}")
+        if run_id is not None and params is not None:
+            msg = "run_id and params are mutually exclusive"
+            raise ValueError(msg)
+        if run_id is not None:
+            return self._request(endpoint=f"test_run/{run_id}")
+        return self._request(endpoint="test_run", params=params)
 
     def tested_dut(self, params: dict[str, Any]) -> Response:
         """Get tested DUT's data from '/tested_dut' endpoint.

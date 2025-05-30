@@ -65,14 +65,17 @@ nav:
       - Attempts: examples/attempts.md
       - CouchDB in RAM: examples/db_in_ram.md
       - CouchDB load: examples/couchdb_load.md
+      - Critical test: examples/critical_test.md
       - Dialog box: examples/dialog_box.md
       - Dialog box plot: examples/dialog_box_plot.md
       - HardPy launch: examples/hardpy_launch.md
       - Hello HardPy: examples/hello_hardpy.md
       - Launch arguments: examples/launch_arguments.md
+      - Pytest logging: examples/logging.md
       - Minute parity: examples/minute_parity.md
       - Multiple stands: examples/multiple_stands.md
       - Operator message: examples/operator_msg.md
+      - Remote access: examples/frontend_remote_access.md
       - Skip test: examples/skip_test.md
       - StandCloud: examples/stand_cloud.md
       - StandCloud read data: examples/stand_cloud_reader.md

@@ -23,8 +23,10 @@ from hardpy.pytest_hardpy.utils import (
     DuplicateSerialNumberError,
     DuplicateTestStandLocationError,
     DuplicateTestStandNameError,
+    DuplicateTestStandNumberError,
     HTMLComponent,
     ImageComponent,
+    TestStandNumberError,
 )
 
 
@@ -138,12 +140,35 @@ def set_stand_location(location: str) -> None:
 
     Args:
         location (str): test stand location
+
+    Raises:
+        DuplicateTestStandLocationError: if test stand location is already set
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.TEST_STAND, DF.LOCATION)
     if reporter.get_field(key):
         raise DuplicateTestStandLocationError
     reporter.set_doc_value(key, location)
+    reporter.update_db_by_doc()
+
+
+def set_stand_number(number: int) -> None:
+    """Add test stand number to document.
+
+    Args:
+        number (int): test stand number (non negative integer)
+
+    Raises:
+        DuplicateTestStandNumberError: if stand number is already set
+        TestStandNumberError: if stand number is incorrect (negative or non integer)
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.TEST_STAND, DF.NUMBER)
+    if not isinstance(number, int) or number < 0:
+        raise TestStandNumberError
+    if reporter.get_field(key):
+        raise DuplicateTestStandNumberError
+    reporter.set_doc_value(key, number)
     reporter.update_db_by_doc()
 
 

@@ -1,5 +1,3 @@
-import logging
-
 import pytest
 from driver_example import DriverExample  # type: ignore
 
@@ -8,12 +6,6 @@ from hardpy import (
     CouchdbLoader,
     get_current_report,
 )
-
-
-@pytest.fixture(scope="module")
-def module_log(request: pytest.FixtureRequest):
-    log_name = request.module.__name__
-    yield logging.getLogger(log_name)
 
 
 @pytest.fixture(scope="session")

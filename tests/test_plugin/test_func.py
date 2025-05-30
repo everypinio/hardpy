@@ -210,6 +210,58 @@ def test_stand_location(pytester: Pytester, hardpy_opts: list[str]):
     result.assert_outcomes(passed=1)
 
 
+def test_stand_duplicate_number(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        from hardpy import DuplicateTestStandNumberError
+
+        def test_stand_number():
+            report = hardpy.get_current_report()
+            assert (
+                report.test_stand.number is None
+            ), "Test stand number is not empty before start."
+
+            stand_number = 1
+            hardpy.set_stand_number(stand_number)
+            report = hardpy.get_current_report()
+            assert stand_number == report.test_stand.number
+
+            second_number = 2
+            with pytest.raises(DuplicateTestStandNumberError):
+                hardpy.set_stand_number(second_number)
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_stand_incorrect_number(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        from hardpy import TestStandNumberError
+
+        def test_stand_negative_number():
+            stand_number = -1
+            with pytest.raises(TestStandNumberError):
+                hardpy.set_stand_number(stand_number)
+
+        def test_stand_float_number():
+            stand_number = 1.1
+            with pytest.raises(TestStandNumberError):
+                hardpy.set_stand_number(stand_number)
+
+        def test_stand_str_number():
+            stand_number = "1"
+            with pytest.raises(TestStandNumberError):
+                hardpy.set_stand_number(stand_number)
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=3)
+
+
 def test_stand_info(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""

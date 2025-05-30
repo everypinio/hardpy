@@ -1,4 +1,4 @@
-# Storing CouchDB Database in RAM
+# Storing CouchDB database in RAM
 
 When using one of the methods below, the database data will be saved to a 
 folder in temporary storage, and after the computer is turned off, the data will be deleted.
@@ -72,6 +72,7 @@ Run **docker compose** in the root directory to launch DB.
 ```bash
 docker compose up
 ```
+
 To stop the database, run the command:
 
 ```bash
@@ -125,6 +126,7 @@ Run **docker compose** in the root directory to launch DB.
 ```bash
 docker compose up
 ```
+
 To stop the database, run the command:
 
 ```bash

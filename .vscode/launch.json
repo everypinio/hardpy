@@ -188,11 +188,8 @@
             "cwd": "${workspaceFolder}/hardpy/hardpy_panel/frontend",
             "runtimeExecutable": "yarn",
             "runtimeArgs": [
-                "start-dev"
+                "vite"
             ],
-            "env": {
-                "DANGEROUSLY_DISABLE_HOST_CHECK": "true"
-            },
             "console": "integratedTerminal",
             "preLaunchTask": "yarn install"
         },

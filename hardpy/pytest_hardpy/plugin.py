@@ -47,6 +47,7 @@ if __debug__:
 
     disable_warnings(InsecureRequestWarning)
 
+
 def pytest_addoption(parser: Parser) -> None:
     """Register argparse-style options."""
     con_data = ConnectionData()
@@ -123,6 +124,7 @@ class HardpyPlugin:
         self._post_run_functions: list[Callable] = []
         self._dependencies = {}
         self._tests_name: str = ""
+        self._is_critical_not_passed = False
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -160,12 +162,13 @@ class HardpyPlugin:
         config.addinivalue_line("markers", "module_name")
         config.addinivalue_line("markers", "dependency")
         config.addinivalue_line("markers", "attempt")
+        config.addinivalue_line("markers", "critical")
 
         # must be init after config data is set
         try:
             self._reporter = HookReporter(bool(is_clear_database))
         except RuntimeError as exc:
-            exit(str(exc), 1)
+            exit(str(exc), ExitCode.INTERNAL_ERROR)
 
     def pytest_sessionfinish(self, session: Session, exitstatus: int) -> None:
         """Call at the end of test session."""
@@ -206,7 +209,7 @@ class HardpyPlugin:
                 node_info = NodeInfo(item)
             except ValueError as exc:
                 error_msg = f"Error creating NodeInfo for item: {item}. {exc}"
-                exit(error_msg, 1)
+                exit(error_msg, ExitCode.NO_TESTS_COLLECTED)
 
             self._init_case_result(node_info.module_id, node_info.case_id)
             if node_info.module_id not in nodes:
@@ -240,7 +243,7 @@ class HardpyPlugin:
             except StandCloudError as exc:
                 msg = str(exc)
                 self._reporter.set_alert(msg)
-                exit(msg)
+                exit(msg, ExitCode.INTERNAL_ERROR)
             try:
                 sc_connector.healthcheck()
             except Exception:  # noqa: BLE001
@@ -251,7 +254,7 @@ class HardpyPlugin:
                 )
                 self._reporter.set_alert(msg)
                 self._reporter.update_db_by_doc()
-                exit(msg)
+                exit(msg, ExitCode.INTERNAL_ERROR)
 
         # testrun entrypoint
         self._reporter.start()
@@ -267,7 +270,7 @@ class HardpyPlugin:
         node_info = NodeInfo(item)
 
         status = TestStatus.RUN
-        is_skip_test = self._is_skip_test(node_info)
+        is_skip_test = self._is_critical_not_passed or self._is_skip_test(node_info)
         self._reporter.set_module_start_time(node_info.module_id)
         if not is_skip_test:
             self._reporter.set_case_start_time(node_info.module_id, node_info.case_id)
@@ -287,11 +290,7 @@ class HardpyPlugin:
     def pytest_runtest_call(self, item: Item) -> None:
         """Call the test item."""
         node_info = NodeInfo(item)
-        self._reporter.set_case_attempt(
-            node_info.module_id,
-            node_info.case_id,
-            1,
-        )
+        self._reporter.set_case_attempt(node_info.module_id, node_info.case_id, 1)
         self._reporter.update_db_by_doc()
 
     def pytest_runtest_makereport(self, item: Item, call: CallInfo) -> None:
@@ -303,6 +302,9 @@ class HardpyPlugin:
         attempt = node_info.attempt
         module_id = node_info.module_id
         case_id = node_info.case_id
+
+        if node_info.critical:
+            self._is_critical_not_passed = True
 
         # first attempt was in pytest_runtest_call
         for current_attempt in range(2, attempt + 1):
@@ -317,6 +319,7 @@ class HardpyPlugin:
             try:
                 item.runtest()
                 call.excinfo = None
+                self._is_critical_not_passed = False
                 self._reporter.set_case_status(module_id, case_id, TestStatus.PASSED)
                 break
             except AssertionError:
@@ -340,11 +343,7 @@ class HardpyPlugin:
         module_id = Path(report.fspath).stem
         case_id = report.nodeid.rpartition("::")[2]
 
-        self._reporter.set_case_status(
-            module_id,
-            case_id,
-            TestStatus(report.outcome),
-        )
+        self._reporter.set_case_status(module_id, case_id, TestStatus(report.outcome))
         # update case stop_time in non-skipped tests or user-skipped tests
         if report.skipped is False or is_skipped_by_plugin is False:
             self._reporter.set_case_stop_time(module_id, case_id)
@@ -376,7 +375,7 @@ class HardpyPlugin:
     # Not hooks
 
     def _stop_handler(self, signum: int, frame: Any) -> None:  # noqa: ANN401, ARG002
-        exit("Tests stopped by user")
+        exit("Tests stopped by user", ExitCode.INTERRUPTED)
 
     def _init_case_result(self, module_id: str, case_id: str) -> None:
         if self._results.get(module_id) is None:
@@ -482,36 +481,40 @@ class HardpyPlugin:
 
     def _is_skip_test(self, node_info: NodeInfo) -> bool:
         """Is need to skip a test because it depends on another test."""
-        is_dependency_test_exist = self._dependencies.get(
+        dependency_tests = self._dependencies.get(
             TestDependencyInfo(node_info.module_id, node_info.case_id),
         )
-        is_dependency_test_failed = False
-        if is_dependency_test_exist:
+        is_skip = False
+        if dependency_tests:
             wrong_status = {TestStatus.FAILED, TestStatus.SKIPPED, TestStatus.ERROR}
-            module_id, case_id = is_dependency_test_exist
-            if case_id is not None:
-                is_dependency_test_failed = (
-                    self._results[module_id][case_id] in wrong_status
-                )
-            else:
-                result_set = set(self._results[module_id].values())
-                is_dependency_test_failed = any(
-                    status in wrong_status for status in result_set
-                )
-        return bool(is_dependency_test_exist and is_dependency_test_failed)
+            for dependency_test in dependency_tests:
+                module_id, case_id = dependency_test
+                module_data = self._results[module_id]
+                # case result is the reason for the skipping
+                if case_id is not None and module_data[case_id] in wrong_status:  # noqa: SIM114
+                    is_skip = True
+                    break
+                # module result is the reason for the skipping
+                elif case_id is None and module_data["module_status"] in wrong_status:  # noqa: RET508
+                    is_skip = True
+                    break
+            if is_skip and node_info.critical is True:
+                self._is_critical_not_passed = True
+        return is_skip
 
     def _add_dependency(self, node_info: NodeInfo, nodes: dict) -> None:
-        dependency = node_info.dependency
-        if dependency is None or dependency == "":
+        dependencies = node_info.dependency
+        if dependencies is None:
             return
-        module_id, case_id = dependency
-        if module_id not in nodes:
-            error_message = f"Error: Module dependency '{dependency}' not found."
-            exit(error_message, 1)
-        elif case_id not in nodes[module_id] and case_id is not None:
-            error_message = f"Error: Case dependency '{dependency}' not found."
-            exit(error_message, 1)
-
-        self._dependencies[
-            TestDependencyInfo(node_info.module_id, node_info.case_id)
-        ] = dependency
+        for dependency in dependencies:
+            module_id, case_id = dependency
+            # incorrect module id in dependency
+            if module_id not in nodes:
+                continue
+            # incorrect case id in dependency
+            if case_id not in nodes[module_id] and case_id is not None:
+                continue
+            test_key = TestDependencyInfo(node_info.module_id, node_info.case_id)
+            if test_key not in self._dependencies:
+                self._dependencies[test_key] = set()
+            self._dependencies[test_key].add(dependency)

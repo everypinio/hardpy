@@ -6,7 +6,7 @@ import _, { Dictionary } from "lodash";
 import { H1, H2, H4, Tag, Divider } from "@blueprintjs/core";
 
 import { TestItem, TestSuite as TestSuiteComponent } from "./TestSuite";
-import StartOperatorMsgDialog from "hardpy_test_view/OperatorMsg";
+import StartOperatorMsgDialog from "./OperatorMsg";
 
 /**
  * Set of suites
@@ -87,6 +87,8 @@ interface Props {
   defaultClose: boolean;
 }
 
+const SECONDS_TO_MILLISECONDS = 1000;
+
 /**
  * Render a list of suites with tests inside
  */
@@ -109,10 +111,10 @@ export class SuiteList extends React.Component<Props> {
 
     const db_state = this.props.db_state;
     const start = db_state.start_time
-      ? new Date(db_state.start_time * 1000).toLocaleString()
+      ? new Date(db_state.start_time * SECONDS_TO_MILLISECONDS).toLocaleString()
       : "";
     const stop = db_state.stop_time
-      ? new Date(db_state.stop_time * 1000).toLocaleString()
+      ? new Date(db_state.stop_time * SECONDS_TO_MILLISECONDS).toLocaleString()
       : "";
     const start_tz = db_state.timezone ? db_state.timezone : "";
     const alert = db_state.alert;

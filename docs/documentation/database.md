@@ -55,51 +55,204 @@ stores the current report and **report** stores reports.
     <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/database/runstore.png" alt="runstore_scheme">
 </h1>
 
-The **current** document of **runstore** database contains the following fields:
+The **current** document of **runstore** database contains some section.
 
-- **_rev**: current document revision;
-- **_id**: unique document identifier;
-- **stop_time**: end time of testing in Unix seconds;
-- **start_time**: testing start time in Unix seconds;
-- **status**: test execution status;
-- **name**: test suite name;
-- **dut**: DUT information containing the serial number and additional information;
-- **test_stand**: information about the test stand in the form of a dictionary;
-- **artifact**: an object containing information about artifacts created during the test run;
-- **modules**: module information.
+#### main
 
-The **test_stand** block containt the following fields:
+- **_rev**: a CouchDB [revision MVCC](https://docs.couchdb.org/en/stable/api/document/common.html) token;
+  The variable is assigned automatically.
+- **_id**: unique document identifier.
+  The variable is assigned automatically.
+- **stop_time**: the end time of the test in Unix seconds. The variable is assigned automatically.
+- **start_time**: the start time of the test in Unix seconds. The variable is assigned automatically.
+- **status**: test execution status from **pytest**: **passed**, **failed**, **skipped**, **stopped**.
+  The variable is assigned automatically.
+- **name**: the name of the test suite. It is displayed in the header of the operator panel.
+  The user can specify the name using the `tests_name` variable in the **hardpy.toml** file.
+  If this variable is not set, the name will be taken from the directory name containing the tests.
+- **dut**: DUT information. See the [dut](#dut) section for more information.
+- **test_stand**: test stand information. See the [test_stand](#test_stand) section for more information.
+- **artifact**: an object that contains information about the artifacts created during the test run.
+  The user can specify the run artifact by using [set_run_artifact](./pytest_hardpy.md#set_run_artifact) function.
+  The artifact contains a dictionary where the user can store any data at the test run level.
+  The artifacts are not displayed on the operator panel.
+- **modules**: module (pytest files) information. See the [modules](#modules) section for more information.
 
-  - **name** - test stand name;
-  - **drivers**: information about drivers in the form of a dictionary;
-  - **info**: a dictionary containing additional information about the test stand;
-  - **timezone**: timezone as a string;
-  - **location**: test stand location;
-  - **hw_id**: test stand machine id (GUID) or MAC address.
+#### test_stand
 
-The **dut** block contains the following fields:
+The **test_stand** section contains information about the test stand.
+It is a computer on which **HardPy** is running and to which the DUT test equipment is connected.
 
-  - **serial_number**: DUT serial number;
-  - **part_number**: DUT part number;
-  - **info**: A dictionary containing additional information about the DUT, such as batch, board revision, etc.
+- **name** - test stand name. It can only be set once per test run.
+  The user can specify the stand name by using [set_stand_name](./pytest_hardpy.md#set_stand_name) function.
+- **drivers**: information about drivers in the form of a dictionary, including test equipment and test equipment software.
+  The user can specify the driver info by using [set_driver_info](./pytest_hardpy.md#set_driver_info) function.
+- **info**: dictionary containing additional information about the test stand.
+  The user can specify the additional info by using [set_stand_info](./pytest_hardpy.md#set_stand_info) function.
+- **timezone**: timezone of test stand as a string. The variable is assigned automatically.
+- **location**: the location of the test stand, e.g., the country, city, or laboratory number.
+  It can only be set once per test run. The user can specify the location by using
+  [set_stand_location](./pytest_hardpy.md#set_stand_location) function.
+- **number**: test stand number. Some stands may have the same name and
+  run on the same computer but have different numbers. It can only be set once per test run.
+  The user can specify the stand number by using [set_stand_number](./pytest_hardpy.md#set_stand_number) function.
+- **hw_id**: test stand machine id (GUID) or host name. The variable is assigned automatically by
+  the [py-machineid](https://pypi.org/project/py-machineid/) package.
 
-The **modules** block contains the following fields:
+##### test_stand examples
 
-  - **test_{module_name}**: an object containing information about a specific module. Contains the following fields:
-    - **status**: module test execution status;
-    - **name**: module name, by default the same as module_id;
-    - **start_time**: module testing start time in Unix seconds;
-    - **stop_time**: end time of module testing in Unix seconds;
-    - **artifact**: an object containing information about artifacts created during the test module process;
-    - **cases**: an object containing information about each test within the module. Contains the following fields:
-      - **test_{test_name}**: an object containing information about the test. Contains the following fields:
-        - **status**: test execution status;
-        - **name**: test name, by default the same as case_id;
-        - **start_time**: test start time in Unix seconds;
-        - **stop_time**: test end time in Unix second;
-        - **assertion_msg**: error message if the test fails;
-        - **msg**: additional message;
-        - **artifact**: an object containing information about artifacts created during the test case process.
+**Two stands on one computer**:
+
+```json
+// test stand 1
+"test_stand": {
+  "hw_id": "840982098ca2459a7b22cc608eff65d4",
+  "name": "Test stand A",
+  "info": {},
+  "timezone": "Europe/Helsinki",
+  "drivers": {
+    "driver_1": {
+      "state": "active",
+      "port": 3000
+    }
+  },
+  "location": "Helsinki",
+  "number": 1
+},
+```
+
+```json
+// test stand 2
+"test_stand": {
+  "hw_id": "840982098ca2459a7b22cc608eff65d4",
+  "name": "Test stand A",
+  "info": {},
+  "timezone": "Europe/Helsinki",
+  "drivers": {
+    "driver_1": {
+      "state": "active",
+      "port": 3000
+    }
+  },
+  "location": "Helsinki",
+  "number": 2
+},
+```
+
+**Two different stands**:
+
+```json
+// test stand 1
+"test_stand": {
+  "hw_id": "840982098ca2459a7b22cc608eff65d4",
+  "name": "ABC",
+  "info": {},
+  "timezone": "Europe/Helsinki",
+  "drivers": {
+    "voltmeter": {
+      "sw_version": "1.1.3",
+      "hw_version": "2.0.1"
+    }
+  },
+  "location": "Laboratory 1",
+  "number": null
+},
+```
+
+```json
+// test stand 2
+"test_stand": {
+  "hw_id": "156731093ab759a7b11ac108eaf69d2",
+  "name": "DEF",
+  "info": {},
+  "timezone": "Europe/Helsinki",
+  "drivers": {},
+  "location": "Laboratory 2",
+  "number": null
+},
+```
+
+#### dut
+
+The device under test section contains information about the DUT.
+
+- **serial_number**: DUT serial number. This identifier is unique to the testing device or board.
+  It can only be set once per test run.
+  The user can specify the DUT serial number by using [set_dut_serial_number](./pytest_hardpy.md#set_dut_serial_number) function.
+- **part_number**: DUT part number. This identifier of a particular part design, board or device.
+  It can only be set once per test run.
+  The user can specify the DUT part number by using [set_dut_part_number](./pytest_hardpy.md#set_dut_part_number) function.
+- **info**: dictionary containing additional information about the the DUT, such as batch, board revision, etc.
+  The user can specify the additional info by using [set_dut_info](./pytest_hardpy.md#set_dut_info) function.
+
+##### dut examples
+
+**Testing of two devices of the same type (same part number)**:
+
+```json
+// dut 1
+"dut": {
+  "serial_number": "1000-10",
+  "part_number": "ABC11",
+  "info": {
+    "board_rev": "rev_1"
+  }
+}
+```
+
+```json
+// dut 2
+"dut": {
+  "serial_number": "1000-11",
+  "part_number": "ABC11",
+  "info": {
+    "board_rev": "rev_1"
+  }
+}
+```
+
+#### modules
+
+The **modules** section contains the information about tests.
+Each module contains information from a single test file.
+The module's name is the same as the file's name.
+
+- **test_{module_name}**: an object containing information about a specific module.
+  The `{module_name}` variable is assigned automatically.
+  Contains the following fields:
+  - **status**: module test execution status. The variable is assigned automatically.
+  - **name**: module name, by default the same as module_id.
+    The user can specify the module name by using [module_name](./pytest_hardpy.md#module_name) marker.
+  - **start_time**: start time of module testing in Unix seconds. The variable is assigned automatically.
+  - **stop_time**: end time of module testing in Unix seconds. The variable is assigned automatically.
+  - **artifact**: an object that contains information about the artifacts created during the test module.
+    The user can specify the module artifact by using [set_module_artifact](./pytest_hardpy.md#set_module_artifact) function.
+    The artifact contains a dictionary where the user can store any data at the test module level.
+    The artifacts are not displayed on the operator panel.
+  - **cases**: an object that contains information about each test case within the module.
+    - **test_{case_name}**: an object containing information about a specific case.
+      The `{case_name}` variable is assigned automatically.
+      Contains the following fields:
+      - **status**: test case execution status. The variable is assigned automatically.
+      - **name**: case name, by default the same as case_id.
+        The user can specify the case name by using [case_name](./pytest_hardpy.md#case_name) marker.
+      - **start_time**: start time of case testing in Unix seconds. The variable is assigned automatically.
+      - **stop_time**: end time of case testing in Unix seconds. The variable is assigned automatically.
+      - **assertion_msg**: assert or error message if the test case fails. The variable is assigned automatically.
+        However, the user can write their own message in case of an assertion, which will be written to this variable.
+        For example:
+        ```python
+        assert False, "This is an example"
+        ```
+        The **assertion_msg** is displayed in the operator panel next to the test case in which it was called.
+      - **msg**: the log message is displayed in the operator panel next to the test case in which it was called.
+        The user can specify and update current message by using [set_message](./pytest_hardpy.md#set_message) function.
+      - **artifact**: an object that contains information about the artifacts created during the test case.
+        The user can specify the case artifact by using [set_case_artifact](./pytest_hardpy.md#set_case_artifact) function.
+        The artifact contains a dictionary where the user can store any data at the test case level.
+        The artifacts are not displayed on the operator panel.
+
+### Report example
 
 Example of a **current** document:
 
@@ -133,7 +286,8 @@ Example of a **current** document:
             "port": 8000
           }
         },
-        "location": "Belgrade_1"
+        "location": "Belgrade_1",
+        "number": 2
       },
       "artifact": {},
       "modules": {
