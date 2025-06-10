@@ -1,4 +1,4 @@
-# Hardpy Installation Guide for Raspberry Pi
+# Hardpy installation guide for Raspberry Pi
 
 This document provides a step-by-step guide for installing and running Hardpy on a Raspberry Pi.  
 It assumes a fresh installation of Raspberry Pi OS.
@@ -12,7 +12,7 @@ All the files for this guideline can be seen inside the hardpy package
 * A computer with internet access to download the Raspberry Pi OS image.
 * A microSD card reader/writer.
 
-## Installation Steps
+## Installation steps
 
 1. **Install Raspberry Pi OS:**
     * Download the Raspberry Pi OS Imager from the official Raspberry Pi website: [https://www.raspberrypi.com/software/](https://www.raspberrypi.com/software/)
@@ -51,7 +51,7 @@ All the files for this guideline can be seen inside the hardpy package
 
 * Make the script executable: `chmod +x /home/[login]/script.sh`
 
-3. **Prepare the Installation Script without SSH:**
+3. **Prepare the installation script without SSH:**
 
     * Create a directory for your Hardpy installation.
     * Inside this directory, create the `script.sh` file and paste the provided script content into it.
@@ -62,7 +62,7 @@ All the files for this guideline can be seen inside the hardpy package
     **Important:**  For production, change the default password!
     * Make the script executable: `chmod +x script.sh`
 
-4. **Run the Installation Script:**
+4. **Run the installation script:**
 
     * Open a terminal on your Raspberry Pi (either directly or via SSH).
     * Navigate to the directory containing the script.
@@ -74,7 +74,7 @@ All the files for this guideline can be seen inside the hardpy package
     * The script will ask if you want to reboot.  
     Choose "yes" to complete the installation.
 
-5. **Initialize and Run Hardpy:**
+5. **Initialize and run Hardpy:**
 
     * After rebooting, log in to your Raspberry Pi.
     * Navigate to the directory where you want to create your Hardpy project.
@@ -89,7 +89,7 @@ All the files for this guideline can be seen inside the hardpy package
 * **CouchDB:** Accessible from any device on the network at `raspberrypi:5984` (or `raspberrypi.local:5984` from some systems).
 * **Hardpy Frontend:** Accessible from any device on the network at `raspberrypi:8000` (or `raspberrypi.local:8000` from some systems).
 
-## Script Explanation (`script.sh`)
+## Script explanation (`script.sh`)
 
 The script performs the following actions:
 
@@ -100,12 +100,12 @@ These files configure CouchDB to bind to all network interfaces and set the init
 The `--break-system-packages` is included to bypass any potential conflicts.
 * **Reboots the system:**  Reboots the Raspberry Pi to ensure all changes are applied.
 
-## Changing the Raspberry Pi Hostname
+## Changing the Raspberry Pi hostname
 
 You can change the hostname of your Raspberry Pi using the `raspi-config` utility: `sudo raspi-config`.  
 This allows you to access it more easily on your local network using the new hostname (e.g., `raspberrypi.local`).
 
-## Running a Database in RAM
+## Running a database in RAM
 
 To keep the database data in RAM and clear it on reboot:
 
