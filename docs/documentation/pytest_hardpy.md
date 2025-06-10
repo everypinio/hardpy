@@ -643,22 +643,35 @@ For more information, see the example [StandCloud reader](./../examples/stand_cl
 
 **Functions:**
 
-- `test_run` *(run_id: str)* - get run data from `/test_run` endpoint.
+- `test_run` *(run_id: str, params: dict[str, Any])* - get run data from `/test_run` endpoint.
+  All test run filters can view in REST documentation.
   Return `requests.Response` class with test run data.
-- `tested_dut` *(params: dict[str, Any])* - get tested DUT's data from `/tested_dut` endpoint.
+- `tested_dut` *(params: dict[str, Any])* - get last tested DUT's data from `/tested_dut` endpoint.
   All tested dut's filters can view in REST documentation.
+  Return `requests.Response` class with tested DUT's data.
+
+In terms of filters, the difference between `test_run` and `tested_dut` in terms of filters
+is that in test_run allows you to request a filter for the number of runs - `number_of_attempt`,
+while tested_dut allows you to request a filter for the number of runs - `attempt_count`.
+In other words, `tested_dut` will return the last run with the specified number of runs specified in `attempt_count`,
+and `test_run` will return the runs whose start number is equal to the `number_of_attempt` specified in the filter.
 
 **Examples:**
 
 ```python
     reader = StandCloudReader(StandCloudConnector(addr="demo.standcloud.io"))
 
-    response = reader.test_run("0196434d-e8f7-7ce1-81f7-e16f20487494")
+    response = reader.test_run(run_id="0196434d-e8f7-7ce1-81f7-e16f20487494")
     status_code = response.status_code
     response_data = response.json()
     print(response_data)
 
     param = {"part_number": "part_number_1", "status": "pass", "firmware_version": "1.2.3"}
+    response = reader.test_run(params=param)
+    status_code = response.status_code
+    response_data = response.json()
+    print(response_data)
+
     response = reader.tested_dut(param)
     status_code = response.status_code
     response_data = response.json()
