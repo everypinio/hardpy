@@ -3,7 +3,7 @@
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
 * Update parallel tests example.
-  [[PR-141](https://github.com/everypinio/hardpy/pull/141)]
+  [[PR-150](https://github.com/everypinio/hardpy/pull/150)]
 
 ## HardPy 0.12.0
 
