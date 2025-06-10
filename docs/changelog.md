@@ -2,6 +2,9 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Update parallel tests example.
+  [[PR-150](https://github.com/everypinio/hardpy/pull/150)]
+
 ## HardPy 0.12.0
 
 * Update `test_run` **StandCloudReader** function.
