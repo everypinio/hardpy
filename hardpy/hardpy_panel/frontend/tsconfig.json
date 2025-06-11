@@ -24,9 +24,7 @@
     "sourceMap": true
   },
   "include": [
-    "src/**/*",
-    "vite-env.d.ts", 
-    "vite.config.mts"  
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
