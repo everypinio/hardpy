@@ -76,6 +76,7 @@ nav:
       - Multiple stands: examples/multiple_stands.md
       - Operator message: examples/operator_msg.md
       - Remote access: examples/frontend_remote_access.md
+      - Raspberry Stand: examples/raspberry_stand.md
       - Skip test: examples/skip_test.md
       - StandCloud: examples/stand_cloud.md
       - StandCloud read data: examples/stand_cloud_reader.md

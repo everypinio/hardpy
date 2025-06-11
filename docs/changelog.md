@@ -2,6 +2,9 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add script for launching Hardpy on the Raspberry Pi.
+  [[PR-151](https://github.com/everypinio/hardpy/pull/151)]
+
 ## HardPy 0.12.0
 
 * Update `test_run` **StandCloudReader** function.
