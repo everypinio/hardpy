@@ -2,6 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## HardPy 0.12.0
+
+* Update `test_run` **StandCloudReader** function.
+  The `test_run` function provides access to 2 endpoints: `/test_run/{test_run_id}` and `/test_run`.
+  [[PR-145](https://github.com/everypinio/hardpy/pull/145)]
 * Update database scheme description.
   [[PR-140](https://github.com/everypinio/hardpy/pull/140)]
 * Add test stand number by using `set_stand_number` function.
@@ -9,7 +14,9 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 * Add prohibition to run tests on the port if the port is busy.
   [[PR-136](https://github.com/everypinio/hardpy/pull/136)]
 * Add marker **critical**.
-  [[PR-135](https://github.com/everypinio/hardpy/pull/135)]
+  [[PR-135](https://github.com/everypinio/hardpy/pull/135)],
+  [[PR-142](https://github.com/everypinio/hardpy/pull/142)],
+  [[PR-143](https://github.com/everypinio/hardpy/pull/143)]
 * Change dependency behaviour when a case or module name does not exist.
   Such a test or module will be executed.
   [[PR-130](https://github.com/everypinio/hardpy/pull/130)]
