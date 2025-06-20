@@ -237,7 +237,8 @@ class HardpyPlugin:
 
         con_data = ConnectionData()
 
-        if con_data.sc_connection_only:  # check
+        # running tests depends on a connection to StandCloud
+        if con_data.sc_connection_only:
             try:
                 sc_connector = StandCloudConnector(addr=con_data.sc_address)
             except StandCloudError as exc:
