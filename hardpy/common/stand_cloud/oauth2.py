@@ -3,61 +3,66 @@
 
 from __future__ import annotations
 
-import io
-import json
-import sys
-from copy import deepcopy
-from datetime import datetime, timedelta, timezone
-from time import sleep
+from datetime import timedelta
 from typing import TYPE_CHECKING
 
-import qrcode
-import requests
-from keyring.errors import KeyringError
 from requests.auth import AuthBase
 from requests_oauth2client import BearerToken
 from requests_oauthlib import OAuth2Session
 
-from hardpy.common.stand_cloud.utils import SERVICE_NAME, get_token_store
-
 if TYPE_CHECKING:
+    from requests import PreparedRequest
     from requests_oauth2client import ApiClient
 
-    from hardpy.common.stand_cloud.utils import StandCloudURL
+    from hardpy.common.stand_cloud.token_manager import TokenManager
+    from hardpy.common.stand_cloud.utils import StandCloudAddr
 
 
 class OAuth2(AuthBase):
     """Authorize HardPy using the device flow of OAuth 2.0."""
 
-    def __init__(self, sc_url: StandCloudURL, client_id: str, verify_ssl: bool = True):
-        self._sc_url = sc_url
+    def __init__(
+        self,
+        sc_addr: StandCloudAddr,
+        client_id: str,
+        token: BearerToken,
+        token_storer: TokenManager,
+        verify_ssl: bool = True,
+    ) -> None:
+        self._sc_addr = sc_addr
         self._client_id = client_id
         self._verify_ssl = verify_ssl
+        self._token_manager = token_storer
 
-        try:
-            token = self._read_token_info()
-        except Exception:  # noqa: BLE001
-            token = self._get_new_token()
+        self._token = self._check_token(token)
 
-        self.token = self._check_token(token)
-
-    def __call__(self, req: requests.PreparedRequest) -> requests.PreparedRequest:
+    def __call__(self, req: PreparedRequest) -> PreparedRequest:
         """Append an OAuth 2 token to the request.
 
         Note that currently HTTPS is required for all requests. There may be
         a token type that allows for plain HTTP in the future and then this
         should be updated to allow plain HTTP on a white list basis.
         """
-        req.headers[self.token.AUTHORIZATION_HEADER] = self.token.authorization_header()  # type: ignore
+        req.headers[self._token.AUTHORIZATION_HEADER] = (  # type: ignore
+            self._token.authorization_header()
+        )
         return req
 
     def _check_token(self, token: BearerToken) -> ApiClient:
-        refresh_url = self._sc_url.token
+        """Check token and refresh if needed.
 
-        session = OAuth2Session(
+        Args:
+            token (BearerToken): bearer token to check
+
+        Returns:
+            ApiClient: refreshed token
+        """
+        refresh_url = self._sc_addr.token
+
+        self.session = OAuth2Session(
             self._client_id,
             token=token.as_dict(),
-            token_updater=self._save_token_info,
+            token_updater=self._token_manager.save_token_info,
         )
 
         is_need_refresh = False
@@ -71,124 +76,21 @@ class OAuth2(AuthBase):
         if is_need_refresh:
             extra = {
                 "client_id": self._client_id,
-                "audience": self._sc_url.api,
+                "audience": self._sc_addr.api,
             }
-            ret = session.refresh_token(
+            ret = self.session.refresh_token(
                 token_url=refresh_url,
                 refresh_token=self._get_refresh_token(),
                 verify=False,
                 **extra,
             )
-            self._save_token_info(ret)
+
+            self._token_manager.save_token_info(ret)
             return BearerToken(**ret)
 
         return token
 
-    def _get_new_token(self) -> BearerToken:
-        req = requests.post(
-            self._sc_url.device,
-            data={
-                "client_id": self._client_id,
-                "scope": "offline_access authelia.bearer.authz",
-                "audience": self._sc_url.api,
-            },
-            verify=self._verify_ssl,
-            timeout=10,
-        )
-        response = json.loads(req.content)
-        self._print_user_action_request(response["verification_uri_complete"])
-
-        interval = response["interval"]
-        data = {
-            "client_id": self._client_id,
-            "grant_type": "urn:ietf:params:oauth:grant-type:device_code",
-            "device_code": response["device_code"],
-        }
-        return self._wait_verification(auth_info=data, interval=interval)
-
-    def _wait_verification(self, auth_info: dict, interval: int) -> BearerToken:
-        start_time = datetime.now(tz=timezone.utc)
-        while True:
-            print(".", end="")
-            sleep(interval)
-
-            req = requests.post(
-                self._sc_url.token,
-                data=auth_info,
-                verify=self._verify_ssl,
-                timeout=interval,
-            )
-            response = json.loads(req.content)
-
-            if "error" in response:
-                current_time = datetime.now(tz=timezone.utc)
-                if current_time >= start_time + timedelta(minutes=3):
-                    print("Verification time is out")
-                    sys.exit(1)
-                continue
-
-            if "access_token" in response and "refresh_token" in response:
-                print("Token received")
-                new_token = BearerToken(**response)
-
-                if "expires_at" not in response and new_token.expires_at:
-                    response["expires_at"] = new_token.expires_at.timestamp()
-                self._save_token_info(response)
-                return new_token
-
-    def _print_user_action_request(self, url_complete: str) -> None:
-        qr = qrcode.QRCode()
-        qr.add_data(url_complete)
-        f = io.StringIO()
-        qr.print_ascii(out=f)
-        f.seek(0)
-
-        print(f.read())
-        print("Scan the QR code or, using a browser on another device, visit:")
-        print(url_complete, end="\n\n")
-
-    def _save_token_info(self, token: BearerToken | dict) -> None:
-        storage_keyring, mem_keyring = get_token_store()
-        storage_keyring.set_password(
-            SERVICE_NAME,
-            "refresh_token",
-            token["refresh_token"],
-        )
-
-        token_info = deepcopy(token)
-        token_info.pop("expires_in")
-        token_info.pop("refresh_token")
-
-        try:
-            mem_keyring.set_password(
-                SERVICE_NAME,
-                "access_token",
-                json.dumps(token_info),
-            )
-        except KeyringError as e:
-            print(e)
-            sys.exit(1)
-
     def _get_refresh_token(self) -> str | None:
-        storage_keyring, _ = get_token_store()
-        return storage_keyring.get_password(SERVICE_NAME, "refresh_token")
-
-    def _read_token_info(self) -> BearerToken:
-        _, mem_keyring = get_token_store()
-        token_info = mem_keyring.get_password(SERVICE_NAME, "access_token")
-        secret = self._add_expires_in(json.loads(token_info))  # type: ignore
-        return BearerToken(**secret)
-
-    def _add_expires_in(self, secret: dict) -> dict:
-        if "expires_at" in secret:
-            expires_at = secret["expires_at"]
-        elif "id_token" in secret and "exp" in secret["id_token"]:
-            expires_at = secret["id_token"]["exp"]
-        expires_at_datetime = datetime.fromtimestamp(expires_at, timezone.utc)
-
-        expires_in_datetime = expires_at_datetime - datetime.now(timezone.utc)
-        expires_in = int(expires_in_datetime.total_seconds())
-
-        secret["expires_in"] = expires_in
-
-        return secret
+        storage_keyring, _ = self._token_manager.get_store()
+        service_name = self._token_manager.service_name
+        return storage_keyring.get_password(service_name, "refresh_token")

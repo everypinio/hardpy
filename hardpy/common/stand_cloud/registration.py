@@ -3,44 +3,41 @@
 
 from __future__ import annotations
 
-from contextlib import suppress
 from datetime import timedelta
-from platform import system
+from io import StringIO
+from typing import TYPE_CHECKING
 
-import requests
-from keyring import delete_password, get_credential
-from keyring.errors import KeyringError
 from oauthlib.oauth2.rfc6749.errors import (
     InvalidGrantError,
     TokenExpiredError,
 )
+from qrcode import QRCode
 from requests.exceptions import HTTPError
 from requests_oauth2client.tokens import ExpiredAccessToken
 
-from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
-from hardpy.common.stand_cloud.oauth2 import SERVICE_NAME, OAuth2
-from hardpy.common.stand_cloud.utils import get_token_store
+from hardpy.common.stand_cloud.token_manager import TokenManager
+
+if TYPE_CHECKING:
+    from hardpy.common.stand_cloud.connector import StandCloudConnector
 
 
-def login(addr: str) -> None:
+def login(sc_connector: StandCloudConnector) -> None:
     """Login HardPy in StandCloud.
 
     Args:
-        addr (str): StandCloud address
+        sc_connector (StandCloudConnector): StandCloud connector
     """
-    try:
-        sc_connector = StandCloudConnector(addr=addr)
-    except StandCloudError as exc:
-        print(str(exc))
-        return
+    token = sc_connector.read_access_token()
+    if token is None:
+        response = sc_connector.get_verification_url()
+        url = response["verification_uri_complete"]
+        _print_user_action_request(url)
+        token = sc_connector.wait_verification(response)
+
+    sc_connector.update_token(token)
 
     try:
-        requests.get(
-            url=sc_connector.url.api,
-            auth=OAuth2(sc_connector),
-            verify=sc_connector.verify_ssl,
-            timeout=10,
-        )
+        sc_connector.healthcheck()
     except ExpiredAccessToken as e:
         time_diff = timedelta(seconds=abs(e.args[0].expires_in))
         print(f"API access error: token is expired for {time_diff}")
@@ -51,22 +48,28 @@ def login(addr: str) -> None:
     except HTTPError as e:
         print(e)
 
+    print(f"HardPy login to {sc_connector.addr} success")
 
-def logout() -> bool:
+
+def logout(addr: str) -> bool:
     """Logout HardPy from StandCloud.
+
+    Args:
+        addr (str): StandCloud address
 
     Returns:
         bool: True if successful else False
     """
-    try:
-        while cred := get_credential(SERVICE_NAME, None):
-            delete_password(SERVICE_NAME, cred.username)
-    except KeyringError:
-        return False
-    # TODO(xorialexandrov): fix keyring clearing
-    # Windows does not clear refresh token by itself
-    if system() == "Windows":
-        storage_keyring, _ = get_token_store()
-        with suppress(KeyringError):
-            storage_keyring.delete_password(SERVICE_NAME, "refresh_token")
-    return True
+    token_manager = TokenManager(addr)
+    return token_manager.remove_token()
+
+def _print_user_action_request(url_complete: str) -> None:
+    qr = QRCode()
+    qr.add_data(url_complete)
+    f = StringIO()
+    qr.print_ascii(out=f)
+    f.seek(0)
+
+    print(f.read())
+    print("Scan the QR code or, using a browser on another device, visit:")
+    print(url_complete, end="\n\n")
