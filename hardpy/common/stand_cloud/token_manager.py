@@ -20,7 +20,10 @@ if TYPE_CHECKING:
 
 
 class TokenManager:
-    """Token manager."""
+    """Token manager.
+
+    Manage token in keyring storage.
+    """
 
     def __init__(self, service_name: str) -> None:
         self._service_name = f"HardPy_{service_name}"
