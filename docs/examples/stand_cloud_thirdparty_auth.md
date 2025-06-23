@@ -1,0 +1,1 @@
+# StandCloud third party authorization
