@@ -54,9 +54,9 @@ class StandCloudConnector:
         )
 
         self._client_id = "hardpy-report-uploader"
-        self.verify_ssl = not __debug__
+        self._verify_ssl = not __debug__
         self._token_manager = TokenManager(self._addr.domain)
-        self._token: BearerToken = self.read_access_token()
+        self._token: BearerToken = self.get_access_token()
         self._log = getLogger(__name__)
 
     @property
@@ -77,14 +77,33 @@ class StandCloudConnector:
         """
         self._token = token
 
-    def read_access_token(self) -> BearerToken | None:
+    def is_refresh_token_valid(self) -> bool:
+        """Check if token is valid.
+
+        Returns:
+            bool: True if token is valid, False otherwise.
+        """
+        try:
+            OAuth2(
+                sc_addr=self._addr,
+                client_id=self._client_id,
+                token=self._token,
+                token_manager=self._token_manager,
+                verify_ssl=self._verify_ssl,
+            )
+        except OAuth2Error:
+            return False
+        return True
+
+
+    def get_access_token(self) -> BearerToken | None:
         """Read access token from token store.
 
         Returns:
             BearerToken: access token
         """
         try:
-            return self._read_token_info()
+            return self._token_manager.read_access_token()
         except Exception:  # noqa: BLE001
             return None
 
@@ -101,7 +120,7 @@ class StandCloudConnector:
                 "scope": "offline_access authelia.bearer.authz",
                 "audience": self._addr.api,
             },
-            verify=self.verify_ssl,
+            verify=self._verify_ssl,
             timeout=10,
         )
         return json.loads(req.content)
@@ -129,7 +148,7 @@ class StandCloudConnector:
         api = self._get_api("healthcheck")
 
         try:
-            resp = api.get(verify=self.verify_ssl)
+            resp = api.get(verify=self._verify_ssl)
         except ExpiredAccessToken as exc:
             raise StandCloudError(str(exc)) from exc
         except OAuth2Error as exc:
@@ -166,7 +185,7 @@ class StandCloudConnector:
                     "grant_type": "urn:ietf:params:oauth:grant-type:device_code",
                     "device_code": device_code,
                 },
-                verify=self.verify_ssl,
+                verify=self._verify_ssl,
                 timeout=interval,
             )
             response = json.loads(req.content)
@@ -196,31 +215,8 @@ class StandCloudConnector:
             sc_addr=self._addr,
             client_id=self._client_id,
             token=self._token,
-            token_storer=self._token_manager,
-            verify_ssl=self.verify_ssl,
+            token_manager=self._token_manager,
+            verify_ssl=self._verify_ssl,
         )
         session = auth.session
         return ApiClient(f"{self._addr.api}/{endpoint}", session=session, timeout=10)
-
-    def _read_token_info(self) -> BearerToken:
-        _, mem_keyring = self._token_manager.get_store()
-        token_info = mem_keyring.get_password(
-            self._token_manager.service_name,
-            "access_token",
-        )
-        secret = self._add_expires_in(json.loads(token_info))  # type: ignore
-        return BearerToken(**secret)
-
-    def _add_expires_in(self, secret: dict) -> dict:
-        if "expires_at" in secret:
-            expires_at = secret["expires_at"]
-        elif "id_token" in secret and "exp" in secret["id_token"]:
-            expires_at = secret["id_token"]["exp"]
-        expires_at_datetime = datetime.fromtimestamp(expires_at, timezone.utc)
-
-        expires_in_datetime = expires_at_datetime - datetime.now(timezone.utc)
-        expires_in = int(expires_in_datetime.total_seconds())
-
-        secret["expires_in"] = expires_in
-
-        return secret

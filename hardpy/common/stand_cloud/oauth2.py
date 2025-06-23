@@ -26,13 +26,13 @@ class OAuth2(AuthBase):
         sc_addr: StandCloudAddr,
         client_id: str,
         token: BearerToken,
-        token_storer: TokenManager,
+        token_manager: TokenManager,
         verify_ssl: bool = True,
     ) -> None:
         self._sc_addr = sc_addr
         self._client_id = client_id
         self._verify_ssl = verify_ssl
-        self._token_manager = token_storer
+        self._token_manager = token_manager
 
         self._token = self._check_token(token)
 
@@ -49,7 +49,7 @@ class OAuth2(AuthBase):
         return req
 
     def _check_token(self, token: BearerToken) -> ApiClient:
-        """Check token and refresh if needed.
+        """Check token in OAuth2 session and refresh it if needed.
 
         Args:
             token (BearerToken): bearer token to check
@@ -60,13 +60,13 @@ class OAuth2(AuthBase):
         refresh_url = self._sc_addr.token
 
         self.session = OAuth2Session(
-            self._client_id,
+            client_id=self._client_id,
             token=token.as_dict(),
             token_updater=self._token_manager.save_token_info,
         )
 
         is_need_refresh = False
-        early_refresh = timedelta(seconds=30)
+        early_refresh = timedelta(seconds=60)
 
         if token.expires_in and token.expires_in < early_refresh.seconds:
             is_need_refresh = True
@@ -74,14 +74,11 @@ class OAuth2(AuthBase):
             is_need_refresh = True
 
         if is_need_refresh:
-            extra = {
-                "client_id": self._client_id,
-                "audience": self._sc_addr.api,
-            }
+            extra = {"client_id": self._client_id, "audience": self._sc_addr.api}
             ret = self.session.refresh_token(
                 token_url=refresh_url,
-                refresh_token=self._get_refresh_token(),
-                verify=False,
+                refresh_token=self._token_manager.read_refresh_token(),
+                verify=self._verify_ssl,
                 **extra,
             )
 
@@ -89,8 +86,3 @@ class OAuth2(AuthBase):
             return BearerToken(**ret)
 
         return token
-
-    def _get_refresh_token(self) -> str | None:
-        storage_keyring, _ = self._token_manager.get_store()
-        service_name = self._token_manager.service_name
-        return storage_keyring.get_password(service_name, "refresh_token")
