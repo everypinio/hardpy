@@ -7,10 +7,7 @@ from datetime import timedelta
 from io import StringIO
 from typing import TYPE_CHECKING
 
-from oauthlib.oauth2.rfc6749.errors import (
-    InvalidGrantError,
-    TokenExpiredError,
-)
+from oauthlib.oauth2.rfc6749.errors import OAuth2Error
 from qrcode import QRCode
 from requests.exceptions import HTTPError
 from requests_oauth2client.tokens import ExpiredAccessToken
@@ -27,8 +24,8 @@ def login(sc_connector: StandCloudConnector) -> None:
     Args:
         sc_connector (StandCloudConnector): StandCloud connector
     """
-    token = sc_connector.read_access_token()
-    if token is None:
+    token = sc_connector.get_access_token()
+    if token is None or sc_connector.is_refresh_token_valid() is False:
         response = sc_connector.get_verification_url()
         url = response["verification_uri_complete"]
         _print_user_action_request(url)
@@ -41,14 +38,12 @@ def login(sc_connector: StandCloudConnector) -> None:
     except ExpiredAccessToken as e:
         time_diff = timedelta(seconds=abs(e.args[0].expires_in))
         print(f"API access error: token is expired for {time_diff}")
-    except TokenExpiredError as e:
-        print(f"API access error: {e.description}")
-    except InvalidGrantError as e:
-        print(f"Refresh token error: {e.description}")
+    except OAuth2Error as e:
+        print(e.description)
     except HTTPError as e:
         print(e)
-
-    print(f"HardPy login to {sc_connector.addr} success")
+    else:
+        print(f"HardPy login to {sc_connector.addr} success")
 
 
 def logout(addr: str) -> bool:
