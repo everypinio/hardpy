@@ -2,6 +2,10 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Change **StandCloud** authorization process to OAuth2 Device Flow by
+  [RFC8628](https://datatracker.ietf.org/doc/html/rfc8628).
+  [[PR-152](https://github.com/everypinio/hardpy/pull/152)]
+
 ## HardPy 0.12.0
 
 * Update `test_run` **StandCloudReader** function.
