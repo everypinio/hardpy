@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 
 from oauthlib.oauth2.rfc6749.errors import OAuth2Error
 from qrcode import QRCode
-from requests.exceptions import HTTPError
+from requests.exceptions import ConnectionError as RequestConnectionError, HTTPError
 from requests_oauth2client.tokens import ExpiredAccessToken
 
 from hardpy.common.stand_cloud.token_manager import TokenManager
@@ -26,7 +26,11 @@ def login(sc_connector: StandCloudConnector) -> None:
     """
     token = sc_connector.get_access_token()
     if token is None or sc_connector.is_refresh_token_valid() is False:
-        response = sc_connector.get_verification_url()
+        try:
+            response = sc_connector.get_verification_url()
+        except RequestConnectionError as e:
+            print(f"Connection error to StandCloud: {sc_connector.addr}. \nError: {e}")
+            return
         url = response["verification_uri_complete"]
         _print_user_action_request(url)
         token = sc_connector.wait_verification(response)
