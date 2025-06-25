@@ -119,7 +119,7 @@ print("\nOAuth Authenticated and Authorized API access")
 ### 1. Introduction
 
 The script facilitates a secure way for devices with limited input capabilities
-(like command-line applications) to authenticate with StandCloud.
+(like command-line applications) to authenticate with **StandCloud**.
 It leverages the OAuth 2.0 Device Flow, which allows a user to authorize a device
 by visiting a URL on a separate, input-rich device (e.g., a web browser on a computer or smartphone).
 
@@ -148,18 +148,18 @@ The script performs the following sequence of operations:
 
 #### 3.1. Configuration
 
-* **`BASE_URL`**: This variable must be changed to your specific StandCloud instance URL.
+* **`BASE_URL`**: This variable must be changed to your specific **StandCloud** instance URL.
     * **Example**: `https://company_name.standcloud.io`
 * **`SSL_VERIFY`**: A boolean flag (`True` by default) indicating whether SSL certificate verification should be performed.
     Set to `False` if your server uses a self-signed certificate.
 * **`CLIENT_ID`**: The OAuth client identifier, which is fixed as `hardpy-report-uploader`.
-    This identifies the client application to the StandCloud authentication system.
+    This identifies the client application to the **StandCloud** authentication system.
 
 #### 3.2. API endpoints
 
 The script defines several critical API endpoints based on the `BASE_URL`:
 
-* **`API_URL`**: The base URL for the StandCloud API (`/hardpy/api/v1`).
+* **`API_URL`**: The base URL for the **StandCloud** API (`/hardpy/api/v1`).
 * **`DEVICE_AUTHORIZATION_URL`**: The endpoint for initiating the device authorization flow (`/auth/api/oidc/device-authorization`).
 * **`TOKEN_URL`**: The endpoint for requesting tokens after device authorization (`/auth/api/oidc/token`).
 
@@ -218,7 +218,7 @@ To implement this authentication flow in a different programming language, you w
     (e.g., `requests` for Python, `HttpClient` for C#, `fetch` for JavaScript, `OkHttp` for Java, `net/http` for Go).
 2. **JSON Parsing**: Implement JSON parsing to handle the responses from the authorization and token endpoints.
 3. **URL Construction**: Construct the `DEVICE_AUTHORIZATION_URL`, `TOKEN_URL`, and `API_URL`
-    correctly based on your StandCloud instance.
+    correctly based on your **StandCloud** instance.
 4. **Request Parameters**: Ensure that the `client_id`, `scope`, `audience`, `grant_type`,
     and `device_code` parameters are correctly included in your `POST` request bodies, typically as form-urlencoded data.
 5. **Polling Logic**: Implement a polling mechanism with appropriate delays to wait for user authorization.
@@ -435,7 +435,7 @@ This script extends the previous basic authentication by adding functions for to
 
 Most configurations are similar to the previous script:
 
-* **`BASE_URL`**: Your StandCloud instance URL.
+* **`BASE_URL`**: **StandCloud** instance URL.
 * **`SSL_VERIFY`**: For SSL certificate validation.
 * **`CLIENT_ID`**: Fixed as `"hardpy-report-uploader"`.
 * **`API_URL`**: Base URL for API calls.
