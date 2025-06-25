@@ -6,6 +6,11 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
   [RFC8628](https://datatracker.ietf.org/doc/html/rfc8628).
   [[PR-152](https://github.com/everypinio/hardpy/pull/152)]
 
+## HardPy 0.12.1
+
+* Fix the situation in which the module and case stop times stop updating when the user stops the tests.
+  [[PR-149](https://github.com/everypinio/hardpy/pull/149)]
+
 ## HardPy 0.12.0
 
 * Update `test_run` **StandCloudReader** function.

@@ -425,6 +425,8 @@ class HardpyPlugin:
             # update module statuses
             self._results[module_id]["module_status"] = TestStatus.STOPPED
             self._reporter.set_module_status(module_id, TestStatus.STOPPED)
+            if self._reporter.get_module_start_time(module_id):
+                self._reporter.set_module_stop_time(module_id)
 
             # update case statuses
             for module_key, module_value in module_data.items():
@@ -440,6 +442,9 @@ class HardpyPlugin:
                         case_id,
                         TestStatus.STOPPED,
                     )
+                    if self._reporter.get_case_start_time(module_id, case_id):
+                        self._reporter.set_case_stop_time(module_id, case_id)
+
         self._reporter.update_db_by_doc()
 
     def _decode_assertion_msg(
