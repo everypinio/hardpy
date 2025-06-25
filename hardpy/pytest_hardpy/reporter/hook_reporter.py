@@ -202,6 +202,24 @@ class HookReporter(BaseReporter):
         """
         self.set_doc_value(DF.ALERT, alert, statestore_only=True)
 
+    def get_module_start_time(self, module_id: str) -> int:
+        """Get module start time.
+
+        Returns:
+            int: module time
+        """
+        key = self.generate_key(DF.MODULES, module_id, DF.START_TIME)
+        return self._statestore.get_field(key)
+
+    def get_case_start_time(self, module_id: str, case_id: str) -> int:
+        """Get case start time.
+
+        Returns:
+            int: module time
+        """
+        key = self.generate_key(DF.MODULES, module_id, DF.CASES, case_id, DF.START_TIME)
+        return self._statestore.get_field(key)
+
     def update_node_order(self, nodes: dict) -> None:
         """Update node order.
 
