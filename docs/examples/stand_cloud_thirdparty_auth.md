@@ -10,7 +10,7 @@ This documentation describes how to authorize a **HardPy** application on a
     * `device_code`
     * `user_code`
     * `verification_uri` (authorization URL)
-    * `verification_uri_complete` (the URL with the pre-filled code).
+    * `verification_uri_complete` (the URL with the pre-filled code)
     * `expires_in` (code lifetime)
     * `interval` (status polling interval)
 3. The user follows the link and confirms authorization.
@@ -20,7 +20,8 @@ This documentation describes how to authorize a **HardPy** application on a
 ## Code example
 
 The code samples are in Python, but they use simple constructs that are available in
-most programming languages. To implement the authorization process for a third-party
+most programming languages.
+To implement the authorization process for a third-party
 application in a different language, use the general approach demonstrated in these scripts.
 Reading [RFC6749](https://datatracker.ietf.org/doc/html/rfc8628),
 which describes the OAuth 2.0 device flow, is also recommended.
