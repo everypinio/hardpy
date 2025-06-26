@@ -25,7 +25,7 @@ DEVICE_AUTHORIZATION_URL = BASE_URL + "/auth/api/oidc/device-authorization"
 TOKEN_URL = BASE_URL + "/auth/api/oidc/token"
 
 
-# Device Authorization Request
+# Device authorization aequest
 data = {
     "client_id": CLIENT_ID,
     "scope": "offline_access authelia.bearer.authz",
@@ -37,7 +37,7 @@ response = json.loads(req.content)
 verification_uri_complete = response["verification_uri_complete"]
 interval = response["interval"]
 
-# Token Request
+# Token request
 if "error" in response:
     error = response["error"]
     error_description = response["error_description"]
@@ -46,14 +46,13 @@ if "error" in response:
 
 print(f"\nVerification URI: {verification_uri_complete}")
 
-# Token request
 data = {
     "client_id": CLIENT_ID,
     "grant_type": "urn:ietf:params:oauth:grant-type:device_code",
     "device_code": response["device_code"],
 }
 
-# Token Response
+# Token response
 while True:
     req = requests.post(TOKEN_URL, data=data, verify=SSL_VERIFY, timeout=10)
     response = json.loads(req.content)
