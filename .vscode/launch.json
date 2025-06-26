@@ -102,6 +102,7 @@
             "console": "integratedTerminal",
             "args": [
                 "sc-logout",
+                "demo.standcloud.localhost"
             ]
         },
         {

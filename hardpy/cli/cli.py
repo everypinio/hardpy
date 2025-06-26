@@ -227,12 +227,13 @@ def sc_login(
         address (str): StandCloud address
         check (bool): Check StandCloud connection
     """
+    try:
+        sc_connector = StandCloudConnector(address)
+    except StandCloudError as exc:
+        print(str(exc))
+        sys.exit()
+
     if check:
-        try:
-            sc_connector = StandCloudConnector(address)
-        except StandCloudError as exc:
-            print(str(exc))
-            sys.exit()
         try:
             sc_connector.healthcheck()
         except StandCloudError:
@@ -240,16 +241,20 @@ def sc_login(
             sys.exit()
         print("StandCloud connection success")
     else:
-        auth_login(address)
+        auth_login(sc_connector)
 
 
 @cli.command()
-def sc_logout() -> None:
-    """Logout HardPy from all StandCloud accounts."""
-    if auth_logout():
-        print("HardPy logout success")
+def sc_logout(address: Annotated[str, typer.Argument()]) -> None:
+    """Logout HardPy from StandCloud account.
+
+    Args:
+        address (str): StandCloud address
+    """
+    if auth_logout(address):
+        print(f"HardPy logout success from {address}")
     else:
-        print("HardPy logout failed")
+        print(f"HardPy logout failed from {address}")
 
 
 def _get_config(tests_dir: str | None = None) -> HardpyConfig:
