@@ -338,7 +338,7 @@ Returns the num of current attempt.
 
 **Returns:**
 
-- *(int)*: num of current attempt. If the function is called outside of test, returns -1
+- *(int)*: num of current attempt
 
 **Example:**
 
