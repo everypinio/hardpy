@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from inspect import stack
 from os import environ
 from time import sleep
 from typing import Any
@@ -180,13 +181,9 @@ def set_message(msg: str, msg_key: str | None = None) -> None:
         msg_key (Optional[str]): Message ID.
                                      If not specified, a random ID will be generated.
     """
-    reporter = RunnerReporter()
-    try:
-        current_test = _get_current_test()
-    except RuntimeError:
-        reporter.set_alert(f"Message can't be set outside of test. Message: {msg}")
-        return
+    current_test = _get_current_test()
 
+    reporter = RunnerReporter()
     if msg_key is None:
         msg_key = str(uuid4())
 
@@ -217,12 +214,8 @@ def set_case_artifact(data: dict) -> None:
     Args:
         data (dict): data
     """
+    current_test = _get_current_test()
     reporter = RunnerReporter()
-    try:
-        current_test = _get_current_test()
-    except RuntimeError:
-        reporter.set_alert("Case artifact can't be set outside of test.")
-        return
     for stand_key, stand_value in data.items():
         key = reporter.generate_key(
             DF.MODULES,
@@ -245,12 +238,8 @@ def set_module_artifact(data: dict) -> None:
     Args:
         data (dict): data
     """
+    current_test = _get_current_test()
     reporter = RunnerReporter()
-    try:
-        current_test = _get_current_test()
-    except RuntimeError:
-        reporter.set_alert("Module artifact can't be set outside of test.")
-        return
     for artifact_key, artifact_value in data.items():
         key = reporter.generate_key(
             DF.MODULES,
@@ -336,11 +325,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
         msg = "The 'dialog_text' argument cannot be empty."
         raise ValueError(msg)
     reporter = RunnerReporter()
-    try:
-        current_test = _get_current_test()
-    except RuntimeError:
-        reporter.set_alert("Dialog box can't be called outside of test")
-        return None
+    current_test = _get_current_test()
     key = reporter.generate_key(
         DF.MODULES,
         current_test.module_id,
@@ -425,14 +410,10 @@ def get_current_attempt() -> int:
     """Get current attempt.
 
     Returns:
-        int: current attempt. If the function is called outside of test, returns -1
+        int: current attempt
     """
     reporter = RunnerReporter()
-    try:
-        module_id, case_id = _get_current_test().module_id, _get_current_test().case_id
-    except RuntimeError:
-        reporter.set_alert("Current attempt can't be called outside of test.")
-        return -1
+    module_id, case_id = _get_current_test().module_id, _get_current_test().case_id
     return reporter.get_current_attempt(module_id, case_id)
 
 
@@ -440,7 +421,10 @@ def _get_current_test() -> CurrentTestInfo:
     current_node = environ.get("PYTEST_CURRENT_TEST")
 
     if current_node is None:
-        msg = "PYTEST_CURRENT_TEST variable is not set"
+        reporter = RunnerReporter()
+        caller = stack()[1].function
+        msg = f"Function {caller} can't be called outside of the test."
+        reporter.set_alert(msg)
         raise RuntimeError(msg)
 
     module_delimiter = ".py::"
