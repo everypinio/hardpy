@@ -2,6 +2,9 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Update the status of the test case and module when the test stops.
+  Only one case and one module receive the "stopped" status, while the rest are marked as "skipped."
+  [[PR-154](https://github.com/everypinio/hardpy/pull/154)]
 * Change **StandCloud** authorization process to OAuth2 Device Flow by
   [RFC8628](https://datatracker.ietf.org/doc/html/rfc8628).
   [[PR-152](https://github.com/everypinio/hardpy/pull/152)]
