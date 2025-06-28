@@ -415,13 +415,13 @@ class HardpyPlugin:
                 return TestStatus.FAILED
 
     def _stop_tests(self) -> None:
-        """Update module and case statuses from READY or RUN to STOPPED and SKIPPED."""
+        """Update module and case statuses to stopped and skipped."""
         is_module_stopped = False
         is_case_stopped = False
+        valid_statuses = {TestStatus.PASSED, TestStatus.FAILED, TestStatus.SKIPPED}
         for module_id, module_data in self._results.items():
             module_status = self._reporter.get_module_status(module_id)
-            # skip passed and failed modules
-            if module_status in {TestStatus.PASSED, TestStatus.FAILED}:
+            if module_status in valid_statuses:
                 continue
 
             is_module_stopped = self._stop_module(module_id, is_module_stopped)
@@ -431,8 +431,7 @@ class HardpyPlugin:
                     continue
                 case_id = module_data_key
                 case_status = self._reporter.get_case_status(module_id, case_id)
-                # skip passed and failed cases
-                if case_status in {TestStatus.PASSED, TestStatus.FAILED}:
+                if case_status in valid_statuses:
                     continue
                 is_case_stopped = self._stop_case(module_id, case_id, is_case_stopped)
 
