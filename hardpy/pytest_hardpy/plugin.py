@@ -420,44 +420,51 @@ class HardpyPlugin:
         is_case_stopped = False
         for module_id, module_data in self._results.items():
             module_status = self._reporter.get_module_status(module_id)
-            # skip not ready and running modules
-            if module_status not in {TestStatus.READY, TestStatus.RUN}:
+            # skip passed and failed modules
+            if module_status in {TestStatus.PASSED, TestStatus.FAILED}:
                 continue
 
-            # update module statuses
-            # STOPPED status is set only once other statuses are SKIPPED
-            if is_module_stopped is False:
-                module_status = TestStatus.STOPPED
-                is_module_stopped = True
-                if not self._reporter.get_module_start_time(module_id):
-                    self._reporter.set_module_start_time(module_id)
-                self._reporter.set_module_stop_time(module_id)
-            else:
-                module_status = TestStatus.SKIPPED
-            self._results[module_id]["module_status"] = module_status
-            self._reporter.set_module_status(module_id, module_status)
-
-            # update case statuses
-            for module_key, module_value in module_data.items():
-                # module status is not a case_id
-                if module_key == "module_status":
+            is_module_stopped = self._stop_module(module_id, is_module_stopped)
+            for module_data_key in module_data:
+                # skip module status
+                if module_data_key == "module_status":
                     continue
-                # case value is empty - case is not finished
-                if module_value is None:
-                    case_id = module_key
-                    # STOPPED status is set only once other statuses are SKIPPED
-                    if is_case_stopped is False:
-                        case_status = TestStatus.STOPPED
-                        is_case_stopped = True
-                        if not self._reporter.get_case_start_time(module_id, case_id):
-                            self._reporter.set_case_start_time(module_id, case_id)
-                        self._reporter.set_case_stop_time(module_id, case_id)
-                    else:
-                        case_status = TestStatus.SKIPPED
-                    self._results[module_id][case_id] = case_status
-                    self._reporter.set_case_status(module_id, case_id, case_status)
+                case_id = module_data_key
+                case_status = self._reporter.get_case_status(module_id, case_id)
+                # skip passed and failed cases
+                if case_status in {TestStatus.PASSED, TestStatus.FAILED}:
+                    continue
+                is_case_stopped = self._stop_case(module_id, case_id, is_case_stopped)
 
         self._reporter.update_db_by_doc()
+
+    def _stop_module(self, module_id: str, is_module_stopped: bool) -> bool:
+        # stopped status is set only once other statuses are skipped
+        if is_module_stopped is False:
+            module_status = TestStatus.STOPPED
+            is_module_stopped = True
+            if not self._reporter.get_module_start_time(module_id):
+                self._reporter.set_module_start_time(module_id)
+            self._reporter.set_module_stop_time(module_id)
+        else:
+            module_status = TestStatus.SKIPPED
+        self._results[module_id]["module_status"] = module_status
+        self._reporter.set_module_status(module_id, module_status)
+        return is_module_stopped
+
+    def _stop_case(self, module_id: str, case_id: str, is_case_stopped: bool) -> bool:
+        # stopped status is set only once other statuses are skipped
+        if is_case_stopped is False:
+            case_status = TestStatus.STOPPED
+            is_case_stopped = True
+            if not self._reporter.get_case_start_time(module_id, case_id):
+                self._reporter.set_case_start_time(module_id, case_id)
+            self._reporter.set_case_stop_time(module_id, case_id)
+        else:
+            case_status = TestStatus.SKIPPED
+        self._results[module_id][case_id] = case_status
+        self._reporter.set_case_status(module_id, case_id, case_status)
+        return is_case_stopped
 
     def _decode_assertion_msg(
         self,
