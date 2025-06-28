@@ -175,6 +175,8 @@ class HardpyPlugin:
         if "--collect-only" in session.config.invocation_params.args:
             return
         status = self._get_run_status(exitstatus)
+        if status == TestStatus.STOPPED:
+            self._stop_tests()
         self._reporter.finish(status)
         self._reporter.update_db_by_doc()
         self._reporter.compact_all()
@@ -408,7 +410,6 @@ class HardpyPlugin:
             case ExitCode.TESTS_FAILED:
                 return TestStatus.FAILED
             case ExitCode.INTERRUPTED:
-                self._stop_tests()
                 return TestStatus.STOPPED
             case _:
                 return TestStatus.FAILED
