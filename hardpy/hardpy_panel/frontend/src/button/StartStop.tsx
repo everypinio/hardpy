@@ -6,13 +6,22 @@ import { AnchorButton, AnchorButtonProps } from "@blueprintjs/core";
 
 type Props = { testing_status: string };
 
+type State = {
+  isStopButtonDisabled: boolean;
+};
+
 /**
  * A React component that renders a start/stop button for controlling a testing process.
  * The button's behavior and appearance depend on the testing status.
  */
-export class StartStopButton extends React.Component<Props> {
+export class StartStopButton extends React.Component<Props, State> {
+  private stopButtonTimer: NodeJS.Timeout | null = null;
+
   constructor(props: Props) {
     super(props);
+    this.state = {
+      isStopButtonDisabled: false
+    };
     this.hardpy_start = this.hardpy_start.bind(this);
     this.hardpy_stop = this.hardpy_stop.bind(this);
   }
@@ -49,7 +58,16 @@ export class StartStopButton extends React.Component<Props> {
    * @private
    */
   private hardpy_stop(): void {
+    if (this.state.isStopButtonDisabled) {
+      return;
+    }
     this.hardpy_call("api/stop");
+
+    // Disable the stop button for some time
+    this.setState({ isStopButtonDisabled: true });
+    this.stopButtonTimer = setTimeout(() => {
+      this.setState({ isStopButtonDisabled: false });
+  }, 500);
   }
 
   /**
@@ -85,6 +103,9 @@ export class StartStopButton extends React.Component<Props> {
    */
   componentWillUnmount(): void {
     window.removeEventListener("keydown", this.hardpy_start_with_space);
+    if (this.stopButtonTimer) {
+      clearTimeout(this.stopButtonTimer);
+    }
   }
 
   /**
@@ -111,6 +132,7 @@ export class StartStopButton extends React.Component<Props> {
       rightIcon: "play",
       onClick: this.handleButtonClick,
       id: button_id,
+      disabled: this.state.isStopButtonDisabled,
     };
 
     return <AnchorButton {...(is_testing ? stop_button : start_button)} />;
