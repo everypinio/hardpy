@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+from datetime import datetime
 from typing import ClassVar
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -19,6 +20,16 @@ class IBaseResult(BaseModel):
     start_time: int | None
     name: str
 
+class NumericMeasurement(BaseModel):
+    """Base class for all result models."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    value: int | float
+    name: str
+    low_limit: int | float | None
+    high_limit: int | float | None
+    unit: str | None
 
 class CaseStateStore(IBaseResult):
     """Test case description.
@@ -77,8 +88,11 @@ class CaseRunStore(IBaseResult):
     ```
     """
 
+    id: str
     assertion_msg: str | None = None
     msg: dict | None = None
+    numeric_measurements: list[NumericMeasurement] = []
+    attempt: int = 0
     artifact: dict = {}
 
 
@@ -139,6 +153,7 @@ class ModuleRunStore(IBaseResult):
     ```
     """
 
+    id: str
     cases: dict[str, CaseRunStore] = {}
     artifact: dict = {}
 
@@ -165,7 +180,19 @@ class Dut(BaseModel):
 
     serial_number: str | None
     part_number: str | None
-    info: dict = {}
+    rev: str | None
+    sub_duts: list[SubDut] = []
+    info: dict[str, str | int | float | datetime] = {}
+
+
+class Instrument(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: str | None = None
+    rev: str | None = None
+    number: int | None = None
+    purpose: str | None = None
+    info: dict[str, str | int | float | datetime] = {}
 
 
 class TestStand(BaseModel):
@@ -199,11 +226,30 @@ class TestStand(BaseModel):
 
     hw_id: str | None = None
     name: str | None = None
+    rev: str | None = None
     timezone: str | None = None
-    drivers: dict = {}
-    info: dict = {}
     location: str | None = None
     number: int | None = None
+    purpose: str | None = None
+    instruments: list[Instrument] = []
+    info: dict[str, str | int | float | datetime] = {}
+
+class Process(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: str | None = None
+    number: int | None = None
+    info: dict = {}
+
+class SubDut(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    type: str | None
+    serial_number: str | None
+    part_number: str | None
+    rev: str | None
+    info: dict = {}
+
 
 
 class OperatorData(BaseModel):
@@ -421,5 +467,10 @@ class ResultRunStore(IBaseResult):
 
     test_stand: TestStand
     dut: Dut
+    process: Process
     modules: dict[str, ModuleRunStore] = {}
+    user: str | None = None
+    batch_serial_number: str | None = None
+    caused_dut_failure_id: str | None = None
+    comment: str | None = None
     artifact: dict = {}
