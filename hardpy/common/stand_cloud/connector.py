@@ -4,46 +4,23 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timedelta, timezone
-from enum import Enum
 from logging import getLogger
-from typing import TYPE_CHECKING, NamedTuple
+from time import sleep
+from typing import TYPE_CHECKING
 
+import requests
 from oauthlib.oauth2.rfc6749.errors import OAuth2Error
 from requests.exceptions import RequestException
 from requests_oauth2client import ApiClient, BearerToken
 from requests_oauth2client.tokens import ExpiredAccessToken
-from requests_oauthlib import OAuth2Session
 
 from hardpy.common.stand_cloud.exception import StandCloudError
-from hardpy.common.stand_cloud.token_storage import get_token_store
+from hardpy.common.stand_cloud.oauth2 import OAuth2
+from hardpy.common.stand_cloud.token_manager import TokenManager
+from hardpy.common.stand_cloud.utils import StandCloudAPIMode, StandCloudAddr
 
 if TYPE_CHECKING:
     from requests import Response
-
-
-class StandCloudURL(NamedTuple):
-    """URL.
-
-    api: API address
-    token: token address
-    par: pushed-authorization-request address
-    auth: auth address
-    """
-
-    api: str
-    token: str
-    par: str
-    auth: str
-
-
-class StandCloudAPIMode(str, Enum):
-    """StandCloud API mode.
-
-    HARDPY for test stand, integration for third-party service.
-    """
-
-    HARDPY = "hardpy"
-    INTEGRATION = "integration"
 
 
 class StandCloudConnector:
@@ -55,7 +32,7 @@ class StandCloudConnector:
         api_mode: StandCloudAPIMode = StandCloudAPIMode.HARDPY,
         api_version: int = 1,
     ) -> None:
-        """Create StandCLoud loader.
+        """Create StandCloud API connector.
 
         Args:
             addr (str): StandCloud service name.
@@ -68,20 +45,85 @@ class StandCloudConnector:
         https_prefix = "https://"
         auth_addr = addr + "/auth"
 
-        self._url: StandCloudURL = StandCloudURL(
+        self._addr: StandCloudAddr = StandCloudAddr(
+            domain=addr,
             api=https_prefix + addr + f"/{api_mode.value}/api/v{api_version}",
             token=https_prefix + auth_addr + "/api/oidc/token",
-            par=https_prefix + auth_addr + "/api/oidc/pushed-authorization-request",
             auth=https_prefix + auth_addr + "/api/oidc/authorization",
+            device=https_prefix + auth_addr + "/api/oidc/device-authorization",
         )
 
+        self._client_id = "hardpy-report-uploader"
         self._verify_ssl = not __debug__
+        self._token_manager = TokenManager(self._addr.domain)
+        self._token: BearerToken = self.get_access_token()
         self._log = getLogger(__name__)
 
     @property
-    def url(self) -> StandCloudURL:
-        """Get StandCloud URL."""
-        return self._url
+    def addr(self) -> str:
+        """Get StandCloud service name."""
+        return self._addr.domain
+
+    @property
+    def api_url(self) -> str:
+        """Get StandCloud API URL."""
+        return self._addr.api
+
+    def update_token(self, token: BearerToken) -> None:
+        """Update access token.
+
+        Args:
+            token (BearerToken): access token.
+        """
+        self._token = token
+
+    def is_refresh_token_valid(self) -> bool:
+        """Check if token is valid.
+
+        Returns:
+            bool: True if token is valid, False otherwise.
+        """
+        try:
+            OAuth2(
+                sc_addr=self._addr,
+                client_id=self._client_id,
+                token=self._token,
+                token_manager=self._token_manager,
+                verify_ssl=self._verify_ssl,
+            )
+        except OAuth2Error:
+            return False
+        return True
+
+
+    def get_access_token(self) -> BearerToken | None:
+        """Read access token from token store.
+
+        Returns:
+            BearerToken: access token
+        """
+        try:
+            return self._token_manager.read_access_token()
+        except Exception:  # noqa: BLE001
+            return None
+
+    def get_verification_url(self) -> dict:
+        """Get StandCloud verification URL.
+
+        Returns:
+            dict: verification URL
+        """
+        req = requests.post(
+            self._addr.device,
+            data={
+                "client_id": self._client_id,
+                "scope": "offline_access authelia.bearer.authz",
+                "audience": self._addr.api,
+            },
+            verify=self._verify_ssl,
+            timeout=10,
+        )
+        return json.loads(req.content)
 
     def get_api(self, endpoint: str) -> ApiClient:
         """Get StandCloud API client.
@@ -112,110 +154,69 @@ class StandCloudConnector:
         except OAuth2Error as exc:
             raise StandCloudError(exc.description) from exc
         except RequestException as exc:
-            raise StandCloudError(exc.strerror) from exc # type: ignore
+            raise StandCloudError(exc.strerror) from exc  # type: ignore
 
         return resp
 
-    def _token_update(self, token: BearerToken) -> None:
-        storage_keyring, mem_keyring = get_token_store()
+    def wait_verification(
+        self,
+        response: dict,
+        waiting_time_m: int = 5,
+    ) -> BearerToken | None:
+        """Wait StandCloud verification.
 
-        _access_token = "access_token"  # noqa: S105
-        _expires_at = "expires_at"
-        _refresh_token = "refresh_token"  # noqa: S105
-        _hardpy = "HardPy"
+        Args:
+            response (dict): verification response
+            waiting_time_m (int): authorization waiting time in minutes
 
-        storage_keyring.set_password(_hardpy, _refresh_token, token[_refresh_token])
-        mem_keyring.set_password(_hardpy, _access_token, token[_access_token])
+        Returns:
+            BearerToken: access token
+        """
+        interval = response["interval"]
+        start_time = datetime.now(tz=timezone.utc)
+        device_code = response["device_code"]
+        while True:
+            sleep(interval)
 
-        token_data = {
-            _access_token: token[_access_token],
-            _expires_at: token[_expires_at],
-        }
+            req = requests.post(
+                self._addr.token,
+                data={
+                    "client_id": self._client_id,
+                    "grant_type": "urn:ietf:params:oauth:grant-type:device_code",
+                    "device_code": device_code,
+                },
+                verify=self._verify_ssl,
+                timeout=interval,
+            )
+            response = json.loads(req.content)
 
-        mem_keyring.set_password(_hardpy, _access_token, json.dumps(token_data))
+            if "error" in response:
+                current_time = datetime.now(tz=timezone.utc)
+                if current_time >= start_time + timedelta(minutes=waiting_time_m):
+                    return None
+                continue
 
-    def _get_expires_in(self, expires_at: float | None) -> int:
-        if expires_at is None:
-            return -1
-        expires_at_datetime = datetime.fromtimestamp(expires_at, timezone.utc)
+            if "access_token" in response and "refresh_token" in response:
+                new_token = BearerToken(**response)
 
-        now_datetime = datetime.now(timezone.utc)
-
-        expires_in_datetime = expires_at_datetime - now_datetime
-        return int(expires_in_datetime.total_seconds())
-
-    def _get_access_token_info(self) -> tuple[str | None, float | None]:
-        _, mem_keyring = get_token_store()
-
-        _access_token = "access_token"  # noqa: S105
-        _expires_at = "expires_at"
-
-        token_info = mem_keyring.get_password("HardPy", _access_token)
-        if token_info is None:
-            return None, None
-        token_dict = json.loads(token_info)
-        access_token = token_dict[_access_token]
-        expired_at = token_dict[_expires_at]
-
-        return access_token, expired_at
-
-    def _get_refresh_token(self) -> str | None:
-        (storage_keyring, _) = get_token_store()
-
-        refresh_token = storage_keyring.get_password("HardPy", "refresh_token")
-        self._log.debug("Got refresh token from the storage keyring")
-        return refresh_token
+                if "expires_at" not in response and new_token.expires_at:
+                    response["expires_at"] = new_token.expires_at.timestamp()
+                self._token_manager.save_token_info(response)
+                return new_token
 
     def _get_api(self, endpoint: str) -> ApiClient:
-        token = self._get_token()
-        client_id = "hardpy-report-uploader"
-
-        extra = {
-            "client_id": client_id,
-            "audience": self._url.api,
-            "redirect_uri": "http://localhost/oauth2/callback",
-        }
-
-        session = OAuth2Session(
-            client_id,
-            token=token.as_dict(),
-            token_updater=self._token_update,
+        if self._token is None:
+            msg = (
+                f"Access token to {self._addr.domain} is not set."
+                f"Login to {self._addr.domain} first"
+            )
+            raise StandCloudError(msg)
+        auth = OAuth2(
+            sc_addr=self._addr,
+            client_id=self._client_id,
+            token=self._token,
+            token_manager=self._token_manager,
+            verify_ssl=self._verify_ssl,
         )
-
-        is_need_refresh = False
-        early_refresh = timedelta(seconds=30)
-
-        if token.expires_in and token.expires_in < early_refresh.seconds:
-            is_need_refresh = True
-
-        if token.access_token is None:
-            self._log.debug("Want to refresh token since don't have access token")
-            is_need_refresh = True
-
-        if is_need_refresh:
-            try:
-                ret = session.refresh_token(
-                    token_url=self._url.token,
-                    refresh_token=self._get_refresh_token(),
-                    verify=False,
-                    **extra,
-                )
-            except OAuth2Error as exc:
-                raise StandCloudError(exc.description) from exc
-            except RequestException as exc:
-                raise StandCloudError(exc.strerror) from exc  # type: ignore
-            self._token_update(ret)  # type: ignore
-
-        return ApiClient(self._url.api + "/" + endpoint, session=session, timeout=10)
-
-    def _get_token(self) -> BearerToken:
-        access_token, expires_at = self._get_access_token_info()
-        expires_in = self._get_expires_in(expires_at)
-
-        return BearerToken(
-            scope=["authelia.bearer.authz", "offline_access"],
-            token_type="bearer",  # noqa: S106
-            access_token=access_token,
-            expires_at=expires_at,
-            expires_in=expires_in,
-        )
+        session = auth.session
+        return ApiClient(f"{self._addr.api}/{endpoint}", session=session, timeout=10)
