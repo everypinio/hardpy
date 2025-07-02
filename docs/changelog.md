@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## HardPy 0.13.0
+
 * Add an alert to operator panel when the following are called not from tests:
   `set_message`, `set_case_artifact`, `set_module_artifact`, `run_dialog_box`,
   and `get_current_attempt`.
