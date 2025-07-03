@@ -1,0 +1,41 @@
+name: Test Matrix
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  test-python-versions:
+    name: Test Python Versions
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests for Python ${{ matrix.python-version }}
+        uses: ./.github/workflows/test.yml
+        with:
+          python-version: ${{ matrix.python-version }}
+
+  test-pytest-versions:
+    name: Test Pytest Versions
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - pytest-version: "7.x"
+            python-version: "3.10"  # минимальная поддерживаемая для pytest 7
+          - pytest-version: "7.x"
+            python-version: "3.12"  # максимальная поддерживаемая для pytest 7
+          - pytest-version: "8.x"
+            python-version: "3.10"  # минимальная поддерживаемая для pytest 8
+          - pytest-version: "8.x"
+            python-version: "3.13"  # максимальная поддерживаемая для pytest 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests for Pytest ${{ matrix.pytest-version }} on Python ${{ matrix.python-version }}
+        uses: ./.github/workflows/test.yml
+        with:
+          python-version: ${{ matrix.python-version }}
+          pytest-version: ${{ matrix.pytest-version }}

@@ -9,9 +9,43 @@ jobs:
   lint:
     name: Lint
     uses: ./.github/workflows/lint.yml
+  
   test:
     name: Test
+    if: github.base_ref != 'ci-with-different-versions'
     uses: ./.github/workflows/test.yml
+  
+  test-matrix:
+    name: Test Matrix
+    if: github.base_ref == 'ci-with-different-versions'
+    uses: ./.github/workflows/test-matrix.yml
+  
   build:
     name: Build
     uses: ./.github/workflows/build.yml
+    
+# name: Merge Checks
+
+# on:
+#   pull_request:
+#     paths-ignore:
+#       - 'docs/**'
+
+# jobs:
+#   lint:
+#     name: Lint
+#     uses: ./.github/workflows/lint.yml
+  
+#   test:
+#     name: Test
+#     if: github.base_ref != 'main'
+#     uses: ./.github/workflows/test.yml
+  
+#   test-matrix:
+#     name: Test Matrix
+#     if: github.base_ref == 'main'
+#     uses: ./.github/workflows/test-matrix.yml
+  
+#   build:
+#     name: Build
+#     uses: ./.github/workflows/build.yml
