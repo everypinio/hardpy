@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from inspect import stack
 from os import environ
 from time import sleep
 from typing import Any
@@ -181,8 +182,8 @@ def set_message(msg: str, msg_key: str | None = None) -> None:
                                      If not specified, a random ID will be generated.
     """
     current_test = _get_current_test()
-    reporter = RunnerReporter()
 
+    reporter = RunnerReporter()
     if msg_key is None:
         msg_key = str(uuid4())
 
@@ -323,8 +324,8 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     if not dialog_box_data.dialog_text:
         msg = "The 'dialog_text' argument cannot be empty."
         raise ValueError(msg)
-    current_test = _get_current_test()
     reporter = RunnerReporter()
+    current_test = _get_current_test()
     key = reporter.generate_key(
         DF.MODULES,
         current_test.module_id,
@@ -420,7 +421,10 @@ def _get_current_test() -> CurrentTestInfo:
     current_node = environ.get("PYTEST_CURRENT_TEST")
 
     if current_node is None:
-        msg = "PYTEST_CURRENT_TEST variable is not set"
+        reporter = RunnerReporter()
+        caller = stack()[1].function
+        msg = f"Function {caller} can't be called outside of the test."
+        reporter.set_alert(msg)
         raise RuntimeError(msg)
 
     module_delimiter = ".py::"

@@ -129,6 +129,19 @@ class HookReporter(BaseReporter):
         key = self.generate_key(DF.MODULES, module_id, DF.CASES, case_id, DF.STATUS)
         self.set_doc_value(key, status)
 
+    def get_case_status(self, module_id: str, case_id: str) -> str:
+        """Set test case status.
+
+        Args:
+            module_id (str): module id
+            case_id (str): case id
+
+        Returns:
+            str: test case status
+        """
+        key = self.generate_key(DF.MODULES, module_id, DF.CASES, case_id, DF.STATUS)
+        return self._statestore.get_field(key)
+
     def set_case_start_time(self, module_id: str, case_id: str) -> None:
         """Set test case start_time.
 
@@ -158,6 +171,18 @@ class HookReporter(BaseReporter):
         """
         key = self.generate_key(DF.MODULES, module_id, DF.STATUS)
         self.set_doc_value(key, status)
+
+    def get_module_status(self, module_id: str) -> str:
+        """Get test module status.
+
+        Args:
+            module_id (str): module id
+
+        Returns:
+            str: test module status
+        """
+        key = self.generate_key(DF.MODULES, module_id, DF.STATUS)
+        return self._statestore.get_field(key)
 
     def set_module_start_time(self, module_id: str) -> None:
         """Set test module status.
@@ -193,14 +218,6 @@ class HookReporter(BaseReporter):
             DF.ATTEMPT,
         )
         self.set_doc_value(key, attempt, statestore_only=True)
-
-    def set_alert(self, alert: str) -> None:
-        """Set alert message.
-
-        Args:
-            alert (str): alert message
-        """
-        self.set_doc_value(DF.ALERT, alert, statestore_only=True)
 
     def get_module_start_time(self, module_id: str) -> int:
         """Get module start time.
