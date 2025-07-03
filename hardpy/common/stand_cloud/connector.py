@@ -211,12 +211,15 @@ class StandCloudConnector:
                 f"Login to {self._addr.domain} first"
             )
             raise StandCloudError(msg)
-        auth = OAuth2(
-            sc_addr=self._addr,
-            client_id=self._client_id,
-            token=self._token,
-            token_manager=self._token_manager,
-            verify_ssl=self._verify_ssl,
-        )
+        try:
+            auth = OAuth2(
+                sc_addr=self._addr,
+                client_id=self._client_id,
+                token=self._token,
+                token_manager=self._token_manager,
+                verify_ssl=self._verify_ssl,
+            )
+        except OAuth2Error as exc:
+            raise StandCloudError(exc.description) from exc
         session = auth.session
         return ApiClient(f"{self._addr.api}/{endpoint}", session=session, timeout=10)
