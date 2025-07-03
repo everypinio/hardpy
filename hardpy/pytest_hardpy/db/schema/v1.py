@@ -20,6 +20,7 @@ class IBaseResult(BaseModel):
     start_time: int | None
     name: str
 
+
 class NumericMeasurement(BaseModel):
     """Base class for all result models."""
 
@@ -29,7 +30,8 @@ class NumericMeasurement(BaseModel):
     name: str
     low_limit: int | float | None
     high_limit: int | float | None
-    unit: str | None
+    unit: str | None = None
+
 
 class CaseStateStore(IBaseResult):
     """Test case description.
@@ -178,10 +180,12 @@ class Dut(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    serial_number: str | None
-    part_number: str | None
-    rev: str | None
-    sub_duts: list[SubDut] = []
+    name: str | None = None
+    type: str | None = None
+    serial_number: str | None = None
+    part_number: str | None = None
+    rev: str | None = None
+    sub_duts: list[Dut] = []
     info: dict[str, str | int | float | datetime] = {}
 
 
@@ -191,7 +195,6 @@ class Instrument(BaseModel):
     name: str | None = None
     rev: str | None = None
     number: int | None = None
-    purpose: str | None = None
     info: dict[str, str | int | float | datetime] = {}
 
 
@@ -230,9 +233,9 @@ class TestStand(BaseModel):
     timezone: str | None = None
     location: str | None = None
     number: int | None = None
-    purpose: str | None = None
     instruments: list[Instrument] = []
     info: dict[str, str | int | float | datetime] = {}
+
 
 class Process(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -240,16 +243,6 @@ class Process(BaseModel):
     name: str | None = None
     number: int | None = None
     info: dict = {}
-
-class SubDut(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    type: str | None
-    serial_number: str | None
-    part_number: str | None
-    rev: str | None
-    info: dict = {}
-
 
 
 class OperatorData(BaseModel):
