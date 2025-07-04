@@ -4,6 +4,8 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 
 ## HardPy 0.13.0
 
+* Change CI settings, add testing of tests on different versions of packages.
+  [[PR-157](https://github.com/everypinio/hardpy/pull/157)]
 * Add an alert to operator panel when the following are called not from tests:
   `set_message`, `set_case_artifact`, `set_module_artifact`, `run_dialog_box`,
   and `get_current_attempt`.
