@@ -2,60 +2,44 @@ name: Test
 
 on:
   workflow_call:  # allow this workflow to be called from other workflows
-    inputs:
-      python-version:
-        description: 'Python version to test against'
-        required: false
-        default: '3.10'
-        type: string
-      pytest-version:
-        description: 'Pytest version to test against'
-        required: false
-        default: ''
-        type: string
   workflow_dispatch: # allow manual trigger
-    inputs:
-      python-version:
-        description: 'Python version to test against'
-        required: false
-        default: '3.10'
-        type: string
-      pytest-version:
-        description: 'Pytest version to test against'
-        required: false
-        default: ''
-        type: string
 
 permissions:
   checks: write
 
 jobs:
   test:
-    name: PyTest (Python ${{ inputs.python-version }}, Pytest ${{ inputs.pytest-version || 'default' }})
+    name: PyTest
     runs-on: ubuntu-latest
+    # Service containers to run with `container-job`
     services:
+      # Label used to access the service container
       db:
+        # Docker Hub image
         image: couchdb:3.4
         env:
           COUCHDB_USER: dev
           COUCHDB_PASSWORD: dev
         ports:
+          # Maps tcp port 5984 on service container to the host
+          # It is not necessary until use act tool for local gh actions running
+          # The tool doesn't resolve service container by its name,
+          # so pass the connection through the host network
           - 5984:5984
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python ${{ inputs.python-version }}
+    - name: Set up Python
+      # This is the version of the action for setting up Python, not the Python version.
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ inputs.python-version }}
+        # Semantic version range syntax or exact version of a Python version
+        python-version: '3.x'
+        # Optional - x64 or x8
         architecture: 'x64'
-        cache: 'pip'
+        cache: 'pip' # caching pip dependencies
 
     - name: Install dependencies
-      run: |
-        python -m pip install .[tests]
-        if [ -n "${{ inputs.pytest-version }}" ]; then
-          python -m pip install pytest==${{ inputs.pytest-version }}
-        fi
+      run: python -m pip install .[tests]
 
     - name: Run PyTest
       uses: dariocurr/pytest-summary@main
