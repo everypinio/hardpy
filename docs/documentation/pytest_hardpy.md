@@ -167,6 +167,8 @@ When called again, the data will be added to DB.
 Artifacts are saved only in the **runstore** database
 because the state in **statestore** and case artifact must be separated.
 
+The `set_case_artifact` function must be called from a test case.
+
 **Arguments:**
 
 - `data` *(dict)*: data
@@ -185,6 +187,8 @@ When called again, the data will be added to DB.
 
 Artifacts are saved only in the **runstore** database
 because the state in **statestore** and module artifact must be separated.
+
+The `set_module_artifact` function must be called from a test case.
 
 **Arguments:**
 
@@ -222,6 +226,8 @@ Writes a string with a message.
 If a message is sent without a key, the key will be generated
 automatically and the messages will be appended.
 If the message is sent with a known key, it will be updated.
+
+The `set_message` function must be called from a test case.
 
 **Arguments:**
 
@@ -280,6 +286,8 @@ def test_clear_operator_msg():
 
 Displays a dialog box and updates the `dialog_box` field in the **statestore** database.
 
+The `run_dialog_box` function must be called from a test case.
+
 **Arguments:**
 
 - `dialog_box_data` *(DialogBox)*: Data for the dialog box.
@@ -335,6 +343,8 @@ def test_current_report():
 #### get_current_attempt
 
 Returns the num of current attempt.
+
+The `get_current_attempt` function must be called from a test case.
 
 **Returns:**
 

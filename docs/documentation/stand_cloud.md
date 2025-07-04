@@ -34,6 +34,8 @@ You need to run the command:
 hardpy sc-login <stand_cloud_address>
 ```
 where <stand_cloud_address> is the **StandCloud** service address.
+StandCloud uses OAuth2 device authorization grant -
+[RFC8628](https://datatracker.ietf.org/doc/html/rfc8628).
 Then go to the authorization link in the terminal and open the link to the browser.
 You will need to enter your StandCloud login and password.
 After successful authorization, you should press the `Accept` button.
@@ -41,12 +43,6 @@ After successful authorization, you should press the `Accept` button.
 <h1 align="center">
     <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/stand_cloud/stand_cloud_auth.png" alt="stand_cloud_auth" style="width:300px;">
 </h1>
-
-After which a page will appear in the browser informing about successfully issued token.
-Otherwise, an error message will appear on the page.
-The browser can be closed.
-The `Registration completed` message should appear in the terminal with
-the start of the registration.
 
 To check the **StandCloud** connection status, run the command:
 
@@ -62,8 +58,12 @@ To clarify and edit your authentication time case, you can contact **info@everyp
 To logout from **StandCloud** service run the command:
 
 ```bash
-hardpy sc-logout
+hardpy sc-logout <stand_cloud_address>
 ```
+
+Third party applications can authorize in **StandCloud**.
+This process is described in the
+[StandCloud third party authorization example](./../examples/stand_cloud_thirdparty_auth.md).
 
 ## HardPy rules
 

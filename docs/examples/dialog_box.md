@@ -197,3 +197,4 @@ def test_base_dialog_box_with_html_link():
     )
     response = run_dialog_box(dbx)
     assert response
+```

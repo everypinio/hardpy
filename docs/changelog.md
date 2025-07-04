@@ -2,6 +2,21 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## HardPy 0.13.0
+
+* Change CI settings, add testing of tests on different versions of packages.
+  [[PR-157](https://github.com/everypinio/hardpy/pull/157)]
+* Add an alert to operator panel when the following are called not from tests:
+  `set_message`, `set_case_artifact`, `set_module_artifact`, `run_dialog_box`,
+  and `get_current_attempt`.
+  [[PR-154](https://github.com/everypinio/hardpy/pull/154)]
+* Update the status of the test case and module when the test stops.
+  Only one case and one module receive the "stopped" status, while the rest are marked as "skipped."
+  [[PR-154](https://github.com/everypinio/hardpy/pull/154)]
+* Change **StandCloud** authorization process to OAuth2 Device Flow by
+  [RFC8628](https://datatracker.ietf.org/doc/html/rfc8628).
+  [[PR-152](https://github.com/everypinio/hardpy/pull/152)]
+
 ## HardPy 0.12.1
 
 * Fix the situation in which the module and case stop times stop updating when the user stops the tests.

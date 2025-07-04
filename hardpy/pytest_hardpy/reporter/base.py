@@ -53,6 +53,14 @@ class BaseReporter:
         self._runstore.update_doc_value(key, value)
         self._statestore.update_doc_value(key, value)
 
+    def set_alert(self, alert: str) -> None:
+        """Set alert message.
+
+        Args:
+            alert (str): alert message
+        """
+        self.set_doc_value(DF.ALERT, alert, statestore_only=True)
+
     def update_db_by_doc(self) -> None:
         """Update database by current document."""
         self._statestore.update_db()

@@ -174,8 +174,9 @@ The `hardpy sc-logout` command is used to logout from **StandCloud**.
  Usage: hardpy sc-logout [OPTIONS]
 
  Logout HardPy from StandCloud.
- Logout HardPy from all StandCloud accounts.
-
+╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
+│   address   TEXT  [default: None] [required]                                                               │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ --help          Show this message and exit.                                                                │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
