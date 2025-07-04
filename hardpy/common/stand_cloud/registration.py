@@ -12,6 +12,7 @@ from qrcode import QRCode
 from requests.exceptions import ConnectionError as RequestConnectionError, HTTPError
 from requests_oauth2client.tokens import ExpiredAccessToken
 
+from hardpy.common.stand_cloud.exception import StandCloudError
 from hardpy.common.stand_cloud.token_manager import TokenManager
 
 if TYPE_CHECKING:
@@ -28,7 +29,7 @@ def login(sc_connector: StandCloudConnector) -> None:
     if token is None or sc_connector.is_refresh_token_valid() is False:
         try:
             response = sc_connector.get_verification_url()
-        except RequestConnectionError as e:
+        except (RequestConnectionError, StandCloudError) as e:
             print(f"Connection error to StandCloud: {sc_connector.addr}. \nError: {e}")
             return
         url = response["verification_uri_complete"]
