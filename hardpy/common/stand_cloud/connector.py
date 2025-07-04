@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timedelta, timezone
+from http import HTTPStatus
 from logging import getLogger
 from time import sleep
 from typing import TYPE_CHECKING
@@ -123,6 +124,8 @@ class StandCloudConnector:
             verify=self._verify_ssl,
             timeout=10,
         )
+        if req.status_code != HTTPStatus.OK:
+            raise StandCloudError(req.text)
         return json.loads(req.content)
 
     def get_api(self, endpoint: str) -> ApiClient:
