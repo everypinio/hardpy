@@ -2,12 +2,19 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime  # noqa: TC003
+from enum import Enum
 from typing import ClassVar
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from hardpy.pytest_hardpy.utils import TestStatus as Status  # noqa: TC001
+
+
+class Group(Enum):
+    SETUP = "setup"
+    MAIN = "main"
+    TEARDOWN = "teardown"
 
 
 class IBaseResult(BaseModel):
@@ -69,6 +76,7 @@ class CaseStateStore(IBaseResult):
     msg: dict | None = None
     dialog_box: dict = {}
     attempt: int = 0
+    group: Group = Group.MAIN
 
 
 class CaseRunStore(IBaseResult):
@@ -95,6 +103,7 @@ class CaseRunStore(IBaseResult):
     msg: dict | None = None
     numeric_measurements: list[NumericMeasurement] = []
     attempt: int = 0
+    group: Group = Group.MAIN
     artifact: dict = {}
 
 
@@ -125,6 +134,7 @@ class ModuleStateStore(IBaseResult):
     """
 
     cases: dict[str, CaseStateStore] = {}
+    group: Group = Group.MAIN
 
 
 class ModuleRunStore(IBaseResult):
@@ -157,6 +167,7 @@ class ModuleRunStore(IBaseResult):
 
     id: str
     cases: dict[str, CaseRunStore] = {}
+    group: Group = Group.MAIN
     artifact: dict = {}
 
 
@@ -195,6 +206,7 @@ class Instrument(BaseModel):
     name: str | None = None
     rev: str | None = None
     number: int | None = None
+    comment: str | None = None
     info: dict[str, str | int | float | datetime] = {}
 
 
@@ -242,7 +254,7 @@ class Process(BaseModel):
 
     name: str | None = None
     number: int | None = None
-    info: dict = {}
+    info: dict[str, str | int | float | datetime] = {}
 
 
 class OperatorData(BaseModel):
@@ -465,5 +477,4 @@ class ResultRunStore(IBaseResult):
     user: str | None = None
     batch_serial_number: str | None = None
     caused_dut_failure_id: str | None = None
-    comment: str | None = None
     artifact: dict = {}
