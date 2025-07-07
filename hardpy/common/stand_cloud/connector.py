@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timedelta, timezone
+from http import HTTPStatus
 from logging import getLogger
 from time import sleep
 from typing import TYPE_CHECKING
@@ -123,6 +124,8 @@ class StandCloudConnector:
             verify=self._verify_ssl,
             timeout=10,
         )
+        if req.status_code != HTTPStatus.OK:
+            raise StandCloudError(req.text)
         return json.loads(req.content)
 
     def get_api(self, endpoint: str) -> ApiClient:
@@ -211,12 +214,15 @@ class StandCloudConnector:
                 f"Login to {self._addr.domain} first"
             )
             raise StandCloudError(msg)
-        auth = OAuth2(
-            sc_addr=self._addr,
-            client_id=self._client_id,
-            token=self._token,
-            token_manager=self._token_manager,
-            verify_ssl=self._verify_ssl,
-        )
+        try:
+            auth = OAuth2(
+                sc_addr=self._addr,
+                client_id=self._client_id,
+                token=self._token,
+                token_manager=self._token_manager,
+                verify_ssl=self._verify_ssl,
+            )
+        except OAuth2Error as exc:
+            raise StandCloudError(exc.description) from exc
         session = auth.session
         return ApiClient(f"{self._addr.api}/{endpoint}", session=session, timeout=10)

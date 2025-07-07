@@ -9,9 +9,16 @@ jobs:
   lint:
     name: Lint
     uses: ./.github/workflows/lint.yml
+
   test:
     name: Test
     uses: ./.github/workflows/test.yml
+
+  test-matrix:
+    name: Test Matrix
+    if: github.base_ref == 'main'
+    uses: ./.github/workflows/test-matrix.yml
+
   build:
     name: Build
     uses: ./.github/workflows/build.yml
