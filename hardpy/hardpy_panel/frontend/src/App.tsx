@@ -2,6 +2,7 @@
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import {
   Button,
@@ -38,6 +39,7 @@ const WINDOW_WIDTH_THRESHOLDS = {
  * @returns {JSX.Element} The main application component.
  */
 function App(): JSX.Element {
+  const { t, i18n } = useTranslation();
   const [use_end_test_sound, setUseEndTestSound] = React.useState(false);
   const [use_debug_info, setUseDebugInfo] = React.useState(false);
 
@@ -45,115 +47,10 @@ function App(): JSX.Element {
   const [lastProgress, setProgress] = React.useState(0);
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
 
-  const [language, setLanguage] = React.useState(
-    localStorage.getItem('hardpy-language') || 'en'
-  );
-
   const changeLanguage = (lang: string) => {
-    setLanguage(lang);
+    i18n.changeLanguage(lang);
     localStorage.setItem('hardpy-language', lang);
   };
-
-  const translations = {
-    en: {
-      title: "HardPy Operator Panel",
-      lastRun: "Last run:",
-      soundOn: "Turn on the sound",
-      soundOff: "Turn off the sound",
-      debugOn: "Turn on the debug mode",
-      debugOff: "Turn off the debug mode",
-      language: "Language",
-      connection: "Establishing a connection... 🧐🔎",
-      dbError: "Database connection error. 🙅🏽‍♀️🚫",
-      noEntries: "No entries in the database 🙅🏽‍♀️🚫"
-    },
-    ru: {
-      title: "Панель оператора HardPy",
-      lastRun: "Последний запуск:",
-      soundOn: "Включить звук",
-      soundOff: "Выключить звук",
-      debugOn: "Включить режим отладки",
-      debugOff: "Выключить режим отладки",
-      language: "Язык",
-      connection: "Установка соединения... 🧐🔎",
-      dbError: "Ошибка подключения к базе данных. 🙅🏽‍♀️🚫",
-      noEntries: "Нет записей в базе данных 🙅🏽‍♀️🚫"
-    },
-    zh: {
-      title: "HardPy 操作面板",
-      lastRun: "最后一次运行:",
-      soundOn: "开启声音",
-      soundOff: "关闭声音",
-      debugOn: "开启调试模式",
-      debugOff: "关闭调试模式",
-      language: "语言",
-      connection: "正在建立连接... 🧐🔎",
-      dbError: "数据库连接错误. 🙅🏽‍♀️🚫",
-      noEntries: "数据库中没有条目 🙅🏽‍♀️🚫"
-    },
-    ja: {
-      title: "HardPy オペレーターパネル",
-      lastRun: "最後の実行:",
-      soundOn: "音をオンにする",
-      soundOff: "音をオフにする",
-      debugOn: "デバッグモードをオンにする",
-      debugOff: "デバッグモードをオフにする",
-      language: "言語",
-      connection: "接続を確立しています... 🧐🔎",
-      dbError: "データベース接続エラー. 🙅🏽‍♀️🚫",
-      noEntries: "データベースにエントリがありません 🙅🏽‍♀️🚫"
-    },
-    es: {
-      title: "Panel de operador HardPy",
-      lastRun: "Última ejecución:",
-      soundOn: "Activar sonido",
-      soundOff: "Desactivar sonido",
-      debugOn: "Activar modo de depuración",
-      debugOff: "Desactivar modo de depuración",
-      language: "Idioma",
-      connection: "Estableciendo conexión... 🧐🔎",
-      dbError: "Error de conexión a la base de datos. 🙅🏽‍♀️🚫",
-      noEntries: "No hay entradas en la base de datos 🙅🏽‍♀️🚫"
-    },
-    de: {
-      title: "HardPy Bedienfeld",
-      lastRun: "Letzter Lauf:",
-      soundOn: "Ton einschalten",
-      soundOff: "Ton ausschalten",
-      debugOn: "Debug-Modus einschalten",
-      debugOff: "Debug-Modus ausschalten",
-      language: "Sprache",
-      connection: "Verbindung wird hergestellt... 🧐🔎",
-      dbError: "Datenbankverbindungsfehler. 🙅🏽‍♀️🚫",
-      noEntries: "Keine Einträge in der Datenbank 🙅🏽‍♀️🚫"
-    },
-    fr: {
-      title: "Panneau opérateur HardPy",
-      lastRun: "Dernière exécution:",
-      soundOn: "Activer le son",
-      soundOff: "Désactiver le son",
-      debugOn: "Activer le mode débogage",
-      debugOff: "Désactiver le mode débogage",
-      language: "Langue",
-      connection: "Établissement de la connexion... 🧐🔎",
-      dbError: "Erreur de connexion à la base de données. 🙅🏽‍♀️🚫",
-      noEntries: "Aucune entrée dans la base de données 🙅🏽‍♀️🚫"
-    }
-  };
-
-  type TranslationKey = 
-    | 'title' 
-    | 'lastRun' 
-    | 'soundOn' 
-    | 'soundOff' 
-    | 'debugOn' 
-    | 'debugOff' 
-    | 'language' 
-    | 'connection' 
-    | 'dbError' 
-    | 'noEntries';
-
-  const t = (key: TranslationKey) => (translations as any)[language][key] || translations.en[key];
 
   /**
    * Custom hook to determine if the window width is greater than a specified size.
@@ -203,7 +100,7 @@ function App(): JSX.Element {
     if (loading && rows.length === 0) {
       return (
         <Card style={{ marginTop: "60px" }}>
-          <H2>{t('connection')}</H2>
+          <H2>{t('app.connection')}</H2>
         </Card>
       );
     }
@@ -211,7 +108,7 @@ function App(): JSX.Element {
     if (state === "error") {
       return (
         <Card style={{ marginTop: "60px" }}>
-          <H2>{t('dbError')}</H2>
+          <H2>{t('app.dbError')}</H2>
           {error && <p>{error.message}</p>}
         </Card>
       );
@@ -220,7 +117,7 @@ function App(): JSX.Element {
     if (rows.length === 0) {
       return (
         <Card style={{ marginTop: "60px" }}>
-          <H2>{t('noEntries')}</H2>
+          <H2>{t('app.noEntries')}</H2>
         </Card>
       );
     }
@@ -286,27 +183,27 @@ function App(): JSX.Element {
       <Menu>
         <MenuItem
           shouldDismissPopover={false}
-          text={use_end_test_sound ? t('soundOff') : t('soundOn')}
+          text={use_end_test_sound ? t('app.soundOff') : t('app.soundOn')}
           icon={use_end_test_sound ? "volume-up" : "volume-off"}
           id="use_end_test_sound"
           onClick={() => setUseEndTestSound(!use_end_test_sound)}
         />
         <MenuItem
           shouldDismissPopover={false}
-          text={use_debug_info ? t('debugOff') : t('debugOn')}
+          text={use_debug_info ? t('app.debugOff') : t('app.debugOn')}
           icon={"bug"}
           id="use_debug_info"
           onClick={() => setUseDebugInfo(!use_debug_info)}
         />
         <Divider />
-        <MenuItem text={t('language')} icon="translate">
+        <MenuItem text={t('app.language')} icon="translate">
           <MenuItem text="English" onClick={() => changeLanguage('en')} />
-          <MenuItem text="Русский" onClick={() => changeLanguage('ru')} />
           <MenuItem text="中文" onClick={() => changeLanguage('zh')} />
           <MenuItem text="日本語" onClick={() => changeLanguage('ja')} />
           <MenuItem text="Español" onClick={() => changeLanguage('es')} />
           <MenuItem text="Deutsch" onClick={() => changeLanguage('de')} />
           <MenuItem text="Français" onClick={() => changeLanguage('fr')} />
+          <MenuItem text="Русский" onClick={() => changeLanguage('ru')} />
         </MenuItem>
       </Menu>
     );
@@ -328,7 +225,7 @@ function App(): JSX.Element {
             <div className={"logo-smol"}></div>
               {wide && (
                 <div>
-                  <b>{ultrawide ? t('title') : "HardPy"}</b>
+                  <b>{ultrawide ? t('app.title') : "HardPy"}</b>
                 </div>
               )}
           </Navbar.Heading>
@@ -336,7 +233,7 @@ function App(): JSX.Element {
           {wide && <Navbar.Divider />}
 
           <Navbar.Heading id={"last-exec-heading"}>
-            <div>{t('lastRun')}</div>
+            <div>{t('app.lastRun')}</div>
           </Navbar.Heading>
           <div id={"glob-test-status"}>
             <TestStatus status={lastRunStatus} />
