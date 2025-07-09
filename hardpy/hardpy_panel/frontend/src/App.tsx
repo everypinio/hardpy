@@ -199,10 +199,10 @@ function App(): JSX.Element {
         <Divider />
         <MenuItem text={t('app.language')} icon="translate">
           <MenuItem text="English" onClick={() => changeLanguage('en')} />
-          <MenuItem text="中文" onClick={() => changeLanguage('zh')} />
+          <MenuItem text="中文" onClick={() => changeLanguage('ch')} />
           <MenuItem text="日本語" onClick={() => changeLanguage('ja')} />
-          <MenuItem text="Español" onClick={() => changeLanguage('es')} />
-          <MenuItem text="Deutsch" onClick={() => changeLanguage('de')} />
+          <MenuItem text="Español" onClick={() => changeLanguage('sp')} />
+          <MenuItem text="Deutsch" onClick={() => changeLanguage('ge')} />
           <MenuItem text="Français" onClick={() => changeLanguage('fr')} />
           <MenuItem text="Русский" onClick={() => changeLanguage('ru')} />
         </MenuItem>

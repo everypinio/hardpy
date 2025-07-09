@@ -16,6 +16,14 @@ from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
 app = FastAPI()
 app.state.pytest_wrp = PyTestWrapper()
 
+config = ConfigManager().get_config()
+
+app = FastAPI()
+app.state.pytest_wrp = PyTestWrapper()
+
+default_language = "en"
+app.state.language = getattr(config.frontend, "language", default_language)
+
 
 class Status(str, Enum):
     """HardPy status.
@@ -39,6 +47,16 @@ def hardpy_config() -> dict:
         dict: HardPy config
     """
     return app.state.pytest_wrp.get_config()
+
+
+@app.get("/api/language")
+def get_language() -> dict:
+    """Get current interface language.
+
+    Returns:
+        dict[str, str]: Current language (e.g. {"language": "ru"})
+    """
+    return {"language": app.state.language}
 
 
 @app.get("/api/start")

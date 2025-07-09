@@ -40,6 +40,7 @@ class FrontendConfig(BaseModel):
 
     host: str = "localhost"
     port: int = 8000
+    language: str = "en"
 
 
 class StandCloudConfig(BaseModel):
