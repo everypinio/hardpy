@@ -6,7 +6,7 @@ import _, { Dictionary } from "lodash";
 import { H1, H2, H4, Tag, Divider } from "@blueprintjs/core";
 import { withTranslation, WithTranslation } from "react-i18next";
 
-import { TestItem, TestSuite as TestSuiteComponent } from "./TestSuite";
+import { TestItem, TestSuiteComponent } from "./TestSuite";
 import StartOperatorMsgDialog from "./OperatorMsg";
 
 /**
