@@ -10,4 +10,4 @@ port = 5984
 [frontend]
 host = "localhost"
 port = 8000
-language = "ch"
+language = "en"

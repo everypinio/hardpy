@@ -15,7 +15,6 @@ import {
   H2,
   Popover,
   Card,
-  Divider,
 } from "@blueprintjs/core";
 
 import StartStopButton from "./button/StartStop";
@@ -47,11 +46,6 @@ function App(): JSX.Element {
   const [lastRunStatus, setLastRunStatus] = React.useState("");
   const [lastProgress, setProgress] = React.useState(0);
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
-
-  const changeLanguage = (lang: string) => {
-    i18n.changeLanguage(lang);
-    localStorage.setItem('hardpy-language', lang);
-  };
 
   /**
    * Custom hook to determine if the window width is greater than a specified size.
@@ -196,16 +190,6 @@ function App(): JSX.Element {
           id="use_debug_info"
           onClick={() => setUseDebugInfo(!use_debug_info)}
         />
-        <Divider />
-        <MenuItem text={t('app.language')} icon="translate">
-          <MenuItem text="English" onClick={() => changeLanguage('en')} />
-          <MenuItem text="中文" onClick={() => changeLanguage('ch')} />
-          <MenuItem text="日本語" onClick={() => changeLanguage('ja')} />
-          <MenuItem text="Español" onClick={() => changeLanguage('sp')} />
-          <MenuItem text="Deutsch" onClick={() => changeLanguage('ge')} />
-          <MenuItem text="Français" onClick={() => changeLanguage('fr')} />
-          <MenuItem text="Русский" onClick={() => changeLanguage('ru')} />
-        </MenuItem>
       </Menu>
     );
   };
