@@ -249,3 +249,33 @@ def test_system_startup():
 
 **HardPy** allows user to read test result from **StandCloud**.
 See the [StandCloud reader](./../examples/stand_cloud_reader.md) for more information.
+
+## Changing language of operator panel
+
+The user can set one of the following operator panel languages ​​via the *hardpy.toml*:
+
+- English ("en")
+- German ("ge")
+- French ("fr")
+- Spanish ("sp")
+- Chinese ("ch")
+- Japanese ("ja")
+- Russian ("ru")
+
+The example of file:
+
+```toml
+title = "HardPy TOML config"
+tests_dir = "test"
+
+[database]
+user = "dev"
+password = "dev"
+host = "localhost"
+port = 5984
+
+[frontend]
+host = "localhost"
+port = 8000
+language = "ch"
+```

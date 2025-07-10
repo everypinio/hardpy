@@ -39,6 +39,7 @@ port = 5984
 [frontend]
 host = "localhost"
 port = 8000
+language = "en"
 
 [stand_cloud]
 address = "demo.standcloud.io"
@@ -103,6 +104,10 @@ The user can change this value with the `hardpy init --frontend-host` option.
 
 Operator panel port number. The default is `8000`.
 The user can change this value with the `hardpy init --frontend-port` option.
+
+#### language
+
+Language of operator panel. The default is `en`.
 
 ### stand_cloud
 
