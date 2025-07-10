@@ -255,10 +255,10 @@ See the [StandCloud reader](./../examples/stand_cloud_reader.md) for more inform
 The user can set one of the following operator panel languages ​​via the *hardpy.toml*:
 
 - English ("en")
-- German ("ge")
+- German ("de")
 - French ("fr")
-- Spanish ("sp")
-- Chinese ("ch")
+- Spanish ("es")
+- Chinese ("zh")
 - Japanese ("ja")
 - Russian ("ru")
 

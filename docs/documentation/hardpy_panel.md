@@ -22,10 +22,10 @@ The **hardpy panel** or operator panel is a web interface that displays and cont
 You can set one of the following operator panel languages ​​via the configuration file:
 
 - English ("en")
-- German ("ge")
+- German ("de")
 - French ("fr")
-- Spanish ("sp")
-- Chinese ("ch")
+- Spanish ("es")
+- Chinese ("zh")
 - Japanese ("ja")
 - Russian ("ru")
 
