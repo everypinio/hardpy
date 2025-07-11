@@ -3811,7 +3811,6 @@ __metadata:
     eslint-plugin-react-hooks: "npm:^4.6.0"
     events: "npm:^3.3.0"
     i18next: "npm:^24.2.0"
-    i18next-browser-languagedetector: "npm:^8.0.2"
     i18next-http-backend: "npm:^3.0.1"
     lodash: "npm:^4.17.21"
     normalize.css: "npm:^8.0.1"
@@ -3948,15 +3947,6 @@ __metadata:
     agent-base: "npm:^7.0.2"
     debug: "npm:4"
   checksum: 7735eb90073db087e7e79312e3d97c8c04baf7ea7ca7b013382b6a45abbaa61b281041a98f4e13c8c80d88f843785bcc84ba189165b4b4087b1e3496ba656d77
-  languageName: node
-  linkType: hard
-
-"i18next-browser-languagedetector@npm:^8.0.2":
-  version: 8.2.0
-  resolution: "i18next-browser-languagedetector@npm:8.2.0"
-  dependencies:
-    "@babel/runtime": "npm:^7.23.2"
-  checksum: 4fcb6ec316e0fd4a10eee67a8d1e3d7e1407f14d5bed98978c50ed6f1853f5d559dc18ea7fd4b2de445ac0a4ed44df5b38f0b31b89b9ac883f99050d59ffec82
   languageName: node
   linkType: hard
 
