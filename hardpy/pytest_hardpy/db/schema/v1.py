@@ -16,6 +16,14 @@ class Group(Enum):
     MAIN = "main"
     TEARDOWN = "teardown"
 
+class CompOp(Enum):
+    EQ = "eq"
+    NE = "ne"
+    GT = "gt"
+    GE = "ge"
+    LT = "lt"
+    LE = "le"
+
 
 class IBaseResult(BaseModel):
     """Base class for all result models."""
@@ -38,6 +46,7 @@ class NumericMeasurement(BaseModel):
     low_limit: int | float | None
     high_limit: int | float | None
     unit: str | None = None
+    comp_op: CompOp | None = None
 
 
 class CaseStateStore(IBaseResult):
@@ -381,6 +390,10 @@ class ResultStateStore(IBaseResult):
     operator_msg: dict = {}
     alert: str
     operator_data: OperatorData
+    user: str | None = None
+    batch_serial_number: str | None = None
+    caused_dut_failure_id: str | None = None
+    error_code: int
 
 
 class ResultRunStore(IBaseResult):
@@ -478,3 +491,4 @@ class ResultRunStore(IBaseResult):
     batch_serial_number: str | None = None
     caused_dut_failure_id: str | None = None
     artifact: dict = {}
+    error_code: int
