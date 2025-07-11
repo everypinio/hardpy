@@ -51,6 +51,7 @@ class StandCloudConfig(BaseModel):
     address: str = ""
     connection_only: bool = False
 
+
 class HardpyConfig(BaseModel, extra="allow"):
     """HardPy configuration."""
 
@@ -81,6 +82,7 @@ class ConfigManager:
         database_port: int,
         frontend_host: str,
         frontend_port: int,
+        frontend_language: str,
         sc_address: str = "",
         sc_connection_only: bool = False,
     ) -> None:
@@ -95,6 +97,7 @@ class ConfigManager:
             database_port (int): Database port.
             frontend_host (str): Operator panel host.
             frontend_port (int): Operator panel port.
+            frontend_language (str): Operator panel language.
             sc_address (str): StandCloud address.
             sc_connection_only (bool): StandCloud check availability.
         """
@@ -106,6 +109,7 @@ class ConfigManager:
         cls.obj.database.port = database_port
         cls.obj.frontend.host = frontend_host
         cls.obj.frontend.port = frontend_port
+        cls.obj.frontend.language = frontend_language
         cls.obj.stand_cloud.address = sc_address
         cls.obj.stand_cloud.connection_only = sc_connection_only
 

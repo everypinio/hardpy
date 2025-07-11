@@ -7,9 +7,9 @@ import Backend from "i18next-http-backend";
 
 const initializeI18n = async () => {
   try {
-    const res = await fetch("/api/language");
+    const res = await fetch("/api/hardpy_config");
     const data = await res.json();
-    const langFromConfig = data.language ?? "en";
+    const langFromConfig = data.frontend?.language ?? "en";
 
     await i18n
       .use(Backend)

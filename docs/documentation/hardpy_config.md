@@ -108,6 +108,7 @@ The user can change this value with the `hardpy init --frontend-port` option.
 #### language
 
 Language of operator panel. The default is `en`.
+Available languages are [there](hardpy_panel.md#languages).
 
 ### stand_cloud
 

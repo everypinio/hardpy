@@ -19,7 +19,9 @@ The **hardpy panel** or operator panel is a web interface that displays and cont
     - Test case status.
 - Browse current [statestore](database.md#statestore-scheme) state in debug mode.
 
-You can set one of the following operator panel languages ​​via the configuration file:
+### Languages
+
+You can set one of the following operator panel languages ​​via the [configuration file](hardpy_config.md#language):
 
 - English ("en")
 - German ("de")

@@ -252,15 +252,8 @@ See the [StandCloud reader](./../examples/stand_cloud_reader.md) for more inform
 
 ## Changing language of operator panel
 
-The user can set one of the following operator panel languages ​​via the *hardpy.toml*:
-
-- English ("en")
-- German ("de")
-- French ("fr")
-- Spanish ("es")
-- Chinese ("zh")
-- Japanese ("ja")
-- Russian ("ru")
+The user can set one of the following operator panel languages ​​via the *hardpy.toml*.
+Available languages are [there](hardpy_panel.md#languages).
 
 The example of file:
 

@@ -1,4 +1,4 @@
-name: hardpy-1
+name: hardpy
 channels:
   - defaults
   - conda-forge
