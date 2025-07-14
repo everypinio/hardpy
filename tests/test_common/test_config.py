@@ -75,6 +75,7 @@ def test_frontend_config():
     config = FrontendConfig()
     assert config.host == frontend_default_host
     assert config.port == frontend_default_port
+    assert config.language == frontend_default_language
 
 
 def test_stand_cloud_config():
