@@ -188,7 +188,7 @@ export class SuiteList extends React.Component<
                 {Object.entries(db_state.test_stand.info).map(
                   ([key, value]) => (
                     <Tag key={key} minimal style={TAG_ELEMENT_STYLE}>
-                      {t("suiteList.standName")} {key}:{" "}
+                      {db_state.test_stand?.name} {key}:{" "}
                       {typeof value === "string"
                         ? value
                         : JSON.stringify(value)}
