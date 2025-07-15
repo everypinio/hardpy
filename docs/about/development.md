@@ -214,7 +214,6 @@ To add or modify translations for the HardPy operator panel:
        "soundOff": "Turn off the sound",
        "debugOn": "Turn on the debug mode",
        "debugOff": "Turn off the debug mode",
-       "language": "Language",
        "connection": "Establishing a connection... 🧐🔎",
        "dbError": "Database connection error. 🙅🏽‍♀️🚫",
        "noEntries": "No entries in the database 🙅🏽‍♀️🚫"

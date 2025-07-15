@@ -75,7 +75,6 @@ class App(BaseModel):
         soundOff (str): The text for the sound off button.
         debugOn (str): The text for the debug on button.
         debugOff (str): The text for the debug off button.
-        language (str): The language of the application.
         connection (str): The connection status of the application.
         dbError (str): The database error message.
         noEntries (str): The message for no entries in the database.
@@ -87,7 +86,6 @@ class App(BaseModel):
     soundOff: str
     debugOn: str
     debugOff: str
-    language: str
     connection: str
     dbError: str
     noEntries: str

@@ -6,7 +6,6 @@
       "soundOff": "Desactivar sonido",
       "debugOn": "Activar modo de depuración",
       "debugOff": "Desactivar modo de depuración",
-      "language": "Idioma",
       "connection": "Estableciendo conexión... 🧐🔎",
       "dbError": "Error de conexión a la base de datos. 🙅🏽‍♀️🚫",
       "noEntries": "No hay entradas en la base de datos 🙅🏽‍♀️🚫"

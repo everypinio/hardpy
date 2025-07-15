@@ -6,7 +6,6 @@
       "soundOff": "Désactiver le son",
       "debugOn": "Activer le mode débogage",
       "debugOff": "Désactiver le mode débogage",
-      "language": "Langue",
       "connection": "Établissement de la connexion... 🧐🔎",
       "dbError": "Erreur de connexion à la base de données. 🙅🏽‍♀️🚫",
       "noEntries": "Aucune entrée dans la base de données 🙅🏽‍♀️🚫"

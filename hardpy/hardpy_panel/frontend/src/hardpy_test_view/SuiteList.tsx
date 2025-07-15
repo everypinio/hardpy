@@ -256,4 +256,4 @@ export class SuiteList extends React.Component<
   }
 }
 
-export default withTranslation(undefined, { i18n: true })(SuiteList);
+export default withTranslation()(SuiteList);

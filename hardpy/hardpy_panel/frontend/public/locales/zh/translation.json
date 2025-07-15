@@ -6,7 +6,6 @@
       "soundOff": "关闭声音",
       "debugOn": "开启调试模式",
       "debugOff": "关闭调试模式",
-      "language": "语言",
       "connection": "正在建立连接... 🧐🔎",
       "dbError": "数据库连接错误. 🙅🏽‍♀️🚫",
       "noEntries": "数据库中没有条目 🙅🏽‍♀️🚫"
