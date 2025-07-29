@@ -4,6 +4,8 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 
 ## HardPy 0.13.0
 
+* Add tests of `hardpy run`.
+  [[PR-161](https://github.com/everypinio/hardpy/pull/161)]
 * Change CI settings, add testing of tests on different versions of packages.
   [[PR-157](https://github.com/everypinio/hardpy/pull/157)]
 * Add an alert to operator panel when the following are called not from tests:
