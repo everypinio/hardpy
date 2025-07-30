@@ -965,7 +965,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
               HTML_IFRAME_WIDTH_FACTOR *
               ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
             props.html_border ?? 0,
-            0
+            t
           )}
       </div>
       <div className={Classes.DIALOG_FOOTER}>
