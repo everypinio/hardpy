@@ -17,3 +17,21 @@ class TestStatus(str, Enum):
     RUN = "run"
     READY = "ready"
     STOPPED = "stopped"
+
+class Group(Enum):
+    """Test group."""
+
+    SETUP = "setup"
+    MAIN = "main"
+    TEARDOWN = "teardown"
+
+
+class CompOp(Enum):
+    """Comparison operator."""
+
+    EQ = "eq"
+    NE = "ne"
+    GT = "gt"
+    GE = "ge"
+    LT = "lt"
+    LE = "le"
