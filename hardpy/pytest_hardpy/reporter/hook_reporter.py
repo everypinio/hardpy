@@ -31,6 +31,10 @@ class HookReporter(BaseReporter):
             doc_name (str): test run name
         """
         self.set_doc_value(DF.NAME, doc_name)
+        self.set_doc_value(DF.USER, None)
+        self.set_doc_value(DF.BATCH_SERIAL_NUMBER, None)
+        self.set_doc_value(DF.CAUSED_DUT_FAILURE_ID, None)
+        self.set_doc_value(DF.ERROR_CODE, None)
         self.set_doc_value(DF.STATUS, TestStatus.READY)
         self.set_doc_value(DF.START_TIME, None)
         self.set_doc_value(DF.STOP_TIME, None)
@@ -217,7 +221,7 @@ class HookReporter(BaseReporter):
             case_id,
             DF.ATTEMPT,
         )
-        self.set_doc_value(key, attempt, statestore_only=True)
+        self.set_doc_value(key, attempt)
 
     def get_module_start_time(self, module_id: str) -> int:
         """Get module start time.
@@ -267,6 +271,7 @@ class HookReporter(BaseReporter):
         module_default = {
             DF.STATUS: TestStatus.READY,
             DF.NAME: self._get_module_name(node_info),
+            DF.GROUP: self._get_module_group(node_info),
             DF.START_TIME: None,
             DF.STOP_TIME: None,
             DF.CASES: {},
@@ -274,10 +279,13 @@ class HookReporter(BaseReporter):
         case_default = {
             DF.STATUS: TestStatus.READY,
             DF.NAME: self._get_case_name(node_info),
+            DF.GROUP: self._get_case_group(node_info),
             DF.START_TIME: None,
             DF.STOP_TIME: None,
             DF.ASSERTION_MSG: None,
             DF.MSG: None,
+            DF.ATTEMPT: 0,
+            DF.NUMERIC_MEASUREMENTS: [],
         }
 
         if item.get(node_info.module_id) is None:
@@ -287,6 +295,7 @@ class HookReporter(BaseReporter):
         else:
             item[node_info.module_id][DF.STATUS] = TestStatus.READY
             item[node_info.module_id][DF.NAME] = self._get_module_name(node_info)
+            item[node_info.module_id][DF.GROUP] = self._get_module_group(node_info)
             item[node_info.module_id][DF.START_TIME] = None
             item[node_info.module_id][DF.STOP_TIME] = None
         item[node_info.module_id][DF.NAME] = self._get_module_name(node_info)
@@ -296,7 +305,6 @@ class HookReporter(BaseReporter):
 
         if is_only_statestore:
             case_default[DF.DIALOG_BOX] = {}
-            case_default[DF.ATTEMPT] = 0
         item[node_info.module_id][DF.CASES][node_info.case_id] = case_default
 
     def _remove_outdate_node(
@@ -377,6 +385,28 @@ class HookReporter(BaseReporter):
             str: module name
         """
         return node_info.module_name if node_info.module_name else node_info.module_id
+
+    def _get_module_group(self, node_info: NodeInfo) -> str:
+        """Get module group from markers or use default.
+
+        Args:
+            node_info (NodeInfo): node info
+
+        Returns:
+            str: module group
+        """
+        return node_info.module_group
+
+    def _get_case_group(self, node_info: NodeInfo) -> str:
+        """Get case group from markers or use default.
+
+        Args:
+            node_info (NodeInfo): node info
+
+        Returns:
+            str: case group
+        """
+        return node_info.case_group
 
     def _get_case_name(self, node_info: NodeInfo) -> str:
         """Get case name from markers or use default.
