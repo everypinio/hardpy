@@ -32,7 +32,7 @@ class HookReporter(BaseReporter):
         """
         self.set_doc_value(DF.NAME, doc_name)
         self.set_doc_value(DF.USER, None)
-        self.set_doc_value(DF.BATCH_SERIAL_NUMBER, None)
+        self.set_doc_value(DF.BATCH_SN, None)
         self.set_doc_value(DF.CAUSED_DUT_FAILURE_ID, None)
         self.set_doc_value(DF.ERROR_CODE, None)
         self.set_doc_value(DF.STATUS, TestStatus.READY)
@@ -285,7 +285,7 @@ class HookReporter(BaseReporter):
             DF.ASSERTION_MSG: None,
             DF.MSG: None,
             DF.ATTEMPT: 0,
-            DF.NUMERIC_MEASUREMENTS: [],
+            DF.NUMERIC_MEAS: [],
         }
 
         if item.get(node_info.module_id) is None:

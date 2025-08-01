@@ -10,7 +10,7 @@ class DatabaseField(str, Enum):
     # common
     NAME = "name"
     USER = "user"
-    BATCH_SERIAL_NUMBER = "batch_serial_number"
+    BATCH_SN = "batch_serial_number"
     CAUSED_DUT_FAILURE_ID = "caused_dut_failure_id"
     GROUP = "group"
     ERROR_CODE = "error_code"
@@ -40,7 +40,7 @@ class DatabaseField(str, Enum):
     MODULES = "modules"
     CASES = "cases"
     INSTRUMENTS = "instruments"
-    NUMERIC_MEASUREMENTS = "numeric_measurements"
+    NUMERIC_MEAS = "numeric_measurements"
     SUB_DUTS = "sub_duts"
 
     # statestore
