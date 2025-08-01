@@ -7,6 +7,8 @@ from logging import getLogger
 from pathlib import Path
 from typing import TYPE_CHECKING, NamedTuple
 
+from hardpy.pytest_hardpy.utils.const import Group
+
 if TYPE_CHECKING:
     from pytest import Item, Mark
 
@@ -44,6 +46,10 @@ class NodeInfo:
         self._attempt = self._get_attempt(item.own_markers)
 
         self._critical = self._get_critical(item.own_markers + item.parent.own_markers)
+
+        # TODO(xorialexandrov):  Add module and case group
+        self._module_group = Group.MAIN.value
+        self._case_group = Group.MAIN.value
 
         self._module_id = Path(item.parent.nodeid).stem  # type: ignore
         self._case_id = item.name
@@ -111,6 +117,24 @@ class NodeInfo:
         """
         return self._critical
 
+    @property
+    def module_group(self) -> str:
+        """Get module group.
+
+        Returns:
+            str: module group
+        """
+        return self._module_group
+
+    @property
+    def case_group(self) -> str:
+        """Get case group.
+
+        Returns:
+            str: case group
+        """
+        return self._case_group
+
     def _get_human_name(self, markers: list[Mark], marker_name: str) -> str:
         """Get human name from markers.
 
@@ -143,7 +167,8 @@ class NodeInfo:
         return names
 
     def _get_dependency_info(
-        self, markers: list[Mark],
+        self,
+        markers: list[Mark],
     ) -> list[TestDependencyInfo] | None:
         """Extract and parse dependency information.
 
