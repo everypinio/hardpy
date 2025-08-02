@@ -18,7 +18,7 @@ class TestStatus(str, Enum):
     READY = "ready"
     STOPPED = "stopped"
 
-class Group(Enum):
+class Group(str, Enum):
     """Test group."""
 
     SETUP = "setup"
@@ -26,7 +26,7 @@ class Group(Enum):
     TEARDOWN = "teardown"
 
 
-class CompOp(Enum):
+class CompOp(str, Enum):
     """Comparison operator."""
 
     EQ = "eq"
