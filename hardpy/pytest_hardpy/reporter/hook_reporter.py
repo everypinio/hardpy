@@ -241,6 +241,26 @@ class HookReporter(BaseReporter):
         key = self.generate_key(DF.MODULES, module_id, DF.CASES, case_id, DF.START_TIME)
         return self._statestore.get_field(key)
 
+    def set_caused_dut_failure_id(self, module_id: str, case_id: str) -> None:
+        """Set caused DUT failure id.
+
+        Args:
+            module_id (str): module id
+            case_id (str): case id
+        """
+        key = self.generate_key(DF.CAUSED_DUT_FAILURE_ID)
+        failure_id = f"{module_id}::{case_id}"
+        self.set_doc_value(key, failure_id)
+
+    def get_caused_dut_failure_id(self) -> str | None:
+        """Get caused DUT failure id.
+
+        Returns:
+            str | None: failure id
+        """
+        key = self.generate_key(DF.CAUSED_DUT_FAILURE_ID)
+        return self._statestore.get_field(key)
+
     def update_node_order(self, nodes: dict) -> None:
         """Update node order.
 
