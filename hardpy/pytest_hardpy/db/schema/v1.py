@@ -32,7 +32,7 @@ class CaseStateStore(IBaseResult):
     msg: dict | None = None
     numeric_measurements: list[NumericMeasurement] = []
     attempt: int = 0
-    group: Group = Group.MAIN
+    group: Group
     dialog_box: dict = {}
 
 
@@ -43,7 +43,7 @@ class CaseRunStore(IBaseResult):
     msg: dict | None = None
     numeric_measurements: list[NumericMeasurement] = []
     attempt: int = 0
-    group: Group = Group.MAIN
+    group: Group
     artifact: dict = {}
 
 
@@ -51,14 +51,14 @@ class ModuleStateStore(IBaseResult):
     """Test module description."""
 
     cases: dict[str, CaseStateStore] = {}
-    group: Group = Group.MAIN
+    group: Group
 
 
 class ModuleRunStore(IBaseResult):
     """Test module description."""
 
     cases: dict[str, CaseRunStore] = {}
-    group: Group = Group.MAIN
+    group: Group
     artifact: dict = {}
 
 
