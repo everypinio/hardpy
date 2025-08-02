@@ -124,7 +124,6 @@ class HardpyPlugin:
         self._post_run_functions: list[Callable] = []
         self._dependencies = {}
         self._tests_name: str = ""
-        self._is_dut_failure = False
         self._is_critical_not_passed = False
 
         if system() == "Linux":
@@ -308,9 +307,7 @@ class HardpyPlugin:
         module_id = node_info.module_id
         case_id = node_info.case_id
         casusd_dut_failure_id = self._reporter.get_caused_dut_failure_id()
-
-        if self._is_dut_failure is False and casusd_dut_failure_id is None:
-            self._is_dut_failure = True
+        is_dut_failure = True
 
         if node_info.critical:
             self._is_critical_not_passed = True
@@ -329,16 +326,16 @@ class HardpyPlugin:
                 item.runtest()
                 call.excinfo = None
                 self._is_critical_not_passed = False
-                if casusd_dut_failure_id is None:
-                    self._is_dut_failure = False
+                is_dut_failure = False
                 self._reporter.set_case_status(module_id, case_id, TestStatus.PASSED)
                 break
             except AssertionError:
                 self._reporter.set_case_status(module_id, case_id, TestStatus.FAILED)
+                is_dut_failure = True
                 if current_attempt == attempt:
                     break
 
-        if self._is_dut_failure and casusd_dut_failure_id is None:
+        if is_dut_failure and casusd_dut_failure_id is None:
             self._reporter.set_caused_dut_failure_id(module_id, case_id)
 
     # Reporting hooks
