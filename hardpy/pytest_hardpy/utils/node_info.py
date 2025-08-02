@@ -48,8 +48,8 @@ class NodeInfo:
         self._critical = self._get_critical(item.own_markers + item.parent.own_markers)
 
         # TODO(xorialexandrov):  Add module and case group
-        self._module_group = Group.MAIN.value
-        self._case_group = Group.MAIN.value
+        self._module_group = Group.MAIN
+        self._case_group = Group.MAIN
 
         self._module_id = Path(item.parent.nodeid).stem  # type: ignore
         self._case_id = item.name
@@ -118,20 +118,20 @@ class NodeInfo:
         return self._critical
 
     @property
-    def module_group(self) -> str:
+    def module_group(self) -> Group:
         """Get module group.
 
         Returns:
-            str: module group
+            Group: module group
         """
         return self._module_group
 
     @property
-    def case_group(self) -> str:
+    def case_group(self) -> Group:
         """Get case group.
 
         Returns:
-            str: case group
+            Group: case group
         """
         return self._case_group
 
