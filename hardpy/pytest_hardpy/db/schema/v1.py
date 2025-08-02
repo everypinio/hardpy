@@ -151,7 +151,7 @@ class ResultStateStore(IBaseResult):
     user: str | None = None
     batch_serial_number: str | None = None
     caused_dut_failure_id: str | None = None
-    error_code: int
+    error_code: int | None = None
     operator_msg: dict = {}
     alert: str
     operator_data: OperatorData
@@ -175,5 +175,5 @@ class ResultRunStore(IBaseResult):
     user: str | None = None
     batch_serial_number: str | None = None
     caused_dut_failure_id: str | None = None
-    error_code: int
+    error_code: int | None = None
     artifact: dict = {}
