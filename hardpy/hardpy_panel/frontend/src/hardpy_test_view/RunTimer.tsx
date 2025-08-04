@@ -9,6 +9,8 @@ const MILLISECONDS_TO_SECONDS = 1000;
 type Props = {
   commonTestRunStatus: string | undefined;
   status: string;
+  start_time?: number;
+  stop_time?: number;
 };
 
 type State = {
@@ -16,13 +18,7 @@ type State = {
   clock: NodeJS.Timeout | null;
 };
 
-/**
- * A React component that displays the elapsed time since the timer started.
- * The timer starts when the component is mounted and the status is "run".
- */
 export class RunTimer extends React.Component<Props, State> {
-  private readonly startTime: number;
-
   /**
    * Constructs the RunTimer component.
    * @param {Props} props - The props passed to the component.
@@ -30,62 +26,96 @@ export class RunTimer extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const now = new Date();
-    this.startTime = now.getTime();
-
     this.state = {
-      elapsedTime: 0,
+      elapsedTime: this.calculateElapsedTime(),
       clock: null,
     };
 
     this.initClock = this.initClock.bind(this);
     this.updateClock = this.updateClock.bind(this);
+    this.calculateElapsedTime = this.calculateElapsedTime.bind(this);
+    this.stopClock = this.stopClock.bind(this);
+  }
 
-    if ("run" == this.props.status) {
-      this.setState({ elapsedTime: 0 });
-      this.initClock();
+  private calculateElapsedTime(): number {
+    const { status, start_time, stop_time } = this.props;
+
+    if (
+      status !== "run" &&
+      start_time &&
+      stop_time &&
+      stop_time >= start_time
+    ) {
+      return stop_time - start_time;
     }
+
+    // Для активных тестов используем текущее время в секундах
+    if (status === "run" && start_time) {
+      return Date.now() / 1000 - start_time;
+    }
+
+    return 0;
   }
 
   /**
-   * Formats the given milliseconds into seconds with one decimal place.
-   * @param {number} ms - The time in milliseconds.
+   * Formats the time in seconds to one decimal place.
+   * @param {number} seconds - The time in seconds.
    * @returns {string} The formatted time in seconds.
    */
-  private formatMilliseconds(ms: number): string {
-    return (ms / MILLISECONDS_TO_SECONDS).toFixed(1);
-  }
-
-  /**
-   * Renders the component, displaying the elapsed time.
-   * @returns {React.ReactElement} The rendered component.
-   */
-  render(): React.ReactElement {
-    return <div>{this.formatMilliseconds(this.state.elapsedTime)}</div>;
+  private formatSeconds(seconds: number): string {
+    return seconds.toFixed(1);
   }
 
   /**
    * Cleans up the interval when the component is unmounted.
    */
   componentWillUnmount(): void {
+    this.stopClock();
+  }
+
+  componentDidMount() {
+    if (this.props.status === "run") {
+      this.initClock();
+    }
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    // Handle status changes
+    if (this.props.status !== prevProps.status) {
+      if (this.props.status === "run") {
+        this.setState({ elapsedTime: this.calculateElapsedTime() });
+        this.initClock();
+      } else if (prevProps.status === "run") {
+        this.stopClock();
+        this.setState({ elapsedTime: this.calculateElapsedTime() });
+      }
+    }
+
+    // Handle time changes
+    if (
+      this.props.start_time !== prevProps.start_time ||
+      this.props.stop_time !== prevProps.stop_time
+    ) {
+      this.setState({ elapsedTime: this.calculateElapsedTime() });
+    }
+  }
+
+  private stopClock() {
     if (this.state.clock) {
       clearInterval(this.state.clock);
+      this.setState({ clock: null });
     }
   }
 
   /**
    * Updates the elapsed time if the status is "run" and the commonTestRunStatus is "run".
-   * Otherwise, it clears the interval.
    */
   private updateClock() {
-    const now = new Date();
-  
-    if (this.props.status == "run" && this.props.commonTestRunStatus == "run") {
-      this.setState({ elapsedTime: now.getTime() - this.startTime });
-    }
-  
-    if (this.state.clock) {
-      clearInterval(this.state.clock);
+    if (
+      this.props.status === "run" &&
+      this.props.commonTestRunStatus === "run"
+    ) {
+      this.setState({ elapsedTime: this.calculateElapsedTime() });
     }
   }
 
@@ -93,7 +123,14 @@ export class RunTimer extends React.Component<Props, State> {
    * Initializes the clock by setting up an interval to update the elapsed time every 100ms.
    */
   private initClock() {
-    this.setState({ clock: setInterval(this.updateClock, CLOCK_UPDATE_INTERVAL) });
+    this.stopClock();
+    this.setState({
+      clock: setInterval(this.updateClock, CLOCK_UPDATE_INTERVAL),
+    });
+  }
+
+  render(): React.ReactElement {
+    return <div>{this.formatSeconds(this.state.elapsedTime)}</div>;
   }
 }
 

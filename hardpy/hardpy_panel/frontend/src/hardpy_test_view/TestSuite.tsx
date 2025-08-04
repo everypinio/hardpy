@@ -14,10 +14,7 @@ import {
 import _, { Dictionary } from "lodash";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { LoadingOutlined } from "@ant-design/icons";
-import {
-  StartConfirmationDialog,
-  WidgetType,
-} from "./DialogBox";
+import { StartConfirmationDialog, WidgetType } from "./DialogBox";
 
 import { TestNumber } from "./TestNumber";
 import { TestName } from "./TestName";
@@ -231,7 +228,7 @@ export class TestSuite extends React.Component<Props, State> {
         name: "Name",
         selector: (row) => row,
         cell: this.cellRendererName.bind(this, case_array),
-        grow: 6,  
+        grow: 6,
       },
       {
         id: "data",
@@ -284,6 +281,8 @@ export class TestSuite extends React.Component<Props, State> {
             <RunTimer
               status={test_topics.status}
               commonTestRunStatus={this.props.commonTestRunStatus}
+              start_time={test_topics.start_time}
+              stop_time={test_topics.stop_time}
             />
           )}
         </Tag>
