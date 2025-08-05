@@ -17,9 +17,10 @@ import {
   calculateTextLines,
   calculateDialogDimensions,
 } from "./DialogUtils";
+import { useTranslation } from 'react-i18next';
 
 interface StartOperatorMsgDialogProps {
-  title: string;
+  title?: string;
   msg: string;
   image_base64?: string;
   image_width?: number;
@@ -91,6 +92,7 @@ const renderHTMLLink = (
 export function StartOperatorMsgDialog(
   props: Readonly<StartOperatorMsgDialogProps>
 ): JSX.Element {
+  const { t } = useTranslation();
   const [operatorMessageOpen, setOperatorMessageOpen] = useState(false);
   const [imageDimensions, setImageDimensions] = useState(
     BASE_DIALOG_DIMENSIONS
@@ -238,7 +240,7 @@ export function StartOperatorMsgDialog(
 
   return (
     <Dialog
-      title={props.title || "Message"}
+      title={props.title || t('operatorDialog.defaultTitle')}
       icon="info-sign"
       isOpen={operatorMessageOpen}
       onClose={handleClose}
