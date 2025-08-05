@@ -3,8 +3,9 @@
 
 import * as React from "react";
 import { AnchorButton, AnchorButtonProps } from "@blueprintjs/core";
+import { withTranslation, WithTranslation } from "react-i18next";
 
-type Props = { testing_status: string };
+type Props = { testing_status: string } & WithTranslation;
 
 type State = {
   isStopButtonDisabled: boolean;
@@ -14,13 +15,13 @@ type State = {
  * A React component that renders a start/stop button for controlling a testing process.
  * The button's behavior and appearance depend on the testing status.
  */
-export class StartStopButton extends React.Component<Props, State> {
+class StartStopButton extends React.Component<Props, State> {
   private stopButtonTimer: NodeJS.Timeout | null = null;
 
   constructor(props: Props) {
     super(props);
     this.state = {
-      isStopButtonDisabled: false
+      isStopButtonDisabled: false,
     };
     this.hardpy_start = this.hardpy_start.bind(this);
     this.hardpy_stop = this.hardpy_stop.bind(this);
@@ -37,11 +38,13 @@ export class StartStopButton extends React.Component<Props, State> {
         if (response.ok) {
           return response.text();
         } else {
-          console.log("Request failed. Status: " + response.status);
+          console.log(
+            this.props.t("error.requestFailed", { status: response.status })
+          );
         }
       })
       .catch((error) => {
-        console.log("Request failed. Error: " + error);
+        console.log(this.props.t("error.requestError", { error }));
       });
   }
 
@@ -67,7 +70,7 @@ export class StartStopButton extends React.Component<Props, State> {
     this.setState({ isStopButtonDisabled: true });
     this.stopButtonTimer = setTimeout(() => {
       this.setState({ isStopButtonDisabled: false });
-  }, 500);
+    }, 500);
   }
 
   /**
@@ -113,11 +116,12 @@ export class StartStopButton extends React.Component<Props, State> {
    * @returns {React.ReactNode} The Start/Stop button component.
    */
   render(): React.ReactNode {
-    const is_testing: boolean = this.props.testing_status == "run";
+    const { t, testing_status } = this.props;
+    const is_testing: boolean = testing_status == "run";
     const button_id: string = "start-stop-button";
 
     const stop_button: AnchorButtonProps = {
-      text: "Stop",
+      text: t("button.stop"),
       intent: "danger",
       large: true,
       rightIcon: "stop",
@@ -126,7 +130,7 @@ export class StartStopButton extends React.Component<Props, State> {
     };
 
     const start_button: AnchorButtonProps = {
-      text: "Start",
+      text: t("button.start"),
       intent: is_testing ? undefined : "primary",
       large: true,
       rightIcon: "play",
@@ -139,4 +143,4 @@ export class StartStopButton extends React.Component<Props, State> {
   }
 }
 
-export default StartStopButton;
+export default withTranslation()(StartStopButton);

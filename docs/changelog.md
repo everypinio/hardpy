@@ -2,6 +2,9 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add the option to translate the HardPy operator panel using ISO 639 language codes..
+  [[PR-159](https://github.com/everypinio/hardpy/pull/159)]
+
 ## HardPy 0.13.0
 
 * Change CI settings, add testing of tests on different versions of packages.

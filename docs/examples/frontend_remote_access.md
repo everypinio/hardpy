@@ -28,6 +28,7 @@ port = 5984
 [frontend]
 host = "{YOUR_COMPUTER_NETWORK_ADDRESS}"  # Replace with the address from step 2 or insert "0.0.0.0"
 port = 8000
+language = "en"
 ```
 
 ## 3. Launch the frontend
