@@ -48,8 +48,6 @@ export class RunTimer extends React.Component<Props, State> {
     ) {
       return stop_time - start_time;
     }
-
-    // Для активных тестов используем текущее время в секундах
     if (status === "run" && start_time) {
       return Date.now() / 1000 - start_time;
     }
