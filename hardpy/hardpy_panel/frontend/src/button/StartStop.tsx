@@ -74,15 +74,52 @@ class StartStopButton extends React.Component<Props, State> {
   }
 
   /**
-   * Handles the keydown event to start the process when the spacebar is pressed.
-   * The process starts only if testing is not in progress.
-   * @param {KeyboardEvent} event - The keyboard event object.
-   * @private
+   * Checks if any dialog is currently open.
+   * @returns {boolean} True if a dialog is open, else false.
    */
-  private readonly hardpy_start_with_space = (event: KeyboardEvent) => {
-    const is_testing_in_progress = this.props.testing_status == "run";
-    if (event.key === " " && !is_testing_in_progress) {
-      this.hardpy_start();
+  private isDialogOpen(): boolean {
+    const blueprintDialogs = document.querySelectorAll('.bp3-dialog');
+    for (const dialog of blueprintDialogs) {
+      const style = window.getComputedStyle(dialog);
+      if (style.display !== 'none' && style.visibility !== 'hidden') {
+        return true;
+      }
+    }
+
+    const ariaDialogs = document.querySelectorAll('[role="dialog"]');
+    for (const dialog of ariaDialogs) {
+      const style = window.getComputedStyle(dialog);
+      if (style.display !== 'none' && style.visibility !== 'hidden') {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Handles the space keydown event to start or stop the process.
+   */
+  private readonly handleSpaceKey = (event: KeyboardEvent) => {
+    if (this.isDialogOpen()) {
+      return;
+    }
+
+    const target = event.target as HTMLElement;
+    if (!target) return;
+
+    const interactiveElements = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'];
+    if (
+      interactiveElements.includes(target.tagName) || 
+      target.isContentEditable
+    ) {
+      return;
+    }
+
+    if (event.key === " ") {
+      event.preventDefault();
+      const is_testing_in_progress = this.props.testing_status == "run";
+      is_testing_in_progress ? this.hardpy_stop() : this.hardpy_start();
     }
   };
 
@@ -98,14 +135,14 @@ class StartStopButton extends React.Component<Props, State> {
    * Adds an event listener for the keydown event when the component is mounted.
    */
   componentDidMount(): void {
-    window.addEventListener("keydown", this.hardpy_start_with_space);
+    window.addEventListener("keydown", this.handleSpaceKey);
   }
 
   /**
    * Removes the event listener for the keydown event when the component is unmounted.
    */
   componentWillUnmount(): void {
-    window.removeEventListener("keydown", this.hardpy_start_with_space);
+    window.removeEventListener("keydown", this.handleSpaceKey);
     if (this.stopButtonTimer) {
       clearTimeout(this.stopButtonTimer);
     }
