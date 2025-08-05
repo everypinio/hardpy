@@ -193,6 +193,75 @@ DEBUG_FRONTEND=1
 
 3. Ensure your VSCode or runtime environment loads the `.env` file. Many tools and frameworks (e.g., `python-dotenv`) automatically load variables from `.env`.
 
+## Adding Translations
+
+To add or modify translations for the HardPy operator panel:
+
+1. Navigate to the translations directory:
+   ```bash
+   cd hardpy/hardpy_panel/frontend/public/locales/
+   ```
+
+2. Create a new folder for your language using its ISO 639 code (e.g., `en` for English, `ru` for Russian, `fr` for French).
+
+3. Inside the language folder, create a `translation.json` file with the following structure:
+   ```json
+   {
+     "app": {
+       "title": "HardPy Operator Panel",
+       "lastRun": "Last run:",
+       "soundOn": "Turn on the sound",
+       "soundOff": "Turn off the sound",
+       "debugOn": "Turn on the debug mode",
+       "debugOff": "Turn off the debug mode",
+       "connection": "Establishing a connection... 🧐🔎",
+       "dbError": "Database connection error. 🙅🏽‍♀️🚫",
+       "noEntries": "No entries in the database 🙅🏽‍♀️🚫"
+     },
+     "button": {
+       "start": "Start",
+       "stop": "Stop",
+       "confirm": "Confirm"
+     },
+     "error": {
+       "dbConnectionTitle": "Database Connection Error",
+       "dbConnectionMessage": "Failed to establish connection with the database"
+     },
+     "operatorDialog": {
+       "defaultTitle": "Message",
+       "imageAlt": "Operator message image",
+       "htmlCodeTitle": "HTML Code",
+       "htmlLinkTitle": "HTML Link",
+       "enterAnswer": "Enter answer",
+       "fieldNotEmpty": "The field must not be empty",
+       "notificationTitle": "Notification",
+       "notificationDesc": "The window was closed. Tests stopped.",
+       "numericInputError": "Please enter a number",
+       "radioButtonError": "Please select one option",
+       "checkboxError": "Please select at least one option"
+     },
+     "suiteList": {
+       "loadingTests": "Loading tests... 🤔",
+       "refreshHint": "Try refreshing the page.",
+       "standName": "Stand name",
+       "status": "Status",
+       "startTime": "Start time",
+       "finishTime": "Finish time",
+       "alert": "Alert"
+     },
+     "testSuite": {
+       "nameColumn": "Name",
+       "dataColumn": "Data",
+       "loading": "Loading...",
+       "stubName": "Test Suite"
+     }
+   }
+   ```
+
+4. Translate all values while keeping the same JSON structure and keys.
+
+Note: Always use valid ISO 639 language codes for folder names.
+
 ## Launch
 
 1. Install dependencies or create environment.

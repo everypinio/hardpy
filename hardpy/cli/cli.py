@@ -86,6 +86,7 @@ def init(  # noqa: PLR0913
         database_port (int): Database port
         frontend_host (str): Panel operator host
         frontend_port (int): Panel operator port
+        frontend_language (str): Panel operator language
         sc_address (str): StandCloud address
         sc_connection_only (bool): Flag to check StandCloud service availability
     """
@@ -100,6 +101,7 @@ def init(  # noqa: PLR0913
         database_port=database_port,
         frontend_host=frontend_host,
         frontend_port=frontend_port,
+        frontend_language=default_config.frontend.language,
         sc_address=sc_address,
         sc_connection_only=sc_connection_only,
     )

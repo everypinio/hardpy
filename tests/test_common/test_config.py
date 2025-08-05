@@ -25,6 +25,7 @@ db_default_host = "localhost"
 db_default_port = 5984
 frontend_default_host = "localhost"
 frontend_default_port = 8000
+frontend_default_language = "en"
 stand_cloud_default_addr = ""
 
 
@@ -39,6 +40,7 @@ def test_config_manager_init(tmp_path: Path):
         database_port=db_no_default_port,
         frontend_host=frontend_no_default_host,
         frontend_port=frontend_no_default_port,
+        frontend_language=frontend_default_language,
         sc_address=stand_cloud_no_default_addr,
     )
     config = ConfigManager.get_config()
@@ -51,6 +53,7 @@ def test_config_manager_init(tmp_path: Path):
     assert config.database.port == db_no_default_port
     assert config.frontend.host == frontend_no_default_host
     assert config.frontend.port == frontend_no_default_port
+    assert config.frontend.language == frontend_default_language
     assert config.stand_cloud.address == stand_cloud_no_default_addr
 
 
@@ -72,6 +75,7 @@ def test_frontend_config():
     config = FrontendConfig()
     assert config.host == frontend_default_host
     assert config.port == frontend_default_port
+    assert config.language == frontend_default_language
 
 
 def test_stand_cloud_config():
@@ -97,6 +101,7 @@ def test_hardpy_config():
     assert config.database.port == db_default_port
     assert config.frontend.host == frontend_default_host
     assert config.frontend.port == frontend_default_port
+    assert config.frontend.language == frontend_default_language
     assert config.stand_cloud.address == stand_cloud_default_addr
 
 
@@ -113,6 +118,7 @@ def test_config_manager_create_config(tmp_path: Path):
         database_port=db_default_port,
         frontend_host=frontend_default_host,
         frontend_port=frontend_default_port,
+        frontend_language=frontend_default_language,
         sc_address=stand_cloud_default_addr,
     )
 
@@ -135,7 +141,11 @@ def test_read_config_success(tmp_path: Path):
             "host": db_default_host,
             "port": db_default_port,
         },
-        "frontend": {"host": frontend_default_host, "port": frontend_default_port},
+        "frontend": {
+            "host": frontend_default_host,
+            "port": frontend_default_port,
+            "language": frontend_default_language,
+        },
         "stand_cloud": {
             "address": stand_cloud_default_addr,
         },
@@ -156,4 +166,5 @@ def test_read_config_success(tmp_path: Path):
     assert config.database.port == test_config_data["database"]["port"]
     assert config.frontend.host == test_config_data["frontend"]["host"]
     assert config.frontend.port == test_config_data["frontend"]["port"]
+    assert config.frontend.language == test_config_data["frontend"]["language"]
     assert config.stand_cloud.address == test_config_data["stand_cloud"]["address"]
