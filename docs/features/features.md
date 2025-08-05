@@ -258,17 +258,6 @@ Available languages are [there](hardpy_panel.md#languages).
 The example of file:
 
 ```toml
-title = "HardPy TOML config"
-tests_dir = "test"
-
-[database]
-user = "dev"
-password = "dev"
-host = "localhost"
-port = 5984
-
 [frontend]
-host = "localhost"
-port = 8000
 language = "ch"
 ```
