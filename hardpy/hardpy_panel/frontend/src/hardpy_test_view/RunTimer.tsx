@@ -18,6 +18,10 @@ type State = {
   clock: NodeJS.Timeout | null;
 };
 
+/**
+ * A React component that displays the elapsed time since the timer started.
+ * The timer starts when the component is mounted and the status is "run".
+ */
 export class RunTimer extends React.Component<Props, State> {
   /**
    * Constructs the RunTimer component.
