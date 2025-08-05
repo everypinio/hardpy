@@ -2,6 +2,8 @@
   "app": {
       "title": "HardPy 操作面板",
       "lastRun": "最后一次运行:",
+      "duration": "持续时间",
+      "seconds": "秒",
       "soundOn": "开启声音",
       "soundOff": "关闭声音",
       "debugOn": "开启调试模式",
