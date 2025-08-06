@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add status display in words depending on the testing status.
+  [[PR-165](https://github.com/everypinio/hardpy/pull/165)]
 * Fix logic for processing spacebar pressing.
   [[PR-164](https://github.com/everypinio/hardpy/pull/164)]
 * Fix module duration and add test run duration.
