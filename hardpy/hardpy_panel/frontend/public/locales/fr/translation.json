@@ -10,7 +10,14 @@
       "debugOff": "Désactiver le mode débogage",
       "connection": "Établissement de la connexion... 🧐🔎",
       "dbError": "Erreur de connexion à la base de données. 🙅🏽‍♀️🚫",
-      "noEntries": "Aucune entrée dans la base de données 🙅🏽‍♀️🚫"
+      "noEntries": "Aucune entrée dans la base de données 🙅🏽‍♀️🚫",
+      "status": {
+        "ready": "PRÊT",
+        "run": "EN COURS",
+        "passed": "RÉUSSI",
+        "failed": "ÉCHOUÉ",
+        "stopped": "ARRÊTÉ"
+      }
   },
   "button": {
     "start": "Commencer",

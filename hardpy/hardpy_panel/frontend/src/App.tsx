@@ -212,6 +212,23 @@ function App(): JSX.Element {
     );
   };
 
+  /**
+   * Renders the status of the test run.
+   * @param status - The status to render.
+   * @returns {string} The status text.
+   */
+  const getStatusText = (status: string): string => {
+    const statusMap: Record<string, string> = {
+      ready: t("app.status.ready"),
+      run: t("app.status.run"),
+      passed: t("app.status.passed"),
+      failed: t("app.status.failed"),
+      stopped: t("app.status.stopped"),
+    };
+
+    return statusMap[status] || status;
+  };
+
   return (
     <div className="App" style={{ minWidth: "310px", margin: "auto" }}>
       {/* Popout elements */}
@@ -246,21 +263,33 @@ function App(): JSX.Element {
             <Navbar.Heading id={"last-exec-heading"}>
               <div>{t("app.lastRun")}</div>
             </Navbar.Heading>
-
-            <div id={"glob-test-status"}>
+            
+            <div 
+              id={"glob-test-status"}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "5px"
+              }}
+            >
+              <Navbar.Heading style={{ margin: 0 }}>
+                {getStatusText(lastRunStatus)}
+              </Navbar.Heading>
               <TestStatus status={lastRunStatus} />
               {use_end_test_sound && (
                 <PlaySound key="sound" status={lastRunStatus} />
               )}
             </div>
-          {wide && lastRunDuration !== null && (
-            <Navbar.Divider />
-          )}
-          {lastRunDuration !== null && (
-            <Navbar.Heading>
-              {t("app.duration")}: {lastRunDuration} {t("app.seconds")}
-            </Navbar.Heading>
-          )}
+            
+            {wide && lastRunDuration !== null && (
+              <Navbar.Divider />
+            )}
+            
+            {lastRunDuration !== null && (
+              <Navbar.Heading>
+                {t("app.duration")}: {lastRunDuration} {t("app.seconds")}
+              </Navbar.Heading>
+            )}
           </div>
 
           <Navbar.Divider />

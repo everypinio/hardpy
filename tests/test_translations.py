@@ -4,6 +4,14 @@ from typing import List
 
 from pydantic import BaseModel
 
+class AppStatus(BaseModel):
+    """A class representing application status translations."""
+    ready: str
+    run: str
+    passed: str
+    failed: str
+    stopped: str
+
 
 class OperatorDialog(BaseModel):
     """A class representing an operator dialog.
@@ -80,6 +88,7 @@ class App(BaseModel):
         connection (str): The connection status of the application.
         dbError (str): The database error message.
         noEntries (str): The message for no entries in the database.
+        status (AppStatus): The status of the application.
     """
 
     title: str
@@ -93,6 +102,7 @@ class App(BaseModel):
     connection: str
     dbError: str
     noEntries: str
+    status: AppStatus
 
 
 class SuiteList(BaseModel):

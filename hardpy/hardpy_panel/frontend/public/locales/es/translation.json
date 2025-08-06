@@ -10,7 +10,14 @@
       "debugOff": "Desactivar modo de depuración",
       "connection": "Estableciendo conexión... 🧐🔎",
       "dbError": "Error de conexión a la base de datos. 🙅🏽‍♀️🚫",
-      "noEntries": "No hay entradas en la base de datos 🙅🏽‍♀️🚫"
+      "noEntries": "No hay entradas en la base de datos 🙅🏽‍♀️🚫",
+      "status": {
+        "ready": "LISTO",
+        "run": "EJECUTANDO",
+        "passed": "APROBADO",
+        "failed": "FALLADO",
+        "stopped": "DETENIDO"
+      }
   },
   "button": {
     "start": "Iniciar",
