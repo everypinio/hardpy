@@ -2,6 +2,8 @@
   "app": {
       "title": "Panneau opérateur HardPy",
       "lastRun": "Dernière exécution:",
+      "duration": "Durée",
+      "seconds": "s",
       "soundOn": "Activer le son",
       "soundOff": "Désactiver le son",
       "debugOn": "Activer le mode débogage",

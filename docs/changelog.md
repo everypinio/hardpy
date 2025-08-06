@@ -2,7 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
-* Add the option to translate the HardPy operator panel using ISO 639 language codes..
+* Fix logic for processing spacebar pressing.
+  [[PR-164](https://github.com/everypinio/hardpy/pull/164)]
+* Fix module duration and add test run duration.
+  [[PR-163](https://github.com/everypinio/hardpy/pull/163)]
+* Add the option to translate the HardPy operator panel using ISO 639 language codes.
   [[PR-159](https://github.com/everypinio/hardpy/pull/159)]
 
 ## HardPy 0.13.0

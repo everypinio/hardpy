@@ -286,6 +286,8 @@ export class TestSuite extends React.Component<Props, State> {
             <RunTimer
               status={test_topics.status}
               commonTestRunStatus={this.props.commonTestRunStatus}
+              start_time={test_topics.start_time}
+              stop_time={test_topics.stop_time}
             />
           )}
         </Tag>

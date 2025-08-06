@@ -39,13 +39,16 @@ const WINDOW_WIDTH_THRESHOLDS = {
  * @returns {JSX.Element} The main application component.
  */
 function App(): JSX.Element {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [use_end_test_sound, setUseEndTestSound] = React.useState(false);
   const [use_debug_info, setUseDebugInfo] = React.useState(false);
 
   const [lastRunStatus, setLastRunStatus] = React.useState("");
   const [lastProgress, setProgress] = React.useState(0);
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
+  const [lastRunDuration, setLastRunDuration] = React.useState<number | null>(
+    null
+  );
 
   /**
    * Custom hook to determine if the window width is greater than a specified size.
@@ -95,7 +98,7 @@ function App(): JSX.Element {
     if (loading && rows.length === 0) {
       return (
         <Card style={{ marginTop: "60px" }}>
-          <H2>{t('app.connection')}</H2>
+          <H2>{t("app.connection")}</H2>
         </Card>
       );
     }
@@ -103,7 +106,7 @@ function App(): JSX.Element {
     if (state === "error") {
       return (
         <Card style={{ marginTop: "60px" }}>
-          <H2>{t('app.dbError')}</H2>
+          <H2>{t("app.dbError")}</H2>
           {error && <p>{error.message}</p>}
         </Card>
       );
@@ -112,11 +115,10 @@ function App(): JSX.Element {
     if (rows.length === 0) {
       return (
         <Card style={{ marginTop: "60px" }}>
-          <H2>{t('app.noEntries')}</H2>
+          <H2>{t("app.noEntries")}</H2>
         </Card>
       );
     }
-
 
     /* Assume it is only one */
     const db_row = rows[0].doc as TestRunI;
@@ -128,6 +130,22 @@ function App(): JSX.Element {
     const progress = db_row.progress;
     if (progress && progress != lastProgress) {
       setProgress(progress);
+    }
+
+    // Calculate test run duration
+    let duration: number | null = null;
+    if (db_row.start_time && db_row.stop_time) {
+      // Completed test run
+      duration = db_row.stop_time - db_row.start_time;
+    } else if (db_row.start_time && status === "run") {
+      // Active test run - calculate current duration
+      const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+      duration = currentTimeInSeconds - db_row.start_time;
+    }
+
+    // Update duration state if changed
+    if (duration !== lastRunDuration) {
+      setLastRunDuration(duration);
     }
 
     return (
@@ -178,14 +196,14 @@ function App(): JSX.Element {
       <Menu>
         <MenuItem
           shouldDismissPopover={false}
-          text={use_end_test_sound ? t('app.soundOff') : t('app.soundOn')}
+          text={use_end_test_sound ? t("app.soundOff") : t("app.soundOn")}
           icon={use_end_test_sound ? "volume-up" : "volume-off"}
           id="use_end_test_sound"
           onClick={() => setUseEndTestSound(!use_end_test_sound)}
         />
         <MenuItem
           shouldDismissPopover={false}
-          text={use_debug_info ? t('app.debugOff') : t('app.debugOn')}
+          text={use_debug_info ? t("app.debugOff") : t("app.debugOn")}
           icon={"bug"}
           id="use_debug_info"
           onClick={() => setUseDebugInfo(!use_debug_info)}
@@ -208,23 +226,41 @@ function App(): JSX.Element {
         <Navbar.Group align={Alignment.LEFT}>
           <Navbar.Heading id={"main-heading"}>
             <div className={"logo-smol"}></div>
-              {wide && (
-                <div>
-                  <b>{ultrawide ? t('app.title') : "HardPy"}</b>
-                </div>
-              )}
+            {wide && (
+              <div>
+                <b>{ultrawide ? t("app.title") : "HardPy"}</b>
+              </div>
+            )}
           </Navbar.Heading>
 
           {wide && <Navbar.Divider />}
 
-          <Navbar.Heading id={"last-exec-heading"}>
-            <div>{t('app.lastRun')}</div>
-          </Navbar.Heading>
-          <div id={"glob-test-status"}>
-            <TestStatus status={lastRunStatus} />
-            {use_end_test_sound && (
-              <PlaySound key="sound" status={lastRunStatus} />
-            )}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: wide ? "row" : "column",
+              alignItems: "center",
+              gap: wide ? "10px" : "5px",
+            }}
+          >
+            <Navbar.Heading id={"last-exec-heading"}>
+              <div>{t("app.lastRun")}</div>
+            </Navbar.Heading>
+
+            <div id={"glob-test-status"}>
+              <TestStatus status={lastRunStatus} />
+              {use_end_test_sound && (
+                <PlaySound key="sound" status={lastRunStatus} />
+              )}
+            </div>
+          {wide && lastRunDuration !== null && (
+            <Navbar.Divider />
+          )}
+          {lastRunDuration !== null && (
+            <Navbar.Heading>
+              {t("app.duration")}: {lastRunDuration} {t("app.seconds")}
+            </Navbar.Heading>
+          )}
           </div>
 
           <Navbar.Divider />
@@ -269,9 +305,7 @@ function App(): JSX.Element {
           <ProgressView percentage={lastProgress} status={lastRunStatus} />
         </div>
         <div style={{ flexDirection: "column" }}>
-          <StartStopButton
-            testing_status={lastRunStatus}
-          />
+          <StartStopButton testing_status={lastRunStatus} />
         </div>
       </div>
     </div>
