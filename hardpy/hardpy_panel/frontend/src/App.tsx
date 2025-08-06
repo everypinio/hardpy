@@ -246,17 +246,21 @@ function App(): JSX.Element {
             <Navbar.Heading id={"last-exec-heading"}>
               <div>{t("app.lastRun")}</div>
             </Navbar.Heading>
+
             <div id={"glob-test-status"}>
               <TestStatus status={lastRunStatus} />
               {use_end_test_sound && (
                 <PlaySound key="sound" status={lastRunStatus} />
               )}
             </div>
-            {lastRunDuration !== null && (
-              <div>
-                {t("app.duration")}: {lastRunDuration} {t("app.seconds")}
-              </div>
-            )}
+          {wide && lastRunDuration !== null && (
+            <Navbar.Divider />
+          )}
+          {lastRunDuration !== null && (
+            <Navbar.Heading>
+              {t("app.duration")}: {lastRunDuration} {t("app.seconds")}
+            </Navbar.Heading>
+          )}
           </div>
 
           <Navbar.Divider />
