@@ -46,9 +46,7 @@ function App(): JSX.Element {
   const [lastRunStatus, setLastRunStatus] = React.useState("");
   const [lastProgress, setProgress] = React.useState(0);
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
-  const [lastRunDuration, setLastRunDuration] = React.useState<number | null>(
-    null
-  );
+  const [lastRunDuration, setLastRunDuration] = React.useState<number>(0);
 
   /**
    * Custom hook to determine if the window width is greater than a specified size.
@@ -133,7 +131,7 @@ function App(): JSX.Element {
     }
 
     // Calculate test run duration
-    let duration: number | null = null;
+    let duration = 0;
     if (db_row.start_time && db_row.stop_time) {
       // Completed test run
       duration = db_row.stop_time - db_row.start_time;
@@ -280,16 +278,10 @@ function App(): JSX.Element {
                 <PlaySound key="sound" status={lastRunStatus} />
               )}
             </div>
-            
-            {wide && lastRunDuration !== null && (
-              <Navbar.Divider />
-            )}
-            
-            {lastRunDuration !== null && (
-              <Navbar.Heading>
-                {t("app.duration")}: {lastRunDuration} {t("app.seconds")}
-              </Navbar.Heading>
-            )}
+            <Navbar.Divider />
+            <Navbar.Heading>
+              {t("app.duration")}: {lastRunDuration} {t("app.seconds")}
+            </Navbar.Heading>
           </div>
 
           <Navbar.Divider />
