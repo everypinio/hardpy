@@ -48,6 +48,10 @@ function App(): JSX.Element {
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
   const [lastRunDuration, setLastRunDuration] = React.useState<number>(0);
 
+  const startTimeRef = React.useRef<number | null>(null);
+  const [timerIntervalId, setTimerIntervalId] =
+    React.useState<NodeJS.Timeout | null>(null);
+
   /**
    * Custom hook to determine if the window width is greater than a specified size.
    * @param {number} size - The width threshold to compare against.
@@ -76,23 +80,80 @@ function App(): JSX.Element {
   const ultrawide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.ULTRAWIDE);
   const wide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.WIDE);
 
-  /**
-   * Custom hook to render data from the database.
-   * @returns {JSX.Element} The rendered database content or a loading/error message.
-   */
-  const useRenderDb = (): JSX.Element => {
-    const { rows, state, loading, error } = useAllDocs({
-      include_docs: true,
-    });
+  React.useEffect(() => {
+    if (lastRunStatus === "run") {
+      if (startTimeRef.current !== null) {
+        const updateDuration = () => {
+          const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+          setLastRunDuration(currentTimeInSeconds - startTimeRef.current!);
+        };
 
-    React.useEffect(() => {
-      if (state === "error") {
-        setIsAuthenticated(false);
-      } else if (isAuthenticated === false) {
-        setIsAuthenticated(true);
+        updateDuration();
+
+        const id = setInterval(updateDuration, 1000);
+        setTimerIntervalId(id);
+
+        return () => {
+          if (id) {
+            clearInterval(id);
+          }
+        };
       }
-    }, [state]);
+    } else if (timerIntervalId) {
+      clearInterval(timerIntervalId);
+      setTimerIntervalId(null);
+    }
+  }, [lastRunStatus]);
 
+  const { rows, state, loading, error } = useAllDocs({
+    include_docs: true,
+  });
+
+  React.useEffect(() => {
+    if (rows.length === 0) return;
+
+    const db_row = rows[0].doc as TestRunI;
+    const status = db_row.status || "";
+    const progress = db_row.progress || 0;
+
+    if (status !== lastRunStatus) {
+      setLastRunStatus(status);
+    }
+
+    if (progress !== lastProgress) {
+      setProgress(progress);
+    }
+
+    if (db_row.start_time) {
+      startTimeRef.current = db_row.start_time;
+
+      if (db_row.stop_time && status !== "run") {
+        const duration = db_row.stop_time - db_row.start_time;
+        if (duration !== lastRunDuration) {
+          setLastRunDuration(duration);
+        }
+      }
+    }
+
+    if (state === "error") {
+      setIsAuthenticated(false);
+    } else if (isAuthenticated === false) {
+      setIsAuthenticated(true);
+    }
+  }, [
+    rows,
+    state,
+    lastRunStatus,
+    lastProgress,
+    lastRunDuration,
+    isAuthenticated,
+  ]);
+
+  /**
+   * Renders the database content.
+   * @returns {JSX.Element} The rendered content.
+   */
+  const renderDbContent = (): JSX.Element => {
     if (loading && rows.length === 0) {
       return (
         <Card style={{ marginTop: "60px" }}>
@@ -116,34 +177,6 @@ function App(): JSX.Element {
           <H2>{t("app.noEntries")}</H2>
         </Card>
       );
-    }
-
-    /* Assume it is only one */
-    const db_row = rows[0].doc as TestRunI;
-    const status = db_row.status;
-    if (status && status != lastRunStatus) {
-      setLastRunStatus(status);
-    }
-
-    const progress = db_row.progress;
-    if (progress && progress != lastProgress) {
-      setProgress(progress);
-    }
-
-    // Calculate test run duration
-    let duration = 0;
-    if (db_row.start_time && db_row.stop_time) {
-      // Completed test run
-      duration = db_row.stop_time - db_row.start_time;
-    } else if (db_row.start_time && status === "run") {
-      // Active test run - calculate current duration
-      const currentTimeInSeconds = Math.floor(Date.now() / 1000);
-      duration = currentTimeInSeconds - db_row.start_time;
-    }
-
-    // Update duration state if changed
-    if (duration !== lastRunDuration) {
-      setLastRunDuration(duration);
     }
 
     return (
@@ -269,7 +302,7 @@ function App(): JSX.Element {
 
       {/* Tests panel */}
       <div className={Classes.DRAWER_BODY} style={{ marginBottom: "60px" }}>
-        {useRenderDb()}
+        {renderDbContent()}
       </div>
 
       {/* Footer */}
