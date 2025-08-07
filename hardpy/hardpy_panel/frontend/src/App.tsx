@@ -286,7 +286,12 @@ function App(): JSX.Element {
             </div>
             <Navbar.Divider />
             <Navbar.Heading>
-              {t("app.duration")}: {lastRunDuration} {t("app.seconds")}
+              {t("app.duration")}:{" "}
+              {lastRunStatus !== "ready" &&
+              lastRunStatus !== "run" &&
+              lastRunDuration === 0
+                ? `< 1 ${t("app.seconds")}`
+                : `${lastRunDuration} ${t("app.seconds")}`}
             </Navbar.Heading>
           </div>
 

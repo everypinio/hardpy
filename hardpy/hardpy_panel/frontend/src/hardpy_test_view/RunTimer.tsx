@@ -65,7 +65,7 @@ export class RunTimer extends React.Component<Props, State> {
    * @returns {string} The formatted time in seconds.
    */
   private formatSeconds(seconds: number): string {
-    return seconds.toFixed(1);
+    return Math.floor(seconds).toString();
   }
 
   /**
