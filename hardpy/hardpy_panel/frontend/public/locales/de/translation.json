@@ -16,7 +16,8 @@
         "run": "läuft",
         "passed": "bestanden",
         "failed": "fehlgeschlagen",
-        "stopped": "gestoppt"
+        "stopped": "gestoppt",
+        "unknown": "unbekannt"
       }
   },
   "button": {

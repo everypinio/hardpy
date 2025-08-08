@@ -16,7 +16,8 @@
       "run": "run",
       "passed": "pass",
       "failed": "fail",
-      "stopped": "stopped"
+      "stopped": "stopped",
+      "unknown": "unknown"
     }
   },
   "button": {

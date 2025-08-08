@@ -16,7 +16,8 @@
         "run": "运行中",
         "passed": "通过",
         "failed": "失败",
-        "stopped": "已停止"
+        "stopped": "已停止",
+        "unknown": "未知"
       }
   },
   "button": {

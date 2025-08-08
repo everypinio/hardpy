@@ -34,6 +34,23 @@ const WINDOW_WIDTH_THRESHOLDS = {
   WIDE: 400,
 };
 
+const STATUS_MAP = {
+  ready: "app.status.ready",
+  run: "app.status.run",
+  passed: "app.status.passed",
+  failed: "app.status.failed",
+  stopped: "app.status.stopped",
+} as const;
+
+type StatusKey = keyof typeof STATUS_MAP;
+
+/**
+ * Checks if the provided status is a valid status key.
+ */
+const isValidStatus = (status: string): status is StatusKey => {
+  return status in STATUS_MAP;
+};
+
 /**
  * Main component of the GUI.
  * @returns {JSX.Element} The main application component.
@@ -43,7 +60,9 @@ function App(): JSX.Element {
   const [use_end_test_sound, setUseEndTestSound] = React.useState(false);
   const [use_debug_info, setUseDebugInfo] = React.useState(false);
 
-  const [lastRunStatus, setLastRunStatus] = React.useState("");
+  const [lastRunStatus, setLastRunStatus] = React.useState<
+    StatusKey | "unknown"
+  >("ready");
   const [lastProgress, setProgress] = React.useState(0);
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
   const [lastRunDuration, setLastRunDuration] = React.useState<number>(0);
@@ -117,7 +136,7 @@ function App(): JSX.Element {
     const progress = db_row.progress || 0;
 
     if (status !== lastRunStatus) {
-      setLastRunStatus(status);
+      setLastRunStatus(isValidStatus(status) ? status : "unknown");
     }
 
     if (progress !== lastProgress) {
@@ -248,29 +267,17 @@ function App(): JSX.Element {
    * @param status - The status to render.
    * @returns {string} The status text.
    */
-  const getStatusText = (status: string): string => {
-    const statusMap: Record<string, string> = {
-      ready: t("app.status.ready"),
-      run: t("app.status.run"),
-      passed: t("app.status.passed"),
-      failed: t("app.status.failed"),
-      stopped: t("app.status.stopped"),
-    };
-
-    const statusText = statusMap[status];
-
-    if (!statusText) {
-      throw new Error(`Unknown status received: ${status}`);
+  const getStatusText = (status: StatusKey | "unknown"): string => {
+    if (status === "unknown") {
+      console.error("Unknown status encountered");
+      return t("app.status.unknown") || "Unknown status";
     }
-
-    return statusText;
+    return t(STATUS_MAP[status]);
   };
 
   return (
-    <div className="App" style={{ minWidth: "310px", margin: "auto" }}>
-      {/* Popout elements */}
+    <div className="App">
       <ReloadAlert reload_timeout_s={3} />
-      {/* <Notification /> */}
 
       {/* Header */}
       <Navbar
@@ -309,7 +316,9 @@ function App(): JSX.Element {
             >
               <div>{t("app.lastRun")}</div>
               <div>{getStatusText(lastRunStatus)}</div>
-              <TestStatus status={lastRunStatus} />
+              <TestStatus
+                status={lastRunStatus === "unknown" ? "" : lastRunStatus}
+              />
             </Navbar.Heading>
 
             {use_end_test_sound && (

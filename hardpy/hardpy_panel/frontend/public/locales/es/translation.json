@@ -16,7 +16,8 @@
         "run": "ejecutando",
         "passed": "aprobado",
         "failed": "fallado",
-        "stopped": "detenido"
+        "stopped": "detenido",
+        "unknown": "desconocido"
       }
   },
   "button": {

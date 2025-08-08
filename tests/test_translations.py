@@ -4,6 +4,7 @@ from typing import List
 
 from pydantic import BaseModel
 
+
 class AppStatus(BaseModel):
     """A class representing application status translations."""
     ready: str
@@ -11,6 +12,7 @@ class AppStatus(BaseModel):
     passed: str
     failed: str
     stopped: str
+    unknown: str
 
 
 class OperatorDialog(BaseModel):

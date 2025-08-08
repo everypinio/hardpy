@@ -16,7 +16,8 @@
         "run": "en cours",
         "passed": "réussi",
         "failed": "échoué",
-        "stopped": "arrêté"
+        "stopped": "arrêté",
+        "unknown": "inconnu"
       }
   },
   "button": {
