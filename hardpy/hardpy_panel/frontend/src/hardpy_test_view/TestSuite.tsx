@@ -281,11 +281,13 @@ export class TestSuite extends React.Component<Props, State> {
           </>
         )}
 
-        <Tag minimal={true} style={{ margin: "2px", minWidth: "30px" }}>
+        <Tag minimal={true} style={{ margin: "2px", minWidth: "15px" }}>
           {"ready" != test_topics.status && (
             <RunTimer
               status={test_topics.status}
               commonTestRunStatus={this.props.commonTestRunStatus}
+              start_time={test_topics.start_time}
+              stop_time={test_topics.stop_time}
             />
           )}
         </Tag>

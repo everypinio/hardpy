@@ -39,13 +39,18 @@ const WINDOW_WIDTH_THRESHOLDS = {
  * @returns {JSX.Element} The main application component.
  */
 function App(): JSX.Element {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [use_end_test_sound, setUseEndTestSound] = React.useState(false);
   const [use_debug_info, setUseDebugInfo] = React.useState(false);
 
   const [lastRunStatus, setLastRunStatus] = React.useState("");
   const [lastProgress, setProgress] = React.useState(0);
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
+  const [lastRunDuration, setLastRunDuration] = React.useState<number>(0);
+
+  const startTimeRef = React.useRef<number | null>(null);
+  const [timerIntervalId, setTimerIntervalId] =
+    React.useState<NodeJS.Timeout | null>(null);
 
   /**
    * Custom hook to determine if the window width is greater than a specified size.
@@ -75,27 +80,84 @@ function App(): JSX.Element {
   const ultrawide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.ULTRAWIDE);
   const wide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.WIDE);
 
-  /**
-   * Custom hook to render data from the database.
-   * @returns {JSX.Element} The rendered database content or a loading/error message.
-   */
-  const useRenderDb = (): JSX.Element => {
-    const { rows, state, loading, error } = useAllDocs({
-      include_docs: true,
-    });
+  React.useEffect(() => {
+    if (lastRunStatus === "run") {
+      if (startTimeRef.current !== null) {
+        const updateDuration = () => {
+          const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+          setLastRunDuration(currentTimeInSeconds - startTimeRef.current!);
+        };
 
-    React.useEffect(() => {
-      if (state === "error") {
-        setIsAuthenticated(false);
-      } else if (isAuthenticated === false) {
-        setIsAuthenticated(true);
+        updateDuration();
+
+        const id = setInterval(updateDuration, 1000);
+        setTimerIntervalId(id);
+
+        return () => {
+          if (id) {
+            clearInterval(id);
+          }
+        };
       }
-    }, [state]);
+    } else if (timerIntervalId) {
+      clearInterval(timerIntervalId);
+      setTimerIntervalId(null);
+    }
+  }, [lastRunStatus]);
 
+  const { rows, state, loading, error } = useAllDocs({
+    include_docs: true,
+  });
+
+  React.useEffect(() => {
+    if (rows.length === 0) return;
+
+    const db_row = rows[0].doc as TestRunI;
+    const status = db_row.status || "";
+    const progress = db_row.progress || 0;
+
+    if (status !== lastRunStatus) {
+      setLastRunStatus(status);
+    }
+
+    if (progress !== lastProgress) {
+      setProgress(progress);
+    }
+
+    if (db_row.start_time) {
+      startTimeRef.current = db_row.start_time;
+
+      if (db_row.stop_time && status !== "run") {
+        const duration = db_row.stop_time - db_row.start_time;
+        if (duration !== lastRunDuration) {
+          setLastRunDuration(duration);
+        }
+      }
+    }
+
+    if (state === "error") {
+      setIsAuthenticated(false);
+    } else if (isAuthenticated === false) {
+      setIsAuthenticated(true);
+    }
+  }, [
+    rows,
+    state,
+    lastRunStatus,
+    lastProgress,
+    lastRunDuration,
+    isAuthenticated,
+  ]);
+
+  /**
+   * Renders the database content.
+   * @returns {JSX.Element} The rendered content.
+   */
+  const renderDbContent = (): JSX.Element => {
     if (loading && rows.length === 0) {
       return (
         <Card style={{ marginTop: "60px" }}>
-          <H2>{t('app.connection')}</H2>
+          <H2>{t("app.connection")}</H2>
         </Card>
       );
     }
@@ -103,7 +165,7 @@ function App(): JSX.Element {
     if (state === "error") {
       return (
         <Card style={{ marginTop: "60px" }}>
-          <H2>{t('app.dbError')}</H2>
+          <H2>{t("app.dbError")}</H2>
           {error && <p>{error.message}</p>}
         </Card>
       );
@@ -112,22 +174,9 @@ function App(): JSX.Element {
     if (rows.length === 0) {
       return (
         <Card style={{ marginTop: "60px" }}>
-          <H2>{t('app.noEntries')}</H2>
+          <H2>{t("app.noEntries")}</H2>
         </Card>
       );
-    }
-
-
-    /* Assume it is only one */
-    const db_row = rows[0].doc as TestRunI;
-    const status = db_row.status;
-    if (status && status != lastRunStatus) {
-      setLastRunStatus(status);
-    }
-
-    const progress = db_row.progress;
-    if (progress && progress != lastProgress) {
-      setProgress(progress);
     }
 
     return (
@@ -178,14 +227,14 @@ function App(): JSX.Element {
       <Menu>
         <MenuItem
           shouldDismissPopover={false}
-          text={use_end_test_sound ? t('app.soundOff') : t('app.soundOn')}
+          text={use_end_test_sound ? t("app.soundOff") : t("app.soundOn")}
           icon={use_end_test_sound ? "volume-up" : "volume-off"}
           id="use_end_test_sound"
           onClick={() => setUseEndTestSound(!use_end_test_sound)}
         />
         <MenuItem
           shouldDismissPopover={false}
-          text={use_debug_info ? t('app.debugOff') : t('app.debugOn')}
+          text={use_debug_info ? t("app.debugOff") : t("app.debugOn")}
           icon={"bug"}
           id="use_debug_info"
           onClick={() => setUseDebugInfo(!use_debug_info)}
@@ -208,23 +257,37 @@ function App(): JSX.Element {
         <Navbar.Group align={Alignment.LEFT}>
           <Navbar.Heading id={"main-heading"}>
             <div className={"logo-smol"}></div>
-              {wide && (
-                <div>
-                  <b>{ultrawide ? t('app.title') : "HardPy"}</b>
-                </div>
-              )}
+            {wide && (
+              <div>
+                <b>{ultrawide ? t("app.title") : "HardPy"}</b>
+              </div>
+            )}
           </Navbar.Heading>
 
           {wide && <Navbar.Divider />}
 
-          <Navbar.Heading id={"last-exec-heading"}>
-            <div>{t('app.lastRun')}</div>
-          </Navbar.Heading>
-          <div id={"glob-test-status"}>
-            <TestStatus status={lastRunStatus} />
-            {use_end_test_sound && (
-              <PlaySound key="sound" status={lastRunStatus} />
-            )}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: wide ? "row" : "column",
+              alignItems: "center",
+              gap: wide ? "10px" : "5px",
+            }}
+          >
+            <Navbar.Heading id={"last-exec-heading"}>
+              <div>{t("app.lastRun")}</div>
+            </Navbar.Heading>
+
+            <div id={"glob-test-status"}>
+              <TestStatus status={lastRunStatus} />
+              {use_end_test_sound && (
+                <PlaySound key="sound" status={lastRunStatus} />
+              )}
+            </div>
+            <Navbar.Divider />
+            <Navbar.Heading>
+              {t("app.duration")}: {lastRunDuration} {t("app.seconds")}
+            </Navbar.Heading>
           </div>
 
           <Navbar.Divider />
@@ -239,7 +302,7 @@ function App(): JSX.Element {
 
       {/* Tests panel */}
       <div className={Classes.DRAWER_BODY} style={{ marginBottom: "60px" }}>
-        {useRenderDb()}
+        {renderDbContent()}
       </div>
 
       {/* Footer */}
@@ -269,9 +332,7 @@ function App(): JSX.Element {
           <ProgressView percentage={lastProgress} status={lastRunStatus} />
         </div>
         <div style={{ flexDirection: "column" }}>
-          <StartStopButton
-            testing_status={lastRunStatus}
-          />
+          <StartStopButton testing_status={lastRunStatus} />
         </div>
       </div>
     </div>

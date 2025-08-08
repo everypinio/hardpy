@@ -2,7 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
-* Add the option to translate the HardPy operator panel using ISO 639 language codes..
+* Fix the display of the module duration after the operator panel has been restarted.
+  [[PR-163](https://github.com/everypinio/hardpy/pull/163)]
+* Add the display of last test run duration.
+  [[PR-163](https://github.com/everypinio/hardpy/pull/163)]
+* Add the option to translate the HardPy operator panel using ISO 639 language codes.
   [[PR-159](https://github.com/everypinio/hardpy/pull/159)]
 
 ## HardPy 0.13.0
