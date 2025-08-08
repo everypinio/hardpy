@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## HardPy 0.14.0
+
 * Add status display in words depending on the testing status.
   [[PR-165](https://github.com/everypinio/hardpy/pull/165)]
 * Add a timeout to the `load` function of the `StandCloudLoader` class.
