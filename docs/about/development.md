@@ -209,7 +209,7 @@ To add or modify translations for the HardPy operator panel:
    {
      "app": {
        "title": "HardPy Operator Panel",
-       "lastRun": "Last run:",
+       "lastLaunch": "Last launch:",
       "duration": "Duration",
       "seconds": "s",
        "soundOn": "Turn on the sound",

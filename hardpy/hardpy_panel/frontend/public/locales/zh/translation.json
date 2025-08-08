@@ -1,7 +1,7 @@
 {
   "app": {
       "title": "HardPy 操作面板",
-      "lastRun": "最后一次运行:",
+      "lastLaunch": "上次启动:",
       "duration": "持续时间",
       "seconds": "秒",
       "soundOn": "开启声音",

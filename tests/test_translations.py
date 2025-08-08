@@ -80,7 +80,7 @@ class App(BaseModel):
 
     Attributes:
         title (str): The title of the application.
-        lastRun (str): The last run time of the application.
+        lastLaunch (str): The last launch of the application.
         duration (str): The duration of the application.
         seconds (str): The text for seconds.
         soundOn (str): The text for the sound on button.
@@ -94,7 +94,7 @@ class App(BaseModel):
     """
 
     title: str
-    lastRun: str
+    lastLaunch: str
     duration: str
     seconds: str
     soundOn: str

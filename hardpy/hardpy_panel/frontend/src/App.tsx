@@ -314,7 +314,7 @@ function App(): JSX.Element {
                 whiteSpace: "nowrap",
               }}
             >
-              <div>{t("app.lastRun")}</div>
+              <div>{t("app.lastLaunch")}</div>
               <div>{getStatusText(lastRunStatus)}</div>
               <TestStatus
                 status={lastRunStatus === "unknown" ? "" : lastRunStatus}
