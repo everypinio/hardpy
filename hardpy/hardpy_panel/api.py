@@ -7,7 +7,7 @@ from enum import Enum
 from pathlib import Path
 from urllib.parse import unquote
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.staticfiles import StaticFiles
 
 from hardpy.common.config import ConfigManager
@@ -42,13 +42,24 @@ def hardpy_config() -> dict:
 
 
 @app.get("/api/start")
-def start_pytest() -> dict:
+def start_pytest(
+    param: list[str] = Query([], description="Dynamic parameters for test execution"),
+) -> dict:
     """Start pytest subprocess.
+
+    Args:
+        param: List of parameters in key=value format
 
     Returns:
         dict[str, RunStatus]: run status
     """
-    if app.state.pytest_wrp.start():
+    params_dict = {}
+    for p in param:
+        if "=" in p:
+            key, value = p.split("=", 1)
+            params_dict[key] = value
+
+    if app.state.pytest_wrp.start(start_params=params_dict):
         return {"status": Status.STARTED}
     return {"status": Status.BUSY}
 

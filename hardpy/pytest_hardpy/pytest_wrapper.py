@@ -25,7 +25,7 @@ class PyTestWrapper:
         self.config = ConfigManager().get_config()
         self.collect(is_clear_database=True)
 
-    def start(self) -> bool:
+    def start(self, start_params: list[str] | None = None) -> bool:
         """Start pytest subprocess.
 
         Returns:
@@ -37,45 +37,75 @@ class PyTestWrapper:
         if self.is_running():
             return False
 
+        base_command = [
+            self.python_executable,
+            "-m",
+            "pytest",
+            "--hardpy-db-url",
+            self.config.database.connection_url(),
+            "--hardpy-tests-name",
+            self.config.tests_name,
+            "--sc-address",
+            self.config.stand_cloud.address,
+        ]
+        if self.config.stand_cloud.connection_only:
+            base_command.append("--sc-connection-only")
+        base_command.append("--hardpy-pt")
+        if start_params:
+            for param in start_params:
+                base_command.extend(["--hardpy-start-param", param])
+
+        if system() == "Windows":
+            self._proc = subprocess.Popen(
+                base_command,
+                cwd=ConfigManager().get_tests_path(),
+                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+            )
         if system() == "Linux":
-            self._proc = subprocess.Popen(  # noqa: S603
-                [
-                    self.python_executable,
-                    "-m",
-                    "pytest",
-                    "--hardpy-db-url",
-                    self.config.database.connection_url(),
-                    "--hardpy-tests-name",
-                    self.config.tests_name,
-                    "--sc-address",
-                    self.config.stand_cloud.address,
-                    "--sc-connection-only"
-                    if self.config.stand_cloud.connection_only
-                    else "",
-                    "--hardpy-pt",
-                ],
+            self._proc = subprocess.Popen(
+                base_command,
                 cwd=ConfigManager().get_tests_path(),
             )
-        elif system() == "Windows":
-            self._proc = subprocess.Popen(  # noqa: S603
-                [
-                    self.python_executable,
-                    "-m",
-                    "pytest",
-                    "--hardpy-db-url",
-                    self.config.database.connection_url(),
-                    "--hardpy-tests-name",
-                    self.config.tests_name,
-                    "--sc-address",
-                    self.config.stand_cloud.address,
-                    "--sc-connection-only"
-                    if self.config.stand_cloud.connection_only
-                    else "",
-                    "--hardpy-pt",
-                ],
-                cwd=ConfigManager().get_tests_path(),
-                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,  # type: ignore
-            )
+
+        # if system() == "Linux":
+        #     self._proc = subprocess.Popen(  # noqa: S603
+        #         [
+        #             self.python_executable,
+        #             "-m",
+        #             "pytest",
+        #             "--hardpy-db-url",
+        #             self.config.database.connection_url(),
+        #             "--hardpy-tests-name",
+        #             self.config.tests_name,
+        #             "--sc-address",
+        #             self.config.stand_cloud.address,
+        #             "--sc-connection-only"
+        #             if self.config.stand_cloud.connection_only
+        #             else "",
+        #             "--hardpy-pt",
+        #         ],
+        #         cwd=ConfigManager().get_tests_path(),
+        #     )
+        # elif system() == "Windows":
+        #     self._proc = subprocess.Popen(  # noqa: S603
+        #         [
+        #             self.python_executable,
+        #             "-m",
+        #             "pytest",
+        #             "--hardpy-db-url",
+        #             self.config.database.connection_url(),
+        #             "--hardpy-tests-name",
+        #             self.config.tests_name,
+        #             "--sc-address",
+        #             self.config.stand_cloud.address,
+        #             "--sc-connection-only"
+        #             if self.config.stand_cloud.connection_only
+        #             else "",
+        #             "--hardpy-pt",
+        #         ],
+        #         cwd=ConfigManager().get_tests_path(),
+        #         creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,  # type: ignore
+        #     )
 
         return True
 

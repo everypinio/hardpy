@@ -98,6 +98,12 @@ def pytest_addoption(parser: Parser) -> None:
         default=con_data.sc_connection_only,
         help="check StandCloud availability",
     )
+    parser.addoption(
+        "--hardpy-start-param",
+        action="append",
+        default=[],
+        help="Dynamic parameters for test execution (key=value format)",
+    )
 
 
 # Bootstrapping hooks
