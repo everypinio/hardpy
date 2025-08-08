@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Fix logic for processing spacebar pressing.
+  [[PR-164](https://github.com/everypinio/hardpy/pull/164)]
 * Fix the display of the module duration after the operator panel has been restarted.
   [[PR-163](https://github.com/everypinio/hardpy/pull/163)]
 * Add the display of last test run duration.
