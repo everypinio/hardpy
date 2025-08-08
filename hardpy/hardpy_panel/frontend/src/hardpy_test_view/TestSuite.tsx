@@ -281,7 +281,7 @@ export class TestSuite extends React.Component<Props, State> {
           </>
         )}
 
-        <Tag minimal={true} style={{ margin: "2px", minWidth: "30px" }}>
+        <Tag minimal={true} style={{ margin: "2px", minWidth: "15px" }}>
           {"ready" != test_topics.status && (
             <RunTimer
               status={test_topics.status}
