@@ -12,11 +12,11 @@
       "dbError": "Datenbankverbindungsfehler. 🙅🏽‍♀️🚫",
       "noEntries": "Keine Einträge in der Datenbank 🙅🏽‍♀️🚫",
       "status": {
-        "ready": "BEREIT",
-        "run": "LÄUFT",
-        "passed": "BESTANDEN",
-        "failed": "FEHLGESCHLAGEN",
-        "stopped": "GESTOPPT"
+        "ready": "bereit",
+        "run": "läuft",
+        "passed": "bestanden",
+        "failed": "fehlgeschlagen",
+        "stopped": "gestoppt"
       }
   },
   "button": {

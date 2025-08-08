@@ -12,11 +12,11 @@
     "dbError": "Database connection error. 🙅🏽‍♀️🚫",
     "noEntries": "No entries in the database 🙅🏽‍♀️🚫",
     "status": {
-      "ready": "READY",
-      "run": "RUN",
-      "passed": "PASS",
-      "failed": "FAIL",
-      "stopped": "STOPPED"
+      "ready": "ready",
+      "run": "run",
+      "passed": "pass",
+      "failed": "fail",
+      "stopped": "stopped"
     }
   },
   "button": {

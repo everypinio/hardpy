@@ -257,7 +257,13 @@ function App(): JSX.Element {
       stopped: t("app.status.stopped"),
     };
 
-    return statusMap[status] || status;
+    const statusText = statusMap[status];
+
+    if (!statusText) {
+      throw new Error(`Unknown status received: ${status}`);
+    }
+
+    return statusText;
   };
 
   return (
@@ -291,26 +297,24 @@ function App(): JSX.Element {
               gap: wide ? "10px" : "5px",
             }}
           >
-            <Navbar.Heading id={"last-exec-heading"}>
-              <div>{t("app.lastRun")}</div>
-            </Navbar.Heading>
-            
-            <div 
-              id={"glob-test-status"}
+            <Navbar.Heading
+              id={"last-exec-heading"}
               style={{
+                margin: 0,
                 display: "flex",
                 alignItems: "center",
-                gap: "5px"
+                gap: "5px",
+                whiteSpace: "nowrap",
               }}
             >
-              <Navbar.Heading style={{ margin: 0 }}>
-                {getStatusText(lastRunStatus)}
-              </Navbar.Heading>
+              <div>{t("app.lastRun")}</div>
+              <div>{getStatusText(lastRunStatus)}</div>
               <TestStatus status={lastRunStatus} />
-              {use_end_test_sound && (
-                <PlaySound key="sound" status={lastRunStatus} />
-              )}
-            </div>
+            </Navbar.Heading>
+
+            {use_end_test_sound && (
+              <PlaySound key="sound" status={lastRunStatus} />
+            )}
             <Navbar.Divider />
             <Navbar.Heading>
               {t("app.duration")}: {lastRunDuration} {t("app.seconds")}

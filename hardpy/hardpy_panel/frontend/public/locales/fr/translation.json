@@ -12,11 +12,11 @@
       "dbError": "Erreur de connexion à la base de données. 🙅🏽‍♀️🚫",
       "noEntries": "Aucune entrée dans la base de données 🙅🏽‍♀️🚫",
       "status": {
-        "ready": "PRÊT",
-        "run": "EN COURS",
-        "passed": "RÉUSSI",
-        "failed": "ÉCHOUÉ",
-        "stopped": "ARRÊTÉ"
+        "ready": "prêt",
+        "run": "en cours",
+        "passed": "réussi",
+        "failed": "échoué",
+        "stopped": "arrêté"
       }
   },
   "button": {
