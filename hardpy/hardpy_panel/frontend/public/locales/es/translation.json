@@ -1,7 +1,7 @@
 {
   "app": {
       "title": "Panel de operador HardPy",
-      "lastRun": "Última ejecución:",
+      "lastLaunch": "Última lanzamiento:",
       "duration": "Duración",
       "seconds": "s",
       "soundOn": "Activar sonido",
@@ -10,7 +10,15 @@
       "debugOff": "Desactivar modo de depuración",
       "connection": "Estableciendo conexión... 🧐🔎",
       "dbError": "Error de conexión a la base de datos. 🙅🏽‍♀️🚫",
-      "noEntries": "No hay entradas en la base de datos 🙅🏽‍♀️🚫"
+      "noEntries": "No hay entradas en la base de datos 🙅🏽‍♀️🚫",
+      "status": {
+        "ready": "listo",
+        "run": "ejecutando",
+        "passed": "aprobado",
+        "failed": "fallado",
+        "stopped": "detenido",
+        "unknown": "desconocido"
+      }
   },
   "button": {
     "start": "Iniciar",

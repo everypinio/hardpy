@@ -1,7 +1,7 @@
 {
   "app": {
       "title": "HardPy Bedienfeld",
-      "lastRun": "Letzter Lauf:",
+      "lastLaunch": "Letzter Start:",
       "duration": "Dauer",
       "seconds": "s",
       "soundOn": "Ton einschalten",
@@ -10,7 +10,15 @@
       "debugOff": "Debug-Modus ausschalten",
       "connection": "Verbindung wird hergestellt... 🧐🔎",
       "dbError": "Datenbankverbindungsfehler. 🙅🏽‍♀️🚫",
-      "noEntries": "Keine Einträge in der Datenbank 🙅🏽‍♀️🚫"
+      "noEntries": "Keine Einträge in der Datenbank 🙅🏽‍♀️🚫",
+      "status": {
+        "ready": "bereit",
+        "run": "läuft",
+        "passed": "bestanden",
+        "failed": "fehlgeschlagen",
+        "stopped": "gestoppt",
+        "unknown": "unbekannt"
+      }
   },
   "button": {
     "start": "Starten",

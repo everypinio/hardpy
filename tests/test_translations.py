@@ -5,6 +5,16 @@ from typing import List
 from pydantic import BaseModel
 
 
+class AppStatus(BaseModel):
+    """A class representing application status translations."""
+    ready: str
+    run: str
+    passed: str
+    failed: str
+    stopped: str
+    unknown: str
+
+
 class OperatorDialog(BaseModel):
     """A class representing an operator dialog.
 
@@ -70,7 +80,7 @@ class App(BaseModel):
 
     Attributes:
         title (str): The title of the application.
-        lastRun (str): The last run time of the application.
+        lastLaunch (str): The last launch of the application.
         duration (str): The duration of the application.
         seconds (str): The text for seconds.
         soundOn (str): The text for the sound on button.
@@ -80,10 +90,11 @@ class App(BaseModel):
         connection (str): The connection status of the application.
         dbError (str): The database error message.
         noEntries (str): The message for no entries in the database.
+        status (AppStatus): The status of the application.
     """
 
     title: str
-    lastRun: str
+    lastLaunch: str
     duration: str
     seconds: str
     soundOn: str
@@ -93,6 +104,7 @@ class App(BaseModel):
     connection: str
     dbError: str
     noEntries: str
+    status: AppStatus
 
 
 class SuiteList(BaseModel):

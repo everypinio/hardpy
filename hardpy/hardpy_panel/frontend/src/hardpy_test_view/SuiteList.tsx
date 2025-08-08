@@ -162,11 +162,6 @@ export class SuiteList extends React.Component<
               {t("suiteList.standName")}: {db_state.test_stand?.name}
             </Tag>
           )}
-          {db_state.status && (
-            <Tag minimal style={TAG_ELEMENT_STYLE}>
-              {t("suiteList.status")}: {db_state.status}
-            </Tag>
-          )}
           {start && (
             <Tag minimal style={TAG_ELEMENT_STYLE}>
               {t("suiteList.startTime")}: {start + start_tz}

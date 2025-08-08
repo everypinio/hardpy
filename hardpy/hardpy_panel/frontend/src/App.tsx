@@ -34,6 +34,23 @@ const WINDOW_WIDTH_THRESHOLDS = {
   WIDE: 400,
 };
 
+const STATUS_MAP = {
+  ready: "app.status.ready",
+  run: "app.status.run",
+  passed: "app.status.passed",
+  failed: "app.status.failed",
+  stopped: "app.status.stopped",
+} as const;
+
+type StatusKey = keyof typeof STATUS_MAP;
+
+/**
+ * Checks if the provided status is a valid status key.
+ */
+const isValidStatus = (status: string): status is StatusKey => {
+  return status in STATUS_MAP;
+};
+
 /**
  * Main component of the GUI.
  * @returns {JSX.Element} The main application component.
@@ -43,7 +60,9 @@ function App(): JSX.Element {
   const [use_end_test_sound, setUseEndTestSound] = React.useState(false);
   const [use_debug_info, setUseDebugInfo] = React.useState(false);
 
-  const [lastRunStatus, setLastRunStatus] = React.useState("");
+  const [lastRunStatus, setLastRunStatus] = React.useState<
+    StatusKey | "unknown"
+  >("ready");
   const [lastProgress, setProgress] = React.useState(0);
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
   const [lastRunDuration, setLastRunDuration] = React.useState<number>(0);
@@ -117,7 +136,7 @@ function App(): JSX.Element {
     const progress = db_row.progress || 0;
 
     if (status !== lastRunStatus) {
-      setLastRunStatus(status);
+      setLastRunStatus(isValidStatus(status) ? status : "unknown");
     }
 
     if (progress !== lastProgress) {
@@ -243,11 +262,22 @@ function App(): JSX.Element {
     );
   };
 
+  /**
+   * Renders the status of the test run.
+   * @param status - The status to render.
+   * @returns {string} The status text.
+   */
+  const getStatusText = (status: StatusKey | "unknown"): string => {
+    if (status === "unknown") {
+      console.error("Unknown status encountered");
+      return t("app.status.unknown") || "Unknown status";
+    }
+    return t(STATUS_MAP[status]);
+  };
+
   return (
-    <div className="App" style={{ minWidth: "310px", margin: "auto" }}>
-      {/* Popout elements */}
+    <div className="App">
       <ReloadAlert reload_timeout_s={3} />
-      {/* <Notification /> */}
 
       {/* Header */}
       <Navbar
@@ -274,16 +304,26 @@ function App(): JSX.Element {
               gap: wide ? "10px" : "5px",
             }}
           >
-            <Navbar.Heading id={"last-exec-heading"}>
-              <div>{t("app.lastRun")}</div>
+            <Navbar.Heading
+              id={"last-exec-heading"}
+              style={{
+                margin: 0,
+                display: "flex",
+                alignItems: "center",
+                gap: "5px",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <div>{t("app.lastLaunch")}</div>
+              <div>{getStatusText(lastRunStatus)}</div>
+              <TestStatus
+                status={lastRunStatus === "unknown" ? "" : lastRunStatus}
+              />
             </Navbar.Heading>
 
-            <div id={"glob-test-status"}>
-              <TestStatus status={lastRunStatus} />
-              {use_end_test_sound && (
-                <PlaySound key="sound" status={lastRunStatus} />
-              )}
-            </div>
+            {use_end_test_sound && (
+              <PlaySound key="sound" status={lastRunStatus} />
+            )}
             <Navbar.Divider />
             <Navbar.Heading>
               {t("app.duration")}: {lastRunDuration} {t("app.seconds")}

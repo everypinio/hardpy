@@ -209,7 +209,7 @@ To add or modify translations for the HardPy operator panel:
    {
      "app": {
        "title": "HardPy Operator Panel",
-       "lastRun": "Last run:",
+       "lastLaunch": "Last launch:",
       "duration": "Duration",
       "seconds": "s",
        "soundOn": "Turn on the sound",
@@ -218,7 +218,15 @@ To add or modify translations for the HardPy operator panel:
        "debugOff": "Turn off the debug mode",
        "connection": "Establishing a connection... 🧐🔎",
        "dbError": "Database connection error. 🙅🏽‍♀️🚫",
-       "noEntries": "No entries in the database 🙅🏽‍♀️🚫"
+       "noEntries": "No entries in the database 🙅🏽‍♀️🚫",
+       "status": {
+         "ready": "ready",
+         "run": "run",
+         "passed": "pass",
+         "failed": "fail",
+         "stopped": "stopped",
+         "unknown": "unknown"
+       }
      },
      "button": {
        "start": "Start",
