@@ -32,11 +32,13 @@ class StandCloudLoader:
         sc_addr = address if address else connection_data.sc_address
         self._sc_connector = StandCloudConnector(sc_addr)
 
-    def load(self, report: ResultRunStore) -> Response:
+    def load(self, report: ResultRunStore, timeout: int = 20) -> Response:
         """Load report to the StandCloud.
 
         Args:
             report (ResultRunStore): report
+            timeout (int, optional): post timeout in seconds. Defaults to 20.
+                                    High timeout value on poor network connections.
 
         Returns:
             Response: StandCloud load response, must be 201
@@ -47,7 +49,11 @@ class StandCloudLoader:
         api = self._sc_connector.get_api("test_report")
 
         try:
-            resp = api.post(verify=self._verify_ssl, json=report.model_dump())
+            resp = api.post(
+                verify=self._verify_ssl,
+                json=report.model_dump(),
+                timeout=timeout,
+            )
         except RuntimeError as exc:
             raise StandCloudError(str(exc)) from exc
         except OAuth2Error as exc:
