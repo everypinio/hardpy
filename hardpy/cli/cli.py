@@ -169,37 +169,6 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
         log_level="critical",
     )
 
-
-# @cli.command()
-# def start(
-#     tests_dir: Annotated[Optional[str], typer.Argument()] = None,
-#     param: list[str] = typer.Option(  # noqa: B008
-#         [],
-#         "--param",
-#         "-p",
-#         help="Dynamic start parameters (format: key=value)",
-#     ),
-# ) -> None:
-#     """Start HardPy tests.
-
-#     Args:
-#         tests_dir (Optional[str]): Test directory. Current directory by default
-#         param (list[str]): Dynamic parameters for test execution
-#     """
-#     if param is None:
-#         param = typer.Option(
-#             [],
-#             "--param",
-#             "-p",
-#             help="Dynamic start parameters (format: key=value)",
-#         )
-#     config = _get_config(tests_dir)
-#     _check_config(config)
-
-
-#     query_params = "&".join([f"param={urllib.parse.quote(p)}" for p in param])
-#     url = f"http://{config.frontend.host}:{config.frontend.port}/api/start?{query_params}"
-#     _request_hardpy(url)
 @cli.command()
 def start(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
     """Start HardPy tests.

@@ -44,7 +44,7 @@ def hardpy_config() -> dict:
 
 @app.get("/api/start")
 def start_pytest(
-    param: Annotated[
+    params: Annotated[
         list[str] | None,  # noqa: FA102
         Query(description="Dynamic parameters for test execution")
     ] = None,
@@ -57,7 +57,7 @@ def start_pytest(
     Returns:
         dict[str, RunStatus]: run status
     """
-    if param is None:
+    if params is None:
         param = []
     params_dict = {}
     for p in param:
