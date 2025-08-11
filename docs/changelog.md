@@ -2,6 +2,14 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Update database schema by some tables: **Process**, **Instrument**, **NumericMeasurement**.
+* [[PR-162](https://github.com/everypinio/hardpy/pull/162)]
+* Update database schema by some fields: **user**, **batch_serial_number**, **caused_dut_failure_id**, **error_code**
+  **process**, **revision**, **instruments**, **group**, **numeric_measurements**.
+  [[PR-162](https://github.com/everypinio/hardpy/pull/162)]
+* Add the `caused_dut_failure_id` logic to the filling process.
+  [[PR-162](https://github.com/everypinio/hardpy/pull/162)]
+
 ## HardPy 0.14.0
 
 * Add status display in words depending on the testing status.
