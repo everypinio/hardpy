@@ -3,15 +3,16 @@
 from __future__ import annotations
 
 from datetime import datetime  # noqa: TC003
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from hardpy.pytest_hardpy.utils import (
-    CompOp,
-    Group,
-    TestStatus as Status,
-)
+if TYPE_CHECKING:
+    from hardpy.pytest_hardpy.utils import (
+        CompOp,
+        Group,
+        TestStatus as Status,
+    )
 
 
 class IBaseResult(BaseModel):
