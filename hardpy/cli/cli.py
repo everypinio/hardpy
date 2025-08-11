@@ -5,7 +5,7 @@ from __future__ import annotations
 import socket
 import sys
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated, List, Optional
 
 import requests
 import typer
@@ -172,12 +172,7 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
 @cli.command()
 def start(
     tests_dir: Annotated[Optional[str], typer.Argument()] = None,
-    param: list[str] = typer.Option(
-        [],
-        "--param",
-        "-p",
-        help="Dynamic start parameters (format: key=value)",
-    ),
+    param: List[str] = None,
 ) -> None:
     """Start HardPy tests.
 
@@ -185,11 +180,16 @@ def start(
         tests_dir (Optional[str]): Test directory. Current directory by default
         param (list[str]): Dynamic parameters for test execution
     """
+    if param is None:
+        param = typer.Option(
+            [],
+            "--param",
+            "-p",
+            help="Dynamic start parameters (format: key=value)",
+        )
     config = _get_config(tests_dir)
     _check_config(config)
 
-    # url = f"http://{config.frontend.host}:{config.frontend.port}/api/start"
-    # _request_hardpy(url)
     query_params = "&".join([f"param={p}" for p in param])
     url = f"http://{config.frontend.host}:{config.frontend.port}/api/start?{query_params}"
     _request_hardpy(url)

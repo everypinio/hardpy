@@ -67,46 +67,6 @@ class PyTestWrapper:
                 cwd=ConfigManager().get_tests_path(),
             )
 
-        # if system() == "Linux":
-        #     self._proc = subprocess.Popen(  # noqa: S603
-        #         [
-        #             self.python_executable,
-        #             "-m",
-        #             "pytest",
-        #             "--hardpy-db-url",
-        #             self.config.database.connection_url(),
-        #             "--hardpy-tests-name",
-        #             self.config.tests_name,
-        #             "--sc-address",
-        #             self.config.stand_cloud.address,
-        #             "--sc-connection-only"
-        #             if self.config.stand_cloud.connection_only
-        #             else "",
-        #             "--hardpy-pt",
-        #         ],
-        #         cwd=ConfigManager().get_tests_path(),
-        #     )
-        # elif system() == "Windows":
-        #     self._proc = subprocess.Popen(  # noqa: S603
-        #         [
-        #             self.python_executable,
-        #             "-m",
-        #             "pytest",
-        #             "--hardpy-db-url",
-        #             self.config.database.connection_url(),
-        #             "--hardpy-tests-name",
-        #             self.config.tests_name,
-        #             "--sc-address",
-        #             self.config.stand_cloud.address,
-        #             "--sc-connection-only"
-        #             if self.config.stand_cloud.connection_only
-        #             else "",
-        #             "--hardpy-pt",
-        #         ],
-        #         cwd=ConfigManager().get_tests_path(),
-        #         creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,  # type: ignore
-        #     )
-
         return True
 
     def stop(self) -> bool:
