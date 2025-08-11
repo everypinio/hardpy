@@ -5,7 +5,7 @@ from __future__ import annotations
 import socket
 import sys
 from pathlib import Path
-from typing import Annotated, List, Optional
+from typing import Annotated, Optional
 
 import requests
 import typer
@@ -172,7 +172,7 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
 @cli.command()
 def start(
     tests_dir: Annotated[Optional[str], typer.Argument()] = None,
-    param: List[str] = None,
+    param: list[str] = None,  # noqa: RUF013
 ) -> None:
     """Start HardPy tests.
 

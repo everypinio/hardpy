@@ -56,13 +56,13 @@ class PyTestWrapper:
                 base_command.extend(["--hardpy-start-param", param])
 
         if system() == "Windows":
-            self._proc = subprocess.Popen(
+            self._proc = subprocess.Popen(  # noqa: S603
                 base_command,
                 cwd=ConfigManager().get_tests_path(),
                 creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
             )
         if system() == "Linux":
-            self._proc = subprocess.Popen(
+            self._proc = subprocess.Popen(  # noqa: S603
                 base_command,
                 cwd=ConfigManager().get_tests_path(),
             )
