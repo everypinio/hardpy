@@ -3,6 +3,7 @@
 
 import React, { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
+import { useTranslation } from "react-i18next";
 
 import PouchDB from "pouchdb-browser";
 import { Provider } from "use-pouchdb";
@@ -11,8 +12,20 @@ import { Provider } from "use-pouchdb";
 import "normalize.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
+import './i18n';
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+
+function ErrorMessage() {
+  const { t } = useTranslation();
+  
+  return (
+    <div style={{ padding: '20px', textAlign: 'center' }}>
+      <h1>{t('error.dbConnectionTitle')}</h1>
+      <p>{t('error.dbConnectionMessage')}</p>
+    </div>
+  );
+}
 
 /**
  * Fetches the synchronization URL for PouchDB from the backend API.
@@ -57,10 +70,9 @@ if (syncURL !== undefined) {
    * Renders an error message if the PouchDB sync URL could not be retrieved.
    */
   root.render(
-    <>
-      <h1>No PouchDB sync URL</h1>
-      <p>Getting the URL from a backend was failed</p>
-    </>
+    <StrictMode>
+      <ErrorMessage />
+    </StrictMode>
   );
 }
 

@@ -14,10 +14,8 @@ import {
 import _, { Dictionary } from "lodash";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { LoadingOutlined } from "@ant-design/icons";
-import {
-  StartConfirmationDialog,
-  WidgetType,
-} from "./DialogBox";
+import { StartConfirmationDialog, WidgetType } from "./DialogBox";
+import { withTranslation, WithTranslation } from "react-i18next";
 
 import { TestNumber } from "./TestNumber";
 import { TestName } from "./TestName";
@@ -85,13 +83,12 @@ type Props = {
   test: TestItem;
   defaultOpen: boolean;
   commonTestRunStatus: string | undefined;
-};
+} & WithTranslation;
 
 type State = {
   isOpen: boolean;
 };
 
-const SUITE_NAME_STUB = "Lorem ipsum";
 const LOADING_ICON_MARGIN = 30;
 
 /**
@@ -114,6 +111,11 @@ export class TestSuite extends React.Component<Props, State> {
    * @returns {React.ReactElement} The rendered component.
    */
   render(): React.ReactElement {
+    const { t, i18n } = this.props;
+
+    if (!i18n?.isInitialized) {
+      return <div>{t("testSuite.loading")}</div>;
+    }
     return (
       <Callout style={{ padding: 0, borderRadius: 0 }} className="test-suite">
         <div style={{ display: "flex" }}>
@@ -188,7 +190,7 @@ export class TestSuite extends React.Component<Props, State> {
         {<span className={Classes.TEXT_DISABLED}>{test_number}</span>}
         {
           <span style={{ marginLeft: "0.5em" }}>
-            {is_loading ? SUITE_NAME_STUB : name}
+            {is_loading ? this.props.t("testSuite.stubName") : name}
           </span>
         }
       </H4>
@@ -228,14 +230,14 @@ export class TestSuite extends React.Component<Props, State> {
       },
       {
         id: "name",
-        name: "Name",
+        name: this.props.t("testSuite.nameColumn"),
         selector: (row) => row,
         cell: this.cellRendererName.bind(this, case_array),
-        grow: 6,  
+        grow: 6,
       },
       {
         id: "data",
-        name: "Data",
+        name: this.props.t("testSuite.dataColumn"),
         selector: (row) => row,
         cell: this.cellRendererData.bind(this, case_array),
         grow: 18,
@@ -279,11 +281,13 @@ export class TestSuite extends React.Component<Props, State> {
           </>
         )}
 
-        <Tag minimal={true} style={{ margin: "2px", minWidth: "30px" }}>
+        <Tag minimal={true} style={{ margin: "2px", minWidth: "15px" }}>
           {"ready" != test_topics.status && (
             <RunTimer
               status={test_topics.status}
               commonTestRunStatus={this.props.commonTestRunStatus}
+              start_time={test_topics.start_time}
+              stop_time={test_topics.stop_time}
             />
           )}
         </Tag>
@@ -453,4 +457,5 @@ TestSuite.defaultProps = {
   defaultOpen: true,
 };
 
-export default TestSuite;
+const TestSuiteComponent = withTranslation()(TestSuite);
+export { TestSuiteComponent };

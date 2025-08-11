@@ -128,3 +128,8 @@ plugins:
         - "*.pdf"
 
   - print-site
+
+extra:
+  analytics:
+    provider: google
+    property: G-6Z35DZJBP7

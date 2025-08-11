@@ -2,6 +2,21 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## HardPy 0.14.0
+
+* Add status display in words depending on the testing status.
+  [[PR-165](https://github.com/everypinio/hardpy/pull/165)]
+* Add a timeout to the `load` function of the `StandCloudLoader` class.
+  [[PR-166](https://github.com/everypinio/hardpy/pull/166)]
+* Fix logic for processing spacebar pressing.
+  [[PR-164](https://github.com/everypinio/hardpy/pull/164)]
+* Fix the display of the module duration after the operator panel has been restarted.
+  [[PR-163](https://github.com/everypinio/hardpy/pull/163)]
+* Add the display of last test run duration.
+  [[PR-163](https://github.com/everypinio/hardpy/pull/163)]
+* Add the option to translate the HardPy operator panel using ISO 639 language codes.
+  [[PR-159](https://github.com/everypinio/hardpy/pull/159)]
+
 ## HardPy 0.13.0
 
 * Change CI settings, add testing of tests on different versions of packages.
