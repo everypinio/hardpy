@@ -5,6 +5,7 @@ import os
 import re
 from enum import Enum
 from pathlib import Path
+from typing import Annotated
 from urllib.parse import unquote
 
 from fastapi import FastAPI, Query
@@ -43,7 +44,10 @@ def hardpy_config() -> dict:
 
 @app.get("/api/start")
 def start_pytest(
-    param: list[str] = Query([], description="Dynamic parameters for test execution"),
+    param: Annotated[
+        list[str],
+        Query([], description="Dynamic parameters for test execution"),
+    ],
 ) -> dict:
     """Start pytest subprocess.
 
