@@ -45,9 +45,9 @@ def hardpy_config() -> dict:
 @app.get("/api/start")
 def start_pytest(
     param: Annotated[
-        list[str],
-        Query([], description="Dynamic parameters for test execution"),
-    ],
+        list[str] | None,  # noqa: FA102
+        Query(description="Dynamic parameters for test execution")
+    ] = None,
 ) -> dict:
     """Start pytest subprocess.
 
@@ -57,6 +57,8 @@ def start_pytest(
     Returns:
         dict[str, RunStatus]: run status
     """
+    if param is None:
+        param = []
     params_dict = {}
     for p in param:
         if "=" in p:
