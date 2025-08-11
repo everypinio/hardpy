@@ -97,6 +97,7 @@ It is a computer on which **HardPy** is running and to which the DUT test equipm
 - **name**: test stand name. It can only be set once per test run.
   The user can specify the stand name by using [set_stand_name](./pytest_hardpy.md#set_stand_name) function.
 - **revision** test stand revision. It can only be set once per test run.
+  The user can specify the stand revision by using [set_stand_revision](./pytest_hardpy.md#set_stand_revision) function.
 - **drivers**: **DEPRECATED, DO NOT USE IT**.
   Information about drivers in the form of a dictionary, including test equipment and test equipment software.
 - **instruments**: list of information about the instruments (i.e. equipment) that form part of the test bench.
