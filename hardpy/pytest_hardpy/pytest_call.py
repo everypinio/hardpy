@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from inspect import stack
 from os import environ
 from time import sleep
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from uuid import uuid4
 
 from pycouchdb.exceptions import NotFound
@@ -29,6 +29,10 @@ from hardpy.pytest_hardpy.utils import (
     ImageComponent,
     TestStandNumberError,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+    from datetime import datetime
 
 
 @dataclass
@@ -56,11 +60,11 @@ def get_current_report() -> ResultRunStore | None:
         return None
 
 
-def set_dut_info(info: dict) -> None:
-    """Add DUT info to document.
+def set_dut_info(info: Mapping[str, str | int | float | datetime]) -> None:
+    """Set DUT info to document.
 
     Args:
-        info (dict): DUT info
+        info (Mapping): DUT info
     """
     reporter = RunnerReporter()
     for dut_key, dut_value in info.items():

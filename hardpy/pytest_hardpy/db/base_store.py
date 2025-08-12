@@ -91,17 +91,28 @@ class BaseStore(BaseConnector):
                 "_id": self._doc_id,
                 DF.MODULES: {},
                 DF.DUT: {
+                    DF.TYPE: None,
+                    DF.NAME: None,
+                    DF.REVISION: None,
                     DF.SERIAL_NUMBER: None,
                     DF.PART_NUMBER: None,
+                    DF.SUB_DUTS: [],
                     DF.INFO: {},
                 },
                 DF.TEST_STAND: {
                     DF.HW_ID: None,
                     DF.NAME: None,
+                    DF.REVISION: None,
                     DF.TIMEZONE: None,
                     DF.LOCATION: None,
                     DF.NUMBER: None,
+                    DF.INSTRUMENTS: [],
                     DF.DRIVERS: {},
+                    DF.INFO: {},
+                },
+                DF.PROCESS: {
+                    DF.NAME: None,
+                    DF.NUMBER: None,
                     DF.INFO: {},
                 },
             }
@@ -111,18 +122,30 @@ class BaseStore(BaseConnector):
             doc[DF.MODULES] = {}
 
         doc[DF.DUT] = {
+            DF.TYPE: None,
+            DF.NAME: None,
+            DF.REVISION: None,
             DF.SERIAL_NUMBER: None,
             DF.PART_NUMBER: None,
+            DF.SUB_DUTS: [],
             DF.INFO: {},
         }
 
         doc[DF.TEST_STAND] = {
             DF.HW_ID: None,
             DF.NAME: None,
+            DF.REVISION: None,
             DF.TIMEZONE: None,
             DF.LOCATION: None,
             DF.NUMBER: None,
+            DF.INSTRUMENTS: [],
             DF.DRIVERS: {},
+            DF.INFO: {},
+        }
+
+        doc[DF.PROCESS] = {
+            DF.NAME: None,
+            DF.NUMBER: None,
             DF.INFO: {},
         }
 

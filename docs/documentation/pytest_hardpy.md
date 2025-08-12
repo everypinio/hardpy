@@ -137,6 +137,8 @@ def test_stand_number():
 
 #### set_driver_info
 
+**DEPRECATED, DO NOT USE IT.**
+
 The function records a dictionary containing information about the test stand driver.
 The data is updated with new information each time the function is called.
 
