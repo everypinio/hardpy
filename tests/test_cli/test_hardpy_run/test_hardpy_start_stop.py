@@ -48,12 +48,12 @@ def start_params(request):
 import time
 
 def test_api_parameters(start_params):
-    time.sleep(15)
-    assert True
-    # assert "test_id" in start_params, "test_id not found"
-    # assert "env" in start_params, "env not found"
-    # assert start_params["test_id"] == "123"
-    # assert start_params["env"] == "prod"
+    # time.sleep(15)
+    # assert True
+    assert "test_id" in start_params, "test_id not found"
+    assert "env" in start_params, "env not found"
+    assert start_params["test_id"] == "123"
+    assert start_params["env"] == "prod"
 """)
 
     # Create empty __init__.py to mark as package
@@ -117,6 +117,34 @@ def test_hardpy_stop(process_killer: NoneType, test_project: Path):
     )
     assert start_response.status_code == 200, "Test start failed"
 
+    while True:
+        status_response = requests.get(API_STATUS_URL, timeout=5)
+        status = status_response.json()
+        if status["status"] == "ready":
+            break
+        time.sleep(1)
+
+
+def test_hardpy_start_with_params(process_killer: NoneType, test_project: Path):
+    """Test that parameters are correctly passed via API."""
+    # Start HardPy server
+    server_process = subprocess.Popen(
+        [*HARDPY_RUN_CMD, str(test_project)],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    time.sleep(3)  # Wait for server initialization
+
+    # Verify server is running
+    status = requests.get(API_STATUS_URL, timeout=5).json()
+    assert status["status"] == "ready", "Server not ready"
+
+    start_response = requests.get(
+        f"{API_START_URL}?params=test_id=123&params=env=prod",
+        timeout=5,
+    )
+    assert start_response.status_code == 200, "Test start failed"
+    time.sleep(5)
     while True:
         status_response = requests.get(API_STATUS_URL, timeout=5)
         status = status_response.json()

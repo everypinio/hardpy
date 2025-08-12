@@ -58,9 +58,9 @@ def start_pytest(
         dict[str, RunStatus]: run status
     """
     if params is None:
-        param = []
+        params = []
     params_dict = {}
-    for p in param:
+    for p in params:
         if "=" in p:
             key, value = p.split("=", 1)
             params_dict[key] = value
