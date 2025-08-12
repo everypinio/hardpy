@@ -174,7 +174,7 @@ def start(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
     """Start HardPy tests.
 
     Args:
-        tests_dir (Optional[str]): Test directory. Current directory by default
+        tests_dir (Optional[str]): Test directory. Current directory by default.
     """
     config = _get_config(tests_dir)
     _check_config(config)

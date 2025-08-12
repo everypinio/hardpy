@@ -5,9 +5,10 @@ import os
 import re
 from enum import Enum
 from pathlib import Path
+from typing import Annotated
 from urllib.parse import unquote
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.staticfiles import StaticFiles
 
 from hardpy.common.config import ConfigManager
@@ -42,13 +43,29 @@ def hardpy_config() -> dict:
 
 
 @app.get("/api/start")
-def start_pytest() -> dict:
+def start_pytest(
+    params: Annotated[
+        list[str] | None,  # noqa: FA102
+        Query(description="Dynamic parameters for test execution"),
+    ] = None,
+) -> dict:
     """Start pytest subprocess.
+
+    Args:
+        params: List of parameters in key=value format
 
     Returns:
         dict[str, RunStatus]: run status
     """
-    if app.state.pytest_wrp.start():
+    if params is None:
+        params = []
+    params_dict = {}
+    for p in params:
+        if "=" in p:
+            key, value = p.split("=", 1)
+            params_dict[key] = value
+
+    if app.state.pytest_wrp.start(start_params=params_dict):
         return {"status": Status.STARTED}
     return {"status": Status.BUSY}
 
