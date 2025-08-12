@@ -46,13 +46,13 @@ def hardpy_config() -> dict:
 def start_pytest(
     params: Annotated[
         list[str] | None,  # noqa: FA102
-        Query(description="Dynamic parameters for test execution")
+        Query(description="Dynamic parameters for test execution"),
     ] = None,
 ) -> dict:
     """Start pytest subprocess.
 
     Args:
-        param: List of parameters in key=value format
+        params: List of parameters in key=value format
 
     Returns:
         dict[str, RunStatus]: run status

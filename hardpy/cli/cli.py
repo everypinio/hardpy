@@ -9,7 +9,6 @@ from typing import Annotated, Optional
 
 import requests
 import typer
-import urllib
 from uvicorn import run as uvicorn_run
 
 from hardpy.cli.template import TemplateGenerator
@@ -168,6 +167,7 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
         port=config.frontend.port,
         log_level="critical",
     )
+
 
 @cli.command()
 def start(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
