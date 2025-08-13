@@ -20,11 +20,19 @@ from hardpy.pytest_hardpy.db import (
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
     DialogBox,
+    DuplicateBatchSerialNumberError,
+    DuplicateDutNameError,
+    DuplicateDutRevisionError,
+    DuplicateDutTypeError,
     DuplicatePartNumberError,
+    DuplicateProcessNameError,
+    DuplicateProcessNumberError,
     DuplicateSerialNumberError,
+    DuplicateStandRevisionError,
     DuplicateTestStandLocationError,
     DuplicateTestStandNameError,
     DuplicateTestStandNumberError,
+    DuplicateUserNameError,
     HTMLComponent,
     ImageComponent,
     TestStandNumberError,
@@ -43,6 +51,17 @@ class CurrentTestInfo:
     case_id: str
 
 
+@dataclass
+class Instrument:
+    """Instrument information dataclass."""
+
+    name: str | None = None
+    revision: str | None = None
+    number: int | None = None
+    comment: str | None = None
+    info: Mapping[str, str | int | float | datetime] | None = None
+
+
 def get_current_report() -> ResultRunStore | None:
     """Get current report from runstore database.
 
@@ -58,6 +77,40 @@ def get_current_report() -> ResultRunStore | None:
         return None
     except TypeError:
         return None
+
+
+def set_user_name(name: str) -> None:
+    """Set operator panel user name.
+
+    Args:
+        name (str): user name
+
+    Raises:
+        DuplicateUserNameError: if user name is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.USER)
+    if reporter.get_field(key):
+        raise DuplicateUserNameError
+    reporter.set_doc_value(key, name)
+    reporter.update_db_by_doc()
+
+
+def set_batch_serial_number(serial_number: str) -> None:
+    """Add batch serial number to document.
+
+    Args:
+        serial_number (str): batch serial number
+
+    Raises:
+        DuplicateBatchSerialNumberError: if batch serial number is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.BATCH_SN)
+    if reporter.get_field(key):
+        raise DuplicateBatchSerialNumberError
+    reporter.set_doc_value(key, serial_number)
+    reporter.update_db_by_doc()
 
 
 def set_dut_info(info: Mapping[str, str | int | float | datetime]) -> None:
@@ -110,6 +163,57 @@ def set_dut_part_number(part_number: str) -> None:
     reporter.update_db_by_doc()
 
 
+def set_dut_name(name: str) -> None:
+    """Set DUT name to document.
+
+    Args:
+        name (str): DUT name
+
+    Raises:
+        DuplicateDutNameError: if DUT name is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.DUT, DF.NAME)
+    if reporter.get_field(key):
+        raise DuplicateDutNameError
+    reporter.set_doc_value(key, name)
+    reporter.update_db_by_doc()
+
+
+def set_dut_type(dut_type: str) -> None:
+    """Set DUT type to document.
+
+    Args:
+        dut_type (str): DUT type
+
+    Raises:
+        DuplicateDutTypeError: if DUT type is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.DUT, DF.TYPE)
+    if reporter.get_field(key):
+        raise DuplicateDutTypeError
+    reporter.set_doc_value(key, dut_type)
+    reporter.update_db_by_doc()
+
+
+def set_dut_revision(revision: str) -> None:
+    """Set DUT revision to document.
+
+    Args:
+        revision (str): DUT revision
+
+    Raises:
+        DuplicateDutRevisionError: if DUT revision is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.DUT, DF.REVISION)
+    if reporter.get_field(key):
+        raise DuplicateDutRevisionError
+    reporter.set_doc_value(key, revision)
+    reporter.update_db_by_doc()
+
+
 def set_stand_name(name: str) -> None:
     """Add test stand name to document.
 
@@ -127,12 +231,13 @@ def set_stand_name(name: str) -> None:
     reporter.update_db_by_doc()
 
 
-def set_stand_info(info: dict) -> None:
+def set_stand_info(info: Mapping[str, str | int | float | datetime]) -> None:
     """Add test stand info to document.
 
     Args:
-        info (dict): test stand info
-    """
+        info (Mapping[str, str | int | float | datetime]): test stand info as a mapping
+            where keys are strings and values can be strings, integers, floats or datetime objects
+    """  # noqa: E501
     reporter = RunnerReporter()
     for stand_key, stand_value in info.items():
         key = reporter.generate_key(DF.TEST_STAND, DF.INFO, stand_key)
@@ -174,6 +279,23 @@ def set_stand_number(number: int) -> None:
     if reporter.get_field(key):
         raise DuplicateTestStandNumberError
     reporter.set_doc_value(key, number)
+    reporter.update_db_by_doc()
+
+
+def set_stand_revision(revision: str) -> None:
+    """Add test stand revision to document.
+
+    Args:
+        revision (str): test stand revision
+
+    Raises:
+        DuplicateStandRevisionError: if test stand revision is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.TEST_STAND, DF.REVISION)
+    if reporter.get_field(key):
+        raise DuplicateStandRevisionError
+    reporter.set_doc_value(key, revision)
     reporter.update_db_by_doc()
 
 
@@ -292,6 +414,83 @@ def set_driver_info(drivers: dict) -> None:
             driver_name,
         )
         reporter.set_doc_value(key, driver_data)
+    reporter.update_db_by_doc()
+
+
+def set_instrument(
+    name: str | None = None,
+    revision: str | None = None,
+    number: int | None = None,
+    comment: str | None = None,
+    info: Mapping[str, str | int | float | datetime] | None = None,
+) -> None:
+    """Add instrument to test stand instruments list.
+
+    Args:
+        name (str | None): instrument name
+        revision (str | None): instrument revision
+        number (int | None): instrument number
+        comment (str | None): instrument comment
+        info (Mapping | None): additional instrument info
+    """
+    instrument = Instrument(
+        name=name, revision=revision, number=number, comment=comment, info=info
+    )
+
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.TEST_STAND, DF.INSTRUMENTS)
+
+    instruments = reporter.get_field(key) or []
+    instruments.append({k: v for k, v in vars(instrument).items() if v is not None})
+
+    reporter.set_doc_value(key, instruments)
+    reporter.update_db_by_doc()
+
+
+def set_process_name(name: str) -> None:
+    """Set process name to document.
+
+    Args:
+        name (str): process name
+
+    Raises:
+        DuplicateProcessNameError: if process name is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.PROCESS, DF.NAME)
+    if reporter.get_field(key):
+        raise DuplicateProcessNameError
+    reporter.set_doc_value(key, name)
+    reporter.update_db_by_doc()
+
+
+def set_process_number(number: int) -> None:
+    """Set process number to document.
+
+    Args:
+        number (int): process number
+
+    Raises:
+        DuplicateProcessNumberError: if process number is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.PROCESS, DF.NUMBER)
+    if reporter.get_field(key):
+        raise DuplicateProcessNumberError
+    reporter.set_doc_value(key, number)
+    reporter.update_db_by_doc()
+
+
+def set_process_info(info: Mapping[str, str | int | float | datetime]) -> None:
+    """Set process info to document.
+
+    Args:
+        info (Mapping): process info
+    """
+    reporter = RunnerReporter()
+    for key, value in info.items():
+        full_key = reporter.generate_key(DF.PROCESS, DF.INFO, key)
+        reporter.set_doc_value(full_key, value)
     reporter.update_db_by_doc()
 
 

@@ -44,6 +44,62 @@ class DuplicateTestStandNumberError(HardpyError):
         super().__init__(self.__doc__)  # type: ignore
 
 
+class DuplicateUserNameError(HardpyError):
+    """The user name has already been determined."""
+
+    def __init__(self) -> None:
+        super().__init__(self.__doc__)  # type: ignore
+
+
+class DuplicateBatchSerialNumberError(HardpyError):
+    """The batch serial number has already been determined."""
+
+    def __init__(self) -> None:
+        super().__init__(self.__doc__)  # type: ignore
+
+
+class DuplicateDutNameError(HardpyError):
+    """The DUT name has already been determined."""
+
+    def __init__(self) -> None:
+        super().__init__(self.__doc__)  # type: ignore
+
+
+class DuplicateDutTypeError(HardpyError):
+    """The DUT type has already been determined."""
+
+    def __init__(self) -> None:
+        super().__init__(self.__doc__)  # type: ignore
+
+
+class DuplicateDutRevisionError(HardpyError):
+    """The DUT revision has already been determined."""
+
+    def __init__(self) -> None:
+        super().__init__(self.__doc__)  # type: ignore
+
+
+class DuplicateStandRevisionError(HardpyError):
+    """The test stand revision has already been determined."""
+
+    def __init__(self) -> None:
+        super().__init__(self.__doc__)  # type: ignore
+
+
+class DuplicateProcessNameError(HardpyError):
+    """The process name has already been determined."""
+
+    def __init__(self) -> None:
+        super().__init__(self.__doc__)  # type: ignore
+
+
+class DuplicateProcessNumberError(HardpyError):
+    """The process number has already been determined."""
+
+    def __init__(self) -> None:
+        super().__init__(self.__doc__)  # type: ignore
+
+
 class TestStandNumberError(HardpyError):
     """The test stand number is in the incorrect format."""
 

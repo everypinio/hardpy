@@ -26,6 +26,40 @@ If tests are run via [hardpy panel](hardpy_panel.md), then the pytest-hardpy plu
 
 ## Functions
 
+#### set_user_name
+
+Writes a string with a **HardPy** operator panel user name.
+When called again, the exception `DuplicateUserNameError` will be raised.
+
+**Arguments:**
+
+- `name` *(str)*: User name
+
+**Example:**
+
+```python
+def test_user_name():
+    set_user_name("test_operator")
+    with pytest.raises(DuplicateUserNameError):
+        set_user_name("another_operator")
+```
+
+#### set_batch_serial_number
+
+Writes a string with the serial number of the device batch.
+When called again, the exception `DuplicateBatchSerialNumberError` will be raised.
+
+**Arguments:**
+
+- `serial_number` *(str)*: Batch serial number
+
+**Example:**
+
+```python
+def test_batch_number():
+    set_batch_serial_number("BATCH-001")
+```
+
 #### set_dut_info
 
 This function records a dictionary containing information about the test stand.
@@ -74,6 +108,54 @@ def test_part_number():
     set_dut_part_number("part_1")
 ```
 
+#### set_dut_name
+
+Writes a string with a human-readable name of the DUT.
+When called again, the exception `DuplicateDutNameError` will be raised.
+
+**Arguments:**
+
+- `name` *(str)*: DUT name
+
+**Example:**
+
+```python
+def test_dut_name():
+    set_dut_name("Test Device")
+```
+
+#### set_dut_type
+
+Writes a string with a type of DUT, f.e "PCBA", "Casing", etc.
+When called again, the exception `DuplicateDutTypeError` will be raised.
+
+**Arguments:**
+
+- `dut_type` *(str)*: DUT type
+
+**Example:**
+
+```python
+def test_dut_type():
+    set_dut_type("PCBA")
+```
+
+#### set_dut_revision
+
+Writes a string with a DUT revision.
+When called again, the exception `DuplicateDutRevisionError` will be raised.
+
+**Arguments:**
+
+- `revision` *(str)*: DUT revision (e.g. "REV1.0")
+
+**Example:**
+
+```python
+def test_dut_revision():
+    set_dut_revision("HW1.0")
+```
+
 #### set_stand_name
 
 Writes a string with a test stand name.
@@ -93,17 +175,21 @@ def test_stand_name():
 #### set_stand_info
 
 Writes a dictionary with information about the test stand.
-When called again, the information will be added to DB.
+When called again, the information will be merged with existing data.
 
 **Arguments:**
 
-- `info` *(dict)*: test stand info
+- `info` *(Mapping[str, str | int | float | datetime])*: Test stand info dictionary
 
 **Example:**
 
 ```python
 def test_stand_info():
-    set_stand_info({"some_info": "123"})
+    set_stand_info({
+        "calibration_date": "2023-01-15",
+        "temperature": 23.5,
+        "firmware_version": "2.1.4"
+    })
 ```
 
 #### set_stand_location
@@ -135,6 +221,23 @@ def test_stand_number():
     set_stand_number(3)
 ```
 
+#### set_stand_revision
+
+Writes a string with a test stand revision.
+When called again, the exception `DuplicateStandRevisionError` will be raised.
+
+**Arguments:**
+
+- `revision` *(str)*: Test stand revision
+
+**Example:**
+
+```python
+def test_stand_revision():
+    set_stand_revision("HW1.0")
+```
+
+
 #### set_driver_info
 
 **DEPRECATED, DO NOT USE IT.**
@@ -159,6 +262,84 @@ def test_driver_info():
         }
     }
     set_driver_info(drivers)
+```
+
+#### set_instrument
+
+Adds a new information about the instrument (i.e equipment) that form part of the test bench.
+
+Can be called multiple times to add multiple instruments.
+
+**Arguments:**
+
+- `name` *(str | None)*: Instrument name
+- `revision` *(str | None)*: Instrument revision
+- `number` *(int | None)*: Instrument number
+- `comment` *(str | None)*: Instrument comment
+- `info` *(Mapping[str, str | int | float | datetime] | None)*: Additional instrument info
+
+**Example:**
+
+```python
+def test_instruments():
+    set_instrument(
+        name="Oscilloscope",
+        revision="1.2",
+        number=1,
+        info={"model": "DSO-X 2024A", "bandwidth": "200MHz"}
+    )
+```
+
+#### set_process_name
+
+Writes a string with a process name.
+When called again, the exception `DuplicateProcessNameError` will be raised.
+
+**Arguments:**
+
+- `name` *(str)*: Process name (e.g. "Production Test")
+
+**Example:**
+
+```python
+def test_process():
+    set_process_name("Acceptance Test")
+```
+
+#### set_process_number
+
+Writes an integer with a process number.
+When called again, the exception `DuplicateProcessNumberError` will be raised.
+
+**Arguments:**
+
+- `number` *(int)*: Process number
+
+**Example:**
+
+```python
+def test_process():
+    set_process_number(1)
+```
+
+#### set_process_info
+
+Writes a dictionary with additional information about the process.
+When called again, the information will be merged with existing data.
+
+**Arguments:**
+
+- `info` *(Mapping[str, str | int | float | datetime])*: Process info dictionary
+
+**Example:**
+
+```python
+def test_process_info():
+    set_process_info({
+        "stage": "production",
+        "version": "1.0",
+        "started_at": datetime.now()
+    })
 ```
 
 #### set_case_artifact

@@ -730,3 +730,268 @@ def test_incorrect_couchdbconfig_data(pytester: Pytester, hardpy_opts: list[str]
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1)
+
+
+def test_user_name(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        from hardpy import DuplicateUserNameError
+
+        def test_user_name():
+            report = hardpy.get_current_report()
+            assert report.user is None, "User name is not empty before start."
+
+            name = "test_user"
+            hardpy.set_user_name(name)
+            report = hardpy.get_current_report()
+            assert name == report.user
+
+            second_name = "another_user"
+            with pytest.raises(DuplicateUserNameError):
+                hardpy.set_user_name(second_name)
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_batch_serial_number(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        from hardpy import DuplicateBatchSerialNumberError
+
+        def test_batch_serial_number():
+            report = hardpy.get_current_report()
+            assert report.batch_serial_number is None, "Batch serial number is not empty before start."
+
+            serial_number = "BATCH-123"
+            hardpy.set_batch_serial_number(serial_number)
+            report = hardpy.get_current_report()
+            assert serial_number == report.batch_serial_number
+
+            second_serial = "BATCH-456"
+            with pytest.raises(DuplicateBatchSerialNumberError):
+                hardpy.set_batch_serial_number(second_serial)
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_dut_name(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        from hardpy import DuplicateDutNameError
+
+        def test_dut_name():
+            report = hardpy.get_current_report()
+            assert report.dut.name is None, "DUT name is not empty before start."
+
+            name = "Test Device"
+            hardpy.set_dut_name(name)
+            report = hardpy.get_current_report()
+            assert name == report.dut.name
+
+            second_name = "Another Device"
+            with pytest.raises(DuplicateDutNameError):
+                hardpy.set_dut_name(second_name)
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_dut_type(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        from hardpy import DuplicateDutTypeError
+
+        def test_dut_type():
+            report = hardpy.get_current_report()
+            assert report.dut.type is None, "DUT type is not empty before start."
+
+            dut_type = "PCBA"
+            hardpy.set_dut_type(dut_type)
+            report = hardpy.get_current_report()
+            assert dut_type == report.dut.type
+
+            second_type = "Module"
+            with pytest.raises(DuplicateDutTypeError):
+                hardpy.set_dut_type(second_type)
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_dut_revision(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        from hardpy import DuplicateDutRevisionError
+
+        def test_dut_revision():
+            report = hardpy.get_current_report()
+            assert report.dut.revision is None, "DUT revision is not empty before start."
+
+            revision = "REV1.0"
+            hardpy.set_dut_revision(revision)
+            report = hardpy.get_current_report()
+            assert revision == report.dut.revision
+
+            second_rev = "REV2.0"
+            with pytest.raises(DuplicateDutRevisionError):
+                hardpy.set_dut_revision(second_rev)
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_stand_revision(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        from hardpy import DuplicateStandRevisionError
+
+        def test_stand_revision():
+            report = hardpy.get_current_report()
+            assert report.test_stand.revision is None, "Stand revision is not empty before start."
+
+            revision = "HW1.0"
+            hardpy.set_stand_revision(revision)
+            report = hardpy.get_current_report()
+            assert revision == report.test_stand.revision
+
+            second_rev = "HW2.0"
+            with pytest.raises(DuplicateStandRevisionError):
+                hardpy.set_stand_revision(second_rev)
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_instruments(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_instruments():
+            report = hardpy.get_current_report()
+            instruments = getattr(report.test_stand, 'instruments', None)
+            assert instruments in (None, []), f"Expected empty instruments, got {{instruments}}"
+
+            hardpy.set_instrument(
+                name="Power Supply",
+                revision="1.0",
+                number=1,
+                comment="Main power source"
+            )
+            report = hardpy.get_current_report()
+            instruments = report.test_stand.instruments
+            assert instruments is not None
+            assert len(instruments) == 1
+
+            first_instrument = instruments[0]
+            if hasattr(first_instrument, 'name'):
+                assert first_instrument.name == "Power Supply"
+            else:
+                assert first_instrument['name'] == "Power Supply"
+
+            hardpy.set_instrument(
+                name="Multimeter",
+                revision="2.1",
+                number=2,
+                info={{'model': '34461A', 'channels': 1}}
+            )
+            report = hardpy.get_current_report()
+            instruments = report.test_stand.instruments
+            assert len(instruments) == 2
+
+            second_instrument = instruments[1]
+            if hasattr(second_instrument, 'name'):
+                assert second_instrument.name == "Multimeter"
+                assert second_instrument.info['model'] == "34461A"
+            else:
+                assert second_instrument['name'] == "Multimeter"
+                assert second_instrument['info']['model'] == "34461A"
+        """
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_process_name(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        from hardpy import DuplicateProcessNameError
+
+        def test_process_name():
+            report = hardpy.get_current_report()
+            assert report.process.name is None, "Process name is not empty before start."
+
+            name = "Acceptance Test"
+            hardpy.set_process_name(name)
+            report = hardpy.get_current_report()
+            assert name == report.process.name
+
+            second_name = "Production Test"
+            with pytest.raises(DuplicateProcessNameError):
+                hardpy.set_process_name(second_name)
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_process_number(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        from hardpy import DuplicateProcessNumberError
+
+        def test_process_number():
+            report = hardpy.get_current_report()
+            assert report.process.number is None, "Process number is not empty before start."
+
+            number = 1
+            hardpy.set_process_number(number)
+            report = hardpy.get_current_report()
+            assert number == report.process.number
+
+            second_number = 2
+            with pytest.raises(DuplicateProcessNumberError):
+                hardpy.set_process_number(second_number)
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_process_info(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_process_info():
+            report = hardpy.get_current_report()
+            assert report.process.info == dict(), "Process info is not empty before start."
+
+            info = {{"stage": "production", "version": "1.0"}}
+            hardpy.set_process_info(info)
+            report = hardpy.get_current_report()
+            assert info == report.process.info
+
+            additional_info = {{"operator": "john.doe"}}
+            expected_info = info | additional_info
+            hardpy.set_process_info(additional_info)
+            report = hardpy.get_current_report()
+            assert expected_info == report.process.info
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
