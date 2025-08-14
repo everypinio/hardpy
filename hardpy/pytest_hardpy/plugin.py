@@ -163,6 +163,8 @@ class HardpyPlugin:
         config.addinivalue_line("markers", "dependency")
         config.addinivalue_line("markers", "attempt")
         config.addinivalue_line("markers", "critical")
+        config.addinivalue_line("markers", "case_group: set test case group (setup/main/teardown)")
+        config.addinivalue_line("markers", "module_group: set test module group (setup/main/teardown)")
 
         # must be init after config data is set
         try:

@@ -47,9 +47,16 @@ class NodeInfo:
 
         self._critical = self._get_critical(item.own_markers + item.parent.own_markers)
 
-        # TODO(xorialexandrov):  Add module and case group
-        self._module_group = Group.MAIN
-        self._case_group = Group.MAIN
+        # # TODO(xorialexandrov):  Add module and case group
+        # self._module_group = Group.MAIN
+        # self._case_group = Group.MAIN
+
+        self._module_group = self._get_group(
+            item.parent.own_markers,  # type: ignore
+            "module_group",
+            Group.MAIN,
+        )
+        self._case_group = self._get_group(item.own_markers, "case_group", Group.MAIN)
 
         self._module_id = Path(item.parent.nodeid).stem  # type: ignore
         self._case_id = item.name
@@ -222,3 +229,28 @@ class NodeInfo:
             bool: True if test or module is critical, False otherwise
         """
         return any(marker.name == "critical" for marker in markers)
+
+    def _get_group(
+        self, markers: list[Mark], marker_name: str, default: Group,
+    ) -> Group:
+        """Get group from markers or use default.
+
+        Args:
+            markers (list[Mark]): item markers list
+            marker_name (str): marker name
+            default (Group): default group if marker not found
+
+        Returns:
+            Group: group from marker or default
+        """
+        for marker in markers:
+            if marker.name == marker_name and marker.args:
+                try:
+                    return Group(marker.args[0].upper())
+                except ValueError:
+                    valid_groups = [g.value for g in Group]
+                    raise ValueError(
+                        f"Invalid group '{marker.args[0]}'. "
+                        f"Valid groups are: {', '.join(valid_groups)}"
+                    )
+        return default
