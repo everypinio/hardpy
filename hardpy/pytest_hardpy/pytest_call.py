@@ -434,7 +434,11 @@ def set_instrument(
         info (Mapping | None): additional instrument info
     """
     instrument = Instrument(
-        name=name, revision=revision, number=number, comment=comment, info=info
+        name=name,
+        revision=revision,
+        number=number,
+        comment=comment,
+        info=info,
     )
 
     reporter = RunnerReporter()
