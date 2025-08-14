@@ -1,0 +1,60 @@
+{
+  "app": {
+      "title": "Panel de operador HardPy",
+      "lastLaunch": "Última lanzamiento:",
+      "duration": "Duración",
+      "seconds": "s",
+      "soundOn": "Activar sonido",
+      "soundOff": "Desactivar sonido",
+      "debugOn": "Activar modo de depuración",
+      "debugOff": "Desactivar modo de depuración",
+      "connection": "Estableciendo conexión... 🧐🔎",
+      "dbError": "Error de conexión a la base de datos. 🙅🏽‍♀️🚫",
+      "noEntries": "No hay entradas en la base de datos 🙅🏽‍♀️🚫",
+      "status": {
+        "ready": "listo",
+        "run": "ejecutando",
+        "passed": "aprobado",
+        "failed": "fallado",
+        "stopped": "detenido",
+        "unknown": "desconocido"
+      }
+  },
+  "button": {
+    "start": "Iniciar",
+    "stop": "Detener",
+    "confirm": "Confirmar"
+  },
+  "error": {
+    "dbConnectionTitle": "Error de conexión a la base de datos",
+    "dbConnectionMessage": "No se pudo establecer la conexión con la base de datos"
+  },
+  "operatorDialog": {
+    "defaultTitle": "Mensaje",
+    "imageAlt": "Imagen del mensaje del operador",
+    "htmlCodeTitle": "Código HTML",
+    "htmlLinkTitle": "Enlace HTML",
+    "enterAnswer": "Ingrese respuesta",
+    "fieldNotEmpty": "El campo no debe estar vacío",
+    "notificationTitle": "Notificación",
+    "notificationDesc": "La ventana fue cerrada. Pruebas detenidas.",
+    "numericInputError": "Por favor ingrese un número",
+    "radioButtonError": "Por favor seleccione una opción",
+    "checkboxError": "Por favor seleccione al menos una opción"
+  },
+  "suiteList": {
+    "loadingTests": "Cargando pruebas... 🤔",
+    "refreshHint": "Intente actualizar la página.",
+    "standName": "Nombre del puesto",
+    "status": "Estado",
+    "startTime": "Hora de inicio",
+    "finishTime": "Hora de finalización",
+    "alert": "Alerta"
+  },
+  "testSuite": {
+    "nameColumn": "Nombre",
+    "dataColumn": "Datos",
+    "loading": "Cargando...",
+    "stubName": "Conjunto de pruebas"
+  }
+}

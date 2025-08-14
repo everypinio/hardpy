@@ -3,8 +3,9 @@
 
 import * as React from "react";
 import { AnchorButton, AnchorButtonProps } from "@blueprintjs/core";
+import { withTranslation, WithTranslation } from "react-i18next";
 
-type Props = { testing_status: string };
+type Props = { testing_status: string } & WithTranslation;
 
 type State = {
   isStopButtonDisabled: boolean;
@@ -14,13 +15,13 @@ type State = {
  * A React component that renders a start/stop button for controlling a testing process.
  * The button's behavior and appearance depend on the testing status.
  */
-export class StartStopButton extends React.Component<Props, State> {
+class StartStopButton extends React.Component<Props, State> {
   private stopButtonTimer: NodeJS.Timeout | null = null;
 
   constructor(props: Props) {
     super(props);
     this.state = {
-      isStopButtonDisabled: false
+      isStopButtonDisabled: false,
     };
     this.hardpy_start = this.hardpy_start.bind(this);
     this.hardpy_stop = this.hardpy_stop.bind(this);
@@ -37,11 +38,13 @@ export class StartStopButton extends React.Component<Props, State> {
         if (response.ok) {
           return response.text();
         } else {
-          console.log("Request failed. Status: " + response.status);
+          console.log(
+            this.props.t("error.requestFailed", { status: response.status })
+          );
         }
       })
       .catch((error) => {
-        console.log("Request failed. Error: " + error);
+        console.log(this.props.t("error.requestError", { error }));
       });
   }
 
@@ -67,19 +70,56 @@ export class StartStopButton extends React.Component<Props, State> {
     this.setState({ isStopButtonDisabled: true });
     this.stopButtonTimer = setTimeout(() => {
       this.setState({ isStopButtonDisabled: false });
-  }, 500);
+    }, 500);
   }
 
   /**
-   * Handles the keydown event to start the process when the spacebar is pressed.
-   * The process starts only if testing is not in progress.
-   * @param {KeyboardEvent} event - The keyboard event object.
-   * @private
+   * Checks if any dialog is currently open.
+   * @returns {boolean} True if a dialog is open, else false.
    */
-  private readonly hardpy_start_with_space = (event: KeyboardEvent) => {
-    const is_testing_in_progress = this.props.testing_status == "run";
-    if (event.key === " " && !is_testing_in_progress) {
-      this.hardpy_start();
+  private isDialogOpen(): boolean {
+    const blueprintDialogs = document.querySelectorAll('.bp3-dialog');
+    for (const dialog of blueprintDialogs) {
+      const style = window.getComputedStyle(dialog);
+      if (style.display !== 'none' && style.visibility !== 'hidden') {
+        return true;
+      }
+    }
+
+    const ariaDialogs = document.querySelectorAll('[role="dialog"]');
+    for (const dialog of ariaDialogs) {
+      const style = window.getComputedStyle(dialog);
+      if (style.display !== 'none' && style.visibility !== 'hidden') {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Handles the space keydown event to start or stop the process.
+   */
+  private readonly handleSpaceKey = (event: KeyboardEvent) => {
+    if (this.isDialogOpen()) {
+      return;
+    }
+
+    const target = event.target as HTMLElement;
+    if (!target) return;
+
+    const interactiveElements = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'];
+    if (
+      interactiveElements.includes(target.tagName) || 
+      target.isContentEditable
+    ) {
+      return;
+    }
+
+    if (event.key === " ") {
+      event.preventDefault();
+      const is_testing_in_progress = this.props.testing_status == "run";
+      is_testing_in_progress ? this.hardpy_stop() : this.hardpy_start();
     }
   };
 
@@ -95,14 +135,14 @@ export class StartStopButton extends React.Component<Props, State> {
    * Adds an event listener for the keydown event when the component is mounted.
    */
   componentDidMount(): void {
-    window.addEventListener("keydown", this.hardpy_start_with_space);
+    window.addEventListener("keydown", this.handleSpaceKey);
   }
 
   /**
    * Removes the event listener for the keydown event when the component is unmounted.
    */
   componentWillUnmount(): void {
-    window.removeEventListener("keydown", this.hardpy_start_with_space);
+    window.removeEventListener("keydown", this.handleSpaceKey);
     if (this.stopButtonTimer) {
       clearTimeout(this.stopButtonTimer);
     }
@@ -113,11 +153,12 @@ export class StartStopButton extends React.Component<Props, State> {
    * @returns {React.ReactNode} The Start/Stop button component.
    */
   render(): React.ReactNode {
-    const is_testing: boolean = this.props.testing_status == "run";
+    const { t, testing_status } = this.props;
+    const is_testing: boolean = testing_status == "run";
     const button_id: string = "start-stop-button";
 
     const stop_button: AnchorButtonProps = {
-      text: "Stop",
+      text: t("button.stop"),
       intent: "danger",
       large: true,
       rightIcon: "stop",
@@ -126,7 +167,7 @@ export class StartStopButton extends React.Component<Props, State> {
     };
 
     const start_button: AnchorButtonProps = {
-      text: "Start",
+      text: t("button.start"),
       intent: is_testing ? undefined : "primary",
       large: true,
       rightIcon: "play",
@@ -139,4 +180,4 @@ export class StartStopButton extends React.Component<Props, State> {
   }
 }
 
-export default StartStopButton;
+export default withTranslation()(StartStopButton);

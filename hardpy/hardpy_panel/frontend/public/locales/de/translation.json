@@ -1,0 +1,60 @@
+{
+  "app": {
+      "title": "HardPy Bedienfeld",
+      "lastLaunch": "Letzter Start:",
+      "duration": "Dauer",
+      "seconds": "s",
+      "soundOn": "Ton einschalten",
+      "soundOff": "Ton ausschalten",
+      "debugOn": "Debug-Modus einschalten",
+      "debugOff": "Debug-Modus ausschalten",
+      "connection": "Verbindung wird hergestellt... 🧐🔎",
+      "dbError": "Datenbankverbindungsfehler. 🙅🏽‍♀️🚫",
+      "noEntries": "Keine Einträge in der Datenbank 🙅🏽‍♀️🚫",
+      "status": {
+        "ready": "bereit",
+        "run": "läuft",
+        "passed": "bestanden",
+        "failed": "fehlgeschlagen",
+        "stopped": "gestoppt",
+        "unknown": "unbekannt"
+      }
+  },
+  "button": {
+    "start": "Starten",
+    "stop": "Stoppen",
+    "confirm": "Bestätigen"
+  },
+  "error": {
+    "dbConnectionTitle": "Datenbankverbindungsfehler",
+    "dbConnectionMessage": "Verbindung zur Datenbank konnte nicht hergestellt werden"
+  },
+  "operatorDialog": {
+    "defaultTitle": "Nachricht",
+    "imageAlt": "Operator-Nachrichtenbild",
+    "htmlCodeTitle": "HTML-Code",
+    "htmlLinkTitle": "HTML-Link",
+    "enterAnswer": "Antwort eingeben",
+    "fieldNotEmpty": "Das Feld darf nicht leer sein",
+    "notificationTitle": "Benachrichtigung",
+    "notificationDesc": "Das Fenster wurde geschlossen. Tests gestoppt.",
+    "numericInputError": "Bitte geben Sie eine Zahl ein",
+    "radioButtonError": "Bitte wählen Sie eine Option",
+    "checkboxError": "Bitte wählen Sie mindestens eine Option"
+  },
+  "suiteList": {
+    "loadingTests": "Tests werden geladen... 🤔",
+    "refreshHint": "Versuchen Sie, die Seite zu aktualisieren.",
+    "standName": "Standortname",
+    "status": "Status",
+    "startTime": "Startzeit",
+    "finishTime": "Endzeit",
+    "alert": "Warnung"
+  },
+  "testSuite": {
+    "nameColumn": "Name",
+    "dataColumn": "Daten",
+    "loading": "Wird geladen...",
+    "stubName": "Testgruppe"
+  }
+}
