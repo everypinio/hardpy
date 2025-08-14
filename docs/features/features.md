@@ -259,5 +259,5 @@ The example of file:
 
 ```toml
 [frontend]
-language = "ch"
+language = "zh"
 ```
