@@ -21,6 +21,7 @@ from hardpy.pytest_hardpy.utils.exception import (
     TestStandNumberError,
     WidgetInfoError,
 )
+from hardpy.pytest_hardpy.utils.instrument import Instrument
 from hardpy.pytest_hardpy.utils.machineid import machine_id
 from hardpy.pytest_hardpy.utils.node_info import NodeInfo
 from hardpy.pytest_hardpy.utils.progress_calculator import ProgressCalculator
@@ -37,6 +38,7 @@ __all__ = [
     "HTMLComponent",
     "ImageComponent",
     "ImageError",
+    "Instrument",
     "MultistepWidget",
     "NodeInfo",
     "NumericInputWidget",

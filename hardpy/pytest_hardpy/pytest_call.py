@@ -23,6 +23,7 @@ from hardpy.pytest_hardpy.utils import (
     DuplicateFieldError,
     HTMLComponent,
     ImageComponent,
+    Instrument,
     TestStandNumberError,
 )
 
@@ -37,17 +38,6 @@ class CurrentTestInfo:
 
     module_id: str
     case_id: str
-
-
-@dataclass
-class Instrument:
-    """Instrument information dataclass."""
-
-    name: str | None = None
-    revision: str | None = None
-    number: int | None = None
-    comment: str | None = None
-    info: Mapping[str, str | int | float | datetime] | None = None
 
 
 def get_current_report() -> ResultRunStore | None:

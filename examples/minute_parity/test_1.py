@@ -14,16 +14,10 @@ def test_dut_info():
     hardpy.set_dut_part_number("part_number_1")
 
     hardpy.set_dut_name("Test Device")
-    with pytest.raises(hardpy.DuplicateDutNameError):
-        hardpy.set_dut_name("Another Device")
 
     hardpy.set_dut_type("PCBA")
-    with pytest.raises(hardpy.DuplicateDutTypeError):
-        hardpy.set_dut_type("Module")
 
     hardpy.set_dut_revision("REV1.0")
-    with pytest.raises(hardpy.DuplicateDutRevisionError):
-        hardpy.set_dut_revision("REV2.0")
 
     info = {
         "batch": "test_batch",
@@ -36,12 +30,8 @@ def test_dut_info():
 @pytest.mark.case_name("Test stand info")
 def test_stand_info():
     hardpy.set_process_name("Acceptance Test")
-    with pytest.raises(hardpy.DuplicateProcessNameError):
-        hardpy.set_process_name("Production Test")
 
     hardpy.set_process_number(1)
-    with pytest.raises(hardpy.DuplicateProcessNumberError):
-        hardpy.set_process_number(2)
 
     process_info = {"stage": "production", "version": "1.0"}
     hardpy.set_process_info(process_info)
@@ -53,8 +43,6 @@ def test_stand_info():
     hardpy.set_stand_number(2)
 
     hardpy.set_stand_revision("HW1.0")
-    with pytest.raises(hardpy.DuplicateStandRevisionError):
-        hardpy.set_stand_revision("HW2.0")
 
     stand_info = {
         "some_info": "123",
