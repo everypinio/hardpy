@@ -38,6 +38,7 @@ from hardpy.pytest_hardpy.result import (
 )
 from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig
 from hardpy.pytest_hardpy.utils import (
+    DUT,
     BaseWidget,
     CheckboxWidget,
     DialogBox,
@@ -54,6 +55,7 @@ from hardpy.pytest_hardpy.utils import (
 )
 
 __all__ = [
+    "DUT",
     "BaseWidget",
     "CheckboxWidget",
     "CouchdbConfig",
