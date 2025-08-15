@@ -47,10 +47,6 @@ class NodeInfo:
 
         self._critical = self._get_critical(item.own_markers + item.parent.own_markers)
 
-        # # TODO(xorialexandrov):  Add module and case group
-        # self._module_group = Group.MAIN
-        # self._case_group = Group.MAIN
-
         self._module_group = self._get_group(
             item.parent.own_markers,  # type: ignore
             "module_group",
