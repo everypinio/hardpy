@@ -2,8 +2,10 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Added functions for filling fields of the updated database.
+  [[PR-172](https://github.com/everypinio/hardpy/pull/172)]
 * Update database schema by some tables: **Process**, **Instrument**, **NumericMeasurement**.
-* [[PR-162](https://github.com/everypinio/hardpy/pull/162)]
+  [[PR-162](https://github.com/everypinio/hardpy/pull/162)]
 * Update database schema by some fields: **user**, **batch_serial_number**, **caused_dut_failure_id**, **error_code**
   **process**, **revision**, **instruments**, **group**, **numeric_measurements**.
   [[PR-162](https://github.com/everypinio/hardpy/pull/162)]

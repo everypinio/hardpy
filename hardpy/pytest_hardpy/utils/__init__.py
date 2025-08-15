@@ -16,15 +16,12 @@ from hardpy.pytest_hardpy.utils.dialog_box import (
     TextInputWidget,
 )
 from hardpy.pytest_hardpy.utils.exception import (
-    DuplicatePartNumberError,
-    DuplicateSerialNumberError,
-    DuplicateTestStandLocationError,
-    DuplicateTestStandNameError,
-    DuplicateTestStandNumberError,
+    DuplicateParameterError,
     ImageError,
     TestStandNumberError,
     WidgetInfoError,
 )
+from hardpy.pytest_hardpy.utils.instrument import Instrument
 from hardpy.pytest_hardpy.utils.machineid import machine_id
 from hardpy.pytest_hardpy.utils.node_info import NodeInfo
 from hardpy.pytest_hardpy.utils.progress_calculator import ProgressCalculator
@@ -36,15 +33,12 @@ __all__ = [
     "CompOp",
     "ConnectionData",
     "DialogBox",
-    "DuplicatePartNumberError",
-    "DuplicateSerialNumberError",
-    "DuplicateTestStandLocationError",
-    "DuplicateTestStandNameError",
-    "DuplicateTestStandNumberError",
+    "DuplicateParameterError",
     "Group",
     "HTMLComponent",
     "ImageComponent",
     "ImageError",
+    "Instrument",
     "MultistepWidget",
     "NodeInfo",
     "NumericInputWidget",

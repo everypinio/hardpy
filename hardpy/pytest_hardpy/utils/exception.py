@@ -2,6 +2,9 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 
+from typing import Any
+
+
 class HardpyError(Exception):
     """Base HardPy exception."""
 
@@ -9,39 +12,11 @@ class HardpyError(Exception):
         super().__init__(f"HardPy error: {msg}")
 
 
-class DuplicateSerialNumberError(HardpyError):
-    """The serial number has already been determined."""
+class DuplicateParameterError(HardpyError):
+    """A parameter has already been defined."""
 
-    def __init__(self) -> None:
-        super().__init__(self.__doc__)  # type: ignore
-
-
-class DuplicatePartNumberError(HardpyError):
-    """The part number has already been determined."""
-
-    def __init__(self) -> None:
-        super().__init__(self.__doc__)  # type: ignore
-
-
-class DuplicateTestStandNameError(HardpyError):
-    """The test stand name has already been determined."""
-
-    def __init__(self) -> None:
-        super().__init__(self.__doc__)  # type: ignore
-
-
-class DuplicateTestStandLocationError(HardpyError):
-    """The test stand location has already been determined."""
-
-    def __init__(self) -> None:
-        super().__init__(self.__doc__)  # type: ignore
-
-
-class DuplicateTestStandNumberError(HardpyError):
-    """The test stand number has already been determined."""
-
-    def __init__(self) -> None:
-        super().__init__(self.__doc__)  # type: ignore
+    def __init__(self, param_name: Any) -> None:  # noqa: ANN401
+        super().__init__(f"Parameter {param_name} is already defined")
 
 
 class TestStandNumberError(HardpyError):
