@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from datetime import datetime
-from typing import Mapping
+from typing import TYPE_CHECKING, Mapping  # noqa: UP035
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 @dataclass

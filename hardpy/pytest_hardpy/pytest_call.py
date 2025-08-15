@@ -69,7 +69,8 @@ def set_user_name(name: str) -> None:
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.USER)
     if reporter.get_field(key):
-        raise DuplicateFieldError("set_user_name")
+        msg = "set_user_name"
+        raise DuplicateFieldError(msg)
     reporter.set_doc_value(key, name)
     reporter.update_db_by_doc()
 
@@ -86,7 +87,8 @@ def set_batch_serial_number(serial_number: str) -> None:
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.BATCH_SN)
     if reporter.get_field(key):
-        raise DuplicateFieldError("set_batch_serial_number")
+        msg = "set_batch_serial_number"
+        raise DuplicateFieldError(msg)
     reporter.set_doc_value(key, serial_number)
     reporter.update_db_by_doc()
 
@@ -116,7 +118,8 @@ def set_dut_serial_number(serial_number: str) -> None:
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.DUT, DF.SERIAL_NUMBER)
     if reporter.get_field(key):
-        raise DuplicateFieldError("set_dut_serial_number")
+        msg = "set_dut_serial_number"
+        raise DuplicateFieldError(msg)
     reporter.set_doc_value(
         key,
         serial_number if isinstance(serial_number, str) else str(serial_number),
@@ -136,7 +139,8 @@ def set_dut_part_number(part_number: str) -> None:
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.DUT, DF.PART_NUMBER)
     if reporter.get_field(key):
-        raise DuplicateFieldError("set_dut_part_number")
+        msg = "set_dut_part_number"
+        raise DuplicateFieldError(msg)
     reporter.set_doc_value(key, part_number)
     reporter.update_db_by_doc()
 
@@ -153,7 +157,8 @@ def set_dut_name(name: str) -> None:
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.DUT, DF.NAME)
     if reporter.get_field(key):
-        raise DuplicateFieldError("set_dut_name")
+        msg = "set_dut_name"
+        raise DuplicateFieldError(msg)
     reporter.set_doc_value(key, name)
     reporter.update_db_by_doc()
 
@@ -170,7 +175,8 @@ def set_dut_type(dut_type: str) -> None:
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.DUT, DF.TYPE)
     if reporter.get_field(key):
-        raise DuplicateFieldError("set_dut_type")
+        msg = "set_dut_type"
+        raise DuplicateFieldError(msg)
     reporter.set_doc_value(key, dut_type)
     reporter.update_db_by_doc()
 
@@ -187,7 +193,8 @@ def set_dut_revision(revision: str) -> None:
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.DUT, DF.REVISION)
     if reporter.get_field(key):
-        raise DuplicateFieldError("set_dut_revision")
+        msg = "set_dut_revision"
+        raise DuplicateFieldError(msg)
     reporter.set_doc_value(key, revision)
     reporter.update_db_by_doc()
 
@@ -204,7 +211,8 @@ def set_stand_name(name: str) -> None:
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.TEST_STAND, DF.NAME)
     if reporter.get_field(key):
-        raise DuplicateFieldError("set_stand_name")
+        msg = "set_stand_name"
+        raise DuplicateFieldError(msg)
     reporter.set_doc_value(key, name)
     reporter.update_db_by_doc()
 
@@ -235,7 +243,8 @@ def set_stand_location(location: str) -> None:
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.TEST_STAND, DF.LOCATION)
     if reporter.get_field(key):
-        raise DuplicateFieldError("set_stand_location")
+        msg = "set_stand_location"
+        raise DuplicateFieldError(msg)
     reporter.set_doc_value(key, location)
     reporter.update_db_by_doc()
 
@@ -255,7 +264,8 @@ def set_stand_number(number: int) -> None:
     if not isinstance(number, int) or number < 0:
         raise TestStandNumberError
     if reporter.get_field(key):
-        raise DuplicateFieldError("set_stand_number")
+        msg = "set_stand_number"
+        raise DuplicateFieldError(msg)
     reporter.set_doc_value(key, number)
     reporter.update_db_by_doc()
 
@@ -272,7 +282,8 @@ def set_stand_revision(revision: str) -> None:
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.TEST_STAND, DF.REVISION)
     if reporter.get_field(key):
-        raise DuplicateFieldError("set_stand_revision")
+        msg = "set_stand_revision"
+        raise DuplicateFieldError(msg)
     reporter.set_doc_value(key, revision)
     reporter.update_db_by_doc()
 
@@ -441,7 +452,8 @@ def set_process_name(name: str) -> None:
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.PROCESS, DF.NAME)
     if reporter.get_field(key):
-        raise DuplicateFieldError("set_process_name")
+        msg = "set_process_name"
+        raise DuplicateFieldError(msg)
     reporter.set_doc_value(key, name)
     reporter.update_db_by_doc()
 
@@ -458,7 +470,8 @@ def set_process_number(number: int) -> None:
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.PROCESS, DF.NUMBER)
     if reporter.get_field(key):
-        raise DuplicateFieldError("set_process_number")
+        msg = "set_process_number"
+        raise DuplicateFieldError(msg)
     reporter.set_doc_value(key, number)
     reporter.update_db_by_doc()
 
