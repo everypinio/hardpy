@@ -19,6 +19,7 @@ from hardpy.pytest_hardpy.db import (
 )
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
+    DUT,
     DialogBox,
     DuplicateFieldError,
     HTMLComponent,
@@ -90,6 +91,23 @@ def set_batch_serial_number(serial_number: str) -> None:
         msg = "set_batch_serial_number"
         raise DuplicateFieldError(msg)
     reporter.set_doc_value(key, serial_number)
+    reporter.update_db_by_doc()
+
+
+def set_dut(dut: DUT):
+    reporter = RunnerReporter()
+    dut.to_dict()
+    for dut_key, dut_value in dut_map.items():
+        key = reporter.generate_key(DF.DUT, dut_key)
+        reporter.set_doc_value(key, dut_value)
+    reporter.update_db_by_doc()
+
+
+def set_sub_dut(sub_dut: DUT):
+    reporter = RunnerReporter()
+    # for dut_key, dut_value in info.items():
+    key = reporter.generate_key(DF.DUT, DF.SUB_DUTS, sub_dut)
+    reporter.set_doc_value(key, sub_dut)
     reporter.update_db_by_doc()
 
 
