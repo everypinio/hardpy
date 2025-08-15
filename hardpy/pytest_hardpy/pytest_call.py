@@ -20,7 +20,7 @@ from hardpy.pytest_hardpy.db import (
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
     DialogBox,
-    DuplicateFieldError,
+    DuplicateParameterError,
     HTMLComponent,
     ImageComponent,
     Instrument,
@@ -64,13 +64,13 @@ def set_user_name(name: str) -> None:
         name (str): user name
 
     Raises:
-        DuplicateFieldError: if user name is already set
+        DuplicateParameterError: if user name is already set
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.USER)
     if reporter.get_field(key):
-        msg = "set_user_name"
-        raise DuplicateFieldError(msg)
+        msg = "user_name"
+        raise DuplicateParameterError(msg)
     reporter.set_doc_value(key, name)
     reporter.update_db_by_doc()
 
@@ -82,13 +82,13 @@ def set_batch_serial_number(serial_number: str) -> None:
         serial_number (str): batch serial number
 
     Raises:
-        DuplicateFieldError: if batch serial number is already set
+        DuplicateParameterError: if batch serial number is already set
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.BATCH_SN)
     if reporter.get_field(key):
-        msg = "set_batch_serial_number"
-        raise DuplicateFieldError(msg)
+        msg = "batch_serial_number"
+        raise DuplicateParameterError(msg)
     reporter.set_doc_value(key, serial_number)
     reporter.update_db_by_doc()
 
@@ -113,13 +113,13 @@ def set_dut_serial_number(serial_number: str) -> None:
         serial_number (str): DUT serial number
 
     Raises:
-        DuplicateFieldError: if serial number is already set
+        DuplicateParameterError: if serial number is already set
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.DUT, DF.SERIAL_NUMBER)
     if reporter.get_field(key):
-        msg = "set_dut_serial_number"
-        raise DuplicateFieldError(msg)
+        msg = "dut_serial_number"
+        raise DuplicateParameterError(msg)
     reporter.set_doc_value(
         key,
         serial_number if isinstance(serial_number, str) else str(serial_number),
@@ -134,13 +134,13 @@ def set_dut_part_number(part_number: str) -> None:
         part_number (str): DUT part number
 
     Raises:
-        DuplicateFieldError: if part number is already set
+        DuplicateParameterError: if part number is already set
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.DUT, DF.PART_NUMBER)
     if reporter.get_field(key):
-        msg = "set_dut_part_number"
-        raise DuplicateFieldError(msg)
+        msg = "dut_part_number"
+        raise DuplicateParameterError(msg)
     reporter.set_doc_value(key, part_number)
     reporter.update_db_by_doc()
 
@@ -152,13 +152,13 @@ def set_dut_name(name: str) -> None:
         name (str): DUT name
 
     Raises:
-        DuplicateFieldError: if DUT name is already set
+        DuplicateParameterError: if DUT name is already set
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.DUT, DF.NAME)
     if reporter.get_field(key):
-        msg = "set_dut_name"
-        raise DuplicateFieldError(msg)
+        msg = "dut_name"
+        raise DuplicateParameterError(msg)
     reporter.set_doc_value(key, name)
     reporter.update_db_by_doc()
 
@@ -170,13 +170,13 @@ def set_dut_type(dut_type: str) -> None:
         dut_type (str): DUT type
 
     Raises:
-        DuplicateFieldError: if DUT type is already set
+        DuplicateParameterError: if DUT type is already set
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.DUT, DF.TYPE)
     if reporter.get_field(key):
-        msg = "set_dut_type"
-        raise DuplicateFieldError(msg)
+        msg = "dut_type"
+        raise DuplicateParameterError(msg)
     reporter.set_doc_value(key, dut_type)
     reporter.update_db_by_doc()
 
@@ -188,13 +188,13 @@ def set_dut_revision(revision: str) -> None:
         revision (str): DUT revision
 
     Raises:
-        DuplicateFieldError: if DUT revision is already set
+        DuplicateParameterError: if DUT revision is already set
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.DUT, DF.REVISION)
     if reporter.get_field(key):
-        msg = "set_dut_revision"
-        raise DuplicateFieldError(msg)
+        msg = "dut_revision"
+        raise DuplicateParameterError(msg)
     reporter.set_doc_value(key, revision)
     reporter.update_db_by_doc()
 
@@ -206,13 +206,13 @@ def set_stand_name(name: str) -> None:
         name (str): test stand name
 
     Raises:
-        DuplicateFieldError: if test stand name is already set
+        DuplicateParameterError: if test stand name is already set
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.TEST_STAND, DF.NAME)
     if reporter.get_field(key):
-        msg = "set_stand_name"
-        raise DuplicateFieldError(msg)
+        msg = "stand_name"
+        raise DuplicateParameterError(msg)
     reporter.set_doc_value(key, name)
     reporter.update_db_by_doc()
 
@@ -238,13 +238,13 @@ def set_stand_location(location: str) -> None:
         location (str): test stand location
 
     Raises:
-        DuplicateFieldError: if test stand location is already set
+        DuplicateParameterError: if test stand location is already set
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.TEST_STAND, DF.LOCATION)
     if reporter.get_field(key):
-        msg = "set_stand_location"
-        raise DuplicateFieldError(msg)
+        msg = "stand_location"
+        raise DuplicateParameterError(msg)
     reporter.set_doc_value(key, location)
     reporter.update_db_by_doc()
 
@@ -256,7 +256,7 @@ def set_stand_number(number: int) -> None:
         number (int): test stand number (non negative integer)
 
     Raises:
-        DuplicateFieldError: if stand number is already set
+        DuplicateParameterError: if stand number is already set
         TestStandNumberError: if stand number is incorrect (negative or non integer)
     """
     reporter = RunnerReporter()
@@ -264,8 +264,8 @@ def set_stand_number(number: int) -> None:
     if not isinstance(number, int) or number < 0:
         raise TestStandNumberError
     if reporter.get_field(key):
-        msg = "set_stand_number"
-        raise DuplicateFieldError(msg)
+        msg = "stand_number"
+        raise DuplicateParameterError(msg)
     reporter.set_doc_value(key, number)
     reporter.update_db_by_doc()
 
@@ -277,13 +277,13 @@ def set_stand_revision(revision: str) -> None:
         revision (str): test stand revision
 
     Raises:
-        DuplicateFieldError: if test stand revision is already set
+        DuplicateParameterError: if test stand revision is already set
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.TEST_STAND, DF.REVISION)
     if reporter.get_field(key):
-        msg = "set_stand_revision"
-        raise DuplicateFieldError(msg)
+        msg = "stand_revision"
+        raise DuplicateParameterError(msg)
     reporter.set_doc_value(key, revision)
     reporter.update_db_by_doc()
 
@@ -429,13 +429,13 @@ def set_process_name(name: str) -> None:
         name (str): process name
 
     Raises:
-        DuplicateFieldError: if process name is already set
+        DuplicateParameterError: if process name is already set
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.PROCESS, DF.NAME)
     if reporter.get_field(key):
-        msg = "set_process_name"
-        raise DuplicateFieldError(msg)
+        msg = "process_name"
+        raise DuplicateParameterError(msg)
     reporter.set_doc_value(key, name)
     reporter.update_db_by_doc()
 
@@ -447,13 +447,13 @@ def set_process_number(number: int) -> None:
         number (int): process number
 
     Raises:
-        DuplicateFieldError: if process number is already set
+        DuplicateParameterError: if process number is already set
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.PROCESS, DF.NUMBER)
     if reporter.get_field(key):
-        msg = "set_process_number"
-        raise DuplicateFieldError(msg)
+        msg = "process_number"
+        raise DuplicateParameterError(msg)
     reporter.set_doc_value(key, number)
     reporter.update_db_by_doc()
 

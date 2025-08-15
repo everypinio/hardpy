@@ -16,7 +16,7 @@ from hardpy.pytest_hardpy.utils.dialog_box import (
     TextInputWidget,
 )
 from hardpy.pytest_hardpy.utils.exception import (
-    DuplicateFieldError,
+    DuplicateParameterError,
     ImageError,
     TestStandNumberError,
     WidgetInfoError,
@@ -33,7 +33,7 @@ __all__ = [
     "CompOp",
     "ConnectionData",
     "DialogBox",
-    "DuplicateFieldError",
+    "DuplicateParameterError",
     "Group",
     "HTMLComponent",
     "ImageComponent",

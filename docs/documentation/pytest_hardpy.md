@@ -29,7 +29,7 @@ If tests are run via [hardpy panel](hardpy_panel.md), then the pytest-hardpy plu
 #### set_user_name
 
 Writes a string with a **HardPy** operator panel user name.
-When called again, the exception `DuplicateFieldError` will be raised.
+When called again, the exception `DuplicateParameterError` will be raised.
 
 **Arguments:**
 
@@ -40,14 +40,14 @@ When called again, the exception `DuplicateFieldError` will be raised.
 ```python
 def test_user_name():
     set_user_name("test_operator")
-    with pytest.raises(DuplicateFieldError):
+    with pytest.raises(DuplicateParameterError):
         set_user_name("another_operator")
 ```
 
 #### set_batch_serial_number
 
 Writes a string with the serial number of the device batch.
-When called again, the exception `DuplicateFieldError` will be raised.
+When called again, the exception `DuplicateParameterError` will be raised.
 
 **Arguments:**
 
@@ -79,7 +79,7 @@ def test_dut_info():
 #### set_dut_serial_number
 
 Writes a string with a serial number.
-When called again, the exception `DuplicateFieldError` will be caused.
+When called again, the exception `DuplicateParameterError` will be caused.
 
 **Arguments:**
 
@@ -95,7 +95,7 @@ def test_serial_number():
 #### set_dut_part_number
 
 Writes a string with a part number.
-When called again, the exception `DuplicateFieldError` will be caused.
+When called again, the exception `DuplicateParameterError` will be caused.
 
 **Arguments:**
 
@@ -111,7 +111,7 @@ def test_part_number():
 #### set_dut_name
 
 Writes a string with a human-readable name of the DUT.
-When called again, the exception `DuplicateFieldError` will be raised.
+When called again, the exception `DuplicateParameterError` will be raised.
 
 **Arguments:**
 
@@ -127,7 +127,7 @@ def test_dut_name():
 #### set_dut_type
 
 Writes a string with a type of DUT, f.e "PCBA", "Casing", etc.
-When called again, the exception `DuplicateFieldError` will be raised.
+When called again, the exception `DuplicateParameterError` will be raised.
 
 **Arguments:**
 
@@ -143,7 +143,7 @@ def test_dut_type():
 #### set_dut_revision
 
 Writes a string with a DUT revision.
-When called again, the exception `DuplicateFieldError` will be raised.
+When called again, the exception `DuplicateParameterError` will be raised.
 
 **Arguments:**
 
@@ -159,7 +159,7 @@ def test_dut_revision():
 #### set_stand_name
 
 Writes a string with a test stand name.
-When called again, the exception `DuplicateFieldError` will be caused.
+When called again, the exception `DuplicateParameterError` will be caused.
 
 **Arguments:**
 
@@ -195,7 +195,7 @@ def test_stand_info():
 #### set_stand_location
 
 Writes a string with a test stand location.
-When called again, the exception `DuplicateFieldError` will be caused.
+When called again, the exception `DuplicateParameterError` will be caused.
 
 **Example:**
 
@@ -207,7 +207,7 @@ def test_stand_info():
 #### set_stand_number
 
 Writes a integer number with a test stand number.
-When called again, the exception `DuplicateFieldError` will be caused.
+When called again, the exception `DuplicateParameterError` will be caused.
 When called with negative or non-integer number, the exception `TestStandNumberError` will be caused.
 
 **Arguments:**
@@ -224,7 +224,7 @@ def test_stand_number():
 #### set_stand_revision
 
 Writes a string with a test stand revision.
-When called again, the exception `DuplicateFieldError` will be raised.
+When called again, the exception `DuplicateParameterError` will be raised.
 
 **Arguments:**
 
@@ -295,7 +295,7 @@ def test_instruments():
 #### set_process_name
 
 Writes a string with a process name.
-When called again, the exception `DuplicateFieldError` will be raised.
+When called again, the exception `DuplicateParameterError` will be raised.
 
 **Arguments:**
 
@@ -311,7 +311,7 @@ def test_process():
 #### set_process_number
 
 Writes an integer with a process number.
-When called again, the exception `DuplicateFieldError` will be raised.
+When called again, the exception `DuplicateParameterError` will be raised.
 
 **Arguments:**
 

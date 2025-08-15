@@ -2,6 +2,9 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 
+from typing import Any
+
+
 class HardpyError(Exception):
     """Base HardPy exception."""
 
@@ -9,11 +12,11 @@ class HardpyError(Exception):
         super().__init__(f"HardPy error: {msg}")
 
 
-class DuplicateFieldError(HardpyError):
-    """A field has already been determined in the specified method."""
+class DuplicateParameterError(HardpyError):
+    """A parameter has already been defined."""
 
-    def __init__(self, method_name: str) -> None:
-        super().__init__(f"Field has already been determined in method '{method_name}'")
+    def __init__(self, param_name: Any) -> None:  # noqa: ANN401
+        super().__init__(f"Parameter {param_name} is already defined")
 
 
 class TestStandNumberError(HardpyError):
