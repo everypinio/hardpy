@@ -885,12 +885,14 @@ def test_instruments(pytester: Pytester, hardpy_opts: list[str]):
             instruments = getattr(report.test_stand, 'instruments', None)
             assert instruments in (None, []), f"Expected empty instruments, got {{instruments}}"
 
-            hardpy.set_instrument(
+            instrument1 = hardpy.Instrument(
                 name="Power Supply",
                 revision="1.0",
                 number=1,
                 comment="Main power source"
             )
+            hardpy.set_instrument(instrument1)
+
             report = hardpy.get_current_report()
             instruments = report.test_stand.instruments
             assert instruments is not None
@@ -902,12 +904,14 @@ def test_instruments(pytester: Pytester, hardpy_opts: list[str]):
             else:
                 assert first_instrument['name'] == "Power Supply"
 
-            hardpy.set_instrument(
+            instrument2 = hardpy.Instrument(
                 name="Multimeter",
                 revision="2.1",
                 number=2,
                 info={{'model': '34461A', 'channels': 1}}
             )
+            hardpy.set_instrument(instrument2)
+
             report = hardpy.get_current_report()
             instruments = report.test_stand.instruments
             assert len(instruments) == 2

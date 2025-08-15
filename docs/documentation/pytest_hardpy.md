@@ -269,25 +269,27 @@ def test_driver_info():
 Adds a new information about the instrument (i.e equipment) that form part of the test bench.
 
 Can be called multiple times to add multiple instruments.
+Accepts an `Instrument` object containing all instrument details.
 
-**Arguments:**
+**Instrument Parameters:**
 
 - `name` *(str | None)*: Instrument name
-- `revision` *(str | None)*: Instrument revision
-- `number` *(int | None)*: Instrument number
-- `comment` *(str | None)*: Instrument comment
-- `info` *(Mapping[str, str | int | float | datetime] | None)*: Additional instrument info
+- `revision` *(str | None)*: Instrument revision  
+- `number` *(int | None)*: Instrument number  
+- `comment` *(str | None)*: Instrument comment  
+- `info` *(Mapping[str, str | int | float | datetime] | None)*: Additional instrument info 
 
 **Example:**
 
 ```python
 def test_instruments():
-    set_instrument(
+    instrument = Instrument(
         name="Oscilloscope",
         revision="1.2",
         number=1,
         info={"model": "DSO-X 2024A", "bandwidth": "200MHz"}
     )
+    set_instrument(instrument)
 ```
 
 #### set_process_name
@@ -869,6 +871,39 @@ and `test_run` will return the runs whose start number is equal to the `number_o
     status_code = response.status_code
     response_data = response.json()
     print(response_data)
+```
+
+#### Instrument
+
+The class is used to store information about test equipment that forms part of the test bench. It is used with the [set_instrument](#set_instrument) function.
+
+**Arguments:**
+
+- `name` *(str | None)*: Instrument name  
+- `revision` *(str | None)*: Instrument revision  
+- `number` *(int | None)*: Instrument number  
+- `comment` *(str | None)*: Instrument comment  
+- `info` *(Mapping[str, str | int | float | datetime] | None)*: Additional instrument info as key-value pairs  
+
+**Validation Rules:**
+
+- `number` must be positive if specified (≥ 0)
+
+**Example:**
+
+```python
+oscilloscope = Instrument(
+    name="Oscilloscope",
+    revision="1.2.3",
+    number=1,
+    info={
+        "model": "DSO-X 2024A",
+        "bandwidth": "200MHz",
+        "calibration_date": datetime(2023, 11, 15)
+    }
+)
+
+set_instrument(oscilloscope)
 ```
 
 ## Fixture

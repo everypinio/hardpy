@@ -406,30 +406,12 @@ def set_driver_info(drivers: dict) -> None:
     reporter.update_db_by_doc()
 
 
-def set_instrument(
-    name: str | None = None,
-    revision: str | None = None,
-    number: int | None = None,
-    comment: str | None = None,
-    info: Mapping[str, str | int | float | datetime] | None = None,
-) -> None:
+def set_instrument(instrument: Instrument) -> None:
     """Add instrument to test stand instruments list.
 
     Args:
-        name (str | None): instrument name
-        revision (str | None): instrument revision
-        number (int | None): instrument number
-        comment (str | None): instrument comment
-        info (Mapping | None): additional instrument info
+        instrument (Instrument): Instrument object containing all instrument data
     """
-    instrument = Instrument(
-        name=name,
-        revision=revision,
-        number=number,
-        comment=comment,
-        info=info,
-    )
-
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.TEST_STAND, DF.INSTRUMENTS)
 
