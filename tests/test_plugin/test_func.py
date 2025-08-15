@@ -19,7 +19,7 @@ def test_dut_serial_number(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        from hardpy import DuplicateSerialNumberError
+        from hardpy import DuplicateFieldError
 
         def test_dut_serial_number():
             report = hardpy.get_current_report()
@@ -33,7 +33,7 @@ def test_dut_serial_number(pytester: Pytester, hardpy_opts: list[str]):
             assert serial_number == report.dut.serial_number
 
             second_serial_number = "incorrect serial number"
-            with pytest.raises(DuplicateSerialNumberError):
+            with pytest.raises(DuplicateFieldError):
                 hardpy.set_dut_serial_number(second_serial_number)
     """,
     )
@@ -46,7 +46,7 @@ def test_dut_part_number(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        from hardpy import DuplicatePartNumberError
+        from hardpy import DuplicateFieldError
 
         def test_dut_part_number():
             report = hardpy.get_current_report()
@@ -60,7 +60,7 @@ def test_dut_part_number(pytester: Pytester, hardpy_opts: list[str]):
             assert part_number == report.dut.part_number
 
             second_part_number = "incorrect part number"
-            with pytest.raises(DuplicatePartNumberError):
+            with pytest.raises(DuplicateFieldError):
                 hardpy.set_dut_part_number(second_part_number)
     """,
     )
@@ -73,7 +73,7 @@ def test_empty_dut_serial_number(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        from hardpy import DuplicateSerialNumberError
+        from hardpy import DuplicateFieldError
 
         def test_empty_dut_serial_number():
             report = hardpy.get_current_report()
@@ -96,7 +96,7 @@ def test_clean_dut_serial_number(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        from hardpy import DuplicateSerialNumberError
+        from hardpy import DuplicateFieldError
 
         def test_clean_dut_serial_number():
             report = hardpy.get_current_report()
@@ -162,7 +162,7 @@ def test_stand_name(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        from hardpy import DuplicateTestStandNameError
+        from hardpy import DuplicateFieldError
 
         def test_stand_name():
             report = hardpy.get_current_report()
@@ -176,7 +176,7 @@ def test_stand_name(pytester: Pytester, hardpy_opts: list[str]):
             assert name == report.test_stand.name
 
             second_name = "incorrect name"
-            with pytest.raises(DuplicateTestStandNameError):
+            with pytest.raises(DuplicateFieldError):
                 hardpy.set_stand_name(second_name)
     """,
     )
@@ -188,7 +188,7 @@ def test_stand_location(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        from hardpy import DuplicateTestStandLocationError
+        from hardpy import DuplicateFieldError
 
         def test_stand_location():
             report = hardpy.get_current_report()
@@ -202,7 +202,7 @@ def test_stand_location(pytester: Pytester, hardpy_opts: list[str]):
             assert location == report.test_stand.location
 
             second_location = "incorrect location"
-            with pytest.raises(DuplicateTestStandLocationError):
+            with pytest.raises(DuplicateFieldError):
                 hardpy.set_stand_location(second_location)
     """,
     )
@@ -214,7 +214,7 @@ def test_stand_duplicate_number(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        from hardpy import DuplicateTestStandNumberError
+        from hardpy import DuplicateFieldError
 
         def test_stand_number():
             report = hardpy.get_current_report()
@@ -228,7 +228,7 @@ def test_stand_duplicate_number(pytester: Pytester, hardpy_opts: list[str]):
             assert stand_number == report.test_stand.number
 
             second_number = 2
-            with pytest.raises(DuplicateTestStandNumberError):
+            with pytest.raises(DuplicateFieldError):
                 hardpy.set_stand_number(second_number)
     """,
     )
@@ -736,7 +736,7 @@ def test_user_name(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        from hardpy import DuplicateUserNameError
+        from hardpy import DuplicateFieldError
 
         def test_user_name():
             report = hardpy.get_current_report()
@@ -748,7 +748,7 @@ def test_user_name(pytester: Pytester, hardpy_opts: list[str]):
             assert name == report.user
 
             second_name = "another_user"
-            with pytest.raises(DuplicateUserNameError):
+            with pytest.raises(DuplicateFieldError):
                 hardpy.set_user_name(second_name)
     """,
     )
@@ -760,7 +760,7 @@ def test_batch_serial_number(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        from hardpy import DuplicateBatchSerialNumberError
+        from hardpy import DuplicateFieldError
 
         def test_batch_serial_number():
             report = hardpy.get_current_report()
@@ -772,7 +772,7 @@ def test_batch_serial_number(pytester: Pytester, hardpy_opts: list[str]):
             assert serial_number == report.batch_serial_number
 
             second_serial = "BATCH-456"
-            with pytest.raises(DuplicateBatchSerialNumberError):
+            with pytest.raises(DuplicateFieldError):
                 hardpy.set_batch_serial_number(second_serial)
     """,
     )
@@ -784,7 +784,7 @@ def test_dut_name(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        from hardpy import DuplicateDutNameError
+        from hardpy import DuplicateFieldError
 
         def test_dut_name():
             report = hardpy.get_current_report()
@@ -796,7 +796,7 @@ def test_dut_name(pytester: Pytester, hardpy_opts: list[str]):
             assert name == report.dut.name
 
             second_name = "Another Device"
-            with pytest.raises(DuplicateDutNameError):
+            with pytest.raises(DuplicateFieldError):
                 hardpy.set_dut_name(second_name)
     """,
     )
@@ -808,7 +808,7 @@ def test_dut_type(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        from hardpy import DuplicateDutTypeError
+        from hardpy import DuplicateFieldError
 
         def test_dut_type():
             report = hardpy.get_current_report()
@@ -820,7 +820,7 @@ def test_dut_type(pytester: Pytester, hardpy_opts: list[str]):
             assert dut_type == report.dut.type
 
             second_type = "Module"
-            with pytest.raises(DuplicateDutTypeError):
+            with pytest.raises(DuplicateFieldError):
                 hardpy.set_dut_type(second_type)
     """,
     )
@@ -832,7 +832,7 @@ def test_dut_revision(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        from hardpy import DuplicateDutRevisionError
+        from hardpy import DuplicateFieldError
 
         def test_dut_revision():
             report = hardpy.get_current_report()
@@ -844,7 +844,7 @@ def test_dut_revision(pytester: Pytester, hardpy_opts: list[str]):
             assert revision == report.dut.revision
 
             second_rev = "REV2.0"
-            with pytest.raises(DuplicateDutRevisionError):
+            with pytest.raises(DuplicateFieldError):
                 hardpy.set_dut_revision(second_rev)
     """,
     )
@@ -856,7 +856,7 @@ def test_stand_revision(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        from hardpy import DuplicateStandRevisionError
+        from hardpy import DuplicateFieldError
 
         def test_stand_revision():
             report = hardpy.get_current_report()
@@ -868,7 +868,7 @@ def test_stand_revision(pytester: Pytester, hardpy_opts: list[str]):
             assert revision == report.test_stand.revision
 
             second_rev = "HW2.0"
-            with pytest.raises(DuplicateStandRevisionError):
+            with pytest.raises(DuplicateFieldError):
                 hardpy.set_stand_revision(second_rev)
     """,
     )
@@ -929,7 +929,7 @@ def test_process_name(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        from hardpy import DuplicateProcessNameError
+        from hardpy import DuplicateFieldError
 
         def test_process_name():
             report = hardpy.get_current_report()
@@ -941,7 +941,7 @@ def test_process_name(pytester: Pytester, hardpy_opts: list[str]):
             assert name == report.process.name
 
             second_name = "Production Test"
-            with pytest.raises(DuplicateProcessNameError):
+            with pytest.raises(DuplicateFieldError):
                 hardpy.set_process_name(second_name)
     """,
     )
@@ -953,7 +953,7 @@ def test_process_number(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        from hardpy import DuplicateProcessNumberError
+        from hardpy import DuplicateFieldError
 
         def test_process_number():
             report = hardpy.get_current_report()
@@ -965,7 +965,7 @@ def test_process_number(pytester: Pytester, hardpy_opts: list[str]):
             assert number == report.process.number
 
             second_number = 2
-            with pytest.raises(DuplicateProcessNumberError):
+            with pytest.raises(DuplicateFieldError):
                 hardpy.set_process_number(second_number)
     """,
     )
