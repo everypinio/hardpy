@@ -250,10 +250,10 @@ class NodeInfo:
                     return arg
                 if isinstance(arg, str):
                     valid_groups = {"setup", "main", "teardown"}
-                    if arg.lower() not in valid_groups:
+                    if arg not in valid_groups:
                         msg = f"Invalid group '{arg}'. Valid groups are: {', '.join(valid_groups)}"  # noqa: E501
                         raise ValueError(msg)
-                    return Group(arg.lower())
+                    return Group(arg)
                 msg = f"Group marker argument must be either string or Group enum, got {type(arg)}"  # noqa: E501
                 raise ValueError(
                     msg,
