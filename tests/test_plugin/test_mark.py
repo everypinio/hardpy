@@ -138,5 +138,3 @@ def test_empty_case_marker(pytester: Pytester, hardpy_opts: list[str]):
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1)
-
-

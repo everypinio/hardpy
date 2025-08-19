@@ -227,7 +227,10 @@ class NodeInfo:
         return any(marker.name == "critical" for marker in markers)
 
     def _get_group(
-        self, markers: list[Mark], marker_name: str, default: Group,
+        self,
+        markers: list[Mark],
+        marker_name: str,
+        default: Group,
     ) -> Group:
         """Get group from markers or use default.
 
@@ -241,12 +244,18 @@ class NodeInfo:
         """
         for marker in markers:
             if marker.name == marker_name and marker.args:
-                try:
-                    return Group(marker.args[0].upper())
-                except ValueError:
-                    valid_groups = [g.value for g in Group]
-                    raise ValueError(
-                        f"Invalid group '{marker.args[0]}'. "
-                        f"Valid groups are: {', '.join(valid_groups)}"
-                    )
+                arg = marker.args[0]
+
+                if isinstance(arg, Group):
+                    return arg
+                if isinstance(arg, str):
+                    valid_groups = {"setup", "main", "teardown"}
+                    if arg.lower() not in valid_groups:
+                        msg = f"Invalid group '{arg}'. Valid groups are: {', '.join(valid_groups)}"  # noqa: E501
+                        raise ValueError(msg)
+                    return Group(arg.lower())
+                msg = f"Group marker argument must be either string or Group enum, got {type(arg)}"  # noqa: E501
+                raise ValueError(
+                    msg,
+                )
         return default
