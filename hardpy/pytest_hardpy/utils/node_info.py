@@ -50,9 +50,8 @@ class NodeInfo:
         self._module_group = self._get_group(
             item.parent.own_markers,  # type: ignore
             "module_group",
-            Group.MAIN,
         )
-        self._case_group = self._get_group(item.own_markers, "case_group", Group.MAIN)
+        self._case_group = self._get_group(item.own_markers, "case_group")
 
         self._module_id = Path(item.parent.nodeid).stem  # type: ignore
         self._case_id = item.name
@@ -230,17 +229,14 @@ class NodeInfo:
         self,
         markers: list[Mark],
         marker_name: str,
-        default: Group,
     ) -> Group:
         """Get group from markers or use default.
 
         Args:
             markers (list[Mark]): item markers list
             marker_name (str): marker name
-            default (Group): default group if marker not found
-
         Returns:
-            Group: group from marker or default
+            Group: group from marker or default (Group.MAIN)
         """
         for marker in markers:
             if marker.name == marker_name and marker.args:
@@ -249,13 +245,12 @@ class NodeInfo:
                 if isinstance(arg, Group):
                     return arg
                 if isinstance(arg, str):
-                    valid_groups = {"setup", "main", "teardown"}
+                    valid_groups = {group.value for group in Group}
                     if arg not in valid_groups:
                         msg = f"Invalid group '{arg}'. Valid groups are: {', '.join(valid_groups)}"  # noqa: E501
                         raise ValueError(msg)
                     return Group(arg)
                 msg = f"Group marker argument must be either string or Group enum, got {type(arg)}"  # noqa: E501
-                raise ValueError(
-                    msg,
-                )
-        return default
+                raise ValueError(msg)
+
+        return Group.MAIN

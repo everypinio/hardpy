@@ -93,7 +93,10 @@ def test_invalid_groups(pytester: Pytester, hardpy_opts: list[str]):
         """,
     )
     result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes()
+    output = result.stdout.str()
+    assert "invalid_group" in output
+    assert "Invalid group" in output or "Error creating NodeInfo" in output
+    assert result.ret != 0
 
 
 def test_empty_groups(pytester: Pytester, hardpy_opts: list[str]):
@@ -109,4 +112,7 @@ def test_empty_groups(pytester: Pytester, hardpy_opts: list[str]):
         """,
     )
     result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes()
+    output = result.stdout.str()
+    assert "empty" in output or "''" in output
+    assert "Invalid group" in output or "Error creating NodeInfo" in output
+    assert result.ret != 0
