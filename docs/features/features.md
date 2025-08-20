@@ -160,6 +160,57 @@ def test_c():
 
 See the example [critical](./../examples/critical_test.md) for more information.
 
+## Test case and test module grouping
+
+The **HardPy** allows users to organize tests into logical groups: `setup`, `main`, and `teardown`.
+This grouping helps structure test execution flow and reporting.
+
+Users can designate individual tests or entire modules with specific groups.
+By default, all tests are in the `main` group.
+
+**Example (test case level):**
+
+```python
+import pytest
+from hardpy.pytest_hardpy.utils.const import Group
+
+@pytest.mark.case_group(Group.SETUP)
+def test_setup_case():
+    # This test will be executed first as part of setup
+    assert initialize_system()
+
+@pytest.mark.case_group(Group.MAIN)
+def test_main_functionality():
+    # This is a main test case
+    assert check_system_operation()
+
+@pytest.mark.case_group(Group.TEARDOWN)
+def test_cleanup():
+    # This test will clean up after execution
+    assert cleanup_resources()
+```
+
+**Example (module level):**
+
+```python
+import pytest
+from hardpy.pytest_hardpy.utils.const import Group
+
+# All tests in this module will be teardown tests
+pytestmark = pytest.mark.module_group(Group.TEARDOWN)
+
+def test_cleanup_database():
+    assert clear_database_tables()
+
+def test_release_resources():
+    assert free_allocated_memory()
+
+def test_generate_final_report():
+    assert create_execution_summary()
+```
+
+See the [test grouping documentation](./../documentation/pytest_hardpy.md#case_group) for more information on how groups affect test execution order and reporting.
+
 ## Running some instance in single stand
 
 A user can run multiple **HardPy** instances on a single stand.
