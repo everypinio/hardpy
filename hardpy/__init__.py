@@ -29,6 +29,7 @@ from hardpy.pytest_hardpy.pytest_call import (
     set_stand_name,
     set_stand_number,
     set_stand_revision,
+    set_sub_unit,
     set_user_name,
 )
 from hardpy.pytest_hardpy.result import (
@@ -38,7 +39,6 @@ from hardpy.pytest_hardpy.result import (
 )
 from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig
 from hardpy.pytest_hardpy.utils import (
-    DUT,
     BaseWidget,
     CheckboxWidget,
     DialogBox,
@@ -50,12 +50,12 @@ from hardpy.pytest_hardpy.utils import (
     NumericInputWidget,
     RadiobuttonWidget,
     StepWidget,
+    SubUnit,
     TestStandNumberError,
     TextInputWidget,
 )
 
 __all__ = [
-    "DUT",
     "BaseWidget",
     "CheckboxWidget",
     "CouchdbConfig",
@@ -73,6 +73,7 @@ __all__ = [
     "StandCloudLoader",
     "StandCloudReader",
     "StepWidget",
+    "SubUnit",
     "TestStandNumberError",
     "TextInputWidget",
     "clear_operator_message",
@@ -82,6 +83,7 @@ __all__ = [
     "set_batch_serial_number",
     "set_case_artifact",
     "set_driver_info",
+    "set_dut",
     "set_dut_info",
     "set_dut_name",
     "set_dut_part_number",
@@ -101,5 +103,6 @@ __all__ = [
     "set_stand_name",
     "set_stand_number",
     "set_stand_revision",
+    "set_sub_unit",
     "set_user_name",
 ]

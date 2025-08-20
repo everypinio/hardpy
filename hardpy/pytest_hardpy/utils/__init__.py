@@ -25,10 +25,9 @@ from hardpy.pytest_hardpy.utils.machineid import machine_id
 from hardpy.pytest_hardpy.utils.node_info import NodeInfo
 from hardpy.pytest_hardpy.utils.progress_calculator import ProgressCalculator
 from hardpy.pytest_hardpy.utils.singleton import SingletonMeta
-from hardpy.pytest_hardpy.utils.user_type import DUT, Instrument
+from hardpy.pytest_hardpy.utils.stand_type import Instrument, SubUnit
 
 __all__ = [
-    "DUT",
     "BaseWidget",
     "CheckboxWidget",
     "CompOp",
@@ -47,6 +46,7 @@ __all__ = [
     "RadiobuttonWidget",
     "SingletonMeta",
     "StepWidget",
+    "SubUnit",
     "TestStandNumberError",
     "TestStatus",
     "TextInputWidget",
