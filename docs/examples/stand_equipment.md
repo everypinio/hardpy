@@ -11,9 +11,9 @@ The example shows how to record instruments that are part of the test setup.
 
 ### Description
 
-The `set_instrument()` function allows documenting all equipment that forms part of the test bench setup.
+The `Instrument` class and `set_instrument()` function allow documenting all equipment that forms part of the test bench setup.
 This information is stored in the database.
-Information about using of the function [set_instrument](https://github.com/everypinio/hardpy/tree/main/documentation/pytest_hadpy#set_instrument)
+Information about using of the function [set_instrument](https://github.com/everypinio/hardpy/tree/main/documentation/pytest_hadpy#set_instrument) and class [Instrument](https://github.com/everypinio/hardpy/tree/main/documentation/pytest_hadpy#instrument)
 
 ### Example implementation
 
@@ -26,8 +26,8 @@ pytestmark = pytest.mark.module_name("Stand equipment")
 
 @pytest.mark.case_name("Power Supply Setup")
 def test_power_supply():
-    """Document the power supply used in testing"""
-    hardpy.set_instrument(
+    """Document the power supply used in testing."""
+    psu = hardpy.Instrument(
         name="DC Power Supply",
         revision="2.1",
         number=1,
@@ -39,13 +39,14 @@ def test_power_supply():
             "calibration_date": datetime(2023, 6, 15).isoformat()
         }
     )
+    hardpy.set_instrument(psu)
     assert True
 
 @pytest.mark.case_name("Measurement Equipment")
 def test_measurement_devices():
-    """Document measurement equipment on the test bench"""
+    """Document measurement equipment on the test bench."""
     # Multimeter
-    hardpy.set_instrument(
+    dmm = hardpy.Instrument(
         name="Digital Multimeter",
         revision="1.3",
         number=2,
@@ -55,9 +56,10 @@ def test_measurement_devices():
             "channels": 4
         }
     )
+    hardpy.set_instrument(dmm)
     
     # Oscilloscope
-    hardpy.set_instrument(
+    scope = hardpy.Instrument(
         name="Oscilloscope",
         revision="3.2",
         number=3,
@@ -67,12 +69,13 @@ def test_measurement_devices():
             "sample_rate": "2GSa/s"
         }
     )
+    hardpy.set_instrument(scope)
     assert True
 
 @pytest.mark.case_name("Environmental Controls")
 def test_environmental_controls():
-    """Document environmental control equipment"""
-    hardpy.set_instrument(
+    """Document environmental control equipment."""
+    chamber = hardpy.Instrument(
         name="Temperature Chamber",
         revision="4.0",
         number=4,
@@ -82,5 +85,6 @@ def test_environmental_controls():
             "humidity_range": "10% to 98% RH"
         }
     )
+    hardpy.set_instrument(chamber)
     assert True
 ```
