@@ -19,12 +19,12 @@ from hardpy.pytest_hardpy.db import (
 )
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
-    DUT,
     DialogBox,
     DuplicateParameterError,
     HTMLComponent,
     ImageComponent,
     Instrument,
+    SubUnit,
     TestStandNumberError,
 )
 
@@ -94,20 +94,19 @@ def set_batch_serial_number(serial_number: str) -> None:
     reporter.update_db_by_doc()
 
 
-def set_dut(dut: DUT):
-    reporter = RunnerReporter()
-    dut.to_dict()
-    for dut_key, dut_value in dut_map.items():
-        key = reporter.generate_key(DF.DUT, dut_key)
-        reporter.set_doc_value(key, dut_value)
-    reporter.update_db_by_doc()
+def set_sub_unit(sub_unit: SubUnit) -> None:
+    """Add sub unit to DUT sub units list.
 
-
-def set_sub_dut(sub_dut: DUT):
+    Args:
+        sub_unit (SubUnit): Sub unit object cof DUT.
+    """
     reporter = RunnerReporter()
-    # for dut_key, dut_value in info.items():
-    key = reporter.generate_key(DF.DUT, DF.SUB_DUTS, sub_dut)
-    reporter.set_doc_value(key, sub_dut)
+    key = reporter.generate_key(DF.DUT, DF.SUB_UNITS)
+
+    sub_units = reporter.get_field(key) or []
+    sub_units.append({k: v for k, v in vars(sub_unit).items() if v is not None})
+
+    reporter.set_doc_value(key, sub_units)
     reporter.update_db_by_doc()
 
 
