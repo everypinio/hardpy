@@ -94,7 +94,7 @@ def set_batch_serial_number(serial_number: str) -> None:
     reporter.update_db_by_doc()
 
 
-def set_sub_unit(sub_unit: SubUnit) -> None:
+def set_dut_sub_unit(sub_unit: SubUnit) -> None:
     """Add sub unit to DUT sub units list.
 
     Args:

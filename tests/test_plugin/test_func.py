@@ -162,7 +162,7 @@ def test_dut_sub_unit(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        from hardpy import set_sub_unit, SubUnit
+        from hardpy import set_dut_sub_unit, SubUnit
 
         def test_sub_unit():
             report = hardpy.get_current_report()
@@ -182,7 +182,7 @@ def test_dut_sub_unit(pytester: Pytester, hardpy_opts: list[str]):
                 revision=revision,
                 info=info,
             )
-            hardpy.set_sub_unit(sub_unit)
+            hardpy.set_dut_sub_unit(sub_unit)
             report = hardpy.get_current_report()
             assert serial_number == report.dut.sub_units[0].serial_number
             assert part_number == report.dut.sub_units[0].part_number
@@ -204,7 +204,7 @@ def test_dut_sub_unit(pytester: Pytester, hardpy_opts: list[str]):
                 type=type_2,
                 revision=revision_2,
             )
-            hardpy.set_sub_unit(sub_unit_2)
+            hardpy.set_dut_sub_unit(sub_unit_2)
             report = hardpy.get_current_report()
             assert serial_number_2 == report.dut.sub_units[1].serial_number
             assert part_number_2 == report.dut.sub_units[1].part_number

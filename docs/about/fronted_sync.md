@@ -135,7 +135,7 @@ The device under test section contains information about the DUT.
   [set_dut_revision](./../documentation/pytest_hardpy.md#set_dut_revision) function.
   It can only be set once per test run.
 - **sub_units**: list of sub units of main DUT. Each sub-unit has a similar structure to the DUT itself, but does not contain any other sub units.
-  The user can add the sub unit by using [set_sub_unit](./../documentation/pytest_hardpy.md#set_sub_unit) function.
+  The user can add the sub unit by using [set_dut_sub_unit](./../documentation/pytest_hardpy.md#set_dut_sub_unit) function.
 - **info**: dictionary containing additional information about the the DUT, such as batch, board revision, etc.
   The user can specify the additional info by using [set_dut_info](./../documentation/pytest_hardpy.md#set_dut_info) function.
 

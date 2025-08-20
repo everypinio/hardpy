@@ -29,7 +29,7 @@ from hardpy.pytest_hardpy.pytest_call import (
     set_stand_name,
     set_stand_number,
     set_stand_revision,
-    set_sub_unit,
+    set_dut_sub_unit,
     set_user_name,
 )
 from hardpy.pytest_hardpy.result import (
@@ -103,6 +103,6 @@ __all__ = [
     "set_stand_name",
     "set_stand_number",
     "set_stand_revision",
-    "set_sub_unit",
+    "set_dut_sub_unit",
     "set_user_name",
 ]
