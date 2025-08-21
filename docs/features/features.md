@@ -338,4 +338,3 @@ See the [StandCloud reader](./../examples/stand_cloud_reader.md) for more inform
 
 A user can run multiple **HardPy** instances on a single stand.
 The startup is described in the [Multiple Stand](./../examples/multiple_stands.md) example.
-
