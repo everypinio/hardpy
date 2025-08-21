@@ -1,4 +1,3 @@
-from datetime import datetime
 from uuid import uuid4
 
 import pytest
@@ -17,6 +16,7 @@ def test_process_info():
     hardpy.set_process_info(process_info)
 
 
+@pytest.mark.case_name("Batch info")
 def test_batch_info():
     hardpy.set_batch_serial_number("batch_1")
 
@@ -30,11 +30,20 @@ def test_dut_info():
     hardpy.set_dut_type("PCBA")
     hardpy.set_dut_revision("REV1.0")
 
-    info = {
-        "batch": "test_batch",
-        "board_rev": "rev_1",
-    }
+    info = {"sw_version": "1.0.0"}
     hardpy.set_dut_info(info)
+
+
+@pytest.mark.case_name("Sub unit info")
+def test_sub_unit_info():
+    hardpy.set_dut_sub_unit(
+        hardpy.SubUnit(
+            serial_number=str(uuid4())[:6],
+            part_number="part_number_1",
+            type="PCBA",
+            revision="REV2.0",
+        ),
+    )
 
 
 @pytest.mark.case_name("Test stand info")
