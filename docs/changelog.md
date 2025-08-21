@@ -12,6 +12,8 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
   `set_process_name`, `set_process_number`, `set_process_info`, `set_dut_name`, `set_dut_type`, 
   `set_dut_revision`, `set_stand_info`.
   [[PR-172](https://github.com/everypinio/hardpy/pull/172)]
+* Change `DuplicateSerialNumberError` and `DuplicatePartNumberError` to `DuplicateParameterError`.
+  [[PR-172](https://github.com/everypinio/hardpy/pull/172)]
 * Update database schema by some tables: **Process**, **Instrument**, **NumericMeasurement**.
   [[PR-162](https://github.com/everypinio/hardpy/pull/162)]
 * Update database schema by some fields: **user**, **batch_serial_number**, **caused_dut_failure_id**, **error_code**
