@@ -2,9 +2,15 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Update database schema by **SubUnit** table.
+  [[PR-174](https://github.com/everypinio/hardpy/pull/174)]
+* Add `set_dut_sub_unit` function.
+  [[PR-174](https://github.com/everypinio/hardpy/pull/174)]
 * Add markers `case_group` and `module_group`.
   [[PR-173](https://github.com/everypinio/hardpy/pull/173)]
-* Added functions for filling fields of the updated database.
+* Add functions: `set_user_name`, `set_batch_serial_number`, `set_stand_revision`, `set_instrument`
+  `set_process_name`, `set_process_number`, `set_process_info`, `set_dut_name`, `set_dut_type`, 
+  `set_dut_revision`, `set_stand_info`.
   [[PR-172](https://github.com/everypinio/hardpy/pull/172)]
 * Update database schema by some tables: **Process**, **Instrument**, **NumericMeasurement**.
   [[PR-162](https://github.com/everypinio/hardpy/pull/162)]
