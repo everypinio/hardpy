@@ -1027,6 +1027,42 @@ Sets a text name for the test module (file) (default: module name)
 pytestmark = pytest.mark.module_name("Module 1")
 ```
 
+#### case_group
+
+Sets the group for a test case. Valid groups: `setup`, `main`, `teardown` (default: `main`)
+
+**Example:**
+
+```python
+from hardpy.pytest_hardpy.utils.const import Group
+@pytest.mark.case_group(Group.SETUP)
+def test_setup_case():
+    assert True
+
+@pytest.mark.case_group("teardown")  
+def test_teardown_case():
+    assert True
+```
+
+#### module_group
+
+Sets the group for all test cases in a module. Valid groups: `setup`, `main`, `teardown` (default: `main`)
+
+**Example:**
+
+```python
+import pytest
+from hardpy.pytest_hardpy.utils.const import Group
+
+pytestmark = pytest.mark.module_group(Group.TEARDOWN)
+
+def test_cleanup1():
+    assert True
+
+def test_cleanup2():
+    assert True
+```
+
 #### dependency
 
 Skips the test case/module if the main test fails/skipped/errored.
