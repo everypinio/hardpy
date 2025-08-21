@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add markers `case_group` and `module_group`.
+  [[PR-173](https://github.com/everypinio/hardpy/pull/173)]
 * Added functions for filling fields of the updated database.
   [[PR-172](https://github.com/everypinio/hardpy/pull/172)]
 * Update database schema by some tables: **Process**, **Instrument**, **NumericMeasurement**.
