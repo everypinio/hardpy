@@ -47,10 +47,7 @@ class NodeInfo:
 
         self._critical = self._get_critical(item.own_markers + item.parent.own_markers)
 
-        self._module_group = self._get_group(
-            item.parent.own_markers,  # type: ignore
-            "module_group",
-        )
+        self._module_group = self._get_group(item.parent.own_markers, "module_group")
         self._case_group = self._get_group(item.own_markers, "case_group")
 
         self._module_id = Path(item.parent.nodeid).stem  # type: ignore
