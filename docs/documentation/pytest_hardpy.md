@@ -926,6 +926,10 @@ It is used with the [set_instrument](#set_instrument) function.
 - `comment` *(str | None)*: Instrument comment  
 - `info` *(Mapping[str, str | int | float | datetime] | None)*: Additional instrument info as key-value pairs  
 
+**Returns:**
+
+- *(int)*: instrument index
+
 **Validation Rules:**
 
 - `number` must be positive if specified (≥ 0)
@@ -960,6 +964,10 @@ It is used with the [set_dut_sub_unit](#set_dut_sub_unit) function.
 - `type` *(str | None)*: unit type
 - `revision` *(str | None)*: unit revision  
 - `info` *(Mapping[str, str | int | float | datetime] | None)*: additional unit info as key-value pairs  
+
+**Returns:**
+
+- *(int)*: sub unit index
 
 **Example:**
 

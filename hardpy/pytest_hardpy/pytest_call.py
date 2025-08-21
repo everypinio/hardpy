@@ -94,11 +94,14 @@ def set_batch_serial_number(serial_number: str) -> None:
     reporter.update_db_by_doc()
 
 
-def set_dut_sub_unit(sub_unit: SubUnit) -> None:
+def set_dut_sub_unit(sub_unit: SubUnit) -> int:
     """Add sub unit to DUT sub units list.
 
     Args:
         sub_unit (SubUnit): Sub unit object cof DUT.
+
+    Returns:
+        int: sub unit index
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.DUT, DF.SUB_UNITS)
@@ -108,6 +111,8 @@ def set_dut_sub_unit(sub_unit: SubUnit) -> None:
 
     reporter.set_doc_value(key, sub_units)
     reporter.update_db_by_doc()
+
+    return len(sub_units) - 1
 
 
 def set_dut_info(info: Mapping[str, str | int | float | datetime]) -> None:
@@ -423,11 +428,14 @@ def set_driver_info(drivers: dict) -> None:
     reporter.update_db_by_doc()
 
 
-def set_instrument(instrument: Instrument) -> None:
+def set_instrument(instrument: Instrument) -> int:
     """Add instrument to test stand instruments list.
 
     Args:
         instrument (Instrument): Instrument object containing all instrument data
+
+    Returns:
+        int: instrument index
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.TEST_STAND, DF.INSTRUMENTS)
@@ -437,6 +445,8 @@ def set_instrument(instrument: Instrument) -> None:
 
     reporter.set_doc_value(key, instruments)
     reporter.update_db_by_doc()
+
+    return len(instruments) - 1
 
 
 def set_process_name(name: str) -> None:
