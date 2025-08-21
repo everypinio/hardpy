@@ -166,7 +166,7 @@ def test_dut_sub_unit(pytester: Pytester, hardpy_opts: list[str]):
 
         def test_sub_unit():
             report = hardpy.get_current_report()
-            assert report.dut.sub_units == [], "Sub units is not empty before start."
+            assert report.dut.sub_units == [], "Sub units are not empty before start."
 
             serial_number = str(uuid4())[:6]
             part_number = "part_number_1"

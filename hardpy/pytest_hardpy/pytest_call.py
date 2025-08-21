@@ -98,7 +98,7 @@ def set_dut_sub_unit(sub_unit: SubUnit) -> int:
     """Add sub unit to DUT sub units list.
 
     Args:
-        sub_unit (SubUnit): Sub unit object cof DUT.
+        sub_unit (SubUnit): Sub unit object of DUT.
 
     Returns:
         int: sub unit index
