@@ -156,6 +156,46 @@ def test_dut_revision():
     set_dut_revision("HW1.0")
 ```
 
+#### set_dut_sub_unit
+
+Writes a sub unit of DUT.
+It accepts a [SubUnit](#subunit) object containing all the details of the sub unit.
+
+**Arguments:**
+
+- `sub_unit` *(SubUnit)*: SubUnit object
+
+**Example:**
+
+```python
+def test_dut_sub_unit():
+    sub_unit = SubUnit(
+        serial_number="12345",
+        part_number="part_number_1",
+        name="Test Device",
+        type="PCBA",
+        revision="REV1.0",
+        info={"sw_version": "1.0"},
+    )
+    hardpy.set_dut_sub_unit(sub_unit)
+```
+
+#### set_dut_revision
+
+Writes a string with a DUT revision.
+When called again, the exception `DuplicateParameterError` will be raised.
+
+**Arguments:**
+
+- `revision` *(str)*: DUT revision (e.g. "REV1.0")
+
+**Example:**
+
+```python
+def test_dut_revision():
+    set_dut_revision("HW1.0")
+```
+
 #### set_stand_name
 
 Writes a string with a test stand name.
@@ -269,7 +309,7 @@ def test_driver_info():
 Adds a new information about the instrument (i.e equipment) that form part of the test bench.
 
 Can be called multiple times to add multiple instruments.
-Accepts an `Instrument` object containing all instrument details.
+Accepts an [Instrument](#instrument) object containing all instrument details.
 
 **Instrument Parameters:**
 
@@ -875,7 +915,8 @@ and `test_run` will return the runs whose start number is equal to the `number_o
 
 #### Instrument
 
-The class is used to store information about test equipment that forms part of the test bench. It is used with the [set_instrument](#set_instrument) function.
+The class is used to store information about test equipment that forms part of the test bench. 
+It is used with the [set_instrument](#set_instrument) function.
 
 **Arguments:**
 
@@ -884,6 +925,10 @@ The class is used to store information about test equipment that forms part of t
 - `number` *(int | None)*: Instrument number  
 - `comment` *(str | None)*: Instrument comment  
 - `info` *(Mapping[str, str | int | float | datetime] | None)*: Additional instrument info as key-value pairs  
+
+**Returns:**
+
+- *(int)*: instrument index
 
 **Validation Rules:**
 
@@ -904,6 +949,39 @@ oscilloscope = Instrument(
 )
 
 set_instrument(oscilloscope)
+```
+
+#### SubUnit
+
+This class stores information about the sub-unit of the DUT.. 
+It is used with the [set_dut_sub_unit](#set_dut_sub_unit) function.
+
+**Arguments:**
+
+- `serial_number` *(str | None)*: unit serial number
+- `part_number` *(str | None)*: unit part number
+- `name` *(str | None)*: unit name  
+- `type` *(str | None)*: unit type
+- `revision` *(str | None)*: unit revision  
+- `info` *(Mapping[str, str | int | float | datetime] | None)*: additional unit info as key-value pairs  
+
+**Returns:**
+
+- *(int)*: sub unit index
+
+**Example:**
+
+```python
+def test_dut_sub_unit():
+    sub_unit = SubUnit(
+        serial_number="12345",
+        part_number="part_number_1",
+        name="Test Device",
+        type="PCBA",
+        revision="REV1.0",
+        info={"sw_version": "1.0"},
+    )
+    hardpy.set_dut_sub_unit(sub_unit)
 ```
 
 ## Fixture

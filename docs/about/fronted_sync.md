@@ -134,8 +134,8 @@ The device under test section contains information about the DUT.
 - **revision**: DUT revision. The user can specify the DUT revision by using
   [set_dut_revision](./../documentation/pytest_hardpy.md#set_dut_revision) function.
   It can only be set once per test run.
-- **sub_duts**: list of sub DUT's of main DUT. The structure of each sub DUT is identical to that of the DUT itself.
-  The user can add the sub DUT by using [set_sub_dut](./../documentation/pytest_hardpy.md#set_sub_dut) function.
+- **sub_units**: list of sub units of main DUT. Each sub-unit has a similar structure to the DUT itself, but does not contain any other sub units.
+  The user can add the sub unit by using [set_dut_sub_unit](./../documentation/pytest_hardpy.md#set_dut_sub_unit) function.
 - **info**: dictionary containing additional information about the the DUT, such as batch, board revision, etc.
   The user can specify the additional info by using [set_dut_info](./../documentation/pytest_hardpy.md#set_dut_info) function.
 
@@ -260,7 +260,7 @@ For example, the measured voltage must fall within a specific range.
         "serial_number": "92c5a4bb-ecb0-42c5-89ac-e0caca0919fd",
         "part_number": "0507",
         "revision": "rev_1",
-        "sub_duts": [],
+        "sub_units": [],
         "info": {
           "sw_version": "3.2.0"
         }

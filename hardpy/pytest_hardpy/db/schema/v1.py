@@ -72,7 +72,20 @@ class Dut(BaseModel):
     serial_number: str | None = None
     part_number: str | None = None
     revision: str | None = None
-    sub_duts: list[Dut] = []
+    sub_units: list[SubUnit] = []
+    info: dict[str, str | int | float | datetime] = {}
+
+
+class SubUnit(BaseModel):
+    """Sub unit of DUT description."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: str | None = None
+    type: str | None = None
+    serial_number: str | None = None
+    part_number: str | None = None
+    revision: str | None = None
     info: dict[str, str | int | float | datetime] = {}
 
 

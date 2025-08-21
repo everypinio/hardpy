@@ -96,7 +96,7 @@ class BaseStore(BaseConnector):
                     DF.REVISION: None,
                     DF.SERIAL_NUMBER: None,
                     DF.PART_NUMBER: None,
-                    DF.SUB_DUTS: [],
+                    DF.SUB_UNITS: [],
                     DF.INFO: {},
                 },
                 DF.TEST_STAND: {
@@ -127,7 +127,7 @@ class BaseStore(BaseConnector):
             DF.REVISION: None,
             DF.SERIAL_NUMBER: None,
             DF.PART_NUMBER: None,
-            DF.SUB_DUTS: [],
+            DF.SUB_UNITS: [],
             DF.INFO: {},
         }
 

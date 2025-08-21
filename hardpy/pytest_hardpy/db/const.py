@@ -25,6 +25,7 @@ class DatabaseField(str, Enum):
     ASSERTION_MSG = "assertion_msg"
     PART_NUMBER = "part_number"
     SERIAL_NUMBER = "serial_number"
+    SUB_UNITS = "sub_units"
     ATTEMPT = "attempt"
     LOCATION = "location"
     HW_ID = "hw_id"
@@ -41,7 +42,6 @@ class DatabaseField(str, Enum):
     CASES = "cases"
     INSTRUMENTS = "instruments"
     NUMERIC_MEAS = "numeric_measurements"
-    SUB_DUTS = "sub_duts"
 
     # statestore
     PROGRESS = "progress"
