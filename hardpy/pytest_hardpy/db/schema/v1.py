@@ -2,14 +2,16 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+from collections.abc import Mapping  # noqa: TC003
 from datetime import datetime  # noqa: TC003
 from typing import ClassVar
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from hardpy.pytest_hardpy.utils import (  # noqa: TC001
-    CompOp,
+from hardpy.pytest_hardpy.utils import (
+    ComparisonOperation as CompOp,
     Group,
+    MeasurementType,
     TestStatus as Status,
 )
 
@@ -86,7 +88,7 @@ class SubUnit(BaseModel):
     serial_number: str | None = None
     part_number: str | None = None
     revision: str | None = None
-    info: dict[str, str | int | float | datetime] = {}
+    info: Mapping[str, str | int | float | datetime] | None = None
 
 
 class Instrument(BaseModel):
@@ -98,7 +100,7 @@ class Instrument(BaseModel):
     revision: str | None = None
     number: int | None = None
     comment: str | None = None
-    info: dict[str, str | int | float | datetime] = {}
+    info: Mapping[str, str | int | float | datetime] | None = None
 
 
 class TestStand(BaseModel):
@@ -127,17 +129,31 @@ class Process(BaseModel):
     info: dict[str, str | int | float | datetime] = {}
 
 
-class NumericMeasurement(BaseModel):
-    """Base class for all result models."""
+class IBaseMeasurement(BaseModel):
+    """Base class for all measurement models."""
 
     model_config = ConfigDict(extra="forbid")
 
+    type: MeasurementType
+    name: str | None = None
+    operation: CompOp | None = None
+
+
+class NumericMeasurement(IBaseMeasurement):
+    """Numeric measurement description."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    type: MeasurementType = MeasurementType.NUMERIC
     value: int | float
-    name: str
-    low_limit: int | float | None
-    high_limit: int | float | None
+    name: str | None = None
     unit: str | None = None
-    comp_op: CompOp | None = None
+    operation: CompOp | None = None
+
+    comparison_value: float | int | None = Field(default=None)
+
+    lower_limit: float | int | None = Field(default=None)
+    upper_limit: float | int | None = Field(default=None)
 
 
 class OperatorData(BaseModel):
