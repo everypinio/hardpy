@@ -37,7 +37,7 @@ class PyTestWrapper:
         if self.is_running():
             return False
 
-        base_command = [
+        cmd = [
             self.python_executable,
             "-m",
             "pytest",
@@ -49,22 +49,22 @@ class PyTestWrapper:
             self.config.stand_cloud.address,
         ]
         if self.config.stand_cloud.connection_only:
-            base_command.append("--sc-connection-only")
-        base_command.append("--hardpy-pt")
+            cmd.append("--sc-connection-only")
+        cmd.append("--hardpy-pt")
         if start_params:
             for key, value in start_params.items():
                 param_str = f"{key}={value}"
-                base_command.extend(["--hardpy-start-param", param_str])
+                cmd.extend(["--hardpy-start-param", param_str])
 
         if system() == "Windows":
             self._proc = subprocess.Popen(  # noqa: S603
-                base_command,
+                cmd,
                 cwd=ConfigManager().get_tests_path(),
                 creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
             )
         if system() == "Linux":
             self._proc = subprocess.Popen(  # noqa: S603
-                base_command,
+                cmd,
                 cwd=ConfigManager().get_tests_path(),
             )
 
