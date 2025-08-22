@@ -19,11 +19,13 @@ from hardpy.pytest_hardpy.db import (
 )
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
+    BaseMeasurement,
     DialogBox,
     DuplicateParameterError,
     HTMLComponent,
     ImageComponent,
     Instrument,
+    NumericMeasurement,
     SubUnit,
     TestStandNumberError,
 )
@@ -497,6 +499,38 @@ def set_process_info(info: Mapping[str, str | int | float | datetime]) -> None:
         reporter.set_doc_value(full_key, value)
     reporter.update_db_by_doc()
 
+
+def set_measurement(measurement: BaseMeasurement) -> int:
+    """Add measurement to document.
+
+    Args:
+        measurement (NumericMeasurement): measurement object
+
+    Returns:
+        int: measurement index from measurements list
+    """
+    if not isinstance(measurement, NumericMeasurement):
+        msg = "Undefined measurement type"
+        raise TypeError(msg)
+
+    current_test = _get_current_test()
+    reporter = RunnerReporter()
+
+    key = reporter.generate_key(
+        DF.MODULES,
+        current_test.module_id,
+        DF.CASES,
+        current_test.case_id,
+        DF.MEASUREMENTS,
+    )
+
+    measurements = reporter.get_field(key) or []
+    measurements.append({k: v for k, v in vars(measurement).items() if v is not None})
+
+    reporter.set_doc_value(key, measurements)
+    reporter.update_db_by_doc()
+
+    return len(measurements) - 1
 
 def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     """Display a dialog box.
