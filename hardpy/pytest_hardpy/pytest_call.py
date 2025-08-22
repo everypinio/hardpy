@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from inspect import stack
 from os import environ
 from time import sleep
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from uuid import uuid4
 
 from pycouchdb.exceptions import NotFound
@@ -29,6 +29,9 @@ from hardpy.pytest_hardpy.utils import (
     ImageComponent,
     TestStandNumberError,
 )
+
+if TYPE_CHECKING:
+    from pytest import Config
 
 
 @dataclass
@@ -415,6 +418,31 @@ def get_current_attempt() -> int:
     reporter = RunnerReporter()
     module_id, case_id = _get_current_test().module_id, _get_current_test().case_id
     return reporter.get_current_attempt(module_id, case_id)
+
+_config = None
+
+
+def set_config(config: Config) -> None:
+    """Set pytest config for internal use."""
+    global _config
+    _config = config
+
+def get_start_args() -> dict:
+    """Get hardpy start arguments from pytest config.
+
+    Returns:
+        dict: Parsed start arguments
+    """
+    if _config is None:
+        return {}
+
+    start_args = _config.getoption("--hardpy-start-arg") or []
+    params_dict = {}
+    for param in start_args:
+        if "=" in param:
+            key, value = param.split("=", 1)
+            params_dict[key] = value
+    return params_dict
 
 
 def _get_current_test() -> CurrentTestInfo:

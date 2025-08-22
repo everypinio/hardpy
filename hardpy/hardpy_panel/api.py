@@ -44,28 +44,28 @@ def hardpy_config() -> dict:
 
 @app.get("/api/start")
 def start_pytest(
-    params: Annotated[
+    args: Annotated[
         list[str] | None,  # noqa: FA102
-        Query(description="Dynamic parameters for test execution"),
+        Query(description="Dynamic arguments for test execution"),
     ] = None,
 ) -> dict:
     """Start pytest subprocess.
 
     Args:
-        params: List of parameters in key=value format
+        args: List of arguments in key=value format
 
     Returns:
         dict[str, RunStatus]: run status
     """
-    if params is None:
-        params = []
-    params_dict = {}
-    for p in params:
+    if args is None:
+        args = []
+    args_dict = {}
+    for p in args:
         if "=" in p:
             key, value = p.split("=", 1)
-            params_dict[key] = value
+            args_dict[key] = value
 
-    if app.state.pytest_wrp.start(start_params=params_dict):
+    if app.state.pytest_wrp.start(start_args=args_dict):
         return {"status": Status.STARTED}
     return {"status": Status.BUSY}
 

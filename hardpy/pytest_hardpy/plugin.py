@@ -32,6 +32,7 @@ from pytest import (
 )
 
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
+from hardpy.pytest_hardpy.pytest_call import set_config
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import (
     ConnectionData,
@@ -102,7 +103,7 @@ def pytest_addoption(parser: Parser) -> None:
         "--hardpy-start-arg",
         action="append",
         default=[],
-        help="Dynamic parameters for test execution (key=value format)",
+        help="Dynamic arguments for test execution (key=value format)",
     )
 
 
@@ -143,6 +144,8 @@ class HardpyPlugin:
     def pytest_configure(self, config: Config) -> None:
         """Configure pytest."""
         con_data = ConnectionData()
+
+        set_config(config)
 
         database_url = config.getoption("--hardpy-db-url")
         if database_url:

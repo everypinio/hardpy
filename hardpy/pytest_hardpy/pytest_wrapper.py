@@ -25,7 +25,7 @@ class PyTestWrapper:
         self.config = ConfigManager().get_config()
         self.collect(is_clear_database=True)
 
-    def start(self, start_params: dict | None = None) -> bool:
+    def start(self, start_args: dict | None = None) -> bool:
         """Start pytest subprocess.
 
         Returns:
@@ -51,10 +51,10 @@ class PyTestWrapper:
         if self.config.stand_cloud.connection_only:
             base_command.append("--sc-connection-only")
         base_command.append("--hardpy-pt")
-        if start_params:
-            for key, value in start_params.items():
-                param_str = f"{key}={value}"
-                base_command.extend(["--hardpy-start-arg", param_str])
+        if start_args:
+            for key, value in start_args.items():
+                arg_str = f"{key}={value}"
+                base_command.extend(["--hardpy-start-arg", arg_str])
 
         if system() == "Windows":
             self._proc = subprocess.Popen(  # noqa: S603

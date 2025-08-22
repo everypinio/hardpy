@@ -732,24 +732,24 @@ def test_incorrect_couchdbconfig_data(pytester: Pytester, hardpy_opts: list[str]
     result.assert_outcomes(failed=1)
 
 
-def test_hardpy_start_param(pytester: Pytester, hardpy_opts: list[str]):
-    """Test that --hardpy-start-arg passes key=value parameters correctly."""
+def test_hardpy_start_arg(pytester: Pytester, hardpy_opts: list[str]):
+    """Test that --hardpy-start-arg passes key=value arguments correctly."""
     pytester.makepyfile(
         f"""
         {func_test_header}
-        def test_start_param_access(request):
-            start_params = request.config.getoption("--hardpy-start-arg") or []
-            params_dict = {{}}
-            for param in start_params:
-                if "=" in param:
-                    k, v = param.split("=", 1)
-                    params_dict[k] = v
-            assert "test_mode" in params_dict
-            assert params_dict["test_mode"] == "debug"
-            assert "retry_count" in params_dict
-            assert params_dict["retry_count"] == "3"
-            assert "device_id" in params_dict
-            assert params_dict["device_id"] == "DUT-007"
+        def test_start_arg_access(request):
+            start_args = request.config.getoption("--hardpy-start-arg") or []
+            args_dict = {{}}
+            for arg in start_args:
+                if "=" in arg:
+                    k, v = arg.split("=", 1)
+                    args_dict[k] = v
+            assert "test_mode" in args_dict
+            assert args_dict["test_mode"] == "debug"
+            assert "retry_count" in args_dict
+            assert args_dict["retry_count"] == "3"
+            assert "device_id" in args_dict
+            assert args_dict["device_id"] == "DUT-007"
             report = hardpy.get_current_report()
             assert report is not None
         """,

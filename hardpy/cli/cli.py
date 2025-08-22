@@ -174,28 +174,28 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
 def start(
     ctx: typer.Context,
     tests_dir: Annotated[Optional[str], typer.Argument()] = None,
-    param: list[str] = typer.Option(  # noqa: B008
+    arg: list[str] = typer.Option(  # noqa: B008
         [],
         "--arg",
         "-a",
-        help="Dynamic start parameters (format: key=value)",
+        help="Dynamic start arguments (format: key=value)",
     ),
 ) -> None:
     """Start HardPy tests.
 
     Args:
-        ctx: Typer context for accessing parameters from other sources
+        ctx: Typer context for accessing arguments from other sources
         tests_dir (Optional[str]): Test directory. Current directory by default
-        param (list[str]): Dynamic parameters for test execution
+        arg (list[str]): Dynamic arguments for test execution
     """
-    context_params = getattr(ctx, "hardpy_params", [])
-    all_params = param + context_params
+    context_args = getattr(ctx, "hardpy_args", [])
+    all_args = arg + context_args
 
     config = _get_config(tests_dir)
     _check_config(config)
 
-    query_params = "&".join([f"params={urllib.parse.quote(p)}" for p in all_params])
-    url = f"http://{config.frontend.host}:{config.frontend.port}/api/start?{query_params}"
+    query_args = "&".join([f"args={urllib.parse.quote(a)}" for a in all_args])
+    url = f"http://{config.frontend.host}:{config.frontend.port}/api/start?{query_args}"
     _request_hardpy(url)
 
 
