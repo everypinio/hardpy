@@ -738,12 +738,7 @@ def test_hardpy_start_arg(pytester: Pytester, hardpy_opts: list[str]):
         f"""
         {func_test_header}
         def test_start_arg_access(request):
-            start_args = request.config.getoption("--hardpy-start-arg") or []
-            args_dict = {{}}
-            for arg in start_args:
-                if "=" in arg:
-                    k, v = arg.split("=", 1)
-                    args_dict[k] = v
+            args_dict = start_args = hardpy.get_start_args()
             assert "test_mode" in args_dict
             assert args_dict["test_mode"] == "debug"
             assert "retry_count" in args_dict

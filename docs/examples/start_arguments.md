@@ -42,14 +42,11 @@ import pytest
 import hardpy
 
 def test_with_start_args():
-    # Get start arguments directly
     start_args = hardpy.get_start_args()
     
-    # Check if we are in debug mode
     if start_args.get("test_mode") == "debug":
         hardpy.set_message("Running in debug mode")
     
-    # Use device_id if provided
     device_id = start_args.get("device_id")
     if device_id:
         hardpy.set_message(f"Testing device: {device_id}")
@@ -57,23 +54,18 @@ def test_with_start_args():
     else:
         hardpy.set_message("No device ID provided")
     
-    # Use retry_count if provided
     retry_count = start_args.get("retry_count")
     if retry_count:
         hardpy.set_message(f"Retry count: {retry_count}")
-        # Implement retry logic based on the parameter
     else:
         hardpy.set_message("Retry count not set")
 
 def test_conditional_behavior():
-    # Get start arguments directly
     args = hardpy.get_start_args()
     
-    # Skip test if not in debug mode
     if args.get("test_mode") != "debug":
         pytest.skip("This test runs only in debug mode")
     
-    # Test specific debug functionality
     hardpy.set_message("Running debug-specific test")
     assert True, "Debug test passed"
 
@@ -81,8 +73,7 @@ def test_parameterized_assertions():
     args = hardpy.get_start_args()
     expected_value = args.get("expected_value", "default")
     
-    # Use start argument in assertion
-    actual_value = "default"  # hypothetical function
+    actual_value = "default"
     assert actual_value == expected_value, f"Expected {expected_value}, got {actual_value}"
     
     hardpy.set_message(f"Verified value: {actual_value}")
