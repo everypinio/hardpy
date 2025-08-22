@@ -18,6 +18,7 @@ class TestStatus(str, Enum):
     READY = "ready"
     STOPPED = "stopped"
 
+
 class Group(str, Enum):
     """Test group."""
 
@@ -26,20 +27,54 @@ class Group(str, Enum):
     TEARDOWN = "teardown"
 
 
-class CompOp(str, Enum):
+class MeasurementType(str, Enum):
+    """Measurement type."""
+
+    NUMERIC = "numeric"
+    """Numeric measurement"""
+
+
+class ComparisonOperation(str, Enum):
     """Comparison operator."""
 
-    EQ = "EQ"
-    NE = "NE"
-    GT = "GT"
-    GE = "GE"
-    LT = "LT"
-    LE = "LE"
-    GTLT = "GTLT"
-    GELE = "GELE"
-    GELT = "GELT"
-    GTLE = "GTLE"
-    LTGT = "LTGT"
-    LEGE = "LEGE"
-    LEGT = "LEGT"
-    LTGE = "LTGE"
+    EQ = "eq"
+    """Equal"""
+
+    NE = "ne"
+    """Not equal"""
+
+    GT = "gt"
+    """Greater than"""
+
+    GE = "ge"
+    """Greater or equal"""
+
+    LT = "lt"
+    """Less than"""
+
+    LE = "le"
+    """Less or equal"""
+
+    GTLT = "gtlt"
+    """Greater than lower limit, less than high limit"""
+
+    GELE = "gele"
+    """Greater or equal than lower limit, less or equal than high limit"""
+
+    GELT = "gelt"
+    """Greater or equal than lower limit, less than high limit"""
+
+    GTLE = "gtle"
+    """Greater than lower limit, less or equal than high limit"""
+
+    LTGT = "ltgt"
+    """Less than lower limit, greater than high limit"""
+
+    LEGE = "lege"
+    """Less or equal than lower limit, greater or equal than high limit"""
+
+    LEGT = "legt"
+    """Less or equal than lower limit, greater than high limit"""
+
+    LTGE = "ltge"
+    """Less than lower limit, greater or equal than high limit"""
