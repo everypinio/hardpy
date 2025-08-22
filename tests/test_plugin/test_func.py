@@ -733,12 +733,12 @@ def test_incorrect_couchdbconfig_data(pytester: Pytester, hardpy_opts: list[str]
 
 
 def test_hardpy_start_param(pytester: Pytester, hardpy_opts: list[str]):
-    """Test that --hardpy-start-param passes key=value parameters correctly."""
+    """Test that --hardpy-start-arg passes key=value parameters correctly."""
     pytester.makepyfile(
         f"""
         {func_test_header}
         def test_start_param_access(request):
-            start_params = request.config.getoption("--hardpy-start-param") or []
+            start_params = request.config.getoption("--hardpy-start-arg") or []
             params_dict = {{}}
             for param in start_params:
                 if "=" in param:
@@ -757,9 +757,9 @@ def test_hardpy_start_param(pytester: Pytester, hardpy_opts: list[str]):
 
     result = pytester.runpytest(
         *hardpy_opts,
-        "--hardpy-start-param", "test_mode=debug",
-        "--hardpy-start-param", "retry_count=3",
-        "--hardpy-start-param", "device_id=DUT-007",
+        "--hardpy-start-arg", "test_mode=debug",
+        "--hardpy-start-arg", "retry_count=3",
+        "--hardpy-start-arg", "device_id=DUT-007",
     )
 
     result.assert_outcomes(passed=1)

@@ -99,7 +99,7 @@ def pytest_addoption(parser: Parser) -> None:
         help="check StandCloud availability",
     )
     parser.addoption(
-        "--hardpy-start-param",
+        "--hardpy-start-arg",
         action="append",
         default=[],
         help="Dynamic parameters for test execution (key=value format)",

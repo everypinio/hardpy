@@ -176,8 +176,8 @@ def start(
     tests_dir: Annotated[Optional[str], typer.Argument()] = None,
     param: list[str] = typer.Option(  # noqa: B008
         [],
-        "--params",
-        "-p",
+        "--arg",
+        "-a",
         help="Dynamic start parameters (format: key=value)",
     ),
 ) -> None:

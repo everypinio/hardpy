@@ -54,7 +54,7 @@ class PyTestWrapper:
         if start_params:
             for key, value in start_params.items():
                 param_str = f"{key}={value}"
-                base_command.extend(["--hardpy-start-param", param_str])
+                base_command.extend(["--hardpy-start-arg", param_str])
 
         if system() == "Windows":
             self._proc = subprocess.Popen(  # noqa: S603
