@@ -26,17 +26,3 @@ def finish_executing():
 def fill_actions_after_test(post_run_functions: list):
     post_run_functions.append(finish_executing)
     yield
-
-
-@pytest.fixture
-def start_params(request):
-    """Fixture to access hardpy start parameters."""
-    start_params = request.config.getoption("--hardpy-start-arg") or []
-
-    params_dict = {}
-    for param in start_params:
-        if "=" in param:
-            key, value = param.split("=", 1)
-            params_dict[key] = value
-
-    return params_dict

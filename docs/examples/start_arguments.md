@@ -1,0 +1,89 @@
+# Start arguments
+
+In **HardPy** library, the [start arguments](../documentation/pytest_hardpy.md#get_start_args) functionality allows you to pass dynamic parameters to your test runs using the `--arg` option (CLI) or `--hardpy-start-arg` option (pytest). This is particularly useful for configuring tests at runtime without changing the code, such as setting different modes, device IDs, or other configuration parameters.
+
+The code for this example can be seen inside the hardpy package [Start arguments](https://github.com/everypinio/hardpy/tree/main/examples/start_arguments).
+
+Contains examples of how to use dynamic start arguments in tests.
+
+### how to start
+
+1. Launch `hardpy init start_arguments`.
+2. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
+3. Modify the files described below.
+4. Launch tests with dynamic arguments:
+
+    ```bash
+    hardpy run start_arguments
+
+    # Using hardpy command
+    hardpy start start_arguments --arg test_mode=debug --arg device_id=DUT-007 --arg retry_count=3
+
+    # Or using pytest directly
+    pytest --hardpy-start-arg test_mode=debug --hardpy-start-arg device_id=DUT-007 --hardpy-start-arg retry_count=3
+    ```
+
+    Alternatively, you can specify start arguments in the `pytest.ini` file.
+    This is useful for setting default arguments that are always used when running tests.
+
+    ```pytest
+    [pytest]
+    addopts = --hardpy-pt
+            --hardpy-db-url http://dev:dev@localhost:5984/
+            --hardpy-start-arg test_mode=debug
+            --hardpy-start-arg device_id=DUT-007
+            --hardpy-start-arg retry_count=3
+    ```
+
+### test_1.py
+
+```python
+import pytest
+import hardpy
+
+def test_with_start_args():
+    # Get start arguments directly
+    start_args = hardpy.get_start_args()
+    
+    # Check if we are in debug mode
+    if start_args.get("test_mode") == "debug":
+        hardpy.set_message("Running in debug mode")
+    
+    # Use device_id if provided
+    device_id = start_args.get("device_id")
+    if device_id:
+        hardpy.set_message(f"Testing device: {device_id}")
+        hardpy.set_case_artifact({"device_id": device_id})
+    else:
+        hardpy.set_message("No device ID provided")
+    
+    # Use retry_count if provided
+    retry_count = start_args.get("retry_count")
+    if retry_count:
+        hardpy.set_message(f"Retry count: {retry_count}")
+        # Implement retry logic based on the parameter
+    else:
+        hardpy.set_message("Retry count not set")
+
+def test_conditional_behavior():
+    # Get start arguments directly
+    args = hardpy.get_start_args()
+    
+    # Skip test if not in debug mode
+    if args.get("test_mode") != "debug":
+        pytest.skip("This test runs only in debug mode")
+    
+    # Test specific debug functionality
+    hardpy.set_message("Running debug-specific test")
+    assert True, "Debug test passed"
+
+def test_parameterized_assertions():
+    args = hardpy.get_start_args()
+    expected_value = args.get("expected_value", "default")
+    
+    # Use start argument in assertion
+    actual_value = "default"  # hypothetical function
+    assert actual_value == expected_value, f"Expected {expected_value}, got {actual_value}"
+    
+    hardpy.set_message(f"Verified value: {actual_value}")
+```

@@ -94,13 +94,16 @@ By default, it starts tests in the current directory.
 ```bash
  Usage: hardpy start [OPTIONS] [TESTS_DIR]
 
+ Usage with arguments: hardpy start --arg test_mode=debug --arg device_id=DUT-007
+
  Start HardPy tests.
 
 ╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
 │   tests_dir      [TESTS_DIR]  [default: None]                                                              │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --help          Show this message and exit.                                                                │
+│ --arg  -a        TEXT  Dynamic start arguments (format: key=value) [multiple]                                │
+│ --help               Show this message and exit.                                                           │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
