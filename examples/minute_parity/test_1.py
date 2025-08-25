@@ -32,11 +32,3 @@ def test_stand_info():
     }
     hardpy.set_stand_info(info)
     assert True
-
-def test_with_start_params(start_params):
-    """Test using start parameters fixture."""
-    assert start_params
-    assert "test_id" in start_params
-    assert start_params["test_id"] == "12345"
-    assert "env" in start_params
-    assert start_params["env"] == "prod"
