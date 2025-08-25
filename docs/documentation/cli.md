@@ -102,8 +102,8 @@ By default, it starts tests in the current directory.
 │   tests_dir      [TESTS_DIR]  [default: None]                                                              │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --arg  -a        TEXT  Dynamic start arguments (format: key=value) [multiple]                                │
-│ --help               Show this message and exit.                                                           │
+│ --arg  -a        TEXT  Dynamic start arguments (format: key=value) [multiple]                              │
+│ --help           Show this message and exit.                                                               │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 

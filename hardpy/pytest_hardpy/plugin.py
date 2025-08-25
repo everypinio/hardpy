@@ -31,8 +31,8 @@ from pytest import (
     skip,
 )
 
+from hardpy.common.config import ConfigManager
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
-from hardpy.pytest_hardpy.pytest_call import set_config
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import (
     ConnectionData,
@@ -145,8 +145,6 @@ class HardpyPlugin:
         """Configure pytest."""
         con_data = ConnectionData()
 
-        set_config(config)
-
         database_url = config.getoption("--hardpy-db-url")
         if database_url:
             con_data.database_url = str(database_url)  # type: ignore
@@ -166,6 +164,15 @@ class HardpyPlugin:
         sc_connection_only = config.getoption("--sc-connection-only")
         if sc_connection_only:
             con_data.sc_connection_only = bool(sc_connection_only)  # type: ignore
+
+        start_args = config.getoption("--hardpy-start-arg") or []
+        params_dict = {}
+        for param in start_args:
+            if "=" in param:
+                key, value = param.split("=", 1)
+                params_dict[key] = value
+
+        ConfigManager.start_args = params_dict
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
