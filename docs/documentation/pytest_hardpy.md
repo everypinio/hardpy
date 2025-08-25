@@ -361,6 +361,33 @@ def test_attempt_message():
         assert False
 ```
 
+#### get_start_args
+
+Returns a dictionary of start arguments passed via CLI.
+
+The `get_start_args` function can be called from any test case to access dynamic start parameters.
+
+**Returns:**
+
+- *(dict)*: Dictionary containing key-value pairs of start arguments
+
+**Example:**
+
+```bash
+hardpy start --arg test_mode=debug --arg device_id=1q2w3e
+```
+
+```python
+def test_with_start_args():
+    start_args = hardpy.get_start_args()
+    
+    if start_args.get("test_mode") == "debug":
+        hardpy.set_message("Running in debug mode")
+    
+    if "device_id" in start_args:
+        hardpy.set_message(f"Testing device: {start_args['device_id']}")
+```
+
 ## Class
 
 #### DialogBox
@@ -856,4 +883,12 @@ The default is *False*.
 
 ```bash
 --sc-connection-only
+```
+
+#### hardpy-start-arg
+
+Dynamic arguments for test execution in key=value format. Can be specified multiple times.
+
+```bash
+--hardpy-start-arg key=value
 ```

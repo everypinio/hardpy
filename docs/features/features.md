@@ -16,10 +16,23 @@ hardpy run
 ```
 
 and press the **Start** button.
+
+You can also pass dynamic arguments using the --arg option:
+
+```bash
+hardpy start --arg test_mode=debug --arg device_id=DUT-007
+```
+
 Alternatively, the user can start the operator panel with the “Start” button and run tests with pytest.
 
 ```bash
 python -m pytest
+```
+
+With arguments:
+
+```bash
+python -m pytest --hardpy-start-arg test_mode=debug --hardpy-start-arg device_id=DUT-007
 ```
 
 The user can also run tests without the operator panel, just using the `hardpy start` command or

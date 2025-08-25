@@ -12,6 +12,7 @@ from uuid import uuid4
 from pycouchdb.exceptions import NotFound
 from pydantic import ValidationError
 
+from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db import (
     DatabaseField as DF,  # noqa: N817
     ResultRunStore,
@@ -415,6 +416,15 @@ def get_current_attempt() -> int:
     reporter = RunnerReporter()
     module_id, case_id = _get_current_test().module_id, _get_current_test().case_id
     return reporter.get_current_attempt(module_id, case_id)
+
+
+def get_start_args() -> dict:
+    """Get hardpy start arguments from pytest config.
+
+    Returns:
+        dict: Parsed start arguments
+    """
+    return getattr(ConfigManager, "start_args", {})
 
 
 def _get_current_test() -> CurrentTestInfo:

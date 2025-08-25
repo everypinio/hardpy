@@ -31,6 +31,7 @@ from pytest import (
     skip,
 )
 
+from hardpy.common.config import ConfigManager
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import (
@@ -98,6 +99,12 @@ def pytest_addoption(parser: Parser) -> None:
         default=con_data.sc_connection_only,
         help="check StandCloud availability",
     )
+    parser.addoption(
+        "--hardpy-start-arg",
+        action="append",
+        default=[],
+        help="Dynamic arguments for test execution (key=value format)",
+    )
 
 
 # Bootstrapping hooks
@@ -157,6 +164,15 @@ class HardpyPlugin:
         sc_connection_only = config.getoption("--sc-connection-only")
         if sc_connection_only:
             con_data.sc_connection_only = bool(sc_connection_only)  # type: ignore
+
+        start_args = config.getoption("--hardpy-start-arg") or []
+        params_dict = {}
+        for param in start_args:
+            if "=" in param:
+                key, value = param.split("=", 1)
+                params_dict[key] = value
+
+        ConfigManager.start_args = params_dict
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
