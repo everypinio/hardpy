@@ -1,6 +1,7 @@
 # Start arguments
 
-In **HardPy** library, the [start arguments](../documentation/pytest_hardpy.md#get_start_args) functionality allows you to pass dynamic parameters to your test runs using the `--arg` option (CLI) or `--hardpy-start-arg` option (pytest). This is particularly useful for configuring tests at runtime without changing the code, such as setting different modes, device IDs, or other configuration parameters.
+In **HardPy** library, the [start arguments](../documentation/pytest_hardpy.md#get_start_args) functionality allows you to pass dynamic parameters to your test runs using the `--arg` option (CLI) or `--hardpy-start-arg` option (pytest). 
+This is particularly useful for configuring tests at runtime without changing the code, such as setting different modes, device IDs, or other configuration parameters.
 
 The code for this example can be seen inside the hardpy package [Start arguments](https://github.com/everypinio/hardpy/tree/main/examples/start_arguments).
 
