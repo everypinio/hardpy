@@ -12,6 +12,7 @@ from uuid import uuid4
 from pycouchdb.exceptions import NotFound
 from pydantic import ValidationError
 
+from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db import (
     DatabaseField as DF,  # noqa: N817
     ResultRunStore,
@@ -424,8 +425,15 @@ _config = None
 
 def set_config(config: Config) -> None:
     """Set pytest config for internal use."""
-    global _config
-    _config = config
+    start_args = config.getoption("--hardpy-start-arg") or []
+    params_dict = {}
+    for param in start_args:
+        if "=" in param:
+            key, value = param.split("=", 1)
+            params_dict[key] = value
+
+    ConfigManager.start_args = params_dict
+
 
 def get_start_args() -> dict:
     """Get hardpy start arguments from pytest config.
@@ -433,16 +441,7 @@ def get_start_args() -> dict:
     Returns:
         dict: Parsed start arguments
     """
-    if _config is None:
-        return {}
-
-    start_args = _config.getoption("--hardpy-start-arg") or []
-    params_dict = {}
-    for param in start_args:
-        if "=" in param:
-            key, value = param.split("=", 1)
-            params_dict[key] = value
-    return params_dict
+    return getattr(ConfigManager, "start_args", {})
 
 
 def _get_current_test() -> CurrentTestInfo:
