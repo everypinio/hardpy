@@ -6,7 +6,6 @@ from __future__ import annotations
 from pydantic import model_validator
 
 from hardpy.pytest_hardpy.db.schema.v1 import (
-    IBaseMeasurement as BaseMeasurementModel,
     Instrument as InstrumentModel,
     NumericMeasurement as NumericMeasurementModel,
     SubUnit as SubUnitModel,
@@ -22,12 +21,18 @@ class SubUnit(SubUnitModel):
     """Sub unit of DUT."""
 
 
-class BaseMeasurement(BaseMeasurementModel):
-    """Base class for all measurements."""
-
-
 class NumericMeasurement(NumericMeasurementModel):
-    """Represents a measurement with value and comparison operation."""
+    """Represents a measurement with value and comparison operation.
+
+    Args:
+        value (int | float): The value of the measurement.
+        name (str | None): The name of the measurement.
+        unit (str | None): The unit of the measurement.
+        operation (CompOp | None): The comparison operation to apply.
+        comparison_value (int | float | None): The value to compare against.
+        lower_limit (int | float | None): The lower limit for range operations.
+        upper_limit (int | float | None): The upper limit for range operations.
+    """
 
     @model_validator(mode="after")
     def validate_operation_requirements(self) -> NumericMeasurement:
@@ -53,9 +58,12 @@ class NumericMeasurement(NumericMeasurementModel):
             msg = "lower_limit and upper_limit required for range operations"
             raise ValueError(msg)
 
+        if self.operation:
+            self.result = self._check_condition()
+
         return self
 
-    def check_condition(self) -> bool:  # noqa: C901,PLR0912
+    def _check_condition(self) -> bool:  # noqa: C901,PLR0912
         """Evaluate the measurement based on the selected operation."""
         res = False
         match self.operation:
@@ -80,11 +88,11 @@ class NumericMeasurement(NumericMeasurementModel):
             case CompOp.GTLE:
                 res = self.value > self.lower_limit and self.value <= self.upper_limit
             case CompOp.LTGT:
-                res = self.value < self.lower_limit and self.value > self.upper_limit
+                res = self.value < self.lower_limit or self.value > self.upper_limit
             case CompOp.LEGE:
-                res = self.value <= self.lower_limit and self.value >= self.upper_limit
+                res = self.value <= self.lower_limit or self.value >= self.upper_limit
             case CompOp.LEGT:
-                res = self.value <= self.lower_limit and self.value > self.upper_limit
+                res = self.value <= self.lower_limit or self.value > self.upper_limit
             case CompOp.LTGE:
-                res = self.value < self.lower_limit and self.value >= self.upper_limit
+                res = self.value < self.lower_limit or self.value >= self.upper_limit
         return res
