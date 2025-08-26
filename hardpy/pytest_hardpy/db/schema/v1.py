@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+from abc import ABC
 from collections.abc import Mapping  # noqa: TC003
 from datetime import datetime  # noqa: TC003
 from typing import ClassVar
@@ -32,7 +33,7 @@ class CaseStateStore(IBaseResult):
 
     assertion_msg: str | None = None
     msg: dict | None = None
-    numeric_measurements: list[NumericMeasurement] = []
+    measurements: list[NumericMeasurement] = []
     attempt: int = 0
     group: Group
     dialog_box: dict = {}
@@ -43,7 +44,7 @@ class CaseRunStore(IBaseResult):
 
     assertion_msg: str | None = None
     msg: dict | None = None
-    numeric_measurements: list[NumericMeasurement] = []
+    measurements: list[NumericMeasurement] = []
     attempt: int = 0
     group: Group
     artifact: dict = {}
@@ -129,14 +130,15 @@ class Process(BaseModel):
     info: dict[str, str | int | float | datetime] = {}
 
 
-class IBaseMeasurement(BaseModel):
+class IBaseMeasurement(BaseModel, ABC):
     """Base class for all measurement models."""
 
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="allow")
 
     type: MeasurementType
     name: str | None = None
     operation: CompOp | None = None
+    result: bool | None = Field(default_factory=lambda: None)
 
 
 class NumericMeasurement(IBaseMeasurement):
@@ -144,17 +146,16 @@ class NumericMeasurement(IBaseMeasurement):
 
     model_config = ConfigDict(extra="forbid")
 
-    type: MeasurementType = MeasurementType.NUMERIC
+    type: MeasurementType = Field(default=MeasurementType.NUMERIC)
     value: int | float
     name: str | None = None
     unit: str | None = None
-    operation: CompOp | None = None
 
+    operation: CompOp | None = None
     comparison_value: float | int | None = Field(default=None)
 
     lower_limit: float | int | None = Field(default=None)
     upper_limit: float | int | None = Field(default=None)
-
 
 class OperatorData(BaseModel):
     """Operator data from operator panel."""
