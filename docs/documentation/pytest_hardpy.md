@@ -384,6 +384,30 @@ def test_process_info():
     })
 ```
 
+#### set_measurement
+
+Writes measurement information to a database in the form of a case measurement list.
+When called again, the information will be added to case measurement list.
+
+**Arguments:**
+
+- `measurement` [NumericMeasurement](#numericmeasurement): measurement data.
+
+**Example:**
+
+```python
+def test_measurement():
+    meas_1 = NumericMeasurement(value=10, operation=ComparisonOperation.EQ, comparison_value=10)
+    set_measurement(meas_1)
+    meas_2 = NumericMeasurement(value=3, unit="V", operation=ComparisonOperation.GTLT, lower_limit=2.9, upper_limit=3.5)
+    set_measurement(meas_2)
+    meas_3 = NumericMeasurement(value=1.0)
+    set_measurement(meas_3)
+
+    assert meas_1.result
+    assert meas_2.result
+```
+
 #### set_case_artifact
 
 Writes a dictionary with a test case artifact.
@@ -953,7 +977,7 @@ set_instrument(oscilloscope)
 
 #### SubUnit
 
-This class stores information about the sub-unit of the DUT.. 
+This class contains information about the sub-unit of the DUT. 
 It is used with the [set_dut_sub_unit](#set_dut_sub_unit) function.
 
 **Arguments:**
@@ -982,6 +1006,40 @@ def test_dut_sub_unit():
         info={"sw_version": "1.0"},
     )
     hardpy.set_dut_sub_unit(sub_unit)
+```
+
+### NumericMeasurement
+
+This class contains information about numeric measurement. 
+It is used with the [set_measurement](#set_measurement) function.
+
+**Arguments:**
+
+- `value` *(float | int)*: numeric measure value.
+- `name` *(str | None)*: numeric measure name.
+- `unit` *(str | None)*: unit of numeric measure.
+- `operation`: comparison operators of numeric measure.
+- `comparison_value` *(ComparisonOperation | None)*: value to compare against.
+- `lower_limit`: *(float | int)*: lower limit for range operations.
+- `upper_limit` *(float | int)*:upper limit for range operations.
+
+**Returns:**
+
+- *(int)*: measurement index
+
+**Example:**
+
+```python
+def test_measurement():
+    meas_1 = NumericMeasurement(value=10, operation=ComparisonOperation.EQ, comparison_value=10)
+    set_measurement(meas_1)
+    meas_2 = NumericMeasurement(value=3, unit="V", operation=ComparisonOperation.GTLT, lower_limit=2.9, upper_limit=3.5)
+    set_measurement(meas_2)
+    meas_3 = NumericMeasurement(value=1.0)
+    set_measurement(meas_3)
+
+    assert meas_1.result
+    assert meas_2.result
 ```
 
 ## Fixture
