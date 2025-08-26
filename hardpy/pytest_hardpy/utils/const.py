@@ -56,25 +56,25 @@ class ComparisonOperation(str, Enum):
     """Less or equal"""
 
     GTLT = "gtlt"
-    """Greater than lower limit, less than high limit"""
+    """Greater than lower limit, less than upper limit"""
 
     GELE = "gele"
-    """Greater or equal than lower limit, less or equal than high limit"""
+    """Greater or equal than lower limit, less or equal than upper limit"""
 
     GELT = "gelt"
-    """Greater or equal than lower limit, less than high limit"""
+    """Greater or equal than lower limit, less than upper limit"""
 
     GTLE = "gtle"
-    """Greater than lower limit, less or equal than high limit"""
+    """Greater than lower limit, less or equal than upper limit"""
 
     LTGT = "ltgt"
-    """Less than lower limit, greater than high limit"""
+    """Less than lower limit or greater than upper limit"""
 
     LEGE = "lege"
-    """Less or equal than lower limit, greater or equal than high limit"""
+    """Less or equal than lower limit or greater or equal than upper limit"""
 
     LEGT = "legt"
-    """Less or equal than lower limit, greater than high limit"""
+    """Less or equal than lower limit or greater than upper limit"""
 
     LTGE = "ltge"
-    """Less than lower limit, greater or equal than high limit"""
+    """Less than lower limit or greater or equal than upper limit"""
