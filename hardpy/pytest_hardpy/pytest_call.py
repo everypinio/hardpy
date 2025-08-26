@@ -19,7 +19,6 @@ from hardpy.pytest_hardpy.db import (
 )
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
-    BaseMeasurement,
     DialogBox,
     DuplicateParameterError,
     HTMLComponent,
@@ -500,7 +499,7 @@ def set_process_info(info: Mapping[str, str | int | float | datetime]) -> None:
     reporter.update_db_by_doc()
 
 
-def set_measurement(measurement: BaseMeasurement) -> int:
+def set_measurement(measurement: NumericMeasurement) -> int:
     """Add measurement to document.
 
     Args:
@@ -531,6 +530,7 @@ def set_measurement(measurement: BaseMeasurement) -> int:
     reporter.update_db_by_doc()
 
     return len(measurements) - 1
+
 
 def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     """Display a dialog box.

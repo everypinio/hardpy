@@ -31,14 +31,12 @@ from hardpy.pytest_hardpy.utils.node_info import NodeInfo
 from hardpy.pytest_hardpy.utils.progress_calculator import ProgressCalculator
 from hardpy.pytest_hardpy.utils.singleton import SingletonMeta
 from hardpy.pytest_hardpy.utils.stand_type import (
-    BaseMeasurement,
     Instrument,
     NumericMeasurement,
     SubUnit,
 )
 
 __all__ = [
-    "BaseMeasurement",
     "BaseWidget",
     "CheckboxWidget",
     "ComparisonOperation",
