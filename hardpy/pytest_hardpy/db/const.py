@@ -41,7 +41,7 @@ class DatabaseField(str, Enum):
     MODULES = "modules"
     CASES = "cases"
     INSTRUMENTS = "instruments"
-    MEASUREMENTS = "numeric_measurements"
+    MEASUREMENTS = "measurements"
 
     # statestore
     PROGRESS = "progress"
