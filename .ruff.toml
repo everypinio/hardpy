@@ -65,6 +65,9 @@ indent-width = 4
         "tests/test_translations.py" = [
             "N815",    # Variable in class scope should not be mixedCase
         ]
+        "tests/test_pytest_hardpy/test_measurement/test_numeric_meas.py" = [
+            "E501",    # enable long lines
+        ]
         "examples/*" = [
             "D104",   # Missing docstring in public package
             "D103",   # Missing docstring in public function
