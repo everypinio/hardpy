@@ -2,7 +2,8 @@
 
 This is example of using the **critical** marker in **pytest-hardpy** to control test execution flow.
 
-The `@pytest.mark.critical` marker allows to designate tests or entire modules as critical.
+The [@pytest.mark.critical](./../documentation/pytest_hardpy.md#critical) 
+marker allows to designate tests or entire modules as critical.
 If a critical test fails or is skipped, all subsequent tests in the current and following modules will be skipped.
 
 ### how to start
