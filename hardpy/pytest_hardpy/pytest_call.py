@@ -25,6 +25,7 @@ from hardpy.pytest_hardpy.utils import (
     ImageComponent,
     Instrument,
     NumericMeasurement,
+    StringMeasurement,
     SubUnit,
     TestStandNumberError,
 )
@@ -499,19 +500,15 @@ def set_process_info(info: Mapping[str, str | int | float | datetime]) -> None:
     reporter.update_db_by_doc()
 
 
-def set_measurement(measurement: NumericMeasurement) -> int:
+def set_measurement(measurement: NumericMeasurement | StringMeasurement) -> int:
     """Add measurement to document.
 
     Args:
-        measurement (NumericMeasurement): measurement object
+        measurement (NumericMeasurement | StringMeasurement): measurement object
 
     Returns:
         int: measurement index from measurements list
     """
-    if not isinstance(measurement, NumericMeasurement):
-        msg = "Undefined measurement type"
-        raise TypeError(msg)
-
     current_test = _get_current_test()
     reporter = RunnerReporter()
 
