@@ -34,7 +34,7 @@ def test_project(tmp_path: Path) -> Path:
 import time
 
 def test_basic_api_call():
-    time.sleep(5)
+    time.sleep(7)
     assert True
 """)
     (tmp_path / "__init__.py").touch()
@@ -205,9 +205,12 @@ def test_with_hardpy_run_and_hardpy_start_stop(test_project: Path):
         result = run_command(["hardpy", "start"], cwd=str(test_project))
         assert result.returncode == 0, f"Command failed: {result.stderr.decode()}"
         assert check_server_status().get("status") == "busy"
+        time.sleep(3)
 
-        stop_response = requests.get(API_STOP_URL, timeout=2)
-        assert stop_response.status_code == 200, "Test stop failed"
+        result = run_command(["hardpy", "stop"], cwd=str(test_project))
+        assert result.returncode == 0, f"Command failed: {result.stderr.decode()}"
+        time.sleep(1)
+        assert get_test_result() == Status.STOPPED
     finally:
         server_process.terminate()
         server_process.wait(timeout=10)
