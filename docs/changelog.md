@@ -2,6 +2,9 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add numeric and string measurements: `set_measurement` function and 
+  `NumericMeasurement` and `StringMeasurement` classes.
+  [[PR-177](https://github.com/everypinio/hardpy/pull/177)]
 * Update database schema by **SubUnit** table.
   [[PR-174](https://github.com/everypinio/hardpy/pull/174)]
 * Add `set_dut_sub_unit` function.
@@ -17,7 +20,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 * Update database schema by some tables: **Process**, **Instrument**, **NumericMeasurement**.
   [[PR-162](https://github.com/everypinio/hardpy/pull/162)]
 * Update database schema by some fields: **user**, **batch_serial_number**, **caused_dut_failure_id**, **error_code**
-  **process**, **revision**, **instruments**, **group**, **numeric_measurements**.
+  **process**, **revision**, **instruments**, **group**, **measurements**.
   [[PR-162](https://github.com/everypinio/hardpy/pull/162)]
 * Add the `caused_dut_failure_id` logic to the filling process.
   [[PR-162](https://github.com/everypinio/hardpy/pull/162)]
