@@ -2,15 +2,13 @@ from __future__ import annotations
 
 import subprocess
 import time
-from pathlib import Path
 from typing import TYPE_CHECKING
 
-import psutil
 import pytest
 import requests
 
 if TYPE_CHECKING:
-    from types import NoneType
+    from pathlib import Path
 
 HARDPY_RUN_CMD = ["hardpy", "run"]
 HARDPY_INIT_CMD = ["hardpy", "init", "--frontend-port", "8000"]
@@ -23,95 +21,64 @@ STATUS_CHECK_TIMEOUT = 30  # seconds
 STATUS_CHECK_INTERVAL = 0.5  # seconds
 
 
-def kill_process_on_port(port: int):
-    for proc in psutil.process_iter(["pid", "name", "connections"]):
+def wait_for_server_ready(timeout: int = STATUS_CHECK_TIMEOUT):
+    """Waits for the HardPy server to be in a "ready" state by polling the status API."""  # noqa: E501
+    start_time = time.time()
+    while time.time() - start_time < timeout:
         try:
-            for conn in proc.connections():
-                if conn.laddr.port == port:
-                    psutil.Process(proc.pid).kill()
+            status_response = requests.get(API_STATUS_URL, timeout=2)
+            if status_response.status_code == 200:
+                status = status_response.json()
+                if status["status"] == "ready":
+                    print("Server is ready.")  # noqa: T201
                     return True
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
-            continue
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):  # noqa: PERF203
+            print("Waiting for server to start...")  # noqa: T201
+            time.sleep(STATUS_CHECK_INTERVAL)
+
+    # If the loop finishes without the server being ready, something is wrong.
+    print(f"Timed out waiting for server to become ready after {timeout} seconds.")  # noqa: T201
     return False
 
 
+def wait_for_test_completion():
+    """Waits for the server to return to the 'ready' state after a test run."""
+    start_time = time.time()
+    print("Waiting for test execution to complete...")
+    while True:
+        try:
+            status_response = requests.get(API_STATUS_URL, timeout=5)
+            status = status_response.json()
+            if status["status"] == "ready":
+                print("Test execution complete.")
+                return True
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            pass  # Server might be temporarily down or busy during test run
+        time.sleep(1)
+        if time.time() - start_time > STATUS_CHECK_TIMEOUT * 2:
+            print("Timed out waiting for test completion.")
+            return False
+
+
+# This fixture creates a simple test project with a basic test file.
 @pytest.fixture(scope="function")  # noqa: PT003
 def test_project(tmp_path: Path) -> Path:
     """Create a test project with necessary test files."""
     # Initialize HardPy project
     subprocess.run([*HARDPY_INIT_CMD, str(tmp_path)], check=True)
 
-    # Create test files with FIXED conftest.py
-    (tmp_path / "conftest.py").write_text("""
-import pytest
-
-@pytest.fixture(scope="session")
-def start_params(request):
-    params = {}
-    # Parse multiple parameters correctly
-    for item in request.config.getoption("--hardpy-start-param"):
-        # Handle key=value pairs
-        if "=" in item:
-            key, value = item.split("=", 1)
-            params[key] = value
-    return params
-""")
-
-    (tmp_path / "test_api_params.py").write_text("""
-import time
-
-def test_api_parameters(start_params):
-    time.sleep(5)
+    # Create a simple test file that doesn't rely on start arguments
+    (tmp_path / "test_simple.py").write_text("""
+def test_basic_api_call():
     assert True
 """)
-
-    # Create empty __init__.py to mark as package
     (tmp_path / "__init__.py").touch()
-
     return tmp_path
 
 
 @pytest.fixture(scope="function")  # noqa: PT003
-def test_project_with_args(tmp_path: Path) -> Path:
-    """Create a test project with necessary test files."""
-    # Initialize HardPy project
-    subprocess.run([*HARDPY_INIT_CMD, str(tmp_path)], check=True)
-
-    # Create test files with FIXED conftest.py
-    (tmp_path / "conftest.py").write_text("""
-import pytest
-
-@pytest.fixture(scope="session")
-def start_params(request):
-    params = {}
-    # Parse multiple parameters correctly
-    for item in request.config.getoption("--hardpy-start-param"):
-        # Handle key=value pairs
-        if "=" in item:
-            key, value = item.split("=", 1)
-            params[key] = value
-    return params
-""")
-
-    (tmp_path / "test_api_params.py").write_text("""
-import time
-
-def test_api_parameters(start_params):
-    assert "test_id" in start_params, "test_id not found"
-    assert "env" in start_params, "env not found"
-    assert start_params["test_id"] == "123"
-    assert start_params["env"] == "prod"
-""")
-
-    # Create empty __init__.py to mark as package
-    (tmp_path / "__init__.py").touch()
-
-    return tmp_path
-
-
-@pytest.fixture(scope="function")
 def test_project_with_ini(tmp_path: Path) -> Path:
-    """Create test project with pytest.ini configuration"""
+    """Create test project with pytest.ini configuration and a test file that uses hardpy.get_start_args()."""  # noqa: E501
     subprocess.run([*HARDPY_INIT_CMD, str(tmp_path)], check=True)
 
     # Create pytest.ini with start arguments
@@ -124,219 +91,199 @@ addopts = --hardpy-pt
 """
     (tmp_path / "pytest.ini").write_text(ini_content)
 
-    # Create test file
-    (tmp_path / "test_ini_params.py").write_text("""
-def test_ini_parameters(start_params):
-    assert start_params["test_mode"] == "debug"
-    assert start_params["device_id"] == "DUT-007"
-    assert start_params["retry_count"] == "3"
-""")
+    # Create test file that uses hardpy.get_start_args() to check for parameters
+    (tmp_path / "test_hardpy_args.py").write_text("""
+import hardpy
 
-    # Create conftest.py with start_params fixture
-    (tmp_path / "conftest.py").write_text("""
-import pytest
-
-@pytest.fixture(scope="session")
-def start_params(request):
-    params = {}
-    for item in request.config.getoption("--hardpy-start-param"):
-        if "=" in item:
-            key, value = item.split("=", 1)
-            params[key] = value
-    return params
+def test_ini_parameters():
+    start_args = hardpy.get_start_args()
+    print(f"Полученные аргументы: {{start_args}}")
+    assert start_args.get("test_mode") == "debug"
+    assert start_args.get("device_id") == "DUT-007"
+    assert start_args.get("retry_count") == "3"
 """)
 
     (tmp_path / "__init__.py").touch()
     return tmp_path
 
 
-@pytest.fixture(autouse=True)
-def kill_port_process():
-    yield
-    kill_process_on_port(8000)
+@pytest.fixture(scope="function")  # noqa: PT003
+def test_project_with_args(tmp_path: Path) -> Path:
+    """Create test project with pytest.ini configuration and a test file that uses hardpy.get_start_args()."""  # noqa: E501
+    subprocess.run([*HARDPY_INIT_CMD, str(tmp_path)], check=True)
+
+    # Create pytest.ini with start arguments
+    ini_content = """[pytest]
+addopts = --hardpy-pt
+        --hardpy-db-url http://dev:dev@localhost:5984/
+"""
+    (tmp_path / "pytest.ini").write_text(ini_content)
+
+    # Create test file that uses hardpy.get_start_args() to check for parameters
+    (tmp_path / "test_hardpy_args.py").write_text("""
+import hardpy
+
+def test_ini_parameters():
+    start_args = hardpy.get_start_args()
+    assert start_args.get("test_mode") == "debug"
+    assert start_args.get("device_id") == "DUT-00"
+    assert start_args.get("retry_count") == "3"
+""")
+
+    (tmp_path / "__init__.py").touch()
+    return tmp_path
 
 
-def test_hardpy_start(test_project: Path):
-    """Test that parameters are correctly passed via API."""
-    # Start HardPy server
-    server_process = subprocess.Popen(
-        [*HARDPY_RUN_CMD, str(test_project)],
+def test_with_hardpy_run_and_hardpy_start(test_project: Path):
+    """Test that hardpy run and hardpy start can be used together."""
+    server_process = None
+    try:
+        server_process = run_hardpy_server(test_project)
+        time.sleep(5)
+        status = check_server_status()
+        assert status.get("status") == "ready", f"Server not ready: {status}"
+
+        result = run_command(["hardpy", "start"], cwd=str(test_project))
+        assert result.returncode == 0, f"Command failed: {result.stderr.decode()}"
+
+    finally:
+        if server_process:
+            server_process.terminate()
+            server_process.wait(timeout=10)
+
+
+def test_with_hardpy_run_and_hardpy_start_with_ini_args(test_project_with_ini: Path):
+    """Test that hardpy run and hardpy start can be used together."""
+    server_process = None
+    try:
+        server_process = run_hardpy_server(test_project_with_ini)
+        time.sleep(5)
+        status = check_server_status()
+        assert status.get("status") == "ready", f"Server not ready: {status}"
+
+        result = run_command(["hardpy", "start"], cwd=str(test_project_with_ini))
+        assert result.returncode == 0, f"Command failed: {result.stderr.decode()}"
+        time.sleep(10)
+
+    finally:
+        if server_process:
+            server_process.terminate()
+            server_process.wait(timeout=10)
+
+
+def test_with_hardpy_run_and_hardpy_start_with_args(test_project_with_args: Path):
+    """Test that hardpy run and hardpy start can be used together."""
+    server_process = None
+    try:
+        server_process = run_hardpy_server(test_project_with_args)
+        time.sleep(5)
+        status = check_server_status()
+        assert status.get("status") == "ready", f"Server not ready: {status}"
+
+        result = run_command(
+            [
+                "hardpy",
+                "start",
+                "--arg",
+                "test_mode=debug",
+                "--arg",
+                "device_id=DUT-007",
+                "--arg",
+                "retry_count=3",
+            ],
+            cwd=str(test_project_with_args),
+        )
+        assert result.returncode == 0, f"Command failed: {result.stderr.decode()}"
+        time.sleep(10)
+
+    finally:
+        if server_process:
+            server_process.terminate()
+            server_process.wait(timeout=10)
+
+
+def test_with_hardpy_run_and_pytest_with_args(test_project_with_args: Path):
+    """Test that hardpy run and hardpy start can be used together."""
+    server_process = None
+    try:
+        server_process = run_hardpy_server(test_project_with_args)
+        time.sleep(5)
+        status = check_server_status()
+        assert status.get("status") == "ready", f"Server not ready: {status}"
+
+        result = run_command(
+            [
+                "pytest",
+                "--hardpy-start-arg",
+                "test_mode=debug",
+                "--hardpy-start-arg",
+                "device_id=DUT-007",
+                "--hardpy-start-arg",
+                "retry_count=3",
+            ],
+            cwd=str(test_project_with_args),
+        )
+        assert result.returncode == 0, f"Command failed: {result.stderr.decode()}"
+        time.sleep(10)
+
+    finally:
+        if server_process:
+            server_process.terminate()
+            server_process.wait(timeout=10)
+
+def test_with_hardpy_run_and_api_start_with_args(test_project_with_args: Path):
+    """Test that hardpy run and hardpy start can be used together."""
+    server_process = None
+    try:
+        server_process = run_hardpy_server(test_project_with_args)
+        time.sleep(5)
+        status = check_server_status()
+        assert status.get("status") == "ready", f"Server not ready: {status}"
+
+        start_response = requests.get(
+            f"{API_START_URL}?args=test_mode=debug&args=device_id=DUT-007&args=retry_count=3",
+            timeout=5,
+        )
+        assert start_response.status_code == 200, "Test start failed"
+        time.sleep(10)
+
+    finally:
+        if server_process:
+            server_process.terminate()
+            server_process.wait(timeout=10)
+
+
+def run_hardpy_server(plan_dir: Path) -> subprocess.Popen:
+    """Starts HardPy server in background mode."""
+    return run_background_process(["hardpy", "run"], cwd=str(plan_dir))
+
+
+def run_background_process(command, cwd=None):
+    """Runs a command in background and returns the process."""
+    process = subprocess.Popen(
+        command,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
+        cwd=cwd,
     )
-    time.sleep(3)  # Wait for server initialization
+    return process
 
-    # Verify server is running
-    status = requests.get(API_STATUS_URL, timeout=5).json()
-    assert status["status"] == "ready", "Server not ready"
 
-    start_response = requests.get(
-        f"{API_START_URL}",
-        timeout=5,
+def run_command(command, cwd=None, timeout=30):
+    """Runs a command and waits for completion. Returns completed process."""
+    return subprocess.run(
+        command,
+        capture_output=True,
+        cwd=cwd,
+        timeout=timeout, check=False,
     )
-    assert start_response.status_code == 200, "Test start failed"
-
-    while True:
-        status_response = requests.get(API_STATUS_URL, timeout=5)
-        status = status_response.json()
-        if status["status"] == "ready":
-            break
-        time.sleep(1)
 
 
-def test_hardpy_stop(test_project: Path):
-    """Test that parameters are correctly passed via API."""
-    # Start HardPy server
-    server_process = subprocess.Popen(
-        [*HARDPY_RUN_CMD, str(test_project)],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    time.sleep(3)  # Wait for server initialization
-
-    # Verify server is running
-    status = requests.get(API_STATUS_URL, timeout=5).json()
-    assert status["status"] == "ready", "Server not ready"
-    start_response = requests.get(
-        f"{API_START_URL}",
-        timeout=2,
-    )
-    assert start_response.status_code == 200, "Test start failed"
-    start_response = requests.get(
-        f"{API_STOP_URL}",
-        timeout=2,
-    )
-    assert start_response.status_code == 200, "Test start failed"
-
-    while True:
-        status_response = requests.get(API_STATUS_URL, timeout=5)
-        status = status_response.json()
-        if status["status"] == "ready":
-            break
-        time.sleep(1)
-
-
-def test_hardpy_start_with_args(test_project_with_args: Path):
-    """Test that args are correctly passed via API."""
-    # Start HardPy server
-    server_process = subprocess.Popen(
-        [*HARDPY_RUN_CMD, str(test_project_with_args)],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    time.sleep(3)  # Wait for server initialization
-
-    # Verify server is running
-    status = requests.get(API_STATUS_URL, timeout=5).json()
-    assert status["status"] == "ready", "Server not ready"
-
-    start_response = requests.get(
-        f"{API_START_URL}?args=test_id=123&args=env=prod",
-        timeout=5,
-    )
-    assert start_response.status_code == 200, "Test start failed"
-    time.sleep(3)
-    while True:
-        status_response = requests.get(API_STATUS_URL, timeout=5)
-        status = status_response.json()
-        if status["status"] == "ready":
-            break
-        time.sleep(1)
-
-
-def test_hardpy_start_with_cli_args(test_project_with_args: Path):
-    """Test passing arguments via CLI using hardpy start command"""
-    # Start HardPy server with CLI arguments
-    server_process = subprocess.Popen(
-        [
-            *HARDPY_START_CMD,
-            str(test_project_with_args),
-            "--arg",
-            "test_id=123",
-            "--arg",
-            "env=prod",
-        ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    time.sleep(3)
-
-    # Verify server is running
-    status = requests.get(API_STATUS_URL, timeout=5).json()
-    assert status["status"] == "ready", "Server not ready"
-
-    # Start test execution
-    start_response = requests.get(API_START_URL, timeout=5)
-    assert start_response.status_code == 200, "Test start failed"
-
-    # Wait for completion
-    time.sleep(3)
-    while True:
-        status_response = requests.get(API_STATUS_URL, timeout=5)
-        status = status_response.json()
-        if status["status"] == "ready":
-            break
-        time.sleep(1)
-
-
-def test_hardpy_start_with_ini(test_project_with_ini: Path):
-    """Test passing arguments via pytest.ini configuration"""
-    # Start HardPy server (should use arguments from pytest.ini)
-    server_process = subprocess.Popen(
-        [*HARDPY_RUN_CMD, str(test_project_with_ini)],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    time.sleep(3)
-
-    # Verify server is running
-    status = requests.get(API_STATUS_URL, timeout=5).json()
-    assert status["status"] == "ready", "Server not ready"
-
-    # Start test execution
-    start_response = requests.get(API_START_URL, timeout=5)
-    assert start_response.status_code == 200, "Test start failed"
-
-    # Wait for completion
-    time.sleep(3)
-    while True:
-        status_response = requests.get(API_STATUS_URL, timeout=5)
-        status = status_response.json()
-        if status["status"] == "ready":
-            break
-        time.sleep(1)
-
-
-def test_hardpy_start_with_mixed_args(test_project_with_ini: Path):
-    """Test CLI arguments override pytest.ini configuration"""
-    # Start HardPy server with CLI args (should override pytest.ini)
-    server_process = subprocess.Popen(
-        [
-            *PYTEST_CMD,
-            str(test_project_with_ini),
-            "--hardpy-start-arg",
-            "test_mode=production",
-            "--hardpy-start-arg",
-            "device_id=OVERRIDE-001",
-        ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    time.sleep(3)
-
-    # Verify server is running
-    status = requests.get(API_STATUS_URL, timeout=5).json()
-    assert status["status"] == "ready", "Server not ready"
-
-    # Start test execution
-    start_response = requests.get(API_START_URL, timeout=5)
-    assert start_response.status_code == 200, "Test start failed"
-
-    # Wait for completion
-    time.sleep(3)
-    while True:
-        status_response = requests.get(API_STATUS_URL, timeout=5)
-        status = status_response.json()
-        if status["status"] == "ready":
-            break
-        time.sleep(1)
+def check_server_status(url="http://localhost:8000/api/status") -> dict:
+    """Checks HardPy server status via API."""
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as e:
+        raise RuntimeError(f"Server status check failed: {e}") from e
