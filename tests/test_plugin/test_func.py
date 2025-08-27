@@ -1076,11 +1076,11 @@ def test_numeric_measurement(pytester: Pytester, hardpy_opts: list[str]):
             assert measurements == [], "The case measurement is not empty."
 
             meas1 = hardpy.NumericMeasurement(value=1)
-            hardpy.set_measurement(meas1)
+            index_1 = hardpy.set_measurement(meas1)
             report = hardpy.get_current_report()
             measurements = report.modules[module_id].cases[case_id].measurements
             assert len(measurements) == 1
-            assert meas1.value == measurements[0].value
+            assert meas1.value == measurements[index_1].value
             assert meas1.result is None
 
             meas2 = hardpy.NumericMeasurement(
@@ -1088,14 +1088,14 @@ def test_numeric_measurement(pytester: Pytester, hardpy_opts: list[str]):
                 operation=hardpy.ComparisonOperation.EQ,
                 comparison_value=2
             )
-            hardpy.set_measurement(meas2)
+            index_2 = hardpy.set_measurement(meas2)
             report = hardpy.get_current_report()
             measurements = report.modules[module_id].cases[case_id].measurements
             assert len(measurements) == 2
-            assert meas2.operation == measurements[1].operation
-            assert meas2.comparison_value == measurements[1].comparison_value
-            assert measurements[1].lower_limit is None
-            assert measurements[1].upper_limit is None
+            assert meas2.operation == measurements[index_2].operation
+            assert meas2.comparison_value == measurements[index_2].comparison_value
+            assert measurements[index_2].lower_limit is None
+            assert measurements[index_2].upper_limit is None
             assert meas2.result
 
             meas3 = hardpy.NumericMeasurement(
@@ -1104,14 +1104,14 @@ def test_numeric_measurement(pytester: Pytester, hardpy_opts: list[str]):
                 lower_limit=1,
                 upper_limit=4
             )
-            hardpy.set_measurement(meas3)
+            index_3 = hardpy.set_measurement(meas3)
             report = hardpy.get_current_report()
             measurements = report.modules[module_id].cases[case_id].measurements
             assert len(measurements) == 3
-            assert meas3.operation == measurements[2].operation
-            assert measurements[2].comparison_value is None
-            assert meas3.lower_limit == measurements[2].lower_limit
-            assert meas3.upper_limit == measurements[2].upper_limit
+            assert meas3.operation == measurements[index_3].operation
+            assert measurements[index_3].comparison_value is None
+            assert meas3.lower_limit == measurements[index_3].lower_limit
+            assert meas3.upper_limit == measurements[index_3].upper_limit
             assert not meas3.result
     """,
     )
