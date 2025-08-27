@@ -156,131 +156,44 @@ def test_ltge():
 
 
 # validation tests
-def test_eq_validator():
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.EQ, lower_limit=1, upper_limit=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.EQ)
+def test_single_operator_validator():
+    single_operators = {
+        CompOp.EQ,
+        CompOp.NE,
+        CompOp.GT,
+        CompOp.GE,
+        CompOp.LT,
+        CompOp.LE,
+    }
+    for _operator in single_operators:
+        with pytest.raises(ValidationError):
+            NumericMeasurement(
+                value=1,
+                operation=_operator,
+                lower_limit=1,
+                upper_limit=1,
+            )
+        with pytest.raises(ValidationError):
+            NumericMeasurement(value=1, operation=_operator)
 
 
-def test_ne_validator():
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.NE, lower_limit=1, upper_limit=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.NE)
-
-
-def test_gt_validator():
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GT, lower_limit=1, upper_limit=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GT)
-
-
-def test_ge_validator():
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GE, lower_limit=1, upper_limit=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GE)
-
-
-def test_lt_validator():
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LT, lower_limit=1, upper_limit=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LT)
-
-
-def test_le_validator():
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LE, lower_limit=1, upper_limit=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LE)
-
-
-def test_gtlt_validator():
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GTLT, comparison_value=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GTLT)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GTLT, lower_limit=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GTLT, upper_limit=1)
-
-
-def test_gele_validator():
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GELE, comparison_value=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GELE)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GELE, lower_limit=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GELE, upper_limit=1)
-
-
-def test_gelt_validator():
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GELT, comparison_value=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GELT)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GELT, lower_limit=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GELT, upper_limit=1)
-
-
-def test_gtle_validator():
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GTLE, comparison_value=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GTLE)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GTLE, lower_limit=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.GTLE, upper_limit=1)
-
-
-def test_ltgt_validator():
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LTGT, comparison_value=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LTGT)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LTGT, lower_limit=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LTGT, upper_limit=1)
-
-
-def test_lege_validator():
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LEGE, comparison_value=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LEGE)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LEGE, lower_limit=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LEGE, upper_limit=1)
-
-
-def test_legt_validator():
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LEGT, comparison_value=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LEGT)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LEGT, lower_limit=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LEGT, upper_limit=1)
-
-
-def test_ltge_validator():
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LTGE, comparison_value=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LTGE)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LTGE, lower_limit=1)
-    with pytest.raises(ValidationError):
-        NumericMeasurement(value=1, operation=CompOp.LTGE, upper_limit=1)
+def test_range_operator_validator():
+    range_operators = {
+        CompOp.GTLT,
+        CompOp.GELE,
+        CompOp.GELT,
+        CompOp.GTLE,
+        CompOp.LTGT,
+        CompOp.LEGE,
+        CompOp.LEGT,
+        CompOp.LTGE,
+    }
+    for _operator in range_operators:
+        with pytest.raises(ValidationError):
+            NumericMeasurement(value=1, operation=_operator, comparison_value=1)
+        with pytest.raises(ValidationError):
+            NumericMeasurement(value=1, operation=_operator)
+        with pytest.raises(ValidationError):
+            NumericMeasurement(value=1, operation=_operator, lower_limit=1)
+        with pytest.raises(ValidationError):
+            NumericMeasurement(value=1, operation=_operator, upper_limit=1)
