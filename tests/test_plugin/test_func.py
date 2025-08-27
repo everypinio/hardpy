@@ -1117,3 +1117,55 @@ def test_numeric_measurement(pytester: Pytester, hardpy_opts: list[str]):
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
+
+def test_string_measurement(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_measurement(request):
+            node = NodeInfo(request.node)
+            module_id = node.module_id
+            case_id = node.case_id
+
+            report = hardpy.get_current_report()
+            measurements = report.modules[module_id].cases[case_id].measurements
+            assert measurements == [], "The case measurement is not empty."
+
+            meas1 = hardpy.StringMeasurement(value="a")
+            hardpy.set_measurement(meas1)
+            report = hardpy.get_current_report()
+            measurements = report.modules[module_id].cases[case_id].measurements
+            assert len(measurements) == 1
+            assert meas1.value == measurements[0].value
+            assert meas1.result is None
+
+            meas2 = hardpy.StringMeasurement(
+                value="b",
+                operation=hardpy.ComparisonOperation.EQ,
+                comparison_value="b"
+            )
+            hardpy.set_measurement(meas2)
+            report = hardpy.get_current_report()
+            measurements = report.modules[module_id].cases[case_id].measurements
+            assert len(measurements) == 2
+            assert meas2.operation == measurements[1].operation
+            assert meas2.comparison_value == measurements[1].comparison_value
+            assert meas2.result
+
+            meas3 = hardpy.StringMeasurement(
+                value="A",
+                operation=hardpy.ComparisonOperation.NE,
+                casesensitive=False,
+                comparison_value="a"
+            )
+            hardpy.set_measurement(meas3)
+            report = hardpy.get_current_report()
+            measurements = report.modules[module_id].cases[case_id].measurements
+            assert len(measurements) == 3
+            assert meas3.operation == measurements[2].operation
+            assert measurements[2].comparison_value == measurements[2].comparison_value
+            assert not meas3.result
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
