@@ -44,5 +44,5 @@ jobs:
     - name: Run PyTest
       uses: dariocurr/pytest-summary@main
       with:
-        options: tests -m "not no_ci"
+        options: tests -m "not manual"
         show: "all"

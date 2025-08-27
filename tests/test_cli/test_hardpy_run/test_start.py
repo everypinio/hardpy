@@ -134,7 +134,7 @@ def test_ini_parameters():
     return tmp_path
 
 
-@pytest.mark.no_ci
+@pytest.mark.manual
 def test_with_hardpy_run_and_hardpy_start(test_project: Path):
     """Test that hardpy run and hardpy start can be used together."""
     server_process = None
@@ -153,7 +153,7 @@ def test_with_hardpy_run_and_hardpy_start(test_project: Path):
             server_process.wait(timeout=10)
 
 
-@pytest.mark.no_ci
+@pytest.mark.manual
 def test_with_hardpy_run_and_hardpy_start_with_ini_args(test_project_with_ini: Path):
     """Test that hardpy run and hardpy start can be used together."""
     server_process = None
@@ -173,7 +173,7 @@ def test_with_hardpy_run_and_hardpy_start_with_ini_args(test_project_with_ini: P
             server_process.wait(timeout=10)
 
 
-@pytest.mark.no_ci
+@pytest.mark.manual
 def test_with_hardpy_run_and_hardpy_start_with_args(test_project_with_args: Path):
     """Test that hardpy run and hardpy start can be used together."""
     server_process = None
@@ -205,7 +205,7 @@ def test_with_hardpy_run_and_hardpy_start_with_args(test_project_with_args: Path
             server_process.wait(timeout=10)
 
 
-@pytest.mark.no_ci
+@pytest.mark.manual
 def test_with_hardpy_run_and_pytest_with_args(test_project_with_args: Path):
     """Test that hardpy run and hardpy start can be used together."""
     server_process = None
@@ -236,7 +236,7 @@ def test_with_hardpy_run_and_pytest_with_args(test_project_with_args: Path):
             server_process.wait(timeout=10)
 
 
-@pytest.mark.no_ci
+@pytest.mark.manual
 def test_with_hardpy_run_and_api_start_with_args(test_project_with_args: Path):
     """Test that hardpy run and hardpy start can be used together."""
     server_process = None
