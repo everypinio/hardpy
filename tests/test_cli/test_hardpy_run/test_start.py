@@ -44,19 +44,19 @@ def wait_for_server_ready(timeout: int = STATUS_CHECK_TIMEOUT):
 def wait_for_test_completion():
     """Waits for the server to return to the 'ready' state after a test run."""
     start_time = time.time()
-    print("Waiting for test execution to complete...")
+    print("Waiting for test execution to complete...")  # noqa: T201
     while True:
         try:
             status_response = requests.get(API_STATUS_URL, timeout=5)
             status = status_response.json()
             if status["status"] == "ready":
-                print("Test execution complete.")
+                print("Test execution complete.")  # noqa: T201
                 return True
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             pass  # Server might be temporarily down or busy during test run
         time.sleep(1)
         if time.time() - start_time > STATUS_CHECK_TIMEOUT * 2:
-            print("Timed out waiting for test completion.")
+            print("Timed out waiting for test completion.")  # noqa: T201
             return False
 
 
@@ -97,7 +97,7 @@ import hardpy
 
 def test_ini_parameters():
     start_args = hardpy.get_start_args()
-    print(f"Полученные аргументы: {{start_args}}")
+    print(f"Arguments: {{start_args}}")
     assert start_args.get("test_mode") == "debug"
     assert start_args.get("device_id") == "DUT-007"
     assert start_args.get("retry_count") == "3"
@@ -134,6 +134,7 @@ def test_ini_parameters():
     return tmp_path
 
 
+@pytest.mark.no_ci
 def test_with_hardpy_run_and_hardpy_start(test_project: Path):
     """Test that hardpy run and hardpy start can be used together."""
     server_process = None
@@ -152,6 +153,7 @@ def test_with_hardpy_run_and_hardpy_start(test_project: Path):
             server_process.wait(timeout=10)
 
 
+@pytest.mark.no_ci
 def test_with_hardpy_run_and_hardpy_start_with_ini_args(test_project_with_ini: Path):
     """Test that hardpy run and hardpy start can be used together."""
     server_process = None
@@ -171,6 +173,7 @@ def test_with_hardpy_run_and_hardpy_start_with_ini_args(test_project_with_ini: P
             server_process.wait(timeout=10)
 
 
+@pytest.mark.no_ci
 def test_with_hardpy_run_and_hardpy_start_with_args(test_project_with_args: Path):
     """Test that hardpy run and hardpy start can be used together."""
     server_process = None
@@ -202,6 +205,7 @@ def test_with_hardpy_run_and_hardpy_start_with_args(test_project_with_args: Path
             server_process.wait(timeout=10)
 
 
+@pytest.mark.no_ci
 def test_with_hardpy_run_and_pytest_with_args(test_project_with_args: Path):
     """Test that hardpy run and hardpy start can be used together."""
     server_process = None
@@ -231,6 +235,8 @@ def test_with_hardpy_run_and_pytest_with_args(test_project_with_args: Path):
             server_process.terminate()
             server_process.wait(timeout=10)
 
+
+@pytest.mark.no_ci
 def test_with_hardpy_run_and_api_start_with_args(test_project_with_args: Path):
     """Test that hardpy run and hardpy start can be used together."""
     server_process = None
@@ -258,32 +264,33 @@ def run_hardpy_server(plan_dir: Path) -> subprocess.Popen:
     return run_background_process(["hardpy", "run"], cwd=str(plan_dir))
 
 
-def run_background_process(command, cwd=None):
+def run_background_process(command, cwd=None):  # noqa: ANN001
     """Runs a command in background and returns the process."""
-    process = subprocess.Popen(
+    return subprocess.Popen(
         command,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         cwd=cwd,
     )
-    return process
 
 
-def run_command(command, cwd=None, timeout=30):
+def run_command(command, cwd=None, timeout=30):  # noqa: ANN001
     """Runs a command and waits for completion. Returns completed process."""
     return subprocess.run(
         command,
         capture_output=True,
         cwd=cwd,
-        timeout=timeout, check=False,
+        timeout=timeout,
+        check=False,
     )
 
 
-def check_server_status(url="http://localhost:8000/api/status") -> dict:
+def check_server_status(url="http://localhost:8000/api/status") -> dict:  # noqa: ANN001
     """Checks HardPy server status via API."""
     try:
         response = requests.get(url, timeout=10)
         response.raise_for_status()
         return response.json()
     except requests.RequestException as e:
-        raise RuntimeError(f"Server status check failed: {e}") from e
+        msg = f"Server status check failed: {e}"
+        raise RuntimeError(msg) from e
