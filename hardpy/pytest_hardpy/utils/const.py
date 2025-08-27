@@ -33,6 +33,9 @@ class MeasurementType(str, Enum):
     NUMERIC = "numeric"
     """Numeric measurement"""
 
+    STRING = "string"
+    """String measurement"""
+
 
 class ComparisonOperation(str, Enum):
     """Comparison operator."""

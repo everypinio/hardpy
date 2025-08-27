@@ -33,7 +33,7 @@ class CaseStateStore(IBaseResult):
 
     assertion_msg: str | None = None
     msg: dict | None = None
-    measurements: list[NumericMeasurement] = []
+    measurements: list[NumericMeasurement | StringMeasurement] = []
     attempt: int = 0
     group: Group
     dialog_box: dict = {}
@@ -44,7 +44,7 @@ class CaseRunStore(IBaseResult):
 
     assertion_msg: str | None = None
     msg: dict | None = None
-    measurements: list[NumericMeasurement] = []
+    measurements: list[NumericMeasurement | StringMeasurement] = []
     attempt: int = 0
     group: Group
     artifact: dict = {}
@@ -136,8 +136,8 @@ class IBaseMeasurement(BaseModel, ABC):
     model_config = ConfigDict(extra="allow")
 
     type: MeasurementType
-    name: str | None = None
-    operation: CompOp | None = None
+    name: str | None = Field(default=None)
+    operation: CompOp | None = Field(default=None)
     result: bool | None = Field(default_factory=lambda: None)
 
 
@@ -148,14 +148,27 @@ class NumericMeasurement(IBaseMeasurement):
 
     type: MeasurementType = Field(default=MeasurementType.NUMERIC)
     value: int | float
-    name: str | None = None
-    unit: str | None = None
+    name: str | None = Field(default=None)
+    unit: str | None = Field(default=None)
 
-    operation: CompOp | None = None
     comparison_value: float | int | None = Field(default=None)
 
     lower_limit: float | int | None = Field(default=None)
     upper_limit: float | int | None = Field(default=None)
+
+
+class StringMeasurement(IBaseMeasurement):
+    """String measurement description."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    type: MeasurementType = Field(default=MeasurementType.STRING)
+    value: str
+    name: str | None = Field(default=None)
+    casesensitive: bool = Field(default=True)
+
+    comparison_value: str | None = Field(default=None)
+
 
 class OperatorData(BaseModel):
     """Operator data from operator panel."""

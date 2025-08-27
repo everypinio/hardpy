@@ -8,6 +8,7 @@ from pydantic import model_validator
 from hardpy.pytest_hardpy.db.schema.v1 import (
     Instrument as InstrumentModel,
     NumericMeasurement as NumericMeasurementModel,
+    StringMeasurement as StringMeasurementModel,
     SubUnit as SubUnitModel,
 )
 from hardpy.pytest_hardpy.utils.const import ComparisonOperation as CompOp
@@ -22,7 +23,7 @@ class SubUnit(SubUnitModel):
 
 
 class NumericMeasurement(NumericMeasurementModel):
-    """Represents a measurement with value and comparison operation.
+    """Represents a numeric measurement with value and comparison operation.
 
     Args:
         value (int | float): The value of the measurement.
@@ -95,4 +96,48 @@ class NumericMeasurement(NumericMeasurementModel):
                 res = self.value <= self.lower_limit or self.value > self.upper_limit
             case CompOp.LTGE:
                 res = self.value < self.lower_limit or self.value >= self.upper_limit
+        return res
+
+
+class StringMeasurement(StringMeasurementModel):
+    """Represents a string measurement with value and comparison operation.
+
+    Args:
+        value (str): The value of the measurement.
+        name (str | None): The name of the measurement.
+        operation (CompOp | None): The comparison operation to apply.
+        comparison_value (str | None): The value to compare against.
+    """
+
+    @model_validator(mode="after")
+    def validate_operation_requirements(self) -> StringMeasurement:
+        """Validate field requirements based on selected operation."""
+        string_operations = (CompOp.EQ, CompOp.NE)
+        if self.operation in string_operations and self.comparison_value is None:
+            msg = f"Comparison_value required for {self.operation} operation"
+            raise ValueError(msg)
+
+        if self.operation and self.operation not in string_operations:
+            msg = f"{self.operation} is not a valid string operation"
+            raise ValueError(msg)
+
+        if self.operation:
+            self.result = self._check_condition()
+
+        return self
+
+    def _check_condition(self) -> bool:
+        """Evaluate the measurement based on the selected operation."""
+        res = False
+        match self.operation:
+            case CompOp.EQ:
+                if self.casesensitive:
+                    res = self.value == self.comparison_value
+                else:
+                    res = self.value.lower() == self.comparison_value.lower()
+            case CompOp.NE:
+                if self.casesensitive:
+                    res = self.value != self.comparison_value
+                else:
+                    res = self.value.lower() != self.comparison_value.lower()
         return res

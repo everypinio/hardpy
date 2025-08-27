@@ -33,6 +33,7 @@ from hardpy.pytest_hardpy.utils.singleton import SingletonMeta
 from hardpy.pytest_hardpy.utils.stand_type import (
     Instrument,
     NumericMeasurement,
+    StringMeasurement,
     SubUnit,
 )
 
@@ -57,6 +58,7 @@ __all__ = [
     "RadiobuttonWidget",
     "SingletonMeta",
     "StepWidget",
+    "StringMeasurement",
     "SubUnit",
     "TestStandNumberError",
     "TestStatus",
