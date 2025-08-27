@@ -47,11 +47,8 @@ def test_other_operations():
             StringMeasurement(value="a", operation=_operator, comparison_value="b")
 
 # validation tests
-def test_eq_validator():
-    with pytest.raises(ValidationError):
-        StringMeasurement(value="a", operation=CompOp.EQ)
-
-
-def test_ne_validator():
-    with pytest.raises(ValidationError):
-        StringMeasurement(value="a", operation=CompOp.NE)
+def test_string_validator():
+    string_operators = {CompOp.EQ, CompOp.NE}
+    for _operator in string_operators:
+        with pytest.raises(ValidationError):
+            StringMeasurement(value="a", operation=_operator)
