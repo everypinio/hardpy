@@ -10,6 +10,7 @@ from typing import ClassVar
 from pydantic import BaseModel, ConfigDict, Field
 
 from hardpy.pytest_hardpy.utils import (
+    ChartType,
     ComparisonOperation as CompOp,
     Group,
     MeasurementType,
@@ -168,6 +169,20 @@ class StringMeasurement(IBaseMeasurement):
     casesensitive: bool = Field(default=True)
 
     comparison_value: str | None = Field(default=None)
+
+
+class Chart(BaseModel):
+    """Chart description."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    chart_type: ChartType = Field(default=ChartType.LINE)
+    title: str | None = Field(default=None)
+    x_label: str | None = Field(default=None)
+    y_label: str | None = Field(default=None)
+    marker_name: list[str | None] = Field(default=[])
+    x_data: list[list[int | float]] = Field(default_factory=lambda: [])  # noqa: PIE807
+    y_data: list[list[int | float]] = Field(default_factory=lambda: [])  # noqa: PIE807
 
 
 class OperatorData(BaseModel):

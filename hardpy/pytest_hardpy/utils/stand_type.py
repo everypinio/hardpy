@@ -6,6 +6,7 @@ from __future__ import annotations
 from pydantic import model_validator
 
 from hardpy.pytest_hardpy.db.schema.v1 import (
+    Chart as ChartModel,
     Instrument as InstrumentModel,
     NumericMeasurement as NumericMeasurementModel,
     StringMeasurement as StringMeasurementModel,
@@ -141,3 +142,53 @@ class StringMeasurement(StringMeasurementModel):
                 else:
                     res = self.value.lower() != self.comparison_value.lower()
         return res
+
+
+class Chart(ChartModel):
+    """Represents a chart with data and labels.
+
+    Args:
+        chart_type (ChartType | None): chart type.
+        title (str | None): chart title.
+        x_label (str | None): X label.
+        y_label (str | None): Y label.
+    """
+
+    @model_validator(mode="after")
+    def validate_lines(self) -> Chart:
+        """Validate field requirements based on selected operation."""
+        if len(self.x_data) != len(self.y_data):
+            msg = "x_data, y_data, must be equal length"
+            raise ValueError(msg)
+
+        if len(self.x_data) != len(self.marker_name):
+            msg = "x_data, marker_name, must be equal length"
+            raise ValueError(msg)
+
+        if len(self.x_data):
+            for i in range(len(self.x_data)):
+                if self.x_data[i] != self.y_data[i]:
+                    msg = "x_data and y_data must have the same length"
+                    raise ValueError(msg)
+
+        return self
+
+    def add_line(
+        self,
+        x_data: list[int | float],
+        y_data: list[int | float],
+        marker_name: str | None = None,
+    ) -> None:
+        """Add line to chart.
+
+        Args:
+            x_data (list[int | float]): X data.
+            y_data (list[int | float]): Y data.
+            marker_name (str | None): marker name.
+        """
+        if len(x_data) != len(y_data):
+            msg = "x_data and y_data must have the same length"
+            raise ValueError(msg)
+        self.x_data.append(x_data)
+        self.y_data.append(y_data)
+        self.marker_name.append(marker_name)
