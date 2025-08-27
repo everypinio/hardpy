@@ -267,6 +267,30 @@ For example, the measured voltage must fall within a specific range.
 }
 ```
 
+###### String measurement
+
+A **StringMeasurement** is a structured container for storing string measurements.
+For example, the firmware version comparison.
+
+- **type**: `string` by default.
+- **value**: string measure value.
+- **name**: string measure name.
+- **operation**: comparison operators of string measure.
+- **comparison_value** value to compare against.
+- **casesensitive**: case sensitivity, default is `True`.
+- **result** the result of the measurement if the operation exists; otherwise, it is empty.
+  Filled in without user involvement.
+
+```json
+{
+  "type": "string",
+  "value": "3.1.2",
+  "operation": "EQ",
+  "casesensitive": true,
+  "result": true
+}
+```
+
 ### Statestore current document example
 
 ```json

@@ -391,7 +391,8 @@ When called again, the information will be added to case measurement list.
 
 **Arguments:**
 
-- `measurement` [NumericMeasurement](#numericmeasurement): measurement data.
+- `measurement` [NumericMeasurement](#numericmeasurement) | 
+  [StringMeasurement](#stringmeasurement): measurement data.
 
 **Example:**
 
@@ -406,6 +407,10 @@ def test_measurement():
 
     assert meas_1.result
     assert meas_2.result
+
+    meas_4 = StringMeasurement(value="1.2.0", operation=ComparisonOperation.EQ, comparison_value="1.2.0")
+    set_measurement(meas_4)
+    assert meas_4.result
 ```
 
 #### set_case_artifact
@@ -1037,6 +1042,37 @@ def test_measurement():
     set_measurement(meas_2)
     meas_3 = NumericMeasurement(value=1.0)
     set_measurement(meas_3)
+
+    assert meas_1.result
+    assert meas_2.result
+```
+
+### StringMeasurement
+
+This class contains information about string measurement. 
+It is used with the [set_measurement](#set_measurement) function.
+
+**Arguments:**
+
+- `value` *(str)*: string measure value.
+- `name` *(str | None)*: string measure name.
+- `operation`: comparison operators of string measure (**EQ** and **NE**).
+- `comparison_value`: *(ComparisonOperation | None)*: value to compare against.
+- `casesensitive`: *bool=True*: case sensitivity.
+
+**Returns:**
+
+- *(int)*: measurement index
+
+**Example:**
+
+```python
+def test_measurement():
+    meas_1 = StringMeasurement(value="1.2.0", operation=ComparisonOperation.EQ, comparison_value="1.2.0")
+    set_measurement(meas_1)
+
+    meas_2 = StringMeasurement(value="abc", operation=ComparisonOperation.EQ, casesensitive=False, comparison_value="ABC")
+    set_measurement(meas_2)
 
     assert meas_1.result
     assert meas_2.result
