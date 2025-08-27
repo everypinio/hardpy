@@ -1042,6 +1042,28 @@ def test_measurement():
     assert meas_2.result
 ```
 
+## Enum
+
+### ComparisonOperation
+
+A comparison operation for the measurements.
+
+**Values:**
+- *EQ*: equal.
+- *NE*: not equal.
+- *GT*: greater than.
+- *GE*: greater or equal.
+- *LT*: less than.
+- *LE*: less or equal.
+- *GTLT*: greater than lower limit, less than upper limit.
+- *GELE*: greater or equal than lower limit, less or equal than upper limit.
+- *GELT*: greater or equal than lower limit, less than upper limit.
+- *GTLE*: greater than lower limit, less or equal than upper limit.
+- *LTGT*: less than lower limit or greater than upper limit.
+- *LEGE*: less or equal than lower limit or greater or equal than upper limit.
+- *LEGT*: less or equal than lower limit or greater than upper limit.
+- *LTGE*: less than lower limit or greater or equal than upper limit.
+
 ## Fixture
 
 #### post_run_functions
