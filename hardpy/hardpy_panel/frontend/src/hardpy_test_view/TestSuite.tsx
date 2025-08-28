@@ -253,6 +253,15 @@ export class TestSuite extends React.Component<Props, State> {
           data={case_names}
           highlightOnHover={true}
           dense={true}
+          customStyles={{
+            cells: {
+              style: {
+                verticalAlign: "top",
+                paddingTop: "8px", 
+                paddingBottom: "8px",
+              },
+            },
+          }}
         />
       </div>
     );
@@ -311,7 +320,7 @@ export class TestSuite extends React.Component<Props, State> {
       <div
         className={is_loading ? Classes.SKELETON : undefined}
         key={key}
-        style={{ display: "inline-block", verticalAlign: "middle" }}
+        style={{ display: "inline-block", verticalAlign: "top" }} 
       >
         {cell_content}
       </div>
@@ -331,9 +340,7 @@ export class TestSuite extends React.Component<Props, State> {
     rowIndex: number
   ): React.ReactElement {
     return this.commonCellRender(
-      <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
-        <TestNumber val={rowIndex + 1} />
-      </div>,
+      <TestNumber val={rowIndex + 1} />,
       `number_${rowIndex}_${row_}}`
     );
   }
@@ -352,9 +359,7 @@ export class TestSuite extends React.Component<Props, State> {
   ): React.ReactElement {
     const test = test_topics[rowIndex];
     return this.commonCellRender(
-      <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
-        <TestName name={test.name} />
-      </div>,
+      <TestName name={test.name} />,
       `name_${rowIndex}_${row_}`
     );
   }
@@ -374,9 +379,7 @@ export class TestSuite extends React.Component<Props, State> {
     const test = test_topics[rowIndex];
 
     return this.commonCellRender(
-      <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
-        <TestData assertion_msg={test.assertion_msg} msg={test.msg} />
-      </div>,
+      <TestData assertion_msg={test.assertion_msg} msg={test.msg} />,
       `data_${rowIndex}_${row_}`
     );
   }
@@ -403,7 +406,8 @@ export class TestSuite extends React.Component<Props, State> {
     } = test.dialog_box.image || {};
 
     return this.commonCellRender(
-      <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
+      <div style={{ verticalAlign: "top" }}>
+        {" "}
         {test.dialog_box.dialog_text &&
           test.status === "run" &&
           this.props.commonTestRunStatus === "run" &&
