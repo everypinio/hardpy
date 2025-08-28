@@ -68,12 +68,10 @@ addopts = --hardpy-pt
     (tmp_path / "test_hardpy_args.py").write_text("""
 import hardpy
 
-def test_ini_parameters():
-    start_args = hardpy.get_start_args()
-    print(f"Arguments: {{start_args}}")
-    assert start_args.get("test_mode") == "debug"
-    assert start_args.get("device_id") == "DUT-007"
-    assert start_args.get("retry_count") == "3"
+def test_ini_parameters(hardpy_start_args):
+    assert hardpy_start_args.get("test_mode") == "debug"
+    assert hardpy_start_args.get("device_id") == "DUT-007"
+    assert hardpy_start_args.get("retry_count") == "3"
 """)
 
     (tmp_path / "__init__.py").touch()
@@ -95,12 +93,11 @@ addopts = --hardpy-pt
 import hardpy
 import time
 
-def test_ini_parameters():
+def test_ini_parameters(hardpy_start_args):
     time.sleep(3)
-    start_args = hardpy.get_start_args()
-    assert start_args.get("test_mode") == "debug"
-    assert start_args.get("device_id") == "DUT-007"
-    assert start_args.get("retry_count") == "3"
+    assert hardpy_start_args.get("test_mode") == "debug"
+    assert hardpy_start_args.get("device_id") == "DUT-007"
+    assert hardpy_start_args.get("retry_count") == "3"
 """)
 
     (tmp_path / "__init__.py").touch()
