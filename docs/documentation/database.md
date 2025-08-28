@@ -6,7 +6,7 @@ We use CouchDB because it's a simple document-oriented NoSQL database.
 The database has two main purposes:
 
 - Saving test report;
-- [Data synchronization](./../about/fronted_sync.md) with the web interface.
+- [Data synchronization](./../about/frontend_sync.md) with the web interface.
 
 The CouchDB version must be equal to or greater than the 3.2 version.
 
@@ -16,7 +16,7 @@ The CouchDB version must be equal to or greater than the 3.2 version.
 
 The pytest plugin has 2 databases: **statestore** and **runstore**.
 
-- The **statestore** database uses for frontend [data synchronization](./../about/fronted_sync.md).
+- The **statestore** database uses for frontend [data synchronization](./../about/frontend_sync.md).
 - The **runstore** database contains the document **current**, which is a JSON object
 that stores the current state of the test run.
 
