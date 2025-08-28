@@ -617,7 +617,7 @@ def test_attempt_message():
 
 #### get_start_args
 
-Returns a dictionary of start arguments passed via CLI.
+It returns a dictionary of the start arguments that were passed via the command `hardpy start --arg`.
 
 The `get_start_args` function can be called from any test case to access dynamic start parameters.
 
