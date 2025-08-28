@@ -9,7 +9,7 @@ The code for this example can be seen inside the hardpy package
 ### how to start
 
 1. Launch `hardpy init couchdb_load`.
-2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
+2. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
 4. Launch `hardpy run couchdb_load`.
 

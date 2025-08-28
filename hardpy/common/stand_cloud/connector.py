@@ -96,7 +96,6 @@ class StandCloudConnector:
             return False
         return True
 
-
     def get_access_token(self) -> BearerToken | None:
         """Read access token from token store.
 
@@ -125,7 +124,8 @@ class StandCloudConnector:
             timeout=10,
         )
         if req.status_code != HTTPStatus.OK:
-            raise StandCloudError(req.text)
+            msg = f"status code {req.status_code}, {req.reason}, {req.text}"
+            raise StandCloudError(msg)
         return json.loads(req.content)
 
     def get_api(self, endpoint: str) -> ApiClient:
