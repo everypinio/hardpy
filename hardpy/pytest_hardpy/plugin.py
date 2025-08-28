@@ -163,6 +163,8 @@ class HardpyPlugin:
         config.addinivalue_line("markers", "dependency")
         config.addinivalue_line("markers", "attempt")
         config.addinivalue_line("markers", "critical")
+        config.addinivalue_line("markers", "case_group")
+        config.addinivalue_line("markers", "module_group")
 
         # must be init after config data is set
         try:
@@ -301,10 +303,13 @@ class HardpyPlugin:
         if call.when != "call" or not call.excinfo:
             return
 
+        # failure item
         node_info = NodeInfo(item)
         attempt = node_info.attempt
         module_id = node_info.module_id
         case_id = node_info.case_id
+        casusd_dut_failure_id = self._reporter.get_caused_dut_failure_id()
+        is_dut_failure = True
 
         if node_info.critical:
             self._is_critical_not_passed = True
@@ -323,12 +328,17 @@ class HardpyPlugin:
                 item.runtest()
                 call.excinfo = None
                 self._is_critical_not_passed = False
+                is_dut_failure = False
                 self._reporter.set_case_status(module_id, case_id, TestStatus.PASSED)
                 break
             except AssertionError:
                 self._reporter.set_case_status(module_id, case_id, TestStatus.FAILED)
+                is_dut_failure = True
                 if current_attempt == attempt:
-                    return
+                    break
+
+        if is_dut_failure and casusd_dut_failure_id is None:
+            self._reporter.set_caused_dut_failure_id(module_id, case_id)
 
     # Reporting hooks
 

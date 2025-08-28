@@ -161,6 +161,17 @@
             ]
         },
         {
+            "name": "Python: Example Measurement",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "run",
+                "examples/measurement"
+            ]
+        },
+        {
             "name": "Python: Example Attempts",
             "type": "debugpy",
             "request": "launch",

@@ -7,7 +7,7 @@ For example, user can write own script for **HardPy** to run with special argume
 ### how to start
 
 1. Launch `hardpy init launch_arg`.
-2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
+2. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
 4. Launch `hardpy run launch_arg`.
 
