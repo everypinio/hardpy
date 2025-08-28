@@ -5,7 +5,7 @@
 ### Viewing tests in the operator panel
 
 The operator panel allows you to view the test hierarchy with **test folder/test file/function** levels.
-See the [HardPy panel](./../documentation/hardpy_panel.md) for more information.
+An example of its use can be found on page [HardPy panel](./../documentation/hardpy_panel.md).
 User can launch operator panel using [hardpy run](./../documentation/cli.md#hardpy-run) command.
 
 <h1 align="center">
@@ -160,7 +160,7 @@ def test_c():
     assert True
 ```
 
-See the example [skip test](./../examples/skip_test.md) for more information.
+An example of its use can be found on page [skip test](./../examples/skip_test.md).
 
 ### Critical tests
 
@@ -190,7 +190,7 @@ def test_c():
     assert True
 ```
 
-See the example [critical](./../examples/critical_test.md) for more information.
+An example of its use can be found on page [critical](./../examples/critical_test.md).
 
 ### Test case and test module grouping
 
@@ -241,8 +241,7 @@ def test_generate_final_report():
     assert create_execution_summary()
 ```
 
-See the [test grouping documentation](./../documentation/pytest_hardpy.md#case_group) 
-for more information on how groups affect test execution order and reporting.
+An example of its use can be found on page [test grouping documentation](./../documentation/pytest_hardpy.md#case_group).
 
 ## Logging approaches in HardPy
 
@@ -324,15 +323,21 @@ def test_system_startup():
 ### Storing test result to StandCloud
 
 **HardPy** allows user to send test results to **StandCloud**, a data storage and analysis platform.
-See the [StandCloud](./../documentation/stand_cloud.md) section and the
-[StandCloud example](./../examples/stand_cloud.md) for more information.
+An example of its use can be found on pages [StandCloud](./../documentation/stand_cloud.md)
+and [StandCloud example](./../examples/stand_cloud.md).
 
 ### Reading test result from StandCloud
 
 **HardPy** allows user to read test result from **StandCloud**.
-See the [StandCloud reader](./../examples/stand_cloud_reader.md) for more information.
+An example of its use can be found on page [StandCloud reader](./../examples/stand_cloud_reader.md).
 
 ## Other
+
+### Measurement
+
+**HardPy** allows users to save their measurement data to a database.
+Each individual test case can store measurements as a list. 
+An example of its use can be found on page [measurement](./../examples/measurement.md).
 
 ### Running some instance in single stand
 

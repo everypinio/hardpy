@@ -384,6 +384,35 @@ def test_process_info():
     })
 ```
 
+#### set_measurement
+
+Writes measurement information to a database in the form of a case measurement list.
+When called again, the information will be added to case measurement list.
+
+**Arguments:**
+
+- `measurement` [NumericMeasurement](#numericmeasurement) | 
+  [StringMeasurement](#stringmeasurement): measurement data.
+
+**Example:**
+
+```python
+def test_measurement():
+    meas_1 = NumericMeasurement(value=10, operation=ComparisonOperation.EQ, comparison_value=10)
+    set_measurement(meas_1)
+    meas_2 = NumericMeasurement(value=3, unit="V", operation=ComparisonOperation.GTLT, lower_limit=2.9, upper_limit=3.5)
+    set_measurement(meas_2)
+    meas_3 = NumericMeasurement(value=1.0)
+    set_measurement(meas_3)
+
+    assert meas_1.result
+    assert meas_2.result
+
+    meas_4 = StringMeasurement(value="1.2.0", operation=ComparisonOperation.EQ, comparison_value="1.2.0")
+    set_measurement(meas_4)
+    assert meas_4.result
+```
+
 #### set_case_artifact
 
 Writes a dictionary with a test case artifact.
@@ -953,7 +982,7 @@ set_instrument(oscilloscope)
 
 #### SubUnit
 
-This class stores information about the sub-unit of the DUT.. 
+This class contains information about the sub-unit of the DUT. 
 It is used with the [set_dut_sub_unit](#set_dut_sub_unit) function.
 
 **Arguments:**
@@ -983,6 +1012,93 @@ def test_dut_sub_unit():
     )
     hardpy.set_dut_sub_unit(sub_unit)
 ```
+
+### NumericMeasurement
+
+This class contains information about numeric measurement. 
+It is used with the [set_measurement](#set_measurement) function.
+
+**Arguments:**
+
+- `value` *(float | int)*: numeric measure value.
+- `name` *(str | None)*: numeric measure name.
+- `unit` *(str | None)*: unit of numeric measure.
+- `operation`: comparison operators of numeric measure.
+- `comparison_value` *(ComparisonOperation | None)*: value to compare against.
+- `lower_limit`: *(float | int)*: lower limit for range operations.
+- `upper_limit` *(float | int)*:upper limit for range operations.
+
+**Returns:**
+
+- *(int)*: measurement index
+
+**Example:**
+
+```python
+def test_measurement():
+    meas_1 = NumericMeasurement(value=10, operation=ComparisonOperation.EQ, comparison_value=10)
+    set_measurement(meas_1)
+    meas_2 = NumericMeasurement(value=3, unit="V", operation=ComparisonOperation.GTLT, lower_limit=2.9, upper_limit=3.5)
+    set_measurement(meas_2)
+    meas_3 = NumericMeasurement(value=1.0)
+    set_measurement(meas_3)
+
+    assert meas_1.result
+    assert meas_2.result
+```
+
+### StringMeasurement
+
+This class contains information about string measurement. 
+It is used with the [set_measurement](#set_measurement) function.
+
+**Arguments:**
+
+- `value` *(str)*: string measure value.
+- `name` *(str | None)*: string measure name.
+- `operation`: comparison operators of string measure (**EQ** and **NE**).
+- `comparison_value`: *(ComparisonOperation | None)*: value to compare against.
+- `casesensitive`: *bool=True*: case sensitivity.
+
+**Returns:**
+
+- *(int)*: measurement index
+
+**Example:**
+
+```python
+def test_measurement():
+    meas_1 = StringMeasurement(value="1.2.0", operation=ComparisonOperation.EQ, comparison_value="1.2.0")
+    set_measurement(meas_1)
+
+    meas_2 = StringMeasurement(value="abc", operation=ComparisonOperation.EQ, casesensitive=False, comparison_value="ABC")
+    set_measurement(meas_2)
+
+    assert meas_1.result
+    assert meas_2.result
+```
+
+## Enum
+
+### ComparisonOperation
+
+A comparison operation for the measurements.
+
+**Values:**
+- *EQ*: equal.
+- *NE*: not equal.
+- *GT*: greater than.
+- *GE*: greater or equal.
+- *LT*: less than.
+- *LE*: less or equal.
+- *GTLT*: greater than lower limit, less than upper limit.
+- *GELE*: greater or equal than lower limit, less or equal than upper limit.
+- *GELT*: greater or equal than lower limit, less than upper limit.
+- *GTLE*: greater than lower limit, less or equal than upper limit.
+- *LTGT*: less than lower limit or greater than upper limit.
+- *LEGE*: less or equal than lower limit or greater or equal than upper limit.
+- *LEGT*: less or equal than lower limit or greater than upper limit.
+- *LTGE*: less than lower limit or greater or equal than upper limit.
 
 ## Fixture
 

@@ -197,8 +197,8 @@ The module's name is the same as the file's name.
         The user can specify and update current message by using [set_message](./../documentation/pytest_hardpy.md#set_message) function.
       - **group**: the group of case: *Setup*, *Main* or *Teardown* (*Main* by default).
         The user can specify the case group by using [case_group](./../documentation/pytest_hardpy.md#case_group) marker.
-      - **numeric_measurements**: list of numeric measurements.
-        See the [numeric-measurement](#numeric-measurement) section for more information.
+      - **measurements**: list of measurements.
+        See the [measurements](#measurements) section for more information.
       - **attempt**: number of attempts per successful test case.
         The user can specify the case name by using [attempt](./../documentation/pytest_hardpy.md#attempt) marker.
       - **dialog_box**: information about dialog box.
@@ -223,17 +223,73 @@ The module's name is the same as the file's name.
         - **id**: dialog box id.
         - **font_size**: dialog box font size.
 
-##### Numeric measurement
+##### Measurements
+
+The **measurements** section contains the information about measurements.
+The user fills in the list of measurements for each case by 
+[set_measurement](./../documentation/pytest_hardpy.md#set_measurement) function.
+
+###### Numeric measurement
 
 A **NumericMeasurement** is a structured container for storing numerical measurements.
 For example, the measured voltage must fall within a specific range.
 
+- **type**: `numeric` by default.
 - **value**: numeric measure value.
 - **name**: numeric measure name.
-- **low_limit**: numeric measure low limit.
-- **high_limit**: numeric measure high limit.
 - **unit**: unit of numeric measure.
-- **comp_op**: comparison operators of numeric measure.
+- **operation**: comparison operators of numeric measure.
+- **comparison_value** value to compare against.
+- **lower_limit**: lower limit for range operations.
+- **upper_limit** upper limit for range operations.
+- **result** the result of the measurement if the operation exists; otherwise, it is empty.
+  Filled in without user involvement.
+
+```json
+// voltage measure
+{
+  "type": "numeric",
+  "value": "3.57",
+  "name": "Main voltage",
+  "lower_limit": "3.45",
+  "upper_limit": "3.65",
+  "unit": "V",
+  "operation": "GTLT",
+  "result": true
+}
+```
+
+```json
+// temperature measure
+{
+  "type": "numeric",
+  "value": "14",
+}
+```
+
+###### String measurement
+
+A **StringMeasurement** is a structured container for storing string measurements.
+For example, the firmware version comparison.
+
+- **type**: `string` by default.
+- **value**: string measure value.
+- **name**: string measure name.
+- **operation**: comparison operators of string measure.
+- **comparison_value** value to compare against.
+- **casesensitive**: case sensitivity, default is `True`.
+- **result** the result of the measurement if the operation exists; otherwise, it is empty.
+  Filled in without user involvement.
+
+```json
+{
+  "type": "string",
+  "value": "3.1.2",
+  "operation": "EQ",
+  "casesensitive": true,
+  "result": true
+}
+```
 
 ### Statestore current document example
 
@@ -309,7 +365,7 @@ For example, the measured voltage must fall within a specific range.
               "start_time": 1695817263,
               "stop_time": 1695817264,
               "assertion_msg": null,
-              "numeric_measurements": [],
+              "measurements": [],
               "msg": null,
               "group": "MAIN",
               "attempt": 1,
@@ -344,7 +400,7 @@ For example, the measured voltage must fall within a specific range.
               "stop_time": 1695817264,
               "assertion_msg": "The test failed because minute 21 is odd! Try again!",
               "attempt": 1,
-              "numeric_measurements": [],
+              "measurements": [],
               "msg": [
                 "Current minute 21"
               ],

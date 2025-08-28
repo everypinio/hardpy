@@ -13,7 +13,7 @@ Contains some examples of valid tests with attempts.
 ### how to start
 
 1. Launch `hardpy init attempts`.
-2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
+2. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
 4. Launch `hardpy run attempts`.
 

@@ -24,6 +24,8 @@ from hardpy.pytest_hardpy.utils import (
     HTMLComponent,
     ImageComponent,
     Instrument,
+    NumericMeasurement,
+    StringMeasurement,
     SubUnit,
     TestStandNumberError,
 )
@@ -496,6 +498,35 @@ def set_process_info(info: Mapping[str, str | int | float | datetime]) -> None:
         full_key = reporter.generate_key(DF.PROCESS, DF.INFO, key)
         reporter.set_doc_value(full_key, value)
     reporter.update_db_by_doc()
+
+
+def set_measurement(measurement: NumericMeasurement | StringMeasurement) -> int:
+    """Add measurement to document.
+
+    Args:
+        measurement (NumericMeasurement | StringMeasurement): measurement object
+
+    Returns:
+        int: measurement index from measurements list
+    """
+    current_test = _get_current_test()
+    reporter = RunnerReporter()
+
+    key = reporter.generate_key(
+        DF.MODULES,
+        current_test.module_id,
+        DF.CASES,
+        current_test.case_id,
+        DF.MEASUREMENTS,
+    )
+
+    measurements = reporter.get_field(key) or []
+    measurements.append({k: v for k, v in vars(measurement).items() if v is not None})
+
+    reporter.set_doc_value(key, measurements)
+    reporter.update_db_by_doc()
+
+    return len(measurements) - 1
 
 
 def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401

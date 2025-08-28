@@ -72,6 +72,7 @@ nav:
       - Hello HardPy: examples/hello_hardpy.md
       - Launch arguments: examples/launch_arguments.md
       - Pytest logging: examples/logging.md
+      - Measurement: examples/measurement.md
       - Minute parity: examples/minute_parity.md
       - Multiple stands: examples/multiple_stands.md
       - Operator message: examples/operator_msg.md
@@ -83,7 +84,7 @@ nav:
       - Stand equipment: examples/stand_equipment.md
   - About:
       - Development: about/development.md
-      - Frontend data synchronization: about/fronted_sync.md
+      - Frontend data synchronization: about/frontend_sync.md
   - Changelog: changelog.md
 
 markdown_extensions:

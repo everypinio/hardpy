@@ -218,6 +218,7 @@ def test_dut_sub_unit(pytester: Pytester, hardpy_opts: list[str]):
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
 
+
 def test_stand_name(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
@@ -1055,6 +1056,115 @@ def test_process_info(pytester: Pytester, hardpy_opts: list[str]):
             hardpy.set_process_info(additional_info)
             report = hardpy.get_current_report()
             assert expected_info == report.process.info
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_numeric_measurement(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_measurement(request):
+            node = NodeInfo(request.node)
+            module_id = node.module_id
+            case_id = node.case_id
+
+            report = hardpy.get_current_report()
+            measurements = report.modules[module_id].cases[case_id].measurements
+            assert measurements == [], "The case measurement is not empty."
+
+            meas1 = hardpy.NumericMeasurement(value=1)
+            index_1 = hardpy.set_measurement(meas1)
+            report = hardpy.get_current_report()
+            measurements = report.modules[module_id].cases[case_id].measurements
+            assert len(measurements) == 1
+            assert meas1.value == measurements[index_1].value
+            assert meas1.result is None
+
+            meas2 = hardpy.NumericMeasurement(
+                value=2,
+                operation=hardpy.ComparisonOperation.EQ,
+                comparison_value=2
+            )
+            index_2 = hardpy.set_measurement(meas2)
+            report = hardpy.get_current_report()
+            measurements = report.modules[module_id].cases[case_id].measurements
+            assert len(measurements) == 2
+            assert meas2.operation == measurements[index_2].operation
+            assert meas2.comparison_value == measurements[index_2].comparison_value
+            assert measurements[index_2].lower_limit is None
+            assert measurements[index_2].upper_limit is None
+            assert meas2.result
+
+            meas3 = hardpy.NumericMeasurement(
+                value=5,
+                operation=hardpy.ComparisonOperation.GTLT,
+                lower_limit=1,
+                upper_limit=4
+            )
+            index_3 = hardpy.set_measurement(meas3)
+            report = hardpy.get_current_report()
+            measurements = report.modules[module_id].cases[case_id].measurements
+            assert len(measurements) == 3
+            assert meas3.operation == measurements[index_3].operation
+            assert measurements[index_3].comparison_value is None
+            assert meas3.lower_limit == measurements[index_3].lower_limit
+            assert meas3.upper_limit == measurements[index_3].upper_limit
+            assert not meas3.result
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+def test_string_measurement(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_measurement(request):
+            node = NodeInfo(request.node)
+            module_id = node.module_id
+            case_id = node.case_id
+
+            report = hardpy.get_current_report()
+            measurements = report.modules[module_id].cases[case_id].measurements
+            assert measurements == [], "The case measurement is not empty."
+
+            meas1 = hardpy.StringMeasurement(value="a")
+            hardpy.set_measurement(meas1)
+            report = hardpy.get_current_report()
+            measurements = report.modules[module_id].cases[case_id].measurements
+            assert len(measurements) == 1
+            assert meas1.value == measurements[0].value
+            assert meas1.result is None
+
+            meas2 = hardpy.StringMeasurement(
+                value="b",
+                operation=hardpy.ComparisonOperation.EQ,
+                comparison_value="b"
+            )
+            hardpy.set_measurement(meas2)
+            report = hardpy.get_current_report()
+            measurements = report.modules[module_id].cases[case_id].measurements
+            assert len(measurements) == 2
+            assert meas2.operation == measurements[1].operation
+            assert meas2.comparison_value == measurements[1].comparison_value
+            assert meas2.result
+
+            meas3 = hardpy.StringMeasurement(
+                value="A",
+                operation=hardpy.ComparisonOperation.NE,
+                casesensitive=False,
+                comparison_value="a"
+            )
+            hardpy.set_measurement(meas3)
+            report = hardpy.get_current_report()
+            measurements = report.modules[module_id].cases[case_id].measurements
+            assert len(measurements) == 3
+            assert meas3.operation == measurements[2].operation
+            assert measurements[2].comparison_value == measurements[2].comparison_value
+            assert not meas3.result
     """,
     )
     result = pytester.runpytest(*hardpy_opts)

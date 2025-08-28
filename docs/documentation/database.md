@@ -6,7 +6,7 @@ We use CouchDB because it's a simple document-oriented NoSQL database.
 The database has two main purposes:
 
 - Saving test report;
-- [Data synchronization](./../about/fronted_sync.md) with the web interface.
+- [Data synchronization](./../about/frontend_sync.md) with the web interface.
 
 The CouchDB version must be equal to or greater than the 3.2 version.
 
@@ -16,7 +16,7 @@ The CouchDB version must be equal to or greater than the 3.2 version.
 
 The pytest plugin has 2 databases: **statestore** and **runstore**.
 
-- The **statestore** database uses for frontend [data synchronization](./../about/fronted_sync.md).
+- The **statestore** database uses for frontend [data synchronization](./../about/frontend_sync.md).
 - The **runstore** database contains the document **current**, which is a JSON object
 that stores the current state of the test run.
 
@@ -340,46 +340,78 @@ The module's name is the same as the file's name.
         The user can specify and update current message by using [set_message](./pytest_hardpy.md#set_message) function.
       - **group**: the group of case: *Setup*, *Main* or *Teardown* (*Main* by default).
         The user can specify the case group by using [case_group](./pytest_hardpy.md#case_group) marker.
-      - **numeric_measurements**: list of numeric measurements.
-        See the [numeric-measurement](#numeric-measurement) section for more information.
+      - **measurements**: list of measurements.
+        See the [measurements](#measurements) section for more information.
       - **artifact**: an object that contains information about the artifacts created during the test case.
         The user can specify the case artifact by using [set_case_artifact](./pytest_hardpy.md#set_case_artifact) function.
         The artifact contains a dictionary where the user can store any data at the test case level.
         The artifacts are not displayed on the operator panel.
 
-##### Numeric measurement
+##### Measurements
+
+The **measurements** section contains the information about measurements.
+The user fills in the list of measurements for each case by 
+[set_measurement](./pytest_hardpy.md#set_measurement) function.
+
+###### Numeric measurement
 
 A **NumericMeasurement** is a structured container for storing numerical measurements.
 For example, the measured voltage must fall within a specific range.
 
+- **type**: `numeric` by default.
 - **value**: numeric measure value.
 - **name**: numeric measure name.
-- **low_limit**: numeric measure low limit.
-- **high_limit**: numeric measure high limit.
 - **unit**: unit of numeric measure.
-- **comp_op**: comparison operators of numeric measure.
+- **operation**: comparison operators of numeric measure.
+- **comparison_value** value to compare against.
+- **lower_limit**: lower limit for range operations.
+- **upper_limit** upper limit for range operations.
+- **result** the result of the measurement if the operation exists; otherwise, it is empty.
+  Filled in without user involvement.
 
 ```json
 // voltage measure
 {
+  "type": "numeric",
   "value": "3.57",
   "name": "Main voltage",
-  "low_limit": "3.45",
-  "high_limit": "3.65",
+  "lower_limit": "3.45",
+  "upper_limit": "3.65",
   "unit": "V",
-  "comp_op": "GTLT",
+  "operation": "GTLT",
+  "result": true
 }
 ```
 
 ```json
 // temperature measure
 {
+  "type": "numeric",
   "value": "14",
-  "name": "Temperature",
-  "low_limit": "",
-  "high_limit": "",
-  "unit": "",
-  "comp_op": "EQ",
+}
+```
+
+###### String measurement
+
+A **StringMeasurement** is a structured container for storing string measurements.
+For example, the firmware version comparison.
+
+- **type**: `string` by default.
+- **value**: string measure value.
+- **name**: string measure name.
+- **operation**: comparison operators of string measure.
+- **comparison_value** value to compare against.
+- **casesensitive**: case sensitivity, default is `True`.
+- **result** the result of the measurement if the operation exists; otherwise, it is empty.
+  Filled in without user involvement.
+
+```json
+{
+  "type": "string",
+  "value": "3.1.2",
+  "operation": "EQ",
+  "casesensitive": true,
+  "result": true
 }
 ```
 
@@ -450,7 +482,7 @@ Example of a **current** document:
               "start_time": 1695817263,
               "stop_time": 1695817264,
               "assertion_msg": null,
-              "numeric_measurements": [],
+              "measurements": [],
               "msg": null,
               "group": "MAIN",
               "artifact": {}
@@ -461,7 +493,7 @@ Example of a **current** document:
               "start_time": 1695817264,
               "stop_time": 1695817264,
               "assertion_msg": "The test failed because minute 21 is odd! Try again!",
-              "numeric_measurements": [],
+              "measurements": [],
               "msg": [
                 "Current minute 21"
               ],

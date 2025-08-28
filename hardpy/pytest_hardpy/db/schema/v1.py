@@ -2,14 +2,17 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+from abc import ABC
+from collections.abc import Mapping  # noqa: TC003
 from datetime import datetime  # noqa: TC003
 from typing import ClassVar
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from hardpy.pytest_hardpy.utils import (  # noqa: TC001
-    CompOp,
+from hardpy.pytest_hardpy.utils import (
+    ComparisonOperation as CompOp,
     Group,
+    MeasurementType,
     TestStatus as Status,
 )
 
@@ -30,7 +33,7 @@ class CaseStateStore(IBaseResult):
 
     assertion_msg: str | None = None
     msg: dict | None = None
-    numeric_measurements: list[NumericMeasurement] = []
+    measurements: list[NumericMeasurement | StringMeasurement] = []
     attempt: int = 0
     group: Group
     dialog_box: dict = {}
@@ -41,7 +44,7 @@ class CaseRunStore(IBaseResult):
 
     assertion_msg: str | None = None
     msg: dict | None = None
-    numeric_measurements: list[NumericMeasurement] = []
+    measurements: list[NumericMeasurement | StringMeasurement] = []
     attempt: int = 0
     group: Group
     artifact: dict = {}
@@ -73,7 +76,7 @@ class Dut(BaseModel):
     part_number: str | None = None
     revision: str | None = None
     sub_units: list[SubUnit] = []
-    info: dict[str, str | int | float | datetime] = {}
+    info: Mapping[str, str | int | float | datetime] = {}
 
 
 class SubUnit(BaseModel):
@@ -86,7 +89,7 @@ class SubUnit(BaseModel):
     serial_number: str | None = None
     part_number: str | None = None
     revision: str | None = None
-    info: dict[str, str | int | float | datetime] = {}
+    info: Mapping[str, str | int | float | datetime] = {}
 
 
 class Instrument(BaseModel):
@@ -98,7 +101,7 @@ class Instrument(BaseModel):
     revision: str | None = None
     number: int | None = None
     comment: str | None = None
-    info: dict[str, str | int | float | datetime] = {}
+    info: Mapping[str, str | int | float | datetime] = {}
 
 
 class TestStand(BaseModel):
@@ -114,7 +117,7 @@ class TestStand(BaseModel):
     number: int | None = None
     drivers: dict = {}  # deprecated, remove in v2
     instruments: list[Instrument] = []
-    info: dict[str, str | int | float | datetime] = {}
+    info: Mapping[str, str | int | float | datetime] = {}
 
 
 class Process(BaseModel):
@@ -124,20 +127,47 @@ class Process(BaseModel):
 
     name: str | None = None
     number: int | None = None
-    info: dict[str, str | int | float | datetime] = {}
+    info: Mapping[str, str | int | float | datetime] = {}
 
 
-class NumericMeasurement(BaseModel):
-    """Base class for all result models."""
+class IBaseMeasurement(BaseModel, ABC):
+    """Base class for all measurement models."""
+
+    model_config = ConfigDict(extra="allow")
+
+    type: MeasurementType
+    name: str | None = Field(default=None)
+    operation: CompOp | None = Field(default=None)
+    result: bool | None = Field(default_factory=lambda: None)
+
+
+class NumericMeasurement(IBaseMeasurement):
+    """Numeric measurement description."""
 
     model_config = ConfigDict(extra="forbid")
 
+    type: MeasurementType = Field(default=MeasurementType.NUMERIC)
     value: int | float
-    name: str
-    low_limit: int | float | None
-    high_limit: int | float | None
-    unit: str | None = None
-    comp_op: CompOp | None = None
+    name: str | None = Field(default=None)
+    unit: str | None = Field(default=None)
+
+    comparison_value: float | int | None = Field(default=None)
+
+    lower_limit: float | int | None = Field(default=None)
+    upper_limit: float | int | None = Field(default=None)
+
+
+class StringMeasurement(IBaseMeasurement):
+    """String measurement description."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    type: MeasurementType = Field(default=MeasurementType.STRING)
+    value: str
+    name: str | None = Field(default=None)
+    casesensitive: bool = Field(default=True)
+
+    comparison_value: str | None = Field(default=None)
 
 
 class OperatorData(BaseModel):
