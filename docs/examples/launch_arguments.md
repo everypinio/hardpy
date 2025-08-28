@@ -83,7 +83,7 @@ def test_parameterized_assertions():
     hardpy.set_message(f"Verified value: {actual_value}")
 ```
 
-## Launch arguments (classic method)
+## Addoption
 
 Alternative approach using pytest's built-in `addoption` method for adding custom options.
 You can read more about it [here](https://docs.pytest.org/en/stable/example/simple.html#how-to-change-command-line-options-defaults).
