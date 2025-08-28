@@ -43,12 +43,7 @@ def hardpy_config() -> dict:
 
 
 @app.get("/api/start")
-def start_pytest(
-    args: Annotated[
-        list[str] | None,  # noqa: FA102
-        Query(description="Dynamic arguments for test execution"),
-    ] = None,
-) -> dict:
+def start_pytest(args: Annotated[list[str] | None, Query()] = None) -> dict:
     """Start pytest subprocess.
 
     Args:
