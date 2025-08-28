@@ -6,7 +6,7 @@ The example shows how to record instruments that are part of the test setup.
 ### How to start
 
 1. Launch `hardpy init test_stand_equipment`.
-2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
+2. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
 3. Launch `hardpy run test_stand_equipment`.
 
 ### Description
