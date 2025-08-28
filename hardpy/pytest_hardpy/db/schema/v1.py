@@ -35,6 +35,7 @@ class CaseStateStore(IBaseResult):
     assertion_msg: str | None = None
     msg: dict | None = None
     measurements: list[NumericMeasurement | StringMeasurement] = []
+    chart: Chart | None = None
     attempt: int = 0
     group: Group
     dialog_box: dict = {}
@@ -46,6 +47,7 @@ class CaseRunStore(IBaseResult):
     assertion_msg: str | None = None
     msg: dict | None = None
     measurements: list[NumericMeasurement | StringMeasurement] = []
+    chart: Chart | None = None
     attempt: int = 0
     group: Group
     artifact: dict = {}
@@ -176,7 +178,7 @@ class Chart(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    chart_type: ChartType = Field(default=ChartType.LINE)
+    type: ChartType = Field(default=ChartType.LINE)
     title: str | None = Field(default=None)
     x_label: str | None = Field(default=None)
     y_label: str | None = Field(default=None)
