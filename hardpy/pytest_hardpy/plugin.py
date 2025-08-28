@@ -31,7 +31,6 @@ from pytest import (
     skip,
 )
 
-from hardpy.common.config import ConfigManager
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import (
@@ -132,6 +131,7 @@ class HardpyPlugin:
         self._dependencies = {}
         self._tests_name: str = ""
         self._is_critical_not_passed = False
+        self._start_args = {}
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -166,19 +166,18 @@ class HardpyPlugin:
             con_data.sc_connection_only = bool(sc_connection_only)  # type: ignore
 
         start_args = config.getoption("--hardpy-start-arg") or []
-        params_dict = {}
-        for param in start_args:
-            if "=" in param:
-                key, value = param.split("=", 1)
-                params_dict[key] = value
+        if start_args:
+            params_dict = dict(arg.split("=", 1) for arg in start_args if "=" in arg)
 
-        ConfigManager.start_args = params_dict
+        self._start_args = params_dict
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
         config.addinivalue_line("markers", "dependency")
         config.addinivalue_line("markers", "attempt")
         config.addinivalue_line("markers", "critical")
+        config.addinivalue_line("markers", "case_group")
+        config.addinivalue_line("markers", "module_group")
 
         # must be init after config data is set
         try:
@@ -317,10 +316,13 @@ class HardpyPlugin:
         if call.when != "call" or not call.excinfo:
             return
 
+        # failure item
         node_info = NodeInfo(item)
         attempt = node_info.attempt
         module_id = node_info.module_id
         case_id = node_info.case_id
+        casusd_dut_failure_id = self._reporter.get_caused_dut_failure_id()
+        is_dut_failure = True
 
         if node_info.critical:
             self._is_critical_not_passed = True
@@ -339,12 +341,17 @@ class HardpyPlugin:
                 item.runtest()
                 call.excinfo = None
                 self._is_critical_not_passed = False
+                is_dut_failure = False
                 self._reporter.set_case_status(module_id, case_id, TestStatus.PASSED)
                 break
             except AssertionError:
                 self._reporter.set_case_status(module_id, case_id, TestStatus.FAILED)
+                is_dut_failure = True
                 if current_attempt == attempt:
-                    return
+                    break
+
+        if is_dut_failure and casusd_dut_failure_id is None:
+            self._reporter.set_caused_dut_failure_id(module_id, case_id)
 
     # Reporting hooks
 
@@ -390,6 +397,15 @@ class HardpyPlugin:
             list[Callable]: list of post run methods
         """
         return self._post_run_functions
+
+    @fixture(scope="session")
+    def hardpy_start_args(self) -> dict:
+        """Get HardPy start arguments.
+
+        Returns:
+            dict: Parsed start arguments (key-value pairs)
+        """
+        return self._start_args
 
     # Not hooks
 

@@ -17,3 +17,67 @@ class TestStatus(str, Enum):
     RUN = "run"
     READY = "ready"
     STOPPED = "stopped"
+
+
+class Group(str, Enum):
+    """Test group."""
+
+    SETUP = "setup"
+    MAIN = "main"
+    TEARDOWN = "teardown"
+
+
+class MeasurementType(str, Enum):
+    """Measurement type."""
+
+    NUMERIC = "numeric"
+    """Numeric measurement"""
+
+    STRING = "string"
+    """String measurement"""
+
+
+class ComparisonOperation(str, Enum):
+    """Comparison operator."""
+
+    EQ = "eq"
+    """Equal"""
+
+    NE = "ne"
+    """Not equal"""
+
+    GT = "gt"
+    """Greater than"""
+
+    GE = "ge"
+    """Greater or equal"""
+
+    LT = "lt"
+    """Less than"""
+
+    LE = "le"
+    """Less or equal"""
+
+    GTLT = "gtlt"
+    """Greater than lower limit, less than upper limit"""
+
+    GELE = "gele"
+    """Greater or equal than lower limit, less or equal than upper limit"""
+
+    GELT = "gelt"
+    """Greater or equal than lower limit, less than upper limit"""
+
+    GTLE = "gtle"
+    """Greater than lower limit, less or equal than upper limit"""
+
+    LTGT = "ltgt"
+    """Less than lower limit or greater than upper limit"""
+
+    LEGE = "lege"
+    """Less or equal than lower limit or greater or equal than upper limit"""
+
+    LEGT = "legt"
+    """Less or equal than lower limit or greater than upper limit"""
+
+    LTGE = "ltge"
+    """Less than lower limit or greater or equal than upper limit"""

@@ -24,7 +24,7 @@ is intended for clearing current operator message.
 
 ### how to start
 
-1. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
+1. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
 2. Create a directory `<dir_name>` with the files described below.
 3. Launch `hardpy run <dir_name>`.
 

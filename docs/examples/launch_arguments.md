@@ -5,7 +5,7 @@
 
 ## Start arguments (recommended method)
 
-The [Start arguments](../documentation/pytest_hardpy.md#get_start_args) functionality allows you to pass dynamic parameters to your test runs using the `--arg` option (CLI) or `--hardpy-start-arg` option (pytest).
+The [hardpy_start_args](../documentation/pytest_hardpy.md#hardpy_start_args) fixture allows you to pass dynamic parameters to your test runs using the `--arg` option (CLI) or `--hardpy-start-arg` option (pytest).
 This is particularly useful for configuring tests at runtime without changing the code.
 
 Contains examples of how to use dynamic start arguments in tests.
@@ -45,37 +45,33 @@ Contains examples of how to use dynamic start arguments in tests.
 import pytest
 import hardpy
 
-def test_with_start_args():
-    start_args = hardpy.get_start_args()
-    
-    if start_args.get("test_mode") == "debug":
+def test_with_start_args(hardpy_start_args):
+   
+    if hardpy_start_args.get("test_mode") == "debug":
         hardpy.set_message("Running in debug mode")
     
-    device_id = start_args.get("device_id")
+    device_id = hardpy_start_args.get("device_id")
     if device_id:
         hardpy.set_message(f"Testing device: {device_id}")
         hardpy.set_case_artifact({"device_id": device_id})
     else:
         hardpy.set_message("No device ID provided")
     
-    retry_count = start_args.get("retry_count")
+    retry_count = hardpy_start_args.get("retry_count")
     if retry_count:
         hardpy.set_message(f"Retry count: {retry_count}")
     else:
         hardpy.set_message("Retry count not set")
 
-def test_conditional_behavior():
-    args = hardpy.get_start_args()
-    
-    if args.get("test_mode") != "debug":
+def test_conditional_behavior(hardpy_start_args):
+    if hardpy_start_args.get("test_mode") != "debug":
         pytest.skip("This test runs only in debug mode")
     
     hardpy.set_message("Running debug-specific test")
     assert True, "Debug test passed"
 
-def test_parameterized_assertions():
-    args = hardpy.get_start_args()
-    expected_value = args.get("expected_value", "default")
+def test_parameterized_assertions(hardpy_start_args):
+    expected_value = hardpy_start_args.get("expected_value", "default")
     
     actual_value = "default"
     assert actual_value == expected_value, f"Expected {expected_value}, got {actual_value}"
@@ -83,7 +79,7 @@ def test_parameterized_assertions():
     hardpy.set_message(f"Verified value: {actual_value}")
 ```
 
-## Launch arguments (classic method)
+## Addoption
 
 Alternative approach using pytest's built-in `addoption` method for adding custom options.
 You can read more about it [here](https://docs.pytest.org/en/stable/example/simple.html#how-to-change-command-line-options-defaults).
@@ -91,7 +87,7 @@ You can read more about it [here](https://docs.pytest.org/en/stable/example/simp
 ### how to start
 
 1. Launch `hardpy init launch_arg`.
-2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
+2. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
 4. Launch `hardpy run launch_arg`.
 

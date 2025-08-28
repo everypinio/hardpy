@@ -8,7 +8,7 @@ Below we will look at all the launch options.
 Initialize the **HardPy** project:
 
 1. Launch `hardpy init test_project`.
-2. Launch [CouchDH instance](../documentation/database.md#couchdb-instance).
+2. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
 
 ### launch options
 
