@@ -166,11 +166,8 @@ class HardpyPlugin:
             con_data.sc_connection_only = bool(sc_connection_only)  # type: ignore
 
         start_args = config.getoption("--hardpy-start-arg") or []
-        params_dict = {}
-        for param in start_args:
-            if "=" in param:
-                key, value = param.split("=", 1)
-                params_dict[key] = value
+        if start_args:
+            params_dict = dict(arg.split("=", 1) for arg in start_args if "=" in arg)
 
         self._start_args = params_dict
 
