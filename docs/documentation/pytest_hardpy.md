@@ -615,33 +615,6 @@ def test_attempt_message():
         assert False
 ```
 
-#### get_start_args
-
-Returns a dictionary of start arguments passed via CLI.
-
-The `get_start_args` function can be called from any test case to access dynamic start parameters.
-
-**Returns:**
-
-- *(dict)*: Dictionary containing key-value pairs of start arguments
-
-**Example:**
-
-```bash
-hardpy start --arg test_mode=debug --arg device_id=1q2w3e
-```
-
-```python
-def test_with_start_args():
-    start_args = hardpy.get_start_args()
-    
-    if start_args.get("test_mode") == "debug":
-        hardpy.set_message("Running in debug mode")
-    
-    if "device_id" in start_args:
-        hardpy.set_message(f"Testing device: {start_args['device_id']}")
-```
-
 ## Class
 
 #### DialogBox
@@ -1152,6 +1125,24 @@ def finish_executing():
 def fill_actions_after_test(post_run_functions: list):
     post_run_functions.append(finish_executing)
     yield
+```
+
+#### hardpy_start_args
+
+To access **HardPy** start arguments passed via command line, you can use the `hardpy_start_args` fixture.
+This fixture returns a `dict` containing parsed key-value pairs from `--hardpy-start-arg` options.
+
+**Returns:**
+
+- *(dict)*: dictionary of start arguments (key-value pairs)
+
+**Example:**
+
+```python
+def test_with_start_args(hardpy_start_args):
+   
+    if hardpy_start_args.get("test_mode") == "debug":
+        hardpy.set_message("Running in debug mode")
 ```
 
 ## Marker

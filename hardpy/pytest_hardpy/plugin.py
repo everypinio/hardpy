@@ -31,7 +31,6 @@ from pytest import (
     skip,
 )
 
-from hardpy.common.config import ConfigManager
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import (
@@ -132,6 +131,7 @@ class HardpyPlugin:
         self._dependencies = {}
         self._tests_name: str = ""
         self._is_critical_not_passed = False
+        self._start_args = {}
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -172,7 +172,7 @@ class HardpyPlugin:
                 key, value = param.split("=", 1)
                 params_dict[key] = value
 
-        ConfigManager.start_args = params_dict
+        self._start_args = params_dict
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
@@ -400,6 +400,15 @@ class HardpyPlugin:
             list[Callable]: list of post run methods
         """
         return self._post_run_functions
+
+    @fixture(scope="session")
+    def hardpy_start_args(self) -> dict:
+        """Get HardPy start arguments.
+
+        Returns:
+            dict: Parsed start arguments (key-value pairs)
+        """
+        return self._start_args
 
     # Not hooks
 
