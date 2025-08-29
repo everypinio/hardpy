@@ -5,6 +5,7 @@ import * as React from "react";
 import { Tag } from "@blueprintjs/core";
 import Plot from "react-plotly.js";
 import { Dialog, Button, Classes } from "@blueprintjs/core";
+import GraphComponent from "./GraphComponent";
 
 import _ from "lodash";
 
@@ -45,6 +46,7 @@ const graphData: GraphData[] = [
  */
 export function TestData(props: Readonly<Props>): React.ReactElement {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isGraphCollapsed, setIsGraphCollapsed] = React.useState(false);
 
   const plotData = graphData.map((graph, index) => ({
     x: graph.x_data,
@@ -95,6 +97,11 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
           {props.assertion_msg.split("\n")[0]}
         </Tag>
       )}
+      <GraphComponent 
+        graphs={graphData}
+        isCollapsed={isGraphCollapsed}
+        onToggleCollapse={() => setIsGraphCollapsed(!isGraphCollapsed)}
+      />
       <div
         style={{ marginTop: "10px", cursor: "pointer" }}
         onClick={() => setIsModalOpen(true)}

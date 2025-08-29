@@ -1,6 +1,5 @@
-// GraphComponent.tsx
 import React, { useState } from "react";
-import { Modal, Button } from "@blueprintjs/core";
+import { Dialog, Button, Icon } from "@blueprintjs/core";
 import Plot from "react-plotly.js";
 
 interface GraphData {
@@ -11,9 +10,15 @@ interface GraphData {
 
 interface GraphComponentProps {
   graphs: GraphData[];
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
-const GraphComponent: React.FC<GraphComponentProps> = ({ graphs }) => {
+const GraphComponent: React.FC<GraphComponentProps> = ({
+  graphs,
+  isCollapsed = false,
+  onToggleCollapse,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const plotData = graphs.map((graph, index) => ({
@@ -39,26 +44,65 @@ const GraphComponent: React.FC<GraphComponentProps> = ({ graphs }) => {
     showlegend: true,
   };
 
+  if (isCollapsed) {
+    return (
+      <div
+        style={{
+          border: "1px solid #ccc",
+          padding: "10px",
+          borderRadius: "3px",
+          background: "#f5f5f5",
+        }}
+      >
+        <Button icon="chevron-down" onClick={onToggleCollapse} minimal small>
+          Show graph
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <>
       <div
-        style={{ width: "100%", cursor: "pointer" }}
-        onClick={() => setIsModalOpen(true)}
+        style={{
+          position: "relative",
+          border: "1px solid #ccc",
+          padding: "10px",
+          borderRadius: "3px",
+        }}
       >
+        <div
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            zIndex: 100,
+          }}
+        >
+          <Button
+            icon="fullscreen"
+            onClick={() => setIsModalOpen(true)}
+            minimal
+            small
+            style={{ marginRight: "5px" }}
+          />
+          <Button icon="chevron-up" onClick={onToggleCollapse} minimal small />
+        </div>
         <Plot
           data={plotData}
           layout={layout}
-          config={{ displayModeBar: true, displaylogo: false }}
+          config={{ displayModeBar: false, displaylogo: false }}
         />
       </div>
 
-      <Modal
+      <Dialog
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title="Graph View"
         className="graph-modal"
+        style={{ width: "90vw", height: "90vh" }}
       >
-        <div className={Classes.DIALOG_BODY}>
+        <div className="bp4-dialog-body">
           <Plot
             data={plotData}
             layout={fullScreenLayout}
@@ -75,10 +119,10 @@ const GraphComponent: React.FC<GraphComponentProps> = ({ graphs }) => {
             }}
           />
         </div>
-        <div className={Classes.DIALOG_FOOTER}>
+        <div className="bp4-dialog-footer">
           <Button onClick={() => setIsModalOpen(false)}>Close</Button>
         </div>
-      </Modal>
+      </Dialog>
     </>
   );
 };
