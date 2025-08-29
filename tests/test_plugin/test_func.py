@@ -1102,7 +1102,7 @@ def test_numeric_measurement(pytester: Pytester, hardpy_opts: list[str]):
             assert measurements == [], "The case measurement is not empty."
 
             meas1 = hardpy.NumericMeasurement(value=1)
-            index_1 = hardpy.set_measurement(meas1)
+            index_1 = hardpy.set_case_measurement(meas1)
             report = hardpy.get_current_report()
             measurements = report.modules[module_id].cases[case_id].measurements
             assert len(measurements) == 1
@@ -1114,7 +1114,7 @@ def test_numeric_measurement(pytester: Pytester, hardpy_opts: list[str]):
                 operation=hardpy.ComparisonOperation.EQ,
                 comparison_value=2
             )
-            index_2 = hardpy.set_measurement(meas2)
+            index_2 = hardpy.set_case_measurement(meas2)
             report = hardpy.get_current_report()
             measurements = report.modules[module_id].cases[case_id].measurements
             assert len(measurements) == 2
@@ -1130,7 +1130,7 @@ def test_numeric_measurement(pytester: Pytester, hardpy_opts: list[str]):
                 lower_limit=1,
                 upper_limit=4
             )
-            index_3 = hardpy.set_measurement(meas3)
+            index_3 = hardpy.set_case_measurement(meas3)
             report = hardpy.get_current_report()
             measurements = report.modules[module_id].cases[case_id].measurements
             assert len(measurements) == 3
@@ -1159,7 +1159,7 @@ def test_string_measurement(pytester: Pytester, hardpy_opts: list[str]):
             assert measurements == [], "The case measurement is not empty."
 
             meas1 = hardpy.StringMeasurement(value="a")
-            hardpy.set_measurement(meas1)
+            hardpy.set_case_measurement(meas1)
             report = hardpy.get_current_report()
             measurements = report.modules[module_id].cases[case_id].measurements
             assert len(measurements) == 1
@@ -1171,7 +1171,7 @@ def test_string_measurement(pytester: Pytester, hardpy_opts: list[str]):
                 operation=hardpy.ComparisonOperation.EQ,
                 comparison_value="b"
             )
-            hardpy.set_measurement(meas2)
+            hardpy.set_case_measurement(meas2)
             report = hardpy.get_current_report()
             measurements = report.modules[module_id].cases[case_id].measurements
             assert len(measurements) == 2
@@ -1185,7 +1185,7 @@ def test_string_measurement(pytester: Pytester, hardpy_opts: list[str]):
                 casesensitive=False,
                 comparison_value="a"
             )
-            hardpy.set_measurement(meas3)
+            hardpy.set_case_measurement(meas3)
             report = hardpy.get_current_report()
             measurements = report.modules[module_id].cases[case_id].measurements
             assert len(measurements) == 3

@@ -4,7 +4,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 
 * Add arguments for `hardpy start`.
   [[PR-175](https://github.com/everypinio/hardpy/pull/175)]
-* Add numeric and string measurements: `set_measurement` function and 
+* Add numeric and string measurements: `set_case_measurement` function and 
   `NumericMeasurement` and `StringMeasurement` classes.
   [[PR-177](https://github.com/everypinio/hardpy/pull/177)]
 * Update database schema by **SubUnit** table.

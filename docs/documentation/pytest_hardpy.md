@@ -384,7 +384,7 @@ def test_process_info():
     })
 ```
 
-#### set_measurement
+#### set_case_measurement
 
 Writes measurement information to a database in the form of a case measurement list.
 When called again, the information will be added to case measurement list.
@@ -399,17 +399,17 @@ When called again, the information will be added to case measurement list.
 ```python
 def test_measurement():
     meas_1 = NumericMeasurement(value=10, operation=ComparisonOperation.EQ, comparison_value=10)
-    set_measurement(meas_1)
+    set_case_measurement(meas_1)
     meas_2 = NumericMeasurement(value=3, unit="V", operation=ComparisonOperation.GTLT, lower_limit=2.9, upper_limit=3.5)
-    set_measurement(meas_2)
+    set_case_measurement(meas_2)
     meas_3 = NumericMeasurement(value=1.0)
-    set_measurement(meas_3)
+    set_case_measurement(meas_3)
 
     assert meas_1.result
     assert meas_2.result
 
     meas_4 = StringMeasurement(value="1.2.0", operation=ComparisonOperation.EQ, comparison_value="1.2.0")
-    set_measurement(meas_4)
+    set_case_measurement(meas_4)
     assert meas_4.result
 ```
 
@@ -1016,7 +1016,7 @@ def test_dut_sub_unit():
 ### NumericMeasurement
 
 This class contains information about numeric measurement. 
-It is used with the [set_measurement](#set_measurement) function.
+It is used with the [set_case_measurement](#set_case_measurement) function.
 
 **Arguments:**
 
@@ -1037,11 +1037,11 @@ It is used with the [set_measurement](#set_measurement) function.
 ```python
 def test_measurement():
     meas_1 = NumericMeasurement(value=10, operation=ComparisonOperation.EQ, comparison_value=10)
-    set_measurement(meas_1)
+    set_case_measurement(meas_1)
     meas_2 = NumericMeasurement(value=3, unit="V", operation=ComparisonOperation.GTLT, lower_limit=2.9, upper_limit=3.5)
-    set_measurement(meas_2)
+    set_case_measurement(meas_2)
     meas_3 = NumericMeasurement(value=1.0)
-    set_measurement(meas_3)
+    set_case_measurement(meas_3)
 
     assert meas_1.result
     assert meas_2.result
@@ -1050,7 +1050,7 @@ def test_measurement():
 ### StringMeasurement
 
 This class contains information about string measurement. 
-It is used with the [set_measurement](#set_measurement) function.
+It is used with the [set_case_measurement](#set_case_measurement) function.
 
 **Arguments:**
 
@@ -1069,10 +1069,10 @@ It is used with the [set_measurement](#set_measurement) function.
 ```python
 def test_measurement():
     meas_1 = StringMeasurement(value="1.2.0", operation=ComparisonOperation.EQ, comparison_value="1.2.0")
-    set_measurement(meas_1)
+    set_case_measurement(meas_1)
 
     meas_2 = StringMeasurement(value="abc", operation=ComparisonOperation.EQ, casesensitive=False, comparison_value="ABC")
-    set_measurement(meas_2)
+    set_case_measurement(meas_2)
 
     assert meas_1.result
     assert meas_2.result
