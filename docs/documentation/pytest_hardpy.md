@@ -440,8 +440,8 @@ def test_chart():
         x_label="x_label",
         y_label="y_label",
         marker_name=["marker_name", None],
-        x_data=[[1, 2], [1, 2]],
-        y_data=[[3, 4], [3, 4]]
+        x_data=[ [1, 2], [1, 2] ],
+        y_data=[ [3, 4], [3, 4] ]
     )
     hardpy.set_case_chart(chart)
 ```
@@ -1135,8 +1135,8 @@ def test_chart():
         x_label="x_label",
         y_label="y_label",
         marker_name=["marker_name", None],
-        x_data=[[1, 2], [1, 2]],
-        y_data=[[3, 4], [3, 4]]
+        x_data=[ [1, 2], [1, 2] ],
+        y_data=[ [3, 4], [3, 4] ]
     )
     chart.add_series(x_data=[0, 3], y_data=[2, 4], marker_name="A")
     hardpy.set_case_chart(chart)

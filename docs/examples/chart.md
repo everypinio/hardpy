@@ -36,8 +36,8 @@ def test_2():
         x_label="x_label",
         y_label="y_label",
         marker_name=[None, None],
-        x_data=[[1, 2], [1, 2]],
-        y_data=[[3, 4], [3, 4]],
+        x_data=[ [1, 2], [1, 2] ],
+        y_data=[ [3, 4], [3, 4] ],
     )
     set_case_chart(chart)
 ```
