@@ -2,6 +2,9 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add the ability to store charts (data series) in the database.
+  Add `set_case_chart` function and `Chart` class.
+  [[PR-179](https://github.com/everypinio/hardpy/pull/179)]
 * Add arguments for `hardpy start`.
   [[PR-175](https://github.com/everypinio/hardpy/pull/175)]
 * Add numeric and string measurements: `set_case_measurement` function and 
