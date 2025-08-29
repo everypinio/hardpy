@@ -1102,7 +1102,7 @@ def test_numeric_measurement(pytester: Pytester, hardpy_opts: list[str]):
             assert measurements == [], "The case measurement is not empty."
 
             meas1 = hardpy.NumericMeasurement(value=1)
-            index_1 = hardpy.set_measurement(meas1)
+            index_1 = hardpy.set_case_measurement(meas1)
             report = hardpy.get_current_report()
             measurements = report.modules[module_id].cases[case_id].measurements
             assert len(measurements) == 1
@@ -1114,7 +1114,7 @@ def test_numeric_measurement(pytester: Pytester, hardpy_opts: list[str]):
                 operation=hardpy.ComparisonOperation.EQ,
                 comparison_value=2
             )
-            index_2 = hardpy.set_measurement(meas2)
+            index_2 = hardpy.set_case_measurement(meas2)
             report = hardpy.get_current_report()
             measurements = report.modules[module_id].cases[case_id].measurements
             assert len(measurements) == 2
@@ -1130,7 +1130,7 @@ def test_numeric_measurement(pytester: Pytester, hardpy_opts: list[str]):
                 lower_limit=1,
                 upper_limit=4
             )
-            index_3 = hardpy.set_measurement(meas3)
+            index_3 = hardpy.set_case_measurement(meas3)
             report = hardpy.get_current_report()
             measurements = report.modules[module_id].cases[case_id].measurements
             assert len(measurements) == 3
@@ -1159,7 +1159,7 @@ def test_string_measurement(pytester: Pytester, hardpy_opts: list[str]):
             assert measurements == [], "The case measurement is not empty."
 
             meas1 = hardpy.StringMeasurement(value="a")
-            hardpy.set_measurement(meas1)
+            hardpy.set_case_measurement(meas1)
             report = hardpy.get_current_report()
             measurements = report.modules[module_id].cases[case_id].measurements
             assert len(measurements) == 1
@@ -1171,7 +1171,7 @@ def test_string_measurement(pytester: Pytester, hardpy_opts: list[str]):
                 operation=hardpy.ComparisonOperation.EQ,
                 comparison_value="b"
             )
-            hardpy.set_measurement(meas2)
+            hardpy.set_case_measurement(meas2)
             report = hardpy.get_current_report()
             measurements = report.modules[module_id].cases[case_id].measurements
             assert len(measurements) == 2
@@ -1185,13 +1185,63 @@ def test_string_measurement(pytester: Pytester, hardpy_opts: list[str]):
                 casesensitive=False,
                 comparison_value="a"
             )
-            hardpy.set_measurement(meas3)
+            hardpy.set_case_measurement(meas3)
             report = hardpy.get_current_report()
             measurements = report.modules[module_id].cases[case_id].measurements
             assert len(measurements) == 3
             assert meas3.operation == measurements[2].operation
             assert measurements[2].comparison_value == measurements[2].comparison_value
             assert not meas3.result
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_set_case_chart(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_set_case_chart(request):
+            node = NodeInfo(request.node)
+            module_id = node.module_id
+            case_id = node.case_id
+
+            report = hardpy.get_current_report()
+            chart_data = report.modules[module_id].cases[case_id].chart
+            assert chart_data == None, "The chart is not empty."
+
+            chart = hardpy.Chart(
+                type=hardpy.ChartType.LINE,
+                title="title",
+                x_label="x_label",
+                y_label="y_label",
+                marker_name=["marker_name", None],
+                x_data=[[1, 2], [1, 2]],
+                y_data=[[3, 4], [3, 4]]
+            )
+            hardpy.set_case_chart(chart)
+            report = hardpy.get_current_report()
+            chart_data = report.modules[module_id].cases[case_id].chart
+            assert chart_data.type == chart.type
+            assert chart_data.title == chart.title
+            assert chart_data.x_label == chart.x_label
+            assert chart_data.y_label == chart.y_label
+            assert chart_data.marker_name == chart.marker_name
+            assert chart_data.x_data == chart.x_data
+            assert chart_data.y_data == chart.y_data
+
+            chart_2 = hardpy.Chart(
+                type=hardpy.ChartType.LINE,
+                title="title",
+                x_label="x_label",
+                y_label="y_label",
+                marker_name=["marker_name", None],
+                x_data=[[1, 2], [1, 2]],
+                y_data=[[3, 4], [3, 4]]
+            )
+            with pytest.raises(hardpy.DuplicateParameterError):
+                hardpy.set_case_chart(chart_2)
     """,
     )
     result = pytester.runpytest(*hardpy_opts)

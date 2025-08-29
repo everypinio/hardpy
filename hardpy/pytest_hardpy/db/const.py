@@ -31,6 +31,7 @@ class DatabaseField(str, Enum):
     HW_ID = "hw_id"
     DRIVERS = "drivers"
     TYPE = "type"
+    CHART = "chart"
 
     # table name
     DUT = "dut"

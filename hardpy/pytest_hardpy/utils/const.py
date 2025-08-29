@@ -81,3 +81,11 @@ class ComparisonOperation(str, Enum):
 
     LTGE = "ltge"
     """Less than lower limit or greater or equal than upper limit"""
+
+class ChartType(str, Enum):
+    """Chart type."""
+
+    LINE = "line"
+    LINE_LOG_X = "line_log_x"
+    LINE_LOG_Y = "line_log_y"
+    LOG_X_Y = "log_x_y"

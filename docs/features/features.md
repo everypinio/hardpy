@@ -35,7 +35,7 @@ so that displaying the window does not stop the test.
 ### Operator panel language
 
 The user can set one of the following operator panel languages ​​via the *hardpy.toml*.
-Available languages are [there](hardpy_panel.md#languages).
+Available languages are [there](./../documentation/hardpy_panel.md#languages).
 
 The example of file:
 
@@ -46,35 +46,6 @@ language = "zh"
 
 ## CLI
 
-### Running tests
-
-Based on pytest **HardPy** allows you to run pytest tests in the browser or command line.
-For running tests in browser run tests using [hardpy run](./../documentation/cli.md#hardpy-run) command.
-
-```bash
-hardpy run
-```
-
-and press the **Start** button.
-Alternatively, the user can start the operator panel with the “Start” button and run tests with pytest.
-
-```bash
-python -m pytest
-```
-
-The user can also run tests without the operator panel, just using the `hardpy start` command or
-using `pytest`.
-
-### Stopping the tests
-
-The user can stop the tests during execution from the operator panel by clicking on the **Stop** button
-or using the `hardpy stop` command.
-It is possible to stop tests from the console by sending an interrupt, e.g. “Ctrl-C” in Linux.
-
-### Checking the status of tests
-
-The user can check the status of tests using the `hardpy status` command.
-
 ### Creating template project
 
 The **HardPy** can create template project using the [hardpy init](./../documentation/cli.md#hardpy-init)
@@ -84,6 +55,61 @@ command. An example of usage can be found in the **how to init** section among t
 ```bash
 hardpy init minute_parity
 ```
+
+### Running the HardPy server
+
+Based on pytest **HardPy** allows you to run pytest tests in the browser or from the command line.
+To run the **HardPy** server and view tests in the browser, execute the 
+[hardpy run](./../documentation/cli.md#hardpy-run) command.
+
+```bash
+hardpy run <project_path>
+```
+
+For example:
+
+```bash
+hardpy run examples/minute_parity 
+```
+
+### Starting the tests
+
+The user can start the operator panel with the **Start** button.
+As an alternative, the user can start the tests using the 
+[hardpy start](./../documentation/cli.md#hardpy-start) command.
+
+```bash
+hardpy start <project_path>
+```
+
+For example:
+
+```bash
+hardpy start examples/minute_parity 
+```
+
+Through the CLI, the user can start **HardPy** 
+[with arguments](./../documentation/cli.md#hardpy-start) that will be used during testing.
+
+```bash
+hardpy start --arg device_id=123 --arg operator_name=user examples/minute_parity 
+```
+
+The user can also start the tests using **pytest**.
+
+```bash
+python -m pytest
+```
+
+### Stopping the tests
+
+The user can stop the tests during execution from the operator panel by clicking on the **Stop** button
+or using the [hardpy stop](./../documentation/cli.md#hardpy-stop) command.
+It is possible to stop tests from the console by sending an interrupt, e.g. “Ctrl-C” in Linux.
+
+### Checking the status of tests
+
+The user can check the status of tests using the [hardpy status](./../documentation/cli.md#hardpy-status) command.
 
 ## Database
 
@@ -336,8 +362,16 @@ An example of its use can be found on page [StandCloud reader](./../examples/sta
 ### Measurement
 
 **HardPy** allows users to save their measurement data to a database.
-Each individual test case can store measurements as a list. 
+The [set_case_measurement](./../documentation/pytest_hardpy.md#set_case_measurement) 
+function allows each individual test case to store measurements as a list.
 An example of its use can be found on page [measurement](./../examples/measurement.md).
+
+### Chart
+
+**HardPy** allows users to save their chart (data series) to a database.
+The [set_case_chart](./../documentation/pytest_hardpy.md#set_case_chart) 
+function allows each individual test case to store a single chart.
+An example of its use can be found on page [chart](./../examples/chart.md).
 
 ### Running some instance in single stand
 

@@ -3,6 +3,7 @@
 
 from hardpy.pytest_hardpy.utils.connection_data import ConnectionData
 from hardpy.pytest_hardpy.utils.const import (
+    ChartType,
     ComparisonOperation,
     Group,
     MeasurementType,
@@ -31,6 +32,7 @@ from hardpy.pytest_hardpy.utils.node_info import NodeInfo
 from hardpy.pytest_hardpy.utils.progress_calculator import ProgressCalculator
 from hardpy.pytest_hardpy.utils.singleton import SingletonMeta
 from hardpy.pytest_hardpy.utils.stand_type import (
+    Chart,
     Instrument,
     NumericMeasurement,
     StringMeasurement,
@@ -39,6 +41,8 @@ from hardpy.pytest_hardpy.utils.stand_type import (
 
 __all__ = [
     "BaseWidget",
+    "Chart",
+    "ChartType",
     "CheckboxWidget",
     "ComparisonOperation",
     "ConnectionData",

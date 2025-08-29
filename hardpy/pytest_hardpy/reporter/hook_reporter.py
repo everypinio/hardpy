@@ -306,6 +306,7 @@ class HookReporter(BaseReporter):
             DF.MSG: None,
             DF.ATTEMPT: 0,
             DF.MEASUREMENTS: [],
+            DF.CHART: None,
         }
 
         if item.get(node_info.module_id) is None:

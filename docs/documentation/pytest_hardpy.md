@@ -165,6 +165,10 @@ It accepts a [SubUnit](#subunit) object containing all the details of the sub un
 
 - `sub_unit` *(SubUnit)*: SubUnit object
 
+**Returns:**
+
+- *(int)*: sub unit index
+
 **Example:**
 
 ```python
@@ -384,7 +388,7 @@ def test_process_info():
     })
 ```
 
-#### set_measurement
+#### set_case_measurement
 
 Writes measurement information to a database in the form of a case measurement list.
 When called again, the information will be added to case measurement list.
@@ -394,23 +398,53 @@ When called again, the information will be added to case measurement list.
 - `measurement` [NumericMeasurement](#numericmeasurement) | 
   [StringMeasurement](#stringmeasurement): measurement data.
 
+**Returns:**
+
+- *(int)*: measurement index
+
 **Example:**
 
 ```python
 def test_measurement():
     meas_1 = NumericMeasurement(value=10, operation=ComparisonOperation.EQ, comparison_value=10)
-    set_measurement(meas_1)
+    set_case_measurement(meas_1)
     meas_2 = NumericMeasurement(value=3, unit="V", operation=ComparisonOperation.GTLT, lower_limit=2.9, upper_limit=3.5)
-    set_measurement(meas_2)
+    set_case_measurement(meas_2)
     meas_3 = NumericMeasurement(value=1.0)
-    set_measurement(meas_3)
+    set_case_measurement(meas_3)
 
     assert meas_1.result
     assert meas_2.result
 
     meas_4 = StringMeasurement(value="1.2.0", operation=ComparisonOperation.EQ, comparison_value="1.2.0")
-    set_measurement(meas_4)
+    set_case_measurement(meas_4)
     assert meas_4.result
+```
+
+#### set_case_chart
+
+Writes chart (data series) information to a test case in the database.
+Only one [Chart](#chart) object can be stored per test case in the database.
+When called again, the exception `DuplicateParameterError` will be raised.
+
+**Arguments:**
+
+- `chart` [Chart](#chart): chart data.
+
+**Example:**
+
+```python
+def test_chart():
+    chart = hardpy.Chart(
+        type=hardpy.ChartType.LINE,
+        title="title",
+        x_label="x_label",
+        y_label="y_label",
+        marker_name=["marker_name", None],
+        x_data=[ [1, 2], [1, 2] ],
+        y_data=[ [3, 4], [3, 4] ]
+    )
+    hardpy.set_case_chart(chart)
 ```
 
 #### set_case_artifact
@@ -994,10 +1028,6 @@ It is used with the [set_dut_sub_unit](#set_dut_sub_unit) function.
 - `revision` *(str | None)*: unit revision  
 - `info` *(Mapping[str, str | int | float | datetime] | None)*: additional unit info as key-value pairs  
 
-**Returns:**
-
-- *(int)*: sub unit index
-
 **Example:**
 
 ```python
@@ -1016,7 +1046,7 @@ def test_dut_sub_unit():
 ### NumericMeasurement
 
 This class contains information about numeric measurement. 
-It is used with the [set_measurement](#set_measurement) function.
+It is used with the [set_case_measurement](#set_case_measurement) function.
 
 **Arguments:**
 
@@ -1037,11 +1067,11 @@ It is used with the [set_measurement](#set_measurement) function.
 ```python
 def test_measurement():
     meas_1 = NumericMeasurement(value=10, operation=ComparisonOperation.EQ, comparison_value=10)
-    set_measurement(meas_1)
+    set_case_measurement(meas_1)
     meas_2 = NumericMeasurement(value=3, unit="V", operation=ComparisonOperation.GTLT, lower_limit=2.9, upper_limit=3.5)
-    set_measurement(meas_2)
+    set_case_measurement(meas_2)
     meas_3 = NumericMeasurement(value=1.0)
-    set_measurement(meas_3)
+    set_case_measurement(meas_3)
 
     assert meas_1.result
     assert meas_2.result
@@ -1050,7 +1080,7 @@ def test_measurement():
 ### StringMeasurement
 
 This class contains information about string measurement. 
-It is used with the [set_measurement](#set_measurement) function.
+It is used with the [set_case_measurement](#set_case_measurement) function.
 
 **Arguments:**
 
@@ -1060,22 +1090,57 @@ It is used with the [set_measurement](#set_measurement) function.
 - `comparison_value`: *(ComparisonOperation | None)*: value to compare against.
 - `casesensitive`: *bool=True*: case sensitivity.
 
-**Returns:**
-
-- *(int)*: measurement index
-
 **Example:**
 
 ```python
 def test_measurement():
     meas_1 = StringMeasurement(value="1.2.0", operation=ComparisonOperation.EQ, comparison_value="1.2.0")
-    set_measurement(meas_1)
+    set_case_measurement(meas_1)
 
     meas_2 = StringMeasurement(value="abc", operation=ComparisonOperation.EQ, casesensitive=False, comparison_value="ABC")
-    set_measurement(meas_2)
+    set_case_measurement(meas_2)
 
     assert meas_1.result
     assert meas_2.result
+```
+
+### Chart
+
+This class contains information about chart (data series). 
+It is used with the [set_case_chart](#set_case_chart) function.
+
+A `ValidationError` will result if the lengths of x_data, y_data, and marker_name differ.
+
+**Arguments:**
+
+- `type` *([ChartType](#charttype))*: chart type, LINE by default.
+- `title` *(str | None)*: chart title.
+- `x_label` *(str | None)*: x label name.
+- `y_label` *(str | None)*: y label name.
+- `marker_name` *(list[str | None])*: data series marker name.
+- `x_data` *(list[list[int | float]])*: x data series. Each data series is its own list.
+- `y_data` *(list[list[int | float]])*: y data series. Each data series is its own list.
+
+**Functions:**
+
+- `add_series` *(x_data: list[int | float], y_data:* 
+  *list[int | float], marker_name: str | None = None)*: add data series to current `Chart`. 
+
+**Example:**
+
+```python
+def test_chart():
+    chart = hardpy.Chart(
+        type=hardpy.ChartType.LINE,
+        title="title",
+        x_label="x_label",
+        y_label="y_label",
+        marker_name=["marker_name", None],
+        x_data=[ [1, 2], [1, 2] ],
+        y_data=[ [3, 4], [3, 4] ]
+    )
+    chart.add_series(x_data=[0, 3], y_data=[2, 4], marker_name="A")
+    hardpy.set_case_chart(chart)
 ```
 
 ## Enum
@@ -1085,6 +1150,7 @@ def test_measurement():
 A comparison operation for the measurements.
 
 **Values:**
+
 - *EQ*: equal.
 - *NE*: not equal.
 - *GT*: greater than.
@@ -1099,6 +1165,17 @@ A comparison operation for the measurements.
 - *LEGE*: less or equal than lower limit or greater or equal than upper limit.
 - *LEGT*: less or equal than lower limit or greater than upper limit.
 - *LTGE*: less than lower limit or greater or equal than upper limit.
+
+### ChartType
+
+This is a chart type for the [Chart](#chart) class.
+
+**Values:**
+
+- *LINE*: line.
+- *LINE_LOG_X*: line_log_x.
+- *LINE_LOG_Y*: line_log_y.
+- *LOG_X_Y*: log_x_y.
 
 ## Fixture
 

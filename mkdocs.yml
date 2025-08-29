@@ -63,6 +63,7 @@ nav:
   - Examples:
       - examples/index.md
       - Attempts: examples/attempts.md
+      - Chart: examples/chart.md
       - CouchDB in RAM: examples/db_in_ram.md
       - CouchDB load: examples/couchdb_load.md
       - Critical test: examples/critical_test.md

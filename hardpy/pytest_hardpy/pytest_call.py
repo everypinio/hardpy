@@ -19,6 +19,7 @@ from hardpy.pytest_hardpy.db import (
 )
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
+    Chart,
     DialogBox,
     DuplicateParameterError,
     HTMLComponent,
@@ -500,7 +501,7 @@ def set_process_info(info: Mapping[str, str | int | float | datetime]) -> None:
     reporter.update_db_by_doc()
 
 
-def set_measurement(measurement: NumericMeasurement | StringMeasurement) -> int:
+def set_case_measurement(measurement: NumericMeasurement | StringMeasurement) -> int:
     """Add measurement to document.
 
     Args:
@@ -528,6 +529,34 @@ def set_measurement(measurement: NumericMeasurement | StringMeasurement) -> int:
 
     return len(measurements) - 1
 
+def set_case_chart(chart: Chart) -> None:
+    """Add chart to document.
+
+    Args:
+        chart (Chart): chart object
+    """
+    if not chart.x_data or not chart.y_data:
+        msg = "x_data and y_data must be set"
+        raise ValueError(msg)
+    current_test = _get_current_test()
+    reporter = RunnerReporter()
+
+    key = reporter.generate_key(
+        DF.MODULES,
+        current_test.module_id,
+        DF.CASES,
+        current_test.case_id,
+        DF.CHART,
+    )
+
+    if reporter.get_field(key):
+        msg = "chart"
+        raise DuplicateParameterError(msg)
+
+    chart_dict = {k: v for k, v in vars(chart).items() if v is not None}
+
+    reporter.set_doc_value(key, chart_dict)
+    reporter.update_db_by_doc()
 
 def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     """Display a dialog box.

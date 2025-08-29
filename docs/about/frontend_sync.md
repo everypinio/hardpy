@@ -227,7 +227,7 @@ The module's name is the same as the file's name.
 
 The **measurements** section contains the information about measurements.
 The user fills in the list of measurements for each case by 
-[set_measurement](./../documentation/pytest_hardpy.md#set_measurement) function.
+[set_case_measurement](./../documentation/pytest_hardpy.md#set_case_measurement) function.
 
 ###### Numeric measurement
 
