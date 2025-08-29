@@ -424,7 +424,7 @@ def test_measurement():
 #### set_case_chart
 
 Writes chart (data series) information to a test case in the database.
-Only one chart can be stored per test case in the database.
+Only one [Chart](#chart) object can be stored per test case in the database.
 When called again, the exception `DuplicateParameterError` will be raised.
 
 **Arguments:**
