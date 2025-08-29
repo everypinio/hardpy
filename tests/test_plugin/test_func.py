@@ -1198,11 +1198,11 @@ def test_string_measurement(pytester: Pytester, hardpy_opts: list[str]):
     result.assert_outcomes(passed=1)
 
 
-def test_chart(pytester: Pytester, hardpy_opts: list[str]):
+def test_set_case_chart(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        def test_measurement(request):
+        def test_set_case_chart(request):
             node = NodeInfo(request.node)
             module_id = node.module_id
             case_id = node.case_id
