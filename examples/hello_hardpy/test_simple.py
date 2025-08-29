@@ -1,6 +1,7 @@
 import hardpy
 import pytest
 import time
+import random
 
 pytestmark = pytest.mark.module_name("Logging Demonstration Module")
 
@@ -8,40 +9,33 @@ pytestmark = pytest.mark.module_name("Logging Demonstration Module")
 @pytest.mark.case_name("Debug Messages Demonstration")
 def test_debug_messages():
     """Test generates various debug messages"""
-    hardpy.set_message("Starting debug messages demonstration")
-
-    for i in range(1, 6):
-        hardpy.set_message(f"Iteration {i}/5: Checking subsystem {i}")
+    for i in range(50):
+        hardpy.set_message(f"Iteration {i+1}/50: Checking subsystem {i+1}")
 
         # Simulate different log levels
-        if i == 2:
+        if i % 10 == 1:
             hardpy.set_message("WARN: Temporary performance delays detected")
-        elif i == 4:
+        elif i % 10 == 3:
             hardpy.set_message("ERROR: Sensor malfunction detected")
 
     hardpy.set_message("Demonstration completed successfully")
-    hardpy.set_case_artifact({"iterations": 5, "status": "completed"})
+    hardpy.set_case_artifact({"iterations": 50, "status": "completed"})
 
 
 @pytest.mark.critical
 @pytest.mark.case_name("Detailed System Verification")
 def test_detailed_logs():
     """Test with detailed system operation logging"""
-    hardpy.set_message("Initializing system verification")
-    time.sleep(0.5)
+    components = ["CPU", "Memory", "Network Interface", "Storage Subsystem"] * 10
 
-    # Simulate working with different components
-    components = ["CPU", "Memory", "Network Interface", "Storage Subsystem"]
-
-    for component in components:
-        hardpy.set_message(f"Testing component: {component}")
-        time.sleep(0.3)
+    for i, component in enumerate(components, 1):
+        hardpy.set_message(f"Testing component {i}/{len(components)}: {component}")
 
         # Simulate sensor readings
-        if component == "CPU":
-            hardpy.set_message("Processor temperature: 65°C")
-        elif component == "Memory":
-            hardpy.set_message("Memory usage: 3.2/8.0 GB")
+        if "CPU" in component:
+            hardpy.set_message(f"Processor temperature: {random.randint(50, 80)}°C")
+        elif "Memory" in component:
+            hardpy.set_message(f"Memory usage: {random.uniform(2.0, 8.0):.1f}/8.0 GB")
 
     hardpy.set_message("All components operating within normal parameters")
     hardpy.set_case_artifact(
@@ -52,7 +46,7 @@ def test_detailed_logs():
 @pytest.mark.case_name("Long Operation Simulation")
 def test_long_operation():
     """Test with long-running operation and periodic logging"""
-    total_steps = 10
+    total_steps = 100  # было 10, стало 100
     hardpy.set_message(f"Starting long operation ({total_steps} steps)")
 
     for step in range(total_steps):
@@ -73,14 +67,16 @@ def test_long_operation():
 @pytest.mark.case_name("Hardware Components Simulation")
 def test_hardware_simulation():
     """Simulation of hardware components operation"""
-    hardpy.set_message("Initializing hardware test")
+    for i in range(100):
+        sensor_value = random.uniform(40, 60)
+        hardpy.set_message(f"temperature_{i}: {sensor_value:.1f}°C")
 
-    # Simulate sensor readings
-    sensors = {"temperature": 45.6, "voltage": 12.3, "current": 0.25, "fan_speed": 2400}
-
-    for sensor_name, value in sensors.items():
-        hardpy.set_message(f"{sensor_name}: {value}")
-        time.sleep(0.2)
+    sensors = {
+        "temperature": [random.uniform(40, 60) for _ in range(100)],
+        "voltage": [random.uniform(11.5, 12.5) for _ in range(100)],
+        "current": [random.uniform(0.2, 0.3) for _ in range(100)],
+        "fan_speed": [random.randint(2000, 2500) for _ in range(100)],
+    }
 
     hardpy.set_message("All readings within normal range")
     hardpy.set_case_artifact(sensors)

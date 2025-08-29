@@ -97,7 +97,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
           {props.assertion_msg.split("\n")[0]}
         </Tag>
       )}
-      <GraphComponent 
+      <GraphComponent
         graphs={graphData}
         isCollapsed={isGraphCollapsed}
         onToggleCollapse={() => setIsGraphCollapsed(!isGraphCollapsed)}
@@ -105,13 +105,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
       <div
         style={{ marginTop: "10px", cursor: "pointer" }}
         onClick={() => setIsModalOpen(true)}
-      >
-        <Plot
-          data={plotData}
-          layout={layout}
-          config={{ displayModeBar: true, displaylogo: false }}
-        />
-      </div>
+      ></div>
 
       <Dialog
         isOpen={isModalOpen}
