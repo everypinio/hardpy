@@ -529,7 +529,7 @@ def set_case_measurement(measurement: NumericMeasurement | StringMeasurement) ->
 
     return len(measurements) - 1
 
-def set_chart(chart: Chart) -> None:
+def set_case_chart(chart: Chart) -> None:
     """Add chart to document.
 
     Args:
