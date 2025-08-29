@@ -1196,3 +1196,53 @@ def test_string_measurement(pytester: Pytester, hardpy_opts: list[str]):
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
+
+
+def test_chart(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_measurement(request):
+            node = NodeInfo(request.node)
+            module_id = node.module_id
+            case_id = node.case_id
+
+            report = hardpy.get_current_report()
+            chart_data = report.modules[module_id].cases[case_id].chart
+            assert chart_data == None, "The chart is not empty."
+
+            chart = hardpy.Chart(
+                type=hardpy.ChartType.LINE,
+                title="title",
+                x_label="x_label",
+                y_label="y_label",
+                marker_name=["marker_name", None],
+                x_data=[[1, 2], [1, 2]],
+                y_data=[[3, 4], [3, 4]]
+            )
+            hardpy.set_case_chart(chart)
+            report = hardpy.get_current_report()
+            chart_data = report.modules[module_id].cases[case_id].chart
+            assert chart_data.type == chart.type
+            assert chart_data.title == chart.title
+            assert chart_data.x_label == chart.x_label
+            assert chart_data.y_label == chart.y_label
+            assert chart_data.marker_name == chart.marker_name
+            assert chart_data.x_data == chart.x_data
+            assert chart_data.y_data == chart.y_data
+
+            chart_2 = hardpy.Chart(
+                type=hardpy.ChartType.LINE,
+                title="title",
+                x_label="x_label",
+                y_label="y_label",
+                marker_name=["marker_name", None],
+                x_data=[[1, 2], [1, 2]],
+                y_data=[[3, 4], [3, 4]]
+            )
+            with pytest.raises(hardpy.DuplicateParameterError):
+                hardpy.set_case_chart(chart_2)
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
