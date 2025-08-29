@@ -5,3 +5,12 @@
 .TestSuite__Tag {
   margin: 2px;
 }
+
+.test-suite .rdt_TableCell {
+  vertical-align: top !important;
+  align-items: flex-start !important;
+}
+
+.test-suite .rdt_TableCol {
+  vertical-align: top !important;
+}

@@ -257,8 +257,10 @@ export class TestSuite extends React.Component<Props, State> {
             cells: {
               style: {
                 verticalAlign: "top",
-                paddingTop: "8px", 
+                paddingTop: "8px",
                 paddingBottom: "8px",
+                alignItems: "flex-start",
+                display: "flex",
               },
             },
           }}
@@ -320,7 +322,11 @@ export class TestSuite extends React.Component<Props, State> {
       <div
         className={is_loading ? Classes.SKELETON : undefined}
         key={key}
-        style={{ display: "inline-block", verticalAlign: "top" }} 
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          minHeight: "100%"
+        }}
       >
         {cell_content}
       </div>
