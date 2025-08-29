@@ -35,7 +35,7 @@ so that displaying the window does not stop the test.
 ### Operator panel language
 
 The user can set one of the following operator panel languages ​​via the *hardpy.toml*.
-Available languages are [there](hardpy_panel.md#languages).
+Available languages are [there](./../documentation/hardpy_panel.md#languages).
 
 The example of file:
 
