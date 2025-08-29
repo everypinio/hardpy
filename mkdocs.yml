@@ -84,7 +84,7 @@ nav:
       - Stand equipment: examples/stand_equipment.md
   - About:
       - Development: about/development.md
-      - Frontend data synchronization: about/fronted_sync.md
+      - Frontend data synchronization: about/frontend_sync.md
   - Changelog: changelog.md
 
 markdown_extensions:

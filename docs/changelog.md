@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add arguments for `hardpy start`.
+  [[PR-175](https://github.com/everypinio/hardpy/pull/175)]
 * Add numeric and string measurements: `set_measurement` function and 
   `NumericMeasurement` and `StringMeasurement` classes.
   [[PR-177](https://github.com/everypinio/hardpy/pull/177)]
