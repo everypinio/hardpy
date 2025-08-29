@@ -1127,6 +1127,24 @@ def fill_actions_after_test(post_run_functions: list):
     yield
 ```
 
+#### hardpy_start_args
+
+To access **HardPy** start arguments passed via command line, you can use the `hardpy_start_args` fixture.
+This fixture returns a `dict` containing parsed key-value pairs from `--hardpy-start-arg` options.
+
+**Returns:**
+
+- *(dict)*: dictionary of start arguments (key-value pairs)
+
+**Example:**
+
+```python
+def test_with_start_args(hardpy_start_args):
+   
+    if hardpy_start_args.get("test_mode") == "debug":
+        hardpy.set_message("Running in debug mode")
+```
+
 ## Marker
 
 #### case_name
@@ -1304,4 +1322,12 @@ The default is *False*.
 
 ```bash
 --sc-connection-only
+```
+
+#### hardpy-start-arg
+
+Dynamic arguments for test execution in key=value format. Can be specified multiple times.
+
+```bash
+--hardpy-start-arg key=value
 ```

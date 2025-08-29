@@ -793,6 +793,32 @@ def test_incorrect_couchdbconfig_data(pytester: Pytester, hardpy_opts: list[str]
     result.assert_outcomes(failed=1)
 
 
+def test_hardpy_start_arg(pytester: Pytester, hardpy_opts: list[str]):
+    """Test that --hardpy-start-arg passes key=value arguments correctly."""
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_start_arg_access(request, hardpy_start_args):
+            assert hardpy_start_args.get("test_mode") == "debug"
+            assert hardpy_start_args.get("retry_count") == "3"
+            assert hardpy_start_args.get("device_id") == "DUT-007"
+            report = hardpy.get_current_report()
+            assert report is not None
+        """,
+    )
+
+    result = pytester.runpytest(
+        *hardpy_opts,
+        "--hardpy-start-arg",
+        "test_mode=debug",
+        "--hardpy-start-arg",
+        "retry_count=3",
+        "--hardpy-start-arg",
+        "device_id=DUT-007",
+    )
+    result.assert_outcomes(passed=1)
+
+
 def test_user_name(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
@@ -1117,6 +1143,7 @@ def test_numeric_measurement(pytester: Pytester, hardpy_opts: list[str]):
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
+
 
 def test_string_measurement(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(

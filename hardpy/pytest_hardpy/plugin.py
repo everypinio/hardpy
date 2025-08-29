@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+import copy
 import signal
 from logging import getLogger
 from pathlib import Path, PurePath
@@ -98,6 +99,12 @@ def pytest_addoption(parser: Parser) -> None:
         default=con_data.sc_connection_only,
         help="check StandCloud availability",
     )
+    parser.addoption(
+        "--hardpy-start-arg",
+        action="append",
+        default=[],
+        help="Dynamic arguments for test execution (key=value format)",
+    )
 
 
 # Bootstrapping hooks
@@ -125,6 +132,7 @@ class HardpyPlugin:
         self._dependencies = {}
         self._tests_name: str = ""
         self._is_critical_not_passed = False
+        self._start_args = {}
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -157,6 +165,10 @@ class HardpyPlugin:
         sc_connection_only = config.getoption("--sc-connection-only")
         if sc_connection_only:
             con_data.sc_connection_only = bool(sc_connection_only)  # type: ignore
+
+        _args = config.getoption("--hardpy-start-arg") or []
+        if _args:
+            self._start_args = dict(arg.split("=", 1) for arg in _args if "=" in arg)
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
@@ -384,6 +396,15 @@ class HardpyPlugin:
             list[Callable]: list of post run methods
         """
         return self._post_run_functions
+
+    @fixture(scope="session")
+    def hardpy_start_args(self) -> dict:
+        """Get HardPy start arguments.
+
+        Returns:
+            dict: Parsed start arguments (key-value pairs)
+        """
+        return copy.deepcopy(self._start_args)
 
     # Not hooks
 
