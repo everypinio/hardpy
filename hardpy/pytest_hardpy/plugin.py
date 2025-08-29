@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+import copy
 import signal
 from logging import getLogger
 from pathlib import Path, PurePath
@@ -165,12 +166,9 @@ class HardpyPlugin:
         if sc_connection_only:
             con_data.sc_connection_only = bool(sc_connection_only)  # type: ignore
 
-        start_args = config.getoption("--hardpy-start-arg") or []
-        params_dict = {}
-        if start_args:
-            params_dict = dict(arg.split("=", 1) for arg in start_args if "=" in arg)
-
-        self._start_args = params_dict
+        _args = config.getoption("--hardpy-start-arg") or []
+        if _args:
+            self._start_args = dict(arg.split("=", 1) for arg in _args if "=" in arg)
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
@@ -406,7 +404,7 @@ class HardpyPlugin:
         Returns:
             dict: Parsed start arguments (key-value pairs)
         """
-        return self._start_args
+        return copy.deepcopy(self._start_args)
 
     # Not hooks
 
