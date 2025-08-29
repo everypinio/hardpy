@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+import copy
 import signal
 from logging import getLogger
 from pathlib import Path, PurePath
@@ -403,7 +404,7 @@ class HardpyPlugin:
         Returns:
             dict: Parsed start arguments (key-value pairs)
         """
-        return self._start_args
+        return copy.deepcopy(self._start_args)
 
     # Not hooks
 
