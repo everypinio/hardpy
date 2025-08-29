@@ -1,4 +1,3 @@
-import hardpy
 
-def test_one(hardpy_start_args: dict):
+def test_one():
     assert True
