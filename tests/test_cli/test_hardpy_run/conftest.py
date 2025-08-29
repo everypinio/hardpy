@@ -21,6 +21,7 @@ def clear_port():
     except psutil.TimeoutExpired:
         process.kill()
 
+
 @pytest.fixture
 def process_killer():
     """Kill the process if tests are completed incorrectly.

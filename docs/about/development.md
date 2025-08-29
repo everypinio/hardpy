@@ -272,6 +272,17 @@ To add or modify translations for the HardPy operator panel:
 
 Note: Always use valid ISO 639 language codes for folder names.
 
+## Excluding tests from CI
+
+To exclude specific tests from running in Continuous Integration (CI) environments, you can mark them with the `@pytest.mark.manual` decorator.
+These tests will be skipped during automated test runs but can still be executed locally when explicitly selected.
+
+```python
+@pytest.mark.manual
+def test_of_manual():
+    assert True
+```
+
 ## Launch
 
 1. Install dependencies or create environment.

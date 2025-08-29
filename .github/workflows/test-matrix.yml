@@ -33,7 +33,7 @@ jobs:
       - name: Run tests
         uses: dariocurr/pytest-summary@main
         with:
-          options: tests
+          options: tests -m "not manual"
           show: "all"
 
   test-pytest-versions:
@@ -74,5 +74,5 @@ jobs:
       - name: Run tests
         uses: dariocurr/pytest-summary@main
         with:
-          options: tests
+          options: tests -m "not manual"
           show: "all"
