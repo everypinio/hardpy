@@ -362,8 +362,16 @@ An example of its use can be found on page [StandCloud reader](./../examples/sta
 ### Measurement
 
 **HardPy** allows users to save their measurement data to a database.
-Each individual test case can store measurements as a list. 
+The [set_case_measurement](./../documentation/pytest_hardpy.md#set_case_measurement) 
+function allows each individual test case to store measurements as a list.
 An example of its use can be found on page [measurement](./../examples/measurement.md).
+
+### Chart
+
+**HardPy** allows users to save their chart (data series) to a database.
+The [set_case_chart](./../documentation/pytest_hardpy.md#set_case_chart) 
+function allows each individual test case to store a single chart.
+An example of its use can be found on page [chart](./../examples/chart.md).
 
 ### Running some instance in single stand
 
