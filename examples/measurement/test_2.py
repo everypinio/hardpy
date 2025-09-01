@@ -3,7 +3,7 @@ import pytest
 from hardpy import (
     ComparisonOperation as CompOp,
     StringMeasurement,
-    set_measurement,
+    set_case_measurement,
 )
 
 pytestmark = pytest.mark.module_name("String measurement")
@@ -16,7 +16,7 @@ def test_1():
         operation=CompOp.EQ,
         comparison_value="1.2.1",
     )
-    set_measurement(meas1)
+    set_case_measurement(meas1)
     assert meas1.result
 
     meas2 = StringMeasurement(
