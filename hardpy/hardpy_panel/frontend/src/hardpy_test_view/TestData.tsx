@@ -12,6 +12,8 @@ import _ from "lodash";
 interface Props {
   msg: string[] | null;
   assertion_msg: string | null;
+  testSuiteIndex: number;
+  testCaseIndex: number;
 }
 
 interface GraphData {
@@ -35,18 +37,35 @@ const graphData: GraphData[] = [
   },
 ];
 
-/**
- * Renders a list of messages and an assertion message as styled tags.
- *
- * @component
- * @param {Object} props - The component props.
- * @param {string[] | null} props.msg - An array of messages to display as primary tags.
- * @param {string | null} props.assertion_msg - An assertion message to display as a warning tag.
- * @returns {React.ReactElement} A React element representing the component.
- */
 export function TestData(props: Readonly<Props>): React.ReactElement {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [isGraphCollapsed, setIsGraphCollapsed] = React.useState(false);
+  const storageKey = `graphState_${props.testSuiteIndex}_${props.testCaseIndex}`;
+
+  const [isGraphCollapsed, setIsGraphCollapsed] = React.useState(() => {
+    const savedState = localStorage.getItem(storageKey);
+    if (savedState) {
+      try {
+        const { isCollapsed } = JSON.parse(savedState);
+        return isCollapsed || false;
+      } catch (e) {
+        return false;
+      }
+    }
+    return false;
+  });
+
+  React.useEffect(() => {
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        isCollapsed: isGraphCollapsed,
+      })
+    );
+  }, [isGraphCollapsed, storageKey]);
+
+  const handleToggleCollapse = () => {
+    setIsGraphCollapsed(!isGraphCollapsed);
+  };
 
   const plotData = graphData.map((graph, index) => ({
     x: graph.x_data,
@@ -57,18 +76,12 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
     marker: { color: `hsl(${(index * 360) / graphData.length}, 70%, 50%)` },
   }));
 
-  const layout = {
-    width: 400,
-    height: 300,
-    title: "Test Data Graph",
-    showlegend: true,
-  };
-
   const fullScreenLayout = {
     width: window.innerWidth * 0.9,
     height: window.innerHeight * 0.9,
     title: "Test Data Graph",
     showlegend: true,
+    autosize: true,
   };
 
   return (
@@ -100,7 +113,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
       <GraphComponent
         graphs={graphData}
         isCollapsed={isGraphCollapsed}
-        onToggleCollapse={() => setIsGraphCollapsed(!isGraphCollapsed)}
+        onToggleCollapse={handleToggleCollapse}
       />
       <div
         style={{ marginTop: "10px", cursor: "pointer" }}
@@ -119,6 +132,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
             config={{
               displayModeBar: true,
               displaylogo: false,
+              responsive: true,
               modeBarButtonsToAdd: ["toggleHover", "resetScale2d"],
               modeBarButtonsToRemove: [
                 "pan2d",
@@ -127,6 +141,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
                 "autoScale2d",
               ],
             }}
+            style={{ width: "100%", height: "100%" }}
           />
         </div>
         <div className={Classes.DIALOG_FOOTER}>

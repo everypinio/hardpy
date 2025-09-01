@@ -31,10 +31,11 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
   }));
 
   const layout = {
-    width: 400,
+    width: 0,
     height: 300,
     title: "Test Data Graph",
     showlegend: true,
+    autosize: true,
   };
 
   const fullScreenLayout = {
@@ -42,6 +43,7 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
     height: window.innerHeight * 0.9,
     title: "Test Data Graph",
     showlegend: true,
+    autosize: true,
   };
 
   if (isCollapsed) {
@@ -69,6 +71,7 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
           border: "1px solid #ccc",
           padding: "10px",
           borderRadius: "3px",
+          width: "100%",
         }}
       >
         <div
@@ -88,11 +91,18 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
           />
           <Button icon="chevron-up" onClick={onToggleCollapse} minimal small />
         </div>
-        <Plot
-          data={plotData}
-          layout={layout}
-          config={{ displayModeBar: false, displaylogo: false }}
-        />
+        <div style={{ width: "100%" }}>
+          <Plot
+            data={plotData}
+            layout={layout}
+            config={{
+              displayModeBar: false,
+              displaylogo: false,
+              responsive: true,
+            }}
+            style={{ width: "100%", height: "100%" }}
+          />
+        </div>
       </div>
 
       <Dialog
@@ -109,6 +119,7 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
             config={{
               displayModeBar: true,
               displaylogo: false,
+              responsive: true,
               modeBarButtonsToAdd: ["toggleHover", "resetScale2d"],
               modeBarButtonsToRemove: [
                 "pan2d",
@@ -117,10 +128,8 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
                 "autoScale2d",
               ],
             }}
+            style={{ width: "100%", height: "100%" }}
           />
-        </div>
-        <div className="bp4-dialog-footer">
-          <Button onClick={() => setIsModalOpen(false)}>Close</Button>
         </div>
       </Dialog>
     </>

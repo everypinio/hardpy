@@ -366,20 +366,25 @@ export class TestSuite extends React.Component<Props, State> {
    * @param {number} rowIndex - The index of the row.
    * @returns {React.ReactElement} The rendered test data cell.
    */
-  private cellRendererData(
-    test_topics: Case[],
-    row_: string,
-    rowIndex: number
-  ): React.ReactElement {
-    const test = test_topics[rowIndex];
+private cellRendererData(
+  test_topics: Case[],
+  row_: string,
+  rowIndex: number
+): React.ReactElement {
+  const test = test_topics[rowIndex];
 
-    return this.commonCellRender(
-      <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
-        <TestData assertion_msg={test.assertion_msg} msg={test.msg} />
-      </div>,
-      `data_${rowIndex}_${row_}`
-    );
-  }
+  return this.commonCellRender(
+    <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
+      <TestData 
+        assertion_msg={test.assertion_msg} 
+        msg={test.msg} 
+        testSuiteIndex={this.props.index}
+        testCaseIndex={rowIndex}
+      />
+    </div>,
+    `data_${rowIndex}_${row_}`
+  );
+}
 
   /**
    * Renders the test status in a cell.
