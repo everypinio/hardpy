@@ -2,6 +2,10 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add check for message presence in set_operator_message.
+  [[PR-180](https://github.com/everypinio/hardpy/pull/180)]
+* Add the `ErrorCode` class.
+  [[PR-180](https://github.com/everypinio/hardpy/pull/180)]
 * Add the ability to store charts (data series) in the database.
   Add `set_case_chart` function and `Chart` class.
   [[PR-179](https://github.com/everypinio/hardpy/pull/179)]

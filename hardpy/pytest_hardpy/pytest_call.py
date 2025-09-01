@@ -44,6 +44,42 @@ class CurrentTestInfo:
     case_id: str
 
 
+class ErrorCodeMeta(type):
+    """Error code metaclass."""
+
+    def __call__(cls, code: int, message: str | None = None) -> str | None:
+        """Add error code to document.
+
+        Args:
+            code (int): non-negative error code.
+            message (str | None): error message.
+
+        Returns:
+            str | None: error message
+        """
+        if code < 0:
+            msg = "error code must be greater than 0"
+            raise ValueError(msg)
+        reporter = RunnerReporter()
+        key = reporter.generate_key(DF.ERROR_CODE)
+        if reporter.get_field(key) is None:
+            reporter.set_doc_value(key, code)
+            reporter.update_db_by_doc()
+        if message:  # noqa: RET503
+            return message
+
+
+class ErrorCode(metaclass=ErrorCodeMeta):
+    """Save error code and return error message.
+
+    It must be called from an assert.
+
+    Args:
+        code (int): error code.
+        message (str): error message.
+    """
+
+
 def get_current_report() -> ResultRunStore | None:
     """Get current report from runstore database.
 
@@ -529,6 +565,7 @@ def set_case_measurement(measurement: NumericMeasurement | StringMeasurement) ->
 
     return len(measurements) - 1
 
+
 def set_case_chart(chart: Chart) -> None:
     """Add chart to document.
 
@@ -557,6 +594,7 @@ def set_case_chart(chart: Chart) -> None:
 
     reporter.set_doc_value(key, chart_dict)
     reporter.update_db_by_doc()
+
 
 def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     """Display a dialog box.
@@ -638,6 +676,10 @@ def set_operator_message(  # noqa: PLR0913
 
     if font_size < 1:
         msg = "The 'font_size' argument cannot be less than 1"
+        raise ValueError(msg)
+
+    if not msg:
+        msg = "The 'msg' argument cannot be empty"
         raise ValueError(msg)
 
     msg_data = {
