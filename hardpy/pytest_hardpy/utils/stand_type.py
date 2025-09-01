@@ -148,7 +148,7 @@ class Chart(ChartModel):
     """Represents a chart with data and labels.
 
     Args:
-        chart_type (ChartType | None): chart type.
+        type (ChartType | None): chart type.
         title (str | None): chart title.
         x_label (str | None): X label.
         y_label (str | None): Y label.
@@ -157,38 +157,42 @@ class Chart(ChartModel):
     @model_validator(mode="after")
     def validate_lines(self) -> Chart:
         """Validate field requirements based on selected operation."""
-        if len(self.x_data) != len(self.y_data):
-            msg = "x_data, y_data, must be equal length"
-            raise ValueError(msg)
-
-        if len(self.x_data) != len(self.marker_name):
-            msg = "x_data, marker_name, must be equal length"
-            raise ValueError(msg)
+        self._diff_list_len_validator(self.x_data, self.y_data)
+        self._diff_list_len_validator(self.x_data, self.marker_name)
 
         if len(self.x_data):
             for i in range(len(self.x_data)):
-                if self.x_data[i] != self.y_data[i]:
-                    msg = "x_data and y_data must have the same length"
-                    raise ValueError(msg)
+                self._diff_list_len_validator(self.x_data[i], self.y_data[i])
+                self._empty_list_validator(self.x_data[0])
+                self._empty_list_validator(self.marker_name)
 
         return self
 
-    def add_line(
+    def add_series(
         self,
         x_data: list[int | float],
         y_data: list[int | float],
         marker_name: str | None = None,
     ) -> None:
-        """Add line to chart.
+        """Add data series to chart.
 
         Args:
             x_data (list[int | float]): X data.
             y_data (list[int | float]): Y data.
-            marker_name (str | None): marker name.
+            marker_name (str | None): series marker name.
         """
-        if len(x_data) != len(y_data):
-            msg = "x_data and y_data must have the same length"
-            raise ValueError(msg)
+        self._diff_list_len_validator(x_data, y_data)
+        self._empty_list_validator(x_data)
         self.x_data.append(x_data)
         self.y_data.append(y_data)
         self.marker_name.append(marker_name)
+
+    def _diff_list_len_validator(self, data1: list, data2: list) -> None:
+        if len(data1) != len(data2):
+            msg = "data in single series must have the same length"
+            raise ValueError(msg)
+
+    def _empty_list_validator(self, data: list) -> None:
+        if len(data) == 0:
+            msg = "data series cannot be empty"
+            raise ValueError(msg)

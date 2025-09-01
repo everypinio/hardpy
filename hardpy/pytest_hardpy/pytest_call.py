@@ -501,7 +501,7 @@ def set_process_info(info: Mapping[str, str | int | float | datetime]) -> None:
     reporter.update_db_by_doc()
 
 
-def set_measurement(measurement: NumericMeasurement | StringMeasurement) -> int:
+def set_case_measurement(measurement: NumericMeasurement | StringMeasurement) -> int:
     """Add measurement to document.
 
     Args:
@@ -529,7 +529,7 @@ def set_measurement(measurement: NumericMeasurement | StringMeasurement) -> int:
 
     return len(measurements) - 1
 
-def set_chart(chart: Chart) -> None:
+def set_case_chart(chart: Chart) -> None:
     """Add chart to document.
 
     Args:
