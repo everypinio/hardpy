@@ -9,6 +9,8 @@ from hardpy.pytest_hardpy.pytest_call import (
     run_dialog_box,
     set_batch_serial_number,
     set_case_artifact,
+    set_case_chart,
+    set_case_measurement,
     set_driver_info,
     set_dut_info,
     set_dut_name,
@@ -18,7 +20,6 @@ from hardpy.pytest_hardpy.pytest_call import (
     set_dut_sub_unit,
     set_dut_type,
     set_instrument,
-    set_measurement,
     set_message,
     set_module_artifact,
     set_operator_message,
@@ -41,6 +42,8 @@ from hardpy.pytest_hardpy.result import (
 from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig
 from hardpy.pytest_hardpy.utils import (
     BaseWidget,
+    Chart,
+    ChartType,
     CheckboxWidget,
     ComparisonOperation,
     DialogBox,
@@ -61,6 +64,8 @@ from hardpy.pytest_hardpy.utils import (
 
 __all__ = [
     "BaseWidget",
+    "Chart",
+    "ChartType",
     "CheckboxWidget",
     "ComparisonOperation",
     "CouchdbConfig",
@@ -89,6 +94,8 @@ __all__ = [
     "run_dialog_box",
     "set_batch_serial_number",
     "set_case_artifact",
+    "set_case_chart",
+    "set_case_measurement",
     "set_driver_info",
     "set_dut",
     "set_dut_info",
@@ -99,7 +106,6 @@ __all__ = [
     "set_dut_sub_unit",
     "set_dut_type",
     "set_instrument",
-    "set_measurement",
     "set_message",
     "set_module_artifact",
     "set_operator_message",
