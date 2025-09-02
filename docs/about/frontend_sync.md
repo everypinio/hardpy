@@ -49,8 +49,8 @@ The **current** document of the **statestore** database contains some section.
   It can only be set once per test run.
 - **caused_dut_failure_id**: the ID of the first failed test that caused the test failure.
   Format id: `module_name::case_name`. The variable is assigned automatically.
-- **error_code** the error code of the caused DUT failure test.
-  The logic for working with **error_code** has not yet been implemented.
+- **error_code** the error code (non-negative integer) of the caused DUT failure test.
+  The variable is assigned by [ErrorCode](./../documentation/pytest_hardpy.md#errorcode) class.
 - **test_stand**: test stand information. See the [test_stand](#test_stand) section for more information.
 - **modules**: module (pytest files) information. See the [modules](#modules) section for more information.
 - **alert**: operator panel alert information.

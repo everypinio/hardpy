@@ -82,8 +82,8 @@ The **current** document of **runstore** database contains some section.
   It can only be set once per test run.
 - **caused_dut_failure_id**: the ID of the first failed test that caused the test failure.
   Format id: `module_name::case_name`. The variable is assigned automatically.
-- **error_code** the error code of the caused DUT failure test.
-  The logic for working with **error_code** has not yet been implemented.
+- **error_code** the error code (non-negative integer) of the caused DUT failure test.
+  The variable is assigned by [ErrorCode](./pytest_hardpy.md#errorcode) class.
 - **artifact**: an object that contains information about the artifacts created during the test run.
   The user can specify the run artifact by using [set_run_artifact](./pytest_hardpy.md#set_run_artifact) function.
   The artifact contains a dictionary where the user can store any data at the test run level.

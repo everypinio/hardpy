@@ -3,6 +3,7 @@
 
 from hardpy.common.stand_cloud import StandCloudConnector, StandCloudError
 from hardpy.pytest_hardpy.pytest_call import (
+    ErrorCode,
     clear_operator_message,
     get_current_attempt,
     get_current_report,
@@ -72,6 +73,7 @@ __all__ = [
     "CouchdbLoader",
     "DialogBox",
     "DuplicateParameterError",
+    "ErrorCode",
     "HTMLComponent",
     "ImageComponent",
     "Instrument",
