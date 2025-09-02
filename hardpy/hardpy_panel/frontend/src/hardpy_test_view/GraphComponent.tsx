@@ -12,12 +12,18 @@ interface GraphComponentProps {
   graphs: GraphData[];
   isCollapsed?: boolean;
   onToggleCollapse?: () => void;
+  title?: string;
+  xLabel?: string;
+  yLabel?: string;
 }
 
 const GraphComponent: React.FC<GraphComponentProps> = ({
   graphs,
   isCollapsed = false,
   onToggleCollapse,
+  title,
+  xLabel,
+  yLabel,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -51,7 +57,13 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
   const layout = {
     width: dimensions.width,
     height: dimensions.height,
-    title: "Test Data Graph",
+    title: title || "Test Data Graph",
+    xaxis: {
+      title: xLabel || undefined,
+    },
+    yaxis: {
+      title: yLabel || undefined,
+    },
     showlegend: true,
     autosize: true,
   };
@@ -59,7 +71,13 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
   const fullScreenLayout = {
     width: window.innerWidth * 0.9,
     height: window.innerHeight * 0.9,
-    title: "Test Data Graph",
+    title: title || "Test Data Graph",
+    xaxis: {
+      title: xLabel || undefined,
+    },
+    yaxis: {
+      title: yLabel || undefined,
+    },
     showlegend: true,
     autosize: true,
   };
@@ -129,7 +147,7 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
       <Dialog
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Graph View"
+        title={title || "Graph View"}
         className="graph-modal"
         style={{ width: "90vw", height: "90vh" }}
       >

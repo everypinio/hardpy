@@ -65,6 +65,17 @@ interface Case {
   msg: string[] | null;
   artifact: Record<string, unknown>;
   dialog_box: DialogBoxProps;
+  chart?: ChartData;
+}
+
+interface ChartData {
+  type: string;
+  title?: string;
+  x_label?: string;
+  y_label?: string;
+  marker_name: string[];
+  x_data: number[][];
+  y_data: number[][];
 }
 
 type Cases = Dictionary<Case>;
@@ -366,25 +377,26 @@ export class TestSuite extends React.Component<Props, State> {
    * @param {number} rowIndex - The index of the row.
    * @returns {React.ReactElement} The rendered test data cell.
    */
-private cellRendererData(
-  test_topics: Case[],
-  row_: string,
-  rowIndex: number
-): React.ReactElement {
-  const test = test_topics[rowIndex];
+  private cellRendererData(
+    test_topics: Case[],
+    row_: string,
+    rowIndex: number
+  ): React.ReactElement {
+    const test = test_topics[rowIndex];
 
-  return this.commonCellRender(
-    <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
-      <TestData 
-        assertion_msg={test.assertion_msg} 
-        msg={test.msg} 
-        testSuiteIndex={this.props.index}
-        testCaseIndex={rowIndex}
-      />
-    </div>,
-    `data_${rowIndex}_${row_}`
-  );
-}
+    return this.commonCellRender(
+      <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
+        <TestData
+          assertion_msg={test.assertion_msg}
+          msg={test.msg}
+          testSuiteIndex={this.props.index}
+          testCaseIndex={rowIndex}
+          chart={test.chart}
+        />
+      </div>,
+      `data_${rowIndex}_${row_}`
+    );
+  }
 
   /**
    * Renders the test status in a cell.
