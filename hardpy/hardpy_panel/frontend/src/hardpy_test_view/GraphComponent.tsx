@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Dialog, Button, Icon } from "@blueprintjs/core";
 import Plot from "react-plotly.js";
 
@@ -20,6 +20,24 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
   onToggleCollapse,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 300 });
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        setDimensions({
+          width: containerRef.current.offsetWidth,
+          height: 300,
+        });
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
 
   const plotData = graphs.map((graph, index) => ({
     x: graph.x_data,
@@ -31,8 +49,8 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
   }));
 
   const layout = {
-    width: 0,
-    height: 300,
+    width: dimensions.width,
+    height: dimensions.height,
     title: "Test Data Graph",
     showlegend: true,
     autosize: true,
@@ -66,12 +84,15 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
   return (
     <>
       <div
+        ref={containerRef}
         style={{
           position: "relative",
           border: "1px solid #ccc",
           padding: "10px",
           borderRadius: "3px",
           width: "100%",
+          minHeight: "300px",
+          minWidth: "300px",
         }}
       >
         <div
@@ -91,7 +112,7 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
           />
           <Button icon="chevron-up" onClick={onToggleCollapse} minimal small />
         </div>
-        <div style={{ width: "100%" }}>
+        <div style={{ width: "100%", height: "100%" }}>
           <Plot
             data={plotData}
             layout={layout}
