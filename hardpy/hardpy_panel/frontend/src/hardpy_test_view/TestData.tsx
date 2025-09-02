@@ -37,6 +37,16 @@ const graphData: GraphData[] = [
   },
 ];
 
+
+/**
+ * Renders a list of messages and an assertion message as styled tags.
+ * 
+ * @component
+ * @param {Object} props - The component props.
+ * @param {string[] | null} props.msg - An array of messages to display as primary tags.
+ * @param {string | null} props.assertion_msg - An assertion message to display as a warning tag.
+ * @returns {React.ReactElement} A React element representing the component.
+ */
 export function TestData(props: Readonly<Props>): React.ReactElement {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const storageKey = `graphState_${props.testSuiteIndex}_${props.testCaseIndex}`;
