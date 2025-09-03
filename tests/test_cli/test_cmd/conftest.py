@@ -92,6 +92,10 @@ class HardPyServer:  # noqa: D101
         )
 
 
+def pytest_configure(config) -> None:
+    config.addinivalue_line("markers", "manual")
+
+
 @pytest.fixture
 def project_dir(tmp_path: Path) -> Path:
     """Create a test project with necessary test files."""

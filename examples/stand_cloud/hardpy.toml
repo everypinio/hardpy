@@ -1,5 +1,5 @@
 title = "HardPy TOML config"
-tests_dir = "stand_cloud"
+tests_name = "StandCloud"
 
 [database]
 user = "dev"
