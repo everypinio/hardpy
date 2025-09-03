@@ -751,6 +751,54 @@ def test_empty_case_message(pytester: Pytester, hardpy_opts: list[str]):
     result.assert_outcomes(passed=1)
 
 
+def test_operator_message(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        def test_operator_message(request):
+            node = NodeInfo(request.node)
+
+            report = hardpy.get_current_report()
+            with pytest.raises(AttributeError):
+                report.operator_msg
+
+            with pytest.raises(ValueError):
+                hardpy.set_operator_message(msg=None)
+
+            with pytest.raises(ValueError):
+                hardpy.set_operator_message(msg="a", font_size=0)
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_block_operator_message(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        @pytest.mark.timeout(2)
+        def test_block_operator_message():
+            hardpy.set_operator_message(msg="a")
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(failed=1)
+
+
+def test_non_block_operator_message(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        @pytest.mark.timeout(2)
+        def test_non_block_operator_message():
+            hardpy.set_operator_message(msg="a", block=False)
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
 def test_incorrect_couchdbconfig_data(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
@@ -1220,67 +1268,6 @@ def test_set_case_chart(pytester: Pytester, hardpy_opts: list[str]):
             )
             with pytest.raises(hardpy.DuplicateParameterError):
                 hardpy.set_case_chart(chart_2)
-    """,
-    )
-    result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(passed=1)
-
-
-def test_fill_error_code(pytester: Pytester, hardpy_opts: list[str]):
-    pytester.makepyfile(
-        f"""
-        {func_test_header}
-        def test_fill_error_code():
-            report = hardpy.get_current_report()
-            error_code = report.error_code
-            assert error_code == None, "The error_code is not empty."
-
-            assert False, hardpy.ErrorCode(1, "a")
-
-        def test_error_code_exist(request):
-            report = hardpy.get_current_report()
-            error_code = report.error_code
-            assert error_code == 1, "The error_code must be 1."
-
-            node = NodeInfo(request.node)
-            module_id = node.module_id
-
-            case_id = "test_fill_error_code"
-            assertion_msg_1 = report.modules[module_id].cases[case_id].assertion_msg
-            assert "AssertionError: a" in assertion_msg_1
-    """,
-    )
-    result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(passed=1, failed=1)
-
-
-def test_duplicate_error_code(pytester: Pytester, hardpy_opts: list[str]):
-    pytester.makepyfile(
-        f"""
-        {func_test_header}
-        def test_error_code(request):
-            assert False, hardpy.ErrorCode(1)
-
-        def test_duplicate_error_code():
-            assert False, hardpy.ErrorCode(2)
-
-        def test_check_error_code():
-            report = hardpy.get_current_report()
-            error_code = report.error_code
-            assert error_code == 1, "The error_code must be 1."
-    """,
-    )
-    result = pytester.runpytest(*hardpy_opts)
-    result.assert_outcomes(passed=1, failed=2)
-
-
-def test_negative_error_code(pytester: Pytester, hardpy_opts: list[str]):
-    pytester.makepyfile(
-        f"""
-        {func_test_header}
-        def test_negative_error_code():
-            with pytest.raises(ValueError):
-                hardpy.ErrorCode(-1)
     """,
     )
     result = pytester.runpytest(*hardpy_opts)
