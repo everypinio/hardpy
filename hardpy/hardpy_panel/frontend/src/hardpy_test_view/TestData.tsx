@@ -163,6 +163,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
               title={props.chart?.title}
               xLabel={props.chart?.x_label}
               yLabel={props.chart?.y_label}
+              chartType={props.chart?.type}
             />
           </div>
 

@@ -18,6 +18,7 @@ interface GraphComponentProps {
   title?: string;
   xLabel?: string;
   yLabel?: string;
+  chartType?: string;
 }
 
 const GraphComponent: React.FC<GraphComponentProps> = ({
@@ -27,6 +28,7 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
   title,
   xLabel,
   yLabel,
+  chartType = "line",
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -38,7 +40,7 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
         const containerWidth = containerRef.current.offsetWidth;
 
         const containerHeight = containerRef.current.offsetHeight;
-        const calculatedWidth = Math.max(300, containerWidth);
+        const calculatedWidth = Math.max(600, containerWidth);
         const calculatedHeight = Math.max(300, containerHeight);
 
         setDimensions({
@@ -53,6 +55,19 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
 
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
+
+  const getAxisType = (axis: 'x' | 'y') => {
+    switch (chartType) {
+      case "line_log_x":
+        return axis === 'x' ? 'log' : 'linear';
+      case "line_log_y":
+        return axis === 'y' ? 'log' : 'linear';
+      case "log_x_y":
+        return 'log';
+      default:
+        return 'linear';
+    }
+  };
 
   const plotData = graphs.map((graph, index) => ({
     x: graph.x_data,
@@ -69,9 +84,11 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
     title: title || "Test Data Graph",
     xaxis: {
       title: xLabel || undefined,
+      type: getAxisType('x'),
     },
     yaxis: {
       title: yLabel || undefined,
+      type: getAxisType('y'),
     },
     showlegend: true,
     autosize: true,
@@ -90,9 +107,11 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
     title: title || "Test Data Graph",
     xaxis: {
       title: xLabel || undefined,
+      type: getAxisType('x'),
     },
     yaxis: {
       title: yLabel || undefined,
+      type: getAxisType('y'),
     },
     showlegend: true,
     autosize: true,
@@ -127,7 +146,7 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
           padding: "10px",
           borderRadius: "3px",
           width: "100%",
-          minWidth: "300px",
+          minWidth: "600px",
           minHeight: "300px",
           overflow: "hidden",
         }}
