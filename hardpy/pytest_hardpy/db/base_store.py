@@ -5,18 +5,25 @@ from logging import getLogger
 from typing import Any
 
 from glom import assign, glom
-from pycouchdb.exceptions import Conflict, NotFound
+from pycouchdb import Server as DbServer
+from pycouchdb.client import Database
+from pycouchdb.exceptions import Conflict, GenericError, NotFound
 from pydantic._internal._model_construction import ModelMetaclass
+from requests.exceptions import ConnectionError  # noqa: A004
 
-from hardpy.pytest_hardpy.db.base_connector import BaseConnector
 from hardpy.pytest_hardpy.db.const import DatabaseField as DF  # noqa: N817
+from hardpy.pytest_hardpy.utils import ConnectionData
 
 
-class BaseStore(BaseConnector):
+class BaseStore:
     """HardPy base storage interface for CouchDB."""
 
     def __init__(self, db_name: str) -> None:
-        super().__init__(db_name)
+        con_data = ConnectionData()
+        self._db_srv = DbServer(con_data.database_url)
+        self._db_name = db_name
+        self._db = self._init_db()
+        self._doc_id = "current"
         self._log = getLogger(__name__)
         self._doc: dict = self._init_doc()
         self._schema: ModelMetaclass
@@ -82,6 +89,19 @@ class BaseStore(BaseConnector):
         except (Conflict, NotFound):
             self._log.debug("Database will be created for the first time")
         self._doc: dict = self._init_doc()
+
+    def _init_db(self) -> Database:
+        try:
+            return self._db_srv.create(self._db_name)  # type: ignore
+        except Conflict:
+            # database is already created
+            return self._db_srv.database(self._db_name)
+        except GenericError as exc:
+            msg = f"Error initializing database {exc}"
+            raise RuntimeError(msg) from exc
+        except ConnectionError as exc:
+            msg = f"Error initializing database: {exc}"
+            raise RuntimeError(msg) from exc
 
     def _init_doc(self) -> dict:
         try:
