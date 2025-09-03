@@ -1,5 +1,5 @@
 title = "HardPy TOML config"
-tests_dir = "operator_msg"
+tests_name = "Operator Message"
 
 [database]
 user = "dev"
