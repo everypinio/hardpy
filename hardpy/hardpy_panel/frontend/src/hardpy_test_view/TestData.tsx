@@ -127,7 +127,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
   };
 
   return (
-    <div className="test-data">
+    <div className="test-data" style={{ width: "100%" }}>
       {_.map(props.msg, (value: string, key: string) => {
         return (
           value && (
@@ -155,14 +155,16 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
 
       {hasGraphData && (
         <>
-          <GraphComponent
-            graphs={graphData}
-            isCollapsed={isGraphCollapsed}
-            onToggleCollapse={handleToggleCollapse}
-            title={props.chart?.title}
-            xLabel={props.chart?.x_label}
-            yLabel={props.chart?.y_label}
-          />
+          <div style={{ width: "100%", marginTop: "10px", minWidth: "300px" }}>
+            <GraphComponent
+              graphs={graphData}
+              isCollapsed={isGraphCollapsed}
+              onToggleCollapse={handleToggleCollapse}
+              title={props.chart?.title}
+              xLabel={props.chart?.x_label}
+              yLabel={props.chart?.y_label}
+            />
+          </div>
 
           <div
             style={{ marginTop: "10px", cursor: "pointer" }}

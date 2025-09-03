@@ -1,5 +1,8 @@
+// Copyright (c) 2025 Everypin
+// GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 import React, { useState, useRef, useEffect } from "react";
-import { Dialog, Button, Icon } from "@blueprintjs/core";
+import { Dialog, Button } from "@blueprintjs/core";
 import Plot from "react-plotly.js";
 
 interface GraphData {
@@ -27,14 +30,20 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 300 });
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     const updateDimensions = () => {
       if (containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth;
+
+        const containerHeight = containerRef.current.offsetHeight;
+        const calculatedWidth = Math.max(300, containerWidth);
+        const calculatedHeight = Math.max(300, containerHeight);
+
         setDimensions({
-          width: containerRef.current.offsetWidth,
-          height: 300,
+          width: calculatedWidth,
+          height: calculatedHeight,
         });
       }
     };
@@ -66,6 +75,13 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
     },
     showlegend: true,
     autosize: true,
+    margin: {
+      l: 60,
+      r: 30,
+      b: 60,
+      t: 60,
+      pad: 4,
+    },
   };
 
   const fullScreenLayout = {
@@ -90,6 +106,8 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
           padding: "10px",
           borderRadius: "3px",
           background: "#f5f5f5",
+          width: "100%",
+          minWidth: "300px",
         }}
       >
         <Button icon="chevron-down" onClick={onToggleCollapse} minimal small>
@@ -109,8 +127,9 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
           padding: "10px",
           borderRadius: "3px",
           width: "100%",
-          minHeight: "300px",
           minWidth: "300px",
+          minHeight: "300px",
+          overflow: "hidden",
         }}
       >
         <div
