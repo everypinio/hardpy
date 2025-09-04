@@ -12,7 +12,7 @@ from urllib.parse import unquote
 from fastapi import FastAPI, Query
 from fastapi.staticfiles import StaticFiles
 
-from hardpy.common.config import ConfigManager
+from hardpy.common.config import ConfigManager, get_sync_doc_id
 from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
 
 app = FastAPI()
@@ -111,6 +111,23 @@ def couch_connection() -> dict:
 
     return {
         "connection_str": connection_url,
+    }
+
+
+@app.get("/api/database_document_id")
+def sync_document() -> dict:
+    """Get couchdb syncronized document name.
+
+    Returns:
+        dict[str, str]: couchdb connection string
+    """
+    document_id = get_sync_doc_id(
+        ConfigManager().get_config().frontend.host,
+        ConfigManager().get_config().frontend.port,
+    )
+
+    return {
+        "document_id": document_id,
     }
 
 
