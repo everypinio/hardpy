@@ -9,5 +9,6 @@ class ConnectionData(metaclass=SingletonMeta):
 
     def __init__(self) -> None:
         self.database_url: str = "http://dev:dev@localhost:5984/"
+        self.database_doc_id: str = "current"
         self.sc_address: str = ""
         self.sc_connection_only: bool = False
