@@ -12,6 +12,15 @@ from pydantic import BaseModel, ConfigDict, ValidationError
 logger = getLogger(__name__)
 
 
+def get_sync_doc_id(server_host: str, server_port: int) -> str:
+    """Get the id of the synchronized database document (name).
+
+    Returns:
+        str: document name
+    """
+    return f"{server_host}_{server_port}"
+
+
 class DatabaseConfig(BaseModel):
     """Database configuration."""
 
