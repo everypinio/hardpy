@@ -23,7 +23,7 @@ class BaseStore:
         self._db_srv = DbServer(con_data.database_url)
         self._db_name = db_name
         self._db = self._init_db()
-        self._doc_id = "current"
+        self._doc_id = con_data.database_doc_id
         self._log = getLogger(__name__)
         self._doc: dict = self._init_doc()
         self._schema: ModelMetaclass
