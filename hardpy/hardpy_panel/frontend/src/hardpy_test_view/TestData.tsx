@@ -15,6 +15,7 @@ interface Props {
   testSuiteIndex: number;
   testCaseIndex: number;
   chart?: ChartData;
+  dataColumnWidth?: number;
 }
 
 interface ChartData {
@@ -155,7 +156,14 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
 
       {hasGraphData && (
         <>
-          <div style={{ width: "100%", marginTop: "10px", minWidth: "300px" }}>
+          <div
+            style={{
+              width: "100%",
+              marginTop: "10px",
+              minWidth: "300px",
+              boxSizing: "border-box",
+            }}
+          >
             <GraphComponent
               graphs={graphData}
               isCollapsed={isGraphCollapsed}
@@ -164,6 +172,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
               xLabel={props.chart?.x_label}
               yLabel={props.chart?.y_label}
               chartType={props.chart?.type}
+              containerWidth={props.dataColumnWidth}
             />
           </div>
 

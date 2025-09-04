@@ -1,5 +1,5 @@
 // Copyright (c) 2025 Everypin
-// GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+// GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt  )
 
 import React, { useState, useRef, useEffect } from "react";
 import { Dialog, Button } from "@blueprintjs/core";
@@ -19,6 +19,7 @@ interface GraphComponentProps {
   xLabel?: string;
   yLabel?: string;
   chartType?: string;
+  containerWidth?: number;
 }
 
 const GraphComponent: React.FC<GraphComponentProps> = ({
@@ -29,6 +30,7 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
   xLabel,
   yLabel,
   chartType = "line",
+  containerWidth,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -36,36 +38,36 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
 
   useEffect(() => {
     const updateDimensions = () => {
-      if (containerRef.current) {
-        const containerWidth = containerRef.current.offsetWidth;
+      let width = 0;
 
-        const containerHeight = containerRef.current.offsetHeight;
-        const calculatedWidth = Math.max(600, containerWidth);
-        const calculatedHeight = Math.max(300, containerHeight);
-
-        setDimensions({
-          width: calculatedWidth,
-          height: calculatedHeight,
-        });
+      if (containerWidth && containerWidth > 0) {
+        width = containerWidth - 600;
+      } else if (containerRef.current) {
+        width = containerRef.current.offsetWidth - 400;
       }
+
+      const finalWidth = Math.max(250, width);
+      const finalHeight = Math.max(300, finalWidth * 0.5);
+
+      setDimensions({ width: finalWidth, height: finalHeight });
     };
 
     updateDimensions();
     window.addEventListener("resize", updateDimensions);
 
     return () => window.removeEventListener("resize", updateDimensions);
-  }, []);
+  }, [containerWidth]);
 
-  const getAxisType = (axis: 'x' | 'y') => {
+  const getAxisType = (axis: "x" | "y") => {
     switch (chartType) {
       case "line_log_x":
-        return axis === 'x' ? 'log' : 'linear';
+        return axis === "x" ? "log" : "linear";
       case "line_log_y":
-        return axis === 'y' ? 'log' : 'linear';
+        return axis === "y" ? "log" : "linear";
       case "log_x_y":
-        return 'log';
+        return "log";
       default:
-        return 'linear';
+        return "linear";
     }
   };
 
@@ -80,15 +82,15 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
 
   const layout = {
     width: dimensions.width,
-    height: dimensions.height,
+    height: 300,
     title: title || "Test Data Graph",
     xaxis: {
       title: xLabel || undefined,
-      type: getAxisType('x'),
+      type: getAxisType("x"),
     },
     yaxis: {
       title: yLabel || undefined,
-      type: getAxisType('y'),
+      type: getAxisType("y"),
     },
     showlegend: true,
     autosize: true,
@@ -107,11 +109,11 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
     title: title || "Test Data Graph",
     xaxis: {
       title: xLabel || undefined,
-      type: getAxisType('x'),
+      type: getAxisType("x"),
     },
     yaxis: {
       title: yLabel || undefined,
-      type: getAxisType('y'),
+      type: getAxisType("y"),
     },
     showlegend: true,
     autosize: true,
@@ -149,6 +151,7 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
           minWidth: "600px",
           minHeight: "300px",
           overflow: "hidden",
+          boxSizing: "border-box",
         }}
       >
         <div
@@ -189,7 +192,7 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
         className="graph-modal"
         style={{ width: "90vw", height: "90vh" }}
       >
-        <div className="bp4-dialog-body">
+        <div className="bp4-dialog-body" style={{ height: "100%" }}>
           <Plot
             data={plotData}
             layout={fullScreenLayout}

@@ -98,6 +98,7 @@ type Props = {
 
 type State = {
   isOpen: boolean;
+  dataColumnWidth: number;
 };
 
 const LOADING_ICON_MARGIN = 30;
@@ -116,6 +117,24 @@ export class TestSuite extends React.Component<Props, State> {
   static defaultProps: Partial<Props> = {
     defaultOpen: true,
   };
+
+  private dataColumnRef: React.RefObject<HTMLDivElement>;
+
+  /**
+   * Constructs the TestSuite component.
+   * @param {Props} props - The properties passed to the component.
+   */
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      isOpen: props.defaultOpen,
+      dataColumnWidth: 0,
+    };
+
+    this.dataColumnRef = React.createRef();
+    this.handleClick = this.handleClick.bind(this);
+  }
 
   /**
    * Renders the TestSuite component.
@@ -164,7 +183,9 @@ export class TestSuite extends React.Component<Props, State> {
           className="test-suite-content"
         >
           {this.props.test.status != "busy" ? (
-            this.renderTests(this.props.test.cases)
+            <div ref={this.dataColumnRef}>
+              {this.renderTests(this.props.test.cases)}
+            </div>
           ) : (
             <Spin indicator={TestSuite.LOADING_ICON} />
           )}
@@ -173,18 +194,29 @@ export class TestSuite extends React.Component<Props, State> {
     );
   }
 
-  /**
-   * Constructs the TestSuite component.
-   * @param {Props} props - The properties passed to the component.
-   */
-  constructor(props: Props) {
-    super(props);
+  componentDidMount() {
+    this.calculateDataColumnWidth();
+  }
 
-    this.state = {
-      isOpen: props.defaultOpen,
-    };
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    if (
+      (this.props.test.status === "ready" &&
+        prevProps.test.status !== "ready") ||
+      (this.state.isOpen && !prevState.isOpen)
+    ) {
+      setTimeout(() => {
+        this.calculateDataColumnWidth();
+      }, 100);
+    }
+  }
 
-    this.handleClick = this.handleClick.bind(this);
+  private calculateDataColumnWidth() {
+    if (this.dataColumnRef.current) {
+      const dataColumnElement = this.dataColumnRef.current;
+      const dataColumnWidth = dataColumnElement.offsetWidth;
+
+      this.setState({ dataColumnWidth });
+    }
   }
 
   /**
@@ -244,7 +276,7 @@ export class TestSuite extends React.Component<Props, State> {
         name: this.props.t("testSuite.nameColumn"),
         selector: (row) => row,
         cell: this.cellRendererName.bind(this, case_array),
-        grow: 6,
+        grow: 4,
       },
       {
         id: "data",
@@ -392,6 +424,7 @@ export class TestSuite extends React.Component<Props, State> {
           testSuiteIndex={this.props.index}
           testCaseIndex={rowIndex}
           chart={test.chart}
+          dataColumnWidth={this.state.dataColumnWidth}
         />
       </div>,
       `data_${rowIndex}_${row_}`
