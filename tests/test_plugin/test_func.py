@@ -751,26 +751,52 @@ def test_empty_case_message(pytester: Pytester, hardpy_opts: list[str]):
     result.assert_outcomes(passed=1)
 
 
-def test_incorrect_configdata(pytester: Pytester, hardpy_opts: list[str]):
+def test_operator_message(pytester: Pytester, hardpy_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
-        def test_incorrect_configdata():
-            config = ConfigData(
-                db_host="test-db",
-                db_user="test-user",
-                db_pswd="test-password",
-                db_port=1234,
-                web_host="test-host",
-                web_port=5678,
-                tests_dir="/path/to/tests",
-            )
+        def test_operator_message(request):
+            node = NodeInfo(request.node)
+
             report = hardpy.get_current_report()
-            assert report
+            with pytest.raises(AttributeError):
+                report.operator_msg
+
+            with pytest.raises(ValueError):
+                hardpy.set_operator_message(msg=None)
+
+            with pytest.raises(ValueError):
+                hardpy.set_operator_message(msg="a", font_size=0)
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
+
+
+def test_block_operator_message(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        @pytest.mark.timeout(2)
+        def test_block_operator_message():
+            hardpy.set_operator_message(msg="a")
     """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=1)
+
+
+def test_non_block_operator_message(pytester: Pytester, hardpy_opts: list[str]):
+    pytester.makepyfile(
+        f"""
+        {func_test_header}
+        @pytest.mark.timeout(2)
+        def test_non_block_operator_message():
+            hardpy.set_operator_message(msg="a", block=False)
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
 
 
 def test_incorrect_couchdbconfig_data(pytester: Pytester, hardpy_opts: list[str]):

@@ -29,10 +29,8 @@ frontend_default_language = "en"
 stand_cloud_default_addr = ""
 
 
-def test_config_manager_init(tmp_path: Path):
-    tests_dir = tmp_path / "my_tests"
+def test_config_manager_init():
     ConfigManager.init_config(
-        tests_dir=str(tests_dir),
         tests_name=tests_no_default_name,
         database_user=db_no_default_user,
         database_password=db_no_default_password,
@@ -45,7 +43,6 @@ def test_config_manager_init(tmp_path: Path):
     )
     config = ConfigManager.get_config()
     assert isinstance(config, HardpyConfig)
-    assert config.tests_dir == str(tests_dir)
     assert config.tests_name == tests_no_default_name
     assert config.database.user == db_no_default_user
     assert config.database.password == db_no_default_password
@@ -86,14 +83,12 @@ def test_stand_cloud_config():
 def test_hardpy_config():
     config = HardpyConfig(
         title="HardPy TOML config",
-        tests_dir="tests",
         tests_name="tests",
         database=DatabaseConfig(),
         frontend=FrontendConfig(),
         stand_cloud=StandCloudConfig(),
     )
     assert config.title == "HardPy TOML config"
-    assert config.tests_dir == "tests"
     assert config.tests_name == "tests"
     assert config.database.user == db_default_user
     assert config.database.password == db_default_password
@@ -110,7 +105,6 @@ def test_config_manager_create_config(tmp_path: Path):
     Path.mkdir(tests_dir, exist_ok=True, parents=True)
 
     ConfigManager.init_config(
-        tests_dir=str(tests_dir),
         tests_name=str(tests_dir),
         database_user=db_default_user,
         database_password=db_default_password,
@@ -133,7 +127,6 @@ def test_config_manager_create_config(tmp_path: Path):
 def test_read_config_success(tmp_path: Path):
     test_config_data = {
         "title": "Test HardPy Config",
-        "tests_dir": "my_tests",
         "tests_name": "My tests",
         "database": {
             "user": db_default_user,
@@ -158,7 +151,6 @@ def test_read_config_success(tmp_path: Path):
     config = ConfigManager.read_config(tests_dir)
     assert isinstance(config, HardpyConfig)
     assert config.title == test_config_data["title"]
-    assert config.tests_dir == test_config_data["tests_dir"]
     assert config.tests_name == test_config_data["tests_name"]
     assert config.database.user == test_config_data["database"]["user"]
     assert config.database.password == test_config_data["database"]["password"]

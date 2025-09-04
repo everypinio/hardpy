@@ -10,7 +10,6 @@ The user can change the fields at creation by using [hardpy init](./cli.md#hardp
 
 ```toml
 title = "HardPy TOML config"
-tests_dir = "tests"
 
 [database]
 user = "dev"
@@ -27,7 +26,6 @@ port = 8000
 
 ```toml
 title = "HardPy TOML config"
-tests_dir = "tests"
 tests_name = "My tests"
 
 [database]
@@ -57,15 +55,9 @@ Common settings.
 Configuration file header.
 The value is always `HardPy TOML config`.
 
-#### tests_dir
-
-Tests directory. The default is `tests`.
-The user can change this value with the `hardpy init` argument.
-
 #### tests_name
 
-Tests name. The default is [tests_dir](#tests_dir).
-The user can change this value with the `hardpy init --tests-name` argument.
+Tests name. The user can change this value with the `hardpy init --tests-name` argument.
 
 ### database
 

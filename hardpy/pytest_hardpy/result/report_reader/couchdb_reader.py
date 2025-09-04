@@ -88,11 +88,7 @@ class CouchdbReader:
             str: report status
         """
         doc = self._db.get(report_name)
-        status = doc[DF.STATUS]
-        if status not in {TestStatus.PASSED, TestStatus.FAILED, TestStatus.SKIPPED}:
-            msg = "Invalid report status"
-            raise ValueError(msg)
-        return status
+        return doc[DF.STATUS]
 
     def get_report_infos(self) -> list[ReportInfo]:
         """Get a list of information about all reports in the database.

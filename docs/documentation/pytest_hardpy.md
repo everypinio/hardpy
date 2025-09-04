@@ -1143,6 +1143,26 @@ def test_chart():
     hardpy.set_case_chart(chart)
 ```
 
+### ErrorCode
+
+This class saves the error code of the test plan to the database.
+Only the first error code from this class is saved.
+
+The `ErrorCode` class must be called from the `assert`. 
+Otherwise, an extra error code may be saved.
+
+**Arguments:**
+
+- `error_code` *(int)*: error code (non-negative integer).
+- `message` *(str | None)*: error code message.
+
+**Example:**
+
+```python
+def test_error_code():
+    assert False, hardpy.ErrorCode(1, "error code message")
+```
+
 ## Enum
 
 ### ComparisonOperation
