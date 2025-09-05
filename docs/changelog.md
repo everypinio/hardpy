@@ -2,6 +2,9 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add charts.
+  [[PR-186](https://github.com/everypinio/hardpy/pull/186)]
+
 ## HardPy 0.15.0
 
 * Remove `tests_dir` variable from **hardpy.toml**. 

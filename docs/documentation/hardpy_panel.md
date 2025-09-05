@@ -252,3 +252,81 @@ the tests will be stopped, an error message will be displayed.
 <h1 align="center">
     <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_notification.png" alt="notification">
 </h1>
+
+### Charts
+
+For visualizing test data, it is possible to use interactive charts.
+Charts provide a graphical representation of measurement results and allow operators to analyze data trends in real-time.
+
+Charts support the following features:
+
+* Multiple datasets on a single chart
+* Zooming capabilities
+* Logarithmic scales for both X and Y axes
+* Collapsible/expandable view
+
+#### Basic line chart
+
+Displays a single dataset as a line graph with customizable styling.
+
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/one_chart.png" alt="basic_line_chart">
+</h1>
+
+#### Multiple datasets
+
+Shows multiple datasets on the same chart for comparative analysis. 
+Each dataset can have different colors and styles.
+
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/two_charts.png" alt="multiple_datasets_chart">
+</h1>
+
+#### Collapsed view
+
+Charts can be collapsed to save screen space when not actively being analyzed.
+
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/collapsed_chart.png" alt="collapsed_chart">
+</h1>
+
+#### Expanded view
+
+Charts can be expanded to full view for detailed analysis.
+
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/expanded_chart.png" alt="expanded_chart">
+</h1>
+
+#### Logarithmic X-axis
+
+When dealing with data that spans multiple orders of magnitude, the X-axis can be set to logarithmic scale.
+
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/chart_log_x.png" alt="logarithmic_x_chart">
+</h1>
+
+#### Logarithmic Y-axis
+
+The Y-axis can be set to logarithmic scale for better visualization of exponential data trends.
+
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/chart_log_y.png" alt="logarithmic_y_chart">
+</h1>
+
+#### Logarithmic X and Y axes
+
+Both axes can be set to logarithmic scale for data that requires logarithmic representation in both dimensions.
+
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/chart_log_x_log_y.png" alt="logarithmic_xy_chart">
+</h1>
+
+### Chart interaction
+
+* **Zoom**: Click and drag to select an area to zoom into
+* **Pan**: Click and drag to move around the chart when zoomed in
+* **Reset zoom**: Double-click to reset to the original view
+* **Data points**: Hover over data points to see exact values
+* **Legend**: Click on legend items to show/hide specific datasets
+* **Download**: Downloading plot as a PNG.
