@@ -12,15 +12,6 @@ from pydantic import BaseModel, ConfigDict, ValidationError
 logger = getLogger(__name__)
 
 
-def get_sync_doc_id(server_host: str, server_port: int) -> str:
-    """Get the id of the synchronized database document (name).
-
-    Returns:
-        str: document name
-    """
-    return f"{server_host}_{server_port}"
-
-
 class DatabaseConfig(BaseModel):
     """Database configuration."""
 
@@ -30,6 +21,7 @@ class DatabaseConfig(BaseModel):
     password: str = "dev"
     host: str = "localhost"
     port: int = 5984
+    doc_id: str = ""
 
     def connection_url(self) -> str:
         """Get database connection url.
@@ -72,6 +64,16 @@ class HardpyConfig(BaseModel, extra="allow"):
     frontend: FrontendConfig = FrontendConfig()
     stand_cloud: StandCloudConfig = StandCloudConfig()
 
+    def get_doc_id(self) -> str:
+        """Get the id of the synchronized database document (name).
+
+        Returns:
+            str: document name
+        """
+        if not self.database.doc_id:
+            return f"{self.frontend.host}_{self.frontend.port}"
+        return self.database.doc_id
+
 
 class ConfigManager:
     """HardPy configuration manager."""
@@ -87,6 +89,7 @@ class ConfigManager:
         database_password: str,
         database_host: str,
         database_port: int,
+        database_doc_id: str,
         frontend_host: str,
         frontend_port: int,
         frontend_language: str,
@@ -101,6 +104,7 @@ class ConfigManager:
             database_password (str): Database password.
             database_host (str): Database host.
             database_port (int): Database port.
+            database_doc_id (str): Database document name.
             frontend_host (str): Operator panel host.
             frontend_port (int): Operator panel port.
             frontend_language (str): Operator panel language.
@@ -112,6 +116,7 @@ class ConfigManager:
         cls.obj.database.password = database_password
         cls.obj.database.host = database_host
         cls.obj.database.port = database_port
+        cls.obj.database.doc_id = database_doc_id
         cls.obj.frontend.host = frontend_host
         cls.obj.frontend.port = frontend_port
         cls.obj.frontend.language = frontend_language
@@ -129,6 +134,8 @@ class ConfigManager:
             del cls.obj.stand_cloud
         if not cls.obj.tests_name:
             del cls.obj.tests_name
+        if not cls.obj.database.doc_id:
+            del cls.obj.database.doc_id
         config_str = tomli_w.dumps(cls.obj.model_dump())
         with Path.open(parent_dir / "hardpy.toml", "w") as file:
             file.write(config_str)
