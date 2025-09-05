@@ -119,6 +119,7 @@ export class TestSuite extends React.Component<Props, State> {
   };
 
   private dataColumnRef: React.RefObject<HTMLDivElement>;
+  private resizeObserver: ResizeObserver | null = null;
 
   /**
    * Constructs the TestSuite component.
@@ -133,7 +134,6 @@ export class TestSuite extends React.Component<Props, State> {
     };
 
     this.dataColumnRef = React.createRef();
-    this.handleClick = this.handleClick.bind(this);
   }
 
   /**
@@ -195,29 +195,52 @@ export class TestSuite extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.calculateDataColumnWidth();
+    this.setupResizeObserver();
+    this.updateWidth();
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
-    if (
-      (this.props.test.status === "ready" &&
-        prevProps.test.status !== "ready") ||
-      (this.state.isOpen && !prevState.isOpen)
-    ) {
-      setTimeout(() => {
-        this.calculateDataColumnWidth();
-      }, 100);
+    const statusBecameReady =
+      this.props.test.status === "ready" && prevProps.test.status !== "ready";
+    const panelJustOpened = this.state.isOpen && !prevState.isOpen;
+
+    if (statusBecameReady || panelJustOpened) {
+      this.updateWidth();
     }
   }
 
-  private calculateDataColumnWidth() {
+  componentWillUnmount() {
+    this.destroyResizeObserver();
+  }
+
+  private setupResizeObserver = () => {
+    if (!this.dataColumnRef.current) return;
+
+    this.destroyResizeObserver();
+
+    this.resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        this.setState({ dataColumnWidth: entry.contentRect.width });
+      }
+    });
+
+    this.resizeObserver.observe(this.dataColumnRef.current);
+  };
+
+  private destroyResizeObserver = () => {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
+  };
+
+  private updateWidth = () => {
     if (this.dataColumnRef.current) {
-      const dataColumnElement = this.dataColumnRef.current;
-      const dataColumnWidth = dataColumnElement.offsetWidth;
-
-      this.setState({ dataColumnWidth });
+      this.setState({
+        dataColumnWidth: this.dataColumnRef.current.offsetWidth,
+      });
     }
-  }
+  };
 
   /**
    * Renders the name of the test suite.
@@ -251,7 +274,6 @@ export class TestSuite extends React.Component<Props, State> {
     if (test_topics) {
       case_names = Object.keys(test_topics);
     }
-
     const case_array: Case[] = case_names.map((n) => test_topics[n]);
 
     const columns: TableColumn<string>[] = [
@@ -276,7 +298,7 @@ export class TestSuite extends React.Component<Props, State> {
         name: this.props.t("testSuite.nameColumn"),
         selector: (row) => row,
         cell: this.cellRendererName.bind(this, case_array),
-        grow: 4,
+        grow: 6,
       },
       {
         id: "data",
@@ -377,7 +399,7 @@ export class TestSuite extends React.Component<Props, State> {
       <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
         <TestNumber val={rowIndex + 1} />
       </div>,
-      `number_${rowIndex}_${row_}}`
+      `number_${rowIndex}_${row_}`
     );
   }
 
@@ -500,12 +522,8 @@ export class TestSuite extends React.Component<Props, State> {
    * Handles the click event to toggle the collapse state of the test suite.
    */
   private readonly handleClick = () =>
-    this.setState((state: State) => ({ isOpen: !state.isOpen }));
+    this.setState((state) => ({ isOpen: !state.isOpen }));
 }
-
-TestSuite.defaultProps = {
-  defaultOpen: true,
-};
 
 const TestSuiteComponent = withTranslation()(TestSuite);
 export { TestSuiteComponent };

@@ -10,22 +10,3 @@
   vertical-align: top !important;
   align-items: flex-start !important;
 }
-
-.test-suite-content .rdt_TableCol {
-  vertical-align: top !important;
-}
-
-.test-suite-content .rdt_Table {
-  width: 100%;
-  table-layout: fixed;
-}
-
-.test-suite-content .rdt_TableCell:nth-child(4) {
-  width: 100%;
-}
-
-.test-suite-content .rdt_TableCell:nth-child(3) {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
