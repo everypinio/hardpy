@@ -7,7 +7,7 @@ import subprocess
 import sys
 from platform import system
 
-from hardpy.common.config import ConfigManager, get_sync_doc_id
+from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 
@@ -44,7 +44,7 @@ class PyTestWrapper:
             "--hardpy-db-url",
             self.config.database.connection_url(),
             "--hardpy-db-doc-id",
-            get_sync_doc_id(self.config.frontend.host, self.config.frontend.port),
+            self.config.get_doc_id(),
             "--hardpy-tests-name",
             self.config.tests_name,
             "--sc-address",
@@ -109,7 +109,7 @@ class PyTestWrapper:
             "--hardpy-db-url",
             self.config.database.connection_url(),
             "--hardpy-db-doc-id",
-            get_sync_doc_id(self.config.frontend.host, self.config.frontend.port),
+            self.config.get_doc_id(),
             "--hardpy-tests-name",
             self.config.tests_name,
             "--hardpy-pt",
