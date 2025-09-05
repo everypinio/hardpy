@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import socket
 import sys
+import urllib
 from pathlib import Path
 from typing import Annotated, Optional
 
@@ -90,11 +91,9 @@ def init(  # noqa: PLR0913
         sc_address (str): StandCloud address
         sc_connection_only (bool): Flag to check StandCloud service availability
     """
-    _tests_dir = tests_dir if tests_dir else default_config.tests_dir
-    _tests_name = tests_name if tests_name else default_config.tests_name
+    dir_path = Path(Path.cwd() / tests_dir if tests_dir else "tests")
     ConfigManager().init_config(
-        tests_dir=str(_tests_dir),
-        tests_name=_tests_name,
+        tests_name=tests_name if tests_name else dir_path.name,
         database_user=database_user,
         database_password=database_password,
         database_host=database_host,
@@ -106,7 +105,6 @@ def init(  # noqa: PLR0913
         sc_connection_only=sc_connection_only,
     )
     # create tests directory
-    dir_path = Path(Path.cwd() / _tests_dir)
     Path.mkdir(dir_path, exist_ok=True, parents=True)
 
     if create_database:
@@ -115,11 +113,8 @@ def init(  # noqa: PLR0913
 
     # create hardpy.toml
     ConfigManager().create_config(dir_path)
-    config = ConfigManager().read_config(dir_path)
-    if not config:
-        print(f"hardpy.toml config by path {dir_path} not detected.")
-        sys.exit()
 
+    config = _get_config(dir_path)
     template = TemplateGenerator(config)
 
     files = {}
@@ -145,12 +140,7 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
     Args:
         tests_dir (Optional[str]): Test directory. Current directory by default
     """
-    dir_path = Path.cwd() / tests_dir if tests_dir else Path.cwd()
-    config = ConfigManager().read_config(dir_path)
-
-    if not config:
-        print(f"Config at path {dir_path} not found.")
-        sys.exit()
+    config = _get_config(tests_dir)
 
     print("\nLaunch the HardPy operator panel...")
 
@@ -170,16 +160,29 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
 
 
 @cli.command()
-def start(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
+def start(
+    ctx: typer.Context,
+    tests_dir: Annotated[Optional[str], typer.Argument()] = None,
+    arg: list[str] = typer.Option(  # noqa: B008
+        [],
+        "--arg",
+        "-a",
+        help="Dynamic start arguments (format: key=value)",
+    ),
+) -> None:
     """Start HardPy tests.
 
     Args:
+        ctx: Typer context for accessing arguments from other sources
         tests_dir (Optional[str]): Test directory. Current directory by default
+        arg (list[str]): Dynamic arguments for test execution
     """
-    config = _get_config(tests_dir)
-    _check_config(config)
+    context_args = getattr(ctx, "hardpy_args", [])
+    all_args = arg + context_args
 
-    url = f"http://{config.frontend.host}:{config.frontend.port}/api/start"
+    config = _get_config(tests_dir, validate=True)
+    query_args = "&".join([f"args={urllib.parse.quote(a)}" for a in all_args])
+    url = f"http://{config.frontend.host}:{config.frontend.port}/api/start?{query_args}"
     _request_hardpy(url)
 
 
@@ -190,9 +193,7 @@ def stop(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
     Args:
         tests_dir (Optional[str]): Test directory. Current directory by default
     """
-    config = _get_config(tests_dir)
-    _check_config(config)
-
+    config = _get_config(tests_dir, validate=True)
     url = f"http://{config.frontend.host}:{config.frontend.port}/api/stop"
     _request_hardpy(url)
 
@@ -204,9 +205,7 @@ def status(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None
     Args:
         tests_dir (Optional[str]): Test directory. Current directory by default
     """
-    config = _get_config(tests_dir)
-    _check_config(config)
-
+    config = _get_config(tests_dir, validate=True)
     url = f"http://{config.frontend.host}:{config.frontend.port}/api/status"
     _request_hardpy(url)
 
@@ -259,7 +258,7 @@ def sc_logout(address: Annotated[str, typer.Argument()]) -> None:
         print(f"HardPy logout failed from {address}")
 
 
-def _get_config(tests_dir: str | None = None) -> HardpyConfig:
+def _get_config(tests_dir: str | None = None, validate: bool = False) -> HardpyConfig:
     dir_path = Path.cwd() / tests_dir if tests_dir else Path.cwd()
     config = ConfigManager().read_config(dir_path)
 
@@ -267,12 +266,15 @@ def _get_config(tests_dir: str | None = None) -> HardpyConfig:
         print(f"Config at path {dir_path} not found.")
         sys.exit()
 
+    if validate:
+        _validate_config(config, dir_path)
+
     return config
 
 
-def _check_config(config: HardpyConfig) -> None:
+def _validate_config(config: HardpyConfig, tests_dir: str) -> None:
     url = f"http://{config.frontend.host}:{config.frontend.port}/api/hardpy_config"
-    error_msg = f"HardPy in directory {config.tests_dir} does not run."
+    error_msg = f"HardPy in directory {tests_dir} does not run."
     try:
         response = requests.get(url, timeout=2)
     except Exception:

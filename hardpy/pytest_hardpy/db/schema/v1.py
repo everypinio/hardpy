@@ -2,11 +2,20 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+from abc import ABC
+from collections.abc import Mapping  # noqa: TC003
+from datetime import datetime  # noqa: TC003
 from typing import ClassVar
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from hardpy.pytest_hardpy.utils import TestStatus as Status  # noqa: TC001
+from hardpy.pytest_hardpy.utils import (
+    ChartType,
+    ComparisonOperation as CompOp,
+    Group,
+    MeasurementType,
+    TestStatus as Status,
+)
 
 
 class IBaseResult(BaseModel):
@@ -21,203 +30,165 @@ class IBaseResult(BaseModel):
 
 
 class CaseStateStore(IBaseResult):
-    """Test case description.
-
-    Example:
-    ```
-    {
-      "test_one": {
-        "status": "passed",
-        "name": "Test 2",
-        "start_time": 1695817188,
-        "stop_time": 1695817189,
-        "assertion_msg": null,
-        "msg": null,
-        "attempt": 1,
-        "dialog_box": {
-          "title_bar": "Example of text input",
-          "dialog_text": "Type some text and press the Confirm button",
-          "widget": {
-            "info": {
-              "text": "some text"
-            },
-            "type": "textinput"
-          },
-          visible: true,
-          id: "af6ac3e7-7ce8-4a6b-bb9d-88c3e10b5c7a",
-          font_size: 14
-        }
-      }
-    }
-    ```
-    """
+    """Test case description."""
 
     assertion_msg: str | None = None
     msg: dict | None = None
-    dialog_box: dict = {}
+    measurements: list[NumericMeasurement | StringMeasurement] = []
+    chart: Chart | None = None
     attempt: int = 0
+    group: Group
+    dialog_box: dict = {}
 
 
 class CaseRunStore(IBaseResult):
-    """Test case description with artifact.
-
-    Example:
-    ```
-    {
-      "test_one": {
-        "status": "passed",
-        "name": "Test 2",
-        "start_time": 1695817188,
-        "stop_time": 1695817189,
-        "assertion_msg": null,
-        "msg": null,
-        "artifact": {}
-      }
-    }
-    ```
-    """
+    """Test case description with artifact."""
 
     assertion_msg: str | None = None
     msg: dict | None = None
+    measurements: list[NumericMeasurement | StringMeasurement] = []
+    chart: Chart | None = None
+    attempt: int = 0
+    group: Group
     artifact: dict = {}
 
 
 class ModuleStateStore(IBaseResult):
-    """Test module description.
-
-    Example:
-    ```
-    {
-      "test_2_b": {
-        "status": "passed",
-        "name": "Module 2",
-        "start_time": 1695816886,
-        "stop_time": 1695817016,
-        "cases": {
-          "test_one": {
-            "status": "passed",
-            "name": "Test 1",
-            "start_time": 1695817015,
-            "stop_time": 1695817016,
-            "assertion_msg": null,
-            "msg": null
-          }
-        }
-      }
-    }
-    ```
-    """
+    """Test module description."""
 
     cases: dict[str, CaseStateStore] = {}
+    group: Group
 
 
 class ModuleRunStore(IBaseResult):
-    """Test module description.
-
-    Example:
-    ```
-    {
-      "test_2_b": {
-        "status": "passed",
-        "name": "Module 2",
-        "start_time": 1695816886,
-        "stop_time": 1695817016,
-        "artifact": {},
-        "cases": {
-          "test_one": {
-            "status": "passed",
-            "name": "Test 1",
-            "start_time": 1695817015,
-            "stop_time": 1695817016,
-            "assertion_msg": null,
-            "msg": null,
-            "artifact": {}
-          }
-        }
-      }
-    }
-    ```
-    """
+    """Test module description."""
 
     cases: dict[str, CaseRunStore] = {}
+    group: Group
     artifact: dict = {}
 
 
 class Dut(BaseModel):
-    """Device under test description.
-
-    Example:
-    ```
-    {
-      "dut": {
-        "serial_number": "a9ad8dca-2c64-4df8-a358-c21e832a32e4",
-        "part_number": "part_number_1",
-        "info": {
-          "batch": "test_batch",
-          "board_rev": "rev_1"
-        }
-      }
-    }
-    ```
-    """
+    """Device under test description."""
 
     model_config = ConfigDict(extra="forbid")
 
-    serial_number: str | None
-    part_number: str | None
-    info: dict = {}
+    name: str | None = None
+    type: str | None = None
+    serial_number: str | None = None
+    part_number: str | None = None
+    revision: str | None = None
+    sub_units: list[SubUnit] = []
+    info: Mapping[str, str | int | float | datetime] = {}
+
+
+class SubUnit(BaseModel):
+    """Sub unit of DUT description."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: str | None = None
+    type: str | None = None
+    serial_number: str | None = None
+    part_number: str | None = None
+    revision: str | None = None
+    info: Mapping[str, str | int | float | datetime] = {}
+
+
+class Instrument(BaseModel):
+    """Instrument (power supply, oscilloscope and others) description."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: str | None = None
+    revision: str | None = None
+    number: int | None = None
+    comment: str | None = None
+    info: Mapping[str, str | int | float | datetime] = {}
 
 
 class TestStand(BaseModel):
-    """Test stand description.
-
-    Example:
-    ```
-    {
-      "test_stand": {
-        "hw_id": "840982098ca2459a7b22cc608eff65d4",
-        "name": "test_stand_1",
-        "info": {
-          "geo": "Belgrade"
-        },
-        "timezone": "Europe/Belgrade",
-        "drivers": {
-          "driver_1": "driver info",
-          "driver_2": {
-            "state": "active",
-            "port": 8000
-          }
-        },
-        "location": "Belgrade_1",
-        "number": 2
-      }
-    }
-    ```
-    """
+    """Test stand description."""
 
     model_config = ConfigDict(extra="forbid")
 
     hw_id: str | None = None
     name: str | None = None
+    revision: str | None = None
     timezone: str | None = None
-    drivers: dict = {}
-    info: dict = {}
     location: str | None = None
     number: int | None = None
+    drivers: dict = {}  # deprecated, remove in v2
+    instruments: list[Instrument] = []
+    info: Mapping[str, str | int | float | datetime] = {}
+
+
+class Process(BaseModel):
+    """Production process description."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: str | None = None
+    number: int | None = None
+    info: Mapping[str, str | int | float | datetime] = {}
+
+
+class IBaseMeasurement(BaseModel, ABC):
+    """Base class for all measurement models."""
+
+    model_config = ConfigDict(extra="allow")
+
+    type: MeasurementType
+    name: str | None = Field(default=None)
+    operation: CompOp | None = Field(default=None)
+    result: bool | None = Field(default_factory=lambda: None)
+
+
+class NumericMeasurement(IBaseMeasurement):
+    """Numeric measurement description."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    type: MeasurementType = Field(default=MeasurementType.NUMERIC)
+    value: int | float
+    name: str | None = Field(default=None)
+    unit: str | None = Field(default=None)
+
+    comparison_value: float | int | None = Field(default=None)
+
+    lower_limit: float | int | None = Field(default=None)
+    upper_limit: float | int | None = Field(default=None)
+
+
+class StringMeasurement(IBaseMeasurement):
+    """String measurement description."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    type: MeasurementType = Field(default=MeasurementType.STRING)
+    value: str
+    name: str | None = Field(default=None)
+    casesensitive: bool = Field(default=True)
+
+    comparison_value: str | None = Field(default=None)
+
+
+class Chart(BaseModel):
+    """Chart description."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    type: ChartType = Field(default=ChartType.LINE)
+    title: str | None = Field(default=None)
+    x_label: str | None = Field(default=None)
+    y_label: str | None = Field(default=None)
+    marker_name: list[str | None] = Field(default=[])
+    x_data: list[list[int | float]] = Field(default_factory=lambda: [])  # noqa: PIE807
+    y_data: list[list[int | float]] = Field(default_factory=lambda: [])  # noqa: PIE807
 
 
 class OperatorData(BaseModel):
-    """Operator data from operator panel.
-
-    Example:
-    ```
-    {
-      "operator_data": {
-        "dialog": "hello",
-      }
-    }
-    ```
-    """
+    """Operator data from operator panel."""
 
     model_config = ConfigDict(extra="forbid")
 
@@ -225,191 +196,29 @@ class OperatorData(BaseModel):
 
 
 class ResultStateStore(IBaseResult):
-    """Test run description.
-
-    Example:
-    ```
-    {
-      "_rev": "44867-3888ae85c19c428cc46685845953b483",
-      "_id": "current",
-      "progress": 100,
-      "stop_time": 1695817266,
-      "start_time": 1695817263,
-      "status": "failed",
-      "name": "hardpy-stand",
-      "alert": "",
-      "operator_data": {
-        "dialog": ""
-      },
-      "dut": {
-        "serial_number": "92c5a4bb-ecb0-42c5-89ac-e0caca0919fd",
-        "part_number": "part_1",
-        "info": {
-          "batch": "test_batch",
-          "board_rev": "rev_1"
-        }
-      },
-      "test_stand": {
-        "hw_id": "840982098ca2459a7b22cc608eff65d4",
-        "name": "test_stand_1",
-        "info": {
-          "geo": "Belgrade"
-        },
-        "timezone": "Europe/Belgrade",
-        "drivers": {
-          "driver_1": "driver info",
-          "driver_2": {
-            "state": "active",
-            "port": 8000
-          }
-        },
-        "location": "Belgrade_1",
-        "number": 2
-      },
-      "operator_msg": {
-        "msg": "Operator message",
-        "title": "Message",
-        "visible": true,
-        "id": "f45ac1e7-2ce8-4a6b-bb9d-8863e30bcc78"
-      },
-      "modules": {
-        "test_1_a": {
-          "status": "failed",
-          "name": "Module 1",
-          "start_time": 1695816884,
-          "stop_time": 1695817265,
-          "cases": {
-            "test_dut_info": {
-              "status": "passed",
-              "name": "DUT info ",
-              "start_time": 1695817263,
-              "stop_time": 1695817264,
-              "assertion_msg": null,
-              "msg": null,
-              "attempt": 1,
-              "dialog_box": {
-                "title_bar": "Example of text input",
-                "dialog_text": "Type some text and press the Confirm button",
-                "widget": {
-                  "info": {
-                    "text": "some text"
-                  },
-                  "type": "textinput"
-                },
-                visible: true,
-                id: "f45bc1e7-2c18-4a4b-2b9d-8863e30bcc78",
-                font_size: 14
-              }
-            },
-            "test_minute_parity": {
-              "status": "failed",
-              "name": "Test 1",
-              "start_time": 1695817264,
-              "stop_time": 1695817264,
-              "assertion_msg": "The test failed because minute 21 is odd! Try again!",
-              "attempt": 1,
-              "msg": [
-                "Current minute 21"
-              ]
-            }
-          }
-        }
-      }
-    }
-    ```
-    """
+    """Test run description."""
 
     model_config = ConfigDict(extra="forbid")
 
     rev: str = Field(..., alias="_rev")
     id: str = Field(..., alias="_id")
+
     progress: int
     test_stand: TestStand
     dut: Dut
+    process: Process
     modules: dict[str, ModuleStateStore] = {}
+    user: str | None = None
+    batch_serial_number: str | None = None
+    caused_dut_failure_id: str | None = None
+    error_code: int | None = None
     operator_msg: dict = {}
     alert: str
     operator_data: OperatorData
 
 
 class ResultRunStore(IBaseResult):
-    """Test run description.
-
-    Example:
-    ```
-    {
-      "_rev": "44867-3888ae85c19c428cc46685845953b483",
-      "_id": "current",
-      "stop_time": 1695817266,
-      "start_time": 1695817263,
-      "status": "failed",
-      "name": "hardpy-stand",
-      "dut": {
-        "serial_number": "92c5a4bb-ecb0-42c5-89ac-e0caca0919fd",
-        "part_number": "part_1",
-        "info": {
-          "batch": "test_batch",
-          "board_rev": "rev_1"
-        }
-      },
-      "test_stand": {
-        "hw_id": "840982098ca2459a7b22cc608eff65d4",
-        "name": "test_stand_1",
-        "info": {
-          "geo": "Belgrade"
-        },
-        "timezone": "Europe/Belgrade",
-        "drivers": {
-          "driver_1": "driver info",
-          "driver_2": {
-            "state": "active",
-            "port": 8000
-          }
-        },
-        "location": "Belgrade_1",
-        "number": 2
-      },
-      "artifact": {},
-      "modules": {
-        "test_1_a": {
-          "status": "failed",
-          "name": "Module 1",
-          "start_time": 1695816884,
-          "stop_time": 1695817265,
-          "artifact": {},
-          "cases": {
-            "test_dut_info": {
-              "status": "passed",
-              "name": "DUT info",
-              "start_time": 1695817263,
-              "stop_time": 1695817264,
-              "assertion_msg": null,
-              "msg": null,
-              "artifact": {}
-            },
-            "test_minute_parity": {
-              "status": "failed",
-              "name": "Test 1",
-              "start_time": 1695817264,
-              "stop_time": 1695817264,
-              "assertion_msg": "The test failed because minute 21 is odd! Try again!",
-              "msg": [
-                "Current minute 21"
-              ],
-              "artifact": {
-                "data_str": "123DATA",
-                "data_int": 12345,
-                "data_dict": {
-                  "test_key": "456DATA"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    ```
-    """
+    """Test run description."""
 
     model_config = ConfigDict(extra="forbid")
     # Create the new schema class with version update
@@ -421,5 +230,10 @@ class ResultRunStore(IBaseResult):
 
     test_stand: TestStand
     dut: Dut
+    process: Process
     modules: dict[str, ModuleRunStore] = {}
+    user: str | None = None
+    batch_serial_number: str | None = None
+    caused_dut_failure_id: str | None = None
+    error_code: int | None = None
     artifact: dict = {}

@@ -58,7 +58,6 @@ class HardpyConfig(BaseModel, extra="allow"):
     model_config = ConfigDict(extra="forbid")
 
     title: str = "HardPy TOML config"
-    tests_dir: str = "tests"
     tests_name: str = ""
     database: DatabaseConfig = DatabaseConfig()
     frontend: FrontendConfig = FrontendConfig()
@@ -74,7 +73,6 @@ class ConfigManager:
     @classmethod
     def init_config(  # noqa: PLR0913
         cls,
-        tests_dir: str,
         tests_name: str,
         database_user: str,
         database_password: str,
@@ -89,7 +87,6 @@ class ConfigManager:
         """Initialize HardPy configuration.
 
         Args:
-            tests_dir (str): Tests directory.
             tests_name (str): Tests suite name.
             database_user (str): Database user name.
             database_password (str): Database password.
@@ -101,7 +98,6 @@ class ConfigManager:
             sc_address (str): StandCloud address.
             sc_connection_only (bool): StandCloud check availability.
         """
-        cls.obj.tests_dir = str(tests_dir)
         cls.obj.tests_name = tests_name
         cls.obj.database.user = database_user
         cls.obj.database.password = database_password

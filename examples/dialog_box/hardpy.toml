@@ -1,5 +1,5 @@
 title = "HardPy TOML config"
-tests_dir = "dialog_box"
+tests_name = "Dialog Box"
 
 [database]
 user = "dev"

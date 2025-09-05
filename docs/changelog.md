@@ -2,6 +2,42 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## HardPy 0.15.0
+
+* Remove `tests_dir` variable from **hardpy.toml**. 
+  [[PR-182](https://github.com/everypinio/hardpy/pull/182)]
+* Add check for message presence in set_operator_message.
+  [[PR-180](https://github.com/everypinio/hardpy/pull/180)]
+* Add the `ErrorCode` class.
+  [[PR-180](https://github.com/everypinio/hardpy/pull/180)]
+* Add the ability to store charts (data series) in the database.
+  Add `set_case_chart` function and `Chart` class.
+  [[PR-179](https://github.com/everypinio/hardpy/pull/179)]
+* Add arguments for `hardpy start`.
+  [[PR-175](https://github.com/everypinio/hardpy/pull/175)]
+* Add numeric and string measurements: `set_case_measurement` function and 
+  `NumericMeasurement` and `StringMeasurement` classes.
+  [[PR-177](https://github.com/everypinio/hardpy/pull/177)]
+* Update database schema by **SubUnit** table.
+  [[PR-174](https://github.com/everypinio/hardpy/pull/174)]
+* Add `set_dut_sub_unit` function.
+  [[PR-174](https://github.com/everypinio/hardpy/pull/174)]
+* Add markers `case_group` and `module_group`.
+  [[PR-173](https://github.com/everypinio/hardpy/pull/173)]
+* Add functions: `set_user_name`, `set_batch_serial_number`, `set_stand_revision`, `set_instrument`
+  `set_process_name`, `set_process_number`, `set_process_info`, `set_dut_name`, `set_dut_type`, 
+  `set_dut_revision`, `set_stand_info`.
+  [[PR-172](https://github.com/everypinio/hardpy/pull/172)]
+* Change `DuplicateSerialNumberError` and `DuplicatePartNumberError` to `DuplicateParameterError`.
+  [[PR-172](https://github.com/everypinio/hardpy/pull/172)]
+* Update database schema by some tables: **Process**, **Instrument**, **NumericMeasurement**.
+  [[PR-162](https://github.com/everypinio/hardpy/pull/162)]
+* Update database schema by some fields: **user**, **batch_serial_number**, **caused_dut_failure_id**, **error_code**
+  **process**, **revision**, **instruments**, **group**, **measurements**.
+  [[PR-162](https://github.com/everypinio/hardpy/pull/162)]
+* Add the `caused_dut_failure_id` logic to the filling process.
+  [[PR-162](https://github.com/everypinio/hardpy/pull/162)]
+
 ## HardPy 0.14.0
 
 * Add status display in words depending on the testing status.
