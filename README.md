@@ -53,7 +53,7 @@ hardpy run
 4. View operator panel in browser: http://localhost:8000/
 5. View the latest test report: http://localhost:5984/_utils
 
-    Login and password: **dev**, database - **runstore**, document - **current**.
+    Login and password: **dev**, database - **runstore**.
 
 ## Examples
 
