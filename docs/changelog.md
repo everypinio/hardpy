@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## HardPy 0.15.0
+
 * Remove `tests_dir` variable from **hardpy.toml**. 
   [[PR-182](https://github.com/everypinio/hardpy/pull/182)]
 * Add check for message presence in set_operator_message.
