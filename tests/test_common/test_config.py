@@ -15,6 +15,7 @@ db_no_default_user = "dev1"
 db_no_default_password = "dev1"
 db_no_default_host = "localhost1"
 db_no_default_port = 5985
+db_no_default_doc_id = "_"
 frontend_no_default_host = "localhost1"
 frontend_no_default_port = 8001
 stand_cloud_no_default_addr = "everypin1.standcloud.localhost"
@@ -23,6 +24,7 @@ db_default_user = "dev"
 db_default_password = "dev"
 db_default_host = "localhost"
 db_default_port = 5984
+db_default_doc_id = ""
 frontend_default_host = "localhost"
 frontend_default_port = 8000
 frontend_default_language = "en"
@@ -36,6 +38,7 @@ def test_config_manager_init():
         database_password=db_no_default_password,
         database_host=db_no_default_host,
         database_port=db_no_default_port,
+        database_doc_id=db_no_default_doc_id,
         frontend_host=frontend_no_default_host,
         frontend_port=frontend_no_default_port,
         frontend_language=frontend_default_language,
@@ -48,6 +51,7 @@ def test_config_manager_init():
     assert config.database.password == db_no_default_password
     assert config.database.host == db_no_default_host
     assert config.database.port == db_no_default_port
+    assert config.database.doc_id == db_no_default_doc_id
     assert config.frontend.host == frontend_no_default_host
     assert config.frontend.port == frontend_no_default_port
     assert config.frontend.language == frontend_default_language
@@ -60,6 +64,7 @@ def test_database_config():
     assert config.password == db_default_password
     assert config.host == db_default_host
     assert config.port == db_default_port
+    assert config.doc_id == db_default_doc_id
 
     connection_url = config.connection_url()
     assert (
@@ -94,6 +99,7 @@ def test_hardpy_config():
     assert config.database.password == db_default_password
     assert config.database.host == db_default_host
     assert config.database.port == db_default_port
+    assert config.database.doc_id == db_default_doc_id
     assert config.frontend.host == frontend_default_host
     assert config.frontend.port == frontend_default_port
     assert config.frontend.language == frontend_default_language
@@ -110,6 +116,7 @@ def test_config_manager_create_config(tmp_path: Path):
         database_password=db_default_password,
         database_host=db_default_host,
         database_port=db_default_port,
+        database_doc_id=db_default_doc_id,
         frontend_host=frontend_default_host,
         frontend_port=frontend_default_port,
         frontend_language=frontend_default_language,
