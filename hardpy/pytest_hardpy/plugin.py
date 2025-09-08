@@ -32,7 +32,7 @@ from pytest import (
     skip,
 )
 
-from hardpy.common.connection_data import ConnectionData
+from hardpy.common.config import ConfigManager
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import NodeInfo, ProgressCalculator, TestStatus
@@ -47,17 +47,18 @@ if __debug__:
 
 def pytest_addoption(parser: Parser) -> None:
     """Register argparse-style options."""
-    con_data = ConnectionData()
+    config_manager = ConfigManager()
+    default_config = config_manager.default_config()
     parser.addoption(
         "--hardpy-db-url",
         action="store",
-        default=con_data.database_url,
+        default=default_config.database.connection_url(),
         help="database url",
     )
     parser.addoption(
         "--hardpy-db-doc-id",
         action="store",
-        default=con_data.database_doc_id,
+        default=default_config.get_doc_id(),
         help="database document id",
     )
     parser.addoption(
@@ -92,13 +93,13 @@ def pytest_addoption(parser: Parser) -> None:
     parser.addoption(
         "--sc-address",
         action="store",
-        default=con_data.sc_address,
+        default=default_config.stand_cloud.address,
         help="StandCloud address",
     )
     parser.addoption(
         "--sc-connection-only",
         action="store_true",
-        default=con_data.sc_connection_only,
+        default=default_config.stand_cloud.connection_only,
         help="check StandCloud availability",
     )
     parser.addoption(
@@ -146,15 +147,19 @@ class HardpyPlugin:
 
     def pytest_configure(self, config: Config) -> None:
         """Configure pytest."""
-        con_data = ConnectionData()
+        config_manager = ConfigManager()
+        hardpy_config = config_manager.read_config(Path(config.rootpath))
 
-        database_url = config.getoption("--hardpy-db-url")
-        if database_url:
-            con_data.database_url = str(database_url)  # type: ignore
+        if not hardpy_config:
+            exit("hardpy.toml file not found", ExitCode.INTERNAL_ERROR)
 
-        database_doc_id = config.getoption("--hardpy-db-doc-id")
-        if database_doc_id:
-            con_data.database_doc_id = str(database_doc_id)  # type: ignore
+        # database_url = config.getoption("--hardpy-db-url")
+        # if database_url:
+        #     hardpy_config.database_url = str(database_url)  # type: ignore
+
+        # database_doc_id = config.getoption("--hardpy-db-doc-id")
+        # if database_doc_id:
+        #     con_data.database_doc_id = str(database_doc_id)  # type: ignore
 
         tests_name = config.getoption("--hardpy-tests-name")
         if tests_name:
@@ -164,13 +169,13 @@ class HardpyPlugin:
 
         is_clear_database = config.getoption("--hardpy-clear-database")
 
-        sc_address = config.getoption("--sc-address")
-        if sc_address:
-            con_data.sc_address = str(sc_address)  # type: ignore
+        # sc_address = config.getoption("--sc-address")
+        # if sc_address:
+        #     con_data.sc_address = str(sc_address)  # type: ignore
 
-        sc_connection_only = config.getoption("--sc-connection-only")
-        if sc_connection_only:
-            con_data.sc_connection_only = bool(sc_connection_only)  # type: ignore
+        # sc_connection_only = config.getoption("--sc-connection-only")
+        # if sc_connection_only:
+        #     con_data.sc_connection_only = bool(sc_connection_only)  # type: ignore
 
         _args = config.getoption("--hardpy-start-arg") or []
         if _args:
@@ -257,12 +262,14 @@ class HardpyPlugin:
             # ignore collect only mode
             return True
 
-        con_data = ConnectionData()
+        config_manager = ConfigManager()
 
         # running tests depends on a connection to StandCloud
-        if con_data.sc_connection_only:
+        if config_manager.config.stand_cloud.connection_only:
             try:
-                sc_connector = StandCloudConnector(addr=con_data.sc_address)
+                sc_connector = StandCloudConnector(
+                    addr=config_manager.config.stand_cloud.address,
+                )
             except StandCloudError as exc:
                 msg = str(exc)
                 self._reporter.set_alert(msg)

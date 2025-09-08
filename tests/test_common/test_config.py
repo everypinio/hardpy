@@ -44,7 +44,7 @@ def test_config_manager_init():
         frontend_language=frontend_default_language,
         sc_address=stand_cloud_no_default_addr,
     )
-    config = ConfigManager.get_config()
+    config = ConfigManager.config
     assert isinstance(config, HardpyConfig)
     assert config.tests_name == tests_no_default_name
     assert config.database.user == db_no_default_user
@@ -127,7 +127,7 @@ def test_config_manager_create_config(tmp_path: Path):
 
     config_file: Path = tests_dir / "hardpy.toml"
     assert config_file.read_text() == tomli_w.dumps(
-        ConfigManager.get_config().model_dump(),
+        ConfigManager.config.model_dump(),
     )
 
 

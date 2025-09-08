@@ -107,7 +107,8 @@ def couch_connection() -> dict:
     Returns:
         dict[str, str]: couchdb connection string
     """
-    connection_url = ConfigManager().get_config().database.connection_url()
+    config_manager = ConfigManager()
+    connection_url = config_manager.config.database.connection_url()
 
     return {
         "connection_str": connection_url,
@@ -121,7 +122,8 @@ def database_document_id() -> dict:
     Returns:
         dict[str, str]: couchdb connection string
     """
-    return {"document_id": ConfigManager().get_config().get_doc_id()}
+    config_manager = ConfigManager()
+    return {"document_id": config_manager.config.get_doc_id()}
 
 
 @app.post("/api/confirm_dialog_box/{dialog_box_output}")

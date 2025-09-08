@@ -11,7 +11,7 @@ from pycouchdb.exceptions import Conflict, GenericError, NotFound
 from pydantic._internal._model_construction import ModelMetaclass
 from requests.exceptions import ConnectionError  # noqa: A004
 
-from hardpy.common.connection_data import ConnectionData
+from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db.const import DatabaseField as DF  # noqa: N817
 
 
@@ -19,11 +19,12 @@ class BaseStore:
     """HardPy base storage interface for CouchDB."""
 
     def __init__(self, db_name: str) -> None:
-        con_data = ConnectionData()
-        self._db_srv = DbServer(con_data.database_url)
+        config_manager = ConfigManager()
+        config = config_manager.config
+        self._db_srv = DbServer(config.database.connection_url())
         self._db_name = db_name
         self._db = self._init_db()
-        self._doc_id = con_data.database_doc_id
+        self._doc_id = config.get_doc_id()
         self._log = getLogger(__name__)
         self._doc: dict = self._init_doc()
         self._schema: ModelMetaclass
