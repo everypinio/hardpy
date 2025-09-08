@@ -276,7 +276,10 @@ def _get_config(tests_dir: str | None = None, validate: bool = False) -> HardpyC
     if validate:
         _validate_config(config, dir_path)
 
-    # update connection data for pytest wrapper
+    # TODO(xorialexandrov): Remove ConnectionData from CLI
+    # ConnectionData is only used for the Pytest shell.
+    # Without it, the RunnerReporter will not know the name of
+    # the document in the database to fill in.
     con_data = ConnectionData()
     con_data.database_url = config.database.connection_url()
     con_data.database_doc_id = config.get_doc_id()
