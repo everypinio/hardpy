@@ -7,8 +7,8 @@ from typing import TYPE_CHECKING
 from oauthlib.oauth2.rfc6749.errors import OAuth2Error
 from requests.exceptions import HTTPError
 
+from hardpy.common.connection_data import ConnectionData
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
-from hardpy.pytest_hardpy.utils import ConnectionData
 
 if TYPE_CHECKING:
     from requests import Response
