@@ -14,6 +14,7 @@ from uvicorn import run as uvicorn_run
 
 from hardpy.cli.template import TemplateGenerator
 from hardpy.common.config import ConfigManager, HardpyConfig
+from hardpy.common.connection_data import ConnectionData
 from hardpy.common.stand_cloud import (
     StandCloudConnector,
     StandCloudError,
@@ -274,6 +275,13 @@ def _get_config(tests_dir: str | None = None, validate: bool = False) -> HardpyC
 
     if validate:
         _validate_config(config, dir_path)
+
+    # update connection data for pytest wrapper
+    con_data = ConnectionData()
+    con_data.database_url = config.database.connection_url()
+    con_data.database_doc_id = config.get_doc_id()
+    con_data.sc_address = config.stand_cloud.address
+    con_data.sc_connection_only = config.stand_cloud.connection_only
 
     return config
 
