@@ -29,6 +29,15 @@
     "dbConnectionTitle": "Datenbankverbindungsfehler",
     "dbConnectionMessage": "Verbindung zur Datenbank konnte nicht hergestellt werden"
   },
+  "graph": {
+    "testDataGraph": "Testdaten-Diagramm",
+    "xAxis": "X-Achse",
+    "yAxis": "Y-Achse",
+    "graph": "Diagramm",
+    "showGraph": "Diagramm anzeigen: {{title}}",
+    "fullscreenButton": "Diagramm im Vollbildmodus öffnen",
+    "series": "Reihe {{number}}"
+  },
   "operatorDialog": {
     "defaultTitle": "Nachricht",
     "imageAlt": "Operator-Nachrichtenbild",

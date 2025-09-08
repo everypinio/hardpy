@@ -29,6 +29,15 @@
     "dbConnectionTitle": "データベース接続エラー",
     "dbConnectionMessage": "データベースへの接続に失敗しました"
   },
+  "graph": {
+    "testDataGraph": "テストデータグラフ",
+    "xAxis": "X軸",
+    "yAxis": "Y軸",
+    "graph": "グラフ",
+    "showGraph": "グラフを表示: {{title}}",
+    "fullscreenButton": "グラフを全画面表示で開く",
+    "series": "シリーズ{{number}}"
+  },
   "operatorDialog": {
     "defaultTitle": "メッセージ",
     "imageAlt": "オペレーターメッセージ画像",

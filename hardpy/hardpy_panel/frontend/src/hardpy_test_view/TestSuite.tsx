@@ -92,7 +92,7 @@ export interface TestItem {
 type Props = {
   index: number;
   test: TestItem;
-  defaultOpen: boolean;
+  defaultOpen?: boolean;
   commonTestRunStatus: string | undefined;
 } & WithTranslation;
 
@@ -118,7 +118,7 @@ export class TestSuite extends React.Component<Props, State> {
     defaultOpen: true,
   };
 
-  private dataColumnRef: React.RefObject<HTMLDivElement>;
+  private readonly dataColumnRef: React.RefObject<HTMLDivElement>;
   private resizeObserver: ResizeObserver | null = null;
 
   /**
@@ -129,7 +129,7 @@ export class TestSuite extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      isOpen: props.defaultOpen,
+      isOpen: props.defaultOpen ?? false,
       dataColumnWidth: 0,
     };
 
@@ -213,28 +213,28 @@ export class TestSuite extends React.Component<Props, State> {
     this.destroyResizeObserver();
   }
 
-  private setupResizeObserver = () => {
-    if (!this.dataColumnRef.current) return;
+  private readonly setupResizeObserver = () => {
+    if (this.dataColumnRef.current) {
+      this.destroyResizeObserver();
 
-    this.destroyResizeObserver();
+      this.resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          this.setState({ dataColumnWidth: entry.contentRect.width });
+        }
+      });
 
-    this.resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        this.setState({ dataColumnWidth: entry.contentRect.width });
-      }
-    });
-
-    this.resizeObserver.observe(this.dataColumnRef.current);
+      this.resizeObserver.observe(this.dataColumnRef.current);
+    }
   };
 
-  private destroyResizeObserver = () => {
+  private readonly destroyResizeObserver = () => {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
       this.resizeObserver = null;
     }
   };
 
-  private updateWidth = () => {
+  private readonly updateWidth = () => {
     if (this.dataColumnRef.current) {
       this.setState({
         dataColumnWidth: this.dataColumnRef.current.offsetWidth,

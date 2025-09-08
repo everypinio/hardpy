@@ -2,16 +2,20 @@
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt  )
 
 import React, { useState, useRef, useEffect } from "react";
-import { Dialog, Button } from "@blueprintjs/core";
+import { Dialog, Button, Classes } from "@blueprintjs/core";
 import Plot from "react-plotly.js";
+import { withTranslation, WithTranslation } from "react-i18next";
 
 interface GraphData {
   x_data: number[];
   y_data: number[];
   marker_name: string;
+  x_label?: string;
+  y_label?: string;
+  graph_title?: string;
 }
 
-interface GraphComponentProps {
+interface GraphComponentProps extends WithTranslation {
   graphs: GraphData[];
   isCollapsed?: boolean;
   onToggleCollapse?: () => void;
@@ -31,6 +35,7 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
   yLabel,
   chartType = "line",
   containerWidth,
+  t,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -58,6 +63,29 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
     return () => window.removeEventListener("resize", updateDimensions);
   }, [containerWidth]);
 
+  const markerSymbols = [
+    "circle",
+    "square",
+    "diamond",
+    "cross",
+    "x",
+    "triangle-up",
+    "triangle-down",
+    "triangle-left",
+    "triangle-right",
+    "pentagon",
+    "hexagon",
+    "hexagon2",
+    "octagon",
+    "star",
+    "hexagram",
+    "star-triangle-up",
+    "star-triangle-down",
+    "star-square",
+    "star-diamond",
+    "diamond-tall",
+  ];
+
   const getAxisType = (axis: "x" | "y") => {
     switch (chartType) {
       case "line_log_x":
@@ -71,28 +99,84 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
     }
   };
 
+  const graphTitle =
+    title ||
+    (graphs.length > 0 && graphs[0].graph_title) ||
+    t("graph.testDataGraph");
+
+  const xAxisLabel =
+    xLabel || (graphs.length > 0 && graphs[0].x_label) || t("graph.xAxis");
+  const yAxisLabel =
+    yLabel || (graphs.length > 0 && graphs[0].y_label) || t("graph.yAxis");
+
   const plotData = graphs.map((graph, index) => ({
     x: graph.x_data,
     y: graph.y_data,
     type: "scatter" as const,
     mode: "lines+markers",
     name: graph.marker_name,
-    marker: { color: `hsl(${(index * 360) / graphs.length}, 70%, 50%)` },
+    marker: {
+      color: `hsl(${(index * 360) / graphs.length}, 70%, 50%)`,
+      symbol: markerSymbols[index % markerSymbols.length],
+      size: 8,
+      line: {
+        width: 1,
+        color: `hsl(${(index * 360) / graphs.length}, 70%, 30%)`,
+      },
+    },
+    line: {
+      width: 2,
+    },
   }));
 
   const layout = {
     width: dimensions.width,
     height: 300,
-    title: title || "Test Data Graph",
+    title: {
+      text: graphTitle,
+      x: 0.5,
+      xanchor: "center",
+      font: {
+        size: 16,
+        weight: "bold",
+      },
+    },
     xaxis: {
-      title: xLabel || undefined,
+      title: {
+        text: xAxisLabel,
+        font: {
+          size: 12,
+          weight: "bold",
+        },
+      },
       type: getAxisType("x"),
+      showgrid: true,
+      gridcolor: "#eee",
+      zeroline: false,
     },
     yaxis: {
-      title: yLabel || undefined,
+      title: {
+        text: yAxisLabel,
+        font: {
+          size: 12,
+          weight: "bold",
+        },
+      },
       type: getAxisType("y"),
+      showgrid: true,
+      gridcolor: "#eee",
+      zeroline: false,
     },
     showlegend: true,
+    legend: {
+      x: 1,
+      y: 1,
+      xanchor: "right",
+      yanchor: "top",
+      bgcolor: "rgba(255, 255, 255, 0.8)",
+      bordercolor: "#ccc",
+      borderwidth: 1,
+    },
     autosize: true,
     margin: {
       l: 60,
@@ -101,22 +185,39 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
       t: 60,
       pad: 4,
     },
+    hovermode: "closest",
+    plot_bgcolor: "#f9f9f9",
+    paper_bgcolor: "#fff",
   };
 
   const fullScreenLayout = {
+    ...layout,
     width: window.innerWidth * 0.9,
     height: window.innerHeight * 0.9,
-    title: title || "Test Data Graph",
+    title: {
+      ...layout.title,
+      font: {
+        size: 20,
+      },
+    },
     xaxis: {
-      title: xLabel || undefined,
-      type: getAxisType("x"),
+      ...layout.xaxis,
+      title: {
+        ...layout.xaxis.title,
+        font: {
+          size: 14,
+        },
+      },
     },
     yaxis: {
-      title: yLabel || undefined,
-      type: getAxisType("y"),
+      ...layout.yaxis,
+      title: {
+        ...layout.yaxis.title,
+        font: {
+          size: 14,
+        },
+      },
     },
-    showlegend: true,
-    autosize: true,
   };
 
   if (isCollapsed) {
@@ -127,12 +228,13 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
           padding: "10px",
           borderRadius: "3px",
           background: "#f5f5f5",
-          width: "100%",
-          minWidth: "300px",
+          display: "inline-block",
+          minWidth: "150px",
+          maxWidth: "100%",
         }}
       >
         <Button icon="chevron-down" onClick={onToggleCollapse} minimal small>
-          Show graph
+          {t("graph.showGraph", { title: graphTitle })}
         </Button>
       </div>
     );
@@ -152,6 +254,7 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
           minHeight: "300px",
           overflow: "hidden",
           boxSizing: "border-box",
+          background: "#fff",
         }}
       >
         <div
@@ -168,6 +271,7 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
             minimal
             small
             style={{ marginRight: "5px" }}
+            title={t("graph.fullscreenButton")}
           />
           <Button icon="chevron-up" onClick={onToggleCollapse} minimal small />
         </div>
@@ -188,14 +292,31 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
       <Dialog
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={title || "Graph View"}
+        title={graphTitle}
         className="graph-modal"
-        style={{ width: "90vw", height: "90vh" }}
+        style={{
+          width: "90vw",
+          height: "90vh",
+          padding: "10px",
+          boxSizing: "border-box",
+        }}
       >
-        <div className="bp4-dialog-body" style={{ height: "100%" }}>
+        <div
+          className={Classes.DIALOG_BODY}
+          style={{
+            height: "calc(100% - 50px)",
+            padding: "0",
+            margin: "0",
+          }}
+        >
           <Plot
             data={plotData}
-            layout={fullScreenLayout}
+            layout={{
+              ...fullScreenLayout,
+              width: undefined,
+              height: undefined,
+              autosize: true,
+            }}
             config={{
               displayModeBar: true,
               displaylogo: false,
@@ -208,7 +329,12 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
                 "autoScale2d",
               ],
             }}
-            style={{ width: "100%", height: "100%" }}
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "block",
+            }}
+            useResizeHandler={true}
           />
         </div>
       </Dialog>
@@ -216,4 +342,4 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
   );
 };
 
-export default GraphComponent;
+export default withTranslation()(GraphComponent);

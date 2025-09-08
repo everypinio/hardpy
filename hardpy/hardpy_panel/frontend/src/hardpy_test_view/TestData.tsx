@@ -6,10 +6,11 @@ import { Tag } from "@blueprintjs/core";
 import Plot from "react-plotly.js";
 import { Dialog, Button, Classes } from "@blueprintjs/core";
 import GraphComponent from "./GraphComponent";
+import { withTranslation, WithTranslation } from "react-i18next";
 
 import _ from "lodash";
 
-interface Props {
+interface Props extends WithTranslation {
   msg: string[] | null;
   assertion_msg: string | null;
   testSuiteIndex: number;
@@ -26,12 +27,18 @@ interface ChartData {
   marker_name: string[];
   x_data: number[][];
   y_data: number[][];
+  graph_title?: string;
+  x_label_data?: string[];
+  y_label_data?: string[];
 }
 
 interface GraphData {
   x_data: number[];
   y_data: number[];
   marker_name: string;
+  x_label?: string;
+  y_label?: string;
+  graph_title?: string;
 }
 
 const TAG_ELEMENT_STYLE = { margin: 2 };
@@ -46,6 +53,7 @@ const TAG_ELEMENT_STYLE = { margin: 2 };
  * @returns {React.ReactElement} A React element representing the component.
  */
 export function TestData(props: Readonly<Props>): React.ReactElement {
+  const { t } = props;
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const storageKey = `graphState_${props.testSuiteIndex}_${props.testCaseIndex}`;
 
@@ -55,7 +63,8 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
       try {
         const { isCollapsed } = JSON.parse(savedState);
         return isCollapsed || false;
-      } catch (e) {
+      } catch (e: unknown) {
+        console.error(`Error parsing local storage: ${e as Error}.message`);
         return false;
       }
     }
@@ -76,7 +85,9 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
   };
 
   const graphData: GraphData[] = React.useMemo(() => {
-    if (!props.chart) return [];
+    if (!props.chart) {
+      return [];
+    }
 
     if (
       !props.chart.marker_name ||
@@ -98,9 +109,12 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
     return props.chart.marker_name.map((name, index) => ({
       x_data: props.chart!.x_data[index] || [],
       y_data: props.chart!.y_data[index] || [],
-      marker_name: name || `Series ${index + 1}`,
+      marker_name: name || t('graph.series', { number: index + 1 }),
+      x_label: props.chart?.x_label_data?.[index] || props.chart?.x_label,
+      y_label: props.chart?.y_label_data?.[index] || props.chart?.y_label,
+      graph_title: props.chart?.graph_title || props.chart?.title,
     }));
-  }, [props.chart]);
+  }, [props.chart, t]);
 
   const hasGraphData = graphData.length > 0;
 
@@ -116,7 +130,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
   const fullScreenLayout = {
     width: window.innerWidth * 0.9,
     height: window.innerHeight * 0.9,
-    title: props.chart?.title || "Test Data Graph",
+    title: props.chart?.graph_title || props.chart?.title || t("graph.testDataGraph"),
     xaxis: {
       title: props.chart?.x_label || undefined,
     },
@@ -168,7 +182,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
               graphs={graphData}
               isCollapsed={isGraphCollapsed}
               onToggleCollapse={handleToggleCollapse}
-              title={props.chart?.title}
+              title={props.chart?.graph_title || props.chart?.title}
               xLabel={props.chart?.x_label}
               yLabel={props.chart?.y_label}
               chartType={props.chart?.type}
@@ -183,7 +197,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
 
           <Dialog
             isOpen={isModalOpen}
-            title={props.chart?.title || "Graph"}
+            title={props.chart?.graph_title || props.chart?.title || t("graph.graph")}
             onClose={() => setIsModalOpen(false)}
           >
             <div className={Classes.DIALOG_BODY}>
@@ -205,9 +219,6 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
                 style={{ width: "100%", height: "100%" }}
               />
             </div>
-            <div className={Classes.DIALOG_FOOTER}>
-              <Button onClick={() => setIsModalOpen(false)}>Close</Button>
-            </div>
           </Dialog>
         </>
       )}
@@ -215,4 +226,4 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
   );
 }
 
-export default TestData;
+export default withTranslation()(TestData);
