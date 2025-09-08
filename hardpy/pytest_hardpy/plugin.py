@@ -32,14 +32,10 @@ from pytest import (
     skip,
 )
 
+from hardpy.common.connection_data import ConnectionData
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
 from hardpy.pytest_hardpy.reporter import HookReporter
-from hardpy.pytest_hardpy.utils import (
-    ConnectionData,
-    NodeInfo,
-    ProgressCalculator,
-    TestStatus,
-)
+from hardpy.pytest_hardpy.utils import NodeInfo, ProgressCalculator, TestStatus
 from hardpy.pytest_hardpy.utils.node_info import TestDependencyInfo
 
 if __debug__:

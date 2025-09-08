@@ -9,7 +9,7 @@ from typing import ClassVar
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from hardpy.pytest_hardpy.utils import (
+from hardpy.pytest_hardpy.utils.const import (
     ChartType,
     ComparisonOperation as CompOp,
     Group,
