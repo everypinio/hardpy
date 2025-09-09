@@ -1,12 +1,43 @@
 import json
 from pathlib import Path
-from typing import List
 
 from pydantic import BaseModel
 
 
+class Graph(BaseModel):
+    """A class representing graph translations.
+
+    Attributes:
+        testDataGraph (str): The translation for the "testDataGraph" text.
+        xAxis (str): The translation for the "xAxis" text.
+        yAxis (str): The translation for the "yAxis" text.
+        graph (str): The translation for the "graph" text.
+        showGraph (str): The translation for the "showGraph" text.
+        fullscreenButton (str): The translation for the "fullscreenButton" text.
+        series (str): The translation for the "series" text.
+    """
+
+    testDataGraph: str
+    xAxis: str
+    yAxis: str
+    graph: str
+    showGraph: str
+    fullscreenButton: str
+    series: str
+
+
 class AppStatus(BaseModel):
-    """A class representing application status translations."""
+    """A class representing application status translations.
+
+    Attributes:
+        ready (str): The translation for the "ready" status.
+        run (str): The translation for the "run" status.
+        passed (str): The translation for the "passed" status.
+        failed (str): The translation for the "failed" status.
+        stopped (str): The translation for the "stopped" status.
+        unknown (str): The translation for the "unknown" status.
+    """
+
     ready: str
     run: str
     passed: str
@@ -152,6 +183,7 @@ class TranslationModel(BaseModel):
         app (App): The app translation data.
         button (Button): The button translation data.
         error (Error): The error translation data.
+        graph (Graph): The graph translation data.
         operatorDialog (OperatorDialog): The operator dialog translation data.
         suiteList (SuiteList): The suite list translation data.
         testSuite (TestSuite): The test suite translation data.
@@ -160,12 +192,13 @@ class TranslationModel(BaseModel):
     app: App
     button: Button
     error: Error
+    graph: Graph
     operatorDialog: OperatorDialog
     suiteList: SuiteList
     testSuite: TestSuite
 
 
-def validate_translation_file(file_path: Path) -> List[str]:
+def validate_translation_file(file_path: Path) -> list[str]:
     """Validate a single translation file against the model."""
     errors = []
     try:

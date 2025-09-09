@@ -270,7 +270,7 @@ Charts support the following features:
 Displays a single dataset as a line graph with customizable styling.
 
 <h1 align="center">
-    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/one_chart.png" alt="basic_line_chart">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/basic_line_chart.png" alt="basic_line_chart">
 </h1>
 
 #### Multiple datasets
@@ -279,7 +279,7 @@ Shows multiple datasets on the same chart for comparative analysis.
 Each dataset can have different colors and styles.
 
 <h1 align="center">
-    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/two_charts.png" alt="multiple_datasets_chart">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/mult_dataset_chart.png" alt="multiple_datasets_chart">
 </h1>
 
 #### Collapsed view
