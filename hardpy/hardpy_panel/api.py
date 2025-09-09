@@ -108,10 +108,9 @@ def couch_connection() -> dict:
         dict[str, str]: couchdb connection string
     """
     config_manager = ConfigManager()
-    connection_url = config_manager.config.database.connection_url()
 
     return {
-        "connection_str": connection_url,
+        "connection_str": config_manager.config.database.url,
     }
 
 

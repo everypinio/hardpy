@@ -19,6 +19,6 @@ def hardpy_opts():
     return [
         "--hardpy-clear-database",
         "--hardpy-db-url",
-        config_data.database.connection_url(),
+        config_data.database.url,
         "--hardpy-pt",
     ]

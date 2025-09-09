@@ -21,7 +21,7 @@ class BaseStore:
     def __init__(self, db_name: str) -> None:
         config_manager = ConfigManager()
         config = config_manager.config
-        self._db_srv = DbServer(config.database.connection_url())
+        self._db_srv = DbServer(config.database.url)
         self._db_name = db_name
         self._db = self._init_db()
         self._doc_id = config.get_doc_id()
