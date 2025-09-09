@@ -52,7 +52,7 @@ def pytest_addoption(parser: Parser) -> None:
     parser.addoption(
         "--hardpy-db-url",
         action="store",
-        default=default_config.database.connection_url(),
+        default=default_config.database.url,
         help="database url",
     )
     parser.addoption(
@@ -151,15 +151,15 @@ class HardpyPlugin:
         hardpy_config = config_manager.read_config(Path(config.rootpath))
 
         if not hardpy_config:
-            exit("hardpy.toml file not found", ExitCode.INTERNAL_ERROR)
+            hardpy_config = config_manager.default_config()
 
-        # database_url = config.getoption("--hardpy-db-url")
-        # if database_url:
-        #     hardpy_config.database_url = str(database_url)  # type: ignore
+        database_url = config.getoption("--hardpy-db-url")
+        if database_url:
+            hardpy_config.database.url = str(database_url)  # type: ignore
 
-        # database_doc_id = config.getoption("--hardpy-db-doc-id")
-        # if database_doc_id:
-        #     con_data.database_doc_id = str(database_doc_id)  # type: ignore
+        database_doc_id = config.getoption("--hardpy-db-doc-id")
+        if database_doc_id:
+            hardpy_config.database.doc_id = str(database_doc_id)  # type: ignore
 
         tests_name = config.getoption("--hardpy-tests-name")
         if tests_name:
@@ -169,13 +169,13 @@ class HardpyPlugin:
 
         is_clear_database = config.getoption("--hardpy-clear-database")
 
-        # sc_address = config.getoption("--sc-address")
-        # if sc_address:
-        #     con_data.sc_address = str(sc_address)  # type: ignore
+        sc_address = config.getoption("--sc-address")
+        if sc_address:
+            hardpy_config.stand_cloud.address = str(sc_address)  # type: ignore
 
-        # sc_connection_only = config.getoption("--sc-connection-only")
-        # if sc_connection_only:
-        #     con_data.sc_connection_only = bool(sc_connection_only)  # type: ignore
+        sc_connection_only = config.getoption("--sc-connection-only")
+        if sc_connection_only:
+            hardpy_config.stand_cloud.connection_only = bool(sc_connection_only)  # type: ignore
 
         _args = config.getoption("--hardpy-start-arg") or []
         if _args:
@@ -277,7 +277,7 @@ class HardpyPlugin:
             try:
                 sc_connector.healthcheck()
             except Exception:  # noqa: BLE001
-                addr = con_data.sc_address
+                addr = config_manager.config.stand_cloud.address
                 msg = (
                     f"StandCloud service at the address {addr} "
                     "not available or HardPy user is not authorized"
