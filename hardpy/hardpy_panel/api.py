@@ -122,7 +122,7 @@ def database_document_id() -> dict:
         dict[str, str]: couchdb connection string
     """
     config_manager = ConfigManager()
-    return {"document_id": config_manager.config.get_doc_id()}
+    return {"document_id": config_manager.config.database.doc_id}
 
 
 @app.post("/api/confirm_dialog_box/{dialog_box_output}")

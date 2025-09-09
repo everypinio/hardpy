@@ -23,7 +23,7 @@ class DatabaseConfig(BaseModel):
     password: str = "dev"
     host: str = "localhost"
     port: int = 5984
-    doc_id: str = ""
+    doc_id: str = Field(exclude=True, default="")
     url: str = Field(exclude=True, default="")
 
     def model_post_init(self, __context) -> None:  # noqa: ANN001,PYI063
@@ -77,16 +77,6 @@ class HardpyConfig(BaseModel, extra="allow"):
             self.database.doc_id or f"{self.frontend.host}_{self.frontend.port}"
         )
 
-    def get_doc_id(self) -> str:
-        """Get the id of the synchronized database document (name).
-
-        Returns:
-            str: document name
-        """
-        if not self.database.doc_id:
-            return f"{self.frontend.host}_{self.frontend.port}"
-        return self.database.doc_id
-
 
 class ConfigManager(metaclass=SingletonMeta):
     """HardPy configuration manager."""
@@ -120,7 +110,6 @@ class ConfigManager(metaclass=SingletonMeta):
         database_password: str,
         database_host: str,
         database_port: int,
-        database_doc_id: str,
         frontend_host: str,
         frontend_port: int,
         frontend_language: str,
@@ -135,7 +124,6 @@ class ConfigManager(metaclass=SingletonMeta):
             database_password (str): Database password.
             database_host (str): Database host.
             database_port (int): Database port.
-            database_doc_id (str): Database document name.
             frontend_host (str): Operator panel host.
             frontend_port (int): Operator panel port.
             frontend_language (str): Operator panel language.
@@ -147,7 +135,6 @@ class ConfigManager(metaclass=SingletonMeta):
         self._config.database.password = database_password
         self._config.database.host = database_host
         self._config.database.port = database_port
-        self._config.database.doc_id = database_doc_id
         self._config.frontend.host = frontend_host
         self._config.frontend.port = frontend_port
         self._config.frontend.language = frontend_language

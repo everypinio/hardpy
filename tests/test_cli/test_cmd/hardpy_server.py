@@ -77,7 +77,7 @@ class HardPyServer:  # noqa: D101
             host="localhost",
             port=5984,
         )
-        return CouchdbReader(config).get_report_status(self._config.get_doc_id())
+        return CouchdbReader(config).get_report_status(self._config.database.doc_id)
 
     def run_command(self, command: list, cwd: str | None = None, timeout: int = 30):  # noqa: D102
         return subprocess.run(
