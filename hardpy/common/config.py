@@ -7,7 +7,7 @@ from pathlib import Path
 
 import tomli
 import tomli_w
-from pydantic import BaseModel, ConfigDict, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from hardpy.common.singleton import SingletonMeta
 
@@ -24,8 +24,13 @@ class DatabaseConfig(BaseModel):
     host: str = "localhost"
     port: int = 5984
     doc_id: str = ""
+    url: str = Field(exclude=True, default="")
 
-    def connection_url(self) -> str:
+    def model_post_init(self, __context) -> None:  # noqa: ANN001,PYI063
+        """Get database connection url."""
+        self.url = self._connection_url()
+
+    def _connection_url(self) -> str:
         """Get database connection url.
 
         Returns:
@@ -66,6 +71,12 @@ class HardpyConfig(BaseModel, extra="allow"):
     frontend: FrontendConfig = FrontendConfig()
     stand_cloud: StandCloudConfig = StandCloudConfig()
 
+    def model_post_init(self, __context) -> None:  # noqa: ANN001,PYI063
+        """Get database document name."""
+        self.database.doc_id = (
+            self.database.doc_id or f"{self.frontend.host}_{self.frontend.port}"
+        )
+
     def get_doc_id(self) -> str:
         """Get the id of the synchronized database document (name).
 
@@ -81,8 +92,17 @@ class ConfigManager(metaclass=SingletonMeta):
     """HardPy configuration manager."""
 
     def __init__(self) -> None:
-        self.config = HardpyConfig()
+        self._config = HardpyConfig()
         self._test_path = Path.cwd()
+
+    @property
+    def config(self) -> HardpyConfig:
+        """Get HardPy configuration.
+
+        Returns:
+            HardpyConfig: HardPy configuration
+        """
+        return self._config
 
     @property
     def tests_path(self) -> Path:
@@ -122,17 +142,17 @@ class ConfigManager(metaclass=SingletonMeta):
             sc_address (str): StandCloud address.
             sc_connection_only (bool): StandCloud check availability.
         """
-        self.config.tests_name = tests_name
-        self.config.database.user = database_user
-        self.config.database.password = database_password
-        self.config.database.host = database_host
-        self.config.database.port = database_port
-        self.config.database.doc_id = database_doc_id
-        self.config.frontend.host = frontend_host
-        self.config.frontend.port = frontend_port
-        self.config.frontend.language = frontend_language
-        self.config.stand_cloud.address = sc_address
-        self.config.stand_cloud.connection_only = sc_connection_only
+        self._config.tests_name = tests_name
+        self._config.database.user = database_user
+        self._config.database.password = database_password
+        self._config.database.host = database_host
+        self._config.database.port = database_port
+        self._config.database.doc_id = database_doc_id
+        self._config.frontend.host = frontend_host
+        self._config.frontend.port = frontend_port
+        self._config.frontend.language = frontend_language
+        self._config.stand_cloud.address = sc_address
+        self._config.stand_cloud.connection_only = sc_connection_only
 
     def default_config(self) -> HardpyConfig:
         """Get default HardPy config.
@@ -148,12 +168,12 @@ class ConfigManager(metaclass=SingletonMeta):
         Args:
             parent_dir (Path): Configuration file parent directory.
         """
-        config = self.config
-        if not self.config.stand_cloud.address:
+        config = self._config
+        if not self._config.stand_cloud.address:
             del config.stand_cloud
-        if not self.config.tests_name:
+        if not self._config.tests_name:
             del config.tests_name
-        if not self.config.database.doc_id:
+        if not self._config.database.doc_id:
             del config.database.doc_id
         config_str = tomli_w.dumps(config.model_dump())
         with Path.open(parent_dir / "hardpy.toml", "w") as file:
@@ -171,7 +191,6 @@ class ConfigManager(metaclass=SingletonMeta):
         self._tests_path = toml_path
         toml_file = toml_path / "hardpy.toml"
         if not toml_file.exists():
-            logger.error("File hardpy.toml not found at path: %s", toml_file)
             return None
         try:
             with Path.open(toml_path / "hardpy.toml", "rb") as f:
@@ -182,8 +201,8 @@ class ConfigManager(metaclass=SingletonMeta):
             return None
 
         try:
-            self.config = HardpyConfig(**toml_data)
+            self._config = HardpyConfig(**toml_data)
         except ValidationError:
             logger.exception("Error parsing TOML")
             return None
-        return self.config
+        return self._config
