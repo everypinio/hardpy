@@ -55,6 +55,12 @@
     "nameColumn": "Nombre",
     "dataColumn": "Datos",
     "loading": "Cargando...",
-    "stubName": "Conjunto de pruebas"
+    "stubName": "Conjunto de pruebas",
+    "runSelectedTests": "Ejecutar {{count}} pruebas seleccionadas",
+    "noTestsSelected": "No hay pruebas seleccionadas",
+    "testsStarted": "{{count}} pruebas iniciadas",
+    "startError": "Error al iniciar las pruebas",
+    "connectionError": "Error de conexión",
+    "selectionColumn": "Seleccionar"
   }
 }

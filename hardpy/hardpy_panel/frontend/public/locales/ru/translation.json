@@ -55,6 +55,12 @@
     "nameColumn": "Название",
     "dataColumn": "Данные",
     "loading": "Загрузка...",
-    "stubName": "Тестовый набор"
+    "stubName": "Тестовый набор",
+    "runSelectedTests": "Запустить {{count}} выбранных тестов",
+    "noTestsSelected": "Тесты не выбраны",
+    "testsStarted": "Запущено {{count}} тестов",
+    "startError": "Ошибка запуска тестов",
+    "connectionError": "Ошибка соединения",
+    "selectionColumn": "Выбрать"
   }
 }

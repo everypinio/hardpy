@@ -55,6 +55,12 @@
     "nameColumn": "名称",
     "dataColumn": "数据",
     "loading": "加载中...",
-    "stubName": "测试套件"
+    "stubName": "测试套件",
+    "runSelectedTests": "运行 {{count}} 个选中的测试",
+    "noTestsSelected": "未选择任何测试",
+    "testsStarted": "已启动 {{count}} 个测试",
+    "startError": "启动测试时出错",
+    "connectionError": "连接错误",
+    "selectionColumn": "选择"
   }
 }

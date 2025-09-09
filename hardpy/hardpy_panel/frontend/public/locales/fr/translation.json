@@ -55,6 +55,12 @@
     "nameColumn": "Nom",
     "dataColumn": "Données",
     "loading": "Chargement...",
-    "stubName": "Suite de tests"
+    "stubName": "Suite de tests",
+    "runSelectedTests": "Exécuter {{count}} tests sélectionnés",
+    "noTestsSelected": "Aucun test sélectionné",
+    "testsStarted": "{{count}} tests démarrés",
+    "startError": "Erreur de démarrage des tests",
+    "connectionError": "Erreur de connexion",
+    "selectionColumn": "Sélectionner"
   }
 }

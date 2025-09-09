@@ -55,6 +55,12 @@
     "nameColumn": "Name",
     "dataColumn": "Data",
     "loading": "Loading...",
-    "stubName": "Test Suite"
+    "stubName": "Test Suite",
+    "runSelectedTests": "Run {{count}} selected tests",
+    "noTestsSelected": "No tests selected",
+    "testsStarted": "Started {{count}} tests",
+    "startError": "Error starting tests",
+    "connectionError": "Connection error",
+    "selectionColumn": "Select"
   }
 }

@@ -55,6 +55,12 @@
     "nameColumn": "Name",
     "dataColumn": "Daten",
     "loading": "Wird geladen...",
-    "stubName": "Testgruppe"
+    "stubName": "Testgruppe",
+    "runSelectedTests": "{{count}} ausgewählte Tests ausführen",
+    "noTestsSelected": "Keine Tests ausgewählt",
+    "testsStarted": "{{count}} Tests gestartet",
+    "startError": "Fehler beim Starten der Tests",
+    "connectionError": "Verbindungsfehler",
+    "selectionColumn": "Auswählen"
   }
 }

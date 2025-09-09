@@ -24,7 +24,7 @@ import TestData from "./TestData";
 import RunTimer from "./RunTimer";
 
 import "./TestSuite.css";
-import { Spin } from "antd";
+import { Spin, Checkbox } from "antd";
 
 interface WidgetDescription {
   info: Record<string, unknown>;
@@ -83,10 +83,13 @@ type Props = {
   test: TestItem;
   defaultOpen: boolean;
   commonTestRunStatus: string | undefined;
+  onTestsSelectionChange?: (selectedTests: string[]) => void;
+  selectionSupported?: boolean;
 } & WithTranslation;
 
 type State = {
   isOpen: boolean;
+  selectedTests: Set<string>;
 };
 
 const LOADING_ICON_MARGIN = 30;
@@ -104,7 +107,25 @@ export class TestSuite extends React.Component<Props, State> {
 
   static defaultProps: Partial<Props> = {
     defaultOpen: true,
+    selectionSupported: true, 
   };
+
+  /**
+   * Constructs the TestSuite component.
+   * @param {Props} props - The properties passed to the component.
+   */
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      isOpen: props.defaultOpen,
+      selectedTests: new Set<string>(),
+    };
+
+    this.handleClick = this.handleClick.bind(this);
+    this.handleTestSelection = this.handleTestSelection.bind(this);
+    this.handleSelectAll = this.handleSelectAll.bind(this);
+  }
 
   /**
    * Renders the TestSuite component.
@@ -139,9 +160,30 @@ export class TestSuite extends React.Component<Props, State> {
                   style={{ marginRight: "10px", marginLeft: "10px" }}
                   icon={this.state.isOpen ? "chevron-down" : "chevron-right"}
                 ></Icon>
-                <span>
-                  {this.renderName(this.props.test.name, this.props.index + 1)}
-                </span>
+                {this.props.selectionSupported && (
+                  <Checkbox
+                    style={{ marginRight: "60px" }}
+                    checked={this.isAllTestsSelected()}
+                    indeterminate={this.isSomeTestsSelected()}
+                    onChange={this.handleSelectAll}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                )}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    minWidth: "65px",
+                  }}
+                >
+                  <span
+                    className={Classes.TEXT_DISABLED}
+                    style={{ marginRight: "20px" }}
+                  >
+                    {this.props.index + 1}
+                  </span>
+                  <span>{this.renderName(this.props.test.name)}</span>
+                </div>
               </div>
             </Button>
           </div>
@@ -163,36 +205,55 @@ export class TestSuite extends React.Component<Props, State> {
   }
 
   /**
-   * Constructs the TestSuite component.
-   * @param {Props} props - The properties passed to the component.
+   * Checks if all tests in a module are selected.
    */
-  constructor(props: Props) {
-    super(props);
+  private isAllTestsSelected(): boolean {
+    const { test } = this.props;
+    const case_names = Object.keys(test.cases);
 
-    this.state = {
-      isOpen: props.defaultOpen,
-    };
+    if (case_names.length === 0) {
+      return false;
+    }
 
-    this.handleClick = this.handleClick.bind(this);
+    return case_names.every((caseName) => {
+      const testFullPath = `${test.name}::${test.cases[caseName].name}`;
+      return this.state.selectedTests.has(testFullPath);
+    });
+  }
+
+  /**
+   * Checks if some (but not all) tests in a module are selected
+   */
+  private isSomeTestsSelected(): boolean {
+    const { test } = this.props;
+    const case_names = Object.keys(test.cases);
+
+    if (case_names.length === 0) {
+      return false;
+    } else {
+      const selectedCount = case_names.filter((caseName) => {
+        const testFullPath = `${test.name}::${test.cases[caseName].name}`;
+        return this.state.selectedTests.has(testFullPath);
+      }).length;
+
+      return selectedCount > 0 && selectedCount < case_names.length;
+    }
   }
 
   /**
    * Renders the name of the test suite.
    * @param {string} name - The name of the test suite.
-   * @param {number} test_number - The number of the test suite.
    * @returns {React.ReactElement} The rendered name element.
    */
-  private renderName(name: string, test_number: number): React.ReactElement {
+  private renderName(name: string): React.ReactElement {
     const is_loading = _.isEmpty(name);
 
     return (
-      <H4 className={`test-suite-name ${is_loading ? Classes.SKELETON : ""}`}>
-        {<span className={Classes.TEXT_DISABLED}>{test_number}</span>}
-        {
-          <span style={{ marginLeft: "0.5em" }}>
-            {is_loading ? this.props.t("testSuite.stubName") : name}
-          </span>
-        }
+      <H4
+        className={`test-suite-name ${is_loading ? Classes.SKELETON : ""}`}
+        style={{ margin: 0 }}
+      >
+        {is_loading ? this.props.t("testSuite.stubName") : name}
       </H4>
     );
   }
@@ -220,6 +281,19 @@ export class TestSuite extends React.Component<Props, State> {
         grow: 0.5,
         width: "10px",
       },
+      ...(this.props.selectionSupported
+        ? [
+            {
+              id: "selection",
+              name: this.props.t("testSuite.selectionColumn"),
+              selector: (row: any) => row,
+              cell: this.cellRendererSelection.bind(this, case_array),
+              grow: 0.5,
+              width: "80px",
+              center: true,
+            },
+          ]
+        : []),
       {
         id: "test_number",
         name: "",
@@ -227,6 +301,7 @@ export class TestSuite extends React.Component<Props, State> {
         cell: this.cellRendererNumber.bind(this, case_array),
         grow: 0.5,
         width: "65px",
+        style: { paddingLeft: "12px" },
       },
       {
         id: "name",
@@ -256,6 +331,98 @@ export class TestSuite extends React.Component<Props, State> {
         />
       </div>
     );
+  }
+
+  /**
+   * Renders the selection checkbox in a cell.
+   * @param {Case[]} test_topics - The test cases.
+   * @param {string} row_ - The row data.
+   * @param {number} rowIndex - The index of the row.
+   * @returns {React.ReactElement} The rendered selection cell.
+   */
+  private cellRendererSelection(
+    test_topics: Case[],
+    row_: string,
+    rowIndex: number
+  ): React.ReactElement {
+    const test = test_topics[rowIndex];
+    const testFullPath = `${this.props.test.name}::${test.name}`;
+    const isSelected = this.state.selectedTests.has(testFullPath);
+
+    return this.commonCellRender(
+      <div
+        style={{
+          marginTop: "0.2em",
+          marginBottom: "0.2em",
+          textAlign: "center",
+        }}
+      >
+        <Checkbox
+          checked={isSelected}
+          onChange={(e) =>
+            this.handleTestSelection(testFullPath, e.target.checked)
+          }
+        />
+      </div>,
+      `selection_${rowIndex}_${row_}`
+    );
+  }
+
+  /**
+   * Handles individual test selection.
+   * @param {string} testPath - The full path of the test.
+   * @param {boolean} isChecked - Whether the checkbox is checked.
+   */
+  private handleTestSelection(testPath: string, isChecked: boolean): void {
+    this.setState((prevState) => {
+      const newSelectedTests = new Set(prevState.selectedTests);
+
+      if (isChecked) {
+        newSelectedTests.add(testPath);
+      } else {
+        newSelectedTests.delete(testPath);
+      }
+
+      // Notify parent component about selection change
+      if (this.props.onTestsSelectionChange) {
+        this.props.onTestsSelectionChange(Array.from(newSelectedTests));
+      }
+
+      return { selectedTests: newSelectedTests };
+    });
+  }
+
+  /**
+   * Handles select all/deselect all.
+   */
+  private handleSelectAll(e: React.ChangeEvent<HTMLInputElement>): void {
+    const { test } = this.props;
+    const case_names = Object.keys(test.cases);
+
+    this.setState((prevState) => {
+      const newSelectedTests = new Set(prevState.selectedTests);
+
+      if (e.target.checked) {
+        // Select all
+        case_names.forEach((caseName) => {
+          const testFullPath = `${test.name}::${test.cases[caseName].name}`;
+          newSelectedTests.add(testFullPath);
+        });
+      } else {
+        // Deselect all
+        case_names.forEach((caseName) => {
+          const testFullPath = `${test.name}::${test.cases[caseName].name}`;
+          newSelectedTests.delete(testFullPath);
+        });
+      }
+
+      // Notify parent component about selection change
+      if (this.props.onTestsSelectionChange) {
+        this.props.onTestsSelectionChange(Array.from(newSelectedTests));
+      }
+
+      return { selectedTests: newSelectedTests };
+    });
   }
 
   /**
@@ -331,10 +498,16 @@ export class TestSuite extends React.Component<Props, State> {
     rowIndex: number
   ): React.ReactElement {
     return this.commonCellRender(
-      <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
+      <div
+        style={{
+          marginTop: "0.2em",
+          marginBottom: "0.2em",
+          paddingLeft: "12px",
+        }}
+      >
         <TestNumber val={rowIndex + 1} />
       </div>,
-      `number_${rowIndex}_${row_}}`
+      `number_${rowIndex}_${row_}`
     );
   }
 
@@ -455,6 +628,7 @@ export class TestSuite extends React.Component<Props, State> {
 
 TestSuite.defaultProps = {
   defaultOpen: true,
+  selectionSupported: true,
 };
 
 const TestSuiteComponent = withTranslation()(TestSuite);
