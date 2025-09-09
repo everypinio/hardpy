@@ -14,7 +14,6 @@ from uvicorn import run as uvicorn_run
 
 from hardpy.cli.template import TemplateGenerator
 from hardpy.common.config import ConfigManager, HardpyConfig
-from hardpy.common.connection_data import ConnectionData
 from hardpy.common.stand_cloud import (
     StandCloudConnector,
     StandCloudError,
@@ -29,7 +28,7 @@ if __debug__:
     disable_warnings(InsecureRequestWarning)
 
 cli = typer.Typer(add_completion=False)
-default_config = ConfigManager().get_config()
+default_config = ConfigManager().default_config()
 
 
 @cli.command()
@@ -98,7 +97,8 @@ def init(  # noqa: PLR0913
         sc_connection_only (bool): Flag to check StandCloud service availability
     """
     dir_path = Path(Path.cwd() / tests_dir if tests_dir else "tests")
-    ConfigManager().init_config(
+    congig_manager = ConfigManager()
+    congig_manager.init_config(
         tests_name=tests_name if tests_name else dir_path.name,
         database_user=database_user,
         database_password=database_password,
@@ -119,7 +119,7 @@ def init(  # noqa: PLR0913
         Path.mkdir(dir_path / "database", exist_ok=True, parents=True)
 
     # create hardpy.toml
-    ConfigManager().create_config(dir_path)
+    congig_manager.create_config(dir_path)
 
     config = _get_config(dir_path)
     template = TemplateGenerator(config)
@@ -267,7 +267,8 @@ def sc_logout(address: Annotated[str, typer.Argument()]) -> None:
 
 def _get_config(tests_dir: str | None = None, validate: bool = False) -> HardpyConfig:
     dir_path = Path.cwd() / tests_dir if tests_dir else Path.cwd()
-    config = ConfigManager().read_config(dir_path)
+    config_manager = ConfigManager()
+    config = config_manager.read_config(dir_path)
 
     if not config:
         print(f"Config at path {dir_path} not found.")
@@ -275,16 +276,6 @@ def _get_config(tests_dir: str | None = None, validate: bool = False) -> HardpyC
 
     if validate:
         _validate_config(config, dir_path)
-
-    # TODO(xorialexandrov): Remove ConnectionData from CLI
-    # ConnectionData is only used for the Pytest shell.
-    # Without it, the RunnerReporter will not know the name of
-    # the document in the database to fill in.
-    con_data = ConnectionData()
-    con_data.database_url = config.database.connection_url()
-    con_data.database_doc_id = config.get_doc_id()
-    con_data.sc_address = config.stand_cloud.address
-    con_data.sc_connection_only = config.stand_cloud.connection_only
 
     return config
 
