@@ -8,7 +8,6 @@ db_no_default_user = "dev1"
 db_no_default_password = "dev1"
 db_no_default_host = "localhost1"
 db_no_default_port = "5985"
-db_no_default_doc_id = "current1"
 frontend_no_default_host = "localhost1"
 frontend_no_default_port = "8001"
 stand_cloud_no_default_addr = "everypin1.standcloud.localhost"
@@ -17,7 +16,6 @@ db_default_port = "5984"
 frontend_default_host = "localhost"
 frontend_default_port = "8000"
 frontend_default_language = "en"
-db_default_doc_id = f"{frontend_default_host}_{frontend_default_port}"
 
 
 def test_cli_init(tmp_path: Path):
@@ -113,38 +111,6 @@ def test_cli_init_db_port(tmp_path: Path):
         assert (
             ";port = 5985" in content
         ), "couchdb.ini does not contain the expected port."
-
-
-def test_cli_init_db_doc_id(tmp_path: Path):
-    subprocess.run(
-        [*HARDPY_COMMAND, tmp_path, "--database-doc-id", db_no_default_doc_id],
-        check=True,
-    )
-    hardpy_toml_path = tmp_path / "hardpy.toml"
-    with Path.open(hardpy_toml_path) as f:
-        content = f.read()
-
-        database_info = (
-            f"[database]\n"
-            f'user = "dev"\n'
-            f'password = "dev"\n'
-            f'host = "localhost"\n'
-            f"port = 5984\n"
-            f'doc_id = "{db_no_default_doc_id}"\n'
-        ).format(db_no_default_doc_id)
-        assert (
-            database_info in content
-        ), "hardpy.toml does not contain the expected document id."
-
-
-def test_cli_init_no_db_doc_id(tmp_path: Path):
-    subprocess.run([*HARDPY_COMMAND, tmp_path], check=True)
-    hardpy_toml_path = tmp_path / "hardpy.toml"
-    with Path.open(hardpy_toml_path) as f:
-        content = f.read()
-        assert (
-            f'doc_id = "{db_default_doc_id}"' in content
-        ), "hardpy.toml contain not correct doc_id."
 
 
 def test_cli_init_frontend_host(tmp_path: Path):

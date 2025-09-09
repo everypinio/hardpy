@@ -44,7 +44,6 @@ More info in [hardpy config](./hardpy_config.md).
 │ --database-password                            TEXT     Specify a database user password. [default: dev]   │
 │ --database-host                                TEXT     Specify a database host. [default: localhost]      │
 │ --database-port                                INTEGER  Specify a database port. [default: 5984]           │
-│ --database-doc-id                              TEXT     Specify a database document name.                  │
 │ --frontend-port                                INTEGER  Specify a frontend port. [default: 8000]           │
 │ --frontend-host                                TEXT     Specify a frontend host. [default: localhost]      │
 │ --sc-address                                   TEXT     Specify a StandCloud address.                      │

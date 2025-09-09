@@ -56,12 +56,6 @@ def pytest_addoption(parser: Parser) -> None:
         help="database url",
     )
     parser.addoption(
-        "--hardpy-db-doc-id",
-        action="store",
-        default=default_config.get_doc_id(),
-        help="database document id",
-    )
-    parser.addoption(
         "--hardpy-tests-name",
         action="store",
         help="HardPy tests suite name",
@@ -156,10 +150,6 @@ class HardpyPlugin:
         database_url = config.getoption("--hardpy-db-url")
         if database_url:
             hardpy_config.database.url = str(database_url)  # type: ignore
-
-        database_doc_id = config.getoption("--hardpy-db-doc-id")
-        if database_doc_id:
-            hardpy_config.database.doc_id = str(database_doc_id)  # type: ignore
 
         tests_name = config.getoption("--hardpy-tests-name")
         if tests_name:

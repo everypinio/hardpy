@@ -1386,15 +1386,6 @@ The default is `http://dev:dev@localhost:5984/`.
 --hardpy-db-url
 ```
 
-#### hardpy-db-doc-id
-
-The document name for the **statestore** and **runstore** databases.
-By default document name is <hardpy_server_host>_<hardpy_server_port>.
-
-```bash
---hardpy-db-doc-id
-```
-
 #### hardpy-tests-name
 
 The **HardPy** tests name.
