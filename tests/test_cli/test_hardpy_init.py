@@ -17,6 +17,7 @@ db_default_port = "5984"
 frontend_default_host = "localhost"
 frontend_default_port = "8000"
 frontend_default_language = "en"
+db_default_doc_id = f"{frontend_default_host}_{frontend_default_port}"
 
 
 def test_cli_init(tmp_path: Path):
@@ -141,7 +142,9 @@ def test_cli_init_no_db_doc_id(tmp_path: Path):
     hardpy_toml_path = tmp_path / "hardpy.toml"
     with Path.open(hardpy_toml_path) as f:
         content = f.read()
-        assert "doc_id = " not in content, "hardpy.toml contain the expected document id."
+        assert (
+            f'doc_id = "{db_default_doc_id}"' in content
+        ), "hardpy.toml contain not correct doc_id."
 
 
 def test_cli_init_frontend_host(tmp_path: Path):
