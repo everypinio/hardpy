@@ -223,7 +223,7 @@ When called again, the information will be merged with existing data.
 
 **Arguments:**
 
-- `info` *(Mapping[str, str | int | float | datetime])*: Test stand info dictionary
+- `info` *(Mapping[str, str | int | float ])*: Test stand info dictionary
 
 **Example:**
 
@@ -321,7 +321,7 @@ Accepts an [Instrument](#instrument) object containing all instrument details.
 - `revision` *(str | None)*: Instrument revision  
 - `number` *(int | None)*: Instrument number  
 - `comment` *(str | None)*: Instrument comment  
-- `info` *(Mapping[str, str | int | float | datetime] | None)*: Additional instrument info 
+- `info` *(Mapping[str, str | int | float ] | None)*: Additional instrument info 
 
 **Example:**
 
@@ -375,7 +375,7 @@ When called again, the information will be merged with existing data.
 
 **Arguments:**
 
-- `info` *(Mapping[str, str | int | float | datetime])*: Process info dictionary
+- `info` *(Mapping[str, str | int | float ])*: Process info dictionary
 
 **Example:**
 
@@ -384,7 +384,6 @@ def test_process_info():
     set_process_info({
         "stage": "production",
         "version": "1.0",
-        "started_at": datetime.now()
     })
 ```
 
@@ -987,7 +986,7 @@ It is used with the [set_instrument](#set_instrument) function.
 - `revision` *(str | None)*: Instrument revision  
 - `number` *(int | None)*: Instrument number  
 - `comment` *(str | None)*: Instrument comment  
-- `info` *(Mapping[str, str | int | float | datetime] | None)*: Additional instrument info as key-value pairs  
+- `info` *(Mapping[str, str | int | float | None)*: Additional instrument info as key-value pairs  
 
 **Returns:**
 
@@ -1007,7 +1006,6 @@ oscilloscope = Instrument(
     info={
         "model": "DSO-X 2024A",
         "bandwidth": "200MHz",
-        "calibration_date": datetime(2023, 11, 15)
     }
 )
 
@@ -1026,7 +1024,7 @@ It is used with the [set_dut_sub_unit](#set_dut_sub_unit) function.
 - `name` *(str | None)*: unit name  
 - `type` *(str | None)*: unit type
 - `revision` *(str | None)*: unit revision  
-- `info` *(Mapping[str, str | int | float | datetime] | None)*: additional unit info as key-value pairs  
+- `info` *(Mapping[str, str | int | float ] | None)*: additional unit info as key-value pairs  
 
 **Example:**
 
