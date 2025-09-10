@@ -298,7 +298,7 @@ export class TestSuite extends React.Component<Props, State> {
         name: this.props.t("testSuite.nameColumn"),
         selector: (row) => row,
         cell: this.cellRendererName.bind(this, case_array),
-        grow: 6,
+        grow: 4,
       },
       {
         id: "data",
