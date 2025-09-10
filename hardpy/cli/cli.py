@@ -28,7 +28,7 @@ if __debug__:
     disable_warnings(InsecureRequestWarning)
 
 cli = typer.Typer(add_completion=False)
-default_config = ConfigManager().default_config()
+default_config = HardpyConfig()
 
 
 @cli.command()

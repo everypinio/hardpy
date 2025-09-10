@@ -32,7 +32,7 @@ from pytest import (
     skip,
 )
 
-from hardpy.common.config import ConfigManager
+from hardpy.common.config import ConfigManager, HardpyConfig
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.utils import NodeInfo, ProgressCalculator, TestStatus
@@ -47,8 +47,7 @@ if __debug__:
 
 def pytest_addoption(parser: Parser) -> None:
     """Register argparse-style options."""
-    config_manager = ConfigManager()
-    default_config = config_manager.default_config()
+    default_config = HardpyConfig()
     parser.addoption(
         "--hardpy-db-url",
         action="store",
@@ -145,7 +144,7 @@ class HardpyPlugin:
         hardpy_config = config_manager.read_config(Path(config.rootpath))
 
         if not hardpy_config:
-            hardpy_config = config_manager.default_config()
+            hardpy_config = HardpyConfig()
 
         database_url = config.getoption("--hardpy-db-url")
         if database_url:

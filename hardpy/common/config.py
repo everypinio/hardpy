@@ -147,14 +147,6 @@ class ConfigManager(metaclass=SingletonMeta):
         self._config.stand_cloud.address = sc_address
         self._config.stand_cloud.connection_only = sc_connection_only
 
-    def default_config(self) -> HardpyConfig:
-        """Get default HardPy config.
-
-        Returns:
-            HardpyConfig: default config.
-        """
-        return HardpyConfig()
-
     def create_config(self, parent_dir: Path) -> None:
         """Create HardPy configuration.
 
