@@ -28,9 +28,9 @@ class DatabaseConfig(BaseModel):
 
     def model_post_init(self, __context) -> None:  # noqa: ANN001,PYI063
         """Get database connection url."""
-        self.url = self._connection_url()
+        self.url = self.get_url()
 
-    def _connection_url(self) -> str:
+    def get_url(self) -> str:
         """Get database connection url.
 
         Returns:
@@ -73,9 +73,11 @@ class HardpyConfig(BaseModel, extra="allow"):
 
     def model_post_init(self, __context) -> None:  # noqa: ANN001,PYI063
         """Get database document name."""
-        self.database.doc_id = (
-            self.database.doc_id or f"{self.frontend.host}_{self.frontend.port}"
-        )
+        self.database.doc_id = self.get_doc_id()
+
+    def get_doc_id(self) -> str:
+        """Update database document name."""
+        return f"{self.frontend.host}_{self.frontend.port}"
 
 
 class ConfigManager(metaclass=SingletonMeta):
@@ -116,7 +118,9 @@ class ConfigManager(metaclass=SingletonMeta):
         sc_address: str = "",
         sc_connection_only: bool = False,
     ) -> None:
-        """Initialize HardPy configuration.
+        """Initialize the HardPy configuration.
+
+        Only call once to create a configuration.
 
         Args:
             tests_name (str): Tests suite name.
@@ -131,13 +135,15 @@ class ConfigManager(metaclass=SingletonMeta):
             sc_connection_only (bool): StandCloud check availability.
         """
         self._config.tests_name = tests_name
+        self._config.frontend.host = frontend_host
+        self._config.frontend.port = frontend_port
+        self._config.frontend.language = frontend_language
         self._config.database.user = database_user
         self._config.database.password = database_password
         self._config.database.host = database_host
         self._config.database.port = database_port
-        self._config.frontend.host = frontend_host
-        self._config.frontend.port = frontend_port
-        self._config.frontend.language = frontend_language
+        self._config.database.doc_id = self._config.get_doc_id()
+        self._config.database.url = self._config.database.get_url()
         self._config.stand_cloud.address = sc_address
         self._config.stand_cloud.connection_only = sc_connection_only
 
