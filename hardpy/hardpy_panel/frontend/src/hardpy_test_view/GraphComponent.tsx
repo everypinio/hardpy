@@ -41,27 +41,27 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
-  useEffect(() => {
-    const updateDimensions = () => {
-      let width = 0;
+useEffect(() => {
+  const updateDimensions = () => {
+    let width = 0;
 
       if (containerWidth && containerWidth > 0) {
-        width = containerWidth - 600;
+        width = containerWidth * 0.7;
       } else if (containerRef.current) {
-        width = containerRef.current.offsetWidth - 400;
+        width = containerRef.current.offsetWidth * 0.7;
       }
+    
+    const finalWidth = Math.max(250, width);
+    const finalHeight = Math.max(300, finalWidth * 0.5);
 
-      const finalWidth = Math.max(250, width);
-      const finalHeight = Math.max(300, finalWidth * 0.5);
+    setDimensions({ width: finalWidth, height: finalHeight });
+  };
 
-      setDimensions({ width: finalWidth, height: finalHeight });
-    };
+  updateDimensions();
+  window.addEventListener("resize", updateDimensions);
 
-    updateDimensions();
-    window.addEventListener("resize", updateDimensions);
-
-    return () => window.removeEventListener("resize", updateDimensions);
-  }, [containerWidth]);
+  return () => window.removeEventListener("resize", updateDimensions);
+}, [containerWidth]);
 
   const markerSymbols = [
     "circle",
