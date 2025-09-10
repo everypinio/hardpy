@@ -6,17 +6,17 @@ import { Dialog, Button, Classes } from "@blueprintjs/core";
 import Plot from "react-plotly.js";
 import { withTranslation, WithTranslation } from "react-i18next";
 
-interface GraphData {
+interface ChartData {
   x_data: number[];
   y_data: number[];
   marker_name: string;
   x_label?: string;
   y_label?: string;
-  graph_title?: string;
+  chart_title?: string;
 }
 
-interface GraphComponentProps extends WithTranslation {
-  graphs: GraphData[];
+interface ChartComponentProps extends WithTranslation {
+  charts: ChartData[];
   isCollapsed?: boolean;
   onToggleCollapse?: () => void;
   title?: string;
@@ -26,8 +26,8 @@ interface GraphComponentProps extends WithTranslation {
   containerWidth?: number;
 }
 
-const GraphComponent: React.FC<GraphComponentProps> = ({
-  graphs,
+const ChartComponent: React.FC<ChartComponentProps> = ({
+  charts,
   isCollapsed = false,
   onToggleCollapse,
   title,
@@ -41,27 +41,27 @@ const GraphComponent: React.FC<GraphComponentProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
-useEffect(() => {
-  const updateDimensions = () => {
-    let width = 0;
+  useEffect(() => {
+    const updateDimensions = () => {
+      let width = 0;
 
       if (containerWidth && containerWidth > 0) {
         width = containerWidth * 0.7;
       } else if (containerRef.current) {
         width = containerRef.current.offsetWidth * 0.7;
       }
-    
-    const finalWidth = Math.max(250, width);
-    const finalHeight = Math.max(300, finalWidth * 0.5);
 
-    setDimensions({ width: finalWidth, height: finalHeight });
-  };
+      const finalWidth = Math.max(250, width);
+      const finalHeight = Math.max(300, finalWidth * 0.5);
 
-  updateDimensions();
-  window.addEventListener("resize", updateDimensions);
+      setDimensions({ width: finalWidth, height: finalHeight });
+    };
 
-  return () => window.removeEventListener("resize", updateDimensions);
-}, [containerWidth]);
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, [containerWidth]);
 
   const markerSymbols = [
     "circle",
@@ -99,29 +99,29 @@ useEffect(() => {
     }
   };
 
-  const graphTitle =
+  const chartTitle =
     title ||
-    (graphs.length > 0 && graphs[0].graph_title) ||
-    t("graph.testDataGraph");
+    (charts.length > 0 && charts[0].chart_title) ||
+    t("chart.testDataChart");
 
   const xAxisLabel =
-    xLabel || (graphs.length > 0 && graphs[0].x_label) || t("graph.xAxis");
+    xLabel || (charts.length > 0 && charts[0].x_label) || t("chart.xAxis");
   const yAxisLabel =
-    yLabel || (graphs.length > 0 && graphs[0].y_label) || t("graph.yAxis");
+    yLabel || (charts.length > 0 && charts[0].y_label) || t("chart.yAxis");
 
-  const plotData = graphs.map((graph, index) => ({
-    x: graph.x_data,
-    y: graph.y_data,
+  const plotData = charts.map((chart, index) => ({
+    x: chart.x_data,
+    y: chart.y_data,
     type: "scatter" as const,
     mode: "lines+markers",
-    name: graph.marker_name,
+    name: chart.marker_name,
     marker: {
-      color: `hsl(${(index * 360) / graphs.length}, 70%, 50%)`,
+      color: `hsl(${(index * 360) / charts.length}, 70%, 50%)`,
       symbol: markerSymbols[index % markerSymbols.length],
       size: 8,
       line: {
         width: 1,
-        color: `hsl(${(index * 360) / graphs.length}, 70%, 30%)`,
+        color: `hsl(${(index * 360) / charts.length}, 70%, 30%)`,
       },
     },
     line: {
@@ -133,7 +133,7 @@ useEffect(() => {
     width: dimensions.width,
     height: 300,
     title: {
-      text: graphTitle,
+      text: chartTitle,
       x: 0.5,
       xanchor: "center",
       font: {
@@ -234,7 +234,7 @@ useEffect(() => {
         }}
       >
         <Button icon="chevron-down" onClick={onToggleCollapse} minimal small>
-          {t("graph.showGraph", { title: graphTitle })}
+          {t("chart.showChart", { title: chartTitle })}
         </Button>
       </div>
     );
@@ -271,7 +271,7 @@ useEffect(() => {
             minimal
             small
             style={{ marginRight: "5px" }}
-            title={t("graph.fullscreenButton")}
+            title={t("chart.fullscreenButton")}
           />
           <Button icon="chevron-up" onClick={onToggleCollapse} minimal small />
         </div>
@@ -292,8 +292,8 @@ useEffect(() => {
       <Dialog
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={graphTitle}
-        className="graph-modal"
+        title={chartTitle}
+        className="chart-modal"
         style={{
           width: "90vw",
           height: "90vh",
@@ -342,4 +342,4 @@ useEffect(() => {
   );
 };
 
-export default withTranslation()(GraphComponent);
+export default withTranslation()(ChartComponent);

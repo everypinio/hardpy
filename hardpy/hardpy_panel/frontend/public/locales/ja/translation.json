@@ -29,12 +29,12 @@
     "dbConnectionTitle": "データベース接続エラー",
     "dbConnectionMessage": "データベースへの接続に失敗しました"
   },
-  "graph": {
-    "testDataGraph": "テストデータグラフ",
+  "chart": {
+    "testDataChart": "テストデータグラフ",
     "xAxis": "X軸",
     "yAxis": "Y軸",
-    "graph": "グラフ",
-    "showGraph": "グラフを表示: {{title}}",
+    "chart": "グラフ",
+    "showChart": "グラフを表示: {{title}}",
     "fullscreenButton": "グラフを全画面表示で開く",
     "series": "シリーズ{{number}}"
   },

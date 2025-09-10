@@ -4,24 +4,24 @@ from pathlib import Path
 from pydantic import BaseModel
 
 
-class Graph(BaseModel):
-    """A class representing graph translations.
+class Chart(BaseModel):
+    """A class representing chart translations.
 
     Attributes:
-        testDataGraph (str): The translation for the "testDataGraph" text.
+        testDataChart (str): The translation for the "testDataChart" text.
         xAxis (str): The translation for the "xAxis" text.
         yAxis (str): The translation for the "yAxis" text.
-        graph (str): The translation for the "graph" text.
-        showGraph (str): The translation for the "showGraph" text.
+        chart (str): The translation for the "chart" text.
+        showChart (str): The translation for the "showChart" text.
         fullscreenButton (str): The translation for the "fullscreenButton" text.
         series (str): The translation for the "series" text.
     """
 
-    testDataGraph: str
+    testDataChart: str
     xAxis: str
     yAxis: str
-    graph: str
-    showGraph: str
+    chart: str
+    showChart: str
     fullscreenButton: str
     series: str
 
@@ -183,7 +183,7 @@ class TranslationModel(BaseModel):
         app (App): The app translation data.
         button (Button): The button translation data.
         error (Error): The error translation data.
-        graph (Graph): The graph translation data.
+        chart (Chart): The chart translation data.
         operatorDialog (OperatorDialog): The operator dialog translation data.
         suiteList (SuiteList): The suite list translation data.
         testSuite (TestSuite): The test suite translation data.
@@ -192,7 +192,7 @@ class TranslationModel(BaseModel):
     app: App
     button: Button
     error: Error
-    graph: Graph
+    chart: Chart
     operatorDialog: OperatorDialog
     suiteList: SuiteList
     testSuite: TestSuite

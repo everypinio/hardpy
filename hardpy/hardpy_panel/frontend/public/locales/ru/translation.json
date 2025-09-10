@@ -29,12 +29,12 @@
     "dbConnectionTitle": "Ошибка подключения к базе данных",
     "dbConnectionMessage": "Не удалось установить соединение с базой данных"
   },
-  "graph": {
-    "testDataGraph": "График тестовых данных",
+  "chart": {
+    "testDataChart": "График тестовых данных",
     "xAxis": "Ось X",
     "yAxis": "Ось Y",
-    "graph": "График",
-    "showGraph": "Показать график: {{title}}",
+    "chart": "График",
+    "showChart": "Показать график: {{title}}",
     "fullscreenButton": "Открыть график в полноэкранном режиме",
     "series": "Серия {{number}}"
   },

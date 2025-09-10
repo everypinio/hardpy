@@ -29,12 +29,12 @@
     "dbConnectionTitle": "Error de conexión a la base de datos",
     "dbConnectionMessage": "No se pudo establecer la conexión con la base de datos"
   },
-  "graph": {
-    "testDataGraph": "Gráfico de Datos de Prueba",
+  "chart": {
+    "testDataChart": "Gráfico de Datos de Prueba",
     "xAxis": "Eje X",
     "yAxis": "Eje Y",
-    "graph": "Gráfico",
-    "showGraph": "Mostrar gráfico: {{title}}",
+    "chart": "Gráfico",
+    "showChart": "Mostrar gráfico: {{title}}",
     "fullscreenButton": "Abrir gráfico en pantalla completa",
     "series": "Serie {{number}}"
   },

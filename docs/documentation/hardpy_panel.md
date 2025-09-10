@@ -267,7 +267,7 @@ Charts support the following features:
 
 #### Basic line chart
 
-Displays a single dataset as a line graph with customizable styling.
+Displays a single dataset as a line chart with customizable styling.
 
 <h1 align="center">
     <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/basic_line_chart.png" alt="basic_line_chart">

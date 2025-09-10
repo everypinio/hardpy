@@ -5,7 +5,7 @@ import * as React from "react";
 import { Tag } from "@blueprintjs/core";
 import Plot from "react-plotly.js";
 import { Dialog, Button, Classes } from "@blueprintjs/core";
-import GraphComponent from "./GraphComponent";
+import ChartComponent from "./ChartComponent";
 import { withTranslation, WithTranslation } from "react-i18next";
 
 import _ from "lodash";
@@ -27,18 +27,18 @@ interface ChartData {
   marker_name: string[];
   x_data: number[][];
   y_data: number[][];
-  graph_title?: string;
+  chart_title?: string;
   x_label_data?: string[];
   y_label_data?: string[];
 }
 
-interface GraphData {
+interface ChartSeriesData {
   x_data: number[];
   y_data: number[];
   marker_name: string;
   x_label?: string;
   y_label?: string;
-  graph_title?: string;
+  chart_title?: string;
 }
 
 const TAG_ELEMENT_STYLE = { margin: 2 };
@@ -55,9 +55,9 @@ const TAG_ELEMENT_STYLE = { margin: 2 };
 export function TestData(props: Readonly<Props>): React.ReactElement {
   const { t } = props;
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const storageKey = `graphState_${props.testSuiteIndex}_${props.testCaseIndex}`;
+  const storageKey = `chartState_${props.testSuiteIndex}_${props.testCaseIndex}`;
 
-  const [isGraphCollapsed, setIsGraphCollapsed] = React.useState(() => {
+  const [isChartCollapsed, setIsChartCollapsed] = React.useState(() => {
     const savedState = localStorage.getItem(storageKey);
     if (savedState) {
       try {
@@ -75,16 +75,16 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
     localStorage.setItem(
       storageKey,
       JSON.stringify({
-        isCollapsed: isGraphCollapsed,
+        isCollapsed: isChartCollapsed,
       })
     );
-  }, [isGraphCollapsed, storageKey]);
+  }, [isChartCollapsed, storageKey]);
 
   const handleToggleCollapse = () => {
-    setIsGraphCollapsed(!isGraphCollapsed);
+    setIsChartCollapsed(!isChartCollapsed);
   };
 
-  const graphData: GraphData[] = React.useMemo(() => {
+  const chartSeriesData: ChartSeriesData[] = React.useMemo(() => {
     if (!props.chart) {
       return [];
     }
@@ -109,28 +109,33 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
     return props.chart.marker_name.map((name, index) => ({
       x_data: props.chart!.x_data[index] || [],
       y_data: props.chart!.y_data[index] || [],
-      marker_name: name || t('graph.series', { number: index + 1 }),
+      marker_name: name || t("chart.series", { number: index + 1 }),
       x_label: props.chart?.x_label_data?.[index] || props.chart?.x_label,
       y_label: props.chart?.y_label_data?.[index] || props.chart?.y_label,
-      graph_title: props.chart?.graph_title || props.chart?.title,
+      chart_title: props.chart?.chart_title || props.chart?.title,
     }));
   }, [props.chart, t]);
 
-  const hasGraphData = graphData.length > 0;
+  const hasChartData = chartSeriesData.length > 0;
 
-  const plotData = graphData.map((graph, index) => ({
-    x: graph.x_data,
-    y: graph.y_data,
+  const plotData = chartSeriesData.map((chart, index) => ({
+    x: chart.x_data,
+    y: chart.y_data,
     type: "scatter",
     mode: "lines+markers",
-    name: graph.marker_name,
-    marker: { color: `hsl(${(index * 360) / graphData.length}, 70%, 50%)` },
+    name: chart.marker_name,
+    marker: {
+      color: `hsl(${(index * 360) / chartSeriesData.length}, 70%, 50%)`,
+    },
   }));
 
   const fullScreenLayout = {
     width: window.innerWidth * 0.9,
     height: window.innerHeight * 0.9,
-    title: props.chart?.graph_title || props.chart?.title || t("graph.testDataGraph"),
+    title:
+      props.chart?.chart_title ||
+      props.chart?.title ||
+      t("chart.testDataChart"),
     xaxis: {
       title: props.chart?.x_label || undefined,
     },
@@ -168,7 +173,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
         </Tag>
       )}
 
-      {hasGraphData && (
+      {hasChartData && (
         <>
           <div
             style={{
@@ -178,11 +183,11 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
               boxSizing: "border-box",
             }}
           >
-            <GraphComponent
-              graphs={graphData}
-              isCollapsed={isGraphCollapsed}
+            <ChartComponent
+              charts={chartSeriesData}
+              isCollapsed={isChartCollapsed}
               onToggleCollapse={handleToggleCollapse}
-              title={props.chart?.graph_title || props.chart?.title}
+              title={props.chart?.chart_title || props.chart?.title}
               xLabel={props.chart?.x_label}
               yLabel={props.chart?.y_label}
               chartType={props.chart?.type}
@@ -197,7 +202,9 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
 
           <Dialog
             isOpen={isModalOpen}
-            title={props.chart?.graph_title || props.chart?.title || t("graph.graph")}
+            title={
+              props.chart?.chart_title || props.chart?.title || t("chart.chart")
+            }
             onClose={() => setIsModalOpen(false)}
           >
             <div className={Classes.DIALOG_BODY}>

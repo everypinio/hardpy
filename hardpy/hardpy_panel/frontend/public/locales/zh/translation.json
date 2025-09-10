@@ -29,12 +29,12 @@
     "dbConnectionTitle": "数据库连接错误",
     "dbConnectionMessage": "无法建立数据库连接"
   },
-  "graph": {
-    "testDataGraph": "测试数据图表",
+  "chart": {
+    "testDataChart": "测试数据图表",
     "xAxis": "X轴",
     "yAxis": "Y轴",
-    "graph": "图表",
-    "showGraph": "显示图表: {{title}}",
+    "chart": "图表",
+    "showChart": "显示图表: {{title}}",
     "fullscreenButton": "全屏显示图表",
     "series": "系列{{number}}"
   },

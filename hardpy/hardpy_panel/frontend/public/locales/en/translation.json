@@ -29,13 +29,13 @@
     "dbConnectionTitle": "Database Connection Error",
     "dbConnectionMessage": "Failed to establish connection with the database"
   },
-  "graph": {
-    "testDataGraph": "Test Data Graph",
+  "chart": {
+    "testDataChart": "Test Data Chart",
     "xAxis": "X Axis",
     "yAxis": "Y Axis",
-    "graph": "Graph",
-    "showGraph": "Show graph: {{title}}",
-    "fullscreenButton": "Open graph in full screen",
+    "chart": "Chart",
+    "showChart": "Show chart: {{title}}",
+    "fullscreenButton": "Open chart in full screen",
     "series": "Series {{number}}"
   },  
   "operatorDialog": {
