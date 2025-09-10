@@ -18,7 +18,7 @@ document assigned to it in the **runstore** and **statestore** databases.
     ```
 
     ```bash
-    hardpy init tests_2 --frontend-port 8002
+    hardpy init tests_3 --frontend-port 8002
     ```
 2. Launch any database [CouchDB instance](../documentation/database.md#couchdb-instance) from any project.
 3. Modify the files described below.
