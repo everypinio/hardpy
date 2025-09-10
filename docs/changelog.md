@@ -6,6 +6,8 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
   The **statestore** and **runstore** databases can contain multiple documents, 
   which are defined by the frontend host name and port.
   The **current** document is no longer being created.
+  The name of the document in the database consists of the 
+  host name and port for the frontend, as described in the **hardpy.toml** file.
   [[PR-187](https://github.com/everypinio/hardpy/pull/187)]
 * Simplify the process of working with multiple **HardPy** instances by 
   using a single **CouchDB** instance instead of multiple instances.
