@@ -2,6 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## HardPy 0.15.1
+
+* Remove the `datetime` type from the info fields in all tables.
+  [[PR-188](https://github.com/everypinio/hardpy/pull/188)]
+
 ## HardPy 0.15.0
 
 * Remove `tests_dir` variable from **hardpy.toml**. 
