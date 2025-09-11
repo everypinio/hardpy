@@ -92,8 +92,8 @@ def init(  # noqa: PLR0913
         sc_connection_only (bool): Flag to check StandCloud service availability
     """
     dir_path = Path(Path.cwd() / tests_dir if tests_dir else "tests")
-    congig_manager = ConfigManager()
-    congig_manager.init_config(
+    config_manager = ConfigManager()
+    config_manager.init_config(
         tests_name=tests_name if tests_name else dir_path.name,
         database_user=database_user,
         database_password=database_password,
@@ -113,7 +113,7 @@ def init(  # noqa: PLR0913
         Path.mkdir(dir_path / "database", exist_ok=True, parents=True)
 
     # create hardpy.toml
-    congig_manager.create_config(dir_path)
+    config_manager.create_config(dir_path)
 
     config = _get_config(dir_path)
     template = TemplateGenerator(config)
