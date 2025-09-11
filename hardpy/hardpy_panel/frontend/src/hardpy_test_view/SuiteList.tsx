@@ -89,6 +89,7 @@ interface Props extends WithTranslation {
 }
 
 const SECONDS_TO_MILLISECONDS = 1000;
+const CLOSED_MESSAGES_KEY = "closed_operator_messages";
 
 /**
  * Render a list of suites with tests inside
@@ -98,12 +99,14 @@ export class SuiteList extends React.Component<
   { initialized: boolean }
 > {
   elements_count: number = 0;
+  previousTestName: string | undefined;
 
   constructor(props: Props) {
     super(props);
     this.state = {
       initialized: props.i18n?.isInitialized ?? false,
     };
+    this.previousTestName = props.db_state.name;
   }
 
   componentDidMount() {
@@ -113,6 +116,20 @@ export class SuiteList extends React.Component<
       });
     }
   }
+
+  componentDidUpdate(prevProps: Props) {
+    // Если имя теста изменилось, очищаем сохраненные закрытые сообщения
+    if (prevProps.db_state.name !== this.props.db_state.name) {
+      try {
+        localStorage.removeItem(CLOSED_MESSAGES_KEY);
+        console.log("Cleared closed messages for new test run");
+      } catch (error) {
+        console.error("Error clearing closed messages:", error);
+      }
+      this.previousTestName = this.props.db_state.name;
+    }
+  }
+
   /**
    * Renders the SuiteList component.
    * @returns {React.ReactElement} The rendered component.

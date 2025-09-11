@@ -2,6 +2,9 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Correct problem with operator message state.
+  [[PR-](https://github.com/everypinio/hardpy/pull/)]
+
 ## HardPy 0.15.1
 
 * Remove the `datetime` type from the info fields in all tables.

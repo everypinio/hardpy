@@ -17,7 +17,7 @@ import {
   calculateTextLines,
   calculateDialogDimensions,
 } from "./DialogUtils";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 interface StartOperatorMsgDialogProps {
   title?: string;
@@ -33,6 +33,28 @@ interface StartOperatorMsgDialogProps {
   html_width?: number;
   html_border?: number;
 }
+
+const CLOSED_MESSAGES_KEY = "closed_operator_messages";
+
+const getClosedMessages = (): Set<string> => {
+  try {
+    const stored = localStorage.getItem(CLOSED_MESSAGES_KEY);
+    return new Set(stored ? JSON.parse(stored) : []);
+  } catch {
+    return new Set();
+  }
+};
+
+const saveClosedMessages = (messages: Set<string>): void => {
+  try {
+    localStorage.setItem(
+      CLOSED_MESSAGES_KEY,
+      JSON.stringify(Array.from(messages))
+    );
+  } catch (error) {
+    console.error("Error saving closed messages to localStorage:", error);
+  }
+};
 
 /**
  * Renders an HTML code iframe.
@@ -97,8 +119,23 @@ export function StartOperatorMsgDialog(
   const [imageDimensions, setImageDimensions] = useState(
     BASE_DIALOG_DIMENSIONS
   );
+  const [closedMessages, setClosedMessages] =
+    useState<Set<string>>(getClosedMessages());
   const screenWidth = window.screen.width;
   const screenHeight = window.screen.height;
+
+  const isMessageClosed = (): boolean => {
+    return props.id ? closedMessages.has(props.id) : false;
+  };
+
+  const markMessageAsClosed = (): void => {
+    if (props.id) {
+      const updatedClosedMessages = new Set(closedMessages);
+      updatedClosedMessages.add(props.id);
+      setClosedMessages(updatedClosedMessages);
+      saveClosedMessages(updatedClosedMessages);
+    }
+  };
 
   /**
    * Handles the closing of the dialog and sends a confirmation to the server.
@@ -107,6 +144,7 @@ export function StartOperatorMsgDialog(
    */
   const handleClose = async (): Promise<void> => {
     setOperatorMessageOpen(false);
+    markMessageAsClosed();
 
     try {
       const response = await axios.post(
@@ -218,10 +256,12 @@ export function StartOperatorMsgDialog(
      * Sets the dialog visibility based on the `is_visible` prop.
      * @returns {void}
      */
-    if (props.is_visible) {
+    if (props.is_visible && !isMessageClosed()) {
       setOperatorMessageOpen(true);
+    } else {
+      setOperatorMessageOpen(false);
     }
-  }, [props.id, props.is_visible]);
+  }, [props.id, props.is_visible, closedMessages]);
 
   useEffect(() => {
     /**
@@ -238,9 +278,13 @@ export function StartOperatorMsgDialog(
     };
   }, [operatorMessageOpen]);
 
+  if (isMessageClosed()) {
+    return <></>;
+  }
+
   return (
     <Dialog
-      title={props.title || t('operatorDialog.defaultTitle')}
+      title={props.title || t("operatorDialog.defaultTitle")}
       icon="info-sign"
       isOpen={operatorMessageOpen}
       onClose={handleClose}
