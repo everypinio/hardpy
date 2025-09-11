@@ -3,7 +3,7 @@
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
 * Correct problem with operator message state.
-  [[PR-](https://github.com/everypinio/hardpy/pull/)]
+  [[PR-190](https://github.com/everypinio/hardpy/pull/190)]
 
 ## HardPy 0.15.1
 
