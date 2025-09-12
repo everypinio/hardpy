@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 import requests
+from hardpy_server import HardPyServer
 
 from hardpy.pytest_hardpy.utils.const import TestStatus as Status
 
@@ -15,9 +16,9 @@ API_START_URL = "http://localhost:8000/api/start"
 
 
 @pytest.mark.manual
-def test_hardpy_run_and_hardpy_start(project_dir: Path, hardpy_server_class):  # noqa: ANN001
+def test_hardpy_run_and_hardpy_start(project_dir: Path):
     """Test that hardpy run and hardpy start can be used together."""
-    server = hardpy_server_class(project_dir)
+    server = HardPyServer(project_dir)
     server_process = server.start_server()
     try:
         server.wait_until_ready()
@@ -33,9 +34,9 @@ def test_hardpy_run_and_hardpy_start(project_dir: Path, hardpy_server_class):  #
 
 
 @pytest.mark.manual
-def test_hardpy_run_and_hardpy_start_stop(project_dir: Path, hardpy_server_class):  # noqa: ANN001
+def test_hardpy_run_and_hardpy_start_stop(project_dir: Path):
     """Test that hardpy run and hardpy start can be used together."""
-    server = hardpy_server_class(project_dir)
+    server = HardPyServer(project_dir)
     server_process = server.start_server()
     try:
         server.wait_until_ready()
@@ -55,12 +56,9 @@ def test_hardpy_run_and_hardpy_start_stop(project_dir: Path, hardpy_server_class
 
 
 @pytest.mark.manual
-def test_hardpy_run_and_hardpy_start_ini_args(
-    project_dir_with_ini: Path,
-    hardpy_server_class,  # noqa: ANN001
-):
+def test_hardpy_run_and_hardpy_start_ini_args(project_dir_with_ini: Path):
     """Test that hardpy run and hardpy start can be used together."""
-    server = hardpy_server_class(project_dir_with_ini)
+    server = HardPyServer(project_dir_with_ini)
     server_process = server.start_server()
     try:
         server.wait_until_ready()
@@ -79,16 +77,16 @@ def test_hardpy_run_and_hardpy_start_ini_args(
 @pytest.mark.manual
 def test_hardpy_run_and_hardpy_start_ini_args_incorrect(
     project_dir_with_ini_incorrect: Path,
-    hardpy_server_class,  # noqa: ANN001
 ):
     """Test that hardpy run and hardpy start can be used together."""
-    server = hardpy_server_class(project_dir_with_ini_incorrect)
+    server = HardPyServer(project_dir_with_ini_incorrect)
     server_process = server.start_server()
     try:
         server.wait_until_ready()
 
         result = server.run_command(
-            ["hardpy", "start"], cwd=str(project_dir_with_ini_incorrect)
+            ["hardpy", "start"],
+            cwd=str(project_dir_with_ini_incorrect),
         )
         assert result.returncode == 0, f"Command failed: {result.stderr.decode()}"
 
@@ -100,12 +98,9 @@ def test_hardpy_run_and_hardpy_start_ini_args_incorrect(
 
 
 @pytest.mark.manual
-def test_hardpy_run_and_hardpy_start_args(
-    project_dir_with_args: Path,
-    hardpy_server_class,  # noqa: ANN001
-):
+def test_hardpy_run_and_hardpy_start_args(project_dir_with_args: Path):
     """Test that hardpy run and hardpy start can be used together."""
-    server = hardpy_server_class(project_dir_with_args)
+    server = HardPyServer(project_dir_with_args)
     server_process = server.start_server()
     try:
         server.wait_until_ready()
@@ -133,12 +128,9 @@ def test_hardpy_run_and_hardpy_start_args(
 
 
 @pytest.mark.manual
-def test_hardpy_run_and_hardpy_start_args_incorrect(
-    project_dir_with_args: Path,
-    hardpy_server_class,  # noqa: ANN001
-):
+def test_hardpy_run_and_hardpy_start_args_incorrect(project_dir_with_args: Path):
     """Test that hardpy run and hardpy start can be used together."""
-    server = hardpy_server_class(project_dir_with_args)
+    server = HardPyServer(project_dir_with_args)
     server_process = server.start_server()
     try:
         server.wait_until_ready()
@@ -166,9 +158,9 @@ def test_hardpy_run_and_hardpy_start_args_incorrect(
 
 
 @pytest.mark.manual
-def test_hardpy_run_and_pytest_args(project_dir_with_args: Path, hardpy_server_class):  # noqa: ANN001
+def test_hardpy_run_and_pytest_args(project_dir_with_args: Path):
     """Test that hardpy run and hardpy start can be used together."""
-    server = hardpy_server_class(project_dir_with_args)
+    server = HardPyServer(project_dir_with_args)
     server_process = server.start_server()
     try:
         server.wait_until_ready()
@@ -195,12 +187,9 @@ def test_hardpy_run_and_pytest_args(project_dir_with_args: Path, hardpy_server_c
 
 
 @pytest.mark.manual
-def test_hardpy_run_and_api_start_args(
-    project_dir_with_args: Path,
-    hardpy_server_class,  # noqa: ANN001
-):
+def test_hardpy_run_and_api_start_args(project_dir_with_args: Path):
     """Test that hardpy run and hardpy start can be used together."""
-    server = hardpy_server_class(project_dir_with_args)
+    server = HardPyServer(project_dir_with_args)
     server_process = server.start_server()
     try:
         server.wait_until_ready()
@@ -219,12 +208,9 @@ def test_hardpy_run_and_api_start_args(
 
 
 @pytest.mark.manual
-def test_hardpy_run_and_api_start_args_incorrect(
-    project_dir_with_args: Path,
-    hardpy_server_class,  # noqa: ANN001
-):
+def test_hardpy_run_and_api_start_args_incorrect(project_dir_with_args: Path):
     """Test that hardpy run and hardpy start can be used together."""
-    server = hardpy_server_class(project_dir_with_args)
+    server = HardPyServer(project_dir_with_args)
     server_process = server.start_server()
     try:
         server.wait_until_ready()

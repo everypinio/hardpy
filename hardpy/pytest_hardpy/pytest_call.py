@@ -13,27 +13,26 @@ from pycouchdb.exceptions import NotFound
 from pydantic import ValidationError
 
 from hardpy.pytest_hardpy.db import (
+    Chart,
     DatabaseField as DF,  # noqa: N817
+    Instrument,
+    NumericMeasurement,
     ResultRunStore,
     RunStore,
+    StringMeasurement,
+    SubUnit,
 )
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
-    Chart,
     DialogBox,
     DuplicateParameterError,
     HTMLComponent,
     ImageComponent,
-    Instrument,
-    NumericMeasurement,
-    StringMeasurement,
-    SubUnit,
     TestStandNumberError,
 )
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
-    from datetime import datetime
 
 
 @dataclass
@@ -154,7 +153,7 @@ def set_dut_sub_unit(sub_unit: SubUnit) -> int:
     return len(sub_units) - 1
 
 
-def set_dut_info(info: Mapping[str, str | int | float | datetime]) -> None:
+def set_dut_info(info: Mapping[str, str | int | float]) -> None:
     """Set DUT info to document.
 
     Args:
@@ -278,13 +277,13 @@ def set_stand_name(name: str) -> None:
     reporter.update_db_by_doc()
 
 
-def set_stand_info(info: Mapping[str, str | int | float | datetime]) -> None:
+def set_stand_info(info: Mapping[str, str | int | float]) -> None:
     """Add test stand info to document.
 
     Args:
-        info (Mapping[str, str | int | float | datetime]): test stand info as a mapping
-            where keys are strings and values can be strings, integers, floats or datetime objects
-    """  # noqa: E501
+        info (Mapping[str, str | int | float ]): test stand info as a mapping
+            where keys are strings and values can be strings, integers, floats objects
+    """
     reporter = RunnerReporter()
     for stand_key, stand_value in info.items():
         key = reporter.generate_key(DF.TEST_STAND, DF.INFO, stand_key)
@@ -524,7 +523,7 @@ def set_process_number(number: int) -> None:
     reporter.update_db_by_doc()
 
 
-def set_process_info(info: Mapping[str, str | int | float | datetime]) -> None:
+def set_process_info(info: Mapping[str, str | int | float]) -> None:
     """Set process info to document.
 
     Args:

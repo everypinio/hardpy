@@ -9,7 +9,8 @@ pytest_plugins = "pytester"
 
 @pytest.fixture
 def hardpy_opts():
-    config_data = ConfigManager().read_config(
+    config_manager = ConfigManager()
+    config_data = config_manager.read_config(
         Path(__file__).parent.resolve(),
     )
     if not config_data:
@@ -18,6 +19,6 @@ def hardpy_opts():
     return [
         "--hardpy-clear-database",
         "--hardpy-db-url",
-        config_data.database.connection_url(),
+        config_data.database.url,
         "--hardpy-pt",
     ]
