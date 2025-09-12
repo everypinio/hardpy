@@ -183,9 +183,7 @@ export class TestSuite extends React.Component<Props, State> {
           className="test-suite-content"
         >
           {this.props.test.status != "busy" ? (
-            <div ref={this.dataColumnRef}>
-              {this.renderTests(this.props.test.cases)}
-            </div>
+            <div>{this.renderTests(this.props.test.cases)}</div>
           ) : (
             <Spin indicator={TestSuite.LOADING_ICON} />
           )}
@@ -196,7 +194,7 @@ export class TestSuite extends React.Component<Props, State> {
 
   componentDidMount() {
     this.setupResizeObserver();
-    this.updateWidth();
+    this.updateDataColumnWidth();
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -205,7 +203,7 @@ export class TestSuite extends React.Component<Props, State> {
     const panelJustOpened = this.state.isOpen && !prevState.isOpen;
 
     if (statusBecameReady || panelJustOpened) {
-      this.updateWidth();
+      this.updateDataColumnWidth();
     }
   }
 
@@ -219,7 +217,13 @@ export class TestSuite extends React.Component<Props, State> {
 
       this.resizeObserver = new ResizeObserver((entries) => {
         for (const entry of entries) {
-          this.setState({ dataColumnWidth: entry.contentRect.width });
+          const dataCells = entry.target.querySelectorAll(
+            '[data-column-id="data"]'
+          );
+          if (dataCells.length > 0) {
+            const firstDataCell = dataCells[0] as HTMLElement;
+            this.setState({ dataColumnWidth: firstDataCell.offsetWidth });
+          }
         }
       });
 
@@ -234,11 +238,17 @@ export class TestSuite extends React.Component<Props, State> {
     }
   };
 
-  private readonly updateWidth = () => {
+  private readonly updateDataColumnWidth = () => {
     if (this.dataColumnRef.current) {
-      this.setState({
-        dataColumnWidth: this.dataColumnRef.current.offsetWidth,
-      });
+      const dataCells = this.dataColumnRef.current.querySelectorAll(
+        '[data-column-id="data"]'
+      );
+      if (dataCells.length > 0) {
+        const firstDataCell = dataCells[0] as HTMLElement;
+        this.setState({
+          dataColumnWidth: firstDataCell.offsetWidth,
+        });
+      }
     }
   };
 
@@ -298,7 +308,9 @@ export class TestSuite extends React.Component<Props, State> {
         name: this.props.t("testSuite.nameColumn"),
         selector: (row) => row,
         cell: this.cellRendererName.bind(this, case_array),
-        grow: 4,
+        // grow: 4,
+        minWidth: "50px",
+        with: "100px",
       },
       {
         id: "data",
@@ -306,18 +318,26 @@ export class TestSuite extends React.Component<Props, State> {
         selector: (row) => row,
         cell: this.cellRendererData.bind(this, case_array),
         grow: 18,
+        cellProps: () => ({ "data-column-id": "data" }),
       },
     ];
 
     return (
       // compensation for 1px shadow of Table
-      <div style={{ margin: "3px", paddingBottom: "4px", borderRadius: "2px" }}>
+      <div
+        ref={this.dataColumnRef}
+        style={{ margin: "3px", paddingBottom: "4px", borderRadius: "2px" }}
+      >
         <DataTable
           noHeader={true}
           columns={columns}
           data={case_names}
           highlightOnHover={true}
           dense={true}
+          responsive={true}
+          persistTableHead={false}
+          fixedHeader={false}
+          fixedHeaderScrollHeight="unset"
         />
       </div>
     );
@@ -439,7 +459,10 @@ export class TestSuite extends React.Component<Props, State> {
     const test = test_topics[rowIndex];
 
     return this.commonCellRender(
-      <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
+      <div
+        style={{ marginTop: "0.2em", marginBottom: "0.2em" }}
+        data-column-id="data"
+      >
         <TestData
           assertion_msg={test.assertion_msg}
           msg={test.msg}

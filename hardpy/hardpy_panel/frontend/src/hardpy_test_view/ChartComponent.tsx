@@ -46,9 +46,18 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
       let width = 0;
 
       if (containerWidth && containerWidth > 0) {
-        width = containerWidth * 0.7;
+        if (containerWidth <= 617) {
+          width = 200;
+        } else {
+          width = containerWidth - 60;
+        }
       } else if (containerRef.current) {
-        width = containerRef.current.offsetWidth * 0.7;
+        const currentWidth = containerRef.current.offsetWidth;
+        if (currentWidth <= 617) {
+          width = 200;
+        } else {
+          width = currentWidth - 60;
+        }
       }
 
       const finalWidth = Math.max(250, width);
@@ -250,8 +259,8 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
           padding: "10px",
           borderRadius: "3px",
           width: "100%",
-          minWidth: "600px",
-          minHeight: "300px",
+          minWidth: "200px",
+          minHeight: "200px",
           overflow: "hidden",
           boxSizing: "border-box",
           background: "#fff",
