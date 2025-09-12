@@ -2,7 +2,7 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
-* Add charts.
+* Add the charts view to the HardPy operator panel.
   [[PR-186](https://github.com/everypinio/hardpy/pull/186)]
 
 ## HardPy 0.15.0
