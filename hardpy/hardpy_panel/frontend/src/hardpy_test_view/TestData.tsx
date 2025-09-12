@@ -133,9 +133,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
     width: window.innerWidth * 0.9,
     height: window.innerHeight * 0.9,
     title:
-      props.chart?.chart_title ||
-      props.chart?.title ||
-      t("chart.dataChart"),
+      props.chart?.chart_title || props.chart?.title || t("chart.dataChart"),
     xaxis: {
       title: props.chart?.x_label || undefined,
     },
