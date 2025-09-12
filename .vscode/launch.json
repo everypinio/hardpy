@@ -203,6 +203,10 @@
                 "vite"
             ],
             "console": "integratedTerminal",
+            "env": {
+                // Add path to yarn and node to PATH
+                "PATH": "${env:HOME}/miniconda3/envs/hardpy/bin:${env:PATH}"
+            },
             "preLaunchTask": "yarn install"
         },
         {

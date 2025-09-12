@@ -4,8 +4,8 @@
 from logging import getLogger
 from typing import Any
 
+from hardpy.common.singleton import SingletonMeta
 from hardpy.pytest_hardpy.reporter.base import BaseReporter
-from hardpy.pytest_hardpy.utils import SingletonMeta
 
 
 class RunnerReporter(BaseReporter, metaclass=SingletonMeta):

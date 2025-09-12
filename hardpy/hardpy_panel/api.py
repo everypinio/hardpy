@@ -107,11 +107,22 @@ def couch_connection() -> dict:
     Returns:
         dict[str, str]: couchdb connection string
     """
-    connection_url = ConfigManager().get_config().database.connection_url()
+    config_manager = ConfigManager()
 
     return {
-        "connection_str": connection_url,
+        "connection_str": config_manager.config.database.url,
     }
+
+
+@app.get("/api/database_document_id")
+def database_document_id() -> dict:
+    """Get couchdb syncronized document name.
+
+    Returns:
+        dict[str, str]: couchdb connection string
+    """
+    config_manager = ConfigManager()
+    return {"document_id": config_manager.config.database.doc_id}
 
 
 @app.post("/api/confirm_dialog_box/{dialog_box_output}")
