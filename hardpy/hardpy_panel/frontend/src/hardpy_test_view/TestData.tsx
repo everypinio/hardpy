@@ -43,6 +43,12 @@ interface ChartSeriesData {
 
 const TAG_ELEMENT_STYLE = { margin: 2 };
 
+const MODAL_CONSTANTS = {
+  SIZE_RATIO: 0.9,
+  MARGIN_TOP: 10,
+  MIN_WIDTH: 200,
+} as const;
+
 /**
  * Renders a list of messages and an assertion message as styled tags.
  *
@@ -130,8 +136,8 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
   }));
 
   const fullScreenLayout = {
-    width: window.innerWidth * 0.9,
-    height: window.innerHeight * 0.9,
+    width: window.innerWidth * MODAL_CONSTANTS.SIZE_RATIO,
+    height: window.innerHeight * MODAL_CONSTANTS.SIZE_RATIO,
     title:
       props.chart?.chart_title || props.chart?.title || t("chart.dataChart"),
     xaxis: {
@@ -176,8 +182,8 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
           <div
             style={{
               width: "100%",
-              marginTop: "10px",
-              minWidth: "300px",
+              marginTop: `${MODAL_CONSTANTS.MARGIN_TOP}px`,
+              minWidth: `${MODAL_CONSTANTS.MIN_WIDTH}px`,
               boxSizing: "border-box",
             }}
           >
@@ -194,7 +200,10 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
           </div>
 
           <div
-            style={{ marginTop: "10px", cursor: "pointer" }}
+            style={{
+              marginTop: `${MODAL_CONSTANTS.MARGIN_TOP}px`,
+              cursor: "pointer",
+            }}
             onClick={() => setIsModalOpen(true)}
           ></div>
 
