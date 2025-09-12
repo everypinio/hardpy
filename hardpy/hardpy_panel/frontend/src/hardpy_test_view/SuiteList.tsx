@@ -7,7 +7,7 @@ import { H1, H2, H4, Tag, Divider } from "@blueprintjs/core";
 import { withTranslation, WithTranslation } from "react-i18next";
 
 import { TestItem, TestSuiteComponent } from "./TestSuite";
-import StartOperatorMsgDialog from "./OperatorMsg";
+import { StartOperatorMsgDialog, CLOSED_MESSAGES_KEY } from "./OperatorMsg";
 
 /**
  * Set of suites
@@ -89,7 +89,6 @@ interface Props extends WithTranslation {
 }
 
 const SECONDS_TO_MILLISECONDS = 1000;
-const CLOSED_MESSAGES_KEY = "closed_operator_messages";
 
 /**
  * Render a list of suites with tests inside

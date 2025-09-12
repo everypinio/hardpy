@@ -34,8 +34,14 @@ interface StartOperatorMsgDialogProps {
   html_border?: number;
 }
 
-const CLOSED_MESSAGES_KEY = "closed_operator_messages";
+export const CLOSED_MESSAGES_KEY = "closed_operator_messages";
 
+/**
+ * Retrieves IDs of closed operator messages from localStorage.
+ * Returns empty set if no data exists or on error.
+ * 
+ * @returns {Set<string>} Set of closed message IDs
+ */
 const getClosedMessages = (): Set<string> => {
   try {
     const stored = localStorage.getItem(CLOSED_MESSAGES_KEY);
