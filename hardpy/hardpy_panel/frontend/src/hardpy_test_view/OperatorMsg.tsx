@@ -39,7 +39,7 @@ export const CLOSED_MESSAGES_KEY = "closed_operator_messages";
 /**
  * Retrieves IDs of closed operator messages from localStorage.
  * Returns empty set if no data exists or on error.
- * 
+ *
  * @returns {Set<string>} Set of closed message IDs
  */
 const getClosedMessages = (): Set<string> => {
@@ -51,6 +51,11 @@ const getClosedMessages = (): Set<string> => {
   }
 };
 
+/**
+ * Saves closed message IDs to localStorage
+ * @param {Set<string>} messages - Set of message IDs to save
+ * @returns {void}
+ */
 const saveClosedMessages = (messages: Set<string>): void => {
   try {
     localStorage.setItem(
@@ -130,10 +135,18 @@ export function StartOperatorMsgDialog(
   const screenWidth = window.screen.width;
   const screenHeight = window.screen.height;
 
+  /**
+   * Checks if the current message has been closed by the user
+   * @returns {boolean} True if message is closed, false otherwise
+   */
   const isMessageClosed = (): boolean => {
     return props.id ? closedMessages.has(props.id) : false;
   };
 
+  /**
+   * Marks the current message as closed and saves to localStorage
+   * @returns {void}
+   */
   const markMessageAsClosed = (): void => {
     if (props.id) {
       const updatedClosedMessages = new Set(closedMessages);
@@ -187,6 +200,7 @@ export function StartOperatorMsgDialog(
    */
   const lineHeight: number =
     (LINE_HEIGHT_FACTOR * (props.font_size ?? BASE_FONT_SIZE)) / BASE_FONT_SIZE;
+
   /**
    * Calculates the optimal dialog width for text content.
    * Ensures the width doesn't exceed maximum screen size factor.
@@ -236,6 +250,9 @@ export function StartOperatorMsgDialog(
     margin: "0 auto",
   };
 
+  /**
+   * Effect hook for handling Escape key press to close dialog
+   */
   useEffect(() => {
     /**
      * Handles the keydown event to close the dialog when the Escape key is pressed.
@@ -257,6 +274,9 @@ export function StartOperatorMsgDialog(
     };
   });
 
+  /**
+   * Effect hook for managing dialog visibility based on props and closed state
+   */
   useEffect(() => {
     /**
      * Sets the dialog visibility based on the `is_visible` prop.
@@ -269,6 +289,9 @@ export function StartOperatorMsgDialog(
     }
   }, [props.id, props.is_visible, closedMessages]);
 
+  /**
+   * Effect hook for managing page scroll behavior when dialog is open/closed
+   */
   useEffect(() => {
     /**
      * Manages the page scroll behavior when the modal dialog is opened or closed.
