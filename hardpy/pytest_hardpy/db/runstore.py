@@ -5,9 +5,9 @@ from logging import getLogger
 
 from pycouchdb.exceptions import Conflict, NotFound
 
+from hardpy.common.singleton import SingletonMeta
 from hardpy.pytest_hardpy.db.base_store import BaseStore
 from hardpy.pytest_hardpy.db.schema import ResultRunStore
-from hardpy.pytest_hardpy.utils import SingletonMeta
 
 
 class RunStore(BaseStore, metaclass=SingletonMeta):

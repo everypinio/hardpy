@@ -7,8 +7,8 @@ from typing import TYPE_CHECKING
 from oauthlib.oauth2.rfc6749.errors import OAuth2Error
 from requests.exceptions import HTTPError
 
+from hardpy.common.config import ConfigManager
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
-from hardpy.pytest_hardpy.utils import ConnectionData
 
 if TYPE_CHECKING:
     from requests import Response
@@ -28,8 +28,8 @@ class StandCloudLoader:
                      Can be used outside of HardPy applications.
         """
         self._verify_ssl = not __debug__
-        connection_data = ConnectionData()
-        sc_addr = address if address else connection_data.sc_address
+        config_manager = ConfigManager()
+        sc_addr = address if address else config_manager.config.stand_cloud.address
         self._sc_connector = StandCloudConnector(sc_addr)
 
     def load(self, report: ResultRunStore, timeout: int = 20) -> Response:
