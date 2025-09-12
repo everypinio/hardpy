@@ -30,7 +30,7 @@
     "dbConnectionMessage": "Failed to establish connection with the database"
   },
   "chart": {
-    "testDataChart": "Test Data Chart",
+    "dataChart": "Chart Data",
     "xAxis": "X Axis",
     "yAxis": "Y Axis",
     "chart": "Chart",

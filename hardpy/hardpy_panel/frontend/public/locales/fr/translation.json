@@ -30,7 +30,7 @@
     "dbConnectionMessage": "Échec de la connexion à la base de données"
   },
   "chart": {
-    "testDataChart": "Graphique de Données de Test",
+    "dataChart": "Données du graphique",
     "xAxis": "Axe X",
     "yAxis": "Axe Y",
     "chart": "Graphique",

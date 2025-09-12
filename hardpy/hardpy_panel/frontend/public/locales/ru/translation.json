@@ -30,7 +30,7 @@
     "dbConnectionMessage": "Не удалось установить соединение с базой данных"
   },
   "chart": {
-    "testDataChart": "График тестовых данных",
+    "dataChart": "Данные графика",
     "xAxis": "Ось X",
     "yAxis": "Ось Y",
     "chart": "График",

@@ -26,6 +26,48 @@ interface ChartComponentProps extends WithTranslation {
   containerWidth?: number;
 }
 
+const CHART_CONSTANTS = {
+  MIN_WIDTH: 250,
+  MIN_HEIGHT: 300,
+  ASPECT_RATIO: 0.5,
+  COLLAPSED_MIN_WIDTH: 150,
+  COLLAPSED_MIN_HEIGHT: 200,
+  BORDER_RADIUS: 3,
+  PADDING: 10,
+  MARGIN: {
+    LEFT: 60,
+    RIGHT: 30,
+    BOTTOM: 60,
+    TOP: 60,
+    PAD: 4,
+  },
+  WIDTH_OFFSET: 60,
+  MODAL_SIZE: 0.9,
+  MARKER: {
+    SIZE: 8,
+    LINE_WIDTH: 1,
+  },
+  LINE_WIDTH: 2,
+  FONT_SIZES: {
+    TITLE: 16,
+    AXIS: 12,
+    MODAL_TITLE: 20,
+    MODAL_AXIS: 14,
+  },
+  COLORS: {
+    GRID: "#eee",
+    BACKGROUND: "#f9f9f9",
+    PAPER: "#fff",
+    COLLAPSED_BACKGROUND: "#f5f5f5",
+    BORDER: "#ccc",
+    LEGEND_BACKGROUND: "rgba(255, 255, 255, 0.8)",
+    LEGEND_BORDER: "#ccc",
+  },
+  Z_INDEX: {
+    CONTROLS: 100,
+  },
+} as const;
+
 const ChartComponent: React.FC<ChartComponentProps> = ({
   charts,
   isCollapsed = false,
@@ -46,22 +88,17 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
       let width = 0;
 
       if (containerWidth && containerWidth > 0) {
-        if (containerWidth <= 617) {
-          width = 200;
-        } else {
-          width = containerWidth - 60;
-        }
+        width = containerWidth - CHART_CONSTANTS.WIDTH_OFFSET;
       } else if (containerRef.current) {
         const currentWidth = containerRef.current.offsetWidth;
-        if (currentWidth <= 617) {
-          width = 200;
-        } else {
-          width = currentWidth - 60;
-        }
+        width = currentWidth - CHART_CONSTANTS.WIDTH_OFFSET;
       }
 
-      const finalWidth = Math.max(250, width);
-      const finalHeight = Math.max(300, finalWidth * 0.5);
+      const finalWidth = Math.max(CHART_CONSTANTS.MIN_WIDTH, width);
+      const finalHeight = Math.max(
+        CHART_CONSTANTS.MIN_HEIGHT,
+        finalWidth * CHART_CONSTANTS.ASPECT_RATIO
+      );
 
       setDimensions({ width: finalWidth, height: finalHeight });
     };
@@ -109,14 +146,11 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
   };
 
   const chartTitle =
-    title ||
-    (charts.length > 0 && charts[0].chart_title) ||
-    t("chart.testDataChart");
-
+    title || (charts.length > 0 ? charts[0].chart_title : undefined);
   const xAxisLabel =
-    xLabel || (charts.length > 0 && charts[0].x_label) || t("chart.xAxis");
+    xLabel || (charts.length > 0 ? charts[0].x_label : undefined);
   const yAxisLabel =
-    yLabel || (charts.length > 0 && charts[0].y_label) || t("chart.yAxis");
+    yLabel || (charts.length > 0 ? charts[0].y_label : undefined);
 
   const plotData = charts.map((chart, index) => ({
     x: chart.x_data,
@@ -127,53 +161,59 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     marker: {
       color: `hsl(${(index * 360) / charts.length}, 70%, 50%)`,
       symbol: markerSymbols[index % markerSymbols.length],
-      size: 8,
+      size: CHART_CONSTANTS.MARKER.SIZE,
       line: {
-        width: 1,
+        width: CHART_CONSTANTS.MARKER.LINE_WIDTH,
         color: `hsl(${(index * 360) / charts.length}, 70%, 30%)`,
       },
     },
     line: {
-      width: 2,
+      width: CHART_CONSTANTS.LINE_WIDTH,
     },
   }));
 
   const layout = {
     width: dimensions.width,
-    height: 300,
-    title: {
-      text: chartTitle,
-      x: 0.5,
-      xanchor: "center",
-      font: {
-        size: 16,
-        weight: "bold",
-      },
-    },
+    height: CHART_CONSTANTS.MIN_HEIGHT,
+    title: chartTitle
+      ? {
+          text: chartTitle,
+          x: 0.5,
+          xanchor: "center",
+          font: {
+            size: CHART_CONSTANTS.FONT_SIZES.TITLE,
+            weight: "bold",
+          },
+        }
+      : undefined,
     xaxis: {
-      title: {
-        text: xAxisLabel,
-        font: {
-          size: 12,
-          weight: "bold",
-        },
-      },
+      title: xAxisLabel
+        ? {
+            text: xAxisLabel,
+            font: {
+              size: CHART_CONSTANTS.FONT_SIZES.AXIS,
+              weight: "bold",
+            },
+          }
+        : undefined,
       type: getAxisType("x"),
       showgrid: true,
-      gridcolor: "#eee",
+      gridcolor: CHART_CONSTANTS.COLORS.GRID,
       zeroline: false,
     },
     yaxis: {
-      title: {
-        text: yAxisLabel,
-        font: {
-          size: 12,
-          weight: "bold",
-        },
-      },
+      title: yAxisLabel
+        ? {
+            text: yAxisLabel,
+            font: {
+              size: CHART_CONSTANTS.FONT_SIZES.AXIS,
+              weight: "bold",
+            },
+          }
+        : undefined,
       type: getAxisType("y"),
       showgrid: true,
-      gridcolor: "#eee",
+      gridcolor: CHART_CONSTANTS.COLORS.GRID,
       zeroline: false,
     },
     showlegend: true,
@@ -182,50 +222,56 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
       y: 1,
       xanchor: "right",
       yanchor: "top",
-      bgcolor: "rgba(255, 255, 255, 0.8)",
-      bordercolor: "#ccc",
+      bgcolor: CHART_CONSTANTS.COLORS.LEGEND_BACKGROUND,
+      bordercolor: CHART_CONSTANTS.COLORS.LEGEND_BORDER,
       borderwidth: 1,
     },
     autosize: true,
     margin: {
-      l: 60,
-      r: 30,
-      b: 60,
-      t: 60,
-      pad: 4,
+      l: CHART_CONSTANTS.MARGIN.LEFT,
+      r: CHART_CONSTANTS.MARGIN.RIGHT,
+      b: CHART_CONSTANTS.MARGIN.BOTTOM,
+      t: CHART_CONSTANTS.MARGIN.TOP,
+      pad: CHART_CONSTANTS.MARGIN.PAD,
     },
     hovermode: "closest",
-    plot_bgcolor: "#f9f9f9",
-    paper_bgcolor: "#fff",
+    plot_bgcolor: CHART_CONSTANTS.COLORS.BACKGROUND,
+    paper_bgcolor: CHART_CONSTANTS.COLORS.PAPER,
   };
 
   const fullScreenLayout = {
     ...layout,
-    width: window.innerWidth * 0.9,
-    height: window.innerHeight * 0.9,
-    title: {
-      ...layout.title,
-      font: {
-        size: 20,
-      },
-    },
+    width: window.innerWidth * CHART_CONSTANTS.MODAL_SIZE,
+    height: window.innerHeight * CHART_CONSTANTS.MODAL_SIZE,
+    title: chartTitle
+      ? {
+          ...layout.title,
+          font: {
+            size: CHART_CONSTANTS.FONT_SIZES.MODAL_TITLE,
+          },
+        }
+      : undefined,
     xaxis: {
       ...layout.xaxis,
-      title: {
-        ...layout.xaxis.title,
-        font: {
-          size: 14,
-        },
-      },
+      title: xAxisLabel
+        ? {
+            ...layout.xaxis?.title,
+            font: {
+              size: CHART_CONSTANTS.FONT_SIZES.MODAL_AXIS,
+            },
+          }
+        : undefined,
     },
     yaxis: {
       ...layout.yaxis,
-      title: {
-        ...layout.yaxis.title,
-        font: {
-          size: 14,
-        },
-      },
+      title: yAxisLabel
+        ? {
+            ...layout.yaxis?.title,
+            font: {
+              size: CHART_CONSTANTS.FONT_SIZES.MODAL_AXIS,
+            },
+          }
+        : undefined,
     },
   };
 
@@ -233,17 +279,19 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     return (
       <div
         style={{
-          border: "1px solid #ccc",
-          padding: "10px",
-          borderRadius: "3px",
-          background: "#f5f5f5",
+          border: `1px solid ${CHART_CONSTANTS.COLORS.BORDER}`,
+          padding: `${CHART_CONSTANTS.PADDING}px`,
+          borderRadius: `${CHART_CONSTANTS.BORDER_RADIUS}px`,
+          background: CHART_CONSTANTS.COLORS.COLLAPSED_BACKGROUND,
           display: "inline-block",
-          minWidth: "150px",
+          minWidth: `${CHART_CONSTANTS.COLLAPSED_MIN_WIDTH}px`,
           maxWidth: "100%",
         }}
       >
         <Button icon="chevron-down" onClick={onToggleCollapse} minimal small>
-          {t("chart.showChart", { title: chartTitle })}
+          {t("chart.showChart", {
+            title: chartTitle || t("chart.defaultChartTitle"),
+          })}
         </Button>
       </div>
     );
@@ -255,23 +303,23 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
         ref={containerRef}
         style={{
           position: "relative",
-          border: "1px solid #ccc",
-          padding: "10px",
-          borderRadius: "3px",
+          border: `1px solid ${CHART_CONSTANTS.COLORS.BORDER}`,
+          padding: `${CHART_CONSTANTS.PADDING}px`,
+          borderRadius: `${CHART_CONSTANTS.BORDER_RADIUS}px`,
           width: "100%",
-          minWidth: "200px",
-          minHeight: "200px",
+          minWidth: `${CHART_CONSTANTS.COLLAPSED_MIN_WIDTH}px`,
+          minHeight: `${CHART_CONSTANTS.COLLAPSED_MIN_HEIGHT}px`,
           overflow: "hidden",
           boxSizing: "border-box",
-          background: "#fff",
+          background: CHART_CONSTANTS.COLORS.PAPER,
         }}
       >
         <div
           style={{
             position: "absolute",
-            top: "10px",
-            right: "10px",
-            zIndex: 100,
+            top: `${CHART_CONSTANTS.PADDING}px`,
+            right: `${CHART_CONSTANTS.PADDING}px`,
+            zIndex: CHART_CONSTANTS.Z_INDEX.CONTROLS,
           }}
         >
           <Button
@@ -306,7 +354,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
         style={{
           width: "90vw",
           height: "90vh",
-          padding: "10px",
+          padding: `${CHART_CONSTANTS.PADDING}px`,
           boxSizing: "border-box",
         }}
       >

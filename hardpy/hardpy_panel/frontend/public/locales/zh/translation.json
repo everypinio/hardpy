@@ -30,7 +30,7 @@
     "dbConnectionMessage": "无法建立数据库连接"
   },
   "chart": {
-    "testDataChart": "测试数据图表",
+    "dataChart": "图表数据",
     "xAxis": "X轴",
     "yAxis": "Y轴",
     "chart": "图表",

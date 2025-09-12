@@ -8,7 +8,7 @@ class Chart(BaseModel):
     """A class representing chart translations.
 
     Attributes:
-        testDataChart (str): The translation for the "testDataChart" text.
+        dataChart (str): The translation for the "dataChart" text.
         xAxis (str): The translation for the "xAxis" text.
         yAxis (str): The translation for the "yAxis" text.
         chart (str): The translation for the "chart" text.
@@ -17,7 +17,7 @@ class Chart(BaseModel):
         series (str): The translation for the "series" text.
     """
 
-    testDataChart: str
+    dataChart: str
     xAxis: str
     yAxis: str
     chart: str

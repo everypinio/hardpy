@@ -135,7 +135,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
     title:
       props.chart?.chart_title ||
       props.chart?.title ||
-      t("chart.testDataChart"),
+      t("chart.dataChart"),
     xaxis: {
       title: props.chart?.x_label || undefined,
     },

@@ -30,7 +30,7 @@
     "dbConnectionMessage": "Verbindung zur Datenbank konnte nicht hergestellt werden"
   },
   "chart": {
-    "testDataChart": "Testdaten-Diagramm",
+    "dataChart": "Diagrammdaten",
     "xAxis": "X-Achse",
     "yAxis": "Y-Achse",
     "chart": "Diagramm",

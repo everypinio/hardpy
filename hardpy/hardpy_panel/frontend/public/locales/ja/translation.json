@@ -30,7 +30,7 @@
     "dbConnectionMessage": "データベースへの接続に失敗しました"
   },
   "chart": {
-    "testDataChart": "テストデータグラフ",
+    "dataChart": "チャートデータ",
     "xAxis": "X軸",
     "yAxis": "Y軸",
     "chart": "グラフ",
