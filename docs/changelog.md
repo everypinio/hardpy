@@ -2,6 +2,22 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Change the database and interface synchronization mechanism.
+  The **statestore** and **runstore** databases can contain multiple documents, 
+  which are defined by the frontend host name and port.
+  The **current** document is no longer being created.
+  The name of the document in the database consists of the 
+  host name and port for the frontend, as described in the **hardpy.toml** file.
+  [[PR-187](https://github.com/everypinio/hardpy/pull/187)]
+* Simplify the process of working with multiple **HardPy** instances by 
+  using a single **CouchDB** instance instead of multiple instances.
+  [[PR-187](https://github.com/everypinio/hardpy/pull/187)]
+
+## HardPy 0.15.1
+
+* Remove the `datetime` type from the info fields in all tables.
+  [[PR-188](https://github.com/everypinio/hardpy/pull/188)]
+
 ## HardPy 0.15.0
 
 * Remove `tests_dir` variable from **hardpy.toml**. 

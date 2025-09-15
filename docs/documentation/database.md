@@ -17,7 +17,7 @@ The CouchDB version must be equal to or greater than the 3.2 version.
 The pytest plugin has 2 databases: **statestore** and **runstore**.
 
 - The **statestore** database uses for frontend [data synchronization](./../about/frontend_sync.md).
-- The **runstore** database contains the document **current**, which is a JSON object
+- The **runstore** database contains the document, which is a JSON object
 that stores the current state of the test run.
 
 A separate database is required to store the list of reports.
@@ -55,7 +55,7 @@ stores the current report and **report** stores reports.
     <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/database/runstore.png" alt="runstore_scheme">
 </h1>
 
-The **current** document of **runstore** database contains some section.
+The document of **runstore** database contains some section.
 
 #### main
 
@@ -417,7 +417,7 @@ For example, the firmware version comparison.
 
 ### Report example
 
-Example of a **current** document:
+Example of a document:
 
 ```json
     {

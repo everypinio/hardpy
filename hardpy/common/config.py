@@ -7,7 +7,9 @@ from pathlib import Path
 
 import tomli
 import tomli_w
-from pydantic import BaseModel, ConfigDict, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
+
+from hardpy.common.singleton import SingletonMeta
 
 logger = getLogger(__name__)
 
@@ -21,8 +23,14 @@ class DatabaseConfig(BaseModel):
     password: str = "dev"
     host: str = "localhost"
     port: int = 5984
+    doc_id: str = Field(exclude=True, default="")
+    url: str = Field(exclude=True, default="")
 
-    def connection_url(self) -> str:
+    def model_post_init(self, __context) -> None:  # noqa: ANN001,PYI063
+        """Get database connection url."""
+        self.url = self.get_url()
+
+    def get_url(self) -> str:
         """Get database connection url.
 
         Returns:
@@ -63,16 +71,42 @@ class HardpyConfig(BaseModel, extra="allow"):
     frontend: FrontendConfig = FrontendConfig()
     stand_cloud: StandCloudConfig = StandCloudConfig()
 
+    def model_post_init(self, __context) -> None:  # noqa: ANN001,PYI063
+        """Get database document name."""
+        self.database.doc_id = self.get_doc_id()
 
-class ConfigManager:
+    def get_doc_id(self) -> str:
+        """Update database document name."""
+        return f"{self.frontend.host}_{self.frontend.port}"
+
+
+class ConfigManager(metaclass=SingletonMeta):
     """HardPy configuration manager."""
 
-    obj = HardpyConfig()
-    tests_path = Path.cwd()
+    def __init__(self) -> None:
+        self._config = HardpyConfig()
+        self._test_path = Path.cwd()
 
-    @classmethod
+    @property
+    def config(self) -> HardpyConfig:
+        """Get HardPy configuration.
+
+        Returns:
+            HardpyConfig: HardPy configuration
+        """
+        return self._config
+
+    @property
+    def tests_path(self) -> Path:
+        """Get tests path.
+
+        Returns:
+            Path: HardPy tests path
+        """
+        return self._tests_path
+
     def init_config(  # noqa: PLR0913
-        cls,
+        self,
         tests_name: str,
         database_user: str,
         database_password: str,
@@ -84,7 +118,9 @@ class ConfigManager:
         sc_address: str = "",
         sc_connection_only: bool = False,
     ) -> None:
-        """Initialize HardPy configuration.
+        """Initialize the HardPy configuration.
+
+        Only call once to create a configuration.
 
         Args:
             tests_name (str): Tests suite name.
@@ -98,34 +134,37 @@ class ConfigManager:
             sc_address (str): StandCloud address.
             sc_connection_only (bool): StandCloud check availability.
         """
-        cls.obj.tests_name = tests_name
-        cls.obj.database.user = database_user
-        cls.obj.database.password = database_password
-        cls.obj.database.host = database_host
-        cls.obj.database.port = database_port
-        cls.obj.frontend.host = frontend_host
-        cls.obj.frontend.port = frontend_port
-        cls.obj.frontend.language = frontend_language
-        cls.obj.stand_cloud.address = sc_address
-        cls.obj.stand_cloud.connection_only = sc_connection_only
+        self._config.tests_name = tests_name
+        self._config.frontend.host = frontend_host
+        self._config.frontend.port = frontend_port
+        self._config.frontend.language = frontend_language
+        self._config.database.user = database_user
+        self._config.database.password = database_password
+        self._config.database.host = database_host
+        self._config.database.port = database_port
+        self._config.database.doc_id = self._config.get_doc_id()
+        self._config.database.url = self._config.database.get_url()
+        self._config.stand_cloud.address = sc_address
+        self._config.stand_cloud.connection_only = sc_connection_only
 
-    @classmethod
-    def create_config(cls, parent_dir: Path) -> None:
+    def create_config(self, parent_dir: Path) -> None:
         """Create HardPy configuration.
 
         Args:
             parent_dir (Path): Configuration file parent directory.
         """
-        if not cls.obj.stand_cloud.address:
-            del cls.obj.stand_cloud
-        if not cls.obj.tests_name:
-            del cls.obj.tests_name
-        config_str = tomli_w.dumps(cls.obj.model_dump())
+        config = self._config
+        if not self._config.stand_cloud.address:
+            del config.stand_cloud
+        if not self._config.tests_name:
+            del config.tests_name
+        if not self._config.database.doc_id:
+            del config.database.doc_id
+        config_str = tomli_w.dumps(config.model_dump())
         with Path.open(parent_dir / "hardpy.toml", "w") as file:
             file.write(config_str)
 
-    @classmethod
-    def read_config(cls, toml_path: Path) -> HardpyConfig | None:
+    def read_config(self, toml_path: Path) -> HardpyConfig | None:
         """Read HardPy configuration.
 
         Args:
@@ -134,10 +173,9 @@ class ConfigManager:
         Returns:
             HardpyConfig | None: HardPy configuration
         """
-        cls.tests_path = toml_path
+        self._tests_path = toml_path
         toml_file = toml_path / "hardpy.toml"
         if not toml_file.exists():
-            logger.error("File hardpy.toml not found at path: %s", toml_file)
             return None
         try:
             with Path.open(toml_path / "hardpy.toml", "rb") as f:
@@ -148,26 +186,8 @@ class ConfigManager:
             return None
 
         try:
-            cls.obj = HardpyConfig(**toml_data)
+            self._config = HardpyConfig(**toml_data)
         except ValidationError:
             logger.exception("Error parsing TOML")
             return None
-        return cls.obj
-
-    @classmethod
-    def get_config(cls) -> HardpyConfig:
-        """Get HardPy configuration.
-
-        Returns:
-            HardpyConfig: HardPy configuration
-        """
-        return cls.obj
-
-    @classmethod
-    def get_tests_path(cls) -> Path:
-        """Get tests path.
-
-        Returns:
-            Path: HardPy tests path
-        """
-        return cls.tests_path
+        return self._config

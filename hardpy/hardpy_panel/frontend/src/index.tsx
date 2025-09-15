@@ -8,21 +8,20 @@ import { useTranslation } from "react-i18next";
 import PouchDB from "pouchdb-browser";
 import { Provider } from "use-pouchdb";
 
-
 import "normalize.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
-import './i18n';
+import "./i18n";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 function ErrorMessage() {
   const { t } = useTranslation();
-  
+
   return (
-    <div style={{ padding: '20px', textAlign: 'center' }}>
-      <h1>{t('error.dbConnectionTitle')}</h1>
-      <p>{t('error.dbConnectionMessage')}</p>
+    <div style={{ padding: "20px", textAlign: "center" }}>
+      <h1>{t("error.dbConnectionTitle")}</h1>
+      <p>{t("error.dbConnectionMessage")}</p>
     </div>
   );
 }
@@ -45,6 +44,21 @@ async function getSyncURL(): Promise<string | undefined> {
   }
 }
 
+/**
+ * Gets the syncronization document ID from the backend API.
+ * @returns {Promise<string>} A promise that resolves to the sync document ID as a string.
+ */
+async function getDatabaseDocumentId(): Promise<string> {
+  try {
+    const response = await fetch("/api/database_document_id");
+    const data = await response.json();
+    return data.document_id;
+  } catch (error) {
+    console.error(error);
+    return "current";
+  }
+}
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
@@ -52,6 +66,8 @@ const root = ReactDOM.createRoot(
 const syncURL = await getSyncURL();
 if (syncURL !== undefined) {
   const db = new PouchDB(syncURL);
+
+  const syncDocumentId = await getDatabaseDocumentId();
 
   /**
    * Renders the main application wrapped in a PouchDB Provider and React StrictMode.
@@ -61,7 +77,7 @@ if (syncURL !== undefined) {
   root.render(
     <StrictMode>
       <Provider pouchdb={db}>
-        <App />
+        <App syncDocumentId={syncDocumentId} />
       </Provider>
     </StrictMode>
   );
