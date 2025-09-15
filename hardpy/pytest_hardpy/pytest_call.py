@@ -43,10 +43,17 @@ class CurrentTestInfo:
     case_id: str
 
 
-class ErrorCodeMeta(type):
-    """Error code metaclass."""
+class ErrorCode:
+    """Save error code and return error message.
 
-    def __call__(cls, code: int, message: str | None = None) -> str | None:
+    It must be called from an assert.
+
+    Args:
+        code (int): error code.
+        message (str): error message.
+    """
+
+    def __init__(self, code: int, message: str | None = None) -> str | None:
         """Add error code to document.
 
         Args:
@@ -64,19 +71,13 @@ class ErrorCodeMeta(type):
         if reporter.get_field(key) is None:
             reporter.set_doc_value(key, code)
             reporter.update_db_by_doc()
-        if message:  # noqa: RET503
-            return message
+        self._message = message
 
+    def __repr__(self) -> str:
+        return self._message
 
-class ErrorCode(metaclass=ErrorCodeMeta):
-    """Save error code and return error message.
-
-    It must be called from an assert.
-
-    Args:
-        code (int): error code.
-        message (str): error message.
-    """
+    def __str__(self) -> str | None:
+        return self._message
 
 
 def get_current_report() -> ResultRunStore | None:
