@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+import json
 import os
 import re
 from enum import Enum
@@ -9,14 +10,14 @@ from pathlib import Path
 from typing import Annotated
 from urllib.parse import unquote
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Request
 from fastapi.staticfiles import StaticFiles
 
 from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
 
 app = FastAPI()
-app.state.pytest_wrp = PyTestWrapper()
+app.state.pytest_wrp = PyTestWrapper(app)
 
 
 class Status(str, Enum):
@@ -161,6 +162,23 @@ def confirm_operator_msg(is_msg_visible: str) -> dict:
     if app.state.pytest_wrp.send_data(str(is_msg_visible)):
         return {"status": Status.BUSY}
     return {"status": Status.ERROR}
+
+
+@app.post("/api/selected_tests")
+async def set_selected_tests(request: Request) -> dict:
+    try:
+        selected_tests_list = await request.json()
+
+        if not isinstance(selected_tests_list, list):
+            raise TypeError("Expected list.")
+
+        app.state.selected_tests = selected_tests_list
+        return {
+            "status": "success",
+            "message": f"Selected {len(selected_tests_list)} tests",
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
 
 
 if "DEBUG_FRONTEND" not in os.environ:

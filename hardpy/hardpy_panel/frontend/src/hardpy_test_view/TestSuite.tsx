@@ -107,7 +107,7 @@ export class TestSuite extends React.Component<Props, State> {
 
   static defaultProps: Partial<Props> = {
     defaultOpen: true,
-    selectionSupported: true, 
+    selectionSupported: true,
   };
 
   /**
@@ -235,6 +235,7 @@ export class TestSuite extends React.Component<Props, State> {
         const testFullPath = `${test.name}::${test.cases[caseName].name}`;
         return this.state.selectedTests.has(testFullPath);
       }).length;
+      console.log("Selected tests being sent:", this.state.selectedTests);
 
       return selectedCount > 0 && selectedCount < case_names.length;
     }
@@ -383,9 +384,12 @@ export class TestSuite extends React.Component<Props, State> {
         newSelectedTests.delete(testPath);
       }
 
-      // Notify parent component about selection change
+      const selectedTestsArray = Array.from(newSelectedTests);
+
+      this.sendSelectedTestsToBackend(selectedTestsArray);
+
       if (this.props.onTestsSelectionChange) {
-        this.props.onTestsSelectionChange(Array.from(newSelectedTests));
+        this.props.onTestsSelectionChange(selectedTestsArray);
       }
 
       return { selectedTests: newSelectedTests };
@@ -416,9 +420,13 @@ export class TestSuite extends React.Component<Props, State> {
         });
       }
 
+      const selectedTestsArray = Array.from(newSelectedTests);
+
+      this.sendSelectedTestsToBackend(selectedTestsArray);
+
       // Notify parent component about selection change
       if (this.props.onTestsSelectionChange) {
-        this.props.onTestsSelectionChange(Array.from(newSelectedTests));
+        this.props.onTestsSelectionChange(selectedTestsArray);
       }
 
       return { selectedTests: newSelectedTests };
@@ -617,6 +625,27 @@ export class TestSuite extends React.Component<Props, State> {
       </div>,
       `status_${rowIndex}_${row_}`
     );
+  }
+
+
+  private sendSelectedTestsToBackend(selectedTests: string[]): void {
+      const testsJsonString = JSON.stringify(selectedTests);
+      
+      console.log("Selected tests being sent:", selectedTests);
+      fetch(`/api/selected_tests`, {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: testsJsonString,
+      })
+          .then((response) => response.json())
+          .then((data) => {
+              console.log("Selected tests sent to backend:", data);
+          })
+          .catch((error) => {
+              console.error("Error sending selected tests:", error);
+          });
   }
 
   /**

@@ -7,6 +7,8 @@ import subprocess
 import sys
 from platform import system
 
+from fastapi import FastAPI
+
 from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
 from hardpy.pytest_hardpy.reporter import RunnerReporter
@@ -15,10 +17,11 @@ from hardpy.pytest_hardpy.reporter import RunnerReporter
 class PyTestWrapper:
     """Wrapper for pytest subprocess."""
 
-    def __init__(self) -> None:
+    def __init__(self, app: FastAPI) -> None:
         self._proc = None
         self._reporter = RunnerReporter()
         self.python_executable = sys.executable
+        self._app = app
 
         # Make sure test structure is stored in DB
         # before clients come in
@@ -28,6 +31,9 @@ class PyTestWrapper:
 
     def start(self, start_args: dict | None = None) -> bool:
         """Start pytest subprocess.
+
+        Args:
+            start_args: Additional start arguments
 
         Returns:
             bool: True if pytest was started
@@ -49,9 +55,16 @@ class PyTestWrapper:
             "--sc-address",
             self.config.stand_cloud.address,
         ]
+
+        selected_tests = getattr(self._app.state, "selected_tests", None)
+        if selected_tests:
+            for test_path in selected_tests:
+                cmd.append(test_path)
+
         if self.config.stand_cloud.connection_only:
             cmd.append("--sc-connection-only")
         cmd.append("--hardpy-pt")
+
         if start_args:
             for key, value in start_args.items():
                 arg_str = f"{key}={value}"
@@ -139,6 +152,21 @@ class PyTestWrapper:
         except Exception:  # noqa: BLE001
             return False
         return True
+
+    def send_selected_tests(self, selected_tests: list[str]) -> bool:
+        """Send selected tests to the FastAPI application's state.
+
+        Args:
+            selected_tests: A list of selected test paths.
+
+        Returns:
+            bool: True if the data was sent successfully.
+        """
+        try:
+            self._app.state.selected_tests = selected_tests
+            return True
+        except Exception:
+            return False
 
     def is_running(self) -> bool | None:
         """Check if pytest is running.
