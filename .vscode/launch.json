@@ -161,6 +161,17 @@
             ]
         },
         {
+            "name": "Python: Example Measurement",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "run",
+                "examples/measurement"
+            ]
+        },
+        {
             "name": "Python: Example Attempts",
             "type": "debugpy",
             "request": "launch",
@@ -192,6 +203,10 @@
                 "vite"
             ],
             "console": "integratedTerminal",
+            "env": {
+                // Add path to yarn and node to PATH
+                "PATH": "${env:HOME}/miniconda3/envs/hardpy/bin:${env:PATH}"
+            },
             "preLaunchTask": "yarn install"
         },
         {

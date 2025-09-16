@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+import copy
 import signal
 from logging import getLogger
 from pathlib import Path, PurePath
@@ -31,14 +32,10 @@ from pytest import (
     skip,
 )
 
+from hardpy.common.config import ConfigManager, HardpyConfig
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
 from hardpy.pytest_hardpy.reporter import HookReporter
-from hardpy.pytest_hardpy.utils import (
-    ConnectionData,
-    NodeInfo,
-    ProgressCalculator,
-    TestStatus,
-)
+from hardpy.pytest_hardpy.utils import NodeInfo, ProgressCalculator, TestStatus
 from hardpy.pytest_hardpy.utils.node_info import TestDependencyInfo
 
 if __debug__:
@@ -50,11 +47,11 @@ if __debug__:
 
 def pytest_addoption(parser: Parser) -> None:
     """Register argparse-style options."""
-    con_data = ConnectionData()
+    default_config = HardpyConfig()
     parser.addoption(
         "--hardpy-db-url",
         action="store",
-        default=con_data.database_url,
+        default=default_config.database.url,
         help="database url",
     )
     parser.addoption(
@@ -89,14 +86,20 @@ def pytest_addoption(parser: Parser) -> None:
     parser.addoption(
         "--sc-address",
         action="store",
-        default=con_data.sc_address,
+        default=default_config.stand_cloud.address,
         help="StandCloud address",
     )
     parser.addoption(
         "--sc-connection-only",
         action="store_true",
-        default=con_data.sc_connection_only,
+        default=default_config.stand_cloud.connection_only,
         help="check StandCloud availability",
+    )
+    parser.addoption(
+        "--hardpy-start-arg",
+        action="append",
+        default=[],
+        help="Dynamic arguments for test execution (key=value format)",
     )
 
 
@@ -125,6 +128,7 @@ class HardpyPlugin:
         self._dependencies = {}
         self._tests_name: str = ""
         self._is_critical_not_passed = False
+        self._start_args = {}
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -136,11 +140,15 @@ class HardpyPlugin:
 
     def pytest_configure(self, config: Config) -> None:
         """Configure pytest."""
-        con_data = ConnectionData()
+        config_manager = ConfigManager()
+        hardpy_config = config_manager.read_config(Path(config.rootpath))
+
+        if not hardpy_config:
+            hardpy_config = HardpyConfig()
 
         database_url = config.getoption("--hardpy-db-url")
         if database_url:
-            con_data.database_url = str(database_url)  # type: ignore
+            hardpy_config.database.url = str(database_url)  # type: ignore
 
         tests_name = config.getoption("--hardpy-tests-name")
         if tests_name:
@@ -152,17 +160,23 @@ class HardpyPlugin:
 
         sc_address = config.getoption("--sc-address")
         if sc_address:
-            con_data.sc_address = str(sc_address)  # type: ignore
+            hardpy_config.stand_cloud.address = str(sc_address)  # type: ignore
 
         sc_connection_only = config.getoption("--sc-connection-only")
         if sc_connection_only:
-            con_data.sc_connection_only = bool(sc_connection_only)  # type: ignore
+            hardpy_config.stand_cloud.connection_only = bool(sc_connection_only)  # type: ignore
+
+        _args = config.getoption("--hardpy-start-arg") or []
+        if _args:
+            self._start_args = dict(arg.split("=", 1) for arg in _args if "=" in arg)
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
         config.addinivalue_line("markers", "dependency")
         config.addinivalue_line("markers", "attempt")
         config.addinivalue_line("markers", "critical")
+        config.addinivalue_line("markers", "case_group")
+        config.addinivalue_line("markers", "module_group")
 
         # must be init after config data is set
         try:
@@ -237,12 +251,14 @@ class HardpyPlugin:
             # ignore collect only mode
             return True
 
-        con_data = ConnectionData()
+        config_manager = ConfigManager()
 
         # running tests depends on a connection to StandCloud
-        if con_data.sc_connection_only:
+        if config_manager.config.stand_cloud.connection_only:
             try:
-                sc_connector = StandCloudConnector(addr=con_data.sc_address)
+                sc_connector = StandCloudConnector(
+                    addr=config_manager.config.stand_cloud.address,
+                )
             except StandCloudError as exc:
                 msg = str(exc)
                 self._reporter.set_alert(msg)
@@ -250,7 +266,7 @@ class HardpyPlugin:
             try:
                 sc_connector.healthcheck()
             except Exception:  # noqa: BLE001
-                addr = con_data.sc_address
+                addr = config_manager.config.stand_cloud.address
                 msg = (
                     f"StandCloud service at the address {addr} "
                     "not available or HardPy user is not authorized"
@@ -301,10 +317,13 @@ class HardpyPlugin:
         if call.when != "call" or not call.excinfo:
             return
 
+        # failure item
         node_info = NodeInfo(item)
         attempt = node_info.attempt
         module_id = node_info.module_id
         case_id = node_info.case_id
+        caused_dut_failure_id = self._reporter.get_caused_dut_failure_id()
+        is_dut_failure = True
 
         if node_info.critical:
             self._is_critical_not_passed = True
@@ -317,18 +336,28 @@ class HardpyPlugin:
             self._reporter.set_module_status(module_id, TestStatus.RUN)
             self._reporter.set_case_status(module_id, case_id, TestStatus.RUN)
             self._reporter.set_case_attempt(module_id, case_id, current_attempt)
+            self._reporter.clear_case_data(module_id, case_id)
             self._reporter.update_db_by_doc()
 
             try:
                 item.runtest()
                 call.excinfo = None
                 self._is_critical_not_passed = False
+                is_dut_failure = False
                 self._reporter.set_case_status(module_id, case_id, TestStatus.PASSED)
+                # clear the error code if there were no failed tests before
+                if caused_dut_failure_id is None:
+                    self._reporter.clear_error_code()
                 break
             except AssertionError:
                 self._reporter.set_case_status(module_id, case_id, TestStatus.FAILED)
+                is_dut_failure = True
                 if current_attempt == attempt:
-                    return
+                    break
+
+        # set the caused dut failure id only the first time
+        if is_dut_failure and caused_dut_failure_id is None:
+            self._reporter.set_caused_dut_failure_id(module_id, case_id)
 
     # Reporting hooks
 
@@ -374,6 +403,15 @@ class HardpyPlugin:
             list[Callable]: list of post run methods
         """
         return self._post_run_functions
+
+    @fixture(scope="session")
+    def hardpy_start_args(self) -> dict:
+        """Get HardPy start arguments.
+
+        Returns:
+            dict: Parsed start arguments (key-value pairs)
+        """
+        return copy.deepcopy(self._start_args)
 
     # Not hooks
 

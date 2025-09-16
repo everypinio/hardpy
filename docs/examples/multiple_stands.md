@@ -2,71 +2,47 @@
 
 This is an example of running multiple stands on one PC.
 
-The example implements the launch of two stands and three CouchDB Instances.
-
-Each stand will record reports on the conducted testing in the CouchDB Instance
-assigned to it in the **runstore** and **statestore** databases.
-The third CouchDB Instance is needed to store reports in the **report**
-database on each conducted test of each stand.
-
-You can learn more about storing reports here
-[Couchdb instance](../documentation/database.md#couchdb-instance).
-
-### projects
-
-* Create 2 separate projects.
-
-```bash
-hardpy init tests_1
-```
-
-```bash
-hardpy init tests_2 --database-port 5985 --frontend-port 8001
-```
-
-### databases
-
-For the third database, you can use `hardpy init` and delete
-all files except the database folder and the `docker-compose.yaml` file.
-
-```bash
-hardpy init third_database --database-port 5986
-```
-
-#### conftest.py
-
-Modify `conftest.py` file in each project.
-Contains settings and fixtures for all tests:
-
-* The function of generating a report and recording it in the database `save_report_to_couchdb`;
-* The list of actions that will be performed after testing is filled in function `fill_actions_after_test`;
-
-To store reports from all booths in the third CouchDB Instance, specify the
-port numbers of this CouchDB Instance in the file `conftest.py` in the folder of each stand.
-
-```bash
-import pytest
-from hardpy import (
-    CouchdbLoader,
-    CouchdbConfig,
-    get_current_report,
-)
-
-def save_report_to_couchdb():
-    report = get_current_report()
-    if report:
-        loader = CouchdbLoader(CouchdbConfig(port=5986))
-        loader.load(report)
-
-@pytest.fixture(scope="session", autouse=True)
-def fill_actions_after_test(post_run_functions: list):
-    post_run_functions.append(save_report_to_couchdb)
-    yield
-```
-
-* `5986` - port of the database with reports
+Each stand will record reports on the testing it conducts in the **CouchDB** 
+document assigned to it in the **runstore** and **statestore** databases.
 
 ### how to start
 
-1. Start all databases via **docker compose**.
-2. Launch both project via `hardpy run <project_name>`.
+1. Create three separate projects, each with a different frontend port.
+   Launch: 
+    ```bash
+    hardpy init tests_1 
+    ```
+
+    ```bash
+    hardpy init tests_2 --frontend-port 8001
+    ```
+
+    ```bash
+    hardpy init tests_3 --frontend-port 8002
+    ```
+2. Launch any database [CouchDB instance](../documentation/database.md#couchdb-instance) from any project.
+3. Modify the files described below.
+4. Launch all projects:
+   
+   ```bash
+   hardpy run tests_1
+   ```
+
+   ```bash
+   hardpy run tests_2
+   ```
+
+   ```bash
+   hardpy run tests_3
+   ```
+
+### result
+
+Three instances of **HardPy** will launch at the following addresses: 
+localhost:8000, localhost:8001, and localhost:8002. 
+Documents named *localhost_8000*, *localhost_8001*, and *localhost_8002* will 
+appear immediately in the statestore database. 
+Documents named *localhost_8000*, *localhost_8001*, and *localhost_8002* will 
+appear after the test is launched in the runstore database. 
+Each document is synchronized with its corresponding HardPy server address.
+If the host addresses in the hardpy.toml file change, the document addresses will change as well.

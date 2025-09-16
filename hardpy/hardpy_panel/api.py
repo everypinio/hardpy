@@ -1,13 +1,15 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import annotations
 
 import os
 import re
 from enum import Enum
 from pathlib import Path
+from typing import Annotated
 from urllib.parse import unquote
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.staticfiles import StaticFiles
 
 from hardpy.common.config import ConfigManager
@@ -42,13 +44,21 @@ def hardpy_config() -> dict:
 
 
 @app.get("/api/start")
-def start_pytest() -> dict:
+def start_pytest(args: Annotated[list[str] | None, Query()] = None) -> dict:
     """Start pytest subprocess.
+
+    Args:
+        args: List of arguments in key=value format
 
     Returns:
         dict[str, RunStatus]: run status
     """
-    if app.state.pytest_wrp.start():
+    if args is None:
+        args_dict = []
+    else:
+        args_dict = dict(arg.split("=", 1) for arg in args if "=" in arg)
+
+    if app.state.pytest_wrp.start(start_args=args_dict):
         return {"status": Status.STARTED}
     return {"status": Status.BUSY}
 
@@ -97,11 +107,22 @@ def couch_connection() -> dict:
     Returns:
         dict[str, str]: couchdb connection string
     """
-    connection_url = ConfigManager().get_config().database.connection_url()
+    config_manager = ConfigManager()
 
     return {
-        "connection_str": connection_url,
+        "connection_str": config_manager.config.database.url,
     }
+
+
+@app.get("/api/database_document_id")
+def database_document_id() -> dict:
+    """Get couchdb syncronized document name.
+
+    Returns:
+        dict[str, str]: couchdb connection string
+    """
+    config_manager = ConfigManager()
+    return {"document_id": config_manager.config.database.doc_id}
 
 
 @app.post("/api/confirm_dialog_box/{dialog_box_output}")

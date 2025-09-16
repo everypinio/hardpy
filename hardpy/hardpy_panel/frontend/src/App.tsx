@@ -2,6 +2,7 @@
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import {
   Button,
@@ -17,7 +18,8 @@ import {
 } from "@blueprintjs/core";
 
 import StartStopButton from "./button/StartStop";
-import { SuiteList, TestRunI } from "./hardpy_test_view/SuiteList";
+import { TestRunI } from "./hardpy_test_view/SuiteList";
+import SuiteList from "./hardpy_test_view/SuiteList";
 import ProgressView from "./progress/ProgressView";
 import TestStatus from "./hardpy_test_view/TestStatus";
 import ReloadAlert from "./restart_alert/RestartAlert";
@@ -32,17 +34,43 @@ const WINDOW_WIDTH_THRESHOLDS = {
   WIDE: 400,
 };
 
+const STATUS_MAP = {
+  ready: "app.status.ready",
+  run: "app.status.run",
+  passed: "app.status.passed",
+  failed: "app.status.failed",
+  stopped: "app.status.stopped",
+} as const;
+
+type StatusKey = keyof typeof STATUS_MAP;
+
+/**
+ * Checks if the provided status is a valid status key.
+ */
+const isValidStatus = (status: string): status is StatusKey => {
+  return status in STATUS_MAP;
+};
+
 /**
  * Main component of the GUI.
+ * @param {string} syncDocumentId - The id of the PouchDB document to syncronize.
  * @returns {JSX.Element} The main application component.
  */
-function App(): JSX.Element {
+function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
+  const { t } = useTranslation();
   const [use_end_test_sound, setUseEndTestSound] = React.useState(false);
   const [use_debug_info, setUseDebugInfo] = React.useState(false);
 
-  const [lastRunStatus, setLastRunStatus] = React.useState("");
+  const [lastRunStatus, setLastRunStatus] = React.useState<
+    StatusKey | "unknown"
+  >("ready");
   const [lastProgress, setProgress] = React.useState(0);
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
+  const [lastRunDuration, setLastRunDuration] = React.useState<number>(0);
+
+  const startTimeRef = React.useRef<number | null>(null);
+  const [timerIntervalId, setTimerIntervalId] =
+    React.useState<NodeJS.Timeout | null>(null);
 
   /**
    * Custom hook to determine if the window width is greater than a specified size.
@@ -72,27 +100,101 @@ function App(): JSX.Element {
   const ultrawide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.ULTRAWIDE);
   const wide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.WIDE);
 
-  /**
-   * Custom hook to render data from the database.
-   * @returns {JSX.Element} The rendered database content or a loading/error message.
-   */
-  const useRenderDb = (): JSX.Element => {
-    const { rows, state, loading, error } = useAllDocs({
-      include_docs: true,
-    });
+  React.useEffect(() => {
+    if (lastRunStatus === "run") {
+      if (startTimeRef.current !== null) {
+        const updateDuration = () => {
+          const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+          setLastRunDuration(currentTimeInSeconds - startTimeRef.current!);
+        };
 
-    React.useEffect(() => {
-      if (state === "error") {
-        setIsAuthenticated(false);
-      } else if (isAuthenticated === false) {
-        setIsAuthenticated(true);
+        updateDuration();
+
+        const id = setInterval(updateDuration, 1000);
+        setTimerIntervalId(id);
+
+        return () => {
+          if (id) {
+            clearInterval(id);
+          }
+        };
       }
-    }, [state]);
+    } else if (timerIntervalId) {
+      clearInterval(timerIntervalId);
+      setTimerIntervalId(null);
+    }
+  }, [lastRunStatus]);
 
+  /**
+   * Finds the index of a row in a list based on its ID.
+   * @param {Array} rows - The list of rows to search.
+   * @param {string} searchTerm - The ID to search for.
+   * @returns {number} The index of the row, or -1 if not found.
+   */
+  function findRowIndex(rows: { id: string }[], searchTerm: string): number {
+    for (let i = 0; i < rows.length; i++) {
+      if (rows[i].id === searchTerm) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  const { rows, state, loading, error } = useAllDocs({
+    include_docs: true,
+  });
+
+  React.useEffect(() => {
+    if (rows.length === 0) return;
+
+    const index = findRowIndex(rows, syncDocumentId);
+    if (index === -1) return;
+    const db_row = rows[index].doc as TestRunI;
+    const status = db_row.status || "";
+    const progress = db_row.progress || 0;
+
+    if (status !== lastRunStatus) {
+      setLastRunStatus(isValidStatus(status) ? status : "unknown");
+    }
+
+    if (progress !== lastProgress) {
+      setProgress(progress);
+    }
+
+    if (db_row.start_time) {
+      startTimeRef.current = db_row.start_time;
+
+      if (db_row.stop_time && status !== "run") {
+        const duration = db_row.stop_time - db_row.start_time;
+        if (duration !== lastRunDuration) {
+          setLastRunDuration(duration);
+        }
+      }
+    }
+
+    if (state === "error") {
+      setIsAuthenticated(false);
+    } else if (isAuthenticated === false) {
+      setIsAuthenticated(true);
+    }
+  }, [
+    rows,
+    state,
+    lastRunStatus,
+    lastProgress,
+    lastRunDuration,
+    isAuthenticated,
+  ]);
+
+  /**
+   * Renders the database content.
+   * @returns {JSX.Element} The rendered content.
+   */
+  const renderDbContent = (): JSX.Element => {
     if (loading && rows.length === 0) {
       return (
         <Card style={{ marginTop: "60px" }}>
-          <H2>Establishing a connection... 🧐🔎</H2>
+          <H2>{t("app.connection")}</H2>
         </Card>
       );
     }
@@ -100,7 +202,7 @@ function App(): JSX.Element {
     if (state === "error") {
       return (
         <Card style={{ marginTop: "60px" }}>
-          <H2>Database connection error. 🙅🏽‍♀️🚫</H2>
+          <H2>{t("app.dbError")}</H2>
           {error && <p>{error.message}</p>}
         </Card>
       );
@@ -109,58 +211,70 @@ function App(): JSX.Element {
     if (rows.length === 0) {
       return (
         <Card style={{ marginTop: "60px" }}>
-          <H2>No entries in the database 🙅🏽‍♀️🚫</H2>
+          <H2>{t("app.noEntries")}</H2>
         </Card>
       );
     }
 
-    /* Assume it is only one */
-    const db_row = rows[0].doc as TestRunI;
-    const status = db_row.status;
-    if (status && status != lastRunStatus) {
-      setLastRunStatus(status);
+    const index = findRowIndex(rows, syncDocumentId);
+    if (index === -1) {
+      return (
+        <Card style={{ marginTop: "60px" }}>
+          <H2>{t("app.dbError")}</H2>
+          {error && <p>{error.message}</p>}
+        </Card>
+      );
     }
 
-    const progress = db_row.progress;
-    if (progress && progress != lastProgress) {
-      setProgress(progress);
+    const document_row = rows[index];
+
+    if (!document_row) {
+      return (
+        <Card style={{ marginTop: "60px" }}>
+          <H2>{t("app.dbError")}</H2>
+          {error && <p>{error.message}</p>}
+        </Card>
+      );
     }
+
+    const testRunData: TestRunI = document_row.doc as TestRunI;
 
     return (
       <div style={{ marginTop: "40px" }}>
-        {rows.map((row) => (
-          <div key={row.id} style={{ display: "flex", flexDirection: "row" }}>
-            {(ultrawide || !use_debug_info) && (
-              <Card
-                style={{
-                  flexDirection: "column",
-                  padding: "20px",
-                  flexGrow: 1,
-                  flexShrink: 1,
-                  marginTop: "20px",
-                  marginBottom: "20px",
-                }}
-              >
-                <SuiteList
-                  db_state={row.doc as TestRunI}
-                  defaultClose={!ultrawide}
-                ></SuiteList>
-              </Card>
-            )}
-            {use_debug_info && (
-              <Card
-                style={{
-                  flexDirection: "column",
-                  padding: "20px",
-                  marginTop: "20px",
-                  marginBottom: "20px",
-                }}
-              >
-                <pre>{JSON.stringify(row.doc, null, 2)}</pre>
-              </Card>
-            )}
-          </div>
-        ))}
+        <div
+          key={document_row.id}
+          style={{ display: "flex", flexDirection: "row" }}
+        >
+          {(ultrawide || !use_debug_info) && (
+            <Card
+              style={{
+                flexDirection: "column",
+                padding: "20px",
+                flexGrow: 1,
+                flexShrink: 1,
+                marginTop: "20px",
+                marginBottom: "20px",
+              }}
+            >
+              <SuiteList
+                db_state={testRunData}
+                defaultClose={!ultrawide}
+              ></SuiteList>
+            </Card>
+          )}
+          {use_debug_info && (
+            <Card
+              style={{
+                flexDirection: "column",
+                padding: "20px",
+                marginTop: "20px",
+                marginBottom: "20px",
+              }}
+            >
+              <pre>{JSON.stringify(testRunData, null, 2)}</pre>
+            </Card>
+          )}
+        </div>
       </div>
     );
   };
@@ -174,18 +288,14 @@ function App(): JSX.Element {
       <Menu>
         <MenuItem
           shouldDismissPopover={false}
-          text={use_end_test_sound ? "Turn off the sound" : "Turn on the sound"}
+          text={use_end_test_sound ? t("app.soundOff") : t("app.soundOn")}
           icon={use_end_test_sound ? "volume-up" : "volume-off"}
           id="use_end_test_sound"
           onClick={() => setUseEndTestSound(!use_end_test_sound)}
         />
         <MenuItem
           shouldDismissPopover={false}
-          text={
-            use_debug_info
-              ? "Turn off the debug mode"
-              : "Turn on the debug mode"
-          }
+          text={use_debug_info ? t("app.debugOff") : t("app.debugOn")}
           icon={"bug"}
           id="use_debug_info"
           onClick={() => setUseDebugInfo(!use_debug_info)}
@@ -194,11 +304,22 @@ function App(): JSX.Element {
     );
   };
 
+  /**
+   * Renders the status of the test run.
+   * @param status - The status to render.
+   * @returns {string} The status text.
+   */
+  const getStatusText = (status: StatusKey | "unknown"): string => {
+    if (status === "unknown") {
+      console.error("Unknown status encountered");
+      return t("app.status.unknown") || "Unknown status";
+    }
+    return t(STATUS_MAP[status]);
+  };
+
   return (
-    <div className="App" style={{ minWidth: "310px", margin: "auto" }}>
-      {/* Popout elements */}
+    <div className="App">
       <ReloadAlert reload_timeout_s={3} />
-      {/* <Notification /> */}
 
       {/* Header */}
       <Navbar
@@ -210,21 +331,45 @@ function App(): JSX.Element {
             <div className={"logo-smol"}></div>
             {wide && (
               <div>
-                <b>{ultrawide ? "HardPy Operator Panel" : "HardPy"}</b>
+                <b>{ultrawide ? t("app.title") : "HardPy"}</b>
               </div>
             )}
           </Navbar.Heading>
 
           {wide && <Navbar.Divider />}
 
-          <Navbar.Heading id={"last-exec-heading"}>
-            <div>Last run:</div>
-          </Navbar.Heading>
-          <div id={"glob-test-status"}>
-            <TestStatus status={lastRunStatus} />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: wide ? "row" : "column",
+              alignItems: "center",
+              gap: wide ? "10px" : "5px",
+            }}
+          >
+            <Navbar.Heading
+              id={"last-exec-heading"}
+              style={{
+                margin: 0,
+                display: "flex",
+                alignItems: "center",
+                gap: "5px",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <div>{t("app.lastLaunch")}</div>
+              <div>{getStatusText(lastRunStatus)}</div>
+              <TestStatus
+                status={lastRunStatus === "unknown" ? "" : lastRunStatus}
+              />
+            </Navbar.Heading>
+
             {use_end_test_sound && (
               <PlaySound key="sound" status={lastRunStatus} />
             )}
+            <Navbar.Divider />
+            <Navbar.Heading>
+              {t("app.duration")}: {lastRunDuration} {t("app.seconds")}
+            </Navbar.Heading>
           </div>
 
           <Navbar.Divider />
@@ -239,7 +384,7 @@ function App(): JSX.Element {
 
       {/* Tests panel */}
       <div className={Classes.DRAWER_BODY} style={{ marginBottom: "60px" }}>
-        {useRenderDb()}
+        {renderDbContent()}
       </div>
 
       {/* Footer */}
@@ -269,9 +414,7 @@ function App(): JSX.Element {
           <ProgressView percentage={lastProgress} status={lastRunStatus} />
         </div>
         <div style={{ flexDirection: "column" }}>
-          <StartStopButton
-            testing_status={lastRunStatus}
-          />
+          <StartStopButton testing_status={lastRunStatus} />
         </div>
       </div>
     </div>

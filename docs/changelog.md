@@ -2,6 +2,83 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Added storage of the operator message state to avoid reopening the window after closing.
+  [[PR-190](https://github.com/everypinio/hardpy/pull/190)]
+* Change the database and interface synchronization mechanism.
+  The **statestore** and **runstore** databases can contain multiple documents, 
+  which are defined by the frontend host name and port.
+  The **current** document is no longer being created.
+  The name of the document in the database consists of the 
+  host name and port for the frontend, as described in the **hardpy.toml** file.
+  [[PR-187](https://github.com/everypinio/hardpy/pull/187)]
+* Simplify the process of working with multiple **HardPy** instances by 
+  using a single **CouchDB** instance instead of multiple instances.
+  [[PR-187](https://github.com/everypinio/hardpy/pull/187)]
+
+## HardPy 0.15.2
+
+* Change the logic of the test case attempts.
+  The test case fields (msg, assertion_message, chart, measurements, and artifact) 
+  are now cleared when the test case passes on the second or subsequent attempt.
+  The error code is now cleared when a test case passes on the second or subsequent attempt.
+  [[PR-192](https://github.com/everypinio/hardpy/pull/192)]
+
+## HardPy 0.15.1
+
+* Remove the `datetime` type from the info fields in all tables.
+  [[PR-188](https://github.com/everypinio/hardpy/pull/188)]
+
+## HardPy 0.15.0
+
+* Remove `tests_dir` variable from **hardpy.toml**. 
+  [[PR-182](https://github.com/everypinio/hardpy/pull/182)]
+* Add check for message presence in set_operator_message.
+  [[PR-180](https://github.com/everypinio/hardpy/pull/180)]
+* Add the `ErrorCode` class.
+  [[PR-180](https://github.com/everypinio/hardpy/pull/180)]
+* Add the ability to store charts (data series) in the database.
+  Add `set_case_chart` function and `Chart` class.
+  [[PR-179](https://github.com/everypinio/hardpy/pull/179)]
+* Add arguments for `hardpy start`.
+  [[PR-175](https://github.com/everypinio/hardpy/pull/175)]
+* Add numeric and string measurements: `set_case_measurement` function and 
+  `NumericMeasurement` and `StringMeasurement` classes.
+  [[PR-177](https://github.com/everypinio/hardpy/pull/177)]
+* Update database schema by **SubUnit** table.
+  [[PR-174](https://github.com/everypinio/hardpy/pull/174)]
+* Add `set_dut_sub_unit` function.
+  [[PR-174](https://github.com/everypinio/hardpy/pull/174)]
+* Add markers `case_group` and `module_group`.
+  [[PR-173](https://github.com/everypinio/hardpy/pull/173)]
+* Add functions: `set_user_name`, `set_batch_serial_number`, `set_stand_revision`, `set_instrument`
+  `set_process_name`, `set_process_number`, `set_process_info`, `set_dut_name`, `set_dut_type`, 
+  `set_dut_revision`, `set_stand_info`.
+  [[PR-172](https://github.com/everypinio/hardpy/pull/172)]
+* Change `DuplicateSerialNumberError` and `DuplicatePartNumberError` to `DuplicateParameterError`.
+  [[PR-172](https://github.com/everypinio/hardpy/pull/172)]
+* Update database schema by some tables: **Process**, **Instrument**, **NumericMeasurement**.
+  [[PR-162](https://github.com/everypinio/hardpy/pull/162)]
+* Update database schema by some fields: **user**, **batch_serial_number**, **caused_dut_failure_id**, **error_code**
+  **process**, **revision**, **instruments**, **group**, **measurements**.
+  [[PR-162](https://github.com/everypinio/hardpy/pull/162)]
+* Add the `caused_dut_failure_id` logic to the filling process.
+  [[PR-162](https://github.com/everypinio/hardpy/pull/162)]
+
+## HardPy 0.14.0
+
+* Add status display in words depending on the testing status.
+  [[PR-165](https://github.com/everypinio/hardpy/pull/165)]
+* Add a timeout to the `load` function of the `StandCloudLoader` class.
+  [[PR-166](https://github.com/everypinio/hardpy/pull/166)]
+* Fix logic for processing spacebar pressing.
+  [[PR-164](https://github.com/everypinio/hardpy/pull/164)]
+* Fix the display of the module duration after the operator panel has been restarted.
+  [[PR-163](https://github.com/everypinio/hardpy/pull/163)]
+* Add the display of last test run duration.
+  [[PR-163](https://github.com/everypinio/hardpy/pull/163)]
+* Add the option to translate the HardPy operator panel using ISO 639 language codes.
+  [[PR-159](https://github.com/everypinio/hardpy/pull/159)]
+
 ## HardPy 0.13.0
 
 * Change CI settings, add testing of tests on different versions of packages.

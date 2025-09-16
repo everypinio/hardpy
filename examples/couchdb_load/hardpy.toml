@@ -1,5 +1,5 @@
 title = "HardPy TOML config"
-tests_dir = "couchdb_load"
+tests_name = "CouchDB Load"
 
 [database]
 user = "dev"
@@ -10,3 +10,4 @@ port = 5984
 [frontend]
 host = "localhost"
 port = 8000
+language = "en"

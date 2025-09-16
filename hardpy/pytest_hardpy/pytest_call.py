@@ -6,29 +6,33 @@ from dataclasses import dataclass
 from inspect import stack
 from os import environ
 from time import sleep
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from uuid import uuid4
 
 from pycouchdb.exceptions import NotFound
 from pydantic import ValidationError
 
 from hardpy.pytest_hardpy.db import (
+    Chart,
     DatabaseField as DF,  # noqa: N817
+    Instrument,
+    NumericMeasurement,
     ResultRunStore,
     RunStore,
+    StringMeasurement,
+    SubUnit,
 )
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
     DialogBox,
-    DuplicatePartNumberError,
-    DuplicateSerialNumberError,
-    DuplicateTestStandLocationError,
-    DuplicateTestStandNameError,
-    DuplicateTestStandNumberError,
+    DuplicateParameterError,
     HTMLComponent,
     ImageComponent,
     TestStandNumberError,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 
 @dataclass
@@ -37,6 +41,43 @@ class CurrentTestInfo:
 
     module_id: str
     case_id: str
+
+
+class ErrorCode:
+    """Save error code and return error message.
+
+    It must be called from an assert.
+
+    Args:
+        code (int): error code.
+        message (str): error message.
+    """
+
+    def __init__(self, code: int, message: str | None = None) -> str | None:
+        """Add error code to document.
+
+        Args:
+            code (int): non-negative error code.
+            message (str | None): error message.
+
+        Returns:
+            str | None: error message
+        """
+        if code < 0:
+            msg = "error code must be greater than 0"
+            raise ValueError(msg)
+        reporter = RunnerReporter()
+        key = reporter.generate_key(DF.ERROR_CODE)
+        if reporter.get_field(key) is None:
+            reporter.set_doc_value(key, code)
+            reporter.update_db_by_doc()
+        self._message = message
+
+    def __repr__(self) -> str:
+        return self._message
+
+    def __str__(self) -> str | None:
+        return self._message
 
 
 def get_current_report() -> ResultRunStore | None:
@@ -56,11 +97,68 @@ def get_current_report() -> ResultRunStore | None:
         return None
 
 
-def set_dut_info(info: dict) -> None:
-    """Add DUT info to document.
+def set_user_name(name: str) -> None:
+    """Set operator panel user name.
 
     Args:
-        info (dict): DUT info
+        name (str): user name
+
+    Raises:
+        DuplicateParameterError: if user name is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.USER)
+    if reporter.get_field(key):
+        msg = "user_name"
+        raise DuplicateParameterError(msg)
+    reporter.set_doc_value(key, name)
+    reporter.update_db_by_doc()
+
+
+def set_batch_serial_number(serial_number: str) -> None:
+    """Add batch serial number to document.
+
+    Args:
+        serial_number (str): batch serial number
+
+    Raises:
+        DuplicateParameterError: if batch serial number is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.BATCH_SN)
+    if reporter.get_field(key):
+        msg = "batch_serial_number"
+        raise DuplicateParameterError(msg)
+    reporter.set_doc_value(key, serial_number)
+    reporter.update_db_by_doc()
+
+
+def set_dut_sub_unit(sub_unit: SubUnit) -> int:
+    """Add sub unit to DUT sub units list.
+
+    Args:
+        sub_unit (SubUnit): Sub unit object of DUT.
+
+    Returns:
+        int: sub unit index
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.DUT, DF.SUB_UNITS)
+
+    sub_units = reporter.get_field(key) or []
+    sub_units.append({k: v for k, v in vars(sub_unit).items() if v is not None})
+
+    reporter.set_doc_value(key, sub_units)
+    reporter.update_db_by_doc()
+
+    return len(sub_units) - 1
+
+
+def set_dut_info(info: Mapping[str, str | int | float]) -> None:
+    """Set DUT info to document.
+
+    Args:
+        info (Mapping): DUT info
     """
     reporter = RunnerReporter()
     for dut_key, dut_value in info.items():
@@ -76,12 +174,13 @@ def set_dut_serial_number(serial_number: str) -> None:
         serial_number (str): DUT serial number
 
     Raises:
-        DuplicateSerialNumberError: if serial number is already set
+        DuplicateParameterError: if serial number is already set
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.DUT, DF.SERIAL_NUMBER)
     if reporter.get_field(key):
-        raise DuplicateSerialNumberError
+        msg = "dut_serial_number"
+        raise DuplicateParameterError(msg)
     reporter.set_doc_value(
         key,
         serial_number if isinstance(serial_number, str) else str(serial_number),
@@ -96,13 +195,68 @@ def set_dut_part_number(part_number: str) -> None:
         part_number (str): DUT part number
 
     Raises:
-        DuplicatePartNumberError: if part number is already set
+        DuplicateParameterError: if part number is already set
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.DUT, DF.PART_NUMBER)
     if reporter.get_field(key):
-        raise DuplicatePartNumberError
+        msg = "dut_part_number"
+        raise DuplicateParameterError(msg)
     reporter.set_doc_value(key, part_number)
+    reporter.update_db_by_doc()
+
+
+def set_dut_name(name: str) -> None:
+    """Set DUT name to document.
+
+    Args:
+        name (str): DUT name
+
+    Raises:
+        DuplicateParameterError: if DUT name is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.DUT, DF.NAME)
+    if reporter.get_field(key):
+        msg = "dut_name"
+        raise DuplicateParameterError(msg)
+    reporter.set_doc_value(key, name)
+    reporter.update_db_by_doc()
+
+
+def set_dut_type(dut_type: str) -> None:
+    """Set DUT type to document.
+
+    Args:
+        dut_type (str): DUT type
+
+    Raises:
+        DuplicateParameterError: if DUT type is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.DUT, DF.TYPE)
+    if reporter.get_field(key):
+        msg = "dut_type"
+        raise DuplicateParameterError(msg)
+    reporter.set_doc_value(key, dut_type)
+    reporter.update_db_by_doc()
+
+
+def set_dut_revision(revision: str) -> None:
+    """Set DUT revision to document.
+
+    Args:
+        revision (str): DUT revision
+
+    Raises:
+        DuplicateParameterError: if DUT revision is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.DUT, DF.REVISION)
+    if reporter.get_field(key):
+        msg = "dut_revision"
+        raise DuplicateParameterError(msg)
+    reporter.set_doc_value(key, revision)
     reporter.update_db_by_doc()
 
 
@@ -113,21 +267,23 @@ def set_stand_name(name: str) -> None:
         name (str): test stand name
 
     Raises:
-        DuplicateTestStandNameError: if test stand name is already set
+        DuplicateParameterError: if test stand name is already set
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.TEST_STAND, DF.NAME)
     if reporter.get_field(key):
-        raise DuplicateTestStandNameError
+        msg = "stand_name"
+        raise DuplicateParameterError(msg)
     reporter.set_doc_value(key, name)
     reporter.update_db_by_doc()
 
 
-def set_stand_info(info: dict) -> None:
+def set_stand_info(info: Mapping[str, str | int | float]) -> None:
     """Add test stand info to document.
 
     Args:
-        info (dict): test stand info
+        info (Mapping[str, str | int | float ]): test stand info as a mapping
+            where keys are strings and values can be strings, integers, floats objects
     """
     reporter = RunnerReporter()
     for stand_key, stand_value in info.items():
@@ -143,12 +299,13 @@ def set_stand_location(location: str) -> None:
         location (str): test stand location
 
     Raises:
-        DuplicateTestStandLocationError: if test stand location is already set
+        DuplicateParameterError: if test stand location is already set
     """
     reporter = RunnerReporter()
     key = reporter.generate_key(DF.TEST_STAND, DF.LOCATION)
     if reporter.get_field(key):
-        raise DuplicateTestStandLocationError
+        msg = "stand_location"
+        raise DuplicateParameterError(msg)
     reporter.set_doc_value(key, location)
     reporter.update_db_by_doc()
 
@@ -160,7 +317,7 @@ def set_stand_number(number: int) -> None:
         number (int): test stand number (non negative integer)
 
     Raises:
-        DuplicateTestStandNumberError: if stand number is already set
+        DuplicateParameterError: if stand number is already set
         TestStandNumberError: if stand number is incorrect (negative or non integer)
     """
     reporter = RunnerReporter()
@@ -168,8 +325,27 @@ def set_stand_number(number: int) -> None:
     if not isinstance(number, int) or number < 0:
         raise TestStandNumberError
     if reporter.get_field(key):
-        raise DuplicateTestStandNumberError
+        msg = "stand_number"
+        raise DuplicateParameterError(msg)
     reporter.set_doc_value(key, number)
+    reporter.update_db_by_doc()
+
+
+def set_stand_revision(revision: str) -> None:
+    """Add test stand revision to document.
+
+    Args:
+        revision (str): test stand revision
+
+    Raises:
+        DuplicateParameterError: if test stand revision is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.TEST_STAND, DF.REVISION)
+    if reporter.get_field(key):
+        msg = "stand_revision"
+        raise DuplicateParameterError(msg)
+    reporter.set_doc_value(key, revision)
     reporter.update_db_by_doc()
 
 
@@ -291,6 +467,135 @@ def set_driver_info(drivers: dict) -> None:
     reporter.update_db_by_doc()
 
 
+def set_instrument(instrument: Instrument) -> int:
+    """Add instrument to test stand instruments list.
+
+    Args:
+        instrument (Instrument): Instrument object containing all instrument data
+
+    Returns:
+        int: instrument index
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.TEST_STAND, DF.INSTRUMENTS)
+
+    instruments = reporter.get_field(key) or []
+    instruments.append({k: v for k, v in vars(instrument).items() if v is not None})
+
+    reporter.set_doc_value(key, instruments)
+    reporter.update_db_by_doc()
+
+    return len(instruments) - 1
+
+
+def set_process_name(name: str) -> None:
+    """Set process name to document.
+
+    Args:
+        name (str): process name
+
+    Raises:
+        DuplicateParameterError: if process name is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.PROCESS, DF.NAME)
+    if reporter.get_field(key):
+        msg = "process_name"
+        raise DuplicateParameterError(msg)
+    reporter.set_doc_value(key, name)
+    reporter.update_db_by_doc()
+
+
+def set_process_number(number: int) -> None:
+    """Set process number to document.
+
+    Args:
+        number (int): process number
+
+    Raises:
+        DuplicateParameterError: if process number is already set
+    """
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.PROCESS, DF.NUMBER)
+    if reporter.get_field(key):
+        msg = "process_number"
+        raise DuplicateParameterError(msg)
+    reporter.set_doc_value(key, number)
+    reporter.update_db_by_doc()
+
+
+def set_process_info(info: Mapping[str, str | int | float]) -> None:
+    """Set process info to document.
+
+    Args:
+        info (Mapping): process info
+    """
+    reporter = RunnerReporter()
+    for key, value in info.items():
+        full_key = reporter.generate_key(DF.PROCESS, DF.INFO, key)
+        reporter.set_doc_value(full_key, value)
+    reporter.update_db_by_doc()
+
+
+def set_case_measurement(measurement: NumericMeasurement | StringMeasurement) -> int:
+    """Add measurement to document.
+
+    Args:
+        measurement (NumericMeasurement | StringMeasurement): measurement object
+
+    Returns:
+        int: measurement index from measurements list
+    """
+    current_test = _get_current_test()
+    reporter = RunnerReporter()
+
+    key = reporter.generate_key(
+        DF.MODULES,
+        current_test.module_id,
+        DF.CASES,
+        current_test.case_id,
+        DF.MEASUREMENTS,
+    )
+
+    measurements = reporter.get_field(key) or []
+    measurements.append({k: v for k, v in vars(measurement).items() if v is not None})
+
+    reporter.set_doc_value(key, measurements)
+    reporter.update_db_by_doc()
+
+    return len(measurements) - 1
+
+
+def set_case_chart(chart: Chart) -> None:
+    """Add chart to document.
+
+    Args:
+        chart (Chart): chart object
+    """
+    if not chart.x_data or not chart.y_data:
+        msg = "x_data and y_data must be set"
+        raise ValueError(msg)
+    current_test = _get_current_test()
+    reporter = RunnerReporter()
+
+    key = reporter.generate_key(
+        DF.MODULES,
+        current_test.module_id,
+        DF.CASES,
+        current_test.case_id,
+        DF.CHART,
+    )
+
+    if reporter.get_field(key):
+        msg = "chart"
+        raise DuplicateParameterError(msg)
+
+    chart_dict = {k: v for k, v in vars(chart).items() if v is not None}
+
+    reporter.set_doc_value(key, chart_dict)
+    reporter.update_db_by_doc()
+
+
 def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     """Display a dialog box.
 
@@ -371,6 +676,10 @@ def set_operator_message(  # noqa: PLR0913
 
     if font_size < 1:
         msg = "The 'font_size' argument cannot be less than 1"
+        raise ValueError(msg)
+
+    if not msg:
+        msg = "The 'msg' argument cannot be empty"
         raise ValueError(msg)
 
     msg_data = {

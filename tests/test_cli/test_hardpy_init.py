@@ -15,6 +15,7 @@ stand_cloud_no_default_addr = "everypin1.standcloud.localhost"
 db_default_port = "5984"
 frontend_default_host = "localhost"
 frontend_default_port = "8000"
+frontend_default_language = "en"
 
 
 def test_cli_init(tmp_path: Path):
@@ -144,6 +145,25 @@ def test_cli_init_frontend_port(tmp_path: Path):
         assert (
             frontend_info in content
         ), "hardpy.toml does not contain the expected port."
+
+
+def test_cli_init_frontend_language(tmp_path: Path):
+    subprocess.run(
+        [*HARDPY_COMMAND, tmp_path],
+        check=True,
+    )
+    hardpy_toml_path = tmp_path / "hardpy.toml"
+    with Path.open(hardpy_toml_path) as f:
+        content = f.read()
+        frontend_info = (
+            f"[frontend]\n"
+            f'host = "localhost"\n'
+            f"port = 8000\n"
+            f'language = "{frontend_default_language}"\n'
+        )
+        assert (
+            frontend_info in content
+        ), "hardpy.toml does not contain the expected language."
 
 
 def test_cli_init_stand_cloud_addr(tmp_path: Path):

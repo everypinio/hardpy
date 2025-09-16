@@ -10,7 +10,6 @@ The user can change the fields at creation by using [hardpy init](./cli.md#hardp
 
 ```toml
 title = "HardPy TOML config"
-tests_dir = "tests"
 
 [database]
 user = "dev"
@@ -27,7 +26,6 @@ port = 8000
 
 ```toml
 title = "HardPy TOML config"
-tests_dir = "tests"
 tests_name = "My tests"
 
 [database]
@@ -39,6 +37,7 @@ port = 5984
 [frontend]
 host = "localhost"
 port = 8000
+language = "en"
 
 [stand_cloud]
 address = "demo.standcloud.io"
@@ -56,15 +55,9 @@ Common settings.
 Configuration file header.
 The value is always `HardPy TOML config`.
 
-#### tests_dir
-
-Tests directory. The default is `tests`.
-The user can change this value with the `hardpy init` argument.
-
 #### tests_name
 
-Tests name. The default is [tests_dir](#tests_dir).
-The user can change this value with the `hardpy init --tests-name` argument.
+Tests name. The user can change this value with the `hardpy init --tests-name` argument.
 
 ### database
 
@@ -103,6 +96,11 @@ The user can change this value with the `hardpy init --frontend-host` option.
 
 Operator panel port number. The default is `8000`.
 The user can change this value with the `hardpy init --frontend-port` option.
+
+#### language
+
+Language of operator panel. The default is `en`.
+Available languages are [there](hardpy_panel.md#languages).
 
 ### stand_cloud
 

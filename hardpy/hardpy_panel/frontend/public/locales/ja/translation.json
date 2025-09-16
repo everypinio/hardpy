@@ -1,0 +1,60 @@
+{
+  "app": {
+      "title": "HardPy オペレーターパネル",
+      "lastLaunch": "最終起動:",
+      "duration": "期間",
+      "seconds": "秒",
+      "soundOn": "音をオンにする",
+      "soundOff": "音をオフにする",
+      "debugOn": "デバッグモードをオンにする",
+      "debugOff": "デバッグモードをオフにする",
+      "connection": "接続を確立しています... 🧐🔎",
+      "dbError": "データベース接続エラー. 🙅🏽‍♀️🚫",
+      "noEntries": "データベースにエントリがありません 🙅🏽‍♀️🚫",
+      "status": {
+        "ready": "準備完了",
+        "run": "実行中",
+        "passed": "合格",
+        "failed": "不合格",
+        "stopped": "停止",
+        "unknown": "不明"
+      }
+  },
+  "button": {
+    "start": "開始",
+    "stop": "停止",
+    "confirm": "確認"
+  },
+  "error": {
+    "dbConnectionTitle": "データベース接続エラー",
+    "dbConnectionMessage": "データベースへの接続に失敗しました"
+  },
+  "operatorDialog": {
+    "defaultTitle": "メッセージ",
+    "imageAlt": "オペレーターメッセージ画像",
+    "htmlCodeTitle": "HTMLコード",
+    "htmlLinkTitle": "HTMLリンク",
+    "enterAnswer": "回答を入力",
+    "fieldNotEmpty": "フィールドは空にできません",
+    "notificationTitle": "通知",
+    "notificationDesc": "ウィンドウが閉じられました。テストを停止しました。",
+    "numericInputError": "数字を入力してください",
+    "radioButtonError": "いずれかのオプションを選択してください",
+    "checkboxError": "少なくとも1つのオプションを選択してください"
+  },
+  "suiteList": {
+    "loadingTests": "テストを読み込み中... 🤔",
+    "refreshHint": "ページを更新してみてください。",
+    "standName": "スタンド名",
+    "status": "ステータス",
+    "startTime": "開始時間",
+    "finishTime": "終了時間",
+    "alert": "警告"
+  },
+  "testSuite": {
+    "nameColumn": "名前",
+    "dataColumn": "データ",
+    "loading": "読み込み中...",
+    "stubName": "テストスイート"
+  }
+}

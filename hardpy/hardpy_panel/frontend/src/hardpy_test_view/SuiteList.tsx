@@ -4,9 +4,10 @@
 import * as React from "react";
 import _, { Dictionary } from "lodash";
 import { H1, H2, H4, Tag, Divider } from "@blueprintjs/core";
+import { withTranslation, WithTranslation } from "react-i18next";
 
-import { TestItem, TestSuite as TestSuiteComponent } from "./TestSuite";
-import StartOperatorMsgDialog from "./OperatorMsg";
+import { TestItem, TestSuiteComponent } from "./TestSuite";
+import { StartOperatorMsgDialog, CLOSED_MESSAGES_KEY } from "./OperatorMsg";
 
 /**
  * Set of suites
@@ -82,7 +83,7 @@ export interface TestRunI {
 /**
  * SuiteList react component props type
  */
-interface Props {
+interface Props extends WithTranslation {
   db_state: TestRunI;
   defaultClose: boolean;
 }
@@ -92,19 +93,57 @@ const SECONDS_TO_MILLISECONDS = 1000;
 /**
  * Render a list of suites with tests inside
  */
-export class SuiteList extends React.Component<Props> {
+export class SuiteList extends React.Component<
+  Props,
+  { initialized: boolean }
+> {
   elements_count: number = 0;
+  previousTestName: string | undefined;
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      initialized: props.i18n?.isInitialized ?? false,
+    };
+    this.previousTestName = props.db_state.name;
+  }
+
+  componentDidMount() {
+    if (!this.state.initialized && this.props.i18n) {
+      this.props.i18n.on("initialized", () => {
+        this.setState({ initialized: true });
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.db_state.name !== this.props.db_state.name) {
+      try {
+        localStorage.removeItem(CLOSED_MESSAGES_KEY);
+        console.log("Cleared closed messages for new test run");
+      } catch (error) {
+        console.error("Error clearing closed messages:", error);
+      }
+      this.previousTestName = this.props.db_state.name;
+    }
+  }
 
   /**
    * Renders the SuiteList component.
    * @returns {React.ReactElement} The rendered component.
    */
   render(): React.ReactElement {
+    const { t, i18n } = this.props;
+    console.log("SuiteList props", { i18n: this.props.i18n });
+    if (!i18n || !this.state.initialized) {
+      return <div>Loading translations...</div>;
+    }
+
     if (this.props.db_state.name == undefined) {
       return (
         <div>
-          <H2>Loading tests... 🤔</H2>
-          {<H4>Try refreshing the page.</H4>}
+          <H2>{t("suiteList.loadingTests")}</H2>
+          {<H4>{t("suiteList.refreshHint")}</H4>}
         </div>
       );
     }
@@ -116,7 +155,7 @@ export class SuiteList extends React.Component<Props> {
     const stop = db_state.stop_time
       ? new Date(db_state.stop_time * SECONDS_TO_MILLISECONDS).toLocaleString()
       : "";
-    const start_tz = db_state.timezone ? db_state.timezone : "";
+    const start_tz = db_state.timezone ?? "";
     const alert = db_state.alert;
 
     let module_names: string[] = [];
@@ -135,38 +174,39 @@ export class SuiteList extends React.Component<Props> {
           <H1>{db_state.name}</H1>
           {db_state.test_stand && (
             <Tag minimal style={TAG_ELEMENT_STYLE}>
-              Stand name: {db_state.test_stand?.name}
-            </Tag>
-          )}
-          {db_state.status && (
-            <Tag minimal style={TAG_ELEMENT_STYLE}>
-              Status: {db_state.status}
+              {t("suiteList.standName")}: {db_state.test_stand?.name}
             </Tag>
           )}
           {start && (
             <Tag minimal style={TAG_ELEMENT_STYLE}>
-              Start time: {start + start_tz}
+              {t("suiteList.startTime")}: {start + start_tz}
             </Tag>
           )}
           {stop && (
             <Tag minimal style={TAG_ELEMENT_STYLE}>
-              Finish time: {stop + start_tz}
+              {t("suiteList.finishTime")}: {stop + start_tz}
             </Tag>
           )}
           {alert && (
             <Tag minimal style={TAG_ELEMENT_STYLE}>
-              Alert: {alert}
+              {t("suiteList.alert")}: {alert}
             </Tag>
           )}
-          {db_state.test_stand?.info && Object.keys(db_state.test_stand.info).length > 0 && (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
-              {Object.entries(db_state.test_stand.info).map(([key, value]) => (
-                <Tag key={key} minimal style={TAG_ELEMENT_STYLE}>
-                  Test stand {key}: {typeof value === 'string' ? value : JSON.stringify(value)}
-                </Tag>
-              ))}
-            </div>
-          )}
+          {db_state.test_stand?.info &&
+            Object.keys(db_state.test_stand.info).length > 0 && (
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                {Object.entries(db_state.test_stand.info).map(
+                  ([key, value]) => (
+                    <Tag key={key} minimal style={TAG_ELEMENT_STYLE}>
+                      {db_state.test_stand?.name} {key}:{" "}
+                      {typeof value === "string"
+                        ? value
+                        : JSON.stringify(value)}
+                    </Tag>
+                  )
+                )}
+              </div>
+            )}
           <Divider />
           {_.map([...module_names], (name: string, index: number) =>
             this.suiteRender(index, { name: name, test: modules[name] })
@@ -178,7 +218,10 @@ export class SuiteList extends React.Component<Props> {
             this.props.db_state.operator_msg.visible && (
               <StartOperatorMsgDialog
                 msg={this.props.db_state.operator_msg?.msg}
-                title={this.props.db_state.operator_msg?.title ?? "Message"}
+                title={
+                  this.props.db_state.operator_msg?.title ??
+                  t("operatorDialog.defaultTitle")
+                }
                 image_base64={this.props.db_state.operator_msg?.image?.base64}
                 image_width={this.props.db_state.operator_msg?.image?.width}
                 image_border={this.props.db_state.operator_msg?.image?.border}
@@ -216,13 +259,11 @@ export class SuiteList extends React.Component<Props> {
         key={`${suite.name}_${index}`}
         index={index}
         test={suite.test}
-        defaultOpen={
-          this.elements_count < 5 && !this.props.defaultClose
-        }
+        defaultOpen={this.elements_count < 5 && !this.props.defaultClose}
         commonTestRunStatus={this.props.db_state.status}
       />
     );
   }
 }
 
-export default SuiteList;
+export default withTranslation()(SuiteList);

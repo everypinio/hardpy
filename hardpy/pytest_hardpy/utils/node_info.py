@@ -7,6 +7,8 @@ from logging import getLogger
 from pathlib import Path
 from typing import TYPE_CHECKING, NamedTuple
 
+from hardpy.pytest_hardpy.utils.const import Group
+
 if TYPE_CHECKING:
     from pytest import Item, Mark
 
@@ -44,6 +46,9 @@ class NodeInfo:
         self._attempt = self._get_attempt(item.own_markers)
 
         self._critical = self._get_critical(item.own_markers + item.parent.own_markers)
+
+        self._module_group = self._get_group(item.parent.own_markers, "module_group")
+        self._case_group = self._get_group(item.own_markers, "case_group")
 
         self._module_id = Path(item.parent.nodeid).stem  # type: ignore
         self._case_id = item.name
@@ -111,6 +116,24 @@ class NodeInfo:
         """
         return self._critical
 
+    @property
+    def module_group(self) -> Group:
+        """Get module group.
+
+        Returns:
+            Group: module group
+        """
+        return self._module_group
+
+    @property
+    def case_group(self) -> Group:
+        """Get case group.
+
+        Returns:
+            Group: case group
+        """
+        return self._case_group
+
     def _get_human_name(self, markers: list[Mark], marker_name: str) -> str:
         """Get human name from markers.
 
@@ -143,7 +166,8 @@ class NodeInfo:
         return names
 
     def _get_dependency_info(
-        self, markers: list[Mark],
+        self,
+        markers: list[Mark],
     ) -> list[TestDependencyInfo] | None:
         """Extract and parse dependency information.
 
@@ -197,3 +221,33 @@ class NodeInfo:
             bool: True if test or module is critical, False otherwise
         """
         return any(marker.name == "critical" for marker in markers)
+
+    def _get_group(
+        self,
+        markers: list[Mark],
+        marker_name: str,
+    ) -> Group:
+        """Get group from markers or use default.
+
+        Args:
+            markers (list[Mark]): item markers list
+            marker_name (str): marker name
+        Returns:
+            Group: group from marker or default (Group.MAIN)
+        """
+        for marker in markers:
+            if marker.name == marker_name and marker.args:
+                arg = marker.args[0]
+
+                if isinstance(arg, Group):
+                    return arg
+                if isinstance(arg, str):
+                    valid_groups = {group.value for group in Group}
+                    if arg not in valid_groups:
+                        msg = f"Invalid group '{arg}'. Valid groups are: {', '.join(valid_groups)}"  # noqa: E501
+                        raise ValueError(msg)
+                    return Group(arg)
+                msg = f"Group marker argument must be either string or Group enum, got {type(arg)}"  # noqa: E501
+                raise ValueError(msg)
+
+        return Group.MAIN

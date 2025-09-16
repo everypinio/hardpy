@@ -5,18 +5,26 @@ from logging import getLogger
 from typing import Any
 
 from glom import assign, glom
-from pycouchdb.exceptions import Conflict, NotFound
+from pycouchdb import Server as DbServer
+from pycouchdb.client import Database
+from pycouchdb.exceptions import Conflict, GenericError, NotFound
 from pydantic._internal._model_construction import ModelMetaclass
+from requests.exceptions import ConnectionError  # noqa: A004
 
-from hardpy.pytest_hardpy.db.base_connector import BaseConnector
+from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db.const import DatabaseField as DF  # noqa: N817
 
 
-class BaseStore(BaseConnector):
+class BaseStore:
     """HardPy base storage interface for CouchDB."""
 
     def __init__(self, db_name: str) -> None:
-        super().__init__(db_name)
+        config_manager = ConfigManager()
+        config = config_manager.config
+        self._db_srv = DbServer(config.database.url)
+        self._db_name = db_name
+        self._db = self._init_db()
+        self._doc_id = config.database.doc_id
         self._log = getLogger(__name__)
         self._doc: dict = self._init_doc()
         self._schema: ModelMetaclass
@@ -83,6 +91,19 @@ class BaseStore(BaseConnector):
             self._log.debug("Database will be created for the first time")
         self._doc: dict = self._init_doc()
 
+    def _init_db(self) -> Database:
+        try:
+            return self._db_srv.create(self._db_name)  # type: ignore
+        except Conflict:
+            # database is already created
+            return self._db_srv.database(self._db_name)
+        except GenericError as exc:
+            msg = f"Error initializing database {exc}"
+            raise RuntimeError(msg) from exc
+        except ConnectionError as exc:
+            msg = f"Error initializing database: {exc}"
+            raise RuntimeError(msg) from exc
+
     def _init_doc(self) -> dict:
         try:
             doc = self._db.get(self._doc_id)
@@ -91,17 +112,28 @@ class BaseStore(BaseConnector):
                 "_id": self._doc_id,
                 DF.MODULES: {},
                 DF.DUT: {
+                    DF.TYPE: None,
+                    DF.NAME: None,
+                    DF.REVISION: None,
                     DF.SERIAL_NUMBER: None,
                     DF.PART_NUMBER: None,
+                    DF.SUB_UNITS: [],
                     DF.INFO: {},
                 },
                 DF.TEST_STAND: {
                     DF.HW_ID: None,
                     DF.NAME: None,
+                    DF.REVISION: None,
                     DF.TIMEZONE: None,
                     DF.LOCATION: None,
                     DF.NUMBER: None,
+                    DF.INSTRUMENTS: [],
                     DF.DRIVERS: {},
+                    DF.INFO: {},
+                },
+                DF.PROCESS: {
+                    DF.NAME: None,
+                    DF.NUMBER: None,
                     DF.INFO: {},
                 },
             }
@@ -111,18 +143,30 @@ class BaseStore(BaseConnector):
             doc[DF.MODULES] = {}
 
         doc[DF.DUT] = {
+            DF.TYPE: None,
+            DF.NAME: None,
+            DF.REVISION: None,
             DF.SERIAL_NUMBER: None,
             DF.PART_NUMBER: None,
+            DF.SUB_UNITS: [],
             DF.INFO: {},
         }
 
         doc[DF.TEST_STAND] = {
             DF.HW_ID: None,
             DF.NAME: None,
+            DF.REVISION: None,
             DF.TIMEZONE: None,
             DF.LOCATION: None,
             DF.NUMBER: None,
+            DF.INSTRUMENTS: [],
             DF.DRIVERS: {},
+            DF.INFO: {},
+        }
+
+        doc[DF.PROCESS] = {
+            DF.NAME: None,
+            DF.NUMBER: None,
             DF.INFO: {},
         }
 

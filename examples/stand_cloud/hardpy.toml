@@ -1,5 +1,5 @@
 title = "HardPy TOML config"
-tests_dir = "stand_cloud"
+tests_name = "StandCloud"
 
 [database]
 user = "dev"
@@ -10,6 +10,7 @@ port = 5984
 [frontend]
 host = "localhost"
 port = 8000
+language = "en"
 
 [stand_cloud]
 address = "demo.standcloud.localhost"

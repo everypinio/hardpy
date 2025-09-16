@@ -1,69 +1,18 @@
 # Features
 
-## Viewing tests in the operator panel
+## Operator panel
+
+### Viewing tests in the operator panel
 
 The operator panel allows you to view the test hierarchy with **test folder/test file/function** levels.
-See the [HardPy panel](./../documentation/hardpy_panel.md) for more information.
+An example of its use can be found on page [HardPy panel](./../documentation/hardpy_panel.md).
 User can launch operator panel using [hardpy run](./../documentation/cli.md#hardpy-run) command.
 
-## Running tests
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/hardpy_panel.gif" alt="hardpy panel" style="width:600;">
+</h1>
 
-Based on pytest **HardPy** allows you to run pytest tests in the browser or command line.
-For running tests in browser run tests using [hardpy run](./../documentation/cli.md#hardpy-run) command.
-
-```bash
-hardpy run
-```
-
-and press the **Start** button.
-Alternatively, the user can start the operator panel with the “Start” button and run tests with pytest.
-
-```bash
-python -m pytest
-```
-
-The user can also run tests without the operator panel, just using the `hardpy start` command or
-using `pytest`.
-
-## Stopping the tests
-
-The user can stop the tests during execution from the operator panel by clicking on the **Stop** button
-or using the `hardpy stop` command.
-It is possible to stop tests from the console by sending an interrupt, e.g. “Ctrl-C” in Linux.
-
-## Checking the status of tests
-
-The user can check the status of tests using the `hardpy status` command.
-
-## Storing test result in database
-
-**HardPy** does not allow you to run tests without a running **CouchDB** database.
-This is a NoSQL database that ensures that the results of the current test run are committed,
-even if the tests are aborted early.
-
-To save the report history, the user must configure the **conftest.py** file using the
-[CouchdbLoader](./../documentation/pytest_hardpy.md#couchdbloader) or another adapter to save the data.
-By default, only the current report in the [runstore](./../documentation/database.md#runstore-scheme)
-database is stored in **CouchDB**.
-
-The test report format (database scheme) is described in the
-[database runstore](./../documentation/database.md#runstore-scheme) section.
-
-An example of configuring **conftest.py** to store test run history can be found in several examples,
-including the [couchdb_load](./../examples/couchdb_load.md) and
-[minute_parity](./../examples/minute_parity.md).
-
-## Creating template project
-
-The **HardPy** can create template project using the [hardpy init](./../documentation/cli.md#hardpy-init)
-command. An example of usage can be found in the **how to init** section among the examples, e.g. in
-[minute parity](./../examples/minute_parity.md#how-to-start).
-
-```bash
-hardpy init minute_parity
-```
-
-## Interacting with tests in the operator panel
+### Interacting with tests in the operator panel
 
 The user can interact with the tests through dialog boxes in the operator panel.
 **HardPy** provides the ability to enter [text](./../documentation/hardpy_panel.md#text-input-field) or
@@ -83,13 +32,122 @@ Unlike dialog boxes, the user cannot enter any information, only close the windo
 User can also close the operator message from within the test code and run it in non-blocking mode,
 so that displaying the window does not stop the test.
 
-## Running multiple test attempts
+### Operator panel language
+
+The user can set one of the following operator panel languages ​​via the *hardpy.toml*.
+Available languages are [there](./../documentation/hardpy_panel.md#languages).
+
+The example of file:
+
+```toml
+[frontend]
+language = "zh"
+```
+
+## CLI
+
+### Creating template project
+
+The **HardPy** can create template project using the [hardpy init](./../documentation/cli.md#hardpy-init)
+command. An example of usage can be found in the **how to init** section among the examples, e.g. in
+[minute parity](./../examples/minute_parity.md#how-to-start).
+
+```bash
+hardpy init minute_parity
+```
+
+### Running the HardPy server
+
+Based on pytest **HardPy** allows you to run pytest tests in the browser or from the command line.
+To run the **HardPy** server and view tests in the browser, execute the 
+[hardpy run](./../documentation/cli.md#hardpy-run) command.
+
+```bash
+hardpy run <project_path>
+```
+
+For example:
+
+```bash
+hardpy run examples/minute_parity 
+```
+
+### Starting the tests
+
+The user can start the operator panel with the **Start** button.
+As an alternative, the user can start the tests using the 
+[hardpy start](./../documentation/cli.md#hardpy-start) command.
+
+```bash
+hardpy start <project_path>
+```
+
+For example:
+
+```bash
+hardpy start examples/minute_parity 
+```
+
+Through the CLI, the user can start **HardPy** 
+[with arguments](./../documentation/cli.md#hardpy-start) that will be used during testing.
+
+```bash
+hardpy start --arg device_id=123 --arg operator_name=user examples/minute_parity 
+```
+
+The user can also start the tests using **pytest**.
+
+```bash
+python -m pytest
+```
+
+### Stopping the tests
+
+The user can stop the tests during execution from the operator panel by clicking on the **Stop** button
+or using the [hardpy stop](./../documentation/cli.md#hardpy-stop) command.
+It is possible to stop tests from the console by sending an interrupt, e.g. “Ctrl-C” in Linux.
+
+### Checking the status of tests
+
+The user can check the status of tests using the [hardpy status](./../documentation/cli.md#hardpy-status) command.
+
+## Database
+
+### Storing test result in database
+
+**HardPy** does not allow you to run tests without a running [CouchDB](https://couchdb.apache.org/) database.
+This is a NoSQL database that ensures that the results of the current test run are committed,
+even if the tests are aborted early.
+
+To save the report history, the user must configure the **conftest.py** file using the
+[CouchdbLoader](./../documentation/pytest_hardpy.md#couchdbloader) or another adapter to save the data.
+By default, only the current report in the [runstore](./../documentation/database.md#runstore-scheme)
+database is stored in **CouchDB**.
+
+The test report format (database scheme) is described in the
+[database runstore](./../documentation/database.md#runstore-scheme) section.
+
+An example of configuring **conftest.py** to store test run history can be found in several examples,
+including the [couchdb_load](./../examples/couchdb_load.md) and
+[minute_parity](./../examples/minute_parity.md).
+
+### Other databases
+
+In order to save data to other databases, users will need to write their own adapter class to convert their 
+HardPy [runstore schema](./../documentation/database.md#runstore-scheme) data into a suitable format.
+Next, the user should call their adapter class in the same way that [CouchdbLoader](./../documentation/pytest_hardpy.md#couchdbloader) 
+is called in the [couchdb_load](./../examples/couchdb_load.md) and
+[minute_parity](./../examples/minute_parity.md) examples.
+
+## Pytest markers
+
+### Running multiple test attempts
 
 The **HardPy** allows the user to attach an [attempt](./../documentation/pytest_hardpy.md#attempt)
 marker to a test, which allows the test to be repeated as many times as specified in
 the marker's content in the event of failure.
 
-## Skipping the tests
+### Skipping the tests
 
 The **HardPy** allows the user to skip tests on [dependency](./../documentation/pytest_hardpy.md#dependency)
 markers.
@@ -128,9 +186,9 @@ def test_c():
     assert True
 ```
 
-See the example [skip test](./../examples/skip_test.md) for more information.
+An example of its use can be found on page [skip test](./../examples/skip_test.md).
 
-## Critical tests
+### Critical tests
 
 The **HardPy** allows the user to skip subsequent tests marked as [critical](./../documentation/pytest_hardpy.md#critical)
 marker, if a critical test fails or is skipped.
@@ -158,18 +216,58 @@ def test_c():
     assert True
 ```
 
-See the example [critical](./../examples/critical_test.md) for more information.
+An example of its use can be found on page [critical](./../examples/critical_test.md).
 
-## Running some instance in single stand
+### Test case and test module grouping
 
-A user can run multiple **HardPy** instances on a single stand.
-The startup is described in the [Multiple Stand](./../examples/multiple_stands.md) example.
+The **HardPy** allows users to organize tests into logical groups: `setup`, `main`, and `teardown`.
+This grouping helps structure test execution flow and reporting.
 
-## Storing test result to StandCloud
+Users can designate individual tests or entire modules with specific groups.
+By default, all tests are in the `main` group.
 
-**HardPy** allows user to send test results to **StandCloud**, a data storage and analysis platform.
-See the [StandCloud](./../documentation/stand_cloud.md) section and the
-[StandCloud example](./../examples/stand_cloud.md) for more information.
+**Example (test case level):**
+
+```python
+import pytest
+from hardpy.pytest_hardpy.utils.const import Group
+
+@pytest.mark.case_group(Group.SETUP)
+def test_setup_case():
+    # This test will be executed first as part of setup
+    assert initialize_system()
+
+@pytest.mark.case_group(Group.MAIN)
+def test_main_functionality():
+    # This is a main test case
+    assert check_system_operation()
+
+@pytest.mark.case_group(Group.TEARDOWN)
+def test_cleanup():
+    # This test will clean up after execution
+    assert cleanup_resources()
+```
+
+**Example (module level):**
+
+```python
+import pytest
+from hardpy.pytest_hardpy.utils.const import Group
+
+# All tests in this module will be teardown tests
+pytestmark = pytest.mark.module_group(Group.TEARDOWN)
+
+def test_cleanup_database():
+    assert clear_database_tables()
+
+def test_release_resources():
+    assert free_allocated_memory()
+
+def test_generate_final_report():
+    assert create_execution_summary()
+```
+
+An example of its use can be found on page [test grouping documentation](./../documentation/pytest_hardpy.md#case_group).
 
 ## Logging approaches in HardPy
 
@@ -237,7 +335,7 @@ def test_system_startup():
     )
 ```
 
-### Choosing the right method
+### Logging recommendation
 
 | Method                  | Database Storage | User Interaction | Best For |
 |-------------------------|------------------|------------------|----------|
@@ -245,7 +343,40 @@ def test_system_startup():
 | `run_dialog_box`        | No               | Yes              | Test steps requiring input |
 | `set_operator_message`  | No               | No               | Important notifications |
 
-## Reading test result from StandCloud
+
+## StandCloud
+
+### Storing test result to StandCloud
+
+**HardPy** allows user to send test results to **StandCloud**, a data storage and analysis platform.
+An example of its use can be found on pages [StandCloud](./../documentation/stand_cloud.md)
+and [StandCloud example](./../examples/stand_cloud.md).
+
+### Reading test result from StandCloud
 
 **HardPy** allows user to read test result from **StandCloud**.
-See the [StandCloud reader](./../examples/stand_cloud_reader.md) for more information.
+An example of its use can be found on page [StandCloud reader](./../examples/stand_cloud_reader.md).
+
+## Other
+
+### Measurement
+
+**HardPy** allows users to save their measurement data to a database.
+The [set_case_measurement](./../documentation/pytest_hardpy.md#set_case_measurement) 
+function allows each individual test case to store measurements as a list.
+An example of its use can be found on page [measurement](./../examples/measurement.md).
+
+### Chart
+
+**HardPy** allows users to save their chart (data series) to a database.
+The [set_case_chart](./../documentation/pytest_hardpy.md#set_case_chart) 
+function allows each individual test case to store a single chart.
+An example of its use can be found on page [chart](./../examples/chart.md).
+
+### Running some instance in single stand
+
+A user can run multiple **HardPy** instances on a single stand.
+To create a document in the database for storing test data, each stand that 
+runs on a single computer must have a unique combination of 
+[frontend](./../documentation/hardpy_config.md#frontend) host and port.
+The startup is described in the [Multiple Stand](./../examples/multiple_stands.md) example.
