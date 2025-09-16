@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Added storage of the operator message state to avoid reopening the window after closing.
+  [[PR-190](https://github.com/everypinio/hardpy/pull/190)]
 * Change the database and interface synchronization mechanism.
   The **statestore** and **runstore** databases can contain multiple documents, 
   which are defined by the frontend host name and port.
