@@ -31,6 +31,7 @@
   },
   "chart": {
     "dataChart": "Datos del gráfico",
+    "defaultChartTitle": "Gráfico",
     "xAxis": "Eje X",
     "yAxis": "Eje Y",
     "chart": "Gráfico",

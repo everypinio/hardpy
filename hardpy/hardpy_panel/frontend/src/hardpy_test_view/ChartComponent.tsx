@@ -1,11 +1,21 @@
 // Copyright (c) 2025 Everypin
-// GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt  )
+// GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import React, { useState, useRef, useEffect } from "react";
 import { Dialog, Button, Classes } from "@blueprintjs/core";
 import Plot from "react-plotly.js";
 import { withTranslation, WithTranslation } from "react-i18next";
 
+/**
+ * Interface representing chart data structure
+ * @interface ChartData
+ * @property {number[]} x_data - Array of x-axis data points
+ * @property {number[]} y_data - Array of y-axis data points
+ * @property {string} marker_name - Name/label for the data series
+ * @property {string} [x_label] - Optional label for x-axis
+ * @property {string} [y_label] - Optional label for y-axis
+ * @property {string} [chart_title] - Optional title for the chart
+ */
 interface ChartData {
   x_data: number[];
   y_data: number[];
@@ -15,6 +25,19 @@ interface ChartData {
   chart_title?: string;
 }
 
+/**
+ * Props interface for ChartComponent
+ * @interface ChartComponentProps
+ * @extends {WithTranslation}
+ * @property {ChartData[]} charts - Array of chart data objects
+ * @property {boolean} [isCollapsed] - Whether the chart is currently collapsed
+ * @property {() => void} [onToggleCollapse] - Callback function to toggle collapse state
+ * @property {string} [title] - Optional chart title (overrides data title)
+ * @property {string} [xLabel] - Optional x-axis label (overrides data label)
+ * @property {string} [yLabel] - Optional y-axis label (overrides data label)
+ * @property {string} [chartType] - Type of chart visualization
+ * @property {number} [containerWidth] - Optional fixed container width
+ */
 interface ChartComponentProps extends WithTranslation {
   charts: ChartData[];
   isCollapsed?: boolean;
@@ -26,6 +49,25 @@ interface ChartComponentProps extends WithTranslation {
   containerWidth?: number;
 }
 
+/**
+ * Constants for chart configuration and styling
+ * @constant
+ * @property {number} MIN_WIDTH - Minimum width of the chart in pixels
+ * @property {number} MIN_HEIGHT - Minimum height of the chart in pixels
+ * @property {number} ASPECT_RATIO - Width to height ratio for responsive sizing
+ * @property {number} COLLAPSED_MIN_WIDTH - Minimum width when chart is collapsed
+ * @property {number} COLLAPSED_MIN_HEIGHT - Minimum height when chart is collapsed
+ * @property {number} BORDER_RADIUS - Border radius for chart container
+ * @property {number} PADDING - Internal padding for chart container
+ * @property {Object} MARGIN - Plotly chart margin configuration
+ * @property {number} WIDTH_OFFSET - Offset to account for container padding/borders
+ * @property {number} MODAL_SIZE - Size ratio for fullscreen modal (0-1)
+ * @property {Object} MARKER - Marker styling configuration
+ * @property {number} LINE_WIDTH - Line width for chart series
+ * @property {Object} FONT_SIZES - Font size configuration for different elements
+ * @property {Object} COLORS - Color scheme configuration
+ * @property {Object} Z_INDEX - Z-index values for layered elements
+ */
 const CHART_CONSTANTS = {
   MIN_WIDTH: 250,
   MIN_HEIGHT: 300,
@@ -68,6 +110,40 @@ const CHART_CONSTANTS = {
   },
 } as const;
 
+/**
+ * Array of marker symbols for differentiating data series
+ * @constant
+ * @type {string[]}
+ */
+const MARKER_SYMBOLS = [
+  "circle",
+  "square",
+  "diamond",
+  "cross",
+  "x",
+  "triangle-up",
+  "triangle-down",
+  "triangle-left",
+  "triangle-right",
+  "pentagon",
+  "hexagon",
+  "hexagon2",
+  "octagon",
+  "star",
+  "hexagram",
+  "star-triangle-up",
+  "star-triangle-down",
+  "star-square",
+  "star-diamond",
+  "diamond-tall",
+];
+
+/**
+ * React component for displaying interactive charts with multiple data series
+ * @component
+ * @param {ChartComponentProps} props - Component properties
+ * @returns {JSX.Element} Rendered chart component
+ */
 const ChartComponent: React.FC<ChartComponentProps> = ({
   charts,
   isCollapsed = false,
@@ -83,6 +159,10 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
+  /**
+   * Effect hook to handle responsive chart sizing
+   * Updates dimensions on mount, container width changes, and window resize
+   */
   useEffect(() => {
     const updateDimensions = () => {
       let width = 0;
@@ -109,29 +189,11 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     return () => window.removeEventListener("resize", updateDimensions);
   }, [containerWidth]);
 
-  const markerSymbols = [
-    "circle",
-    "square",
-    "diamond",
-    "cross",
-    "x",
-    "triangle-up",
-    "triangle-down",
-    "triangle-left",
-    "triangle-right",
-    "pentagon",
-    "hexagon",
-    "hexagon2",
-    "octagon",
-    "star",
-    "hexagram",
-    "star-triangle-up",
-    "star-triangle-down",
-    "star-square",
-    "star-diamond",
-    "diamond-tall",
-  ];
-
+  /**
+   * Determines the axis type based on chart type configuration
+   * @param {"x" | "y"} axis - Which axis to get type for
+   * @returns {"linear" | "log"} The axis scale type
+   */
   const getAxisType = (axis: "x" | "y") => {
     switch (chartType) {
       case "line_log_x":
@@ -145,6 +207,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     }
   };
 
+  // Determine chart title and labels with fallback logic
   const chartTitle =
     title || (charts.length > 0 ? charts[0].chart_title : undefined);
   const xAxisLabel =
@@ -152,6 +215,10 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
   const yAxisLabel =
     yLabel || (charts.length > 0 ? charts[0].y_label : undefined);
 
+  /**
+   * Transforms chart data into Plotly-compatible format
+   * @type {Array<Object>}
+   */
   const plotData = charts.map((chart, index) => ({
     x: chart.x_data,
     y: chart.y_data,
@@ -160,7 +227,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     name: chart.marker_name,
     marker: {
       color: `hsl(${(index * 360) / charts.length}, 70%, 50%)`,
-      symbol: markerSymbols[index % markerSymbols.length],
+      symbol: MARKER_SYMBOLS[index % MARKER_SYMBOLS.length],
       size: CHART_CONSTANTS.MARKER.SIZE,
       line: {
         width: CHART_CONSTANTS.MARKER.LINE_WIDTH,
@@ -172,6 +239,10 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     },
   }));
 
+  /**
+   * Layout configuration for the main chart
+   * @type {Object}
+   */
   const layout = {
     width: dimensions.width,
     height: CHART_CONSTANTS.MIN_HEIGHT,
@@ -239,6 +310,10 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     paper_bgcolor: CHART_CONSTANTS.COLORS.PAPER,
   };
 
+  /**
+   * Layout configuration for fullscreen modal chart
+   * @type {Object}
+   */
   const fullScreenLayout = {
     ...layout,
     width: window.innerWidth * CHART_CONSTANTS.MODAL_SIZE,
@@ -275,6 +350,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     },
   };
 
+  // Render collapsed state if isCollapsed is true
   if (isCollapsed) {
     return (
       <div
@@ -297,6 +373,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     );
   }
 
+  // Render expanded chart with fullscreen modal capability
   return (
     <>
       <div

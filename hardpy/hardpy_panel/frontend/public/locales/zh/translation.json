@@ -31,6 +31,7 @@
   },
   "chart": {
     "dataChart": "图表数据",
+    "defaultChartTitle": "图表",
     "xAxis": "X轴",
     "yAxis": "Y轴",
     "chart": "图表",
