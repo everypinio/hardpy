@@ -320,7 +320,7 @@ class HardpyPlugin:
         attempt = node_info.attempt
         module_id = node_info.module_id
         case_id = node_info.case_id
-        casusd_dut_failure_id = self._reporter.get_caused_dut_failure_id()
+        caused_dut_failure_id = self._reporter.get_caused_dut_failure_id()
         is_dut_failure = True
 
         if node_info.critical:
@@ -344,7 +344,7 @@ class HardpyPlugin:
                 is_dut_failure = False
                 self._reporter.set_case_status(module_id, case_id, TestStatus.PASSED)
                 # clear the error code if there were no failed tests before
-                if casusd_dut_failure_id is None:
+                if caused_dut_failure_id is None:
                     self._reporter.clear_error_code()
                 break
             except AssertionError:
@@ -354,7 +354,7 @@ class HardpyPlugin:
                     break
 
         # set the caused dut failure id only the first time
-        if is_dut_failure and casusd_dut_failure_id is None:
+        if is_dut_failure and caused_dut_failure_id is None:
             self._reporter.set_caused_dut_failure_id(module_id, case_id)
 
     # Reporting hooks
