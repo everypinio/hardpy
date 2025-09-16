@@ -9,9 +9,49 @@ func_test_header = """
         import pytest
 
         import hardpy
-        from hardpy.pytest_hardpy.utils import NodeInfo
         """
 
+
+def test_attempt_success(pytester: Pytester, hardpy_opts: list):
+    pytester.makepyfile(
+        test_1=f"""{func_test_header}
+
+        from hardpy.pytest_hardpy.utils.const import TestStatus
+
+        @pytest.mark.attempt(2)
+        def test_a():
+            attempt = hardpy.get_current_attempt()
+            if attempt == 2:
+                return
+            assert False
+
+        def test_b():
+            report = hardpy.get_current_report()
+            case_a_status = report.modules["test_1"].cases["test_a"].status
+            assert case_a_status == TestStatus.PASSED
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=2)
+
+def test_attempt_failed(pytester: Pytester, hardpy_opts: list):
+    pytester.makepyfile(
+        test_1=f"""{func_test_header}
+
+        from hardpy.pytest_hardpy.utils.const import TestStatus
+
+        @pytest.mark.attempt(2)
+        def test_a():
+            assert False
+
+        def test_b():
+            report = hardpy.get_current_report()
+            case_a_status = report.modules["test_1"].cases["test_a"].status
+            assert case_a_status == TestStatus.FAILED
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1, failed=1)
 
 def test_critical_with_attempt_passed_on_retry(
     pytester: Pytester,
@@ -170,4 +210,39 @@ def test_success_attempt_after_error_code(pytester: Pytester, hardpy_opts: list)
     result.assert_outcomes(passed=2, failed=1)
 
 
-# TODO: Add test case data for attempt
+def test_clear_case_data(pytester: Pytester, hardpy_opts: list):
+    pytester.makepyfile(
+        test_1=f"""{func_test_header}
+        @pytest.mark.attempt(2)
+        def test_a():
+            report = hardpy.get_current_report()
+            assert report.modules["test_1"].cases["test_a"].assertion_msg == None
+            assert report.modules["test_1"].cases["test_a"].msg == None
+            assert report.modules["test_1"].cases["test_a"].measurements == []
+            assert report.modules["test_1"].cases["test_a"].chart == None
+            assert report.modules["test_1"].cases["test_a"].artifact == {{}}
+
+            hardpy.set_message("a")
+            chart = hardpy.Chart(
+                type=hardpy.ChartType.LINE,
+                title="title",
+                x_label="x_label",
+                y_label="y_label",
+                marker_name=["marker_name", None],
+                x_data=[[1, 2], [1, 2]],
+                y_data=[[3, 4], [3, 4]]
+            )
+            hardpy.set_case_chart(chart)
+            meas = hardpy.NumericMeasurement(value=1)
+            hardpy.set_case_measurement(meas)
+            artifact_data = {{"data_str": "123DATA"}}
+            hardpy.set_case_artifact(artifact_data)
+
+            attempt = hardpy.get_current_attempt()
+            if attempt == 2:
+                return
+            assert False, "Test failed"
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)
