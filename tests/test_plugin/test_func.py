@@ -1272,3 +1272,22 @@ def test_set_case_chart(pytester: Pytester, hardpy_opts: list[str]):
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)
+
+
+def test_get_current_attempt(pytester: Pytester, hardpy_opts: list):
+    pytester.makepyfile(
+        f"""{func_test_header}
+
+        def test_a():
+            assert hardpy.get_current_attempt() == 1
+
+        @pytest.mark.attempt(2)
+        def test_b():
+            attempt = hardpy.get_current_attempt()
+            if attempt == 2:
+                return
+            assert False
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=2)
