@@ -1271,7 +1271,8 @@ Sets the group for a test case. Valid groups: `setup`, `main`, `teardown` (defau
 **Example:**
 
 ```python
-from hardpy.pytest_hardpy.utils.const import Group
+from hardpy import Group
+
 @pytest.mark.case_group(Group.SETUP)
 def test_setup_case():
     assert True
@@ -1289,7 +1290,7 @@ Sets the group for all test cases in a module. Valid groups: `setup`, `main`, `t
 
 ```python
 import pytest
-from hardpy.pytest_hardpy.utils.const import Group
+from hardpy import Group
 
 pytestmark = pytest.mark.module_group(Group.TEARDOWN)
 
@@ -1324,6 +1325,8 @@ If a test is marked `attempt`, it will be repeated if it fails the number of
 attempts specified by the mark.
 The test will be repeated until it is passed.
 There is a 1 second pause between attempts.
+Each attempt clears the case data, including the message, 
+the assertion message, the chart, the measurements, and the artifact.
 For more information, see the example [attempts](./../examples/attempts.md).
 
 **Example:**
