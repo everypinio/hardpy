@@ -17,7 +17,7 @@ import {
   calculateTextLines,
   calculateDialogDimensions,
 } from "./DialogUtils";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 interface StartOperatorMsgDialogProps {
   title?: string;
@@ -33,6 +33,39 @@ interface StartOperatorMsgDialogProps {
   html_width?: number;
   html_border?: number;
 }
+
+export const CLOSED_MESSAGES_KEY = "closed_operator_messages";
+
+/**
+ * Retrieves IDs of closed operator messages from localStorage.
+ * Returns empty set if no data exists or on error.
+ *
+ * @returns {Set<string>} Set of closed message IDs
+ */
+const getClosedMessages = (): Set<string> => {
+  try {
+    const stored = localStorage.getItem(CLOSED_MESSAGES_KEY);
+    return new Set(stored ? JSON.parse(stored) : []);
+  } catch {
+    return new Set();
+  }
+};
+
+/**
+ * Saves closed message IDs to localStorage
+ * @param {Set<string>} messages - Set of message IDs to save
+ * @returns {void}
+ */
+const saveClosedMessages = (messages: Set<string>): void => {
+  try {
+    localStorage.setItem(
+      CLOSED_MESSAGES_KEY,
+      JSON.stringify(Array.from(messages))
+    );
+  } catch (error) {
+    console.error("Error saving closed messages to localStorage:", error);
+  }
+};
 
 /**
  * Renders an HTML code iframe.
@@ -97,8 +130,31 @@ export function StartOperatorMsgDialog(
   const [imageDimensions, setImageDimensions] = useState(
     BASE_DIALOG_DIMENSIONS
   );
+  const [closedMessages, setClosedMessages] =
+    useState<Set<string>>(getClosedMessages());
   const screenWidth = window.screen.width;
   const screenHeight = window.screen.height;
+
+  /**
+   * Checks if the current message has been closed by the user
+   * @returns {boolean} True if message is closed, false otherwise
+   */
+  const isMessageClosed = (): boolean => {
+    return props.id ? closedMessages.has(props.id) : false;
+  };
+
+  /**
+   * Marks the current message as closed and saves to localStorage
+   * @returns {void}
+   */
+  const markMessageAsClosed = (): void => {
+    if (props.id) {
+      const updatedClosedMessages = new Set(closedMessages);
+      updatedClosedMessages.add(props.id);
+      setClosedMessages(updatedClosedMessages);
+      saveClosedMessages(updatedClosedMessages);
+    }
+  };
 
   /**
    * Handles the closing of the dialog and sends a confirmation to the server.
@@ -107,6 +163,7 @@ export function StartOperatorMsgDialog(
    */
   const handleClose = async (): Promise<void> => {
     setOperatorMessageOpen(false);
+    markMessageAsClosed();
 
     try {
       const response = await axios.post(
@@ -143,6 +200,7 @@ export function StartOperatorMsgDialog(
    */
   const lineHeight: number =
     (LINE_HEIGHT_FACTOR * (props.font_size ?? BASE_FONT_SIZE)) / BASE_FONT_SIZE;
+
   /**
    * Calculates the optimal dialog width for text content.
    * Ensures the width doesn't exceed maximum screen size factor.
@@ -192,6 +250,9 @@ export function StartOperatorMsgDialog(
     margin: "0 auto",
   };
 
+  /**
+   * Effect hook for handling Escape key press to close dialog
+   */
   useEffect(() => {
     /**
      * Handles the keydown event to close the dialog when the Escape key is pressed.
@@ -213,16 +274,24 @@ export function StartOperatorMsgDialog(
     };
   });
 
+  /**
+   * Effect hook for managing dialog visibility based on props and closed state
+   */
   useEffect(() => {
     /**
      * Sets the dialog visibility based on the `is_visible` prop.
      * @returns {void}
      */
-    if (props.is_visible) {
+    if (props.is_visible && !isMessageClosed()) {
       setOperatorMessageOpen(true);
+    } else {
+      setOperatorMessageOpen(false);
     }
-  }, [props.id, props.is_visible]);
+  }, [props.id, props.is_visible, closedMessages]);
 
+  /**
+   * Effect hook for managing page scroll behavior when dialog is open/closed
+   */
   useEffect(() => {
     /**
      * Manages the page scroll behavior when the modal dialog is opened or closed.
@@ -238,9 +307,13 @@ export function StartOperatorMsgDialog(
     };
   }, [operatorMessageOpen]);
 
+  if (isMessageClosed()) {
+    return <></>;
+  }
+
   return (
     <Dialog
-      title={props.title || t('operatorDialog.defaultTitle')}
+      title={props.title || t("operatorDialog.defaultTitle")}
       icon="info-sign"
       isOpen={operatorMessageOpen}
       onClose={handleClose}

@@ -4,6 +4,8 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 
 * Add the charts view to the HardPy operator panel.
   [[PR-186](https://github.com/everypinio/hardpy/pull/186)]
+* Added storage of the operator message state to avoid reopening the window after closing.
+  [[PR-190](https://github.com/everypinio/hardpy/pull/190)]
 * Change the database and interface synchronization mechanism.
   The **statestore** and **runstore** databases can contain multiple documents, 
   which are defined by the frontend host name and port.
@@ -14,6 +16,14 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 * Simplify the process of working with multiple **HardPy** instances by 
   using a single **CouchDB** instance instead of multiple instances.
   [[PR-187](https://github.com/everypinio/hardpy/pull/187)]
+
+## HardPy 0.15.2
+
+* Change the logic of the test case attempts.
+  The test case fields (msg, assertion_message, chart, measurements, and artifact) 
+  are now cleared when the test case passes on the second or subsequent attempt.
+  The error code is now cleared when a test case passes on the second or subsequent attempt.
+  [[PR-192](https://github.com/everypinio/hardpy/pull/192)]
 
 ## HardPy 0.15.1
 
