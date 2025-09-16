@@ -2,6 +2,14 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## HardPy 0.15.2
+
+* Change the logic of the test case attempts.
+  The test case fields (msg, assertion_message, chart, measurements, and artifact) 
+  are now cleared when the test case passes on the second or subsequent attempt.
+  The error code is now cleared when a test case passes on the second or subsequent attempt.
+  [[PR-192](https://github.com/everypinio/hardpy/pull/192)]
+
 ## HardPy 0.15.1
 
 * Remove the `datetime` type from the info fields in all tables.
