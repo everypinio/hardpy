@@ -4,21 +4,26 @@
 import * as React from "react";
 import { Tag } from "@blueprintjs/core";
 import Plot from "react-plotly.js";
-import { Dialog, Button, Classes } from "@blueprintjs/core";
+import { Dialog, Classes } from "@blueprintjs/core";
 import ChartComponent from "./ChartComponent";
 import { withTranslation, WithTranslation } from "react-i18next";
 
 import _ from "lodash";
 
-interface Props extends WithTranslation {
-  msg: string[] | null;
-  assertion_msg: string | null;
-  testSuiteIndex: number;
-  testCaseIndex: number;
-  chart?: ChartData;
-  dataColumnWidth?: number;
-}
-
+/**
+ * Interface representing chart data structure for test results
+ * @interface ChartData
+ * @property {string} type - Type of chart visualization (e.g., "line", "bar")
+ * @property {string} [title] - Optional title for the chart (deprecated, use chart_title)
+ * @property {string} [x_label] - Optional label for x-axis
+ * @property {string} [y_label] - Optional label for y-axis
+ * @property {string[]} marker_name - Array of names/labels for each data series
+ * @property {number[][]} x_data - 2D array of x-axis data points for each series
+ * @property {number[][]} y_data - 2D array of y-axis data points for each series
+ * @property {string} [chart_title] - Optional title for the chart
+ * @property {string[]} [x_label_data] - Optional array of x-axis labels for each series
+ * @property {string[]} [y_label_data] - Optional array of y-axis labels for each series
+ */
 interface ChartData {
   type: string;
   title?: string;
@@ -32,6 +37,16 @@ interface ChartData {
   y_label_data?: string[];
 }
 
+/**
+ * Interface representing individual chart series data
+ * @interface ChartSeriesData
+ * @property {number[]} x_data - Array of x-axis data points for the series
+ * @property {number[]} y_data - Array of y-axis data points for the series
+ * @property {string} marker_name - Name/label for the data series
+ * @property {string} [x_label] - Optional label for x-axis of this series
+ * @property {string} [y_label] - Optional label for y-axis of this series
+ * @property {string} [chart_title] - Optional title for the chart
+ */
 interface ChartSeriesData {
   x_data: number[];
   y_data: number[];
@@ -41,8 +56,33 @@ interface ChartSeriesData {
   chart_title?: string;
 }
 
-const TAG_ELEMENT_STYLE = { margin: 2 };
+/**
+ * Props interface for TestData component
+ * @interface Props
+ * @extends {WithTranslation}
+ * @property {string[] | null} msg - Array of test messages to display as tags
+ * @property {string | null} assertion_msg - Assertion message to display as warning tag
+ * @property {number} testSuiteIndex - Index of the test suite for storage key generation
+ * @property {number} testCaseIndex - Index of the test case for storage key generation
+ * @property {ChartData} [chart] - Optional chart data object for visualization
+ * @property {number} [dataColumnWidth] - Optional width for the data column container
+ */
+interface Props extends WithTranslation {
+  msg: string[] | null;
+  assertion_msg: string | null;
+  testSuiteIndex: number;
+  testCaseIndex: number;
+  chart?: ChartData;
+  dataColumnWidth?: number;
+}
 
+/**
+ * Constants for modal styling and configuration
+ * @constant
+ * @property {number} SIZE_RATIO - Size ratio for fullscreen modal (0-1)
+ * @property {number} MARGIN_TOP - Top margin for chart container
+ * @property {number} MIN_WIDTH - Minimum width for chart container
+ */
 const MODAL_CONSTANTS = {
   SIZE_RATIO: 0.9,
   MARGIN_TOP: 10,
@@ -50,19 +90,42 @@ const MODAL_CONSTANTS = {
 } as const;
 
 /**
- * Renders a list of messages and an assertion message as styled tags.
- *
+ * Style constants for tag elements
+ * @constant
+ * @property {Object} TAG_ELEMENT_STYLE - CSS style object for tag elements
+ */
+const TAG_ELEMENT_STYLE = { margin: 2 };
+
+/**
+ * TestData component displays test messages, assertions, and optional chart visualizations
  * @component
- * @param {Object} props - The component props.
- * @param {string[] | null} props.msg - An array of messages to display as primary tags.
- * @param {string | null} props.assertion_msg - An assertion message to display as a warning tag.
- * @returns {React.ReactElement} A React element representing the component.
+ * @param {Props} props - Component properties
+ * @returns {React.ReactElement} Rendered test data component with messages and charts
+ *
+ * @example
+ * <TestData
+ *   msg={["Test passed", "Measurement complete"]}
+ *   assertion_msg="Assertion failed: expected 5, got 4"
+ *   testSuiteIndex={0}
+ *   testCaseIndex={1}
+ *   chart={chartData}
+ * />
  */
 export function TestData(props: Readonly<Props>): React.ReactElement {
   const { t } = props;
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const storageKey = `chartState_${props.testSuiteIndex}_${props.testCaseIndex}`;
 
+  /**
+   * Unique storage key for persisting chart collapse state per test case
+   * @constant
+   * @type {string}
+   */
+  const storageKey: string = `chartState_${props.testSuiteIndex}_${props.testCaseIndex}`;
+
+  /**
+   * State hook for chart collapse/expand functionality with localStorage persistence
+   * @type {[boolean, React.Dispatch<React.SetStateAction<boolean>>]}
+   */
   const [isChartCollapsed, setIsChartCollapsed] = React.useState(() => {
     const savedState = localStorage.getItem(storageKey);
     if (savedState) {
@@ -77,6 +140,10 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
     return false;
   });
 
+  /**
+   * Effect hook to persist chart collapse state to localStorage
+   * Runs when isChartCollapsed or storageKey changes
+   */
   React.useEffect(() => {
     localStorage.setItem(
       storageKey,
@@ -86,15 +153,25 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
     );
   }, [isChartCollapsed, storageKey]);
 
+  /**
+   * Toggles the chart collapse state between expanded and collapsed
+   * @function
+   */
   const handleToggleCollapse = () => {
     setIsChartCollapsed(!isChartCollapsed);
   };
 
+  /**
+   * Memoized transformation of chart data into series format for ChartComponent
+   * Validates data integrity and provides fallback values for missing properties
+   * @type {ChartSeriesData[]}
+   */
   const chartSeriesData: ChartSeriesData[] = React.useMemo(() => {
     if (!props.chart) {
       return [];
     }
 
+    // Validate required chart data properties
     if (
       !props.chart.marker_name ||
       !props.chart.x_data ||
@@ -104,6 +181,8 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
     }
 
     const seriesCount = props.chart.marker_name.length;
+
+    // Validate array length consistency
     if (
       props.chart.x_data.length !== seriesCount ||
       props.chart.y_data.length !== seriesCount
@@ -112,6 +191,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
       return [];
     }
 
+    // Transform chart data into series format
     return props.chart.marker_name.map((name, index) => ({
       x_data: props.chart!.x_data[index] || [],
       y_data: props.chart!.y_data[index] || [],
@@ -122,9 +202,17 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
     }));
   }, [props.chart, t]);
 
-  const hasChartData = chartSeriesData.length > 0;
+  /**
+   * Flag indicating whether chart data is available for rendering
+   * @type {boolean}
+   */
+  const hasChartData: boolean = chartSeriesData.length > 0;
 
-  const plotData = chartSeriesData.map((chart, index) => ({
+  /**
+   * Plotly-compatible data format for fullscreen modal chart
+   * @type {Array<Object>}
+   */
+  const plotData: Array<object> = chartSeriesData.map((chart, index) => ({
     x: chart.x_data,
     y: chart.y_data,
     type: "scatter",
@@ -135,7 +223,11 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
     },
   }));
 
-  const fullScreenLayout = {
+  /**
+   * Layout configuration for fullscreen modal chart
+   * @type {Object}
+   */
+  const fullScreenLayout: object = {
     width: window.innerWidth * MODAL_CONSTANTS.SIZE_RATIO,
     height: window.innerHeight * MODAL_CONSTANTS.SIZE_RATIO,
     title:
@@ -152,6 +244,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
 
   return (
     <div className="test-data" style={{ width: "100%" }}>
+      {/* Render test messages as primary tags */}
       {_.map(props.msg, (value: string, key: string) => {
         return (
           value && (
@@ -166,6 +259,8 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
           )
         );
       })}
+
+      {/* Render assertion message as warning tag (first line only) */}
       {props.assertion_msg && (
         <Tag
           key={"assertion"}
@@ -177,6 +272,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
         </Tag>
       )}
 
+      {/* Chart visualization section */}
       {hasChartData && (
         <>
           <div
@@ -207,6 +303,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
             onClick={() => setIsModalOpen(true)}
           ></div>
 
+          {/* Fullscreen chart modal dialog */}
           <Dialog
             isOpen={isModalOpen}
             title={

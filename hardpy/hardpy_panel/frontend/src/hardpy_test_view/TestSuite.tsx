@@ -26,11 +26,25 @@ import RunTimer from "./RunTimer";
 import "./TestSuite.css";
 import { Spin } from "antd";
 
+/**
+ * Interface representing widget description for dialog boxes
+ * @interface WidgetDescription
+ * @property {Record<string, unknown>} info - Widget configuration and data
+ * @property {WidgetType} type - Type of widget (input, selection, etc.)
+ */
 interface WidgetDescription {
   info: Record<string, unknown>;
   type: WidgetType;
 }
 
+/**
+ * Interface representing image information for dialog boxes
+ * @interface ImageInfo
+ * @property {string} [base64] - Base64 encoded image data
+ * @property {string} [format] - Image format (png, jpg, etc.)
+ * @property {number} [width] - Image display width
+ * @property {number} [border] - Image border thickness
+ */
 interface ImageInfo {
   base64?: string;
   format?: string;
@@ -38,6 +52,14 @@ interface ImageInfo {
   border?: number;
 }
 
+/**
+ * Interface representing HTML content information for dialog boxes
+ * @interface HTMLInfo
+ * @property {string} [code_or_url] - HTML code or URL
+ * @property {boolean} [is_raw_html] - Whether the content is raw HTML or a URL
+ * @property {number} [width] - HTML content display width
+ * @property {number} [border] - HTML content border thickness
+ */
 interface HTMLInfo {
   code_or_url?: string;
   is_raw_html?: boolean;
@@ -45,6 +67,18 @@ interface HTMLInfo {
   border?: number;
 }
 
+/**
+ * Interface representing dialog box properties
+ * @interface DialogBoxProps
+ * @property {string} [title_bar] - Dialog box title
+ * @property {string} dialog_text - Main dialog text content
+ * @property {WidgetDescription} [widget] - Optional widget configuration
+ * @property {ImageInfo} [image] - Optional image configuration
+ * @property {boolean} visible - Whether the dialog is visible
+ * @property {string} id - Unique identifier for the dialog
+ * @property {number} [font_size] - Font size for dialog text
+ * @property {HTMLInfo} [html] - Optional HTML content configuration
+ */
 interface DialogBoxProps {
   title_bar?: string;
   dialog_text: string;
@@ -56,6 +90,19 @@ interface DialogBoxProps {
   html?: HTMLInfo;
 }
 
+/**
+ * Interface representing a test case
+ * @interface Case
+ * @property {string} status - Current status of the test case
+ * @property {string} name - Name of the test case
+ * @property {number} start_time - Timestamp when the test started
+ * @property {number} stop_time - Timestamp when the test stopped
+ * @property {string | null} assertion_msg - Assertion message if test failed
+ * @property {string[] | null} msg - Array of test messages
+ * @property {Record<string, unknown>} artifact - Test artifacts and metadata
+ * @property {DialogBoxProps} dialog_box - Dialog box configuration
+ * @property {ChartData} [chart] - Optional chart data for visualization
+ */
 interface Case {
   status: string;
   name: string;
@@ -68,6 +115,17 @@ interface Case {
   chart?: ChartData;
 }
 
+/**
+ * Interface representing chart data for test visualization
+ * @interface ChartData
+ * @property {string} type - Type of chart (line, bar, etc.)
+ * @property {string} [title] - Chart title
+ * @property {string} [x_label] - X-axis label
+ * @property {string} [y_label] - Y-axis label
+ * @property {string[]} marker_name - Array of series names
+ * @property {number[][]} x_data - 2D array of x-axis data points
+ * @property {number[][]} y_data - 2D array of y-axis data points
+ */
 interface ChartData {
   type: string;
   title?: string;
@@ -78,8 +136,22 @@ interface ChartData {
   y_data: number[][];
 }
 
+/**
+ * Type representing a dictionary of test cases
+ * @type {Dictionary<Case>}
+ */
 type Cases = Dictionary<Case>;
 
+/**
+ * Interface representing a test item (test suite)
+ * @interface TestItem
+ * @property {string} status - Current status of the test suite
+ * @property {string} name - Name of the test suite
+ * @property {number} start_time - Timestamp when the suite started
+ * @property {number} stop_time - Timestamp when the suite stopped
+ * @property {Record<string, unknown>} artifact - Suite artifacts and metadata
+ * @property {Cases} cases - Dictionary of test cases in this suite
+ */
 export interface TestItem {
   status: string;
   name: string;
@@ -89,6 +161,15 @@ export interface TestItem {
   cases: Cases;
 }
 
+/**
+ * Props interface for TestSuite component
+ * @interface Props
+ * @extends {WithTranslation}
+ * @property {number} index - Index of the test suite in the list
+ * @property {TestItem} test - Test suite data object
+ * @property {boolean} [defaultOpen] - Whether the suite should be initially expanded
+ * @property {string | undefined} commonTestRunStatus - Global test run status
+ */
 type Props = {
   index: number;
   test: TestItem;
@@ -96,29 +177,70 @@ type Props = {
   commonTestRunStatus: string | undefined;
 } & WithTranslation;
 
+/**
+ * State interface for TestSuite component
+ * @interface State
+ * @property {boolean} isOpen - Whether the test suite is expanded
+ * @property {number} dataColumnWidth - Current width of the data column
+ */
 type State = {
   isOpen: boolean;
   dataColumnWidth: number;
 };
 
+/**
+ * Margin constant for loading icon
+ * @constant
+ */
 const LOADING_ICON_MARGIN = 30;
 
 /**
  * TestSuite component displays a collapsible test suite with test cases.
- * It includes functionality to render test names, statuses, and data.
+ * It provides functionality to render test names, statuses, timing information,
+ * and detailed test data including charts and dialog boxes.
+ *
+ * @component
+ * @example
+ * <TestSuite
+ *   index={0}
+ *   test={testSuiteData}
+ *   defaultOpen={true}
+ *   commonTestRunStatus="run"
+ * />
  */
 export class TestSuite extends React.Component<Props, State> {
+  /**
+   * Static loading icon component for busy states
+   * @static
+   * @type {React.ReactElement}
+   */
   private static readonly LOADING_ICON = (
     <div style={{ margin: LOADING_ICON_MARGIN }}>
       <LoadingOutlined spin />
     </div>
   );
 
+  /**
+   * Default props for the TestSuite component
+   * @static
+   * @type {Partial<Props>}
+   */
   static defaultProps: Partial<Props> = {
     defaultOpen: true,
   };
 
+  /**
+   * Reference to the data column container for width measurement
+   * @private
+   * @type {React.RefObject<HTMLDivElement>}
+   */
   private readonly dataColumnRef: React.RefObject<HTMLDivElement>;
+
+  /**
+   * Resize observer for tracking data column width changes
+   * @private
+   * @type {ResizeObserver | null}
+   */
   private resizeObserver: ResizeObserver | null = null;
 
   /**
@@ -192,11 +314,21 @@ export class TestSuite extends React.Component<Props, State> {
     );
   }
 
+  /**
+   * Lifecycle method called after component mounts
+   * Sets up resize observer and initial data column width
+   */
   componentDidMount() {
     this.setupResizeObserver();
     this.updateDataColumnWidth();
   }
 
+  /**
+   * Lifecycle method called after component updates
+   * Handles responsive width updates when test status changes or panel opens
+   * @param {Props} prevProps - Previous props
+   * @param {State} prevState - Previous state
+   */
   componentDidUpdate(prevProps: Props, prevState: State) {
     const statusBecameReady =
       this.props.test.status === "ready" && prevProps.test.status !== "ready";
@@ -207,10 +339,18 @@ export class TestSuite extends React.Component<Props, State> {
     }
   }
 
+  /**
+   * Lifecycle method called before component unmounts
+   * Cleans up resize observer to prevent memory leaks
+   */
   componentWillUnmount() {
     this.destroyResizeObserver();
   }
 
+  /**
+   * Sets up resize observer to track data column width changes
+   * @private
+   */
   private readonly setupResizeObserver = () => {
     if (this.dataColumnRef.current) {
       this.destroyResizeObserver();
@@ -231,6 +371,10 @@ export class TestSuite extends React.Component<Props, State> {
     }
   };
 
+  /**
+   * Destroys the resize observer and cleans up resources
+   * @private
+   */
   private readonly destroyResizeObserver = () => {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
@@ -238,6 +382,10 @@ export class TestSuite extends React.Component<Props, State> {
     }
   };
 
+  /**
+   * Updates the data column width state based on current DOM measurements
+   * @private
+   */
   private readonly updateDataColumnWidth = () => {
     if (this.dataColumnRef.current) {
       const dataCells = this.dataColumnRef.current.querySelectorAll(
@@ -253,10 +401,11 @@ export class TestSuite extends React.Component<Props, State> {
   };
 
   /**
-   * Renders the name of the test suite.
-   * @param {string} name - The name of the test suite.
-   * @param {number} test_number - The number of the test suite.
-   * @returns {React.ReactElement} The rendered name element.
+   * Renders the name of the test suite with optional loading state
+   * @param {string} name - The name of the test suite
+   * @param {number} test_number - The numerical identifier of the test suite
+   * @returns {React.ReactElement} The rendered name element
+   * @private
    */
   private renderName(name: string, test_number: number): React.ReactElement {
     const is_loading = _.isEmpty(name);
@@ -274,9 +423,10 @@ export class TestSuite extends React.Component<Props, State> {
   }
 
   /**
-   * Renders the test cases within the test suite.
-   * @param {Cases} test_topics - The test cases to render.
-   * @returns {React.ReactElement} The rendered test cases.
+   * Renders the test cases within the test suite as a data table
+   * @param {Cases} test_topics - The test cases to render
+   * @returns {React.ReactElement} The rendered test cases table
+   * @private
    */
   private renderTests(test_topics: Cases): React.ReactElement {
     let case_names: string[] = [];
@@ -286,6 +436,10 @@ export class TestSuite extends React.Component<Props, State> {
     }
     const case_array: Case[] = case_names.map((n) => test_topics[n]);
 
+    /**
+     * Column configuration for the test cases data table
+     * @type {TableColumn<string>[]}
+     */
     const columns: TableColumn<string>[] = [
       {
         id: "status",
@@ -342,9 +496,10 @@ export class TestSuite extends React.Component<Props, State> {
   }
 
   /**
-   * Renders the right panel of the test suite.
-   * @param {TestItem} test_topics - The test item containing cases.
-   * @returns {React.ReactElement} The rendered right panel.
+   * Renders the right panel of the test suite with status icons and timer
+   * @param {TestItem} test_topics - The test item containing cases
+   * @returns {React.ReactElement} The rendered right panel
+   * @private
    */
   private renderTestSuiteRightPanel(test_topics: TestItem): React.ReactElement {
     return (
@@ -379,11 +534,12 @@ export class TestSuite extends React.Component<Props, State> {
   }
 
   /**
-   * Common method to render a cell with optional loading skeleton.
-   * @param {React.ReactElement} cell_content - The content to render in the cell.
-   * @param {string} key - The unique key for the cell.
-   * @param {boolean} is_loading - Whether to show a loading skeleton.
-   * @returns {React.ReactElement} The rendered cell.
+   * Common method to render a table cell with optional loading skeleton
+   * @param {React.ReactElement} cell_content - The content to render in the cell
+   * @param {string} key - The unique key for the cell
+   * @param {boolean} is_loading - Whether to show a loading skeleton
+   * @returns {React.ReactElement} The rendered cell
+   * @private
    */
   private commonCellRender(
     cell_content: React.ReactElement,
@@ -402,11 +558,12 @@ export class TestSuite extends React.Component<Props, State> {
   }
 
   /**
-   * Renders the test number in a cell.
-   * @param {Case[]} test_topics - The test cases.
-   * @param {string} row_ - The row data.
-   * @param {number} rowIndex - The index of the row.
-   * @returns {React.ReactElement} The rendered test number cell.
+   * Renders the test number in a table cell
+   * @param {Case[]} test_topics - The test cases array
+   * @param {string} row_ - The row identifier
+   * @param {number} rowIndex - The index of the row
+   * @returns {React.ReactElement} The rendered test number cell
+   * @private
    */
   private cellRendererNumber(
     test_topics: Case[],
@@ -422,11 +579,12 @@ export class TestSuite extends React.Component<Props, State> {
   }
 
   /**
-   * Renders the test name in a cell.
-   * @param {Case[]} test_topics - The test cases.
-   * @param {string} row_ - The row data.
-   * @param {number} rowIndex - The index of the row.
-   * @returns {React.ReactElement} The rendered test name cell.
+   * Renders the test name in a table cell
+   * @param {Case[]} test_topics - The test cases array
+   * @param {string} row_ - The row identifier
+   * @param {number} rowIndex - The index of the row
+   * @returns {React.ReactElement} The rendered test name cell
+   * @private
    */
   private cellRendererName(
     test_topics: Case[],
@@ -443,11 +601,12 @@ export class TestSuite extends React.Component<Props, State> {
   }
 
   /**
-   * Renders the test data in a cell.
-   * @param {Case[]} test_topics - The test cases.
-   * @param {string} row_ - The row data.
-   * @param {number} rowIndex - The index of the row.
-   * @returns {React.ReactElement} The rendered test data cell.
+   * Renders the test data in a table cell
+   * @param {Case[]} test_topics - The test cases array
+   * @param {string} row_ - The row identifier
+   * @param {number} rowIndex - The index of the row
+   * @returns {React.ReactElement} The rendered test data cell
+   * @private
    */
   private cellRendererData(
     test_topics: Case[],
@@ -475,11 +634,12 @@ export class TestSuite extends React.Component<Props, State> {
   }
 
   /**
-   * Renders the test status in a cell.
-   * @param {Case[]} test_topics - The test cases.
-   * @param {string} row_ - The row data.
-   * @param {number} rowIndex - The index of the row.
-   * @returns {React.ReactElement} The rendered test status cell.
+   * Renders the test status and dialog box in a table cell
+   * @param {Case[]} test_topics - The test cases array
+   * @param {string} row_ - The row identifier
+   * @param {number} rowIndex - The index of the row
+   * @returns {React.ReactElement} The rendered test status cell
+   * @private
    */
   private cellRendererStatus(
     test_topics: Case[],
@@ -540,11 +700,16 @@ export class TestSuite extends React.Component<Props, State> {
   }
 
   /**
-   * Handles the click event to toggle the collapse state of the test suite.
+   * Handles the click event to toggle the collapse state of the test suite
+   * @private
    */
   private readonly handleClick = () =>
     this.setState((state) => ({ isOpen: !state.isOpen }));
 }
 
-const TestSuiteComponent = withTranslation()(TestSuite);
+/**
+ * Higher-order component that wraps TestSuite with translation capabilities
+ * @type {React.ComponentType<Omit<Props, keyof WithTranslation>>}
+ */
+const TestSuiteComponent: React.ComponentType<Omit<Props, keyof WithTranslation>> = withTranslation()(TestSuite);
 export { TestSuiteComponent };
