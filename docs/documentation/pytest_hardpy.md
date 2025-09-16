@@ -1271,7 +1271,8 @@ Sets the group for a test case. Valid groups: `setup`, `main`, `teardown` (defau
 **Example:**
 
 ```python
-from hardpy.pytest_hardpy.utils.const import Group
+from hardpy import Group
+
 @pytest.mark.case_group(Group.SETUP)
 def test_setup_case():
     assert True
@@ -1289,7 +1290,7 @@ Sets the group for all test cases in a module. Valid groups: `setup`, `main`, `t
 
 ```python
 import pytest
-from hardpy.pytest_hardpy.utils.const import Group
+from hardpy import Group
 
 pytestmark = pytest.mark.module_group(Group.TEARDOWN)
 
