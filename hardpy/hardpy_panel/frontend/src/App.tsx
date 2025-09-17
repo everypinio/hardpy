@@ -53,9 +53,10 @@ const isValidStatus = (status: string): status is StatusKey => {
 
 /**
  * Main component of the GUI.
+ * @param {string} syncDocumentId - The id of the PouchDB document to syncronize.
  * @returns {JSX.Element} The main application component.
  */
-function App(): JSX.Element {
+function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const { t } = useTranslation();
   const [use_end_test_sound, setUseEndTestSound] = React.useState(false);
   const [use_debug_info, setUseDebugInfo] = React.useState(false);
@@ -124,6 +125,21 @@ function App(): JSX.Element {
     }
   }, [lastRunStatus]);
 
+  /**
+   * Finds the index of a row in a list based on its ID.
+   * @param {Array} rows - The list of rows to search.
+   * @param {string} searchTerm - The ID to search for.
+   * @returns {number} The index of the row, or -1 if not found.
+   */
+  function findRowIndex(rows: { id: string }[], searchTerm: string): number {
+    for (let i = 0; i < rows.length; i++) {
+      if (rows[i].id === searchTerm) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   const { rows, state, loading, error } = useAllDocs({
     include_docs: true,
   });
@@ -131,7 +147,9 @@ function App(): JSX.Element {
   React.useEffect(() => {
     if (rows.length === 0) return;
 
-    const db_row = rows[0].doc as TestRunI;
+    const index = findRowIndex(rows, syncDocumentId);
+    if (index === -1) return;
+    const db_row = rows[index].doc as TestRunI;
     const status = db_row.status || "";
     const progress = db_row.progress || 0;
 
@@ -198,41 +216,65 @@ function App(): JSX.Element {
       );
     }
 
+    const index = findRowIndex(rows, syncDocumentId);
+    if (index === -1) {
+      return (
+        <Card style={{ marginTop: "60px" }}>
+          <H2>{t("app.dbError")}</H2>
+          {error && <p>{error.message}</p>}
+        </Card>
+      );
+    }
+
+    const document_row = rows[index];
+
+    if (!document_row) {
+      return (
+        <Card style={{ marginTop: "60px" }}>
+          <H2>{t("app.dbError")}</H2>
+          {error && <p>{error.message}</p>}
+        </Card>
+      );
+    }
+
+    const testRunData: TestRunI = document_row.doc as TestRunI;
+
     return (
       <div style={{ marginTop: "40px" }}>
-        {rows.map((row) => (
-          <div key={row.id} style={{ display: "flex", flexDirection: "row" }}>
-            {(ultrawide || !use_debug_info) && (
-              <Card
-                style={{
-                  flexDirection: "column",
-                  padding: "20px",
-                  flexGrow: 1,
-                  flexShrink: 1,
-                  marginTop: "20px",
-                  marginBottom: "20px",
-                }}
-              >
-                <SuiteList
-                  db_state={row.doc as TestRunI}
-                  defaultClose={!ultrawide}
-                ></SuiteList>
-              </Card>
-            )}
-            {use_debug_info && (
-              <Card
-                style={{
-                  flexDirection: "column",
-                  padding: "20px",
-                  marginTop: "20px",
-                  marginBottom: "20px",
-                }}
-              >
-                <pre>{JSON.stringify(row.doc, null, 2)}</pre>
-              </Card>
-            )}
-          </div>
-        ))}
+        <div
+          key={document_row.id}
+          style={{ display: "flex", flexDirection: "row" }}
+        >
+          {(ultrawide || !use_debug_info) && (
+            <Card
+              style={{
+                flexDirection: "column",
+                padding: "20px",
+                flexGrow: 1,
+                flexShrink: 1,
+                marginTop: "20px",
+                marginBottom: "20px",
+              }}
+            >
+              <SuiteList
+                db_state={testRunData}
+                defaultClose={!ultrawide}
+              ></SuiteList>
+            </Card>
+          )}
+          {use_debug_info && (
+            <Card
+              style={{
+                flexDirection: "column",
+                padding: "20px",
+                marginTop: "20px",
+                marginBottom: "20px",
+              }}
+            >
+              <pre>{JSON.stringify(testRunData, null, 2)}</pre>
+            </Card>
+          )}
+        </div>
       </div>
     );
   };

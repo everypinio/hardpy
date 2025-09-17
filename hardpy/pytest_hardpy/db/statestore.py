@@ -3,9 +3,9 @@
 
 from logging import getLogger
 
+from hardpy.common.singleton import SingletonMeta
 from hardpy.pytest_hardpy.db.base_store import BaseStore
 from hardpy.pytest_hardpy.db.schema import ResultStateStore
-from hardpy.pytest_hardpy.utils import SingletonMeta
 
 
 class StateStore(BaseStore, metaclass=SingletonMeta):

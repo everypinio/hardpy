@@ -2,6 +2,13 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from hardpy.common.stand_cloud import StandCloudConnector, StandCloudError
+from hardpy.pytest_hardpy.db import (
+    Chart,
+    Instrument,
+    NumericMeasurement,
+    StringMeasurement,
+    SubUnit,
+)
 from hardpy.pytest_hardpy.pytest_call import (
     ErrorCode,
     clear_operator_message,
@@ -43,7 +50,6 @@ from hardpy.pytest_hardpy.result import (
 from hardpy.pytest_hardpy.result.couchdb_config import CouchdbConfig
 from hardpy.pytest_hardpy.utils import (
     BaseWidget,
-    Chart,
     ChartType,
     CheckboxWidget,
     ComparisonOperation,
@@ -52,14 +58,10 @@ from hardpy.pytest_hardpy.utils import (
     Group,
     HTMLComponent,
     ImageComponent,
-    Instrument,
     MultistepWidget,
     NumericInputWidget,
-    NumericMeasurement,
     RadiobuttonWidget,
     StepWidget,
-    StringMeasurement,
-    SubUnit,
     TestStandNumberError,
     TextInputWidget,
 )

@@ -17,7 +17,7 @@ The CouchDB version must be equal to or greater than the 3.2 version.
 The pytest plugin has 2 databases: **statestore** and **runstore**.
 
 - The **statestore** database uses for frontend [data synchronization](./../about/frontend_sync.md).
-- The **runstore** database contains the document **current**, which is a JSON object
+- The **runstore** database contains the document, which is a JSON object
 that stores the current state of the test run.
 
 A separate database is required to store the list of reports.
@@ -55,7 +55,7 @@ stores the current report and **report** stores reports.
     <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/database/runstore.png" alt="runstore_scheme">
 </h1>
 
-The **current** document of **runstore** database contains some section.
+The document of **runstore** database contains some section.
 
 #### main
 
@@ -332,9 +332,11 @@ The module's name is the same as the file's name.
       - **assertion_msg**: assert or error message if the test case fails. The variable is assigned automatically.
         However, the user can write their own message in case of an assertion, which will be written to this variable.
         For example:
+
         ```python
         assert False, "This is an example"
         ```
+
         The **assertion_msg** is displayed in the operator panel next to the test case in which it was called.
       - **msg**: the log message is displayed in the operator panel next to the test case in which it was called.
         The user can specify and update current message by using [set_message](./pytest_hardpy.md#set_message) function.
@@ -417,7 +419,7 @@ For example, the firmware version comparison.
 
 ### Report example
 
-Example of a **current** document:
+Example of a document:
 
 ```json
     {
@@ -541,6 +543,7 @@ methods = GET, PUT, POST, HEAD, DELETE
 credentials = true
 headers = accept, authorization, content-type, origin, referer, x-csrf-token
 ```
+
 3. Create a `docker-compose.yaml` file in project's root directory.
 
 ```yaml
