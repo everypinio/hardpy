@@ -376,4 +376,7 @@ An example of its use can be found on page [chart](./../examples/chart.md).
 ### Running some instance in single stand
 
 A user can run multiple **HardPy** instances on a single stand.
+To create a document in the database for storing test data, each stand that 
+runs on a single computer must have a unique combination of 
+[frontend](./../documentation/hardpy_config.md#frontend) host and port.
 The startup is described in the [Multiple Stand](./../examples/multiple_stands.md) example.

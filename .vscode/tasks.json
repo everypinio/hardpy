@@ -12,7 +12,11 @@
                 "isDefault": true
             },
             "options": {
-                "cwd": "${workspaceFolder}/hardpy/hardpy_panel/frontend"
+                "cwd": "${workspaceFolder}/hardpy/hardpy_panel/frontend",
+                "env": {
+                    // Add path to yarn and node to PATH
+                    "PATH": "${env:HOME}/miniconda3/envs/hardpy/bin:${env:PATH}"
+                }
             },
             "problemMatcher": []
         }

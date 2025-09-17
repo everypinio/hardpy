@@ -22,7 +22,8 @@ class PyTestWrapper:
 
         # Make sure test structure is stored in DB
         # before clients come in
-        self.config = ConfigManager().get_config()
+        self._config_manager = ConfigManager()
+        self.config = self._config_manager.config
         self.collect(is_clear_database=True)
 
     def start(self, start_args: dict | None = None) -> bool:
@@ -42,7 +43,7 @@ class PyTestWrapper:
             "-m",
             "pytest",
             "--hardpy-db-url",
-            self.config.database.connection_url(),
+            self.config.database.url,
             "--hardpy-tests-name",
             self.config.tests_name,
             "--sc-address",
@@ -59,13 +60,13 @@ class PyTestWrapper:
         if system() == "Windows":
             self._proc = subprocess.Popen(  # noqa: S603
                 cmd,
-                cwd=ConfigManager().get_tests_path(),
+                cwd=self._config_manager.tests_path,
                 creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
             )
         if system() == "Linux":
             self._proc = subprocess.Popen(  # noqa: S603
                 cmd,
-                cwd=ConfigManager().get_tests_path(),
+                cwd=self._config_manager.tests_path,
             )
 
         return True
@@ -105,7 +106,7 @@ class PyTestWrapper:
             "pytest",
             "--collect-only",
             "--hardpy-db-url",
-            self.config.database.connection_url(),
+            self.config.database.url,
             "--hardpy-tests-name",
             self.config.tests_name,
             "--hardpy-pt",
@@ -116,7 +117,7 @@ class PyTestWrapper:
 
         subprocess.Popen(  # noqa: S603
             [self.python_executable, *args],
-            cwd=ConfigManager().get_tests_path(),
+            cwd=self._config_manager.tests_path,
         )
         return True
 
@@ -153,4 +154,5 @@ class PyTestWrapper:
         Returns:
             dict: HardPy configuration
         """
-        return ConfigManager().get_config().model_dump()
+        config_manager = ConfigManager()
+        return config_manager.config.model_dump()
