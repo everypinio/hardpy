@@ -31,11 +31,10 @@
   },
   "chart": {
     "dataChart": "チャートデータ",
-    "defaultChartTitle": "チャート",
     "xAxis": "X軸",
     "yAxis": "Y軸",
     "chart": "グラフ",
-    "showChart": "グラフを表示: {{title}}",
+    "showChart": "グラフを表示 {{title}}",
     "fullscreenButton": "グラフを全画面表示で開く",
     "series": "シリーズ{{number}}"
   },

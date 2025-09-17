@@ -31,11 +31,10 @@
   },
   "chart": {
     "dataChart": "Données du graphique",
-    "defaultChartTitle": "Graphique",
     "xAxis": "Axe X",
     "yAxis": "Axe Y",
     "chart": "Graphique",
-    "showChart": "Afficher le graphique : {{title}}",
+    "showChart": "Afficher le graphique {{title}}",
     "fullscreenButton": "Ouvrir le graphique en plein écran",
     "series": "Série {{number}}"
   },

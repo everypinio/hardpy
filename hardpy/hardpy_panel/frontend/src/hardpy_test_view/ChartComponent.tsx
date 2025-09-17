@@ -364,11 +364,11 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
           maxWidth: "100%",
         }}
       >
-        <Button icon="chevron-down" onClick={onToggleCollapse} minimal small>
-          {t("chart.showChart", {
-            title: chartTitle || t("chart.defaultChartTitle"),
-          })}
-        </Button>
+      <Button icon="chevron-down" onClick={onToggleCollapse} minimal small>
+        {t("chart.showChart", {
+          title: chartTitle || "",
+        })}
+      </Button>
       </div>
     );
   }

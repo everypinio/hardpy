@@ -31,11 +31,10 @@
   },
   "chart": {
     "dataChart": "Данные графика",
-    "defaultChartTitle": "График",
     "xAxis": "Ось X",
     "yAxis": "Ось Y",
     "chart": "График",
-    "showChart": "Показать график: {{title}}",
+    "showChart": "Показать график {{title}}",
     "fullscreenButton": "Открыть график в полноэкранном режиме",
     "series": "Серия {{number}}"
   },

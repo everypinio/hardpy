@@ -15,7 +15,6 @@ class Chart(BaseModel):
         showChart (str): The translation for the "showChart" text.
         fullscreenButton (str): The translation for the "fullscreenButton" text.
         series (str): The translation for the "series" text.
-        defaultChartTitle (str): The translation for the default chart title when no title is provided.
     """
 
     dataChart: str
@@ -25,8 +24,6 @@ class Chart(BaseModel):
     showChart: str
     fullscreenButton: str
     series: str
-    defaultChartTitle: str
-
 
 class AppStatus(BaseModel):
     """A class representing application status translations.

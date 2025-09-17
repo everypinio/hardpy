@@ -31,11 +31,10 @@
   },
   "chart": {
     "dataChart": "图表数据",
-    "defaultChartTitle": "图表",
     "xAxis": "X轴",
     "yAxis": "Y轴",
     "chart": "图表",
-    "showChart": "显示图表: {{title}}",
+    "showChart": "显示图表 {{title}}",
     "fullscreenButton": "全屏显示图表",
     "series": "系列{{number}}"
   },
