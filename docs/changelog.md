@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add the charts view to the HardPy operator panel.
+  [[PR-186](https://github.com/everypinio/hardpy/pull/186)]
 * Added storage of the operator message state to avoid reopening the window after closing.
   [[PR-190](https://github.com/everypinio/hardpy/pull/190)]
 * Change the database and interface synchronization mechanism.

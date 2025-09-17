@@ -134,7 +134,6 @@ export class SuiteList extends React.Component<
    */
   render(): React.ReactElement {
     const { t, i18n } = this.props;
-    console.log("SuiteList props", { i18n: this.props.i18n });
     if (!i18n || !this.state.initialized) {
       return <div>Loading translations...</div>;
     }
