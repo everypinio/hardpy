@@ -9,14 +9,14 @@ jobs:
     name: Frontend and Backend
     runs-on: ubuntu-latest
     env:
-      NODE_VERSION: "20.x"
+      NODE_VERSION: "20.19"
       YARN_VERSION: "4.0.1"
     steps:
       - uses: actions/checkout@v4
       - name: Set Node.js 20.x
         uses: actions/setup-node@v4
         with:
-            node-version: 20.x
+            node-version: 20.19
       - name: Set up Yarn
         run: corepack enable; yarn set version $YARN_VERSION
       - name: Set up Python
