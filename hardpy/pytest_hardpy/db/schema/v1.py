@@ -148,7 +148,7 @@ class NumericMeasurement(IBaseMeasurement):
 
     model_config = ConfigDict(extra="forbid")
 
-    type: MeasurementType = Field(default=MeasurementType.NUMERIC)
+    type: MeasurementType = Field(default=MeasurementType.NUMERIC, frozen=True)
     value: int | float
     name: str | None = Field(default=None)
     unit: str | None = Field(default=None)
@@ -164,7 +164,7 @@ class StringMeasurement(IBaseMeasurement):
 
     model_config = ConfigDict(extra="forbid")
 
-    type: MeasurementType = Field(default=MeasurementType.STRING)
+    type: MeasurementType = Field(default=MeasurementType.STRING, frozen=True)
     value: str
     name: str | None = Field(default=None)
     casesensitive: bool = Field(default=True)
