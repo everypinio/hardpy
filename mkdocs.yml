@@ -68,7 +68,6 @@ nav:
       - CouchDB load: examples/couchdb_load.md
       - Critical test: examples/critical_test.md
       - Dialog box: examples/dialog_box.md
-      - Dialog box plot: examples/dialog_box_plot.md
       - HardPy launch: examples/hardpy_launch.md
       - Hello HardPy: examples/hello_hardpy.md
       - Launch arguments: examples/launch_arguments.md
