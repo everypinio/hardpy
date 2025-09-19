@@ -86,6 +86,8 @@ export interface TestRunI {
 interface Props extends WithTranslation {
   db_state: TestRunI;
   defaultClose: boolean;
+  onTestsSelectionChange?: (selectedTests: string[]) => void;
+  selectedTests?: string[];
 }
 
 const SECONDS_TO_MILLISECONDS = 1000;
@@ -261,6 +263,8 @@ export class SuiteList extends React.Component<
         defaultOpen={this.elements_count < 5 && !this.props.defaultClose}
         commonTestRunStatus={this.props.db_state.status}
         moduleTechName={suite.name}
+        onTestsSelectionChange={this.props.onTestsSelectionChange}
+        selectedTests={this.props.selectedTests}
       />
     );
   }

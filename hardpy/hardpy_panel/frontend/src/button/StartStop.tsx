@@ -5,7 +5,10 @@ import * as React from "react";
 import { AnchorButton, AnchorButtonProps } from "@blueprintjs/core";
 import { withTranslation, WithTranslation } from "react-i18next";
 
-type Props = { testing_status: string } & WithTranslation;
+type Props = { 
+  testing_status: string;
+  selectedTests: string[];
+} & WithTranslation;
 
 type State = {
   isStopButtonDisabled: boolean;
@@ -25,6 +28,34 @@ class StartStopButton extends React.Component<Props, State> {
     };
     this.hardpy_start = this.hardpy_start.bind(this);
     this.hardpy_stop = this.hardpy_stop.bind(this);
+  }
+
+  /**
+   * Sends selected tests to backend
+   * @private
+   */
+  private sendSelectedTestsToBackend(selectedTests: string[]): void {
+    if (selectedTests.length === 0) {
+      console.log("No tests selected, sending empty array");
+    }
+    
+    const testsJsonString = JSON.stringify(selectedTests);
+    
+    console.log("Selected tests being sent after START:", selectedTests);
+    fetch(`/api/selected_tests`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: testsJsonString,
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Selected tests sent to backend:", data);
+        })
+        .catch((error) => {
+            console.error("Error sending selected tests:", error);
+        });
   }
 
   /**
@@ -53,6 +84,8 @@ class StartStopButton extends React.Component<Props, State> {
    * @private
    */
   private hardpy_start(): void {
+    this.sendSelectedTestsToBackend(this.props.selectedTests);
+    
     this.hardpy_call("api/start");
   }
 
@@ -72,7 +105,6 @@ class StartStopButton extends React.Component<Props, State> {
       this.setState({ isStopButtonDisabled: false });
     }, 500);
   }
-
   /**
    * Checks if any dialog is currently open.
    * @returns {boolean} True if a dialog is open, else false.

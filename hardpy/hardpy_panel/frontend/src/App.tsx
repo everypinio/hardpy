@@ -71,6 +71,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const startTimeRef = React.useRef<number | null>(null);
   const [timerIntervalId, setTimerIntervalId] =
     React.useState<NodeJS.Timeout | null>(null);
+  const [selectedTests, setSelectedTests] = React.useState<string[]>([]);
 
   /**
    * Custom hook to determine if the window width is greater than a specified size.
@@ -187,6 +188,13 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   ]);
 
   /**
+   * Handles selection change from SuiteList
+   */
+  const handleTestsSelectionChange = (tests: string[]) => {
+    setSelectedTests(tests);
+  };
+
+  /**
    * Renders the database content.
    * @returns {JSX.Element} The rendered content.
    */
@@ -259,6 +267,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
               <SuiteList
                 db_state={testRunData}
                 defaultClose={!ultrawide}
+                onTestsSelectionChange={handleTestsSelectionChange}
+                selectedTests={selectedTests}
               ></SuiteList>
             </Card>
           )}
@@ -414,7 +424,10 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           <ProgressView percentage={lastProgress} status={lastRunStatus} />
         </div>
         <div style={{ flexDirection: "column" }}>
-          <StartStopButton testing_status={lastRunStatus} />
+          <StartStopButton
+            testing_status={lastRunStatus}
+            selectedTests={selectedTests}
+          />
         </div>
       </div>
     </div>

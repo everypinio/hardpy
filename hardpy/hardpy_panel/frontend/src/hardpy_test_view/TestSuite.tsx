@@ -178,6 +178,7 @@ type Props = {
   onTestsSelectionChange?: (selectedTests: string[]) => void;
   selectionSupported?: boolean;
   moduleTechName: string;
+  selectedTests?: string[];
 } & WithTranslation;
 
 /**
@@ -188,7 +189,6 @@ type Props = {
  */
 type State = {
   isOpen: boolean;
-  selectedTests: Set<string>;
   dataColumnWidth: number;
 };
 
@@ -257,7 +257,6 @@ export class TestSuite extends React.Component<Props, State> {
 
     this.state = {
       isOpen: props.defaultOpen ?? false,
-      selectedTests: new Set<string>(),
       dataColumnWidth: 0,
     };
 
@@ -348,7 +347,7 @@ export class TestSuite extends React.Component<Props, State> {
    * Checks if all tests in a module are selected.
    */
   private isAllTestsSelected(): boolean {
-    const { test } = this.props;
+    const { test, selectedTests = [] } = this.props;
     const case_names = Object.keys(test.cases);
 
     if (case_names.length === 0) {
@@ -357,7 +356,7 @@ export class TestSuite extends React.Component<Props, State> {
 
     return case_names.every((caseName) => {
       const testFullPath = `${this.getModuleTechName()}::${caseName}`;
-      return this.state.selectedTests.has(testFullPath);
+      return selectedTests.includes(testFullPath);
     });
   }
 
@@ -365,7 +364,7 @@ export class TestSuite extends React.Component<Props, State> {
    * Checks if some (but not all) tests in a module are selected
    */
   private isSomeTestsSelected(): boolean {
-    const { test } = this.props;
+    const { test, selectedTests = [] } = this.props;
     const case_names = Object.keys(test.cases);
 
     if (case_names.length === 0) {
@@ -373,9 +372,8 @@ export class TestSuite extends React.Component<Props, State> {
     } else {
       const selectedCount = case_names.filter((caseName) => {
         const testFullPath = `${this.getModuleTechName()}::${caseName}`;
-        return this.state.selectedTests.has(testFullPath);
+        return selectedTests.includes(testFullPath);
       }).length;
-      console.log("Selected tests being sent:", this.state.selectedTests);
 
       return selectedCount > 0 && selectedCount < case_names.length;
     }
@@ -471,7 +469,7 @@ export class TestSuite extends React.Component<Props, State> {
    * Renders the name of the test suite with optional loading state
    * @param {string} name - The name of the test suite
    * @returns {React.ReactElement} The rendered name element
-   * 
+   *
    */
   private renderName(name: string): React.ReactElement {
     const is_loading = _.isEmpty(name);
@@ -585,8 +583,9 @@ export class TestSuite extends React.Component<Props, State> {
     row_: string,
     rowIndex: number
   ): React.ReactElement {
+    const { selectedTests = [] } = this.props;
     const testFullPath = `${this.getModuleTechName()}::${row_}`;
-    const isSelected = this.state.selectedTests.has(testFullPath);
+    const isSelected = selectedTests.includes(testFullPath);
 
     return this.commonCellRender(
       <div
@@ -613,62 +612,48 @@ export class TestSuite extends React.Component<Props, State> {
    * @param {boolean} isChecked - Whether the checkbox is checked.
    */
   private handleTestSelection(testPath: string, isChecked: boolean): void {
-    this.setState((prevState) => {
-      const newSelectedTests = new Set(prevState.selectedTests);
+    const { selectedTests = [], onTestsSelectionChange } = this.props;
 
-      if (isChecked) {
-        newSelectedTests.add(testPath);
-      } else {
-        newSelectedTests.delete(testPath);
-      }
+    let newSelectedTests: string[];
+    if (isChecked) {
+      newSelectedTests = [...selectedTests, testPath];
+    } else {
+      newSelectedTests = selectedTests.filter((test) => test !== testPath);
+    }
 
-      const selectedTestsArray = Array.from(newSelectedTests);
-
-      this.sendSelectedTestsToBackend(selectedTestsArray);
-
-      if (this.props.onTestsSelectionChange) {
-        this.props.onTestsSelectionChange(selectedTestsArray);
-      }
-
-      return { selectedTests: newSelectedTests };
-    });
+    if (onTestsSelectionChange) {
+      onTestsSelectionChange(newSelectedTests);
+    }
   }
 
   /**
    * Handles select all/deselect all.
    */
   private handleSelectAll(e: React.ChangeEvent<HTMLInputElement>): void {
-    const { test } = this.props;
+    const { test, selectedTests = [], onTestsSelectionChange } = this.props;
     const case_names = Object.keys(test.cases);
 
-    this.setState((prevState) => {
-      const newSelectedTests = new Set(prevState.selectedTests);
+    let newSelectedTests: string[];
+    if (e.target.checked) {
+      // Select all
+      newSelectedTests = [
+        ...selectedTests.filter(
+          (test) => !test.startsWith(`${this.getModuleTechName()}::`)
+        ),
+        ...case_names.map(
+          (caseName) => `${this.getModuleTechName()}::${caseName}`
+        ),
+      ];
+    } else {
+      // Deselect all
+      newSelectedTests = selectedTests.filter(
+        (test) => !test.startsWith(`${this.getModuleTechName()}::`)
+      );
+    }
 
-      if (e.target.checked) {
-        // Select all
-        case_names.forEach((caseName) => {
-          const testFullPath = `${this.getModuleTechName()}::${caseName}`;
-          newSelectedTests.add(testFullPath);
-        });
-      } else {
-        // Deselect all
-        case_names.forEach((caseName) => {
-          const testFullPath = `${this.getModuleTechName()}::${caseName}`;
-          newSelectedTests.delete(testFullPath);
-        });
-      }
-
-      const selectedTestsArray = Array.from(newSelectedTests);
-
-      this.sendSelectedTestsToBackend(selectedTestsArray);
-
-      // Notify parent component about selection change
-      if (this.props.onTestsSelectionChange) {
-        this.props.onTestsSelectionChange(selectedTestsArray);
-      }
-
-      return { selectedTests: newSelectedTests };
-    });
+    if (onTestsSelectionChange) {
+      onTestsSelectionChange(newSelectedTests);
+    }
   }
 
   /**
@@ -890,27 +875,6 @@ export class TestSuite extends React.Component<Props, State> {
     );
   }
 
-
-  private sendSelectedTestsToBackend(selectedTests: string[]): void {
-      const testsJsonString = JSON.stringify(selectedTests);
-      
-      console.log("Selected tests being sent:", selectedTests);
-      fetch(`/api/selected_tests`, {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-          },
-          body: testsJsonString,
-      })
-          .then((response) => response.json())
-          .then((data) => {
-              console.log("Selected tests sent to backend:", data);
-          })
-          .catch((error) => {
-              console.error("Error sending selected tests:", error);
-          });
-  }
-
   /**
    * Handles the click event to toggle the collapse state of the test suite
    * @private
@@ -918,7 +882,6 @@ export class TestSuite extends React.Component<Props, State> {
   private readonly handleClick = () =>
     this.setState((state) => ({ isOpen: !state.isOpen }));
 }
-
 
 TestSuite.defaultProps = {
   defaultOpen: true,
@@ -929,5 +892,7 @@ TestSuite.defaultProps = {
  * Higher-order component that wraps TestSuite with translation capabilities
  * @type {React.ComponentType<Omit<Props, keyof WithTranslation>>}
  */
-const TestSuiteComponent: React.ComponentType<Omit<Props, keyof WithTranslation>> = withTranslation()(TestSuite);
+const TestSuiteComponent: React.ComponentType<
+  Omit<Props, keyof WithTranslation>
+> = withTranslation()(TestSuite);
 export { TestSuiteComponent };
