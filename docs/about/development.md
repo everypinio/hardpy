@@ -6,7 +6,7 @@
 
 * **python** version must be equal to or greater than  **3.10**;
 * **yarn** version must be equal to 4.0.1;
-* **node.js** version must be equal to or greater than **16.10.0**;
+* **node.js** version must be equal to or greater than **18.12.0**;
 * **CouchDB** version must be equal to or greater than **3.2.0**;
 
 ### Conda
