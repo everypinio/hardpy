@@ -260,6 +260,7 @@ export class SuiteList extends React.Component<
         test={suite.test}
         defaultOpen={this.elements_count < 5 && !this.props.defaultClose}
         commonTestRunStatus={this.props.db_state.status}
+        moduleTechName={suite.name}
       />
     );
   }

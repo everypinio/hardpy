@@ -177,6 +177,7 @@ type Props = {
   commonTestRunStatus: string | undefined;
   onTestsSelectionChange?: (selectedTests: string[]) => void;
   selectionSupported?: boolean;
+  moduleTechName: string;
 } & WithTranslation;
 
 /**
@@ -217,7 +218,7 @@ export class TestSuite extends React.Component<Props, State> {
    * @static
    * @type {React.ReactElement}
    */
-  private static readonly LOADING_ICON = (
+  private static readonly LOADING_ICON: React.ReactElement = (
     <div style={{ margin: LOADING_ICON_MARGIN }}>
       <LoadingOutlined spin />
     </div>
@@ -355,7 +356,7 @@ export class TestSuite extends React.Component<Props, State> {
     }
 
     return case_names.every((caseName) => {
-      const testFullPath = `${test.name}::${test.cases[caseName].name}`;
+      const testFullPath = `${this.getModuleTechName()}::${caseName}`;
       return this.state.selectedTests.has(testFullPath);
     });
   }
@@ -371,7 +372,7 @@ export class TestSuite extends React.Component<Props, State> {
       return false;
     } else {
       const selectedCount = case_names.filter((caseName) => {
-        const testFullPath = `${test.name}::${test.cases[caseName].name}`;
+        const testFullPath = `${this.getModuleTechName()}::${caseName}`;
         return this.state.selectedTests.has(testFullPath);
       }).length;
       console.log("Selected tests being sent:", this.state.selectedTests);
@@ -584,8 +585,7 @@ export class TestSuite extends React.Component<Props, State> {
     row_: string,
     rowIndex: number
   ): React.ReactElement {
-    const test = test_topics[rowIndex];
-    const testFullPath = `${this.props.test.name}::${test.name}`;
+    const testFullPath = `${this.getModuleTechName()}::${row_}`;
     const isSelected = this.state.selectedTests.has(testFullPath);
 
     return this.commonCellRender(
@@ -647,13 +647,13 @@ export class TestSuite extends React.Component<Props, State> {
       if (e.target.checked) {
         // Select all
         case_names.forEach((caseName) => {
-          const testFullPath = `${test.name}::${test.cases[caseName].name}`;
+          const testFullPath = `${this.getModuleTechName()}::${caseName}`;
           newSelectedTests.add(testFullPath);
         });
       } else {
         // Deselect all
         case_names.forEach((caseName) => {
-          const testFullPath = `${test.name}::${test.cases[caseName].name}`;
+          const testFullPath = `${this.getModuleTechName()}::${caseName}`;
           newSelectedTests.delete(testFullPath);
         });
       }
@@ -707,6 +707,15 @@ export class TestSuite extends React.Component<Props, State> {
         </Tag>
       </div>
     );
+  }
+
+  /**
+   * Returns the module tech name
+   * @returns {string} The module tech name
+   * @private
+   */
+  private getModuleTechName(): string {
+    return this.props.moduleTechName;
   }
 
   /**
