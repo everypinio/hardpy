@@ -5,10 +5,16 @@ from __future__ import annotations
 import signal
 import subprocess
 import sys
+import logging
 from platform import system
+from pathlib import Path
 
 from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 
 
@@ -20,10 +26,25 @@ class PyTestWrapper:
         self._reporter = RunnerReporter()
         self.python_executable = sys.executable
 
-        # Make sure test structure is stored in DB
-        # before clients come in
         self.config = ConfigManager().get_config()
-        self.collect(is_clear_database=True)
+        #Check to see if there are any test configs defined in the TOML file
+        if not self.config.test_configs:
+            logger.info("No test configurations defined in the HardPy configuration. Loading from tests directory.")
+            self.collect(is_clear_database=True)
+        else:
+            self.clear_database()
+            # Check if there's a current test config selected in statestore
+            try:
+                current_config_name = self.config.current_test_config
+                if current_config_name != "":
+                    self.collect(is_clear_database=True, test_config=current_config_name)
+                else:
+                    print("No existing test config selection found.")
+
+            except Exception:
+                # No existing test configs in statestore, will be initialized later
+                pass
+        
 
     def start(self, start_args: dict | None = None) -> bool:
         """Start pytest subprocess.
@@ -84,7 +105,7 @@ class PyTestWrapper:
             return True
         return False
 
-    def collect(self, *, is_clear_database: bool = False) -> bool:
+    def collect(self, *, is_clear_database: bool = False, test_config: str | None = None) -> bool:
         """Perform pytest collection.
 
         Args:
@@ -113,6 +134,12 @@ class PyTestWrapper:
 
         if is_clear_database:
             args.append("--hardpy-clear-database")
+
+        if test_config:
+            test_config_file = ConfigManager().get_test_config_file(test_config)
+            if test_config_file is not None:
+                logging.info(f"Using test configuration file: {test_config_file}")
+                args.extend(["--config-file", test_config_file])
 
         subprocess.Popen(  # noqa: S603
             [self.python_executable, *args],
@@ -154,3 +181,12 @@ class PyTestWrapper:
             dict: HardPy configuration
         """
         return ConfigManager().get_config().model_dump()
+
+    def clear_database(self) -> None:
+        """Clear both statestore and runstore databases directly."""
+        try:
+            self._reporter._statestore.clear()
+            self._reporter._runstore.clear()
+            logging.info("Database cleared successfully")
+        except Exception as e:
+            logging.error(f"Failed to clear database: {e}")

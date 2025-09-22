@@ -52,6 +52,24 @@ class StandCloudConfig(BaseModel):
     connection_only: bool = False
 
 
+class TestConfig(BaseModel):
+    """Test configuration entry."""
+
+    model_config = ConfigDict(extra="allow")
+
+    name: str
+    description: str = ""
+    file: str | None = None
+
+
+class TestConfigs(BaseModel):
+    """Test configurations container."""
+
+    model_config = ConfigDict(extra="allow")
+
+    available: list[str] = []
+
+
 class HardpyConfig(BaseModel, extra="allow"):
     """HardPy configuration."""
 
@@ -62,6 +80,8 @@ class HardpyConfig(BaseModel, extra="allow"):
     database: DatabaseConfig = DatabaseConfig()
     frontend: FrontendConfig = FrontendConfig()
     stand_cloud: StandCloudConfig = StandCloudConfig()
+    current_test_config: str = ""
+    test_configs: list[TestConfig] | None = None
 
 
 class ConfigManager:
@@ -149,8 +169,8 @@ class ConfigManager:
 
         try:
             cls.obj = HardpyConfig(**toml_data)
-        except ValidationError:
-            logger.exception("Error parsing TOML")
+        except ValidationError as e:
+            logger.exception(f"Error parsing TOML: {e}")
             return None
         return cls.obj
 
@@ -171,3 +191,55 @@ class ConfigManager:
             Path: HardPy tests path
         """
         return cls.tests_path
+
+    @classmethod
+    def get_test_configs(cls) -> TestConfigs:
+        """Get test configurations for statestore.
+
+        Returns:
+            TestConfigs: Test configurations with current and available
+        """
+        available_configs = [config.name for config in cls.obj.test_configs]
+
+        return TestConfigs(
+            available = available_configs
+        )
+    
+    @classmethod
+    def set_current_test_config(cls, config_name: str) -> None:
+        """Set current test configuration.
+
+        Args:
+            config_name (str): Test configuration name
+        """
+        available_configs = [config.name for config in cls.obj.test_configs]
+        if config_name in available_configs:
+            cls.obj.current_test_config = config_name
+        else:
+            logger.warning(f"Test configuration '{config_name}' not found among available configurations.")
+    
+    @classmethod
+    def get_current_test_config(cls) -> str:
+        """Get current test configuration.
+
+        Returns:
+            str: Current test configuration name
+        """
+        return cls.obj.current_test_config
+
+    @classmethod
+    def get_test_config_file(cls, config_name: str) -> str | None:
+        """Get test configuration file by name.
+
+        Args:
+            config_name (str): Test configuration name
+
+        Returns:
+            str | None: Test configuration file or None if not found
+        """
+        if cls.obj.test_configs is None:
+            return None
+        for config in cls.obj.test_configs:
+            if config.name == config_name:
+                return config.file
+        return None
