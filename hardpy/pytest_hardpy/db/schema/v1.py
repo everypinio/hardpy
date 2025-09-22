@@ -101,6 +101,8 @@ class Instrument(BaseModel):
 
     name: str | None = None
     revision: str | None = None
+    serial_number: str | None = None
+    part_number: str | None = None
     number: int | None = None
     comment: str | None = None
     info: Mapping[str, str | int | float] = {}
