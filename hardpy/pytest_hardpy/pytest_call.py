@@ -610,6 +610,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
         - widget (DialogBoxWidget | None): Widget information.
         - image (ImageComponent | None): Image information.
         - html (HTMLComponent | None): HTML information.
+        - passFail (bool): If True, show PASS/FAIL buttons instead of normal widget.
 
     Returns:
         Any: An object containing the user's response.
@@ -622,6 +623,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
         - RADIOBUTTON: str.
         - CHECKBOX: list[str].
         - MULTISTEP: bool.
+        - PASS/FAIL: bool (True for PASS, False for FAIL).
 
     Raises:
         ValueError: If the 'message' argument is empty.
@@ -646,6 +648,11 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     input_dbx_data = _get_operator_data()
 
     _cleanup_widget(reporter, key)
+    
+    # Handle pass/fail functionality
+    if dialog_box_data.passFail:
+        return input_dbx_data.lower() == "pass"
+    
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
 
@@ -697,10 +704,8 @@ def set_operator_message(  # noqa: PLR0913
     if block:
         is_msg_visible = _get_operator_data()
         msg_data[DF.VISIBLE] = is_msg_visible
-
         reporter.set_doc_value(key, msg_data, statestore_only=True)
         reporter.update_db_by_doc()
-
         _cleanup_widget(reporter, key)
 
 

@@ -57,6 +57,7 @@ class DatabaseField(str, Enum):
     IMAGE = "image"
     HTML = "html"
     ID = "id"
+    PASS_FAIL = "pass_fail"
 
     # runstore
     ARTIFACT = "artifact"

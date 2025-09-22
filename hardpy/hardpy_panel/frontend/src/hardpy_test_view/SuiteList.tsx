@@ -62,6 +62,7 @@ interface OperatorMsgProps {
   id?: string;
   font_size?: number;
   html?: HTMLInfo;
+  pass_fail?: boolean;
 }
 
 export interface TestRunI {
@@ -86,6 +87,11 @@ export interface TestRunI {
 interface Props extends WithTranslation {
   db_state: TestRunI;
   defaultClose: boolean;
+  currentTestConfig?: string;
+}
+
+interface State {
+  initialized: boolean;
 }
 
 const SECONDS_TO_MILLISECONDS = 1000;
@@ -93,10 +99,7 @@ const SECONDS_TO_MILLISECONDS = 1000;
 /**
  * Render a list of suites with tests inside
  */
-export class SuiteList extends React.Component<
-  Props,
-  { initialized: boolean }
-> {
+export class SuiteList extends React.Component<Props, State> {
   elements_count: number = 0;
 
   constructor(props: Props) {
@@ -156,7 +159,7 @@ export class SuiteList extends React.Component<
     return (
       <>
         <div>
-          <H1>{db_state.name}</H1>
+          <H1>{this.props.currentTestConfig || db_state.name}</H1>
           {db_state.test_stand && (
             <Tag minimal style={TAG_ELEMENT_STYLE}>
               {t("suiteList.standName")}: {db_state.test_stand?.name}
@@ -225,6 +228,7 @@ export class SuiteList extends React.Component<
                 }
                 html_width={this.props.db_state.operator_msg?.html?.width}
                 html_border={this.props.db_state.operator_msg?.html?.border}
+                pass_fail={this.props.db_state.operator_msg?.pass_fail}
               />
             )}
         </div>

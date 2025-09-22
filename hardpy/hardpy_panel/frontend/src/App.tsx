@@ -24,6 +24,8 @@ import ProgressView from "./progress/ProgressView";
 import TestStatus from "./hardpy_test_view/TestStatus";
 import ReloadAlert from "./restart_alert/RestartAlert";
 import PlaySound from "./hardpy_test_view/PlaySound";
+import TestConfigOverlay from "./config_selection/TestConfigOverlay";
+import TestCompletionOverlay from "./test_completion/TestCompletionOverlay";
 
 import { useAllDocs } from "use-pouchdb";
 
@@ -67,6 +69,21 @@ function App(): JSX.Element {
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
   const [lastRunDuration, setLastRunDuration] = React.useState<number>(0);
 
+  // Test config selection state
+  const [showConfigOverlay, setShowConfigOverlay] = React.useState(false);
+  const [hardpyConfig, setHardpyConfig] = React.useState<any>(null);
+
+  // Test completion overlay state
+  const [showCompletionOverlay, setShowCompletionOverlay] = React.useState(false);
+  const [testCompletionData, setTestCompletionData] = React.useState<{
+    testPassed: boolean;
+    failedTestCases: Array<{
+      moduleName: string;
+      caseName: string;
+      assertionMsg?: string;
+    }>;
+  } | null>(null);
+
   const startTimeRef = React.useRef<number | null>(null);
   const [timerIntervalId, setTimerIntervalId] =
     React.useState<NodeJS.Timeout | null>(null);
@@ -99,6 +116,32 @@ function App(): JSX.Element {
   const ultrawide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.ULTRAWIDE);
   const wide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.WIDE);
 
+  // Handler for test config selection
+  const handleConfigSelection = async (configName: string) => {
+    // Prevent config changes during test runs
+    if (lastRunStatus === "run") {
+      console.warn("Cannot change test config while test is running");
+      return;
+    }
+    
+    try {
+      // Update the backend with the selected config
+      const response = await fetch(`/api/set_test_config/${encodeURIComponent(configName)}`, {
+        method: 'POST',
+      });
+      
+      if (response.ok) {
+        // Update local state
+        setHardpyConfig(prev => ({ ...prev, current_test_config: configName }));
+        setShowConfigOverlay(false);
+      } else {
+        console.error('Failed to set test config');
+      }
+    } catch (error) {
+      console.error('Error setting test config:', error);
+    }
+  };
+
   React.useEffect(() => {
     if (lastRunStatus === "run") {
       if (startTimeRef.current !== null) {
@@ -123,6 +166,38 @@ function App(): JSX.Element {
       setTimerIntervalId(null);
     }
   }, [lastRunStatus]);
+
+  // Load HardPy config on startup
+  React.useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const response = await fetch("/api/hardpy_config");
+        const config = await response.json();
+        setHardpyConfig(config);
+        
+        // Initialize sound setting from TOML config
+        if (config.soundOn !== undefined) {
+          setUseEndTestSound(config.soundOn);
+        }
+        
+        // Show overlay if no current test config is selected
+        if (!config.current_test_config && config.test_configs && config.test_configs.length > 0) {
+          setShowConfigOverlay(true);
+        }
+      } catch (error) {
+        console.error("Failed to load HardPy config:", error);
+      }
+    };
+    
+    loadConfig();
+  }, []);
+
+  // Close config overlay when test starts running
+  React.useEffect(() => {
+    if (lastRunStatus === "run" && showConfigOverlay) {
+      setShowConfigOverlay(false);
+    }
+  }, [lastRunStatus, showConfigOverlay]);
 
   const { rows, state, loading, error } = useAllDocs({
     include_docs: true,
@@ -154,6 +229,40 @@ function App(): JSX.Element {
       }
     }
 
+    // Detect test completion and show overlay (only if enabled in config)
+    const prevStatus = lastRunStatus;
+    if (prevStatus === "run" && (status === "passed" || status === "failed") && !showCompletionOverlay && hardpyConfig?.enableTestPassFailModal) {
+      const testPassed = status === "passed";
+      const failedTestCases: Array<{
+        moduleName: string;
+        caseName: string;
+        assertionMsg?: string;
+      }> = [];
+
+      // Extract failed test cases if test failed
+      if (!testPassed && db_row.modules) {
+        Object.entries(db_row.modules).forEach(([moduleId, module]: [string, any]) => {
+          if (module.cases) {
+            Object.entries(module.cases).forEach(([caseId, testCase]: [string, any]) => {
+              if (testCase.status === "failed") {
+                failedTestCases.push({
+                  moduleName: module.name || moduleId,
+                  caseName: testCase.name || caseId,
+                  assertionMsg: testCase.assertion_msg || undefined,
+                });
+              }
+            });
+          }
+        });
+      }
+
+      setTestCompletionData({
+        testPassed,
+        failedTestCases,
+      });
+      setShowCompletionOverlay(true);
+    }
+
     if (state === "error") {
       setIsAuthenticated(false);
     } else if (isAuthenticated === false) {
@@ -166,6 +275,7 @@ function App(): JSX.Element {
     lastProgress,
     lastRunDuration,
     isAuthenticated,
+    showCompletionOverlay,
   ]);
 
   /**
@@ -216,6 +326,7 @@ function App(): JSX.Element {
                 <SuiteList
                   db_state={row.doc as TestRunI}
                   defaultClose={!ultrawide}
+                  currentTestConfig={hardpyConfig?.current_test_config}
                 ></SuiteList>
               </Card>
             )}
@@ -334,6 +445,20 @@ function App(): JSX.Element {
         </Navbar.Group>
 
         <Navbar.Group align={Alignment.RIGHT}>
+          {hardpyConfig && hardpyConfig.current_test_config && (
+            <Button
+              className="bp3-minimal"
+              text={hardpyConfig.current_test_config}
+              icon="projects"
+              disabled={lastRunStatus === "run"}
+              onClick={() => setShowConfigOverlay(true)}
+              style={{
+                marginRight: "8px",
+                fontWeight: "bold",
+                color: lastRunStatus === "run" ? Colors.GRAY3 : Colors.BLUE3
+              }}
+            />
+          )}
           <Popover content={renderSettingsMenu()}>
             <Button className="bp3-minimal" icon="cog" />
           </Popover>
@@ -341,7 +466,7 @@ function App(): JSX.Element {
       </Navbar>
 
       {/* Tests panel */}
-      <div className={Classes.DRAWER_BODY} style={{ marginBottom: "60px" }}>
+      <div className={Classes.DRAWER_BODY} style={{ marginBottom: "140px" }}>
         {renderDbContent()}
       </div>
 
@@ -352,7 +477,7 @@ function App(): JSX.Element {
         style={{
           width: "100%",
           display: "flex",
-          flexDirection: "row",
+          flexDirection: "column",
           position: "fixed",
           bottom: 0,
           background: Colors.LIGHT_GRAY5,
@@ -361,20 +486,52 @@ function App(): JSX.Element {
       >
         <div
           style={{
+            width: "100%",
+            padding: "10px 20px",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <div style={{ width: "100%" }}>
+            <StartStopButton testing_status={lastRunStatus} />
+          </div>
+        </div>
+        <div
+          style={{
             flexDirection: "column",
             flexGrow: 1,
             flexShrink: 1,
             marginTop: "auto",
             marginBottom: "auto",
-            padding: "20px",
+            padding: "10px 20px",
           }}
         >
           <ProgressView percentage={lastProgress} status={lastRunStatus} />
         </div>
-        <div style={{ flexDirection: "column" }}>
-          <StartStopButton testing_status={lastRunStatus} />
-        </div>
       </div>
+
+      {/* Test Config Selection Overlay */}
+      {hardpyConfig && (
+        <TestConfigOverlay
+          isOpen={showConfigOverlay}
+          testConfigs={hardpyConfig.test_configs || []}
+          currentConfig={hardpyConfig.current_test_config}
+          isTestRunning={lastRunStatus === "run"}
+          onSelect={handleConfigSelection}
+          onClose={() => setShowConfigOverlay(false)}
+        />
+      )}
+
+      {/* Test Completion Overlay */}
+      <TestCompletionOverlay
+        isVisible={showCompletionOverlay}
+        testPassed={testCompletionData?.testPassed || false}
+        failedTestCases={testCompletionData?.failedTestCases || []}
+        onDismiss={() => {
+          setShowCompletionOverlay(false);
+          setTestCompletionData(null);
+        }}
+      />
     </div>
   );
 }

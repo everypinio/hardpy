@@ -43,6 +43,24 @@ def hardpy_config() -> dict:
     return app.state.pytest_wrp.get_config()
 
 
+@app.post("/api/set_test_config/{config_name}")
+def set_test_config(config_name: str) -> dict:
+    """Set the current test configuration.
+
+    Args:
+        config_name (str): Name of the test configuration to set
+
+    Returns:
+        dict: Status of the operation
+    """
+    try:
+        ConfigManager.set_current_test_config(config_name)
+        app.state.pytest_wrp.collect(is_clear_database=True, test_config=config_name)
+        return {"status": "success", "current_config": config_name}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
 @app.get("/api/start")
 def start_pytest(args: Annotated[list[str] | None, Query()] = None) -> dict:
     """Start pytest subprocess.
