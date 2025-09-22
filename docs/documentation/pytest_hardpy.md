@@ -223,7 +223,7 @@ When called again, the information will be merged with existing data.
 
 **Arguments:**
 
-- `info` *(Mapping[str, str | int | float | datetime])*: Test stand info dictionary
+- `info` *(Mapping[str, str | int | float ])*: Test stand info dictionary
 
 **Example:**
 
@@ -321,7 +321,7 @@ Accepts an [Instrument](#instrument) object containing all instrument details.
 - `revision` *(str | None)*: Instrument revision  
 - `number` *(int | None)*: Instrument number  
 - `comment` *(str | None)*: Instrument comment  
-- `info` *(Mapping[str, str | int | float | datetime] | None)*: Additional instrument info 
+- `info` *(Mapping[str, str | int | float ] | None)*: Additional instrument info 
 
 **Example:**
 
@@ -375,7 +375,7 @@ When called again, the information will be merged with existing data.
 
 **Arguments:**
 
-- `info` *(Mapping[str, str | int | float | datetime])*: Process info dictionary
+- `info` *(Mapping[str, str | int | float ])*: Process info dictionary
 
 **Example:**
 
@@ -384,7 +384,6 @@ def test_process_info():
     set_process_info({
         "stage": "production",
         "version": "1.0",
-        "started_at": datetime.now()
     })
 ```
 
@@ -987,7 +986,7 @@ It is used with the [set_instrument](#set_instrument) function.
 - `revision` *(str | None)*: Instrument revision  
 - `number` *(int | None)*: Instrument number  
 - `comment` *(str | None)*: Instrument comment  
-- `info` *(Mapping[str, str | int | float | datetime] | None)*: Additional instrument info as key-value pairs  
+- `info` *(Mapping[str, str | int | float | None)*: Additional instrument info as key-value pairs  
 
 **Returns:**
 
@@ -1007,7 +1006,6 @@ oscilloscope = Instrument(
     info={
         "model": "DSO-X 2024A",
         "bandwidth": "200MHz",
-        "calibration_date": datetime(2023, 11, 15)
     }
 )
 
@@ -1026,7 +1024,7 @@ It is used with the [set_dut_sub_unit](#set_dut_sub_unit) function.
 - `name` *(str | None)*: unit name  
 - `type` *(str | None)*: unit type
 - `revision` *(str | None)*: unit revision  
-- `info` *(Mapping[str, str | int | float | datetime] | None)*: additional unit info as key-value pairs  
+- `info` *(Mapping[str, str | int | float ] | None)*: additional unit info as key-value pairs  
 
 **Example:**
 
@@ -1273,7 +1271,8 @@ Sets the group for a test case. Valid groups: `setup`, `main`, `teardown` (defau
 **Example:**
 
 ```python
-from hardpy.pytest_hardpy.utils.const import Group
+from hardpy import Group
+
 @pytest.mark.case_group(Group.SETUP)
 def test_setup_case():
     assert True
@@ -1291,7 +1290,7 @@ Sets the group for all test cases in a module. Valid groups: `setup`, `main`, `t
 
 ```python
 import pytest
-from hardpy.pytest_hardpy.utils.const import Group
+from hardpy import Group
 
 pytestmark = pytest.mark.module_group(Group.TEARDOWN)
 
@@ -1326,6 +1325,8 @@ If a test is marked `attempt`, it will be repeated if it fails the number of
 attempts specified by the mark.
 The test will be repeated until it is passed.
 There is a 1 second pause between attempts.
+Each attempt clears the case data, including the message, 
+the assertion message, the chart, the measurements, and the artifact.
 For more information, see the example [attempts](./../examples/attempts.md).
 
 **Example:**

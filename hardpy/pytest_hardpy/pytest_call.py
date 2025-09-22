@@ -33,7 +33,6 @@ from hardpy.pytest_hardpy.utils import (
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
-    from datetime import datetime
 
 
 @dataclass
@@ -44,10 +43,17 @@ class CurrentTestInfo:
     case_id: str
 
 
-class ErrorCodeMeta(type):
-    """Error code metaclass."""
+class ErrorCode:
+    """Save error code and return error message.
 
-    def __call__(cls, code: int, message: str | None = None) -> str | None:
+    It must be called from an assert.
+
+    Args:
+        code (int): error code.
+        message (str): error message.
+    """
+
+    def __init__(self, code: int, message: str | None = None) -> str | None:
         """Add error code to document.
 
         Args:
@@ -65,19 +71,13 @@ class ErrorCodeMeta(type):
         if reporter.get_field(key) is None:
             reporter.set_doc_value(key, code)
             reporter.update_db_by_doc()
-        if message:  # noqa: RET503
-            return message
+        self._message = message
 
+    def __repr__(self) -> str:
+        return self._message
 
-class ErrorCode(metaclass=ErrorCodeMeta):
-    """Save error code and return error message.
-
-    It must be called from an assert.
-
-    Args:
-        code (int): error code.
-        message (str): error message.
-    """
+    def __str__(self) -> str | None:
+        return self._message
 
 
 def get_current_report() -> ResultRunStore | None:
@@ -154,7 +154,7 @@ def set_dut_sub_unit(sub_unit: SubUnit) -> int:
     return len(sub_units) - 1
 
 
-def set_dut_info(info: Mapping[str, str | int | float | datetime]) -> None:
+def set_dut_info(info: Mapping[str, str | int | float]) -> None:
     """Set DUT info to document.
 
     Args:
@@ -278,13 +278,13 @@ def set_stand_name(name: str) -> None:
     reporter.update_db_by_doc()
 
 
-def set_stand_info(info: Mapping[str, str | int | float | datetime]) -> None:
+def set_stand_info(info: Mapping[str, str | int | float]) -> None:
     """Add test stand info to document.
 
     Args:
-        info (Mapping[str, str | int | float | datetime]): test stand info as a mapping
-            where keys are strings and values can be strings, integers, floats or datetime objects
-    """  # noqa: E501
+        info (Mapping[str, str | int | float ]): test stand info as a mapping
+            where keys are strings and values can be strings, integers, floats objects
+    """
     reporter = RunnerReporter()
     for stand_key, stand_value in info.items():
         key = reporter.generate_key(DF.TEST_STAND, DF.INFO, stand_key)
@@ -524,7 +524,7 @@ def set_process_number(number: int) -> None:
     reporter.update_db_by_doc()
 
 
-def set_process_info(info: Mapping[str, str | int | float | datetime]) -> None:
+def set_process_info(info: Mapping[str, str | int | float]) -> None:
     """Set process info to document.
 
     Args:
