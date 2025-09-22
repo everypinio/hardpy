@@ -318,7 +318,9 @@ Accepts an [Instrument](#instrument) object containing all instrument details.
 **Instrument Parameters:**
 
 - `name` *(str | None)*: Instrument name
-- `revision` *(str | None)*: Instrument revision  
+- `revision` *(str | None)*: Instrument revision
+- `serial_number` *(str | None)* Instrument serial number.
+- `part_number` *(str | None)*  Instrument part number.  
 - `number` *(int | None)*: Instrument number  
 - `comment` *(str | None)*: Instrument comment  
 - `info` *(Mapping[str, str | int | float ] | None)*: Additional instrument info 
@@ -330,6 +332,8 @@ def test_instruments():
     instrument = Instrument(
         name="Oscilloscope",
         revision="1.2",
+        serial_number="4235098"
+        part_number="E012"
         number=1,
         info={"model": "DSO-X 2024A", "bandwidth": "200MHz"}
     )
@@ -984,9 +988,11 @@ It is used with the [set_instrument](#set_instrument) function.
 
 - `name` *(str | None)*: Instrument name  
 - `revision` *(str | None)*: Instrument revision  
+- `serial_number` *(str | None)*: Instrument serial number  
+- `part_number` *(str | None)*: Instrument part number  
 - `number` *(int | None)*: Instrument number  
 - `comment` *(str | None)*: Instrument comment  
-- `info` *(Mapping[str, str | int | float | None)*: Additional instrument info as key-value pairs  
+- `info` *(Mapping[str, str | int | float | None])*: Additional instrument info as key-value pairs  
 
 **Returns:**
 
@@ -1002,6 +1008,8 @@ It is used with the [set_instrument](#set_instrument) function.
 oscilloscope = Instrument(
     name="Oscilloscope",
     revision="1.2.3",
+    serial_number="1325",
+    part_number="EOSC_23",
     number=1,
     info={
         "model": "DSO-X 2024A",

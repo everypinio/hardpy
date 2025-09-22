@@ -100,6 +100,8 @@ The user can specify the instrument information by using [set_instrument](./../d
 
 - **name**: instrument name.
 - **revision** instrument revision.
+- **serial_number** instrument serial number.
+- **part_number** instrument part number.
 - **number**: instrument number.
 - **comment**: comment on the instrument.
 - **info**: dictionary containing additional information about the instrument.
@@ -336,6 +338,8 @@ For example, the firmware version comparison.
           {
             "name": "Everypin Power Supply",
             "revision": "2.0",
+            "serial_number": "4235098",
+            "part_number": "E012",
             "number": 1,
             "comment": "",
             "info": {}
