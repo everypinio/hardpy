@@ -25,6 +25,7 @@ import TestStatus from "./hardpy_test_view/TestStatus";
 import ReloadAlert from "./restart_alert/RestartAlert";
 import PlaySound from "./hardpy_test_view/PlaySound";
 import TestConfigOverlay from "./config_selection/TestConfigOverlay";
+import TestCompletionOverlay from "./test_completion/TestCompletionOverlay";
 
 import { useAllDocs } from "use-pouchdb";
 
@@ -71,6 +72,17 @@ function App(): JSX.Element {
   // Test config selection state
   const [showConfigOverlay, setShowConfigOverlay] = React.useState(false);
   const [hardpyConfig, setHardpyConfig] = React.useState<any>(null);
+
+  // Test completion overlay state
+  const [showCompletionOverlay, setShowCompletionOverlay] = React.useState(false);
+  const [testCompletionData, setTestCompletionData] = React.useState<{
+    testPassed: boolean;
+    failedTestCases: Array<{
+      moduleName: string;
+      caseName: string;
+      assertionMsg?: string;
+    }>;
+  } | null>(null);
 
   const startTimeRef = React.useRef<number | null>(null);
   const [timerIntervalId, setTimerIntervalId] =
@@ -212,6 +224,40 @@ function App(): JSX.Element {
       }
     }
 
+    // Detect test completion and show overlay
+    const prevStatus = lastRunStatus;
+    if (prevStatus === "run" && (status === "passed" || status === "failed") && !showCompletionOverlay) {
+      const testPassed = status === "passed";
+      const failedTestCases: Array<{
+        moduleName: string;
+        caseName: string;
+        assertionMsg?: string;
+      }> = [];
+
+      // Extract failed test cases if test failed
+      if (!testPassed && db_row.modules) {
+        Object.entries(db_row.modules).forEach(([moduleId, module]: [string, any]) => {
+          if (module.cases) {
+            Object.entries(module.cases).forEach(([caseId, testCase]: [string, any]) => {
+              if (testCase.status === "failed") {
+                failedTestCases.push({
+                  moduleName: module.name || moduleId,
+                  caseName: testCase.name || caseId,
+                  assertionMsg: testCase.assertion_msg || undefined,
+                });
+              }
+            });
+          }
+        });
+      }
+
+      setTestCompletionData({
+        testPassed,
+        failedTestCases,
+      });
+      setShowCompletionOverlay(true);
+    }
+
     if (state === "error") {
       setIsAuthenticated(false);
     } else if (isAuthenticated === false) {
@@ -224,6 +270,7 @@ function App(): JSX.Element {
     lastProgress,
     lastRunDuration,
     isAuthenticated,
+    showCompletionOverlay,
   ]);
 
   /**
@@ -469,6 +516,17 @@ function App(): JSX.Element {
           onClose={() => setShowConfigOverlay(false)}
         />
       )}
+
+      {/* Test Completion Overlay */}
+      <TestCompletionOverlay
+        isVisible={showCompletionOverlay}
+        testPassed={testCompletionData?.testPassed || false}
+        failedTestCases={testCompletionData?.failedTestCases || []}
+        onDismiss={() => {
+          setShowCompletionOverlay(false);
+          setTestCompletionData(null);
+        }}
+      />
     </div>
   );
 }

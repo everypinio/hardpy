@@ -56,6 +56,18 @@ interface DialogBoxProps {
   html?: HTMLInfo;
 }
 
+interface Measurement {
+  name?: string;
+  result?: boolean;
+  type: string;
+  value: number | string;
+  unit?: string;
+  comparison_value?: number | string;
+  operation?: string;
+  lower_limit?: number;
+  upper_limit?: number;
+}
+
 interface Case {
   status: string;
   name: string;
@@ -63,6 +75,7 @@ interface Case {
   stop_time: number;
   assertion_msg: string | null;
   msg: string[] | null;
+  measurements: Measurement[];
   artifact: Record<string, unknown>;
   dialog_box: DialogBoxProps;
 }
@@ -375,7 +388,7 @@ export class TestSuite extends React.Component<Props, State> {
 
     return this.commonCellRender(
       <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
-        <TestData assertion_msg={test.assertion_msg} msg={test.msg} />
+        <TestData assertion_msg={test.assertion_msg} msg={test.msg} measurements={test.measurements} />
       </div>,
       `data_${rowIndex}_${row_}`
     );
