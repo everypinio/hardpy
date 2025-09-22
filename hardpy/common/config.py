@@ -82,6 +82,8 @@ class HardpyConfig(BaseModel, extra="allow"):
     stand_cloud: StandCloudConfig = StandCloudConfig()
     current_test_config: str = ""
     test_configs: list[TestConfig] | None = None
+    soundOn: bool = False
+    enableTestPassFailModal: bool = False
 
 
 class ConfigManager:

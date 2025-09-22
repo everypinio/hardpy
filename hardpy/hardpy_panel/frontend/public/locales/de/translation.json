@@ -40,7 +40,9 @@
     "notificationDesc": "Das Fenster wurde geschlossen. Tests gestoppt.",
     "numericInputError": "Bitte geben Sie eine Zahl ein",
     "radioButtonError": "Bitte wählen Sie eine Option",
-    "checkboxError": "Bitte wählen Sie mindestens eine Option"
+    "checkboxError": "Bitte wählen Sie mindestens eine Option",
+    "pass": "BESTANDEN",
+    "fail": "FEHLGESCHLAGEN"
   },
   "suiteList": {
     "loadingTests": "Tests werden geladen... 🤔",

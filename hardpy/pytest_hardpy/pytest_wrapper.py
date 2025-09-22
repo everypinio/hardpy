@@ -69,6 +69,13 @@ class PyTestWrapper:
             "--sc-address",
             self.config.stand_cloud.address,
         ]
+
+        test_config_file = ConfigManager().get_test_config_file(self.config.current_test_config)
+        if test_config_file is not None:
+            logging.info(f"Using test configuration file: {test_config_file}")
+            cmd.extend(["--config-file", test_config_file])
+
+
         if self.config.stand_cloud.connection_only:
             cmd.append("--sc-connection-only")
         cmd.append("--hardpy-pt")

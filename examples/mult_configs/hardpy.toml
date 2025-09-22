@@ -1,6 +1,8 @@
 title = "HardPy TOML config"
 tests_name = "mult_configs"
 current_test_config = ""
+soundOn = true
+enableTestPassFailModal = true
 
 [database]
 user = "dev"

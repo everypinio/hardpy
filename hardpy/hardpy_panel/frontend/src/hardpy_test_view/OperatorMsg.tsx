@@ -2,7 +2,7 @@
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import React, { useState, useEffect } from "react";
-import { Classes, Dialog } from "@blueprintjs/core";
+import { Classes, Dialog, Button } from "@blueprintjs/core";
 import axios from "axios";
 import {
   BASE_DIALOG_DIMENSIONS,
@@ -32,6 +32,7 @@ interface StartOperatorMsgDialogProps {
   html_code?: string;
   html_width?: number;
   html_border?: number;
+  pass_fail?: boolean;
 }
 
 /**
@@ -115,6 +116,26 @@ export function StartOperatorMsgDialog(
       console.log(response.data);
     } catch (error) {
       console.error("Error confirming operator message:", error);
+    }
+  };
+
+  /**
+   * Handles the pass/fail button clicks and sends the response to the server.
+   * @async
+   * @param {boolean} passed - True for PASS, False for FAIL
+   * @returns {Promise<void>}
+   */
+  const handlePassFail = async (passed: boolean): Promise<void> => {
+    setOperatorMessageOpen(false);
+
+    try {
+      const result = passed ? "pass" : "fail";
+      const response = await axios.post(
+        `/api/confirm_operator_msg/${JSON.stringify(result)}`
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error sending pass/fail response:", error);
     }
   };
 
@@ -243,8 +264,9 @@ export function StartOperatorMsgDialog(
       title={props.title || t('operatorDialog.defaultTitle')}
       icon="info-sign"
       isOpen={operatorMessageOpen}
-      onClose={handleClose}
+      onClose={props.pass_fail ? undefined : handleClose}
       canOutsideClickClose={false}
+      canEscapeKeyClose={!props.pass_fail}
       style={{
         width: "auto",
         height: "auto",
@@ -318,6 +340,25 @@ export function StartOperatorMsgDialog(
             props.html_border ?? 0
           )}
       </div>
+      {props.pass_fail && (
+        <div className={Classes.DIALOG_FOOTER}>
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+            <Button
+              intent="danger"
+              text={t('operatorDialog.fail')}
+              onClick={() => handlePassFail(false)}
+              large
+              style={{ marginRight: "10px" }}
+            />
+            <Button
+              intent="success"
+              text={t('operatorDialog.pass')}
+              onClick={() => handlePassFail(true)}
+              large
+            />
+          </div>
+        </div>
+      )}
     </Dialog>
   );
 }

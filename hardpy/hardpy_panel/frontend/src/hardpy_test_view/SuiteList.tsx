@@ -62,6 +62,7 @@ interface OperatorMsgProps {
   id?: string;
   font_size?: number;
   html?: HTMLInfo;
+  pass_fail?: boolean;
 }
 
 export interface TestRunI {
@@ -227,6 +228,7 @@ export class SuiteList extends React.Component<Props, State> {
                 }
                 html_width={this.props.db_state.operator_msg?.html?.width}
                 html_border={this.props.db_state.operator_msg?.html?.border}
+                pass_fail={this.props.db_state.operator_msg?.pass_fail}
               />
             )}
         </div>

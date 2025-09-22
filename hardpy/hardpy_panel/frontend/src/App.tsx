@@ -175,6 +175,11 @@ function App(): JSX.Element {
         const config = await response.json();
         setHardpyConfig(config);
         
+        // Initialize sound setting from TOML config
+        if (config.soundOn !== undefined) {
+          setUseEndTestSound(config.soundOn);
+        }
+        
         // Show overlay if no current test config is selected
         if (!config.current_test_config && config.test_configs && config.test_configs.length > 0) {
           setShowConfigOverlay(true);
@@ -224,9 +229,9 @@ function App(): JSX.Element {
       }
     }
 
-    // Detect test completion and show overlay
+    // Detect test completion and show overlay (only if enabled in config)
     const prevStatus = lastRunStatus;
-    if (prevStatus === "run" && (status === "passed" || status === "failed") && !showCompletionOverlay) {
+    if (prevStatus === "run" && (status === "passed" || status === "failed") && !showCompletionOverlay && hardpyConfig?.enableTestPassFailModal) {
       const testPassed = status === "passed";
       const failedTestCases: Array<{
         moduleName: string;

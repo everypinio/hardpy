@@ -40,7 +40,9 @@
     "notificationDesc": "La ventana fue cerrada. Pruebas detenidas.",
     "numericInputError": "Por favor ingrese un número",
     "radioButtonError": "Por favor seleccione una opción",
-    "checkboxError": "Por favor seleccione al menos una opción"
+    "checkboxError": "Por favor seleccione al menos una opción",
+    "pass": "APROBADO",
+    "fail": "REPROBADO"
   },
   "suiteList": {
     "loadingTests": "Cargando pruebas... 🤔",

@@ -40,7 +40,9 @@
     "notificationDesc": "La fenêtre a été fermée. Tests arrêtés.",
     "numericInputError": "Veuillez entrer un nombre",
     "radioButtonError": "Veuillez sélectionner une option",
-    "checkboxError": "Veuillez sélectionner au moins une option"
+    "checkboxError": "Veuillez sélectionner au moins une option",
+    "pass": "RÉUSSI",
+    "fail": "ÉCHOUÉ"
   },
   "suiteList": {
     "loadingTests": "Chargement des tests... 🤔",
