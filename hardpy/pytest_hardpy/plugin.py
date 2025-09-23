@@ -98,7 +98,7 @@ def pytest_addoption(parser: Parser) -> None:
         help="check StandCloud availability",
     )
     parser.addoption(
-        "--sc-autosunc",
+        "--sc-autosync",
         action="store_true",
         default=default_config.stand_cloud.autosync,
         help="StandCloud auto syncronization",
