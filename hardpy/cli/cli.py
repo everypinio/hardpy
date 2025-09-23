@@ -74,6 +74,10 @@ def init(  # noqa: PLR0913
         default=False,
         help="Check StandCloud service availability before start.",
     ),
+    sc_autosync: bool = typer.Option(
+        default=False,
+        help="Enable StandCloud autosyncronization.",
+    ),
 ) -> None:
     """Initialize HardPy tests directory.
 
@@ -90,6 +94,7 @@ def init(  # noqa: PLR0913
         frontend_language (str): Panel operator language
         sc_address (str): StandCloud address
         sc_connection_only (bool): Flag to check StandCloud service availability
+        sc_autosync (bool): Flag to enable StandCloud autosyncronization
     """
     dir_path = Path(Path.cwd() / tests_dir if tests_dir else "tests")
     config_manager = ConfigManager()
@@ -104,6 +109,7 @@ def init(  # noqa: PLR0913
         frontend_language=default_config.frontend.language,
         sc_address=sc_address,
         sc_connection_only=sc_connection_only,
+        sc_autosync=sc_autosync,
     )
     # create tests directory
     Path.mkdir(dir_path, exist_ok=True, parents=True)

@@ -58,6 +58,7 @@ class StandCloudConfig(BaseModel):
 
     address: str = ""
     connection_only: bool = False
+    autosync: bool = False
 
 
 class HardpyConfig(BaseModel, extra="allow"):
@@ -117,6 +118,7 @@ class ConfigManager(metaclass=SingletonMeta):
         frontend_language: str,
         sc_address: str = "",
         sc_connection_only: bool = False,
+        sc_autosync: bool = False,
     ) -> None:
         """Initialize the HardPy configuration.
 
@@ -133,6 +135,7 @@ class ConfigManager(metaclass=SingletonMeta):
             frontend_language (str): Operator panel language.
             sc_address (str): StandCloud address.
             sc_connection_only (bool): StandCloud check availability.
+            sc_autosync (bool): StandCloud autosyncronization
         """
         self._config.tests_name = tests_name
         self._config.frontend.host = frontend_host
@@ -146,6 +149,7 @@ class ConfigManager(metaclass=SingletonMeta):
         self._config.database.url = self._config.database.get_url()
         self._config.stand_cloud.address = sc_address
         self._config.stand_cloud.connection_only = sc_connection_only
+        self._config.stand_cloud.autosync = sc_autosync
 
     def create_config(self, parent_dir: Path) -> None:
         """Create HardPy configuration.

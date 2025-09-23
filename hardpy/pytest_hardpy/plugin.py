@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import signal
+from http import HTTPStatus
 from logging import getLogger
 from pathlib import Path, PurePath
 from platform import system
@@ -35,6 +36,7 @@ from pytest import (
 from hardpy.common.config import ConfigManager, HardpyConfig
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
 from hardpy.pytest_hardpy.reporter import HookReporter
+from hardpy.pytest_hardpy.result import StandCloudLoader
 from hardpy.pytest_hardpy.utils import NodeInfo, ProgressCalculator, TestStatus
 from hardpy.pytest_hardpy.utils.node_info import TestDependencyInfo
 
@@ -94,6 +96,12 @@ def pytest_addoption(parser: Parser) -> None:
         action="store_true",
         default=default_config.stand_cloud.connection_only,
         help="check StandCloud availability",
+    )
+    parser.addoption(
+        "--sc-autosunc",
+        action="store_true",
+        default=default_config.stand_cloud.autosync,
+        help="StandCloud auto syncronization",
     )
     parser.addoption(
         "--hardpy-start-arg",
@@ -166,6 +174,10 @@ class HardpyPlugin:
         if sc_connection_only:
             hardpy_config.stand_cloud.connection_only = bool(sc_connection_only)  # type: ignore
 
+        sc_autosync = config.getoption("--sc-autosync")
+        if sc_autosync:
+            hardpy_config.stand_cloud.autosync = bool(sc_autosync)  # type: ignore
+
         _args = config.getoption("--hardpy-start-arg") or []
         if _args:
             self._start_args = dict(arg.split("=", 1) for arg in _args if "=" in arg)
@@ -199,6 +211,11 @@ class HardpyPlugin:
         if self._post_run_functions:
             for action in self._post_run_functions:
                 action()
+
+        config_manager = ConfigManager()
+
+        if config_manager.config.stand_cloud.autosync:
+            self._send_report_to_sc()
 
     # Collection hooks
 
@@ -507,6 +524,25 @@ class HardpyPlugin:
         self._results[module_id][case_id] = case_status
         self._reporter.set_case_status(module_id, case_id, case_status)
         return is_case_stopped
+
+    def _send_report_to_sc(self) -> None:
+        """Send report to StandCloud."""
+        report = self._reporter.get_report()
+        if report:
+            try:
+                loader = StandCloudLoader()
+                response = loader.load(report)
+                if response.status_code != HTTPStatus.CREATED:
+                    self._reporter.set_alert(
+                        "Report not uploaded to StandCloud, "
+                        f"status code: {response.status_code}, "
+                        f"text: {response.text}",
+                    )
+            except StandCloudError as exc:
+                self._reporter.set_alert(f"{exc}")
+        else:
+            msg = "Empty report cannot be uploaded to StandCloud"
+            self._reporter.set_alert(msg)
 
     def _decode_assertion_msg(
         self,
