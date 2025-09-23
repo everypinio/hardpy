@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Everypin
+# Copyright (c) 2025 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
@@ -9,16 +9,12 @@ from time import sleep
 from typing import TYPE_CHECKING, Any
 from uuid import uuid4
 
-from pycouchdb.exceptions import NotFound
-from pydantic import ValidationError
-
 from hardpy.pytest_hardpy.db import (
     Chart,
     DatabaseField as DF,  # noqa: N817
     Instrument,
     NumericMeasurement,
     ResultRunStore,
-    RunStore,
     StringMeasurement,
     SubUnit,
 )
@@ -86,15 +82,8 @@ def get_current_report() -> ResultRunStore | None:
     Returns:
         ResultRunStore | None: report, or None if not found or invalid
     """
-    runstore = RunStore()
-    try:
-        return runstore.get_document()  # type: ignore
-    except NotFound:
-        return None
-    except ValidationError:
-        return None
-    except TypeError:
-        return None
+    reporter = RunnerReporter()
+    return reporter.get_report()
 
 
 def set_user_name(name: str) -> None:
