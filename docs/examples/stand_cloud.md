@@ -11,12 +11,14 @@ The code for this example can be seen inside the hardpy package
 ### how to start
 
 1. Get your own **StandCloud** service address by contacting **info@everypin.io**, e.g. `demo.standcloud.localhost`.
-2. Launch `hardpy init stand_cloud --sc-address demo.standcloud.localhost --sc-connection-only`.
+2. Launch `hardpy init stand_cloud --sc-address demo.standcloud.localhost --sc-connection-only --sc-autosync`.
 3. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
 4. Modify the files described below.
 5. You can remove `connection_only = true` if you don't want to check the
     **StandCloud** connection before each **HardPy** start.
-6. Login in the **StandCloud**:
+6. If you don't want autosynchronisation with the **StandCloud**, 
+   you can remove `autosync = true`.
+7. Login in the **StandCloud**:
 
     ```bash
     hardpy sc-login demo.standcloud.localhost
@@ -44,41 +46,13 @@ Contains settings and fixtures for all tests:
 - The list of actions that will be performed after testing is filled in function `fill_actions_after_test`;
 
 ```python
-from http import HTTPStatus
-
 import pytest
 from driver_example import DriverExample
-
-from hardpy import (
-    StandCloudError,
-    StandCloudLoader,
-    get_current_report,
-    set_operator_message,
-)
 
 @pytest.fixture(scope="session")
 def driver_example():
     example = DriverExample()
     yield example
-
-def finish_executing():
-    report = get_current_report()
-    if report:
-        try:
-            loader = StandCloudLoader()
-            response = loader.load(report)
-            if response.status_code != HTTPStatus.CREATED:
-                set_operator_message(
-                    "Report not uploaded to StandCloud, "
-                    f"status code: {response.status_code}, text: {response.text}",
-                )
-        except StandCloudError as exc:
-            set_operator_message(f"{exc}")
-
-@pytest.fixture(scope="session", autouse=True)
-def fill_actions_after_test(post_run_functions: list):
-    post_run_functions.append(finish_executing)
-    yield
 ```
 
 ### driver_example.py
@@ -221,4 +195,52 @@ def test_one():
         sleep(1)
     hardpy.set_message("Testing ended", "updated_status")
     assert True
+```
+
+### manual StandCloud syncronization
+
+If you want to control the sending of reports to **StandCloud** yourself, 
+the following code, which you can add to `conftest.py`, will allow you to do so.
+
+Remember to also set `autosync=false` in the stand_cloud section of 
+the **hardpy.toml** file.
+
+
+```python
+# conftest.py
+from http import HTTPStatus
+
+import pytest
+from driver_example import DriverExample
+
+from hardpy import (
+    StandCloudError,
+    StandCloudLoader,
+    get_current_report,
+    set_operator_message,
+)
+
+@pytest.fixture(scope="session")
+def driver_example():
+    example = DriverExample()
+    yield example
+
+def finish_executing():
+    report = get_current_report()
+    if report:
+        try:
+            loader = StandCloudLoader()
+            response = loader.load(report)
+            if response.status_code != HTTPStatus.CREATED:
+                set_operator_message(
+                    "Report not uploaded to StandCloud, "
+                    f"status code: {response.status_code}, text: {response.text}",
+                )
+        except StandCloudError as exc:
+            set_operator_message(f"{exc}")
+
+@pytest.fixture(scope="session", autouse=True)
+def fill_actions_after_test(post_run_functions: list):
+    post_run_functions.append(finish_executing)
+    yield
 ```

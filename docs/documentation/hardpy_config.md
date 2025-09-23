@@ -42,6 +42,7 @@ language = "en"
 [stand_cloud]
 address = "demo.standcloud.io"
 connection_only = true
+autosync = true
 ```
 
 ## Configuration fields description
@@ -110,6 +111,7 @@ Available languages are [there](hardpy_panel.md#languages).
 [stand_cloud]
 address = "demo.standcloud.localhost"
 connection_only = true
+autosync = true
 ```
 
 #### address
@@ -124,3 +126,10 @@ to the **StandCloud** service at each startup before running tests.
 The default value is `false`.
 
 If the connection fails, the tests will not run.
+
+#### autosync
+
+Boolean variable, if set to `true`, **HardPy** will automatically send data 
+to **StandCloud** upon completion of testing.
+
+The default value is `false`.

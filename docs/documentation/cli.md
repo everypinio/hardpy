@@ -48,7 +48,9 @@ More info in [hardpy config](./hardpy_config.md).
 │ --frontend-host                                TEXT     Specify a frontend host. [default: localhost]      │
 │ --sc-address                                   TEXT     Specify a StandCloud address.                      │
 │ --sc-connection-only --no-sc-connection-only            Check StandCloud service availability before start.│
-|                                                         [default: check-stand-cloud]                       │
+|                                                         [default: no-sc-connection-only]                   │
+│ --sc-autosync        --no-sc-autosync                   Enable StandCloud autosyncronization.              | 
+|                                                         [default: no-sc-autosync]                          │
 │ --help                                                  Show this message and exit.                        │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
