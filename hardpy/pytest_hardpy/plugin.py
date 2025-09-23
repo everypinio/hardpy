@@ -246,7 +246,12 @@ class HardpyPlugin:
 
     def pytest_runtestloop(self, session: Session) -> bool | None:
         """Call at the start of test run."""
-        self._progress.set_test_amount(session.testscollected)
+        try:
+            self._progress.set_test_amount(session.testscollected)
+        except ValueError:
+            msg = "No tests collected"
+            self._reporter.set_alert(msg)
+            exit(msg, ExitCode.NO_TESTS_COLLECTED)
         if session.config.option.collectonly:
             # ignore collect only mode
             return True
