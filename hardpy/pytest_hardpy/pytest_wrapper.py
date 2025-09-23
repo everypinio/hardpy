@@ -51,6 +51,8 @@ class PyTestWrapper:
         ]
         if self.config.stand_cloud.connection_only:
             cmd.append("--sc-connection-only")
+        if self.config.stand_cloud.autosync:
+            cmd.append("--sc-autosync")
         cmd.append("--hardpy-pt")
         if start_args:
             for key, value in start_args.items():
