@@ -143,7 +143,7 @@ def set_dut_sub_unit(sub_unit: SubUnit) -> int:
     return len(sub_units) - 1
 
 
-def set_dut_info(info: Mapping[str, str | int | float]) -> None:
+def set_dut_info(info: Mapping[str, str | int | float | None]) -> None:
     """Set DUT info to document.
 
     Args:
@@ -267,7 +267,7 @@ def set_stand_name(name: str) -> None:
     reporter.update_db_by_doc()
 
 
-def set_stand_info(info: Mapping[str, str | int | float]) -> None:
+def set_stand_info(info: Mapping[str, str | int | float | None]) -> None:
     """Add test stand info to document.
 
     Args:
@@ -513,7 +513,7 @@ def set_process_number(number: int) -> None:
     reporter.update_db_by_doc()
 
 
-def set_process_info(info: Mapping[str, str | int | float]) -> None:
+def set_process_info(info: Mapping[str, str | int | float | None]) -> None:
     """Set process info to document.
 
     Args:
