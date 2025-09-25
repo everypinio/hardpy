@@ -35,6 +35,7 @@ from pytest import (
 
 from hardpy.common.config import ConfigManager, HardpyConfig
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
+from hardpy.pytest_hardpy.db import CloudStore
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.result import StandCloudLoader
 from hardpy.pytest_hardpy.utils import NodeInfo, ProgressCalculator, TestStatus
@@ -137,6 +138,7 @@ class HardpyPlugin:
         self._tests_name: str = ""
         self._is_critical_not_passed = False
         self._start_args = {}
+        self._cloudstore = CloudStore()
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -528,21 +530,23 @@ class HardpyPlugin:
     def _send_report_to_sc(self) -> None:
         """Send report to StandCloud."""
         report = self._reporter.get_report()
-        if report:
-            try:
-                loader = StandCloudLoader()
-                response = loader.load(report)
-                if response.status_code != HTTPStatus.CREATED:
-                    self._reporter.set_alert(
-                        "Report not uploaded to StandCloud, "
-                        f"status code: {response.status_code}, "
-                        f"text: {response.text}",
-                    )
-            except StandCloudError as exc:
-                self._reporter.set_alert(f"{exc}")
-        else:
+        if not report:
             msg = "Empty report cannot be uploaded to StandCloud"
             self._reporter.set_alert(msg)
+            return
+        # self._cloudstore
+        try:
+            loader = StandCloudLoader()
+            response = loader.load(report)
+            if response.status_code != HTTPStatus.CREATED:
+                self._reporter.set_alert(
+                    "Report not uploaded to StandCloud, "
+                    f"status code: {response.status_code}, "
+                    f"text: {response.text}",
+                )
+        except StandCloudError as exc:
+            self._reporter.set_alert(f"{exc}")
+
 
     def _decode_assertion_msg(
         self,
