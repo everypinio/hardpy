@@ -67,13 +67,13 @@ When called again, the information will be added to DB.
 
 **Arguments:**
 
-- `info` *(dict)*: DUT info
+- `info` *(Mapping[str, str | int | float  | None])*: DUT info
 
 **Example:**
 
 ```python
 def test_dut_info():
-    set_dut_info({"batch": "test_batch", "board_rev": "rev_1"})
+    set_dut_info({"sw_version": "1.0.0"})
 ```
 
 #### set_dut_serial_number
@@ -229,11 +229,7 @@ When called again, the information will be merged with existing data.
 
 ```python
 def test_stand_info():
-    set_stand_info({
-        "calibration_date": "2023-01-15",
-        "temperature": 23.5,
-        "firmware_version": "2.1.4"
-    })
+    set_stand_info({"calibration_date": "2023-01-15"})
 ```
 
 #### set_stand_location
@@ -379,7 +375,7 @@ When called again, the information will be merged with existing data.
 
 **Arguments:**
 
-- `info` *(Mapping[str, str | int | float ])*: Process info dictionary
+- `info` *(Mapping[str, str | int | float | None])*: Process info dictionary
 
 **Example:**
 
@@ -1032,7 +1028,7 @@ It is used with the [set_dut_sub_unit](#set_dut_sub_unit) function.
 - `name` *(str | None)*: unit name  
 - `type` *(str | None)*: unit type
 - `revision` *(str | None)*: unit revision  
-- `info` *(Mapping[str, str | int | float ] | None)*: additional unit info as key-value pairs  
+- `info` *(Mapping[str, str | int | float  | None] | None)*: additional unit info as key-value pairs  
 
 **Example:**
 
