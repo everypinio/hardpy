@@ -34,6 +34,7 @@ class NumericMeasurement(NumericMeasurementModel):
         comparison_value (int | float | None): The value to compare against.
         lower_limit (int | float | None): The lower limit for range operations.
         upper_limit (int | float | None): The upper limit for range operations.
+        disp (bool): Enables display in the operator panel. Defaults to False.
     """
 
     @model_validator(mode="after")
@@ -108,6 +109,7 @@ class StringMeasurement(StringMeasurementModel):
         name (str | None): The name of the measurement.
         operation (CompOp | None): The comparison operation to apply.
         comparison_value (str | None): The value to compare against.
+        disp (bool): Enables display in the operator panel. Defaults to False.
     """
 
     @model_validator(mode="after")

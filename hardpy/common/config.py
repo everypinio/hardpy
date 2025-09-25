@@ -142,10 +142,10 @@ class ConfigManager:
             del cls.obj.stand_cloud
         if not cls.obj.tests_name:
             del cls.obj.tests_name
-        
+
         # Get the model dump and exclude None values for TOML compatibility
         config_dict = cls.obj.model_dump(exclude_none=True)
-        
+
         # Clean nested None values that exclude_none=True might miss
         config_dict = cls._clean_none_values(config_dict)
         config_str = tomli_w.dumps(config_dict)
@@ -153,14 +153,15 @@ class ConfigManager:
             file.write(config_str)
 
     @classmethod
-    def _clean_none_values(cls, obj):
+    def _clean_none_values(cls, obj: any) -> any:
         """Recursively remove None values from nested dictionaries and lists."""
         if isinstance(obj, dict):
-            return {k: cls._clean_none_values(v) for k, v in obj.items() if v is not None}
-        elif isinstance(obj, list):
+            return {
+                k: cls._clean_none_values(v) for k, v in obj.items() if v is not None
+}
+        if isinstance(obj, list):
             return [cls._clean_none_values(item) for item in obj if item is not None]
-        else:
-            return obj
+        return obj
 
     @classmethod
     def read_config(cls, toml_path: Path) -> HardpyConfig | None:
