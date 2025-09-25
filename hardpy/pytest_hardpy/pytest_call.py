@@ -610,7 +610,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
         - widget (DialogBoxWidget | None): Widget information.
         - image (ImageComponent | None): Image information.
         - html (HTMLComponent | None): HTML information.
-        - passFail (bool): If True, show PASS/FAIL buttons instead of normal widget.
+        - pass_fail (bool): If True, show PASS/FAIL buttons instead of normal widget.
 
     Returns:
         Any: An object containing the user's response.
@@ -648,11 +648,11 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     input_dbx_data = _get_operator_data()
 
     _cleanup_widget(reporter, key)
-    
+
     # Handle pass/fail functionality
-    if dialog_box_data.passFail:
+    if dialog_box_data.pass_fail:
         return input_dbx_data.lower() == "pass"
-    
+
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
 

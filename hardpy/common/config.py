@@ -82,8 +82,8 @@ class HardpyConfig(BaseModel, extra="allow"):
     stand_cloud: StandCloudConfig = StandCloudConfig()
     current_test_config: str = ""
     test_configs: list[TestConfig] | None = None
-    soundOn: bool = False
-    enableTestPassFailModal: bool = False
+    sound_on: bool = False
+    enable_test_pass_fail_modal: bool = False
 
 
 class ConfigManager:
@@ -171,8 +171,8 @@ class ConfigManager:
 
         try:
             cls.obj = HardpyConfig(**toml_data)
-        except ValidationError as e:
-            logger.exception(f"Error parsing TOML: {e}")
+        except ValidationError:
+            logger.exception("Error parsing TOML")
             return None
         return cls.obj
 
@@ -204,9 +204,9 @@ class ConfigManager:
         available_configs = [config.name for config in cls.obj.test_configs]
 
         return TestConfigs(
-            available = available_configs
+            available = available_configs,
         )
-    
+
     @classmethod
     def set_current_test_config(cls, config_name: str) -> None:
         """Set current test configuration.
@@ -218,8 +218,9 @@ class ConfigManager:
         if config_name in available_configs:
             cls.obj.current_test_config = config_name
         else:
-            logger.warning(f"Test configuration '{config_name}' not found among available configurations.")
-    
+            logger.warning("Test configuration '%s' \
+                           not found among available configurations.", config_name)
+
     @classmethod
     def get_current_test_config(cls) -> str:
         """Get current test configuration.

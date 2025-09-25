@@ -2,20 +2,18 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+import logging
 import signal
 import subprocess
 import sys
-import logging
 from platform import system
-from pathlib import Path
 
 from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
+from hardpy.pytest_hardpy.reporter import RunnerReporter
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-from hardpy.pytest_hardpy.reporter import RunnerReporter
 
 
 class PyTestWrapper:
@@ -29,7 +27,10 @@ class PyTestWrapper:
         self.config = ConfigManager().get_config()
         #Check to see if there are any test configs defined in the TOML file
         if not self.config.test_configs:
-            logger.info("No test configurations defined in the HardPy configuration. Loading from tests directory.")
+            logger.info(
+                "No test configurations defined in the HardPy configuration. "
+                "Loading from tests directory.",
+            )
             self.collect(is_clear_database=True)
         else:
             self.clear_database()
@@ -37,14 +38,18 @@ class PyTestWrapper:
             try:
                 current_config_name = self.config.current_test_config
                 if current_config_name != "":
-                    self.collect(is_clear_database=True, test_config=current_config_name)
+                    self.collect(
+                        is_clear_database=True, test_config=current_config_name,
+                    )
                 else:
-                    print("No existing test config selection found.")
+                    logger.info("No existing test config selection found.")
 
             except Exception:
                 # No existing test configs in statestore, will be initialized later
-                pass
-        
+                logger.exception(
+                    "Error retrieving current test config from statestore.",
+                    )
+
 
     def start(self, start_args: dict | None = None) -> bool:
         """Start pytest subprocess.
@@ -70,9 +75,11 @@ class PyTestWrapper:
             self.config.stand_cloud.address,
         ]
 
-        test_config_file = ConfigManager().get_test_config_file(self.config.current_test_config)
+        test_config_file = ConfigManager().get_test_config_file(
+            self.config.current_test_config,
+        )
         if test_config_file is not None:
-            logging.info(f"Using test configuration file: {test_config_file}")
+            logging.info("Using test configuration file: %s", test_config_file)
             cmd.extend(["--config-file", test_config_file])
 
 
@@ -112,12 +119,15 @@ class PyTestWrapper:
             return True
         return False
 
-    def collect(self, *, is_clear_database: bool = False, test_config: str | None = None) -> bool:
+    def collect(
+        self, *, is_clear_database: bool = False, test_config: str | None = None,
+    ) -> bool:
         """Perform pytest collection.
 
         Args:
             is_clear_database (bool): indicates whether database
                                       should be cleared. Defaults to False.
+            test_config (str | None): test configuration name. Defaults to None.
 
         Returns:
             bool: True if collection was started
@@ -145,7 +155,7 @@ class PyTestWrapper:
         if test_config:
             test_config_file = ConfigManager().get_test_config_file(test_config)
             if test_config_file is not None:
-                logging.info(f"Using test configuration file: {test_config_file}")
+                logging.info("Using test configuration file: %s", test_config_file)
                 args.extend(["--config-file", test_config_file])
 
         subprocess.Popen(  # noqa: S603
@@ -192,8 +202,8 @@ class PyTestWrapper:
     def clear_database(self) -> None:
         """Clear both statestore and runstore databases directly."""
         try:
-            self._reporter._statestore.clear()
-            self._reporter._runstore.clear()
+            self._reporter._statestore.clear()  # noqa: SLF001
+            self._reporter._runstore.clear()  # noqa: SLF001
             logging.info("Database cleared successfully")
-        except Exception as e:
-            logging.error(f"Failed to clear database: {e}")
+        except Exception:
+            logging.exception("Failed to clear database")
