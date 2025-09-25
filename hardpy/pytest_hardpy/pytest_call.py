@@ -67,7 +67,7 @@ class ErrorCode:
         if reporter.get_field(key) is None:
             reporter.set_doc_value(key, code)
             reporter.update_db_by_doc()
-        self._message = message
+        self._message = message if message else f"Error code = {code}"
 
     def __repr__(self) -> str:
         return self._message
