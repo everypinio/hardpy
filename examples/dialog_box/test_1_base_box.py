@@ -37,7 +37,7 @@ def test_pass_fail_dialog_box():
     dbx = DialogBox(
         title_bar="Manual Verification Required",
         dialog_text="Please check the test result manually.\n\nIs the LED blinking correctly?\n\nClick PASS if yes, FAIL if no.",
-        passFail=True,
+        pass_fail=True,
     )
     result = run_dialog_box(dbx)
     

@@ -51,7 +51,7 @@ interface Props {
   html_width?: number;
   html_border?: number;
   language?: string;
-  passFail?: boolean;
+  pass_fail?: boolean;
 }
 
 export enum WidgetType {
@@ -873,9 +873,9 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
       title={props.title_bar}
       icon="info-sign"
       isOpen={dialogOpen}
-      onClose={props.passFail ? undefined : handleClose}
+      onClose={props.pass_fail ? undefined : handleClose}
       canOutsideClickClose={false}
-      canEscapeKeyClose={!props.passFail}
+      canEscapeKeyClose={!props.pass_fail}
       style={{
         width:
           widgetType === WidgetType.Multistep ? `${dialogWidth}px` : "auto",
@@ -991,7 +991,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
           )}
       </div>
       <div className={Classes.DIALOG_FOOTER}>
-        {props.passFail ? (
+        {props.pass_fail ? (
           <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
             <Button
               intent="success"

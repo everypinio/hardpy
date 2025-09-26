@@ -12,7 +12,7 @@ def test_block_operator_message():
         msg="Test blocking operator message PASS | Fail",
         title="Operator message",
         block=True,
-        passFail=True,
+        pass_fail=True,
     )
     for i in range(3, 0, -1):
         set_message(f"Time left to complete test case {i} s", "updated_status")

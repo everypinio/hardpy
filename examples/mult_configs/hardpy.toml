@@ -2,7 +2,7 @@ title = "HardPy TOML config"
 tests_name = "mult_configs"
 current_test_config = ""
 soundOn = true
-enableTestPassFailModal = true
+enable_test_pass_fail_modal = true
 
 [database]
 user = "dev"

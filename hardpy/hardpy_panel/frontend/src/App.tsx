@@ -231,7 +231,7 @@ function App(): JSX.Element {
 
     // Detect test completion and show overlay (only if enabled in config)
     const prevStatus = lastRunStatus;
-    if (prevStatus === "run" && (status === "passed" || status === "failed") && !showCompletionOverlay && hardpyConfig?.enableTestPassFailModal) {
+    if (prevStatus === "run" && (status === "passed" || status === "failed") && !showCompletionOverlay && hardpyConfig?.enable_test_pass_fail_modal) {
       const testPassed = status === "passed";
       const failedTestCases: Array<{
         moduleName: string;
