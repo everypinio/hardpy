@@ -16,6 +16,7 @@ interface Measurement {
   operation?: string;
   lower_limit?: number;
   upper_limit?: number;
+  disp?: boolean;
 }
 
 interface Props {
@@ -83,7 +84,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
       }}
     >
       {/* Render measurements first */}
-      {_.map(props.measurements, (measurement: Measurement, index: number) => {
+      {_.map(props.measurements?.filter(measurement => measurement.disp !== false), (measurement: Measurement, index: number) => {
         const intent = measurement.result === true ? "success" : measurement.result === false ? "danger" : "none";
         
         return (

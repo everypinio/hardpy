@@ -142,9 +142,26 @@ class ConfigManager:
             del cls.obj.stand_cloud
         if not cls.obj.tests_name:
             del cls.obj.tests_name
-        config_str = tomli_w.dumps(cls.obj.model_dump())
+
+        # Get the model dump and exclude None values for TOML compatibility
+        config_dict = cls.obj.model_dump(exclude_none=True)
+
+        # Clean nested None values that exclude_none=True might miss
+        config_dict = cls._clean_none_values(config_dict)
+        config_str = tomli_w.dumps(config_dict)
         with Path.open(parent_dir / "hardpy.toml", "w") as file:
             file.write(config_str)
+
+    @classmethod
+    def _clean_none_values(cls, obj: any) -> any:
+        """Recursively remove None values from nested dictionaries and lists."""
+        if isinstance(obj, dict):
+            return {
+                k: cls._clean_none_values(v) for k, v in obj.items() if v is not None
+}
+        if isinstance(obj, list):
+            return [cls._clean_none_values(item) for item in obj if item is not None]
+        return obj
 
     @classmethod
     def read_config(cls, toml_path: Path) -> HardpyConfig | None:
@@ -171,8 +188,8 @@ class ConfigManager:
 
         try:
             cls.obj = HardpyConfig(**toml_data)
-        except ValidationError as e:
-            logger.exception(f"Error parsing TOML: {e}")
+        except ValidationError:
+            logger.exception("Error parsing TOML")
             return None
         return cls.obj
 
@@ -204,9 +221,9 @@ class ConfigManager:
         available_configs = [config.name for config in cls.obj.test_configs]
 
         return TestConfigs(
-            available = available_configs
+            available = available_configs,
         )
-    
+
     @classmethod
     def set_current_test_config(cls, config_name: str) -> None:
         """Set current test configuration.
@@ -218,8 +235,9 @@ class ConfigManager:
         if config_name in available_configs:
             cls.obj.current_test_config = config_name
         else:
-            logger.warning(f"Test configuration '{config_name}' not found among available configurations.")
-    
+            logger.warning("Test configuration '%s' \
+                           not found among available configurations.", config_name)
+
     @classmethod
     def get_current_test_config(cls) -> str:
         """Get current test configuration.

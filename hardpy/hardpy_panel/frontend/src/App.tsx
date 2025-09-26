@@ -176,8 +176,8 @@ function App(): JSX.Element {
         setHardpyConfig(config);
         
         // Initialize sound setting from TOML config
-        if (config.soundOn !== undefined) {
-          setUseEndTestSound(config.soundOn);
+        if (config.sound_on !== undefined) {
+          setUseEndTestSound(config.sound_on);
         }
         
         // Show overlay if no current test config is selected

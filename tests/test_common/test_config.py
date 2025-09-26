@@ -119,9 +119,10 @@ def test_config_manager_create_config(tmp_path: Path):
     ConfigManager.create_config(tests_dir)
 
     config_file: Path = tests_dir / "hardpy.toml"
-    assert config_file.read_text() == tomli_w.dumps(
-        ConfigManager.get_config().model_dump(),
-    )
+    # Use the same filtering logic as create_config
+    config_dict = ConfigManager.get_config().model_dump(exclude_none=True)
+    config_dict = ConfigManager._clean_none_values(config_dict)
+    assert config_file.read_text() == tomli_w.dumps(config_dict)
 
 
 def test_read_config_success(tmp_path: Path):

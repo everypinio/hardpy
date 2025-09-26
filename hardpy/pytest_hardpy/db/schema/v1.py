@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from abc import ABC
 from collections.abc import Mapping  # noqa: TC003
-from datetime import datetime  # noqa: TC003
 from typing import ClassVar
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -79,7 +78,7 @@ class Dut(BaseModel):
     part_number: str | None = None
     revision: str | None = None
     sub_units: list[SubUnit] = []
-    info: Mapping[str, str | int | float | datetime] = {}
+    info: Mapping[str, str | int | float] = {}
 
 
 class SubUnit(BaseModel):
@@ -92,7 +91,7 @@ class SubUnit(BaseModel):
     serial_number: str | None = None
     part_number: str | None = None
     revision: str | None = None
-    info: Mapping[str, str | int | float | datetime] = {}
+    info: Mapping[str, str | int | float] = {}
 
 
 class Instrument(BaseModel):
@@ -104,7 +103,7 @@ class Instrument(BaseModel):
     revision: str | None = None
     number: int | None = None
     comment: str | None = None
-    info: Mapping[str, str | int | float | datetime] = {}
+    info: Mapping[str, str | int | float] = {}
 
 
 class TestStand(BaseModel):
@@ -120,7 +119,7 @@ class TestStand(BaseModel):
     number: int | None = None
     drivers: dict = {}  # deprecated, remove in v2
     instruments: list[Instrument] = []
-    info: Mapping[str, str | int | float | datetime] = {}
+    info: Mapping[str, str | int | float] = {}
 
 
 class Process(BaseModel):
@@ -130,7 +129,7 @@ class Process(BaseModel):
 
     name: str | None = None
     number: int | None = None
-    info: Mapping[str, str | int | float | datetime] = {}
+    info: Mapping[str, str | int | float] = {}
 
 
 class IBaseMeasurement(BaseModel, ABC):
@@ -142,6 +141,7 @@ class IBaseMeasurement(BaseModel, ABC):
     name: str | None = Field(default=None)
     operation: CompOp | None = Field(default=None)
     result: bool | None = Field(default_factory=lambda: None)
+    disp: bool = Field(default=False)
 
 
 class NumericMeasurement(IBaseMeasurement):
@@ -149,7 +149,7 @@ class NumericMeasurement(IBaseMeasurement):
 
     model_config = ConfigDict(extra="forbid")
 
-    type: MeasurementType = Field(default=MeasurementType.NUMERIC)
+    type: MeasurementType = Field(default=MeasurementType.NUMERIC, frozen=True)
     value: int | float
     name: str | None = Field(default=None)
     unit: str | None = Field(default=None)
@@ -165,7 +165,7 @@ class StringMeasurement(IBaseMeasurement):
 
     model_config = ConfigDict(extra="forbid")
 
-    type: MeasurementType = Field(default=MeasurementType.STRING)
+    type: MeasurementType = Field(default=MeasurementType.STRING, frozen=True)
     value: str
     name: str | None = Field(default=None)
     casesensitive: bool = Field(default=True)

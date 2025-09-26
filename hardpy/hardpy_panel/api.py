@@ -56,9 +56,10 @@ def set_test_config(config_name: str) -> dict:
     try:
         ConfigManager.set_current_test_config(config_name)
         app.state.pytest_wrp.collect(is_clear_database=True, test_config=config_name)
-        return {"status": "success", "current_config": config_name}
-    except Exception as e:
+    except (ValueError, RuntimeError) as e:
         return {"status": "error", "message": str(e)}
+    else:
+        return {"status": "success", "current_config": config_name}
 
 
 @app.get("/api/start")

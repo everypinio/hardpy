@@ -261,6 +261,35 @@ class HookReporter(BaseReporter):
         key = self.generate_key(DF.CAUSED_DUT_FAILURE_ID)
         return self._statestore.get_field(key)
 
+    def clear_case_data(self, module_id: str, case_id: str) -> None:
+        """Clear test case data.
+
+        Args:
+            module_id (str): module id
+            case_id (str): case id
+        """
+        # fmt: off
+        key = self.generate_key(DF.MODULES, module_id, DF.CASES, case_id, DF.ARTIFACT)
+        self.set_doc_value(key, {})
+
+        key = self.generate_key(DF.MODULES, module_id, DF.CASES, case_id, DF.MSG)
+        self.set_doc_value(key, None)
+
+        key = self.generate_key(DF.MODULES, module_id, DF.CASES, case_id, DF.ASSERTION_MSG)  # noqa: E501
+        self.set_doc_value(key, None)
+
+        key = self.generate_key(DF.MODULES, module_id, DF.CASES, case_id, DF.MEASUREMENTS)  # noqa: E501
+        self.set_doc_value(key, [])
+
+        key = self.generate_key(DF.MODULES, module_id, DF.CASES, case_id, DF.CHART)
+        self.set_doc_value(key, None)
+        # fmt: on
+
+    def clear_error_code(self) -> None:
+        """Clear error code."""
+        key = self.generate_key(DF.ERROR_CODE)
+        self.set_doc_value(key, None)
+
     def update_node_order(self, nodes: dict) -> None:
         """Update node order.
 
