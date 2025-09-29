@@ -315,8 +315,8 @@ Accepts an [Instrument](#instrument) object containing all instrument details.
 
 - `name` *(str | None)*: Instrument name
 - `revision` *(str | None)*: Instrument revision
-- `serial_number` *(str | None)* Instrument serial number.
-- `part_number` *(str | None)*  Instrument part number.  
+- `serial_number` *(str | None)* Instrument serial number
+- `part_number` *(str | None)*  Instrument part number
 - `number` *(int | None)*: Instrument number  
 - `comment` *(str | None)*: Instrument comment  
 - `info` *(Mapping[str, str | int | float ] | None)*: Additional instrument info 
