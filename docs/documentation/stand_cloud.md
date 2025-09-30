@@ -67,31 +67,6 @@ This process is described in the
 
 ## HardPy rules
 
-### Database mandatory fields
-
-In order to populate the **StandCloud** database,
-it is mandatory to populate some fields in the HardPy database.
-
-1. DUT part number. Fills with the
-   [set_dut_part_number](./pytest_hardpy.md#set_dut_part_number) function.
-2. Test stand name. Fills with the
-   [set_stand_name](./pytest_hardpy.md#set_stand_name) function.
-
-So, a minimal example of a test plan for successfully filling a **StandCloud** database:
-
-```python
-import hardpy
-
-def test_example():
-    hardpy.set_dut_part_number("part_number_example")
-    hardpy.set_stand_name("stand_name_example")
-```
-
-These database fields are required for minimal **StandCloud** analytics.
-The `StandCloudLoader.load()` function will return a code **422** if these fields are not filled in.
-Other required database fields are automatically filled by HardPy.
-See **HardPy** database specification in [Runstore](./database.md#runstore-scheme) section.
-
 ### General guidelines
 
 Some tips for getting the best analytics in **StandCloud**.
@@ -101,20 +76,16 @@ Some tips for getting the best analytics in **StandCloud**.
    The serial number allows you to distinguish between units with
    the same part number. It also allows you to analyze the
    number of attempts to test a device.
-2. Use the [set_case_artifact](./pytest_hardpy.md#set_case_artifact),
+2. Use the [set_dut_part_number](./pytest_hardpy.md#set_dut_part_number)
+   to store DUT part number.
+   The part number is an identifier that allows you to clearly 
+   identify the product.   
+3. Use the [set_case_artifact](./pytest_hardpy.md#set_case_artifact),
    [set_module_artifact](./pytest_hardpy.md#set_module_artifact),
    and [set_run_artifact](./pytest_hardpy.md#set_run_artifact)
-   to store important information, such as measurement results or case attempt.
-   Artifacts are not displayed in the operator panel.
-   They can contain more complex data structures and can be used
-   for data analysis, unlike [set_message](./pytest_hardpy.md#set_message)
-   which only stores strings.
-3. Use the [set_stand_info](./pytest_hardpy.md#set_stand_info),
-   [set_dut_info](./pytest_hardpy.md#set_dut_info) and
-   [set_driver_info](./pytest_hardpy.md#set_driver_info)
-   to store important information about DUT or test stand.
-   Don't store DUT or test stand information such as hardware/software
-   revisions or stand components in artifacts.
+   to store important information, that cannot be accommodated in other structured fields
+   such as [set_case_measurement](./pytest_hardpy.md#set_case_measurement)
+   and [set_case_chart](./pytest_hardpy.md#set_case_measurement).
 4. Use the [case_name](./pytest_hardpy.md#case_name)
    and [module_name](./pytest_hardpy.md#module_name)
    markers for human-readable names.

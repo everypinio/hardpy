@@ -28,7 +28,7 @@ if __debug__:
     disable_warnings(InsecureRequestWarning)
 
 cli = typer.Typer(add_completion=False)
-default_config = ConfigManager().get_config()
+default_config = HardpyConfig()
 
 
 @cli.command()
@@ -92,7 +92,8 @@ def init(  # noqa: PLR0913
         sc_connection_only (bool): Flag to check StandCloud service availability
     """
     dir_path = Path(Path.cwd() / tests_dir if tests_dir else "tests")
-    ConfigManager().init_config(
+    config_manager = ConfigManager()
+    config_manager.init_config(
         tests_name=tests_name if tests_name else dir_path.name,
         database_user=database_user,
         database_password=database_password,
@@ -112,7 +113,7 @@ def init(  # noqa: PLR0913
         Path.mkdir(dir_path / "database", exist_ok=True, parents=True)
 
     # create hardpy.toml
-    ConfigManager().create_config(dir_path)
+    config_manager.create_config(dir_path)
 
     config = _get_config(dir_path)
     template = TemplateGenerator(config)
@@ -151,12 +152,16 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
 
     print(f"http://{config.frontend.host}:{config.frontend.port}\n")
 
-    uvicorn_run(
-        "hardpy.hardpy_panel.api:app",
-        host=config.frontend.host,
-        port=config.frontend.port,
-        log_level="critical",
-    )
+    try:
+        uvicorn_run(
+            "hardpy.hardpy_panel.api:app",
+            host=config.frontend.host,
+            port=config.frontend.port,
+            log_level="critical",
+        )
+    except RuntimeError as exc:
+        print(f"HardPy server cannot be started: {exc}")
+        sys.exit()
 
 
 @cli.command()
@@ -260,7 +265,8 @@ def sc_logout(address: Annotated[str, typer.Argument()]) -> None:
 
 def _get_config(tests_dir: str | None = None, validate: bool = False) -> HardpyConfig:
     dir_path = Path.cwd() / tests_dir if tests_dir else Path.cwd()
-    config = ConfigManager().read_config(dir_path)
+    config_manager = ConfigManager()
+    config = config_manager.read_config(dir_path)
 
     if not config:
         print(f"Config at path {dir_path} not found.")

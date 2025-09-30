@@ -7,7 +7,7 @@ import { H1, H2, H4, Tag, Divider } from "@blueprintjs/core";
 import { withTranslation, WithTranslation } from "react-i18next";
 
 import { TestItem, TestSuiteComponent } from "./TestSuite";
-import StartOperatorMsgDialog from "./OperatorMsg";
+import { StartOperatorMsgDialog, CLOSED_MESSAGES_KEY } from "./OperatorMsg";
 
 /**
  * Set of suites
@@ -98,12 +98,14 @@ export class SuiteList extends React.Component<
   { initialized: boolean }
 > {
   elements_count: number = 0;
+  previousTestName: string | undefined;
 
   constructor(props: Props) {
     super(props);
     this.state = {
       initialized: props.i18n?.isInitialized ?? false,
     };
+    this.previousTestName = props.db_state.name;
   }
 
   componentDidMount() {
@@ -113,13 +115,25 @@ export class SuiteList extends React.Component<
       });
     }
   }
+
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.db_state.name !== this.props.db_state.name) {
+      try {
+        localStorage.removeItem(CLOSED_MESSAGES_KEY);
+        console.log("Cleared closed messages for new test run");
+      } catch (error) {
+        console.error("Error clearing closed messages:", error);
+      }
+      this.previousTestName = this.props.db_state.name;
+    }
+  }
+
   /**
    * Renders the SuiteList component.
    * @returns {React.ReactElement} The rendered component.
    */
   render(): React.ReactElement {
     const { t, i18n } = this.props;
-    console.log("SuiteList props", { i18n: this.props.i18n });
     if (!i18n || !this.state.initialized) {
       return <div>Loading translations...</div>;
     }

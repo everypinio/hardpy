@@ -8,7 +8,7 @@ from typing import ClassVar
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from hardpy.pytest_hardpy.utils import (
+from hardpy.pytest_hardpy.utils.const import (
     ChartType,
     ComparisonOperation as CompOp,
     Group,
@@ -78,7 +78,7 @@ class Dut(BaseModel):
     part_number: str | None = None
     revision: str | None = None
     sub_units: list[SubUnit] = []
-    info: Mapping[str, str | int | float] = {}
+    info: Mapping[str, str | int | float | None] = {}
 
 
 class SubUnit(BaseModel):
@@ -91,7 +91,7 @@ class SubUnit(BaseModel):
     serial_number: str | None = None
     part_number: str | None = None
     revision: str | None = None
-    info: Mapping[str, str | int | float] = {}
+    info: Mapping[str, str | int | float | None] = {}
 
 
 class Instrument(BaseModel):
@@ -101,9 +101,11 @@ class Instrument(BaseModel):
 
     name: str | None = None
     revision: str | None = None
+    serial_number: str | None = None
+    part_number: str | None = None
     number: int | None = None
     comment: str | None = None
-    info: Mapping[str, str | int | float] = {}
+    info: Mapping[str, str | int | float | None] = {}
 
 
 class TestStand(BaseModel):
@@ -119,7 +121,7 @@ class TestStand(BaseModel):
     number: int | None = None
     drivers: dict = {}  # deprecated, remove in v2
     instruments: list[Instrument] = []
-    info: Mapping[str, str | int | float] = {}
+    info: Mapping[str, str | int | float | None] = {}
 
 
 class Process(BaseModel):
@@ -129,7 +131,7 @@ class Process(BaseModel):
 
     name: str | None = None
     number: int | None = None
-    info: Mapping[str, str | int | float] = {}
+    info: Mapping[str, str | int | float | None] = {}
 
 
 class IBaseMeasurement(BaseModel, ABC):

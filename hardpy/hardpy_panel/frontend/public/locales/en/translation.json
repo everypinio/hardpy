@@ -29,6 +29,15 @@
     "dbConnectionTitle": "Database Connection Error",
     "dbConnectionMessage": "Failed to establish connection with the database"
   },
+  "chart": {
+    "dataChart": "Chart Data",
+    "xAxis": "X Axis",
+    "yAxis": "Y Axis",
+    "chart": "Chart",
+    "showChart": "Show chart {{title}}",
+    "fullscreenButton": "Open chart in full screen",
+    "series": "Series {{number}}"
+  },  
   "operatorDialog": {
     "defaultTitle": "Message",
     "imageAlt": "Operator message image",

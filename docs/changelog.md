@@ -2,10 +2,41 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## 0.16.0
+
+* Add error code cleanup in the `attempts`.
+  [[PR-200](https://github.com/everypinio/hardpy/pull/200)]
+* Add an event handler for the inability to collect tests and the 
+  absence of a database launch.
+  [[PR-200](https://github.com/everypinio/hardpy/pull/200)]
+* Add **unknown** values in the `StandCloudLoader` class.
+  [[PR-200](https://github.com/everypinio/hardpy/pull/200)]
+* Add the type `None` to info field in the `Dut`, `SubUnit`, `Instrument`, 
+  and `TestStand` tables.
+  [[PR-200](https://github.com/everypinio/hardpy/pull/200)]
+* Add `serial_number` and `part_number` to the **Instrument** table.
+  [[PR-200](https://github.com/everypinio/hardpy/pull/200)]
+* Update js packages.
+  [[PR-197](https://github.com/everypinio/hardpy/pull/197)]
+* Add the charts view to the HardPy operator panel.
+  [[PR-186](https://github.com/everypinio/hardpy/pull/186)]
+* Added storage of the operator message state to avoid reopening the window after closing.
+  [[PR-190](https://github.com/everypinio/hardpy/pull/190)]
+* Change the database and interface synchronization mechanism.
+  The **statestore** and **runstore** databases can contain multiple documents,
+  which are defined by the frontend host name and port.
+  The **current** document is no longer being created.
+  The name of the document in the database consists of the
+  host name and port for the frontend, as described in the **hardpy.toml** file.
+  [[PR-187](https://github.com/everypinio/hardpy/pull/187)]
+* Simplify the process of working with multiple **HardPy** instances by
+  using a single **CouchDB** instance instead of multiple instances.
+  [[PR-187](https://github.com/everypinio/hardpy/pull/187)]
+
 ## HardPy 0.15.2
 
 * Change the logic of the test case attempts.
-  The test case fields (msg, assertion_message, chart, measurements, and artifact) 
+  The test case fields (msg, assertion_message, chart, measurements, and artifact)
   are now cleared when the test case passes on the second or subsequent attempt.
   The error code is now cleared when a test case passes on the second or subsequent attempt.
   [[PR-192](https://github.com/everypinio/hardpy/pull/192)]

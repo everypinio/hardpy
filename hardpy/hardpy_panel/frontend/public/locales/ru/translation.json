@@ -29,6 +29,15 @@
     "dbConnectionTitle": "Ошибка подключения к базе данных",
     "dbConnectionMessage": "Не удалось установить соединение с базой данных"
   },
+  "chart": {
+    "dataChart": "Данные графика",
+    "xAxis": "Ось X",
+    "yAxis": "Ось Y",
+    "chart": "График",
+    "showChart": "Показать график {{title}}",
+    "fullscreenButton": "Открыть график в полноэкранном режиме",
+    "series": "Серия {{number}}"
+  },
   "operatorDialog": {
     "defaultTitle": "Сообщение",
     "imageAlt": "Изображение в сообщении оператора",

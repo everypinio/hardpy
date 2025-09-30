@@ -5,3 +5,8 @@
 .TestSuite__Tag {
   margin: 2px;
 }
+
+.test-suite-content .rdt_TableCell {
+  vertical-align: top !important;
+  align-items: flex-start !important;
+}

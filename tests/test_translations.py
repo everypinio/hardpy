@@ -1,12 +1,42 @@
 import json
 from pathlib import Path
-from typing import List
 
 from pydantic import BaseModel
 
 
+class Chart(BaseModel):
+    """A class representing chart translations.
+
+    Attributes:
+        dataChart (str): The translation for the "dataChart" text.
+        xAxis (str): The translation for the "xAxis" text.
+        yAxis (str): The translation for the "yAxis" text.
+        chart (str): The translation for the "chart" text.
+        showChart (str): The translation for the "showChart" text.
+        fullscreenButton (str): The translation for the "fullscreenButton" text.
+        series (str): The translation for the "series" text.
+    """
+
+    dataChart: str
+    xAxis: str
+    yAxis: str
+    chart: str
+    showChart: str
+    fullscreenButton: str
+    series: str
+
 class AppStatus(BaseModel):
-    """A class representing application status translations."""
+    """A class representing application status translations.
+
+    Attributes:
+        ready (str): The translation for the "ready" status.
+        run (str): The translation for the "run" status.
+        passed (str): The translation for the "passed" status.
+        failed (str): The translation for the "failed" status.
+        stopped (str): The translation for the "stopped" status.
+        unknown (str): The translation for the "unknown" status.
+    """
+
     ready: str
     run: str
     passed: str
@@ -129,7 +159,7 @@ class SuiteList(BaseModel):
     alert: str
 
 
-class TestSuite(BaseModel):
+class _TestSuite(BaseModel):
     """A class representing a test suite.
 
     Attributes:
@@ -152,20 +182,22 @@ class TranslationModel(BaseModel):
         app (App): The app translation data.
         button (Button): The button translation data.
         error (Error): The error translation data.
+        chart (Chart): The chart translation data.
         operatorDialog (OperatorDialog): The operator dialog translation data.
         suiteList (SuiteList): The suite list translation data.
-        testSuite (TestSuite): The test suite translation data.
+        testSuite (_TestSuite): The test suite translation data.
     """
 
     app: App
     button: Button
     error: Error
+    chart: Chart
     operatorDialog: OperatorDialog
     suiteList: SuiteList
-    testSuite: TestSuite
+    testSuite: _TestSuite
 
 
-def validate_translation_file(file_path: Path) -> List[str]:
+def validate_translation_file(file_path: Path) -> list[str]:
     """Validate a single translation file against the model."""
     errors = []
     try:

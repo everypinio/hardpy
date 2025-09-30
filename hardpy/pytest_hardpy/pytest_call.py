@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Everypin
+# Copyright (c) 2025 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
@@ -9,25 +9,21 @@ from time import sleep
 from typing import TYPE_CHECKING, Any
 from uuid import uuid4
 
-from pycouchdb.exceptions import NotFound
-from pydantic import ValidationError
-
 from hardpy.pytest_hardpy.db import (
+    Chart,
     DatabaseField as DF,  # noqa: N817
+    Instrument,
+    NumericMeasurement,
     ResultRunStore,
-    RunStore,
+    StringMeasurement,
+    SubUnit,
 )
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
-    Chart,
     DialogBox,
     DuplicateParameterError,
     HTMLComponent,
     ImageComponent,
-    Instrument,
-    NumericMeasurement,
-    StringMeasurement,
-    SubUnit,
     TestStandNumberError,
 )
 
@@ -71,7 +67,7 @@ class ErrorCode:
         if reporter.get_field(key) is None:
             reporter.set_doc_value(key, code)
             reporter.update_db_by_doc()
-        self._message = message
+        self._message = message if message else f"Error code = {code}"
 
     def __repr__(self) -> str:
         return self._message
@@ -86,15 +82,8 @@ def get_current_report() -> ResultRunStore | None:
     Returns:
         ResultRunStore | None: report, or None if not found or invalid
     """
-    runstore = RunStore()
-    try:
-        return runstore.get_document()  # type: ignore
-    except NotFound:
-        return None
-    except ValidationError:
-        return None
-    except TypeError:
-        return None
+    reporter = RunnerReporter()
+    return reporter.get_report()
 
 
 def set_user_name(name: str) -> None:
@@ -154,7 +143,7 @@ def set_dut_sub_unit(sub_unit: SubUnit) -> int:
     return len(sub_units) - 1
 
 
-def set_dut_info(info: Mapping[str, str | int | float]) -> None:
+def set_dut_info(info: Mapping[str, str | int | float | None]) -> None:
     """Set DUT info to document.
 
     Args:
@@ -278,7 +267,7 @@ def set_stand_name(name: str) -> None:
     reporter.update_db_by_doc()
 
 
-def set_stand_info(info: Mapping[str, str | int | float]) -> None:
+def set_stand_info(info: Mapping[str, str | int | float | None]) -> None:
     """Add test stand info to document.
 
     Args:
@@ -524,7 +513,7 @@ def set_process_number(number: int) -> None:
     reporter.update_db_by_doc()
 
 
-def set_process_info(info: Mapping[str, str | int | float]) -> None:
+def set_process_info(info: Mapping[str, str | int | float | None]) -> None:
     """Set process info to document.
 
     Args:

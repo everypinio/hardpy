@@ -17,7 +17,7 @@ The CouchDB version must be equal to or greater than the 3.2 version.
 The pytest plugin has 2 databases: **statestore** and **runstore**.
 
 - The **statestore** database uses for frontend [data synchronization](./../about/frontend_sync.md).
-- The **runstore** database contains the document **current**, which is a JSON object
+- The **runstore** database contains the document, which is a JSON object
 that stores the current state of the test run.
 
 A separate database is required to store the list of reports.
@@ -55,7 +55,7 @@ stores the current report and **report** stores reports.
     <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/database/runstore.png" alt="runstore_scheme">
 </h1>
 
-The **current** document of **runstore** database contains some section.
+The document of **runstore** database contains some section.
 
 #### main
 
@@ -122,6 +122,8 @@ The user can specify the instrument information by using [set_instrument](./pyte
 
 - **name**: instrument name.
 - **revision** instrument revision.
+- **serial_number** instrument serial number.
+- **part_number** instrument part number.
 - **number**: instrument number.
 - **comment**: comment on the instrument.
 - **info**: dictionary containing additional information about the instrument.
@@ -133,6 +135,8 @@ The user can specify the instrument information by using [set_instrument](./pyte
 {
   "name": "Everypin Power Supply",
   "revision": "1.1.0",
+  "serial_number": "4235098",
+  "part_number": "E012",
   "number": 1,
   "comment": "",
   "info": {
@@ -159,6 +163,8 @@ The user can specify the instrument information by using [set_instrument](./pyte
     {
       "name": "Everypin Power Supply",
       "revision": "1.1.0",
+      "serial_number": "1238",
+      "part_number": "EPS_08",
       "number": 1,
       "comment": "",
       "info": {
@@ -184,6 +190,8 @@ The user can specify the instrument information by using [set_instrument](./pyte
     {
       "name": "Everypin Power Supply",
       "revision": "1.1.0",
+      "serial_number": "1237",
+      "part_number": "EPS_08",
       "number": 1,
       "comment": "",
       "info": {
@@ -417,7 +425,7 @@ For example, the firmware version comparison.
 
 ### Report example
 
-Example of a **current** document:
+Example of a document:
 
 ```json
     {
@@ -454,6 +462,8 @@ Example of a **current** document:
           {
             "name": "Everypin Power Supply",
             "revision": "2.0",
+            "serial_number": "1238",
+            "part_number": "EPS_08",
             "number": 1,
             "comment": "",
             "info": {}

@@ -2,11 +2,14 @@
 
 Data synchronization uses the replication mechanism of CouchDB and PouchDB.
 
-- The **statestore** database contains the document **current**, which is a JSON
+- The **statestore** database contains the document, which is a JSON
 object that stores the current state of the test run without artifacts.
+The name of the synchronization document is generated based on the host 
+and port specified for the server in the **hardpy.toml** file: 
+`<frontend_host>_<frontend_port>`.
 The plugin updates the document as testing progresses using the **StateStore** class.
-- The [runstore](./../documentation/database.md#runstore-scheme) database contains the document
-**current**, which is a JSON object that stores the current state of the test run with
+- The [runstore](./../documentation/database.md#runstore-scheme) database contains the document, 
+which is a JSON object that stores the current state of the test run with
 artifacts - a report on the current test run.
 
 ## Statestore scheme
@@ -21,7 +24,7 @@ The **runstore** database is similar to **statestore** database, but there are d
 - **runstore** does not contain some fields: **progress**, **dialog_box**, **attempt**,
   **alert**, **operator_data**, **operator_msg**.
 
-The **current** document of the **statestore** database contains some section.
+The document of the **statestore** database contains some section.
 
 #### main
 
@@ -97,6 +100,8 @@ The user can specify the instrument information by using [set_instrument](./../d
 
 - **name**: instrument name.
 - **revision** instrument revision.
+- **serial_number** instrument serial number.
+- **part_number** instrument part number.
 - **number**: instrument number.
 - **comment**: comment on the instrument.
 - **info**: dictionary containing additional information about the instrument.
@@ -333,6 +338,8 @@ For example, the firmware version comparison.
           {
             "name": "Everypin Power Supply",
             "revision": "2.0",
+            "serial_number": "4235098",
+            "part_number": "E012",
             "number": 1,
             "comment": "",
             "info": {}
