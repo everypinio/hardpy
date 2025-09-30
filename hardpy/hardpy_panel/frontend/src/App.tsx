@@ -24,6 +24,7 @@ import ProgressView from "./progress/ProgressView";
 import TestStatus from "./hardpy_test_view/TestStatus";
 import ReloadAlert from "./restart_alert/RestartAlert";
 import PlaySound from "./hardpy_test_view/PlaySound";
+import TestCompletionOverlay from "./hardpy_test_view/TestCompletionOverlay";
 
 import { useAllDocs } from "use-pouchdb";
 
@@ -67,6 +68,18 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const [lastProgress, setProgress] = React.useState(0);
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
   const [lastRunDuration, setLastRunDuration] = React.useState<number>(0);
+
+  // Test completion overlay state
+  const [showCompletionOverlay, setShowCompletionOverlay] =
+    React.useState(false);
+  const [testCompletionData, setTestCompletionData] = React.useState<{
+    testPassed: boolean;
+    failedTestCases: Array<{
+      moduleName: string;
+      caseName: string;
+      assertionMsg?: string;
+    }>;
+  } | null>(null);
 
   const startTimeRef = React.useRef<number | null>(null);
   const [timerIntervalId, setTimerIntervalId] =
@@ -170,6 +183,48 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           setLastRunDuration(duration);
         }
       }
+    }
+
+    // Detect test completion and show overlay (only if enabled in config)
+    const prevStatus = lastRunStatus;
+    if (
+      prevStatus === "run" &&
+      (status === "passed" || status === "failed") &&
+      !showCompletionOverlay
+    ) {
+      const testPassed = status === "passed";
+      const failedTestCases: Array<{
+        moduleName: string;
+        caseName: string;
+        assertionMsg?: string;
+      }> = [];
+
+      // Extract failed test cases if test failed
+      if (!testPassed && db_row.modules) {
+        Object.entries(db_row.modules).forEach(
+          ([moduleId, module]: [string, any]) => {
+            if (module.cases) {
+              Object.entries(module.cases).forEach(
+                ([caseId, testCase]: [string, any]) => {
+                  if (testCase.status === "failed") {
+                    failedTestCases.push({
+                      moduleName: module.name || moduleId,
+                      caseName: testCase.name || caseId,
+                      assertionMsg: testCase.assertion_msg || undefined,
+                    });
+                  }
+                }
+              );
+            }
+          }
+        );
+      }
+
+      setTestCompletionData({
+        testPassed,
+        failedTestCases,
+      });
+      setShowCompletionOverlay(true);
     }
 
     if (state === "error") {
@@ -417,6 +472,16 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           <StartStopButton testing_status={lastRunStatus} />
         </div>
       </div>
+      {/* Test Completion Overlay */}
+      <TestCompletionOverlay
+        isVisible={showCompletionOverlay}
+        testPassed={testCompletionData?.testPassed || false}
+        failedTestCases={testCompletionData?.failedTestCases || []}
+        onDismiss={() => {
+          setShowCompletionOverlay(false);
+          setTestCompletionData(null);
+        }}
+      />
     </div>
   );
 }
