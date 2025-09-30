@@ -159,7 +159,7 @@ class SuiteList(BaseModel):
     alert: str
 
 
-class TestSuite(BaseModel):
+class _TestSuite(BaseModel):
     """A class representing a test suite.
 
     Attributes:
@@ -185,7 +185,7 @@ class TranslationModel(BaseModel):
         chart (Chart): The chart translation data.
         operatorDialog (OperatorDialog): The operator dialog translation data.
         suiteList (SuiteList): The suite list translation data.
-        testSuite (TestSuite): The test suite translation data.
+        testSuite (_TestSuite): The test suite translation data.
     """
 
     app: App
@@ -194,7 +194,7 @@ class TranslationModel(BaseModel):
     chart: Chart
     operatorDialog: OperatorDialog
     suiteList: SuiteList
-    testSuite: TestSuite
+    testSuite: _TestSuite
 
 
 def validate_translation_file(file_path: Path) -> list[str]:

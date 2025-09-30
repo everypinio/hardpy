@@ -152,12 +152,16 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
 
     print(f"http://{config.frontend.host}:{config.frontend.port}\n")
 
-    uvicorn_run(
-        "hardpy.hardpy_panel.api:app",
-        host=config.frontend.host,
-        port=config.frontend.port,
-        log_level="critical",
-    )
+    try:
+        uvicorn_run(
+            "hardpy.hardpy_panel.api:app",
+            host=config.frontend.host,
+            port=config.frontend.port,
+            log_level="critical",
+        )
+    except RuntimeError as exc:
+        print(f"HardPy server cannot be started: {exc}")
+        sys.exit()
 
 
 @cli.command()

@@ -1001,6 +1001,8 @@ def test_instruments(pytester: Pytester, hardpy_opts: list[str]):
             instrument1 = hardpy.Instrument(
                 name="Power Supply",
                 revision="1.0",
+                serial_number="1234",
+                part_number="ps_1",
                 number=1,
                 comment="Main power source"
             )
@@ -1020,6 +1022,8 @@ def test_instruments(pytester: Pytester, hardpy_opts: list[str]):
             instrument2 = hardpy.Instrument(
                 name="Multimeter",
                 revision="2.1",
+                serial_number="5678",
+                part_number="mm_1",
                 number=2,
                 info={{'model': '34461A', 'channels': 1}}
             )
@@ -1036,7 +1040,7 @@ def test_instruments(pytester: Pytester, hardpy_opts: list[str]):
             else:
                 assert second_instrument['name'] == "Multimeter"
                 assert second_instrument['info']['model'] == "34461A"
-        """
+        """,
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1)

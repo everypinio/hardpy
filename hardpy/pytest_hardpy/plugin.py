@@ -246,7 +246,12 @@ class HardpyPlugin:
 
     def pytest_runtestloop(self, session: Session) -> bool | None:
         """Call at the start of test run."""
-        self._progress.set_test_amount(session.testscollected)
+        try:
+            self._progress.set_test_amount(session.testscollected)
+        except ValueError:
+            msg = "No tests collected"
+            self._reporter.set_alert(msg)
+            exit(msg, ExitCode.NO_TESTS_COLLECTED)
         if session.config.option.collectonly:
             # ignore collect only mode
             return True
@@ -339,15 +344,16 @@ class HardpyPlugin:
             self._reporter.clear_case_data(module_id, case_id)
             self._reporter.update_db_by_doc()
 
+            # clear the error code if there were no failed tests before
+            if caused_dut_failure_id is None:
+                self._reporter.clear_error_code()
+
             try:
                 item.runtest()
                 call.excinfo = None
                 self._is_critical_not_passed = False
                 is_dut_failure = False
                 self._reporter.set_case_status(module_id, case_id, TestStatus.PASSED)
-                # clear the error code if there were no failed tests before
-                if caused_dut_failure_id is None:
-                    self._reporter.clear_error_code()
                 break
             except AssertionError:
                 self._reporter.set_case_status(module_id, case_id, TestStatus.FAILED)

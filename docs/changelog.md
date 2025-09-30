@@ -2,6 +2,20 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## 0.16.0
+
+* Add error code cleanup in the `attempts`.
+  [[PR-200](https://github.com/everypinio/hardpy/pull/200)]
+* Add an event handler for the inability to collect tests and the 
+  absence of a database launch.
+  [[PR-200](https://github.com/everypinio/hardpy/pull/200)]
+* Add **unknown** values in the `StandCloudLoader` class.
+  [[PR-200](https://github.com/everypinio/hardpy/pull/200)]
+* Add the type `None` to info field in the `Dut`, `SubUnit`, `Instrument`, 
+  and `TestStand` tables.
+  [[PR-200](https://github.com/everypinio/hardpy/pull/200)]
+* Add `serial_number` and `part_number` to the **Instrument** table.
+  [[PR-200](https://github.com/everypinio/hardpy/pull/200)]
 * Update js packages.
   [[PR-197](https://github.com/everypinio/hardpy/pull/197)]
 * Add the charts view to the HardPy operator panel.
