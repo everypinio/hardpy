@@ -11,6 +11,8 @@
       "connection": "Estableciendo conexión... 🧐🔎",
       "dbError": "Error de conexión a la base de datos. 🙅🏽‍♀️🚫",
       "noEntries": "No hay entradas en la base de datos 🙅🏽‍♀️🚫",
+      "failedTestCases": "Casos de prueba fallidos",
+      "overlayDismissHint": "Haga clic en cualquier lugar o presione cualquier tecla para cerrar",
       "status": {
         "ready": "listo",
         "run": "ejecutando",

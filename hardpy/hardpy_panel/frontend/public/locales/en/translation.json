@@ -11,6 +11,8 @@
     "connection": "Establishing a connection... 🧐🔎",
     "dbError": "Database connection error. 🙅🏽‍♀️🚫",
     "noEntries": "No entries in the database 🙅🏽‍♀️🚫",
+    "failedTestCases": "Failed Test Cases",
+    "overlayDismissHint": "Click anywhere or press any key to dismiss",
     "status": {
       "ready": "ready",
       "run": "run",

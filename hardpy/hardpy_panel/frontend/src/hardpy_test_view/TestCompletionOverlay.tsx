@@ -2,6 +2,7 @@
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import { Classes } from "@blueprintjs/core";
 
 interface FailedTestCase {
@@ -13,19 +14,23 @@ interface FailedTestCase {
 interface TestCompletionOverlayProps {
   isVisible: boolean;
   testPassed: boolean;
+  testStopped: boolean;
   failedTestCases?: FailedTestCase[];
   onDismiss: () => void;
 }
 
 /**
- * Overlay component that displays test completion results with PASS/FAIL status
+ * Overlay component that displays test completion results with PASS/FAIL/STOP status
  */
 const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
   isVisible,
   testPassed,
+  testStopped,
   failedTestCases = [],
   onDismiss,
 }) => {
+  const { t } = useTranslation();
+
   React.useEffect(() => {
     if (isVisible && testPassed) {
       // Auto-dismiss after 5 seconds only for PASS
@@ -41,15 +46,38 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
     return null;
   }
 
+  // Determine overlay color based on status
+  let backgroundColor: string;
+  if (testStopped) {
+    backgroundColor = "rgba(255, 179, 0, 0.95)"; // Yellow for STOP
+  } else if (testPassed) {
+    backgroundColor = "rgba(15, 153, 96, 0.95)"; // Green for PASS
+  } else {
+    backgroundColor = "rgba(219, 55, 55, 0.95)"; // Red for FAIL
+  }
+
+  // Determine status text and translation
+  let statusText: string;
+  let statusTranslation: string;
+
+  if (testStopped) {
+    statusText = "STOP";
+    statusTranslation = t("app.status.stopped") || "停止";
+  } else if (testPassed) {
+    statusText = "PASS";
+    statusTranslation = t("app.status.passed") || "通过";
+  } else {
+    statusText = "FAIL";
+    statusTranslation = t("app.status.failed") || "失败";
+  }
+
   const overlayStyle: React.CSSProperties = {
     position: "fixed",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: testPassed
-      ? "rgba(15, 153, 96, 0.95)" // Green with transparency
-      : "rgba(219, 55, 55, 0.95)", // Red with transparency
+    backgroundColor: backgroundColor,
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -107,13 +135,13 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
 
   return (
     <div style={overlayStyle} onClick={onDismiss} className={Classes.DARK}>
-      <div style={titleStyle}>{testPassed ? "PASS" : "FAIL"}</div>
-      <div style={subtitleStyle}>{testPassed ? "通过" : "失败"}</div>
+      <div style={titleStyle}>{statusText}</div>
+      <div style={subtitleStyle}>{statusTranslation}</div>
 
-      {!testPassed && failedTestCases.length > 0 && (
+      {!testPassed && !testStopped && failedTestCases.length > 0 && (
         <div style={failedCasesStyle}>
           <h3 style={{ marginTop: 0, marginBottom: "20px", fontSize: "24px" }}>
-            Failed Test Cases:
+            {t("app.failedTestCases") || "Failed Test Cases"}:
           </h3>
           {failedTestCases.map((testCase, index) => (
             <div key={index} style={caseItemStyle}>
@@ -136,7 +164,8 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
           opacity: 0.8,
         }}
       >
-        Click anywhere to dismiss
+        {t("app.overlayDismissHint") ||
+          "Click anywhere or press any key to dismiss"}
       </div>
     </div>
   );

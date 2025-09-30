@@ -11,6 +11,8 @@
       "connection": "Verbindung wird hergestellt... 🧐🔎",
       "dbError": "Datenbankverbindungsfehler. 🙅🏽‍♀️🚫",
       "noEntries": "Keine Einträge in der Datenbank 🙅🏽‍♀️🚫",
+    "failedTestCases": "Fehlgeschlagene Testfälle",
+    "overlayDismissHint": "Klicken Sie irgendwo oder drücken Sie eine Taste, um zu schließen",
       "status": {
         "ready": "bereit",
         "run": "läuft",

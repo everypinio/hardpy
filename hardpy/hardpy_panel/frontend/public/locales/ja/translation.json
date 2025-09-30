@@ -11,6 +11,8 @@
       "connection": "接続を確立しています... 🧐🔎",
       "dbError": "データベース接続エラー. 🙅🏽‍♀️🚫",
       "noEntries": "データベースにエントリがありません 🙅🏽‍♀️🚫",
+      "failedTestCases": "失敗したテストケース",
+      "overlayDismissHint": "どこかをクリックするか、任意のキーを押して閉じます",
       "status": {
         "ready": "準備完了",
         "run": "実行中",

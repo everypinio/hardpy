@@ -74,6 +74,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     React.useState(false);
   const [testCompletionData, setTestCompletionData] = React.useState<{
     testPassed: boolean;
+    testStopped: boolean;
     failedTestCases: Array<{
       moduleName: string;
       caseName: string;
@@ -112,6 +113,29 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
 
   const ultrawide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.ULTRAWIDE);
   const wide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.WIDE);
+
+  // Handle keyboard events for overlay dismissal
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (showCompletionOverlay) {
+        if (event.code === "Space" || event.key === " ") {
+          event.preventDefault();
+          setShowCompletionOverlay(false);
+          setTestCompletionData(null);
+        } else if (event.code === "Escape" || event.key === "Escape") {
+          setShowCompletionOverlay(false);
+          setTestCompletionData(null);
+        }
+      }
+    };
+
+    if (showCompletionOverlay) {
+      document.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [showCompletionOverlay]);
 
   React.useEffect(() => {
     if (lastRunStatus === "run") {
@@ -189,10 +213,11 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     const prevStatus = lastRunStatus;
     if (
       prevStatus === "run" &&
-      (status === "passed" || status === "failed") &&
+      (status === "passed" || status === "failed" || status === "stopped") &&
       !showCompletionOverlay
     ) {
       const testPassed = status === "passed";
+      const testStopped = status === "stopped";
       const failedTestCases: Array<{
         moduleName: string;
         caseName: string;
@@ -200,7 +225,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       }> = [];
 
       // Extract failed test cases if test failed
-      if (!testPassed && db_row.modules) {
+      if (!testPassed && !testStopped && db_row.modules) {
         Object.entries(db_row.modules).forEach(
           ([moduleId, module]: [string, any]) => {
             if (module.cases) {
@@ -222,6 +247,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
 
       setTestCompletionData({
         testPassed,
+        testStopped,
         failedTestCases,
       });
       setShowCompletionOverlay(true);
@@ -476,6 +502,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       <TestCompletionOverlay
         isVisible={showCompletionOverlay}
         testPassed={testCompletionData?.testPassed || false}
+        testStopped={testCompletionData?.testStopped || false}
         failedTestCases={testCompletionData?.failedTestCases || []}
         onDismiss={() => {
           setShowCompletionOverlay(false);
