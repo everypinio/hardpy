@@ -328,8 +328,8 @@ def test_instruments():
     instrument = Instrument(
         name="Oscilloscope",
         revision="1.2",
-        serial_number="4235098"
-        part_number="E012"
+        serial_number="4235098",
+        part_number="E012",
         number=1,
         info={"model": "DSO-X 2024A", "bandwidth": "200MHz"}
     )
