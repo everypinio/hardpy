@@ -52,6 +52,55 @@ const isValidStatus = (status: string): status is StatusKey => {
   return status in STATUS_MAP;
 };
 
+// Global variable to track overlay visibility with timestamp
+let isCompletionOverlayVisible = false;
+let lastOverlayDismissTime = 0;
+const OVERLAY_DISMISS_COOLDOWN = 100; // ms
+
+/**
+ * Sets the global overlay visibility state
+ */
+export const setCompletionOverlayVisible = (visible: boolean): void => {
+  console.log(
+    "App: Setting global overlay visibility to",
+    visible,
+    "at time:",
+    Date.now()
+  );
+  isCompletionOverlayVisible = visible;
+  if (!visible) {
+    lastOverlayDismissTime = Date.now();
+    console.log(
+      "App: Set last overlay dismiss time to",
+      lastOverlayDismissTime
+    );
+  }
+};
+
+/**
+ * Gets the global overlay visibility state
+ */
+export const getCompletionOverlayVisible = (): boolean => {
+  return isCompletionOverlayVisible;
+};
+
+/**
+ * Checks if we're in cooldown period after overlay dismissal
+ */
+export const isInOverlayDismissCooldown = (): boolean => {
+  const now = Date.now();
+  const inCooldown = now - lastOverlayDismissTime < OVERLAY_DISMISS_COOLDOWN;
+  console.log(
+    "App: Cooldown check - now:",
+    now,
+    "lastDismiss:",
+    lastOverlayDismissTime,
+    "inCooldown:",
+    inCooldown
+  );
+  return inCooldown;
+};
+
 /**
  * Main component of the GUI.
  * @param {string} syncDocumentId - The id of the PouchDB document to syncronize.
@@ -114,19 +163,49 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const ultrawide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.ULTRAWIDE);
   const wide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.WIDE);
 
+  // Handle overlay visibility changes
+  const handleOverlayVisibilityChange = React.useCallback(
+    (isVisible: boolean) => {
+      console.log(
+        "App: Overlay visibility change callback, isVisible:",
+        isVisible
+      );
+      setCompletionOverlayVisible(isVisible);
+    },
+    []
+  );
+
   // Handle keyboard events for overlay dismissal
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (showCompletionOverlay) {
-        setShowCompletionOverlay(false);
-        setTestCompletionData(null);
+        console.log("App: Key pressed while overlay visible, key:", event.key);
+        if (
+          event.key === "Enter" ||
+          event.key === " " ||
+          event.key === "Escape"
+        ) {
+          console.log(
+            "App: Dismissing overlay via keyboard, preventing default"
+          );
+          event.preventDefault();
+          event.stopPropagation();
+          setShowCompletionOverlay(false);
+          setTestCompletionData(null);
+        }
       }
     };
 
     if (showCompletionOverlay) {
-      document.addEventListener("keydown", handleKeyDown);
+      console.log(
+        "App: Adding keyboard event listener for overlay with capture"
+      );
+      document.addEventListener("keydown", handleKeyDown, { capture: true });
       return () => {
-        document.removeEventListener("keydown", handleKeyDown);
+        console.log("App: Removing keyboard event listener for overlay");
+        document.removeEventListener("keydown", handleKeyDown, {
+          capture: true,
+        });
       };
     }
   }, [showCompletionOverlay]);
@@ -210,6 +289,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       (status === "passed" || status === "failed" || status === "stopped") &&
       !showCompletionOverlay
     ) {
+      console.log("App: Test completed, showing overlay. Status:", status);
       const testPassed = status === "passed";
       const testStopped = status === "stopped";
       const failedTestCases: Array<{
@@ -392,6 +472,12 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     return t(STATUS_MAP[status]);
   };
 
+  const handleOverlayDismiss = () => {
+    console.log("App: Overlay dismissed via click at time:", Date.now());
+    setShowCompletionOverlay(false);
+    setTestCompletionData(null);
+  };
+
   return (
     <div className="App">
       <ReloadAlert reload_timeout_s={3} />
@@ -498,10 +584,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         testPassed={testCompletionData?.testPassed || false}
         testStopped={testCompletionData?.testStopped || false}
         failedTestCases={testCompletionData?.failedTestCases || []}
-        onDismiss={() => {
-          setShowCompletionOverlay(false);
-          setTestCompletionData(null);
-        }}
+        onDismiss={handleOverlayDismiss}
+        onVisibilityChange={handleOverlayVisibilityChange}
       />
     </div>
   );

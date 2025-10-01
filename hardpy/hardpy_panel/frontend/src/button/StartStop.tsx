@@ -11,6 +11,11 @@ type State = {
   isStopButtonDisabled: boolean;
 };
 
+// Global variables for overlay state
+declare let isCompletionOverlayVisible: boolean;
+declare let lastOverlayDismissTime: number;
+declare const OVERLAY_DISMISS_COOLDOWN: number;
+
 /**
  * A React component that renders a start/stop button for controlling a testing process.
  * The button's behavior and appearance depend on the testing status.
@@ -53,6 +58,7 @@ class StartStopButton extends React.Component<Props, State> {
    * @private
    */
   private hardpy_start(): void {
+    console.log("StartStopButton: Starting test execution");
     this.hardpy_call("api/start");
   }
 
@@ -64,6 +70,7 @@ class StartStopButton extends React.Component<Props, State> {
     if (this.state.isStopButtonDisabled) {
       return;
     }
+    console.log("StartStopButton: Stopping test execution");
     this.hardpy_call("api/stop");
 
     // Disable the stop button for some time
@@ -78,10 +85,10 @@ class StartStopButton extends React.Component<Props, State> {
    * @returns {boolean} True if a dialog is open, else false.
    */
   private isDialogOpen(): boolean {
-    const blueprintDialogs = document.querySelectorAll('.bp3-dialog');
+    const blueprintDialogs = document.querySelectorAll(".bp3-dialog");
     for (const dialog of blueprintDialogs) {
       const style = window.getComputedStyle(dialog);
-      if (style.display !== 'none' && style.visibility !== 'hidden') {
+      if (style.display !== "none" && style.visibility !== "hidden") {
         return true;
       }
     }
@@ -89,7 +96,7 @@ class StartStopButton extends React.Component<Props, State> {
     const ariaDialogs = document.querySelectorAll('[role="dialog"]');
     for (const dialog of ariaDialogs) {
       const style = window.getComputedStyle(dialog);
-      if (style.display !== 'none' && style.visibility !== 'hidden') {
+      if (style.display !== "none" && style.visibility !== "hidden") {
         return true;
       }
     }
@@ -98,9 +105,100 @@ class StartStopButton extends React.Component<Props, State> {
   }
 
   /**
+   * Checks if completion overlay is visible using global variable
+   * @returns {boolean} True if completion overlay is visible
+   */
+  private isCompletionOverlayVisible(): boolean {
+    try {
+      if (typeof isCompletionOverlayVisible !== "undefined") {
+        console.log(
+          "StartStopButton: Global overlay visibility:",
+          isCompletionOverlayVisible
+        );
+        return isCompletionOverlayVisible;
+      }
+    } catch (error) {
+      console.warn(
+        "StartStopButton: Could not access global overlay visibility variable"
+      );
+    }
+
+    // Fallback: check if overlay element exists in DOM
+    const overlayElements = document.querySelectorAll(
+      '[style*="z-index: 9999"]'
+    );
+    const hasOverlay = overlayElements.length > 0;
+    console.log(
+      "StartStopButton: Fallback overlay check, has overlay:",
+      hasOverlay
+    );
+    return hasOverlay;
+  }
+
+  /**
+   * Checks if we're in cooldown period after overlay dismissal
+   */
+  private isInOverlayDismissCooldown(): boolean {
+    try {
+      if (
+        typeof lastOverlayDismissTime !== "undefined" &&
+        typeof OVERLAY_DISMISS_COOLDOWN !== "undefined"
+      ) {
+        const now = Date.now();
+        const inCooldown =
+          now - lastOverlayDismissTime < OVERLAY_DISMISS_COOLDOWN;
+        console.log(
+          "StartStopButton: Cooldown check - now:",
+          now,
+          "lastDismiss:",
+          lastOverlayDismissTime,
+          "inCooldown:",
+          inCooldown
+        );
+        return inCooldown;
+      }
+    } catch (error) {
+      console.warn("StartStopButton: Could not access cooldown variables");
+    }
+    return false;
+  }
+
+  /**
    * Handles the space keydown event to start or stop the process.
    */
-  private readonly handleSpaceKey = (event: KeyboardEvent) => {
+  private readonly handleSpaceKey = (event: KeyboardEvent): void => {
+    const currentTime = Date.now();
+    console.log(
+      "StartStopButton: Key pressed:",
+      event.key,
+      "at time:",
+      currentTime
+    );
+
+    // Only handle Space key, let other keys pass through
+    if (event.key !== " ") {
+      console.log("StartStopButton: Not Space key, allowing to pass through");
+      return;
+    }
+
+    // Check if completion overlay is visible
+    if (this.isCompletionOverlayVisible()) {
+      console.log("StartStopButton: Overlay is visible, blocking SPACE key");
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
+    // Check if we're in cooldown period after overlay dismissal
+    if (this.isInOverlayDismissCooldown()) {
+      console.log(
+        "StartStopButton: In cooldown period after overlay dismissal, blocking SPACE key"
+      );
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
     if (this.isDialogOpen()) {
       return;
     }
@@ -108,19 +206,22 @@ class StartStopButton extends React.Component<Props, State> {
     const target = event.target as HTMLElement;
     if (!target) return;
 
-    const interactiveElements = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'];
+    const interactiveElements = ["INPUT", "TEXTAREA", "SELECT", "BUTTON"];
     if (
-      interactiveElements.includes(target.tagName) || 
+      interactiveElements.includes(target.tagName) ||
       target.isContentEditable
     ) {
       return;
     }
 
-    if (event.key === " ") {
-      event.preventDefault();
-      const is_testing_in_progress = this.props.testing_status == "run";
-      is_testing_in_progress ? this.hardpy_stop() : this.hardpy_start();
-    }
+    console.log("StartStopButton: Processing space key after all checks");
+    event.preventDefault();
+    const is_testing_in_progress = this.props.testing_status == "run";
+    console.log(
+      "StartStopButton: Space key handled, testing in progress:",
+      is_testing_in_progress
+    );
+    is_testing_in_progress ? this.hardpy_stop() : this.hardpy_start();
   };
 
   /**
@@ -128,6 +229,22 @@ class StartStopButton extends React.Component<Props, State> {
    * @private
    */
   private readonly handleButtonClick = (): void => {
+    console.log("StartStopButton: Button clicked");
+
+    // Check if completion overlay is visible
+    if (this.isCompletionOverlayVisible()) {
+      console.log("StartStopButton: Overlay is visible, blocking button click");
+      return;
+    }
+
+    // Check if we're in cooldown period after overlay dismissal
+    if (this.isInOverlayDismissCooldown()) {
+      console.log(
+        "StartStopButton: In cooldown period after overlay dismissal, blocking button click"
+      );
+      return;
+    }
+
     this.hardpy_start();
   };
 
@@ -135,6 +252,8 @@ class StartStopButton extends React.Component<Props, State> {
    * Adds an event listener for the keydown event when the component is mounted.
    */
   componentDidMount(): void {
+    console.log("StartStopButton: Component mounted, adding keydown listener");
+    // Use bubbling phase (default) to not interfere with other capture phase listeners
     window.addEventListener("keydown", this.handleSpaceKey);
   }
 
@@ -142,6 +261,9 @@ class StartStopButton extends React.Component<Props, State> {
    * Removes the event listener for the keydown event when the component is unmounted.
    */
   componentWillUnmount(): void {
+    console.log(
+      "StartStopButton: Component unmounting, removing keydown listener"
+    );
     window.removeEventListener("keydown", this.handleSpaceKey);
     if (this.stopButtonTimer) {
       clearTimeout(this.stopButtonTimer);

@@ -17,6 +17,7 @@ interface TestCompletionOverlayProps {
   testStopped: boolean;
   failedTestCases?: FailedTestCase[];
   onDismiss: () => void;
+  onVisibilityChange?: (isVisible: boolean) => void;
 }
 
 /**
@@ -28,13 +29,20 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
   testStopped,
   failedTestCases = [],
   onDismiss,
+  onVisibilityChange,
 }) => {
   const { t } = useTranslation();
+
+  React.useEffect(() => {
+    console.log("TestCompletionOverlay: Visibility changed to", isVisible);
+    onVisibilityChange?.(isVisible);
+  }, [isVisible, onVisibilityChange]);
 
   React.useEffect(() => {
     if (isVisible && testPassed) {
       // Auto-dismiss after 5 seconds only for PASS
       const timer = setTimeout(() => {
+        console.log("TestCompletionOverlay: Auto-dismissing PASS overlay");
         onDismiss();
       }, 5000);
 
@@ -133,8 +141,17 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
     fontStyle: "italic",
   };
 
+  const handleOverlayClick = () => {
+    console.log("TestCompletionOverlay: Overlay clicked, dismissing");
+    onDismiss();
+  };
+
   return (
-    <div style={overlayStyle} onClick={onDismiss} className={Classes.DARK}>
+    <div
+      style={overlayStyle}
+      onClick={handleOverlayClick}
+      className={Classes.DARK}
+    >
       <div style={titleStyle}>{statusText}</div>
       <div style={subtitleStyle}>{statusTranslation}</div>
 
