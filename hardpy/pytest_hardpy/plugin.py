@@ -360,9 +360,12 @@ class HardpyPlugin:
                 is_dut_failure = True
                 if current_attempt == attempt:
                     break
-
         # set the caused dut failure id only the first time
-        if is_dut_failure and caused_dut_failure_id is None:
+        if (
+            is_dut_failure
+            and caused_dut_failure_id is None
+            and call.excinfo.typename != "Skipped"
+        ):
             self._reporter.set_caused_dut_failure_id(module_id, case_id)
 
     # Reporting hooks
