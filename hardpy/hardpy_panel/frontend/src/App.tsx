@@ -118,14 +118,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (showCompletionOverlay) {
-        if (event.code === "Space" || event.key === " ") {
-          event.preventDefault();
-          setShowCompletionOverlay(false);
-          setTestCompletionData(null);
-        } else if (event.code === "Escape" || event.key === "Escape") {
-          setShowCompletionOverlay(false);
-          setTestCompletionData(null);
-        }
+        setShowCompletionOverlay(false);
+        setTestCompletionData(null);
       }
     };
 
