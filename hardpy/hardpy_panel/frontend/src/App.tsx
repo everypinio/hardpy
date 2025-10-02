@@ -102,6 +102,49 @@ export const isInOverlayDismissCooldown = (): boolean => {
 };
 
 /**
+ * Finds the test case that was stopped during test execution
+ */
+const findStoppedTestCase = (
+  testRunData: TestRunI
+):
+  | { moduleName: string; caseName: string; assertionMsg?: string }
+  | undefined => {
+  if (!testRunData.modules) return undefined;
+
+  for (const [moduleId, module] of Object.entries(testRunData.modules)) {
+    if (module.cases) {
+      for (const [caseId, testCase] of Object.entries(module.cases)) {
+        if (testCase.status === "stopped") {
+          return {
+            moduleName: module.name || moduleId,
+            caseName: testCase.name || caseId,
+            assertionMsg: testCase.assertion_msg || undefined,
+          };
+        }
+      }
+    }
+  }
+
+  let lastFailedTestCase: any = null;
+
+  for (const [moduleId, module] of Object.entries(testRunData.modules)) {
+    if (module.cases) {
+      for (const [caseId, testCase] of Object.entries(module.cases)) {
+        if (testCase.status === "failed") {
+          lastFailedTestCase = {
+            moduleName: module.name || moduleId,
+            caseName: testCase.name || caseId,
+            assertionMsg: testCase.assertion_msg || undefined,
+          };
+        }
+      }
+    }
+  }
+
+  return lastFailedTestCase;
+};
+
+/**
  * Main component of the GUI.
  * @param {string} syncDocumentId - The id of the PouchDB document to syncronize.
  * @returns {JSX.Element} The main application component.
@@ -129,6 +172,11 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       caseName: string;
       assertionMsg?: string;
     }>;
+    stoppedTestCase?: {
+      moduleName: string;
+      caseName: string;
+      assertionMsg?: string;
+    };
   } | null>(null);
 
   const startTimeRef = React.useRef<number | null>(null);
@@ -319,10 +367,13 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         );
       }
 
+      const stoppedTestCase = testStopped ? findStoppedTestCase(db_row) : undefined;
+
       setTestCompletionData({
         testPassed,
         testStopped,
         failedTestCases,
+        stoppedTestCase,
       });
       setShowCompletionOverlay(true);
     }
@@ -584,6 +635,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         testPassed={testCompletionData?.testPassed || false}
         testStopped={testCompletionData?.testStopped || false}
         failedTestCases={testCompletionData?.failedTestCases || []}
+        stoppedTestCase={testCompletionData?.stoppedTestCase}
         onDismiss={handleOverlayDismiss}
         onVisibilityChange={handleOverlayVisibilityChange}
       />

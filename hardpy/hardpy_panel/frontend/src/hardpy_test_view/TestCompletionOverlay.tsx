@@ -11,11 +11,18 @@ interface FailedTestCase {
   assertionMsg?: string;
 }
 
+interface StoppedTestCase {
+  moduleName: string;
+  caseName: string;
+  assertionMsg?: string;
+}
+
 interface TestCompletionOverlayProps {
   isVisible: boolean;
   testPassed: boolean;
   testStopped: boolean;
   failedTestCases?: FailedTestCase[];
+  stoppedTestCase?: StoppedTestCase;
   onDismiss: () => void;
   onVisibilityChange?: (isVisible: boolean) => void;
 }
@@ -28,6 +35,7 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
   testPassed,
   testStopped,
   failedTestCases = [],
+  stoppedTestCase,
   onDismiss,
   onVisibilityChange,
 }) => {
@@ -42,7 +50,6 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
     if (isVisible && testPassed) {
       // Auto-dismiss after 5 seconds only for PASS
       const timer = setTimeout(() => {
-        console.log("TestCompletionOverlay: Auto-dismissing PASS overlay");
         onDismiss();
       }, 5000);
 
@@ -111,7 +118,7 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
     textShadow: "0 2px 4px rgba(0,0,0,0.3)",
   };
 
-  const failedCasesStyle: React.CSSProperties = {
+  const casesContainerStyle: React.CSSProperties = {
     maxHeight: "60vh",
     overflowY: "auto",
     backgroundColor: "rgba(0,0,0,0.3)",
@@ -142,8 +149,49 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
   };
 
   const handleOverlayClick = () => {
-    console.log("TestCompletionOverlay: Overlay clicked, dismissing");
     onDismiss();
+  };
+
+  const renderStoppedTestCase = () => {
+    if (!stoppedTestCase) return null;
+
+    return (
+      <div style={casesContainerStyle}>
+        <h3 style={{ marginTop: 0, marginBottom: "20px", fontSize: "24px" }}>
+          {t("app.stoppedTestCase") || "Stopped Test Case"}:
+        </h3>
+        <div style={caseItemStyle}>
+          <div style={caseNameStyle}>
+            {stoppedTestCase.moduleName} → {stoppedTestCase.caseName}
+          </div>
+          {stoppedTestCase.assertionMsg && (
+            <div style={assertionStyle}>{stoppedTestCase.assertionMsg}</div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const renderFailedTestCases = () => {
+    if (failedTestCases.length === 0) return null;
+
+    return (
+      <div style={casesContainerStyle}>
+        <h3 style={{ marginTop: 0, marginBottom: "20px", fontSize: "24px" }}>
+          {t("app.failedTestCases") || "Failed Test Cases"}:
+        </h3>
+        {failedTestCases.map((testCase, index) => (
+          <div key={index} style={caseItemStyle}>
+            <div style={caseNameStyle}>
+              {testCase.moduleName} → {testCase.caseName}
+            </div>
+            {testCase.assertionMsg && (
+              <div style={assertionStyle}>{testCase.assertionMsg}</div>
+            )}
+          </div>
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -155,23 +203,11 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
       <div style={titleStyle}>{statusText}</div>
       <div style={subtitleStyle}>{statusTranslation}</div>
 
-      {!testPassed && !testStopped && failedTestCases.length > 0 && (
-        <div style={failedCasesStyle}>
-          <h3 style={{ marginTop: 0, marginBottom: "20px", fontSize: "24px" }}>
-            {t("app.failedTestCases") || "Failed Test Cases"}:
-          </h3>
-          {failedTestCases.map((testCase, index) => (
-            <div key={index} style={caseItemStyle}>
-              <div style={caseNameStyle}>
-                {testCase.moduleName} → {testCase.caseName}
-              </div>
-              {testCase.assertionMsg && (
-                <div style={assertionStyle}>{testCase.assertionMsg}</div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+      {/* Show stopped test case for STOP status */}
+      {testStopped && renderStoppedTestCase()}
+
+      {/* Show failed test cases for FAIL status */}
+      {!testPassed && !testStopped && renderFailedTestCases()}
 
       <div
         style={{
