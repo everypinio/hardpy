@@ -227,30 +227,29 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (showCompletionOverlay) {
-        console.log("App: Key pressed while overlay visible, key:", event.key);
-        if (
-          event.key === "Enter" ||
-          event.key === " " ||
-          event.key === "Escape"
-        ) {
-          console.log(
-            "App: Dismissing overlay via keyboard, preventing default"
-          );
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+
+        setShowCompletionOverlay(false);
+        setTestCompletionData(null);
+
+        if (event.key === " ") {
           event.preventDefault();
-          event.stopPropagation();
-          setShowCompletionOverlay(false);
-          setTestCompletionData(null);
+          const activeElement = document.activeElement as HTMLElement;
+          if (activeElement && activeElement.blur) {
+            activeElement.blur();
+          }
         }
       }
     };
 
     if (showCompletionOverlay) {
-      console.log(
-        "App: Adding keyboard event listener for overlay with capture"
-      );
-      document.addEventListener("keydown", handleKeyDown, { capture: true });
+      document.addEventListener("keydown", handleKeyDown, {
+        capture: true,
+        passive: false,
+      });
       return () => {
-        console.log("App: Removing keyboard event listener for overlay");
         document.removeEventListener("keydown", handleKeyDown, {
           capture: true,
         });
@@ -367,7 +366,9 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         );
       }
 
-      const stoppedTestCase = testStopped ? findStoppedTestCase(db_row) : undefined;
+      const stoppedTestCase = testStopped
+        ? findStoppedTestCase(db_row)
+        : undefined;
 
       setTestCompletionData({
         testPassed,
