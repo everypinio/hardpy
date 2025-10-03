@@ -101,3 +101,33 @@ def test_caused_dut_failure_id_first(pytester: Pytester, hardpy_opts: list):
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(failed=2)
+
+
+def test_caused_dut_failure_skip(pytester: Pytester, hardpy_opts: list):
+    """Caused DUT failure id is not filled by skipped test."""
+    pytester.makeconftest(
+        f"""
+        {import_header}
+
+        def finish_executing():
+            report = hardpy.get_current_report()
+
+            caused_dut_failure_id = report.caused_dut_failure_id
+            assert caused_dut_failure_id == "test_1::test_b"
+
+        {conftest_actions_after}
+    """,
+    )
+    pytester.makepyfile(
+        test_1="""
+        import pytest
+
+        def test_a():
+            pytest.skip()
+
+        def test_b():
+            assert False
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(skipped=1, failed=1)

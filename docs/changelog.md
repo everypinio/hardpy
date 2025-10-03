@@ -2,6 +2,9 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Exclude the `Skipped` status from the `caused_dut_failure_id` reason.
+  [[PR-202](https://github.com/everypinio/hardpy/pull/202)]
+
 ## 0.16.0
 
 * Add error code cleanup in the `attempts`.
