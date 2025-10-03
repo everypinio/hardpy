@@ -12,7 +12,7 @@ host = "localhost"
 port = 8000
 language = "ru"
 
-[frontend.overlay]
+[frontend.modal_result]
 enabled = true
 auto_dismiss_pass = true
 auto_dismiss_timeout = 15000

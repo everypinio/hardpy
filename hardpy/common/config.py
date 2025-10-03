@@ -49,11 +49,11 @@ class FrontendConfig(BaseModel):
     host: str = "localhost"
     port: int = 8000
     language: str = "en"
-    overlay: OverlayConfig = Field(default_factory=lambda: OverlayConfig())
+    modal_result: ModalResultConfig = Field(default_factory=lambda: ModalResultConfig())
 
 
-class OverlayConfig(BaseModel):
-    """Overlay configuration."""
+class ModalResultConfig(BaseModel):
+    """Modal result configuration."""
 
     model_config = ConfigDict(extra="forbid")
 
@@ -128,9 +128,9 @@ class ConfigManager(metaclass=SingletonMeta):
         frontend_language: str,
         sc_address: str = "",
         sc_connection_only: bool = False,
-        overlay_enabled: bool = True,
-        overlay_auto_dismiss_pass: bool = True,
-        overlay_auto_dismiss_timeout: int = 5000,
+        modal_result_enabled: bool = True,
+        modal_result_auto_dismiss_pass: bool = True,
+        modal_result_auto_dismiss_timeout: int = 5000,
     ) -> None:
         """Initialize the HardPy configuration.
 
@@ -147,18 +147,18 @@ class ConfigManager(metaclass=SingletonMeta):
             frontend_language (str): Operator panel language.
             sc_address (str): StandCloud address.
             sc_connection_only (bool): StandCloud check availability.
-            overlay_enabled (bool): Enable/disable completion overlay.
-            overlay_auto_dismiss_pass (bool): Auto-dismiss PASS overlay.
-            overlay_auto_dismiss_timeout (int): Auto-dismiss timeout in ms.
+            modal_result_enabled (bool): Enable/disable completion modal.
+            modal_result_auto_dismiss_pass (bool): Auto-dismiss PASS entries.
+            modal_result_auto_dismiss_timeout (int): Auto-dismiss timeout in ms.
         """
         self._config.tests_name = tests_name
         self._config.frontend.host = frontend_host
         self._config.frontend.port = frontend_port
         self._config.frontend.language = frontend_language
-        self._config.frontend.overlay.enabled = overlay_enabled
-        self._config.frontend.overlay.auto_dismiss_pass = overlay_auto_dismiss_pass
-        self._config.frontend.overlay.auto_dismiss_timeout = (
-            overlay_auto_dismiss_timeout
+        self._config.frontend.modal_result.enabled = modal_result_enabled
+        self._config.frontend.modal_result.auto_dismiss_pass = modal_result_auto_dismiss_pass
+        self._config.frontend.modal_result.auto_dismiss_timeout = (
+            modal_result_auto_dismiss_timeout
         )
         self._config.database.user = database_user
         self._config.database.password = database_password

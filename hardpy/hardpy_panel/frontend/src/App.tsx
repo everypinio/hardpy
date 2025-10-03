@@ -24,7 +24,7 @@ import ProgressView from "./progress/ProgressView";
 import TestStatus from "./hardpy_test_view/TestStatus";
 import ReloadAlert from "./restart_alert/RestartAlert";
 import PlaySound from "./hardpy_test_view/PlaySound";
-import TestCompletionOverlay from "./hardpy_test_view/TestCompletionOverlay";
+import TestCompletionModalResult from "./hardpy_test_view/TestCompletionModalResult";
 
 import { useAllDocs } from "use-pouchdb";
 
@@ -52,49 +52,50 @@ const isValidStatus = (status: string): status is StatusKey => {
   return status in STATUS_MAP;
 };
 
-// Global variable to track overlay visibility with timestamp
-let isCompletionOverlayVisible = false;
-let lastOverlayDismissTime = 0;
-const OVERLAY_DISMISS_COOLDOWN = 100; // ms
+// Global variable to track ModalResult visibility with timestamp
+let isCompletionModalResultVisible = false;
+let lastModalResultDismissTime = 0;
+const MODAL_RESULT_DISMISS_COOLDOWN = 100; // ms
 
 /**
- * Sets the global overlay visibility state
+ * Sets the global ModalResult visibility state
  */
-export const setCompletionOverlayVisible = (visible: boolean): void => {
+export const setCompletionModalResultVisible = (visible: boolean): void => {
   console.log(
-    "App: Setting global overlay visibility to",
+    "App: Setting global ModalResult visibility to",
     visible,
     "at time:",
     Date.now()
   );
-  isCompletionOverlayVisible = visible;
+  isCompletionModalResultVisible = visible;
   if (!visible) {
-    lastOverlayDismissTime = Date.now();
+    lastModalResultDismissTime = Date.now();
     console.log(
-      "App: Set last overlay dismiss time to",
-      lastOverlayDismissTime
+      "App: Set last ModalResult dismiss time to",
+      lastModalResultDismissTime
     );
   }
 };
 
 /**
- * Gets the global overlay visibility state
+ * Gets the global ModalResult visibility state
  */
-export const getCompletionOverlayVisible = (): boolean => {
-  return isCompletionOverlayVisible;
+export const getCompletionModalResultVisible = (): boolean => {
+  return isCompletionModalResultVisible;
 };
 
 /**
- * Checks if we're in cooldown period after overlay dismissal
+ * Checks if we're in cooldown period after ModalResult dismissal
  */
-export const isInOverlayDismissCooldown = (): boolean => {
+export const isInModalResultDismissCooldown = (): boolean => {
   const now = Date.now();
-  const inCooldown = now - lastOverlayDismissTime < OVERLAY_DISMISS_COOLDOWN;
+  const inCooldown =
+    now - lastModalResultDismissTime < MODAL_RESULT_DISMISS_COOLDOWN;
   console.log(
     "App: Cooldown check - now:",
     now,
     "lastDismiss:",
-    lastOverlayDismissTime,
+    lastModalResultDismissTime,
     "inCooldown:",
     inCooldown
   );
@@ -164,8 +165,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   // HardPy config state
   const [hardpyConfig, setHardpyConfig] = React.useState<any>(null);
 
-  // Test completion overlay state
-  const [showCompletionOverlay, setShowCompletionOverlay] =
+  // Test completion ModalResult state
+  const [showCompletionModalResult, setShowCompletionModalResult] =
     React.useState(false);
   const [testCompletionData, setTestCompletionData] = React.useState<{
     testPassed: boolean;
@@ -199,13 +200,13 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           setUseEndTestSound(config.sound_on);
         }
 
-        // Show overlay if no current test config is selected
+        // Show ModalResult if no current test config is selected
         if (
           !config.current_test_config &&
           config.test_configs &&
           config.test_configs.length > 0
         ) {
-          // This can be used for config overlay, keeping for reference
+          // This can be used for config ModalResult, keeping for reference
         }
       } catch (error) {
         console.error("Failed to load HardPy config:", error);
@@ -243,27 +244,27 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const ultrawide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.ULTRAWIDE);
   const wide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.WIDE);
 
-  // Handle overlay visibility changes
-  const handleOverlayVisibilityChange = React.useCallback(
+  // Handle ModalResult visibility changes
+  const handleModalResultVisibilityChange = React.useCallback(
     (isVisible: boolean) => {
       console.log(
-        "App: Overlay visibility change callback, isVisible:",
+        "App: ModalResult visibility change callback, isVisible:",
         isVisible
       );
-      setCompletionOverlayVisible(isVisible);
+      setCompletionModalResultVisible(isVisible);
     },
     []
   );
 
-  // Handle keyboard events for overlay dismissal
+  // Handle keyboard events for ModalResult dismissal
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (showCompletionOverlay) {
+      if (showCompletionModalResult) {
         event.preventDefault();
         event.stopPropagation();
         event.stopImmediatePropagation();
 
-        setShowCompletionOverlay(false);
+        setShowCompletionModalResult(false);
         setTestCompletionData(null);
 
         if (event.key === " ") {
@@ -276,7 +277,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       }
     };
 
-    if (showCompletionOverlay) {
+    if (showCompletionModalResult) {
       document.addEventListener("keydown", handleKeyDown, {
         capture: true,
         passive: false,
@@ -287,7 +288,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         });
       };
     }
-  }, [showCompletionOverlay]);
+  }, [showCompletionModalResult]);
 
   React.useEffect(() => {
     if (lastRunStatus === "run") {
@@ -361,16 +362,17 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       }
     }
 
-    // Detect test completion and show overlay (only if enabled in config)
+    // Detect test completion and show ModalResult (only if enabled in config)
     const prevStatus = lastRunStatus;
-    const overlayEnabled = hardpyConfig?.frontend?.overlay?.enabled ?? true;  
+    const ModalResultEnabled =
+      hardpyConfig?.frontend?.ModalResult?.enabled ?? true;
     if (
-      overlayEnabled &&
+      ModalResultEnabled &&
       prevStatus === "run" &&
       (status === "passed" || status === "failed" || status === "stopped") &&
-      !showCompletionOverlay
+      !showCompletionModalResult
     ) {
-      console.log("App: Test completed, showing overlay. Status:", status);
+      console.log("App: Test completed, showing ModalResult. Status:", status);
       const testPassed = status === "passed";
       const testStopped = status === "stopped";
       const failedTestCases: Array<{
@@ -410,7 +412,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         failedTestCases,
         stoppedTestCase,
       });
-      setShowCompletionOverlay(true);
+      setShowCompletionModalResult(true);
     }
 
     if (state === "error") {
@@ -559,9 +561,9 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     return t(STATUS_MAP[status]);
   };
 
-  const handleOverlayDismiss = () => {
-    console.log("App: Overlay dismissed via click at time:", Date.now());
-    setShowCompletionOverlay(false);
+  const handleModalResultDismiss = () => {
+    console.log("App: ModalResult dismissed via click at time:", Date.now());
+    setShowCompletionModalResult(false);
     setTestCompletionData(null);
   };
 
@@ -665,17 +667,21 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           <StartStopButton testing_status={lastRunStatus} />
         </div>
       </div>
-      {/* Test Completion Overlay */}
-      <TestCompletionOverlay
-        isVisible={showCompletionOverlay}
+      {/* Test Completion ModalResult */}
+      <TestCompletionModalResult
+        isVisible={showCompletionModalResult}
         testPassed={testCompletionData?.testPassed || false}
         testStopped={testCompletionData?.testStopped || false}
         failedTestCases={testCompletionData?.failedTestCases || []}
         stoppedTestCase={testCompletionData?.stoppedTestCase}
-        onDismiss={handleOverlayDismiss}
-        onVisibilityChange={handleOverlayVisibilityChange}
-        autoDismissPass={hardpyConfig?.frontend?.overlay?.auto_dismiss_pass ?? true}
-        autoDismissTimeout={hardpyConfig?.frontend?.overlay?.auto_dismiss_timeout ?? 5000}
+        onDismiss={handleModalResultDismiss}
+        onVisibilityChange={handleModalResultVisibilityChange}
+        autoDismissPass={
+          hardpyConfig?.frontend?.ModalResult?.auto_dismiss_pass ?? true
+        }
+        autoDismissTimeout={
+          hardpyConfig?.frontend?.ModalResult?.auto_dismiss_timeout ?? 5000
+        }
       />
     </div>
   );

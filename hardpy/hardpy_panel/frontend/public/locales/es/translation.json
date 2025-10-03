@@ -13,15 +13,15 @@
       "noEntries": "No hay entradas en la base de datos 🙅🏽‍♀️🚫",
       "stoppedTestCase": "Caso de prueba detenido",
       "failedTestCases": "Casos de prueba fallidos",
-      "overlayDismissHint": "Haga clic en cualquier lugar o presione cualquier tecla para cerrar",
-      "overlayAutoDismissHint": "Cierre automático en {{seconds}} segundos...",
+      "modalResultDismissHint": "Haga clic en cualquier lugar o presione cualquier tecla para cerrar",
+      "modalResultAutoDismissHint": "Cierre automático en {{seconds}} segundos...",
       "status": {
-        "ready": "listo",
-        "run": "ejecutando",
-        "passed": "aprobado",
-        "failed": "fallado",
-        "stopped": "detenido",
-        "unknown": "desconocido"
+        "ready": "Listo",
+        "run": "Ejecutando",
+        "passed": "Aprobado",
+        "failed": "Fallado",
+        "stopped": "Detenido",
+        "unknown": "Desconocido"
       }
   },
   "button": {

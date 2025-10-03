@@ -11,10 +11,10 @@ type State = {
   isStopButtonDisabled: boolean;
 };
 
-// Global variables for overlay state
-declare let isCompletionOverlayVisible: boolean;
-declare let lastOverlayDismissTime: number;
-declare const OVERLAY_DISMISS_COOLDOWN: number;
+// Global variables for ModalResult state
+declare let isCompletionModalResultVisible: boolean;
+declare let lastModalResultDismissTime: number;
+declare const MODAL_RESULT_DISMISS_COOLDOWN: number;
 
 /**
  * A React component that renders a start/stop button for controlling a testing process.
@@ -105,53 +105,53 @@ class StartStopButton extends React.Component<Props, State> {
   }
 
   /**
-   * Checks if completion overlay is visible using global variable
-   * @returns {boolean} True if completion overlay is visible
+   * Checks if completion ModalResult is visible using global variable
+   * @returns {boolean} True if completion ModalResult is visible
    */
-  private isCompletionOverlayVisible(): boolean {
+  private isCompletionModalResultVisible(): boolean {
     try {
-      if (typeof isCompletionOverlayVisible !== "undefined") {
+      if (typeof isCompletionModalResultVisible !== "undefined") {
         console.log(
-          "StartStopButton: Global overlay visibility:",
-          isCompletionOverlayVisible
+          "StartStopButton: Global ModalResult visibility:",
+          isCompletionModalResultVisible
         );
-        return isCompletionOverlayVisible;
+        return isCompletionModalResultVisible;
       }
     } catch (error) {
       console.warn(
-        "StartStopButton: Could not access global overlay visibility variable"
+        "StartStopButton: Could not access global ModalResult visibility variable"
       );
     }
 
-    // Fallback: check if overlay element exists in DOM
-    const overlayElements = document.querySelectorAll(
+    // Fallback: check if ModalResult element exists in DOM
+    const ModalResultElements = document.querySelectorAll(
       '[style*="z-index: 9999"]'
     );
-    const hasOverlay = overlayElements.length > 0;
+    const hasModalResult = ModalResultElements.length > 0;
     console.log(
-      "StartStopButton: Fallback overlay check, has overlay:",
-      hasOverlay
+      "StartStopButton: Fallback ModalResult check, has ModalResult:",
+      hasModalResult
     );
-    return hasOverlay;
+    return hasModalResult;
   }
 
   /**
-   * Checks if we're in cooldown period after overlay dismissal
+   * Checks if we're in cooldown period after ModalResult dismissal
    */
-  private isInOverlayDismissCooldown(): boolean {
+  private isInModalResultDismissCooldown(): boolean {
     try {
       if (
-        typeof lastOverlayDismissTime !== "undefined" &&
-        typeof OVERLAY_DISMISS_COOLDOWN !== "undefined"
+        typeof lastModalResultDismissTime !== "undefined" &&
+        typeof MODAL_RESULT_DISMISS_COOLDOWN !== "undefined"
       ) {
         const now = Date.now();
         const inCooldown =
-          now - lastOverlayDismissTime < OVERLAY_DISMISS_COOLDOWN;
+          now - lastModalResultDismissTime < MODAL_RESULT_DISMISS_COOLDOWN;
         console.log(
           "StartStopButton: Cooldown check - now:",
           now,
           "lastDismiss:",
-          lastOverlayDismissTime,
+          lastModalResultDismissTime,
           "inCooldown:",
           inCooldown
         );
@@ -181,18 +181,20 @@ class StartStopButton extends React.Component<Props, State> {
       return;
     }
 
-    // Check if completion overlay is visible
-    if (this.isCompletionOverlayVisible()) {
-      console.log("StartStopButton: Overlay is visible, blocking SPACE key");
+    // Check if completion ModalResult is visible
+    if (this.isCompletionModalResultVisible()) {
+      console.log(
+        "StartStopButton: ModalResult is visible, blocking SPACE key"
+      );
       event.preventDefault();
       event.stopPropagation();
       return;
     }
 
-    // Check if we're in cooldown period after overlay dismissal
-    if (this.isInOverlayDismissCooldown()) {
+    // Check if we're in cooldown period after ModalResult dismissal
+    if (this.isInModalResultDismissCooldown()) {
       console.log(
-        "StartStopButton: In cooldown period after overlay dismissal, blocking SPACE key"
+        "StartStopButton: In cooldown period after ModalResult dismissal, blocking SPACE key"
       );
       event.preventDefault();
       event.stopPropagation();
@@ -231,16 +233,18 @@ class StartStopButton extends React.Component<Props, State> {
   private readonly handleButtonClick = (): void => {
     console.log("StartStopButton: Button clicked");
 
-    // Check if completion overlay is visible
-    if (this.isCompletionOverlayVisible()) {
-      console.log("StartStopButton: Overlay is visible, blocking button click");
+    // Check if completion ModalResult is visible
+    if (this.isCompletionModalResultVisible()) {
+      console.log(
+        "StartStopButton: ModalResult is visible, blocking button click"
+      );
       return;
     }
 
-    // Check if we're in cooldown period after overlay dismissal
-    if (this.isInOverlayDismissCooldown()) {
+    // Check if we're in cooldown period after ModalResult dismissal
+    if (this.isInModalResultDismissCooldown()) {
       console.log(
-        "StartStopButton: In cooldown period after overlay dismissal, blocking button click"
+        "StartStopButton: In cooldown period after ModalResult dismissal, blocking button click"
       );
       return;
     }

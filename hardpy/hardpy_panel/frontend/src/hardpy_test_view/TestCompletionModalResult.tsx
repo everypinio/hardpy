@@ -17,7 +17,7 @@ interface StoppedTestCase {
   assertionMsg?: string;
 }
 
-interface TestCompletionOverlayProps {
+interface TestCompletionModalResultProps {
   isVisible: boolean;
   testPassed: boolean;
   testStopped: boolean;
@@ -25,14 +25,14 @@ interface TestCompletionOverlayProps {
   stoppedTestCase?: StoppedTestCase;
   onDismiss: () => void;
   onVisibilityChange?: (isVisible: boolean) => void;
-  autoDismissPass?: boolean; // Whether to auto-dismiss PASS overlay
+  autoDismissPass?: boolean; // Whether to auto-dismiss PASS ModalResult
   autoDismissTimeout?: number; // Timeout for auto-dismiss in milliseconds
 }
 
 /**
- * Overlay component that displays test completion results with PASS/FAIL/STOP status
+ * ModalResult component that displays test completion results with PASS/FAIL/STOP status
  */
-const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
+const TestCompletionModalResult: React.FC<TestCompletionModalResultProps> = ({
   isVisible,
   testPassed,
   testStopped,
@@ -46,7 +46,7 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
   const { t } = useTranslation();
 
   React.useEffect(() => {
-    console.log("TestCompletionOverlay: Visibility changed to", isVisible);
+    console.log("TestCompletionModalResult: Visibility changed to", isVisible);
     onVisibilityChange?.(isVisible);
   }, [isVisible, onVisibilityChange]);
 
@@ -55,7 +55,7 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
       // Auto-dismiss after specified timeout only for PASS and if auto-dismiss is enabled
       const timer = setTimeout(() => {
         console.log(
-          `TestCompletionOverlay: Auto-dismissing after ${autoDismissTimeout}ms`
+          `TestCompletionModalResult: Auto-dismissing after ${autoDismissTimeout}ms`
         );
         onDismiss();
       }, autoDismissTimeout);
@@ -68,7 +68,7 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
     return null;
   }
 
-  // Determine overlay color based on status
+  // Determine ModalResult color based on status
   let backgroundColor: string;
   if (testStopped) {
     backgroundColor = "rgba(255, 179, 0, 0.95)"; // Yellow for STOP
@@ -93,7 +93,7 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
     statusTranslation = t("app.status.failed") || "失败";
   }
 
-  const overlayStyle: React.CSSProperties = {
+  const ModalResultStyle: React.CSSProperties = {
     position: "fixed",
     top: 0,
     left: 0,
@@ -167,7 +167,7 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
     padding: "0 10px",
   };
 
-  const handleOverlayClick = () => {
+  const handleModalResultClick = () => {
     onDismiss();
   };
 
@@ -176,11 +176,13 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
 
     return (
       <div style={casesContainerStyle}>
-        <h3 style={{ 
-          marginTop: 0, 
-          marginBottom: "15px", 
-          fontSize: "clamp(16px, 4vw, 24px)" 
-        }}>
+        <h3
+          style={{
+            marginTop: 0,
+            marginBottom: "15px",
+            fontSize: "clamp(16px, 4vw, 24px)",
+          }}
+        >
           {t("app.stoppedTestCase") || "Stopped Test Case"}:
         </h3>
         <div style={caseItemStyle}>
@@ -200,11 +202,13 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
 
     return (
       <div style={casesContainerStyle}>
-        <h3 style={{ 
-          marginTop: 0, 
-          marginBottom: "15px", 
-          fontSize: "clamp(16px, 4vw, 24px)" 
-        }}>
+        <h3
+          style={{
+            marginTop: 0,
+            marginBottom: "15px",
+            fontSize: "clamp(16px, 4vw, 24px)",
+          }}
+        >
           {t("app.failedTestCases") || "Failed Test Cases"}:
         </h3>
         {failedTestCases.map((testCase, index) => (
@@ -226,8 +230,8 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
 
   return (
     <div
-      style={overlayStyle}
-      onClick={handleOverlayClick}
+      style={ModalResultStyle}
+      onClick={handleModalResultClick}
       className={Classes.DARK}
     >
       <div style={titleStyle}>{statusText}</div>
@@ -241,14 +245,18 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
 
       {showDismissHint && (
         <div style={dismissHintStyle}>
-          {t("app.overlayDismissHint") ||
+          {t("app.modalResultDismissHint") ||
             "Click anywhere or press any key to dismiss"}
         </div>
       )}
 
       {testPassed && autoDismissPass && (
         <div style={dismissHintStyle}>
-          {t("app.overlayAutoDismissHint", { seconds: autoDismissTimeout / 1000 }) + ' ' + t("app.overlayDismissHint") ||
+          {t("app.modalResultAutoDismissHint", {
+            seconds: autoDismissTimeout / 1000,
+          }) +
+            " " +
+            t("app.modalResultDismissHint") ||
             `Auto-dismissing in ${autoDismissTimeout / 1000} seconds...`}
         </div>
       )}
@@ -256,4 +264,4 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
   );
 };
 
-export default TestCompletionOverlay;
+export default TestCompletionModalResult;
