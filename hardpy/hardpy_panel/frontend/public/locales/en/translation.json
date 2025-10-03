@@ -14,6 +14,7 @@
     "stoppedTestCase": "Stopped Test Case",
     "failedTestCases": "Failed Test Cases",
     "overlayDismissHint": "Click anywhere or press any key to dismiss",
+    "overlayAutoDismissHint": "Auto-dismissing in {{seconds}} seconds...",
     "status": {
       "ready": "ready",
       "run": "run",

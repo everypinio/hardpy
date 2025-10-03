@@ -161,6 +161,9 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
   const [lastRunDuration, setLastRunDuration] = React.useState<number>(0);
 
+  // HardPy config state
+  const [hardpyConfig, setHardpyConfig] = React.useState<any>(null);
+
   // Test completion overlay state
   const [showCompletionOverlay, setShowCompletionOverlay] =
     React.useState(false);
@@ -182,6 +185,35 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const startTimeRef = React.useRef<number | null>(null);
   const [timerIntervalId, setTimerIntervalId] =
     React.useState<NodeJS.Timeout | null>(null);
+
+  // Load HardPy config on startup
+  React.useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const response = await fetch("/api/hardpy_config");
+        const config = await response.json();
+        setHardpyConfig(config);
+
+        // Initialize sound setting from TOML config
+        if (config.sound_on !== undefined) {
+          setUseEndTestSound(config.sound_on);
+        }
+
+        // Show overlay if no current test config is selected
+        if (
+          !config.current_test_config &&
+          config.test_configs &&
+          config.test_configs.length > 0
+        ) {
+          // This can be used for config overlay, keeping for reference
+        }
+      } catch (error) {
+        console.error("Failed to load HardPy config:", error);
+      }
+    };
+
+    loadConfig();
+  }, []);
 
   /**
    * Custom hook to determine if the window width is greater than a specified size.
@@ -331,7 +363,10 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
 
     // Detect test completion and show overlay (only if enabled in config)
     const prevStatus = lastRunStatus;
+    const overlayEnabled = hardpyConfig?.overlay_enabled ?? true; // Default to true if not specified
+
     if (
+      overlayEnabled &&
       prevStatus === "run" &&
       (status === "passed" || status === "failed" || status === "stopped") &&
       !showCompletionOverlay
@@ -391,6 +426,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     lastProgress,
     lastRunDuration,
     isAuthenticated,
+    hardpyConfig,
   ]);
 
   /**
@@ -639,6 +675,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         stoppedTestCase={testCompletionData?.stoppedTestCase}
         onDismiss={handleOverlayDismiss}
         onVisibilityChange={handleOverlayVisibilityChange}
+        autoDismissPass={hardpyConfig?.overlay_auto_dismiss_pass ?? true}
+        autoDismissTimeout={hardpyConfig?.overlay_auto_dismiss_timeout ?? 5000}
       />
     </div>
   );

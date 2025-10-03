@@ -14,6 +14,7 @@
       "stoppedTestCase": "Caso de prueba detenido",
       "failedTestCases": "Casos de prueba fallidos",
       "overlayDismissHint": "Haga clic en cualquier lugar o presione cualquier tecla para cerrar",
+      "overlayAutoDismissHint": "Cierre automático en {{seconds}} segundos...",
       "status": {
         "ready": "listo",
         "run": "ejecutando",

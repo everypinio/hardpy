@@ -25,6 +25,8 @@ interface TestCompletionOverlayProps {
   stoppedTestCase?: StoppedTestCase;
   onDismiss: () => void;
   onVisibilityChange?: (isVisible: boolean) => void;
+  autoDismissPass?: boolean; // Whether to auto-dismiss PASS overlay
+  autoDismissTimeout?: number; // Timeout for auto-dismiss in milliseconds
 }
 
 /**
@@ -38,6 +40,8 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
   stoppedTestCase,
   onDismiss,
   onVisibilityChange,
+  autoDismissPass = true, // Default to true for backward compatibility
+  autoDismissTimeout = 5000, // Default to 5 seconds for backward compatibility
 }) => {
   const { t } = useTranslation();
 
@@ -47,15 +51,18 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
   }, [isVisible, onVisibilityChange]);
 
   React.useEffect(() => {
-    if (isVisible && testPassed) {
-      // Auto-dismiss after 5 seconds only for PASS
+    if (isVisible && testPassed && autoDismissPass) {
+      // Auto-dismiss after specified timeout only for PASS and if auto-dismiss is enabled
       const timer = setTimeout(() => {
+        console.log(
+          `TestCompletionOverlay: Auto-dismissing after ${autoDismissTimeout}ms`
+        );
         onDismiss();
-      }, 5000);
+      }, autoDismissTimeout);
 
       return () => clearTimeout(timer);
     }
-  }, [isVisible, testPassed, onDismiss]);
+  }, [isVisible, testPassed, onDismiss, autoDismissPass, autoDismissTimeout]);
 
   if (!isVisible) {
     return null;
@@ -194,6 +201,9 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
     );
   };
 
+  // Show dismiss hint only if manual dismissal is required
+  const showDismissHint = !testPassed || !autoDismissPass;
+
   return (
     <div
       style={overlayStyle}
@@ -209,17 +219,33 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
       {/* Show failed test cases for FAIL status */}
       {!testPassed && !testStopped && renderFailedTestCases()}
 
-      <div
-        style={{
-          position: "absolute",
-          bottom: "40px",
-          fontSize: "16px",
-          opacity: 0.8,
-        }}
-      >
-        {t("app.overlayDismissHint") ||
-          "Click anywhere or press any key to dismiss"}
-      </div>
+      {showDismissHint && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "40px",
+            fontSize: "16px",
+            opacity: 0.8,
+          }}
+        >
+          {t("app.overlayDismissHint") ||
+            "Click anywhere or press any key to dismiss"}
+        </div>
+      )}
+
+      {testPassed && autoDismissPass && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "40px",
+            fontSize: "16px",
+            opacity: 0.8,
+          }}
+        >
+          {t("app.overlayAutoDismissHint", { seconds: autoDismissTimeout / 1000 }) + ' ' +t("app.overlayDismissHint") ||
+            `Auto-dismissing in ${autoDismissTimeout / 1000} seconds...`}
+        </div>
+      )}
     </div>
   );
 };

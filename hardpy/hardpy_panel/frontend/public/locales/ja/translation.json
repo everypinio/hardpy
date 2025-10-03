@@ -14,6 +14,7 @@
       "stoppedTestCase": "停止されたテストケース",
       "failedTestCases": "失敗したテストケース",
       "overlayDismissHint": "どこかをクリックするか、任意のキーを押して閉じます",
+      "overlayAutoDismissHint": "{{seconds}}秒後に自動的に閉じます...",
       "status": {
         "ready": "準備完了",
         "run": "実行中",

@@ -14,6 +14,7 @@
       "stoppedTestCase": "已停止的测试用例",
       "failedTestCases": "失败的测试用例",
       "overlayDismissHint": "点击任意位置或按任意键关闭",
+      "overlayAutoDismissHint": "{{seconds}}秒后自动关闭...",
       "status": {
         "ready": "就绪",
         "run": "运行中",

@@ -70,6 +70,10 @@ class HardpyConfig(BaseModel, extra="allow"):
     database: DatabaseConfig = DatabaseConfig()
     frontend: FrontendConfig = FrontendConfig()
     stand_cloud: StandCloudConfig = StandCloudConfig()
+    overlay_enabled: bool = True
+    overlay_auto_dismiss_pass: bool = True
+    overlay_auto_dismiss_timeout: int = 5000
+    sound_on: bool = True
 
     def model_post_init(self, __context) -> None:  # noqa: ANN001,PYI063
         """Get database document name."""
@@ -117,6 +121,10 @@ class ConfigManager(metaclass=SingletonMeta):
         frontend_language: str,
         sc_address: str = "",
         sc_connection_only: bool = False,
+        overlay_enabled: bool = True,
+        overlay_auto_dismiss_pass: bool = True,
+        overlay_auto_dismiss_timeout: int = 5000,
+        sound_on: bool = True,
     ) -> None:
         """Initialize the HardPy configuration.
 
@@ -133,6 +141,10 @@ class ConfigManager(metaclass=SingletonMeta):
             frontend_language (str): Operator panel language.
             sc_address (str): StandCloud address.
             sc_connection_only (bool): StandCloud check availability.
+            overlay_enabled (bool): Enable/disable completion overlay.
+            overlay_auto_dismiss_pass (bool): Auto-dismiss PASS overlay.
+            overlay_auto_dismiss_timeout (int): Auto-dismiss timeout in ms.
+            sound_on (bool): Enable sound notifications.
         """
         self._config.tests_name = tests_name
         self._config.frontend.host = frontend_host
@@ -146,6 +158,10 @@ class ConfigManager(metaclass=SingletonMeta):
         self._config.database.url = self._config.database.get_url()
         self._config.stand_cloud.address = sc_address
         self._config.stand_cloud.connection_only = sc_connection_only
+        self._config.overlay_enabled = overlay_enabled
+        self._config.overlay_auto_dismiss_pass = overlay_auto_dismiss_pass
+        self._config.overlay_auto_dismiss_timeout = overlay_auto_dismiss_timeout
+        self._config.sound_on = sound_on
 
     def create_config(self, parent_dir: Path) -> None:
         """Create HardPy configuration.

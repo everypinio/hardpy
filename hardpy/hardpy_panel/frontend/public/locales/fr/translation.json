@@ -14,6 +14,7 @@
       "stoppedTestCase": "Cas de test arrêté",
       "failedTestCases": "Cas de test échoués",
       "overlayDismissHint": "Cliquez n'importe où ou appuyez sur n'importe quelle touche pour fermer",
+      "overlayAutoDismissHint": "Fermeture automatique dans {{seconds}} secondes...",
       "status": {
         "ready": "prêt",
         "run": "en cours",
