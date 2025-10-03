@@ -2,7 +2,6 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from hardpy.pytest_hardpy.db.base_store import BaseStore
-from hardpy.pytest_hardpy.db.cloudstore import CloudStore
 from hardpy.pytest_hardpy.db.const import DatabaseField
 from hardpy.pytest_hardpy.db.runstore import RunStore
 from hardpy.pytest_hardpy.db.schema import ResultRunStore, ResultStateStore
@@ -14,11 +13,11 @@ from hardpy.pytest_hardpy.db.stand_type import (
     SubUnit,
 )
 from hardpy.pytest_hardpy.db.statestore import StateStore
+from hardpy.pytest_hardpy.db.tempstore import TempStore
 
 __all__ = [
     "BaseStore",
     "Chart",
-    "CloudStore",
     "DatabaseField",
     "Instrument",
     "NumericMeasurement",
@@ -28,4 +27,5 @@ __all__ = [
     "StateStore",
     "StringMeasurement",
     "SubUnit",
+    "TempStore",
 ]
