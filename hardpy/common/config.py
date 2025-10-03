@@ -59,7 +59,7 @@ class ModalResultConfig(BaseModel):
 
     enabled: bool = True
     auto_dismiss_pass: bool = True
-    auto_dismiss_timeout: int = 5000
+    auto_dismiss_timeout: int = 5
 
 
 class StandCloudConfig(BaseModel):

@@ -26,7 +26,7 @@ interface TestCompletionModalResultProps {
   onDismiss: () => void;
   onVisibilityChange?: (isVisible: boolean) => void;
   autoDismissPass?: boolean; // Whether to auto-dismiss PASS ModalResult
-  autoDismissTimeout?: number; // Timeout for auto-dismiss in milliseconds
+  autoDismissTimeout?: number; // Timeout for auto-dismiss in seconds
 }
 
 /**
@@ -41,7 +41,7 @@ const TestCompletionModalResult: React.FC<TestCompletionModalResultProps> = ({
   onDismiss,
   onVisibilityChange,
   autoDismissPass = true, // Default to true for backward compatibility
-  autoDismissTimeout = 5000, // Default to 5 seconds for backward compatibility
+  autoDismissTimeout = 5, // Default to 5 seconds for backward compatibility
 }) => {
   const { t } = useTranslation();
 
@@ -51,18 +51,18 @@ const TestCompletionModalResult: React.FC<TestCompletionModalResultProps> = ({
   }, [isVisible, onVisibilityChange]);
 
   React.useEffect(() => {
-    if (isVisible && testPassed && autoDismissPass) {
-      // Auto-dismiss after specified timeout only for PASS and if auto-dismiss is enabled
-      const timer = setTimeout(() => {
-        console.log(
-          `TestCompletionModalResult: Auto-dismissing after ${autoDismissTimeout}ms`
-        );
-        onDismiss();
-      }, autoDismissTimeout);
+      if (isVisible && testPassed && autoDismissPass) {
+        // Auto-dismiss after specified timeout only for PASS and if auto-dismiss is enabled
+        const timer = setTimeout(() => {
+          console.log(
+            `TestCompletionModalResult: Auto-dismissing after ${autoDismissTimeout} s`
+          );
+          onDismiss();
+        }, autoDismissTimeout * 1000); // Convert seconds to milliseconds
 
-      return () => clearTimeout(timer);
-    }
-  }, [isVisible, testPassed, onDismiss, autoDismissPass, autoDismissTimeout]);
+        return () => clearTimeout(timer);
+      }
+    }, [isVisible, testPassed, onDismiss, autoDismissPass, autoDismissTimeout]);
 
   if (!isVisible) {
     return null;
@@ -253,11 +253,11 @@ const TestCompletionModalResult: React.FC<TestCompletionModalResultProps> = ({
       {testPassed && autoDismissPass && (
         <div style={dismissHintStyle}>
           {t("app.modalResultAutoDismissHint", {
-            seconds: autoDismissTimeout / 1000,
+            seconds: autoDismissTimeout,
           }) +
             " " +
             t("app.modalResultDismissHint") ||
-            `Auto-dismissing in ${autoDismissTimeout / 1000} seconds...`}
+            `Auto-dismissing in ${autoDismissTimeout} seconds...`}
         </div>
       )}
     </div>

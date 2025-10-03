@@ -187,7 +187,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const [timerIntervalId, setTimerIntervalId] =
     React.useState<NodeJS.Timeout | null>(null);
 
-  // Load HardPy config on startup
   React.useEffect(() => {
     const loadConfig = async () => {
       try {
@@ -195,12 +194,10 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         const config = await response.json();
         setHardpyConfig(config);
 
-        // Initialize sound setting from TOML config
         if (config.sound_on !== undefined) {
           setUseEndTestSound(config.sound_on);
         }
 
-        // Show ModalResult if no current test config is selected
         if (
           !config.current_test_config &&
           config.test_configs &&
@@ -365,7 +362,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     // Detect test completion and show ModalResult (only if enabled in config)
     const prevStatus = lastRunStatus;
     const ModalResultEnabled =
-      hardpyConfig?.frontend?.ModalResult?.enabled ?? true;
+      hardpyConfig?.frontend?.modal_result?.enabled ?? true;
     if (
       ModalResultEnabled &&
       prevStatus === "run" &&
@@ -677,10 +674,10 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         onDismiss={handleModalResultDismiss}
         onVisibilityChange={handleModalResultVisibilityChange}
         autoDismissPass={
-          hardpyConfig?.frontend?.ModalResult?.auto_dismiss_pass ?? true
+          hardpyConfig?.frontend?.modal_result?.auto_dismiss_pass ?? true
         }
         autoDismissTimeout={
-          hardpyConfig?.frontend?.ModalResult?.auto_dismiss_timeout ?? 5000
+          hardpyConfig?.frontend?.modal_result?.auto_dismiss_timeout ?? 5
         }
       />
     </div>
