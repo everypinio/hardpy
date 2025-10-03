@@ -57,7 +57,7 @@ class ModalResultConfig(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    enabled: bool = True
+    enabled: bool = False
     auto_dismiss_pass: bool = True
     auto_dismiss_timeout: int = 5
 

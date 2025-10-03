@@ -362,7 +362,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     // Detect test completion and show ModalResult (only if enabled in config)
     const prevStatus = lastRunStatus;
     const ModalResultEnabled =
-      hardpyConfig?.frontend?.modal_result?.enabled ?? true;
+      hardpyConfig?.frontend?.modal_result?.enabled ?? false;
     if (
       ModalResultEnabled &&
       prevStatus === "run" &&
