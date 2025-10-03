@@ -363,8 +363,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
 
     // Detect test completion and show overlay (only if enabled in config)
     const prevStatus = lastRunStatus;
-    const overlayEnabled = hardpyConfig?.overlay_enabled ?? true; // Default to true if not specified
-
+    const overlayEnabled = hardpyConfig?.frontend?.overlay?.enabled ?? true;  
     if (
       overlayEnabled &&
       prevStatus === "run" &&
@@ -675,8 +674,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         stoppedTestCase={testCompletionData?.stoppedTestCase}
         onDismiss={handleOverlayDismiss}
         onVisibilityChange={handleOverlayVisibilityChange}
-        autoDismissPass={hardpyConfig?.overlay_auto_dismiss_pass ?? true}
-        autoDismissTimeout={hardpyConfig?.overlay_auto_dismiss_timeout ?? 5000}
+        autoDismissPass={hardpyConfig?.frontend?.overlay?.auto_dismiss_pass ?? true}
+        autoDismissTimeout={hardpyConfig?.frontend?.overlay?.auto_dismiss_timeout ?? 5000}
       />
     </div>
   );

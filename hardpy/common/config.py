@@ -49,6 +49,17 @@ class FrontendConfig(BaseModel):
     host: str = "localhost"
     port: int = 8000
     language: str = "en"
+    overlay: OverlayConfig = Field(default_factory=lambda: OverlayConfig())
+
+
+class OverlayConfig(BaseModel):
+    """Overlay configuration."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    enabled: bool = True
+    auto_dismiss_pass: bool = True
+    auto_dismiss_timeout: int = 5000
 
 
 class StandCloudConfig(BaseModel):
@@ -70,10 +81,6 @@ class HardpyConfig(BaseModel, extra="allow"):
     database: DatabaseConfig = DatabaseConfig()
     frontend: FrontendConfig = FrontendConfig()
     stand_cloud: StandCloudConfig = StandCloudConfig()
-    overlay_enabled: bool = True
-    overlay_auto_dismiss_pass: bool = True
-    overlay_auto_dismiss_timeout: int = 5000
-    sound_on: bool = True
 
     def model_post_init(self, __context) -> None:  # noqa: ANN001,PYI063
         """Get database document name."""
@@ -124,7 +131,6 @@ class ConfigManager(metaclass=SingletonMeta):
         overlay_enabled: bool = True,
         overlay_auto_dismiss_pass: bool = True,
         overlay_auto_dismiss_timeout: int = 5000,
-        sound_on: bool = True,
     ) -> None:
         """Initialize the HardPy configuration.
 
@@ -144,12 +150,16 @@ class ConfigManager(metaclass=SingletonMeta):
             overlay_enabled (bool): Enable/disable completion overlay.
             overlay_auto_dismiss_pass (bool): Auto-dismiss PASS overlay.
             overlay_auto_dismiss_timeout (int): Auto-dismiss timeout in ms.
-            sound_on (bool): Enable sound notifications.
         """
         self._config.tests_name = tests_name
         self._config.frontend.host = frontend_host
         self._config.frontend.port = frontend_port
         self._config.frontend.language = frontend_language
+        self._config.frontend.overlay.enabled = overlay_enabled
+        self._config.frontend.overlay.auto_dismiss_pass = overlay_auto_dismiss_pass
+        self._config.frontend.overlay.auto_dismiss_timeout = (
+            overlay_auto_dismiss_timeout
+        )
         self._config.database.user = database_user
         self._config.database.password = database_password
         self._config.database.host = database_host
@@ -158,10 +168,6 @@ class ConfigManager(metaclass=SingletonMeta):
         self._config.database.url = self._config.database.get_url()
         self._config.stand_cloud.address = sc_address
         self._config.stand_cloud.connection_only = sc_connection_only
-        self._config.overlay_enabled = overlay_enabled
-        self._config.overlay_auto_dismiss_pass = overlay_auto_dismiss_pass
-        self._config.overlay_auto_dismiss_timeout = overlay_auto_dismiss_timeout
-        self._config.sound_on = sound_on
 
     def create_config(self, parent_dir: Path) -> None:
         """Create HardPy configuration.
