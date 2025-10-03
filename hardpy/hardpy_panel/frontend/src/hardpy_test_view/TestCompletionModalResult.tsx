@@ -46,8 +46,10 @@ const TestCompletionModalResult: React.FC<TestCompletionModalResultProps> = ({
   const { t } = useTranslation();
   const [timeLeft, setTimeLeft] = React.useState(autoDismissTimeout);
 
+  /**
+   * Handles visibility changes and resets timer when modal becomes visible
+   */
   React.useEffect(() => {
-    console.log("TestCompletionModalResult: Visibility changed to", isVisible);
     onVisibilityChange?.(isVisible);
 
     if (isVisible) {
@@ -55,6 +57,9 @@ const TestCompletionModalResult: React.FC<TestCompletionModalResultProps> = ({
     }
   }, [isVisible, onVisibilityChange, autoDismissTimeout]);
 
+  /**
+   * Manages auto-dismiss functionality with countdown timer
+   */
   React.useEffect(() => {
     if (isVisible && testPassed && autoDismissPass) {
       setTimeLeft(autoDismissTimeout);
@@ -71,9 +76,6 @@ const TestCompletionModalResult: React.FC<TestCompletionModalResultProps> = ({
 
       // Auto-dismiss after specified timeout only for PASS and if auto-dismiss is enabled
       const dismissTimer = setTimeout(() => {
-        console.log(
-          `TestCompletionModalResult: Auto-dismissing after ${autoDismissTimeout} s`
-        );
         onDismiss();
       }, autoDismissTimeout * 1000); // Convert seconds to milliseconds
 
@@ -187,11 +189,18 @@ const TestCompletionModalResult: React.FC<TestCompletionModalResultProps> = ({
     padding: "0 10px",
   };
 
+  /**
+   * Handles click event on the modal result to dismiss it
+   */
   const handleModalResultClick = () => {
     onDismiss();
   };
 
-  const renderStoppedTestCase = () => {
+  /**
+   * Renders the stopped test case information if available
+   * @returns {JSX.Element | null} Stopped test case component or null if no stopped test case
+   */
+  const renderStoppedTestCase = (): JSX.Element | null => {
     if (!stoppedTestCase) return null;
 
     return (
@@ -217,7 +226,11 @@ const TestCompletionModalResult: React.FC<TestCompletionModalResultProps> = ({
     );
   };
 
-  const renderFailedTestCases = () => {
+  /**
+   * Renders the list of failed test cases if any exist
+   * @returns {JSX.Element | null} Failed test cases component or null if no failed test cases
+   */
+  const renderFailedTestCases = (): JSX.Element | null => {
     if (failedTestCases.length === 0) return null;
 
     return (
