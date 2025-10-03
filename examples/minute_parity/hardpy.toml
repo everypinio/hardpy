@@ -15,4 +15,4 @@ language = "ru"
 [frontend.modal_result]
 enabled = true
 auto_dismiss_pass = true
-auto_dismiss_timeout = 15000
+auto_dismiss_timeout = 15
