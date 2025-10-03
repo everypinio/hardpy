@@ -20,6 +20,7 @@ from _pytest._code.code import (
     TerminalRepr,
 )
 from natsort import natsorted
+from pydantic import ValidationError
 from pytest import (
     CallInfo,
     Config,
@@ -35,7 +36,7 @@ from pytest import (
 
 from hardpy.common.config import ConfigManager, HardpyConfig
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
-from hardpy.pytest_hardpy.db import CloudStore
+from hardpy.pytest_hardpy.db import TempStore
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.result import StandCloudLoader
 from hardpy.pytest_hardpy.utils import NodeInfo, ProgressCalculator, TestStatus
@@ -138,7 +139,7 @@ class HardpyPlugin:
         self._tests_name: str = ""
         self._is_critical_not_passed = False
         self._start_args = {}
-        self._cloudstore = CloudStore()
+        self._tempstore = TempStore()
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -538,19 +539,37 @@ class HardpyPlugin:
             msg = "Empty report cannot be uploaded to StandCloud"
             self._reporter.set_alert(msg)
             return
-        # self._cloudstore
-        try:
-            loader = StandCloudLoader()
-            response = loader.load(report)
-            if response.status_code != HTTPStatus.CREATED:
-                self._reporter.set_alert(
-                    "Report not uploaded to StandCloud, "
-                    f"status code: {response.status_code}, "
-                    f"text: {response.text}",
-                )
-        except StandCloudError as exc:
-            self._reporter.set_alert(f"{exc}")
+        if not self._tempstore.push_report(report):
+            msg = "Report not uploaded to StandCloud temporary storage"
+            self._reporter.set_alert(msg)
 
+        for _report in self._tempstore.reports():
+            try:
+                report_id = _report.get("id")
+                document: dict = _report.get("doc")
+                document.pop("rev")
+            except KeyError:
+                continue
+            try:
+                schema_report = self._tempstore.dict_to_schema(document)
+            except ValidationError as exc:
+                msg = f"Report {report_id} has invalid format: {exc}"
+                self._reporter.set_alert(msg)
+                continue
+            try:
+                loader = StandCloudLoader()
+                response = loader.load(schema_report)
+            except StandCloudError:
+                self._reporter.set_alert("StandCloud service is not available")
+                continue
+            if response.status_code != HTTPStatus.CREATED:
+                msg = f"Report {report_id} not synchronized with StandCloud"
+                self._reporter.set_alert(msg)
+                continue
+            if not self._tempstore.delete(report_id):
+                msg = f"Report {report_id} not deleted from temporary storage"
+                self._reporter.set_alert(msg)
+        self._reporter.update_db_by_doc()
 
     def _decode_assertion_msg(
         self,
