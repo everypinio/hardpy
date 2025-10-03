@@ -108,51 +108,63 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
     cursor: "pointer",
     color: "white",
     textAlign: "center",
-    padding: "40px",
+    padding: "20px",
   };
 
   const titleStyle: React.CSSProperties = {
-    fontSize: "120px",
+    fontSize: "clamp(60px, 15vw, 120px)", // Responsive font size
     fontWeight: "bold",
-    marginBottom: "20px",
+    marginBottom: "10px",
     textShadow: "0 4px 8px rgba(0,0,0,0.3)",
   };
 
   const subtitleStyle: React.CSSProperties = {
-    fontSize: "48px",
+    fontSize: "clamp(24px, 6vw, 48px)", // Responsive font size
     fontWeight: "bold",
-    marginBottom: "40px",
+    marginBottom: "30px",
     textShadow: "0 2px 4px rgba(0,0,0,0.3)",
   };
 
   const casesContainerStyle: React.CSSProperties = {
-    maxHeight: "60vh",
+    maxHeight: "50vh",
     overflowY: "auto",
     backgroundColor: "rgba(0,0,0,0.3)",
     borderRadius: "8px",
-    padding: "20px",
-    marginTop: "20px",
-    width: "80%",
+    padding: "15px",
+    marginTop: "10px",
+    width: "90%",
     maxWidth: "800px",
+    marginBottom: "20px", // Add margin at bottom to separate from dismiss hint
   };
 
   const caseItemStyle: React.CSSProperties = {
-    marginBottom: "15px",
+    marginBottom: "12px",
     textAlign: "left",
     borderBottom: "1px solid rgba(255,255,255,0.2)",
-    paddingBottom: "10px",
+    paddingBottom: "8px",
+    wordBreak: "break-word", // Ensure long text breaks properly
   };
 
   const caseNameStyle: React.CSSProperties = {
-    fontSize: "18px",
+    fontSize: "clamp(14px, 3vw, 18px)", // Responsive font size
     fontWeight: "bold",
-    marginBottom: "5px",
+    marginBottom: "4px",
   };
 
   const assertionStyle: React.CSSProperties = {
-    fontSize: "14px",
+    fontSize: "clamp(12px, 2.5vw, 14px)", // Responsive font size
     opacity: 0.9,
     fontStyle: "italic",
+  };
+
+  const dismissHintStyle: React.CSSProperties = {
+    position: "absolute",
+    bottom: "20px",
+    fontSize: "clamp(12px, 3vw, 16px)",
+    opacity: 0.8,
+    width: "100%",
+    textAlign: "center",
+    padding: "0 10px",
   };
 
   const handleOverlayClick = () => {
@@ -164,7 +176,11 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
 
     return (
       <div style={casesContainerStyle}>
-        <h3 style={{ marginTop: 0, marginBottom: "20px", fontSize: "24px" }}>
+        <h3 style={{ 
+          marginTop: 0, 
+          marginBottom: "15px", 
+          fontSize: "clamp(16px, 4vw, 24px)" 
+        }}>
           {t("app.stoppedTestCase") || "Stopped Test Case"}:
         </h3>
         <div style={caseItemStyle}>
@@ -184,7 +200,11 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
 
     return (
       <div style={casesContainerStyle}>
-        <h3 style={{ marginTop: 0, marginBottom: "20px", fontSize: "24px" }}>
+        <h3 style={{ 
+          marginTop: 0, 
+          marginBottom: "15px", 
+          fontSize: "clamp(16px, 4vw, 24px)" 
+        }}>
           {t("app.failedTestCases") || "Failed Test Cases"}:
         </h3>
         {failedTestCases.map((testCase, index) => (
@@ -220,29 +240,15 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
       {!testPassed && !testStopped && renderFailedTestCases()}
 
       {showDismissHint && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "40px",
-            fontSize: "16px",
-            opacity: 0.8,
-          }}
-        >
+        <div style={dismissHintStyle}>
           {t("app.overlayDismissHint") ||
             "Click anywhere or press any key to dismiss"}
         </div>
       )}
 
       {testPassed && autoDismissPass && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "40px",
-            fontSize: "16px",
-            opacity: 0.8,
-          }}
-        >
-          {t("app.overlayAutoDismissHint", { seconds: autoDismissTimeout / 1000 }) + ' ' +t("app.overlayDismissHint") ||
+        <div style={dismissHintStyle}>
+          {t("app.overlayAutoDismissHint", { seconds: autoDismissTimeout / 1000 }) + ' ' + t("app.overlayDismissHint") ||
             `Auto-dismissing in ${autoDismissTimeout / 1000} seconds...`}
         </div>
       )}

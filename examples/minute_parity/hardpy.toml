@@ -10,4 +10,9 @@ port = 5984
 [frontend]
 host = "localhost"
 port = 8000
-language = "en"
+language = "ru"
+
+[frontend.overlay]
+enabled = true
+auto_dismiss_pass = true
+auto_dismiss_timeout = 15000
