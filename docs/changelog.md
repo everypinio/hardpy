@@ -2,6 +2,9 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Added configurable modal result windows that display test completion status (PASS/FAIL/STOP)
+  with auto-dismiss functionality and enhanced keyboard interaction handling.
+  [[PR-204](https://github.com/everypinio/hardpy/pull/204)]
 * Exclude the `Skipped` status from the `caused_dut_failure_id` reason.
   [[PR-202](https://github.com/everypinio/hardpy/pull/202)]
 

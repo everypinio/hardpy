@@ -13,6 +13,31 @@ The code for this example can be seen inside the hardpy package
 3. Modify the files described below.
 4. Launch `hardpy run minute_parity`.
 
+### hardpy.toml
+
+Contains settings that enable modal windows with test results and configure them.
+
+```toml
+title = "HardPy TOML config"
+tests_name = "Minute Parity"
+
+[database]
+user = "dev"
+password = "dev"
+host = "localhost"
+port = 5984
+
+[frontend]
+host = "localhost"
+port = 8000
+language = "zh"
+
+[frontend.modal_result]
+enabled = true
+auto_dismiss_pass = true
+auto_dismiss_timeout = 15
+```
+
 ### conftest.py
 
 Contains settings and fixtures for all tests:
