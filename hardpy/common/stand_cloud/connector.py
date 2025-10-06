@@ -70,6 +70,15 @@ class StandCloudConnector:
         """Get StandCloud API URL."""
         return self._addr.api
 
+    def save_pat(self, token: str) -> None:
+        """Save personal access token.
+
+        Args:
+            token (str): personal access token.
+        """
+        self._token_manager.save_pat(token)
+        self._token = BearerToken(access_token=token)
+
     def update_token(self, token: BearerToken) -> None:
         """Update access token.
 
@@ -84,6 +93,8 @@ class StandCloudConnector:
         Returns:
             bool: True if token is valid, False otherwise.
         """
+        if self._token_manager.is_pat():
+            return False
         try:
             OAuth2(
                 sc_addr=self._addr,
@@ -214,6 +225,13 @@ class StandCloudConnector:
                 f"Login to {self._addr.domain} first"
             )
             raise StandCloudError(msg)
+
+
+        if self._token_manager.is_pat():
+            session = requests.Session()
+            session.headers["Authorization"] = f"Bearer {self._token.access_token}"
+            return ApiClient(f"{self._addr.api}/{endpoint}", session=session, timeout=10)
+
         try:
             auth = OAuth2(
                 sc_addr=self._addr,

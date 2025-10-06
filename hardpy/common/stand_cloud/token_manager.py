@@ -35,6 +35,7 @@ class TokenManager:
             bool: True if successful else False
         """
         try:
+            delete_password(self._service_name, "pat")
             while cred := get_credential(self._service_name, None):
                 delete_password(self._service_name, cred.username)
         except KeyringError:
@@ -47,12 +48,27 @@ class TokenManager:
                 storage_keyring.delete_password(self._service_name, "refresh_token")
         return True
 
+    def save_pat(self, token: str) -> None:
+        """Save personal access token to keyring storage.
+
+        Args:
+            token (str): personal access token
+        """
+        self.remove_token()
+        storage_keyring, _ = self._get_store()
+        try:
+            storage_keyring.set_password(self._service_name, "pat", token)
+        except KeyringError as e:
+            print(e)  # noqa: T201
+            sys.exit(1)
+
     def save_token_info(self, token: BearerToken | dict) -> None:
         """Save token to keyring storage.
 
         Args:
             token (BearerToken | dict): token
         """
+        self.remove_token()
         # fmt: off
         storage_keyring, mem_keyring = self._get_store()
         storage_keyring.set_password(self._service_name, "refresh_token", token["refresh_token"])  # noqa: E501
@@ -74,10 +90,26 @@ class TokenManager:
         Returns:
             BearerToken: access token
         """
-        _, mem_keyring = self._get_store()
+        storage_keyring, mem_keyring = self._get_store()
+        pat = storage_keyring.get_password(self._service_name, "pat")
+        if pat:
+            return BearerToken(access_token=pat)
+
         token_info = mem_keyring.get_password(self._service_name, "access_token")
+        if not token_info:
+            msg = "Access token not found"
+            raise FileNotFoundError(msg)
         secret = self._add_expires_in(json.loads(token_info))  # type: ignore
         return BearerToken(**secret)
+
+    def is_pat(self) -> bool:
+        """Check if token is PAT.
+
+        Returns:
+            bool: True if token is PAT else False.
+        """
+        storage_keyring, _ = self._get_store()
+        return storage_keyring.get_password(self._service_name, "pat") is not None
 
     def read_refresh_token(self) -> str | None:
         """Read refresh token from token store.

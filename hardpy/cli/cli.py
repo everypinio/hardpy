@@ -243,7 +243,22 @@ def sc_login(
             sys.exit()
         print("StandCloud connection success")
     else:
-        auth_login(sc_connector)
+        auth_method = typer.prompt(
+            "Select authentication method: [O]Auth or [P]AT",
+            default="O",
+        )
+        if auth_method.upper() == "P":
+            token = sc_connector.get_access_token()
+            if token is None:
+                pat = typer.prompt("Enter your Personal Access Token", hide_input=True)
+                sc_connector.save_pat(pat)
+            try:
+                sc_connector.healthcheck()
+                print(f"HardPy login to {sc_connector.addr} success using PAT.")
+            except StandCloudError as e:
+                print(f"PAT login failed: {e}")
+        else:
+            auth_login(sc_connector)
 
 
 @cli.command()
