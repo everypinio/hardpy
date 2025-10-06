@@ -164,6 +164,8 @@ class StartStopButton extends React.Component<Props, State> {
       rightIcon: "stop",
       onClick: this.hardpy_stop,
       id: button_id,
+      fill: true,
+      style: { width: "100%", height: "96px", fontSize: "16px" },
     };
 
     const start_button: AnchorButtonProps = {
@@ -174,6 +176,8 @@ class StartStopButton extends React.Component<Props, State> {
       onClick: this.handleButtonClick,
       id: button_id,
       disabled: this.state.isStopButtonDisabled,
+      fill: true,
+      style: { width: "100%", height: "96px", fontSize: "16px" },
     };
 
     return <AnchorButton {...(is_testing ? stop_button : start_button)} />;

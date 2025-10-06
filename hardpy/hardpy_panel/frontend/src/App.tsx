@@ -403,6 +403,18 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       >
         <div
           style={{
+            width: "100%",
+            padding: "10px 20px",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <div style={{ width: "100%" }}>
+            <StartStopButton testing_status={lastRunStatus} />
+          </div>
+        </div>
+        <div
+          style={{
             flexDirection: "column",
             flexGrow: 1,
             flexShrink: 1,
@@ -413,9 +425,9 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         >
           <ProgressView percentage={lastProgress} status={lastRunStatus} />
         </div>
-        <div style={{ flexDirection: "column" }}>
+        {/* <div style={{ flexDirection: "column" }}>
           <StartStopButton testing_status={lastRunStatus} />
-        </div>
+        </div> */}
       </div>
     </div>
   );
