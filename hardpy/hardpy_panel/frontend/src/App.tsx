@@ -44,6 +44,13 @@ const STATUS_MAP = {
 
 type StatusKey = keyof typeof STATUS_MAP;
 
+interface HardpyConfig {
+  sound_on?: boolean;
+  frontend?: {
+    full_size_button?: boolean;
+  };
+}
+
 /**
  * Checks if the provided status is a valid status key.
  */
@@ -60,6 +67,10 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const { t } = useTranslation();
   const [use_end_test_sound, setUseEndTestSound] = React.useState(false);
   const [use_debug_info, setUseDebugInfo] = React.useState(false);
+  const [hardpyConfig, setHardpyConfig] = React.useState<HardpyConfig | null>(
+    null
+  );
+  const [isConfigLoaded, setIsConfigLoaded] = React.useState(false);
 
   const [lastRunStatus, setLastRunStatus] = React.useState<
     StatusKey | "unknown"
@@ -71,6 +82,27 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const startTimeRef = React.useRef<number | null>(null);
   const [timerIntervalId, setTimerIntervalId] =
     React.useState<NodeJS.Timeout | null>(null);
+
+  React.useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const response = await fetch("/api/hardpy_config");
+        const config = await response.json();
+        setHardpyConfig(config);
+
+        // Initialize sound setting from TOML config
+        if (config.sound_on !== undefined) {
+          setUseEndTestSound(config.sound_on);
+        }
+      } catch (error) {
+        console.error("Failed to load HardPy config:", error);
+      } finally {
+        setIsConfigLoaded(true);
+      }
+    };
+
+    loadConfig();
+  }, []);
 
   /**
    * Custom hook to determine if the window width is greater than a specified size.
@@ -317,6 +349,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     return t(STATUS_MAP[status]);
   };
 
+  const useBigButton = hardpyConfig?.frontend?.full_size_button !== false;
+
   return (
     <div className="App">
       <ReloadAlert reload_timeout_s={3} />
@@ -343,7 +377,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
               display: "flex",
               flexDirection: wide ? "row" : "column",
               alignItems: "center",
-              gap: wide ? "10px" : "5px",
+              gap: wide ? "10px" : "2px",
+              fontSize: wide ? "inherit" : "12px",
             }}
           >
             <Navbar.Heading
@@ -354,6 +389,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                 alignItems: "center",
                 gap: "5px",
                 whiteSpace: "nowrap",
+                flexWrap: wide ? "nowrap" : "wrap",
               }}
             >
               <div>{t("app.lastLaunch")}</div>
@@ -366,9 +402,11 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
             {use_end_test_sound && (
               <PlaySound key="sound" status={lastRunStatus} />
             )}
-            <Navbar.Divider />
-            <Navbar.Heading>
-              {t("app.duration")}: {lastRunDuration} {t("app.seconds")}
+            
+            {wide && <Navbar.Divider />}
+            
+            <Navbar.Heading style={{ whiteSpace: "nowrap" }}>
+              {t("app.duration")}: {lastRunDuration}s 
             </Navbar.Heading>
           </div>
 
@@ -388,47 +426,81 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       </div>
 
       {/* Footer */}
-
-      <div
-        className={Classes.DRAWER_FOOTER}
-        style={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "row",
-          position: "fixed",
-          bottom: 0,
-          background: Colors.LIGHT_GRAY5,
-          margin: "auto",
-        }}
-      >
+      {isConfigLoaded && (
         <div
+          className={Classes.DRAWER_FOOTER}
           style={{
             width: "100%",
-            padding: "10px 20px",
             display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <div style={{ width: "100%" }}>
-            <StartStopButton testing_status={lastRunStatus} />
-          </div>
-        </div>
-        <div
-          style={{
             flexDirection: "column",
-            flexGrow: 1,
-            flexShrink: 1,
-            marginTop: "auto",
-            marginBottom: "auto",
-            padding: "20px",
+            position: "fixed",
+            bottom: 0,
+            background: Colors.LIGHT_GRAY5,
+            margin: "auto",
           }}
         >
-          <ProgressView percentage={lastProgress} status={lastRunStatus} />
+          {useBigButton ? (
+            <>
+              <div
+                style={{
+                  width: "100%",
+                  padding: "10px 20px 0px 20px",
+                }}
+              >
+                <ProgressView
+                  percentage={lastProgress}
+                  status={lastRunStatus}
+                />
+              </div>
+              <div
+                style={{
+                  width: "100%",
+                  padding: "10px 20px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <div style={{ width: "100%" }}>
+                  <StartStopButton
+                    testing_status={lastRunStatus}
+                    useBigButton={true}
+                  />
+                </div>
+              </div>
+            </>
+          ) : (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              <div
+                style={{
+                  flexDirection: "column",
+                  flexGrow: 1,
+                  flexShrink: 1,
+                  marginTop: "auto",
+                  marginBottom: "auto",
+                  padding: "20px",
+                }}
+              >
+                <ProgressView
+                  percentage={lastProgress}
+                  status={lastRunStatus}
+                />
+              </div>
+              <div style={{ flexDirection: "column" }}>
+                <StartStopButton
+                  testing_status={lastRunStatus}
+                  useBigButton={false}
+                />
+              </div>
+            </div>
+          )}
         </div>
-        {/* <div style={{ flexDirection: "column" }}>
-          <StartStopButton testing_status={lastRunStatus} />
-        </div> */}
-      </div>
+      )}
     </div>
   );
 }

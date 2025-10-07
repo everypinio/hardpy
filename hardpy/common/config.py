@@ -49,6 +49,7 @@ class FrontendConfig(BaseModel):
     host: str = "localhost"
     port: int = 8000
     language: str = "en"
+    full_size_button: bool = False
 
 
 class StandCloudConfig(BaseModel):
@@ -115,6 +116,7 @@ class ConfigManager(metaclass=SingletonMeta):
         frontend_host: str,
         frontend_port: int,
         frontend_language: str,
+        full_size_button: bool,
         sc_address: str = "",
         sc_connection_only: bool = False,
     ) -> None:
@@ -131,6 +133,7 @@ class ConfigManager(metaclass=SingletonMeta):
             frontend_host (str): Operator panel host.
             frontend_port (int): Operator panel port.
             frontend_language (str): Operator panel language.
+            full_size_button (bool): Operator panel big button.
             sc_address (str): StandCloud address.
             sc_connection_only (bool): StandCloud check availability.
         """
@@ -138,6 +141,7 @@ class ConfigManager(metaclass=SingletonMeta):
         self._config.frontend.host = frontend_host
         self._config.frontend.port = frontend_port
         self._config.frontend.language = frontend_language
+        self._config.frontend.full_size_button = full_size_button
         self._config.database.user = database_user
         self._config.database.password = database_password
         self._config.database.host = database_host
