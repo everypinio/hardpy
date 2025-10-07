@@ -127,12 +127,12 @@ class ConfigManager(metaclass=SingletonMeta):
         frontend_host: str,
         frontend_port: int,
         frontend_language: str,
-        full_size_button: bool,
         sc_address: str = "",
         sc_connection_only: bool = False,
         modal_result_enabled: bool = True,
         modal_result_auto_dismiss_pass: bool = True,
         modal_result_auto_dismiss_timeout: int = 5000,
+        full_size_button: bool = False,
     ) -> None:
         """Initialize the HardPy configuration.
 
@@ -147,12 +147,12 @@ class ConfigManager(metaclass=SingletonMeta):
             frontend_host (str): Operator panel host.
             frontend_port (int): Operator panel port.
             frontend_language (str): Operator panel language.
-            full_size_button (bool): Operator panel big button.
             sc_address (str): StandCloud address.
             sc_connection_only (bool): StandCloud check availability.
             modal_result_enabled (bool): Enable/disable completion modal.
             modal_result_auto_dismiss_pass (bool): Auto-dismiss PASS entries.
             modal_result_auto_dismiss_timeout (int): Auto-dismiss timeout in s.
+            full_size_button (bool): Operator panel big button.
         """
         self._config.tests_name = tests_name
         self._config.frontend.host = frontend_host

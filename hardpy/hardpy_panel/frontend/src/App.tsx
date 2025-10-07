@@ -594,7 +594,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   };
 
   const useBigButton = hardpyConfig?.frontend?.full_size_button !== false;
-  
+
   /**
    * Handles ModalResult dismissal by hiding it and clearing completion data
    */

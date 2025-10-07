@@ -46,7 +46,7 @@ def test_config_manager_init():
         frontend_host=frontend_no_default_host,
         frontend_port=frontend_no_default_port,
         frontend_language=frontend_default_language,
-        full_size_button=False,
+        full_size_button=True,
         sc_address=stand_cloud_no_default_addr,
         modal_result_enabled=True,
         modal_result_auto_dismiss_pass=False,
@@ -64,7 +64,7 @@ def test_config_manager_init():
     assert config.frontend.host == frontend_no_default_host
     assert config.frontend.port == frontend_no_default_port
     assert config.frontend.language == frontend_default_language
-    assert config.frontend.full_size_button is False
+    assert config.frontend.full_size_button is True
     assert config.stand_cloud.address == stand_cloud_no_default_addr
     assert config.frontend.modal_result.enabled is True
     assert config.frontend.modal_result.auto_dismiss_pass is False
@@ -89,6 +89,7 @@ def test_frontend_config():
     assert config.modal_result.enabled is False
     assert config.modal_result.auto_dismiss_pass is True
     assert config.modal_result.auto_dismiss_timeout == 5
+    assert config.full_size_button is False
 
 
 def test_modal_result_config():
@@ -126,6 +127,7 @@ def test_hardpy_config():
     assert config.frontend.modal_result.enabled is False
     assert config.frontend.modal_result.auto_dismiss_pass is True
     assert config.frontend.modal_result.auto_dismiss_timeout == 5
+    assert config.frontend.full_size_button is False
 
 
 def test_config_manager_create_config(tmp_path: Path):
@@ -160,6 +162,7 @@ def test_config_manager_create_config(tmp_path: Path):
     assert config_data["frontend"]["modal_result"]["enabled"] is True
     assert config_data["frontend"]["modal_result"]["auto_dismiss_pass"] is False
     assert config_data["frontend"]["modal_result"]["auto_dismiss_timeout"] == 20
+    assert config_data["frontend"]["full_size_button"] is False
 
 
 def test_read_config_success(tmp_path: Path):
@@ -176,6 +179,7 @@ def test_read_config_success(tmp_path: Path):
             "host": frontend_default_host,
             "port": frontend_default_port,
             "language": frontend_default_language,
+            "full_size_button": False,
             "modal_result": {
                 "enabled": True,
                 "auto_dismiss_pass": False,
@@ -209,6 +213,7 @@ def test_read_config_success(tmp_path: Path):
     assert config.frontend.modal_result.enabled is True
     assert config.frontend.modal_result.auto_dismiss_pass is False
     assert config.frontend.modal_result.auto_dismiss_timeout == 15
+    assert config.frontend.full_size_button is False
 
 
 def test_read_config_without_modal_result(tmp_path: Path):
@@ -242,3 +247,4 @@ def test_read_config_without_modal_result(tmp_path: Path):
     assert config.frontend.modal_result.enabled is False
     assert config.frontend.modal_result.auto_dismiss_pass is True
     assert config.frontend.modal_result.auto_dismiss_timeout == 5
+    assert config.frontend.full_size_button is False
