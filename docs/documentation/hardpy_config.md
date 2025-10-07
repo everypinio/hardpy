@@ -39,6 +39,11 @@ host = "localhost"
 port = 8000
 language = "en"
 
+[frontend.modal_result]
+enabled = true
+auto_dismiss_pass = true
+auto_dismiss_timeout = 15
+
 [stand_cloud]
 address = "demo.standcloud.io"
 connection_only = true
@@ -101,6 +106,36 @@ The user can change this value with the `hardpy init --frontend-port` option.
 
 Language of operator panel. The default is `en`.
 Available languages are [there](hardpy_panel.md#languages).
+
+#### modal_result
+
+Modal result windows settings for test completion display.
+
+```toml
+[frontend.modal_result]
+enabled = true
+auto_dismiss_pass = true
+auto_dismiss_timeout = 5
+```
+
+##### enabled
+
+Enable or disable test completion modal result windows.
+When set to `true`, modal windows will display test completion status (PASS/FAIL/STOP) at the end of test execution.
+Default is `false`.
+
+##### auto_dismiss_pass
+
+Automatically dismiss PASS result modals after the timeout period.
+When set to `true`, PASS results will automatically close without requiring user interaction.
+FAIL and STOP results always require manual dismissal.
+Default is `true`.
+
+##### auto_dismiss_timeout
+
+Timeout in seconds for auto-dismissing PASS result modals.
+Applies only when `auto_dismiss_pass = true`.
+Default is `5` seconds.
 
 ### stand_cloud
 

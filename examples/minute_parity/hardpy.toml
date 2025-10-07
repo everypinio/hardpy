@@ -11,3 +11,8 @@ port = 5984
 host = "localhost"
 port = 8000
 language = "en"
+
+[frontend.modal_result]
+enabled = true
+auto_dismiss_pass = true
+auto_dismiss_timeout = 15

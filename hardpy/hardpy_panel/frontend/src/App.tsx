@@ -24,6 +24,7 @@ import ProgressView from "./progress/ProgressView";
 import TestStatus from "./hardpy_test_view/TestStatus";
 import ReloadAlert from "./restart_alert/RestartAlert";
 import PlaySound from "./hardpy_test_view/PlaySound";
+import TestCompletionModalResult from "./hardpy_test_view/TestCompletionModalResult";
 
 import { useAllDocs } from "use-pouchdb";
 
@@ -53,15 +54,100 @@ interface HardpyConfig {
 
 /**
  * Checks if the provided status is a valid status key.
+ * @param {string} status - The status string to validate
+ * @returns {boolean} True if the status is a valid StatusKey, false otherwise
  */
 const isValidStatus = (status: string): status is StatusKey => {
   return status in STATUS_MAP;
 };
 
+// Global variable to track ModalResult visibility with timestamp
+let isCompletionModalResultVisible = false;
+let lastModalResultDismissTime = 0;
+const MODAL_RESULT_DISMISS_COOLDOWN = 100; // ms
+
 /**
- * Main component of the GUI.
- * @param {string} syncDocumentId - The id of the PouchDB document to syncronize.
- * @returns {JSX.Element} The main application component.
+ * Sets the global ModalResult visibility state and updates dismissal timestamp
+ * @param {boolean} visible - The visibility state to set
+ */
+export const setCompletionModalResultVisible = (visible: boolean): void => {
+  isCompletionModalResultVisible = visible;
+  if (!visible) {
+    lastModalResultDismissTime = Date.now();
+  }
+};
+
+/**
+ * Gets the global ModalResult visibility state
+ * @returns {boolean} Current visibility state of the completion ModalResult
+ */
+export const getCompletionModalResultVisible = (): boolean => {
+  return isCompletionModalResultVisible;
+};
+
+/**
+ * Checks if we're in cooldown period after ModalResult dismissal
+ * Prevents immediate space key actions after ModalResult is dismissed
+ * @returns {boolean} True if within the cooldown period, false otherwise
+ */
+export const isInModalResultDismissCooldown = (): boolean => {
+  const now = Date.now();
+  return now - lastModalResultDismissTime < MODAL_RESULT_DISMISS_COOLDOWN;
+};
+
+/**
+ * Finds the test case that was stopped during test execution
+ * Searches through all modules and cases to find the stopped test case
+ * @param {TestRunI} testRunData - The test run data to search through
+ * @returns {Object|undefined} Object containing module name, case name, and optional assertion message, or undefined if not found
+ */
+const findStoppedTestCase = (
+  testRunData: TestRunI
+):
+  | { moduleName: string; caseName: string; assertionMsg?: string }
+  | undefined => {
+  if (!testRunData.modules) return undefined;
+
+  // First, look for explicitly stopped test cases
+  for (const [moduleId, module] of Object.entries(testRunData.modules)) {
+    if (module.cases) {
+      for (const [caseId, testCase] of Object.entries(module.cases)) {
+        if (testCase.status === "stopped") {
+          return {
+            moduleName: module.name || moduleId,
+            caseName: testCase.name || caseId,
+            assertionMsg: testCase.assertion_msg || undefined,
+          };
+        }
+      }
+    }
+  }
+
+  // If no explicitly stopped case found, return the last failed test case
+  let lastFailedTestCase: any = null;
+  for (const [moduleId, module] of Object.entries(testRunData.modules)) {
+    if (module.cases) {
+      for (const [caseId, testCase] of Object.entries(module.cases)) {
+        if (testCase.status === "failed") {
+          lastFailedTestCase = {
+            moduleName: module.name || moduleId,
+            caseName: testCase.name || caseId,
+            assertionMsg: testCase.assertion_msg || undefined,
+          };
+        }
+      }
+    }
+  }
+
+  return lastFailedTestCase;
+};
+
+/**
+ * Main application component for the HardPy testing interface
+ * Provides the main GUI for test execution, monitoring, and result display
+ * @param {Object} props - Component properties
+ * @param {string} props.syncDocumentId - The id of the PouchDB document to synchronize with
+ * @returns {JSX.Element} The main application component
  */
 function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const { t } = useTranslation();
@@ -78,6 +164,24 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const [lastProgress, setProgress] = React.useState(0);
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
   const [lastRunDuration, setLastRunDuration] = React.useState<number>(0);
+
+  // Test completion ModalResult state
+  const [showCompletionModalResult, setShowCompletionModalResult] =
+    React.useState(false);
+  const [testCompletionData, setTestCompletionData] = React.useState<{
+    testPassed: boolean;
+    testStopped: boolean;
+    failedTestCases: Array<{
+      moduleName: string;
+      caseName: string;
+      assertionMsg?: string;
+    }>;
+    stoppedTestCase?: {
+      moduleName: string;
+      caseName: string;
+      assertionMsg?: string;
+    };
+  } | null>(null);
 
   const startTimeRef = React.useRef<number | null>(null);
   const [timerIntervalId, setTimerIntervalId] =
@@ -105,20 +209,45 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   }, []);
 
   /**
-   * Custom hook to determine if the window width is greater than a specified size.
-   * @param {number} size - The width threshold to compare against.
-   * @returns {boolean} True if the window width is greater than the specified size, otherwise false.
+   * Loads HardPy configuration from the backend API on component mount
+   * Initializes sound settings and other frontend configurations
+   */
+  React.useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const response = await fetch("/api/hardpy_config");
+        const config = await response.json();
+        setHardpyConfig(config);
+
+        // Initialize sound setting from TOML config
+        if (config.sound_on !== undefined) {
+          setUseEndTestSound(config.sound_on);
+        }
+      } catch (error) {
+        console.error("Failed to load HardPy config:", error);
+      }
+    };
+
+    loadConfig();
+  }, []);
+
+  /**
+   * Custom hook to determine if the window width is greater than a specified size
+   * @param {number} size - The width threshold to compare against in pixels
+   * @returns {boolean} True if the window width is greater than the specified size, otherwise false
    */
   const useWindowWide = (size: number): boolean => {
     const [width, setWidth] = React.useState(0);
 
     React.useEffect(() => {
+      /**
+       * Updates the current window width state
+       */
       function handleResize() {
         setWidth(window.innerWidth);
       }
 
       window.addEventListener("resize", handleResize);
-
       handleResize();
 
       return () => {
@@ -132,9 +261,64 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const ultrawide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.ULTRAWIDE);
   const wide = useWindowWide(WINDOW_WIDTH_THRESHOLDS.WIDE);
 
+  /**
+   * Handles ModalResult visibility changes and updates global state
+   */
+  const handleModalResultVisibilityChange = React.useCallback(
+    (isVisible: boolean) => {
+      setCompletionModalResultVisible(isVisible);
+    },
+    []
+  );
+
+  /**
+   * Handles keyboard events for ModalResult dismissal
+   * Prevents space key propagation and dismisses ModalResult on any key press
+   */
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (showCompletionModalResult) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+
+        setShowCompletionModalResult(false);
+        setTestCompletionData(null);
+
+        // Additional handling for space key to prevent focus issues
+        if (event.key === " ") {
+          event.preventDefault();
+          const activeElement = document.activeElement as HTMLElement;
+          if (activeElement && activeElement.blur) {
+            activeElement.blur();
+          }
+        }
+      }
+    };
+
+    if (showCompletionModalResult) {
+      document.addEventListener("keydown", handleKeyDown, {
+        capture: true,
+        passive: false,
+      });
+      return () => {
+        document.removeEventListener("keydown", handleKeyDown, {
+          capture: true,
+        });
+      };
+    }
+  }, [showCompletionModalResult]);
+
+  /**
+   * Manages test execution timer and duration calculation
+   * Updates the test duration every second while test is running
+   */
   React.useEffect(() => {
     if (lastRunStatus === "run") {
       if (startTimeRef.current !== null) {
+        /**
+         * Updates the test duration by calculating difference from start time
+         */
         const updateDuration = () => {
           const currentTimeInSeconds = Math.floor(Date.now() / 1000);
           setLastRunDuration(currentTimeInSeconds - startTimeRef.current!);
@@ -158,10 +342,10 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   }, [lastRunStatus]);
 
   /**
-   * Finds the index of a row in a list based on its ID.
-   * @param {Array} rows - The list of rows to search.
-   * @param {string} searchTerm - The ID to search for.
-   * @returns {number} The index of the row, or -1 if not found.
+   * Finds the index of a row in a list based on its ID
+   * @param {Array} rows - The list of rows to search
+   * @param {string} searchTerm - The ID to search for
+   * @returns {number} The index of the row, or -1 if not found
    */
   function findRowIndex(rows: { id: string }[], searchTerm: string): number {
     for (let i = 0; i < rows.length; i++) {
@@ -176,6 +360,10 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     include_docs: true,
   });
 
+  /**
+   * Monitors database changes and updates application state accordingly
+   * Handles test status changes, progress updates, and ModalResult display
+   */
   React.useEffect(() => {
     if (rows.length === 0) return;
 
@@ -185,14 +373,17 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     const status = db_row.status || "";
     const progress = db_row.progress || 0;
 
+    // Update run status if changed
     if (status !== lastRunStatus) {
       setLastRunStatus(isValidStatus(status) ? status : "unknown");
     }
 
+    // Update progress if changed
     if (progress !== lastProgress) {
       setProgress(progress);
     }
 
+    // Update start time and calculate duration
     if (db_row.start_time) {
       startTimeRef.current = db_row.start_time;
 
@@ -204,6 +395,59 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       }
     }
 
+    // Detect test completion and show ModalResult (only if enabled in config)
+    const prevStatus = lastRunStatus;
+    const ModalResultEnabled =
+      hardpyConfig?.frontend?.modal_result?.enabled ?? false;
+    if (
+      ModalResultEnabled &&
+      prevStatus === "run" &&
+      (status === "passed" || status === "failed" || status === "stopped") &&
+      !showCompletionModalResult
+    ) {
+      const testPassed = status === "passed";
+      const testStopped = status === "stopped";
+      const failedTestCases: Array<{
+        moduleName: string;
+        caseName: string;
+        assertionMsg?: string;
+      }> = [];
+
+      // Extract failed test cases if test failed
+      if (!testPassed && !testStopped && db_row.modules) {
+        Object.entries(db_row.modules).forEach(
+          ([moduleId, module]: [string, any]) => {
+            if (module.cases) {
+              Object.entries(module.cases).forEach(
+                ([caseId, testCase]: [string, any]) => {
+                  if (testCase.status === "failed") {
+                    failedTestCases.push({
+                      moduleName: module.name || moduleId,
+                      caseName: testCase.name || caseId,
+                      assertionMsg: testCase.assertion_msg || undefined,
+                    });
+                  }
+                }
+              );
+            }
+          }
+        );
+      }
+
+      const stoppedTestCase = testStopped
+        ? findStoppedTestCase(db_row)
+        : undefined;
+
+      setTestCompletionData({
+        testPassed,
+        testStopped,
+        failedTestCases,
+        stoppedTestCase,
+      });
+      setShowCompletionModalResult(true);
+    }
+
+    // Handle authentication state based on database connection
     if (state === "error") {
       setIsAuthenticated(false);
     } else if (isAuthenticated === false) {
@@ -216,11 +460,12 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     lastProgress,
     lastRunDuration,
     isAuthenticated,
+    hardpyConfig,
   ]);
 
   /**
-   * Renders the database content.
-   * @returns {JSX.Element} The rendered content.
+   * Renders the database content including test suites and debug information
+   * @returns {JSX.Element} The rendered database content component
    */
   const renderDbContent = (): JSX.Element => {
     if (loading && rows.length === 0) {
@@ -312,8 +557,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   };
 
   /**
-   * Renders the settings menu.
-   * @returns {JSX.Element} The settings menu component.
+   * Renders the settings menu with sound and debug options
+   * @returns {JSX.Element} The settings menu component
    */
   const renderSettingsMenu = (): JSX.Element => {
     return (
@@ -337,25 +582,32 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   };
 
   /**
-   * Renders the status of the test run.
-   * @param status - The status to render.
-   * @returns {string} The status text.
+   * Renders the status text of the test run based on the current status
+   * @param {StatusKey | "unknown"} status - The status to render
+   * @returns {string} The translated status text
    */
   const getStatusText = (status: StatusKey | "unknown"): string => {
     if (status === "unknown") {
-      console.error("Unknown status encountered");
       return t("app.status.unknown") || "Unknown status";
     }
     return t(STATUS_MAP[status]);
   };
 
   const useBigButton = hardpyConfig?.frontend?.full_size_button !== false;
+  
+  /**
+   * Handles ModalResult dismissal by hiding it and clearing completion data
+   */
+  const handleModalResultDismiss = () => {
+    setShowCompletionModalResult(false);
+    setTestCompletionData(null);
+  };
 
   return (
     <div className="App">
       <ReloadAlert reload_timeout_s={3} />
 
-      {/* Header */}
+      {/* Header with navigation and status information */}
       <Navbar
         fixedToTop={true}
         style={{ background: Colors.LIGHT_GRAY4, margin: "auto" }}
@@ -420,12 +672,12 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         </Navbar.Group>
       </Navbar>
 
-      {/* Tests panel */}
+      {/* Main content area with test suites and results */}
       <div className={Classes.DRAWER_BODY} style={{ marginBottom: "60px" }}>
         {renderDbContent()}
       </div>
 
-      {/* Footer */}
+      {/* Footer with progress bar and control buttons */}
       {isConfigLoaded && (
         <div
           className={Classes.DRAWER_FOOTER}
@@ -501,6 +753,23 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           )}
         </div>
       )}
+
+      {/* Test Completion ModalResult */}
+      <TestCompletionModalResult
+        isVisible={showCompletionModalResult}
+        testPassed={testCompletionData?.testPassed || false}
+        testStopped={testCompletionData?.testStopped || false}
+        failedTestCases={testCompletionData?.failedTestCases || []}
+        stoppedTestCase={testCompletionData?.stoppedTestCase}
+        onDismiss={handleModalResultDismiss}
+        onVisibilityChange={handleModalResultVisibilityChange}
+        autoDismissPass={
+          hardpyConfig?.frontend?.modal_result?.auto_dismiss_pass ?? true
+        }
+        autoDismissTimeout={
+          hardpyConfig?.frontend?.modal_result?.auto_dismiss_timeout ?? 5
+        }
+      />
     </div>
   );
 }

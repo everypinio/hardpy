@@ -32,8 +32,34 @@ The code for this example can be seen inside the hardpy package
 
     Learn more in the [StandCloud](./../documentation/stand_cloud.md) section.
 
-
 7. Launch `hardpy run stand_cloud`.
+
+### hardpy.toml
+
+Contains settings that enable modal windows with test results and configure them.
+
+```toml
+title = "HardPy TOML config"
+tests_name = "StandCloud"
+
+[database]
+user = "dev"
+password = "dev"
+host = "localhost"
+port = 5984
+
+[frontend]
+host = "localhost"
+port = 8000
+language = "en"
+
+[frontend.modal_result]
+enabled = true
+
+[stand_cloud]
+address = "demo.standcloud.localhost"
+connection_only = true
+```
 
 ### conftest.py
 

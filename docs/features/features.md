@@ -44,6 +44,29 @@ The example of file:
 language = "zh"
 ```
 
+### Test completion modal results
+
+**HardPy** provides configurable modal result windows that display test completion status with detailed information:
+
+- **PASS results**: Green modal with auto-dismiss functionality
+- **FAIL results**: Red modal showing detailed failed test cases list
+- **STOP results**: Yellow modal displaying stopped test case information
+
+**Configuration Options** in `hardpy.toml`:
+```toml
+[frontend.modal_result]
+enabled = true
+auto_dismiss_pass = true
+auto_dismiss_timeout = 5
+```
+
+**Features**:
+- **Auto-dismiss**: PASS results automatically close after configurable timeout
+- **Manual dismissal**: Click anywhere or press any key to close modal
+- **Detailed reporting**: Failed test cases show module names, case names, and assertion messages
+- **Keyboard integration**: Space key handling respects modal visibility states
+- **Responsive design**: Adapts to different screen sizes with optimal readability
+
 ## CLI
 
 ### Creating template project

@@ -11,13 +11,17 @@
     "connection": "Establishing a connection... 🧐🔎",
     "dbError": "Database connection error. 🙅🏽‍♀️🚫",
     "noEntries": "No entries in the database 🙅🏽‍♀️🚫",
+    "stoppedTestCase": "Stopped Test Case",
+    "failedTestCases": "Failed Test Cases",
+    "modalResultDismissHint": "Click anywhere or press any key to dismiss",
+    "modalResultAutoDismissHint": "Auto-dismissing in {{seconds}} seconds...",
     "status": {
-      "ready": "ready",
-      "run": "run",
-      "passed": "pass",
-      "failed": "fail",
-      "stopped": "stopped",
-      "unknown": "unknown"
+      "ready": "Ready",
+      "run": "Run",
+      "passed": "Pass",
+      "failed": "Fail",
+      "stopped": "Stopped",
+      "unknown": "Unknown"
     }
   },
   "button": {
