@@ -46,6 +46,7 @@ def test_config_manager_init():
         frontend_host=frontend_no_default_host,
         frontend_port=frontend_no_default_port,
         frontend_language=frontend_default_language,
+        full_size_button=False,
         sc_address=stand_cloud_no_default_addr,
         modal_result_enabled=True,
         modal_result_auto_dismiss_pass=False,
@@ -63,6 +64,7 @@ def test_config_manager_init():
     assert config.frontend.host == frontend_no_default_host
     assert config.frontend.port == frontend_no_default_port
     assert config.frontend.language == frontend_default_language
+    assert config.frontend.full_size_button is False
     assert config.stand_cloud.address == stand_cloud_no_default_addr
     assert config.frontend.modal_result.enabled is True
     assert config.frontend.modal_result.auto_dismiss_pass is False
@@ -140,6 +142,7 @@ def test_config_manager_create_config(tmp_path: Path):
         frontend_host=frontend_default_host,
         frontend_port=frontend_default_port,
         frontend_language=frontend_default_language,
+        full_size_button=False,
         sc_address=stand_cloud_default_addr,
         modal_result_enabled=True,
         modal_result_auto_dismiss_pass=False,
