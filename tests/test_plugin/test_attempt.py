@@ -34,6 +34,7 @@ def test_attempt_success(pytester: Pytester, hardpy_opts: list):
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=2)
 
+
 def test_attempt_failed(pytester: Pytester, hardpy_opts: list):
     pytester.makepyfile(
         test_1=f"""{func_test_header}
@@ -52,6 +53,7 @@ def test_attempt_failed(pytester: Pytester, hardpy_opts: list):
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=1, failed=1)
+
 
 def test_critical_with_attempt_passed_on_retry(
     pytester: Pytester,
@@ -186,6 +188,7 @@ def test_error_code_empty_after_success_attempt(pytester: Pytester, hardpy_opts:
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=2)
 
+
 def test_success_attempt_after_error_code(pytester: Pytester, hardpy_opts: list):
     pytester.makepyfile(
         f"""
@@ -208,6 +211,26 @@ def test_success_attempt_after_error_code(pytester: Pytester, hardpy_opts: list)
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=2, failed=1)
+
+
+def test_different_error_code_some_attempt(pytester: Pytester, hardpy_opts: list):
+    pytester.makepyfile(
+        f"""{func_test_header}
+        @pytest.mark.attempt(2)
+        def test_1():
+            attempt = hardpy.get_current_attempt()
+            assert False, hardpy.ErrorCode(attempt)
+
+        def test_2():
+            assert False, hardpy.ErrorCode(3)
+
+        def test_current_error_code():
+            report = hardpy.get_current_report()
+            assert report.error_code == 2
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1, failed=2)
 
 
 def test_clear_case_data(pytester: Pytester, hardpy_opts: list):

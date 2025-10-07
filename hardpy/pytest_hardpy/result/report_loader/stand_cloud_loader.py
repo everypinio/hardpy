@@ -47,11 +47,12 @@ class StandCloudLoader:
             StandCloudError: if report not uploaded to StandCloud
         """
         api = self._sc_connector.get_api("test_report")
+        sc_report = self._convert_to_sc_format(report)
 
         try:
             resp = api.post(
                 verify=self._verify_ssl,
-                json=report.model_dump(),
+                json=sc_report.model_dump(),
                 timeout=timeout,
             )
         except RuntimeError as exc:
@@ -73,3 +74,33 @@ class StandCloudLoader:
             StandCloudError: if StandCloud is unavailable
         """
         return self._sc_connector.healthcheck()
+
+    def _convert_to_sc_format(self, report: ResultRunStore) -> ResultRunStore:
+        """Convert report to StandCloud format.
+
+        StandCloud expects parameters to be not empty.
+        If a parameter is None, it will be replaced with "unknown".
+        """
+        unknown_param = "unknown"
+        # test stand name
+        if not report.test_stand.name:
+            report.test_stand.name = unknown_param
+        # DUT part number
+        if not report.dut.part_number:
+            report.dut.part_number = unknown_param
+        # DUT name
+        if not report.dut.name:
+            report.dut.name = report.dut.part_number
+        # sub unit part number and name
+        for sub_unit in report.dut.sub_units:
+            if not sub_unit.part_number:
+                sub_unit.part_number = unknown_param
+            if not sub_unit.name:
+                sub_unit.name = sub_unit.part_number
+        # instrument part number and name
+        for instrument in report.test_stand.instruments:
+            if not instrument.part_number:
+                instrument.part_number = unknown_param
+            if not instrument.name:
+                instrument.name = instrument.part_number
+        return report

@@ -30,10 +30,11 @@ def test_power_supply():
     psu = hardpy.Instrument(
         name="DC Power Supply",
         revision="2.1",
+        serial_number="809184",
+        part_number="pwr_blck_01",
         number=1,
         comment="Main system power source",
         info={
-            "model": "PSU-3000",
             "voltage_range": "0-30V",
             "current_range": "0-5A",
             "calibration_date": datetime(2023, 6, 15).isoformat()
@@ -48,10 +49,11 @@ def test_measurement_devices():
     # Multimeter
     dmm = hardpy.Instrument(
         name="Digital Multimeter",
+        serial_number="235446",
+        part_number="epin_mlmtr_05",
         revision="1.3",
         number=2,
         info={
-            "model": "DMM-4040",
             "accuracy": "0.1%",
             "channels": 4
         }
@@ -62,6 +64,8 @@ def test_measurement_devices():
     scope = hardpy.Instrument(
         name="Oscilloscope",
         revision="3.2",
+        serial_number="456312",
+        part_number="epin_osc_07",
         number=3,
         info={
             "model": "DSO-X 2024A",
@@ -78,6 +82,8 @@ def test_environmental_controls():
     chamber = hardpy.Instrument(
         name="Temperature Chamber",
         revision="4.0",
+        serial_number="5468653",
+        part_number="epin_temp_12",
         number=4,
         comment="Used for thermal testing",
         info={
