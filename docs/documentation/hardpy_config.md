@@ -38,6 +38,7 @@ port = 5984
 host = "localhost"
 port = 8000
 language = "en"
+full_size_button = true
 
 [frontend.modal_result]
 enabled = true
@@ -106,6 +107,12 @@ The user can change this value with the `hardpy init --frontend-port` option.
 
 Language of operator panel. The default is `en`.
 Available languages are [there](hardpy_panel.md#languages).
+
+#### full_size_button
+
+Enable enlarged start/stop button layout in operator panel.
+When set to `true`, the button will be displayed in full-size layout with larger dimensions and centered positioning.
+Default is `false`.
 
 #### modal_result
 
