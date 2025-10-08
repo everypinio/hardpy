@@ -143,6 +143,7 @@ class IBaseMeasurement(BaseModel, ABC):
     name: str | None = Field(default=None)
     operation: CompOp | None = Field(default=None)
     result: bool | None = Field(default_factory=lambda: None)
+    disp: bool = Field(default=False)
 
 
 class NumericMeasurement(IBaseMeasurement):

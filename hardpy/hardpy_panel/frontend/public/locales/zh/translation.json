@@ -53,7 +53,9 @@
     "notificationDesc": "窗口已关闭。测试已停止。",
     "numericInputError": "请输入数字",
     "radioButtonError": "请选择一个选项",
-    "checkboxError": "请至少选择一个选项"
+    "checkboxError": "请至少选择一个选项",
+    "pass": "通过",
+    "fail": "失败"
   },
   "suiteList": {
     "loadingTests": "正在加载测试... 🤔",

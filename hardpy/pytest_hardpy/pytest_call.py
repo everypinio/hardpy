@@ -611,6 +611,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
         - RADIOBUTTON: str.
         - CHECKBOX: list[str].
         - MULTISTEP: bool.
+        - PASS/FAIL: bool (True for PASS, False for FAIL).
 
     Raises:
         ValueError: If the 'message' argument is empty.
@@ -635,6 +636,11 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     input_dbx_data = _get_operator_data()
 
     _cleanup_widget(reporter, key)
+
+    # Handle pass/fail functionality
+    if dialog_box_data.pass_fail:
+        return input_dbx_data.lower() == "pass"
+
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
 

@@ -51,6 +51,7 @@ interface Props {
   html_width?: number;
   html_border?: number;
   language?: string;
+  pass_fail?: boolean;
 }
 
 export enum WidgetType {
@@ -530,6 +531,24 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
   };
 
   /**
+   * Handles the pass/fail button clicks and sends the response to the server.
+   * @async
+   * @param {boolean} passed - True for PASS, False for FAIL
+   * @returns {Promise<void>}
+   */
+  const handlePassFail = async (passed: boolean): Promise<void> => {
+    setDialogOpen(false);
+
+    try {
+      const result = passed ? "pass" : "fail";
+      const response = await axios.post(`/api/confirm_dialog_box/${result}`);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error sending pass/fail response:", error);
+    }
+  };
+
+  /**
    * Handles the confirm event of the dialog box.
    * Validates the input and sends the confirmed data to the server.
    */
@@ -796,8 +815,11 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
   }, [props.language, i18n]);
 
   useEffect(() => {
-    console.log('Current language:', i18n.language);
-    console.log('All translations:', i18n.getResourceBundle(i18n.language, 'translation'));
+    console.log("Current language:", i18n.language);
+    console.log(
+      "All translations:",
+      i18n.getResourceBundle(i18n.language, "translation")
+    );
   }, [i18n]);
 
   useEffect(() => {
@@ -854,6 +876,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
       isOpen={dialogOpen}
       onClose={handleClose}
       canOutsideClickClose={false}
+      canEscapeKeyClose={true}
       style={{
         width:
           widgetType === WidgetType.Multistep ? `${dialogWidth}px` : "auto",
@@ -969,16 +992,46 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
           )}
       </div>
       <div className={Classes.DIALOG_FOOTER}>
-        <Button
-          intent="primary"
-          onClick={handleConfirm}
-          autoFocus={
-            widgetType === WidgetType.Base ||
-            widgetType === WidgetType.Multistep
-          }
-        >
-          {t("button.confirm")}
-        </Button>
+        {props.pass_fail ? (
+          <div style={{ 
+            display: "flex", 
+            justifyContent: "space-between",
+            gap: "10px"
+          }}>
+            <Button
+              intent="success"
+              text={t("operatorDialog.pass")}
+              onClick={() => handlePassFail(true)}
+              style={{
+                minWidth: "65px",
+                fontSize: "14px",
+              }}
+            />
+            <Button
+              intent="danger"
+              text={t("operatorDialog.fail")}
+              onClick={() => handlePassFail(false)}
+              style={{
+                minWidth: "65px",
+                fontSize: "14px",
+              }}
+            />
+          </div>
+        ) : (
+          <Button
+            intent="primary"
+            onClick={handleConfirm}
+            autoFocus={
+              widgetType === WidgetType.Base ||
+              widgetType === WidgetType.Multistep
+            }
+            style={{
+              minWidth: "65px",
+            }}
+          >
+            {t("button.confirm")}
+          </Button>
+        )}
       </div>
     </Dialog>
   );
