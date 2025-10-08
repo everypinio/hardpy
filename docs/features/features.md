@@ -53,7 +53,7 @@ Enable the enlarged button in your `hardpy.toml`:
 
 ```toml
 [frontend]
-full_size_button = true  # Enable enlarged button layout
+full_size_button = true
 ```
 
 ### Test completion modal results

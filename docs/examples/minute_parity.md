@@ -32,7 +32,7 @@ port = 5984
 host = "localhost"
 port = 8000
 language = "zh"
-full_size_button = true  # Enable enlarged button layout
+full_size_button = true
 
 [frontend.modal_result]
 enabled = true
