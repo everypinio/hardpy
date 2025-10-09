@@ -148,6 +148,39 @@ def confirm_dialog_box(dialog_box_output: str) -> dict:
     return {"status": Status.ERROR}
 
 
+@app.post("/api/confirm_dialog_box_with_pass_fail")
+def confirm_dialog_box_with_pass_fail(payload: dict) -> dict:
+    """Confirm dialog box with pass/fail result and widget data.
+
+    Args:
+        payload: dict with 'result' (pass/fail) and 'data' (widget data)
+
+    Returns:
+        dict[str, RunStatus]: run status
+    """
+    hex_base = 16
+
+    # Extract pass/fail result and widget data
+    result = payload.get("result", "")
+    widget_data = payload.get("data", "")
+
+    # Process widget data
+    unquoted_string = unquote(widget_data)
+    decoded_string = re.sub(
+        "%([0-9a-fA-F]{2})",
+        lambda match: chr(int(match.group(1), hex_base)),
+        unquoted_string,
+    )
+
+    # Combine result and data in a format that backend can parse
+    # Format: "pass|data" or "fail|data"
+    combined_data = f"{result}|{decoded_string}"
+
+    if app.state.pytest_wrp.send_data(combined_data):
+        return {"status": Status.BUSY}
+    return {"status": Status.ERROR}
+
+
 @app.post("/api/confirm_operator_msg/{is_msg_visible}")
 def confirm_operator_msg(is_msg_visible: str) -> dict:
     """Confirm operator msg.

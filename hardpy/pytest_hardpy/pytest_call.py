@@ -637,9 +637,13 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
 
     _cleanup_widget(reporter, key)
 
-    # Handle pass/fail functionality
     if dialog_box_data.pass_fail:
-        return input_dbx_data.lower() == "pass"
+        if "|" in input_dbx_data:
+            result_part, data_part = input_dbx_data.split("|", 1)
+            widget_result = dialog_box_data.widget.convert_data(data_part)
+            return (result_part.lower() == "pass", widget_result)
+        else:
+            return input_dbx_data.lower() == "pass"
 
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
