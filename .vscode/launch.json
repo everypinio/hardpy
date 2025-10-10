@@ -91,10 +91,8 @@
             "console": "integratedTerminal",
             "args": [
                 "sc-login",
-            ],
-            "env": {
-                "OAUTHLIB_INSECURE_TRANSPORT": "1"
-            },
+                "demo.standcloud.localhost"
+            ]
         },
         {
             "name": "StandCloud logout",
