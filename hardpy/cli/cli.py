@@ -74,6 +74,10 @@ def init(  # noqa: PLR0913
         default=False,
         help="Check StandCloud service availability before start.",
     ),
+    sc_api_key: str | None = typer.Option(
+        default=None,
+        help="Specify a StandCloud API key.",
+    ),
 ) -> None:
     """Initialize HardPy tests directory.
 
@@ -90,6 +94,7 @@ def init(  # noqa: PLR0913
         frontend_language (str): Panel operator language
         sc_address (str): StandCloud address
         sc_connection_only (bool): Flag to check StandCloud service availability
+        sc_api_key (str | None): StandCloud API key
     """
     dir_path = Path(Path.cwd() / tests_dir if tests_dir else "tests")
     config_manager = ConfigManager()
@@ -104,6 +109,7 @@ def init(  # noqa: PLR0913
         frontend_language=default_config.frontend.language,
         sc_address=sc_address,
         sc_connection_only=sc_connection_only,
+        sc_api_key=sc_api_key,
     )
     # create tests directory
     Path.mkdir(dir_path, exist_ok=True, parents=True)
@@ -247,22 +253,7 @@ def sc_login(
             sys.exit()
         print("StandCloud connection success")
     else:
-        auth_method = typer.prompt(
-            "Select authentication method: [O]Auth or [P]AT",
-            default="O",
-        )
-        if auth_method.upper() == "P":
-            token = sc_connector.get_access_token()
-            if token is None:
-                pat = typer.prompt("Enter your Personal Access Token", hide_input=True)
-                sc_connector.save_pat(pat)
-            try:
-                sc_connector.healthcheck()
-                print(f"HardPy login to {sc_connector.addr} success using PAT.")
-            except StandCloudError as e:
-                print(f"PAT login failed: {e}")
-        else:
-            auth_login(sc_connector)
+        auth_login(sc_connector)
 
 
 @cli.command()

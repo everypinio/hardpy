@@ -263,6 +263,7 @@ class HardpyPlugin:
             try:
                 sc_connector = StandCloudConnector(
                     addr=config_manager.config.stand_cloud.address,
+                    api_key=config_manager.config.stand_cloud.api_key,
                 )
             except StandCloudError as exc:
                 msg = str(exc)
