@@ -634,18 +634,27 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     reporter.update_db_by_doc()
 
     input_dbx_data = _get_operator_data()
-
     _cleanup_widget(reporter, key)
 
     if dialog_box_data.pass_fail:
         if "|" in input_dbx_data:
             result_part, data_part = input_dbx_data.split("|", 1)
-            widget_result = dialog_box_data.widget.convert_data(data_part)
-            return (result_part.lower() == "pass", widget_result)
+            pass_fail_result = result_part.lower() == "pass"
+            if dialog_box_data.widget and dialog_box_data.widget.type not in [
+                "BASE",
+                "MULTISTEP",
+            ]:
+                widget_result = dialog_box_data.widget.convert_data(data_part)
+                return (pass_fail_result, widget_result)
+            else:
+                return pass_fail_result
         else:
             return input_dbx_data.lower() == "pass"
 
-    return dialog_box_data.widget.convert_data(input_dbx_data)
+    if dialog_box_data.widget:
+        return dialog_box_data.widget.convert_data(input_dbx_data)
+    else:
+        return True
 
 
 def set_operator_message(  # noqa: PLR0913

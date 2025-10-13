@@ -71,6 +71,23 @@ def test_text_input_with_html():
     assert response == "ok", "The entered text is not correct"
 
 
+@pytest.mark.case_name("Text input with pass_fail")
+def test_text_input_with_pass_fail():
+    dbx = DialogBox(
+        dialog_text="Type 'ok' and press PASS or FAIL button",
+        title_bar="Example of text input with pass/fail",
+        widget=TextInputWidget(),
+        font_size=18,
+        pass_fail=True,
+    )
+    result = run_dialog_box(dbx)
+    # Now returns tuple (pass_fail_result, widget_data)
+    assert isinstance(result, tuple) and len(result) == 2
+    pass_fail_result, widget_data = result
+    assert isinstance(pass_fail_result, bool)
+    assert widget_data == "ok"  # Widget data is still processed
+
+
 @pytest.mark.case_name("Numeric input")
 def test_num_input():
     test_num = 123
@@ -110,3 +127,20 @@ def test_num_input_with_html():
     response = int(run_dialog_box(dbx))
     set_message(f"Entered number {response}")
     assert response == test_num, "The entered number is not correct"
+
+
+@pytest.mark.case_name("Numeric input with pass_fail")
+def test_num_input_with_pass_fail():
+    test_num = 123
+    dbx = DialogBox(
+        dialog_text=f"Enter the number {test_num} and press PASS or FAIL button",
+        title_bar="Example of entering a number with pass/fail",
+        widget=NumericInputWidget(),
+        pass_fail=True,
+    )
+    result = run_dialog_box(dbx)
+    # Now returns tuple (pass_fail_result, widget_data)
+    assert isinstance(result, tuple) and len(result) == 2
+    pass_fail_result, widget_data = result
+    assert isinstance(pass_fail_result, bool)
+    assert int(widget_data) == test_num  # Widget data is still processed
