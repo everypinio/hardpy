@@ -31,6 +31,9 @@ from hardpy.pytest_hardpy.utils.dialog_box import WidgetType
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
+PASS_VALUE = "pass"  # noqa: S105
+FAIL_VALUE = "fail"
+
 
 @dataclass
 class CurrentTestInfo:
@@ -38,6 +41,35 @@ class CurrentTestInfo:
 
     module_id: str
     case_id: str
+
+
+@dataclass
+class DialogResult:
+    """Result of dialog box interaction.
+
+    Attributes:
+        pass_fail_result: True for PASS, False for FAIL, None if pass_fail is not enabled
+        widget_result: Data from widget if any, None otherwise
+    """
+
+    pass_fail_result: bool | None = None
+    widget_result: Any = None
+
+    def __bool__(self) -> bool:
+        """Return True if the dialog was successful."""
+        if self.pass_fail_result is not None:
+            return self.pass_fail_result
+        return bool(self.widget_result) if self.widget_result is not None else True
+
+    @property
+    def is_pass(self) -> bool | None:
+        """Convenience property to check pass/fail status."""
+        return self.pass_fail_result
+
+    @property
+    def data(self) -> Any:
+        """Convenience property to get widget data."""
+        return self.widget_result
 
 
 class ErrorCode:
@@ -50,7 +82,7 @@ class ErrorCode:
         message (str): error message.
     """
 
-    def __init__(self, code: int, message: str | None = None) -> str | None: # type: ignore
+    def __init__(self, code: int, message: str | None = None) -> str | None:  # type: ignore
         """Add error code to document.
 
         Args:
@@ -586,40 +618,19 @@ def set_case_chart(chart: Chart) -> None:
     reporter.update_db_by_doc()
 
 
-def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
+def run_dialog_box(dialog_box_data: DialogBox) -> DialogResult:
     """Display a dialog box.
 
     Args:
         dialog_box_data (DialogBox): Data for creating the dialog box.
 
-        DialogBox attributes:
-
-        - dialog_text (str): The text of the dialog box.
-        - title_bar (str | None): The title bar of the dialog box.
-          If the title_bar field is missing, it is the case name.
-        - widget (DialogBoxWidget | None): Widget information.
-        - image (ImageComponent | None): Image information.
-        - html (HTMLComponent | None): HTML information.
-
     Returns:
-        Any: An object containing the user's response.
-
-        The type of the return value depends on the widget type:
-
-        - BASE: bool.
-        - TEXT_INPUT: str.
-        - NUMERIC_INPUT: float.
-        - RADIOBUTTON: str.
-        - CHECKBOX: list[str].
-        - MULTISTEP: bool.
-        - PASS/FAIL: bool (True for PASS, False for FAIL).
-
-    Raises:
-        ValueError: If the 'message' argument is empty.
+        DialogResult: Structured result containing pass/fail status and widget data.
     """
     if not dialog_box_data.dialog_text:
         msg = "The 'dialog_text' argument cannot be empty."
         raise ValueError(msg)
+
     reporter = RunnerReporter()
     current_test = _get_current_test()
     key = reporter.generate_key(
@@ -637,22 +648,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     input_dbx_data = _get_operator_data()
     _cleanup_widget(reporter, key)
 
-    if dialog_box_data.pass_fail:
-        if "|" in input_dbx_data:
-            result_part, data_part = input_dbx_data.split("|", 1)
-            pass_fail_result = result_part.lower() == "pass"
-            if dialog_box_data.widget and dialog_box_data.widget.type not in [
-                 WidgetType.BASE,
-                 WidgetType.MULTISTEP,
-            ]:
-                widget_result = dialog_box_data.widget.convert_data(data_part)
-                return (pass_fail_result, widget_result)
-            return pass_fail_result
-        return input_dbx_data.lower() == "pass"
-
-    if dialog_box_data.widget:
-        return dialog_box_data.widget.convert_data(input_dbx_data)
-    return True
+    return _process_dialog_result(dialog_box_data, input_dbx_data)
 
 
 def set_operator_message(  # noqa: PLR0913
@@ -783,3 +779,37 @@ def _get_operator_data() -> str:
 def _cleanup_widget(reporter: RunnerReporter, key: str) -> None:
     reporter.set_doc_value(key, {}, statestore_only=True)
     reporter.update_db_by_doc()
+
+
+def _process_dialog_result(dialog_box_data: DialogBox, input_data: str) -> DialogResult:
+    """Process dialog box result data.
+
+    Args:
+        dialog_box_data: Dialog box configuration
+        input_data: Raw input data from operator panel
+
+    Returns:
+        DialogResult: Processed dialog result
+    """
+    result = DialogResult()
+
+    if dialog_box_data.pass_fail:
+        if dialog_box_data.widget:
+            if "|" in input_data:
+                result_part, data_part = input_data.split("|", 1)
+                result.pass_fail_result = result_part.lower() == PASS_VALUE
+                result.widget_result = dialog_box_data.widget.convert_data(data_part)
+            else:
+                result.pass_fail_result = input_data.lower() == PASS_VALUE
+                result.widget_result = None
+        else:
+            result.pass_fail_result = input_data.lower() == PASS_VALUE
+            result.widget_result = None
+    else:
+        result.pass_fail_result = None
+        if dialog_box_data.widget:
+            result.widget_result = dialog_box_data.widget.convert_data(input_data)
+        else:
+            result.widget_result = True
+
+    return result
