@@ -50,7 +50,7 @@ class ErrorCode:
         message (str): error message.
     """
 
-    def __init__(self, code: int, message: str | None = None) -> str | None:
+    def __init__(self, code: int, message: str | None = None) -> str | None: # type: ignore
         """Add error code to document.
 
         Args:
@@ -647,15 +647,12 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
             ]:
                 widget_result = dialog_box_data.widget.convert_data(data_part)
                 return (pass_fail_result, widget_result)
-            else:
-                return pass_fail_result
-        else:
-            return input_dbx_data.lower() == "pass"
+            return pass_fail_result
+        return input_dbx_data.lower() == "pass"
 
     if dialog_box_data.widget:
         return dialog_box_data.widget.convert_data(input_dbx_data)
-    else:
-        return True
+    return True
 
 
 def set_operator_message(  # noqa: PLR0913
