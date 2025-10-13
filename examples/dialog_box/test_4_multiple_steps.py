@@ -207,5 +207,4 @@ def test_multiple_steps_with_pass_fail():
         pass_fail=True,
     )
     result = run_dialog_box(dbx)
-    # Now returns tuple (pass_fail_result, widget_data)
-    assert isinstance(result, bool)
+    assert result

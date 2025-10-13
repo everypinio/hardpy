@@ -26,6 +26,7 @@ test_html = """
 </html>
 """
 
+
 @pytest.mark.case_name("Text input")
 def test_text_input():
     dbx = DialogBox(
@@ -81,10 +82,10 @@ def test_text_input_with_pass_fail():
         pass_fail=True,
     )
     result = run_dialog_box(dbx)
-    # Now returns tuple (pass_fail_result, widget_data)
-    assert isinstance(result, tuple) and len(result) == 2
+    assert isinstance(result, tuple)
+    assert len(result) == 2  # noqa: PLR2004
     pass_fail_result, widget_data = result
-    assert isinstance(pass_fail_result, bool)
+    assert pass_fail_result
     assert widget_data == "ok"  # Widget data is still processed
 
 
@@ -140,7 +141,8 @@ def test_num_input_with_pass_fail():
     )
     result = run_dialog_box(dbx)
     # Now returns tuple (pass_fail_result, widget_data)
-    assert isinstance(result, tuple) and len(result) == 2
+    assert isinstance(result, tuple)
+    assert len(result) == 2  # noqa: PLR2004
     pass_fail_result, widget_data = result
-    assert isinstance(pass_fail_result, bool)
+    assert pass_fail_result
     assert int(widget_data) == test_num  # Widget data is still processed

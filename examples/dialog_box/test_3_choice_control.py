@@ -78,11 +78,11 @@ def test_radiobutton_with_pass_fail():
         pass_fail=True,
     )
     result = run_dialog_box(dbx)
-    # Now returns tuple (pass_fail_result, widget_data)
-    assert isinstance(result, tuple) and len(result) == 2
+    assert isinstance(result, tuple)
+    assert len(result) == 2  # noqa: PLR2004
     pass_fail_result, widget_data = result
-    assert isinstance(pass_fail_result, bool)
-    assert widget_data == "one"  # Widget data is still processed
+    assert pass_fail_result
+    assert widget_data == "one"
 
 
 @pytest.mark.case_name("Test dialog box with checkbox")
@@ -139,9 +139,9 @@ def test_checkbox_with_pass_fail():
         pass_fail=True,
     )
     result = run_dialog_box(dbx)
-    # Now returns tuple (pass_fail_result, widget_data)
-    assert isinstance(result, tuple) and len(result) == 2
+    assert isinstance(result, tuple)
+    assert len(result) == 2  # noqa: PLR2004
     pass_fail_result, widget_data = result
-    assert isinstance(pass_fail_result, bool)
+    assert pass_fail_result
     correct_answer = {"one", "two"}
-    assert set(widget_data) == correct_answer  # Widget data is still processed
+    assert set(widget_data) == correct_answer

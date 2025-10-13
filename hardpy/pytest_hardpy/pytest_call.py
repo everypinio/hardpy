@@ -26,6 +26,7 @@ from hardpy.pytest_hardpy.utils import (
     ImageComponent,
     TestStandNumberError,
 )
+from hardpy.pytest_hardpy.utils.dialog_box import WidgetType
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -641,8 +642,8 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
             result_part, data_part = input_dbx_data.split("|", 1)
             pass_fail_result = result_part.lower() == "pass"
             if dialog_box_data.widget and dialog_box_data.widget.type not in [
-                "BASE",
-                "MULTISTEP",
+                 WidgetType.BASE,
+                 WidgetType.MULTISTEP,
             ]:
                 widget_result = dialog_box_data.widget.convert_data(data_part)
                 return (pass_fail_result, widget_result)

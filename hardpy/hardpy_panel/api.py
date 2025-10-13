@@ -160,11 +160,9 @@ def confirm_dialog_box_with_pass_fail(payload: dict) -> dict:
     """
     hex_base = 16
 
-    # Extract pass/fail result and widget data
     result = payload.get("result", "")
     widget_data = payload.get("data", "")
 
-    # Process widget data
     unquoted_string = unquote(widget_data)
     decoded_string = re.sub(
         "%([0-9a-fA-F]{2})",
@@ -172,8 +170,6 @@ def confirm_dialog_box_with_pass_fail(payload: dict) -> dict:
         unquoted_string,
     )
 
-    # Combine result and data in a format that backend can parse
-    # Format: "pass|data" or "fail|data"
     combined_data = f"{result}|{decoded_string}"
 
     if app.state.pytest_wrp.send_data(combined_data):

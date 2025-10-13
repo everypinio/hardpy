@@ -93,9 +93,9 @@ def test_dialog_box_with_html_and_pass_fail():
     """
     dbx = DialogBox(
         title_bar="Equipment Verification",
-        dialog_text="Check the equipment status in the HTML below and make your decision:",
+        dialog_text="Check the equipment status in the HTML below and make your decision:",  # noqa: E501
         html=HTMLComponent(html=test_html, is_raw_html=True, width=60),
         pass_fail=True,
     )
     response = run_dialog_box(dbx)
-    assert isinstance(response, bool)
+    assert response
