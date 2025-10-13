@@ -26,7 +26,6 @@ from hardpy.pytest_hardpy.utils import (
     ImageComponent,
     TestStandNumberError,
 )
-from hardpy.pytest_hardpy.utils.dialog_box import WidgetType
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -50,7 +49,7 @@ class DialogResult:
     Attributes:
         pass_fail_result: True for PASS, False for FAIL, None if pass_fail is not enabled
         widget_result: Data from widget if any, None otherwise
-    """
+    """  # noqa: E501
 
     pass_fail_result: bool | None = None
     widget_result: Any = None
@@ -67,7 +66,7 @@ class DialogResult:
         return self.pass_fail_result
 
     @property
-    def data(self) -> Any:
+    def data(self) -> Any:  # noqa: ANN401
         """Convenience property to get widget data."""
         return self.widget_result
 
