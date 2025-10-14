@@ -2,9 +2,9 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from inspect import stack
-import json
 from os import environ
 from time import sleep
 from typing import TYPE_CHECKING, Any

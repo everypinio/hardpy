@@ -135,7 +135,7 @@ def confirm_dialog_box(payload: dict) -> dict:
 
     Returns:
         dict[str, RunStatus]: run status
-    """
+    """  # noqa: E501
     hex_base = 16
 
     result = payload.get("result", "")
@@ -153,7 +153,7 @@ def confirm_dialog_box(payload: dict) -> dict:
     dialog_result = {
         "has_pass_fail": has_pass_fail,
         "result": result,
-        "data": decoded_string
+        "data": decoded_string,
     }
 
     # Convert to JSON string for transmission
