@@ -42,6 +42,7 @@ language = "en"
 [stand_cloud]
 address = "demo.standcloud.io"
 connection_only = true
+api-key = "1234567890"
 ```
 
 ## Configuration fields description
@@ -124,3 +125,7 @@ to the **StandCloud** service at each startup before running tests.
 The default value is `false`.
 
 If the connection fails, the tests will not run.
+
+#### api-key
+
+**StandCloud** API key.

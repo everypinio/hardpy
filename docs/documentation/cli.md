@@ -49,6 +49,7 @@ More info in [hardpy config](./hardpy_config.md).
 │ --sc-address                                   TEXT     Specify a StandCloud address.                      │
 │ --sc-connection-only --no-sc-connection-only            Check StandCloud service availability before start.│
 |                                                         [default: check-stand-cloud]                       │
+│ --sc-api-key                                  TEXT      Specify a StandCloud API key.                      │
 │ --help                                                  Show this message and exit.                        │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
