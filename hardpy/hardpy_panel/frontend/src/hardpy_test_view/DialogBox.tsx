@@ -726,17 +726,15 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
 
     try {
       const result = passed ? "pass" : "fail";
-      // Send both pass/fail result and widget data
-      const response = await axios.post(
-        `/api/confirm_dialog_box_with_pass_fail`,
-        {
-          result: result,
-          data: widgetData,
-        }
-      );
+      // Send unified JSON payload structure
+      const response = await axios.post(`/api/confirm_dialog_box`, {
+        result: result,
+        data: widgetData,
+        has_pass_fail: true,
+      });
       console.log(response.data);
     } catch (error) {
-      console.error("Error sending pass/fail response:", error);
+      console.error("Error sending dialog response:", error);
     }
   };
 
@@ -758,9 +756,12 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
     }
 
     try {
-      const response = await axios.post(
-        `/api/confirm_dialog_box/${widgetData}`
-      );
+      // Send unified JSON payload structure
+      const response = await axios.post(`/api/confirm_dialog_box`, {
+        result: "",
+        data: widgetData,
+        has_pass_fail: false,
+      });
       console.log(response.data);
     } catch (error) {
       console.error("Error confirming dialog box:", error);

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from inspect import stack
+import json
 from os import environ
 from time import sleep
 from typing import TYPE_CHECKING, Any
@@ -781,30 +782,42 @@ def _cleanup_widget(reporter: RunnerReporter, key: str) -> None:
 
 
 def _process_dialog_result(dialog_box_data: DialogBox, input_data: str) -> DialogResult:
-    """Process dialog box result data.
+    """Process dialog box result data with JSON structure.
 
     Args:
         dialog_box_data: Dialog box configuration
-        input_data: Raw input data from operator panel
+        input_data: Raw input data from operator panel (JSON string)
 
     Returns:
         DialogResult: Processed dialog result
     """
     result = DialogResult()
 
-    if dialog_box_data.pass_fail:
-        if dialog_box_data.widget:
-            if "|" in input_data:
-                result_part, data_part = input_data.split("|", 1)
-                result.pass_fail_result = result_part.lower() == PASS_VALUE
-                result.widget_result = dialog_box_data.widget.convert_data(data_part)
+    try:
+        # Try to parse as JSON first
+        data_dict = json.loads(input_data)
+        has_pass_fail = data_dict.get("has_pass_fail", False)
+        result_value = data_dict.get("result", "")
+        widget_data = data_dict.get("data", "")
+
+        if has_pass_fail:
+            # For pass/fail mode
+            result.pass_fail_result = result_value.lower() == PASS_VALUE
+            if dialog_box_data.widget and widget_data:
+                result.widget_result = dialog_box_data.widget.convert_data(widget_data)
             else:
-                result.pass_fail_result = input_data.lower() == PASS_VALUE
                 result.widget_result = None
         else:
-            result.pass_fail_result = input_data.lower() == PASS_VALUE
-            result.widget_result = None
-    else:
+            # For normal mode
+            result.pass_fail_result = None
+            if dialog_box_data.widget:
+                result.widget_result = dialog_box_data.widget.convert_data(widget_data)
+            else:
+                result.widget_result = True
+
+    except json.JSONDecodeError:
+        # Simple fallback - treat as normal dialog without pass/fail
+        # This maintains basic functionality even if JSON parsing fails
         result.pass_fail_result = None
         if dialog_box_data.widget:
             result.widget_result = dialog_box_data.widget.convert_data(input_data)
