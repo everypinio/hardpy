@@ -31,13 +31,13 @@ port = 5984
 [frontend]
 host = "localhost"
 port = 8000
-language = "zh"
+language = "en"
 full_size_button = true
 
 [frontend.modal_result]
-enabled = true
+enable = true
 auto_dismiss_pass = true
-auto_dismiss_timeout = 15
+auto_dismiss_timeout = 5
 ```
 
 ### conftest.py
