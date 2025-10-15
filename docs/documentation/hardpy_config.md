@@ -41,9 +41,9 @@ language = "en"
 full_size_button = true
 
 [frontend.modal_result]
-enabled = true
+enable = true
 auto_dismiss_pass = true
-auto_dismiss_timeout = 15
+auto_dismiss_timeout = 5
 
 [stand_cloud]
 address = "demo.standcloud.io"
@@ -120,12 +120,12 @@ Modal result windows settings for test completion display.
 
 ```toml
 [frontend.modal_result]
-enabled = true
+enable = true
 auto_dismiss_pass = true
 auto_dismiss_timeout = 5
 ```
 
-##### enabled
+##### enable
 
 Enable or disable test completion modal result windows.
 When set to `true`, modal windows will display test completion status (PASS/FAIL/STOP) at the end of test execution.

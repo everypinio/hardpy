@@ -415,7 +415,7 @@ Enable and customize modal results in your `hardpy.toml`:
 
 ```toml
 [frontend.modal_result]
-enabled = true    
+enable = true    
 auto_dismiss_pass = true
 auto_dismiss_timeout = 15
 ```
