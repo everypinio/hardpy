@@ -73,11 +73,12 @@ auto_dismiss_timeout = 5
 ```
 
 **Features**:
-- **Auto-dismiss**: PASS results automatically close after configurable timeout
-- **Manual dismissal**: Click anywhere or press any key to close modal
-- **Detailed reporting**: Failed test cases show module names, case names, and assertion messages
-- **Keyboard integration**: Space key handling respects modal visibility states
-- **Responsive design**: Adapts to different screen sizes with optimal readability
+
+- **Auto-dismiss**: PASS results automatically close after configurable timeout.
+- **Manual dismissal**: Click anywhere or press any key to close modal.
+- **Detailed reporting**: Failed test cases show module names, case names, and assertion messages.
+- **Keyboard integration**: Space key handling respects modal visibility states.
+- **Responsive design**: Adapts to different screen sizes with optimal readability.
 
 ## CLI
 
