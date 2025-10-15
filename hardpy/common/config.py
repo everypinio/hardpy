@@ -57,7 +57,7 @@ class ModalResultConfig(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    enabled: bool = False
+    enable: bool = False
     auto_dismiss_pass: bool = True
     auto_dismiss_timeout: int = 5
 
@@ -128,9 +128,6 @@ class ConfigManager(metaclass=SingletonMeta):
         frontend_language: str,
         sc_address: str = "",
         sc_connection_only: bool = False,
-        modal_result_enabled: bool = True,
-        modal_result_auto_dismiss_pass: bool = True,
-        modal_result_auto_dismiss_timeout: int = 5000,
     ) -> None:
         """Initialize the HardPy configuration.
 
@@ -147,21 +144,11 @@ class ConfigManager(metaclass=SingletonMeta):
             frontend_language (str): Operator panel language.
             sc_address (str): StandCloud address.
             sc_connection_only (bool): StandCloud check availability.
-            modal_result_enabled (bool): Enable/disable completion modal.
-            modal_result_auto_dismiss_pass (bool): Auto-dismiss PASS entries.
-            modal_result_auto_dismiss_timeout (int): Auto-dismiss timeout in s.
         """
         self._config.tests_name = tests_name
         self._config.frontend.host = frontend_host
         self._config.frontend.port = frontend_port
         self._config.frontend.language = frontend_language
-        self._config.frontend.modal_result.enabled = modal_result_enabled
-        self._config.frontend.modal_result.auto_dismiss_pass = (
-            modal_result_auto_dismiss_pass
-        )
-        self._config.frontend.modal_result.auto_dismiss_timeout = (
-            modal_result_auto_dismiss_timeout
-        )
         self._config.database.user = database_user
         self._config.database.password = database_password
         self._config.database.host = database_host

@@ -8,7 +8,6 @@ from hardpy.common.config import (
     DatabaseConfig,
     FrontendConfig,
     HardpyConfig,
-    ModalResultConfig,
     StandCloudConfig,
 )
 
@@ -47,9 +46,6 @@ def test_config_manager_init():
         frontend_port=frontend_no_default_port,
         frontend_language=frontend_default_language,
         sc_address=stand_cloud_no_default_addr,
-        modal_result_enabled=True,
-        modal_result_auto_dismiss_pass=False,
-        modal_result_auto_dismiss_timeout=10,
     )
     config = config_manager.config
     assert isinstance(config, HardpyConfig)
@@ -64,9 +60,6 @@ def test_config_manager_init():
     assert config.frontend.port == frontend_no_default_port
     assert config.frontend.language == frontend_default_language
     assert config.stand_cloud.address == stand_cloud_no_default_addr
-    assert config.frontend.modal_result.enabled is True
-    assert config.frontend.modal_result.auto_dismiss_pass is False
-    assert config.frontend.modal_result.auto_dismiss_timeout == 10
 
 
 def test_database_config():
@@ -84,16 +77,6 @@ def test_frontend_config():
     assert config.host == frontend_default_host
     assert config.port == frontend_default_port
     assert config.language == frontend_default_language
-    assert config.modal_result.enabled is False
-    assert config.modal_result.auto_dismiss_pass is True
-    assert config.modal_result.auto_dismiss_timeout == 5
-
-
-def test_modal_result_config():
-    config = ModalResultConfig()
-    assert config.enabled is False
-    assert config.auto_dismiss_pass is True
-    assert config.auto_dismiss_timeout == 5
 
 
 def test_stand_cloud_config():
@@ -121,9 +104,6 @@ def test_hardpy_config():
     assert config.frontend.port == frontend_default_port
     assert config.frontend.language == frontend_default_language
     assert config.stand_cloud.address == stand_cloud_default_addr
-    assert config.frontend.modal_result.enabled is False
-    assert config.frontend.modal_result.auto_dismiss_pass is True
-    assert config.frontend.modal_result.auto_dismiss_timeout == 5
 
 
 def test_config_manager_create_config(tmp_path: Path):
@@ -141,9 +121,6 @@ def test_config_manager_create_config(tmp_path: Path):
         frontend_port=frontend_default_port,
         frontend_language=frontend_default_language,
         sc_address=stand_cloud_default_addr,
-        modal_result_enabled=True,
-        modal_result_auto_dismiss_pass=False,
-        modal_result_auto_dismiss_timeout=20,
     )
 
     config_manager.create_config(tests_dir)
@@ -153,10 +130,6 @@ def test_config_manager_create_config(tmp_path: Path):
     expected_data = config_manager.config.model_dump()
 
     assert config_data == expected_data
-    assert "modal_result" in config_data["frontend"]
-    assert config_data["frontend"]["modal_result"]["enabled"] is True
-    assert config_data["frontend"]["modal_result"]["auto_dismiss_pass"] is False
-    assert config_data["frontend"]["modal_result"]["auto_dismiss_timeout"] == 20
 
 
 def test_read_config_success(tmp_path: Path):
@@ -173,11 +146,6 @@ def test_read_config_success(tmp_path: Path):
             "host": frontend_default_host,
             "port": frontend_default_port,
             "language": frontend_default_language,
-            "modal_result": {
-                "enabled": True,
-                "auto_dismiss_pass": False,
-                "auto_dismiss_timeout": 15,
-            },
         },
         "stand_cloud": {
             "address": stand_cloud_default_addr,
@@ -203,9 +171,6 @@ def test_read_config_success(tmp_path: Path):
     assert config.frontend.port == test_config_data["frontend"]["port"]
     assert config.frontend.language == test_config_data["frontend"]["language"]
     assert config.stand_cloud.address == test_config_data["stand_cloud"]["address"]
-    assert config.frontend.modal_result.enabled is True
-    assert config.frontend.modal_result.auto_dismiss_pass is False
-    assert config.frontend.modal_result.auto_dismiss_timeout == 15
 
 
 def test_read_config_without_modal_result(tmp_path: Path):
@@ -236,6 +201,3 @@ def test_read_config_without_modal_result(tmp_path: Path):
     config_manager = ConfigManager()
     config = config_manager.read_config(tests_dir)
     assert isinstance(config, HardpyConfig)
-    assert config.frontend.modal_result.enabled is False
-    assert config.frontend.modal_result.auto_dismiss_pass is True
-    assert config.frontend.modal_result.auto_dismiss_timeout == 5
