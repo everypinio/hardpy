@@ -52,6 +52,7 @@ port = 5984
 host = "localhost"
 port = 8000
 language = "en"
+full_size_button = true
 
 [frontend.modal_result]
 enable = true
