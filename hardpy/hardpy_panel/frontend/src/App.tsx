@@ -192,6 +192,11 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         const response = await fetch("/api/hardpy_config");
         const config = await response.json();
         setHardpyConfig(config);
+
+        // Initialize sound setting from TOML config
+        if (config.sound_on !== undefined) {
+          setUseEndTestSound(config.sound_on);
+        }
       } catch (error) {
         console.error("Failed to load HardPy config:", error);
       } finally {
