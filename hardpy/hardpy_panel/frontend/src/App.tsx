@@ -48,6 +48,11 @@ type StatusKey = keyof typeof STATUS_MAP;
 interface HardpyConfig {
   frontend?: {
     full_size_button?: boolean;
+    modal_result?: {
+      enable?: boolean;
+      auto_dismiss_pass?: boolean;
+      auto_dismiss_timeout?: number;
+    };
   };
 }
 
@@ -152,9 +157,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const { t } = useTranslation();
   const [use_end_test_sound, setUseEndTestSound] = React.useState(false);
   const [use_debug_info, setUseDebugInfo] = React.useState(false);
-  const [hardpyConfig, setHardpyConfig] = React.useState<HardpyConfig | null>(
-    null
-  );
+  const [appConfig, setAppConfig] = React.useState<HardpyConfig | null>(null);
   const [isConfigLoaded, setIsConfigLoaded] = React.useState(false);
 
   const [lastRunStatus, setLastRunStatus] = React.useState<
@@ -186,12 +189,16 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const [timerIntervalId, setTimerIntervalId] =
     React.useState<NodeJS.Timeout | null>(null);
 
+  /**
+   * Loads HardPy configuration from the backend API on component mount
+   * Initializes frontend configurations
+   */
   React.useEffect(() => {
     const loadConfig = async () => {
       try {
         const response = await fetch("/api/hardpy_config");
         const config = await response.json();
-        setHardpyConfig(config);
+        setAppConfig(config);
 
         // Initialize sound setting from TOML config
         if (config.sound_on !== undefined) {
@@ -201,24 +208,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         console.error("Failed to load HardPy config:", error);
       } finally {
         setIsConfigLoaded(true);
-      }
-    };
-
-    loadConfig();
-  }, []);
-
-  /**
-   * Loads HardPy configuration from the backend API on component mount
-   * Initializes sound settings and other frontend configurations
-   */
-  React.useEffect(() => {
-    const loadConfig = async () => {
-      try {
-        const response = await fetch("/api/hardpy_config");
-        const config = await response.json();
-        setHardpyConfig(config);
-      } catch (error) {
-        console.error("Failed to load HardPy config:", error);
       }
     };
 
@@ -392,7 +381,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     // Detect test completion and show ModalResult (only if enabled in config)
     const prevStatus = lastRunStatus;
     const ModalResultEnable =
-      hardpyConfig?.frontend?.modal_result?.enable ?? false;
+      appConfig?.frontend?.modal_result?.enable ?? false;
     if (
       ModalResultEnable &&
       prevStatus === "run" &&
@@ -454,7 +443,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     lastProgress,
     lastRunDuration,
     isAuthenticated,
-    hardpyConfig,
+    appConfig,
   ]);
 
   /**
@@ -587,7 +576,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     return t(STATUS_MAP[status]);
   };
 
-  const useBigButton = hardpyConfig?.frontend?.full_size_button !== false;
+  const useBigButton = appConfig?.frontend?.full_size_button !== false;
 
   /**
    * Handles ModalResult dismissal by hiding it and clearing completion data
@@ -648,11 +637,11 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
             {use_end_test_sound && (
               <PlaySound key="sound" status={lastRunStatus} />
             )}
-            
+
             {wide && <Navbar.Divider />}
-            
+
             <Navbar.Heading style={{ whiteSpace: "nowrap" }}>
-              {t("app.duration")}: {lastRunDuration}s 
+              {t("app.duration")}: {lastRunDuration}s
             </Navbar.Heading>
           </div>
 
@@ -758,10 +747,10 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         onDismiss={handleModalResultDismiss}
         onVisibilityChange={handleModalResultVisibilityChange}
         autoDismissPass={
-          hardpyConfig?.frontend?.modal_result?.auto_dismiss_pass ?? true
+          appConfig?.frontend?.modal_result?.auto_dismiss_pass ?? true
         }
         autoDismissTimeout={
-          hardpyConfig?.frontend?.modal_result?.auto_dismiss_timeout ?? 5
+          appConfig?.frontend?.modal_result?.auto_dismiss_timeout ?? 5
         }
       />
     </div>
