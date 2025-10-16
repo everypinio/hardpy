@@ -15,8 +15,7 @@ The code for this example can be seen inside the hardpy package
 
 ### hardpy.toml
 
-Contains settings that enable and configure modal windows with test results,
-enable big button mode, and enable Chinese language.
+Replace the settings in the `[frontend]` and `[frontend.modal_result]` sections with those shown in the **hardpy.toml** example file below.
 
 ```toml
 title = "HardPy TOML config"
