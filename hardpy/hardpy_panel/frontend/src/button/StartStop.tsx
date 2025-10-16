@@ -11,9 +11,15 @@ type State = {
   isStopButtonDisabled: boolean;
 };
 
+// Global variables for ModalResult state
+declare let isCompletionModalResultVisible: boolean;
+declare let lastModalResultDismissTime: number;
+declare const MODAL_RESULT_DISMISS_COOLDOWN: number;
+
 /**
  * A React component that renders a start/stop button for controlling a testing process.
  * The button's behavior and appearance depend on the testing status.
+ * Handles space key events for keyboard control and prevents actions during modal display.
  */
 class StartStopButton extends React.Component<Props, State> {
   private stopButtonTimer: NodeJS.Timeout | null = null;
@@ -32,7 +38,7 @@ class StartStopButton extends React.Component<Props, State> {
    * @param {string} uri - The URI to which the fetch request is made.
    * @private
    */
-  private hardpy_call(uri: string) {
+  private hardpy_call(uri: string): void {
     fetch(uri)
       .then((response) => {
         if (response.ok) {
@@ -53,20 +59,23 @@ class StartStopButton extends React.Component<Props, State> {
    * @private
    */
   private hardpy_start(): void {
+    console.log("StartStopButton: Starting test execution");
     this.hardpy_call("api/start");
   }
 
   /**
    * Initiates the stop process by making a call to the 'api/stop' endpoint.
+   * Temporarily disables the stop button to prevent multiple rapid clicks.
    * @private
    */
   private hardpy_stop(): void {
     if (this.state.isStopButtonDisabled) {
       return;
     }
+    console.log("StartStopButton: Stopping test execution");
     this.hardpy_call("api/stop");
 
-    // Disable the stop button for some time
+    // Disable the stop button for some time to prevent multiple rapid clicks
     this.setState({ isStopButtonDisabled: true });
     this.stopButtonTimer = setTimeout(() => {
       this.setState({ isStopButtonDisabled: false });
@@ -74,14 +83,15 @@ class StartStopButton extends React.Component<Props, State> {
   }
 
   /**
-   * Checks if any dialog is currently open.
-   * @returns {boolean} True if a dialog is open, else false.
+   * Checks if any dialog is currently open in the application.
+   * Searches for both Blueprint.js dialogs and standard ARIA dialogs.
+   * @returns {boolean} True if a dialog is open and visible, false otherwise.
    */
   private isDialogOpen(): boolean {
-    const blueprintDialogs = document.querySelectorAll('.bp3-dialog');
+    const blueprintDialogs = document.querySelectorAll(".bp3-dialog");
     for (const dialog of blueprintDialogs) {
       const style = window.getComputedStyle(dialog);
-      if (style.display !== 'none' && style.visibility !== 'hidden') {
+      if (style.display !== "none" && style.visibility !== "hidden") {
         return true;
       }
     }
@@ -89,7 +99,7 @@ class StartStopButton extends React.Component<Props, State> {
     const ariaDialogs = document.querySelectorAll('[role="dialog"]');
     for (const dialog of ariaDialogs) {
       const style = window.getComputedStyle(dialog);
-      if (style.display !== 'none' && style.visibility !== 'hidden') {
+      if (style.display !== "none" && style.visibility !== "hidden") {
         return true;
       }
     }
@@ -98,9 +108,75 @@ class StartStopButton extends React.Component<Props, State> {
   }
 
   /**
-   * Handles the space keydown event to start or stop the process.
+   * Checks if the completion ModalResult is currently visible.
+   * First attempts to use the global variable, falls back to DOM inspection.
+   * @returns {boolean} True if the completion ModalResult is visible, false otherwise.
    */
-  private readonly handleSpaceKey = (event: KeyboardEvent) => {
+  private isCompletionModalResultVisible(): boolean {
+    try {
+      if (typeof isCompletionModalResultVisible !== "undefined") {
+        return isCompletionModalResultVisible;
+      }
+    } catch (error) {
+      console.warn(
+        "StartStopButton: Could not access global ModalResult visibility variable"
+      );
+    }
+
+    // Fallback: check if ModalResult element exists in DOM by z-index
+    const ModalResultElements = document.querySelectorAll(
+      '[style*="z-index: 9999"]'
+    );
+    return ModalResultElements.length > 0;
+  }
+
+  /**
+   * Checks if the application is in the cooldown period after ModalResult dismissal.
+   * Prevents immediate space key actions after the ModalResult is dismissed.
+   * @returns {boolean} True if within the cooldown period, false otherwise.
+   */
+  private isInModalResultDismissCooldown(): boolean {
+    try {
+      if (
+        typeof lastModalResultDismissTime !== "undefined" &&
+        typeof MODAL_RESULT_DISMISS_COOLDOWN !== "undefined"
+      ) {
+        const now = Date.now();
+        return now - lastModalResultDismissTime < MODAL_RESULT_DISMISS_COOLDOWN;
+      }
+    } catch (error) {
+      console.warn("StartStopButton: Could not access cooldown variables");
+    }
+    return false;
+  }
+
+  /**
+   * Handles the space keydown event to start or stop the testing process.
+   * Prevents space key actions when ModalResult is visible or during cooldown period.
+   * Also prevents action when dialogs are open or interactive elements are focused.
+   * @param {KeyboardEvent} event - The keyboard event object
+   */
+  private readonly handleSpaceKey = (event: KeyboardEvent): void => {
+    // Only handle Space key, let other keys pass through
+    if (event.key !== " ") {
+      return;
+    }
+
+    // Check if completion ModalResult is visible
+    if (this.isCompletionModalResultVisible()) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
+    // Check if we're in cooldown period after ModalResult dismissal
+    if (this.isInModalResultDismissCooldown()) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
+    // Don't handle space if any dialog is open
     if (this.isDialogOpen()) {
       return;
     }
@@ -108,31 +184,42 @@ class StartStopButton extends React.Component<Props, State> {
     const target = event.target as HTMLElement;
     if (!target) return;
 
-    const interactiveElements = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'];
+    // Don't handle space if focused on interactive elements
+    const interactiveElements = ["INPUT", "TEXTAREA", "SELECT", "BUTTON"];
     if (
-      interactiveElements.includes(target.tagName) || 
+      interactiveElements.includes(target.tagName) ||
       target.isContentEditable
     ) {
       return;
     }
 
-    if (event.key === " ") {
-      event.preventDefault();
-      const is_testing_in_progress = this.props.testing_status == "run";
-      is_testing_in_progress ? this.hardpy_stop() : this.hardpy_start();
-    }
+    event.preventDefault();
+    const is_testing_in_progress = this.props.testing_status == "run";
+    is_testing_in_progress ? this.hardpy_stop() : this.hardpy_start();
   };
 
   /**
-   * Handles the button click event to start the process.
+   * Handles the button click event to start the testing process.
+   * Prevents button clicks when ModalResult is visible or during cooldown period.
    * @private
    */
   private readonly handleButtonClick = (): void => {
+    // Check if completion ModalResult is visible
+    if (this.isCompletionModalResultVisible()) {
+      return;
+    }
+
+    // Check if we're in cooldown period after ModalResult dismissal
+    if (this.isInModalResultDismissCooldown()) {
+      return;
+    }
+
     this.hardpy_start();
   };
 
   /**
    * Adds an event listener for the keydown event when the component is mounted.
+   * Uses bubbling phase to not interfere with other capture phase listeners.
    */
   componentDidMount(): void {
     window.addEventListener("keydown", this.handleSpaceKey);
@@ -140,6 +227,7 @@ class StartStopButton extends React.Component<Props, State> {
 
   /**
    * Removes the event listener for the keydown event when the component is unmounted.
+   * Also clears any pending timers to prevent memory leaks.
    */
   componentWillUnmount(): void {
     window.removeEventListener("keydown", this.handleSpaceKey);
@@ -150,6 +238,7 @@ class StartStopButton extends React.Component<Props, State> {
 
   /**
    * Renders the Start/Stop button with appropriate properties based on the testing status.
+   * Shows stop button when testing is in progress, start button otherwise.
    * @returns {React.ReactNode} The Start/Stop button component.
    */
   render(): React.ReactNode {

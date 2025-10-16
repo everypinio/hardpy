@@ -12,6 +12,11 @@ host = "localhost"
 port = 8000
 language = "en"
 
+[frontend.modal_result]
+enable = true
+auto_dismiss_pass = true
+auto_dismiss_timeout = 5
+
 [stand_cloud]
 address = "demo.standcloud.localhost"
 connection_only = true

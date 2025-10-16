@@ -322,7 +322,7 @@ Both axes can be set to logarithmic scale for data that requires logarithmic rep
     <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/chart_log_x_log_y.png" alt="logarithmic_xy_chart">
 </h1>
 
-### Chart interaction
+#### Chart interaction
 
 * **Zoom**: Click and drag to select an area to zoom into
 * **Pan**: Click and drag to move around the chart when zoomed in
@@ -330,3 +330,45 @@ Both axes can be set to logarithmic scale for data that requires logarithmic rep
 * **Data points**: Hover over data points to see exact values
 * **Legend**: Click on legend items to show/hide specific datasets
 * **Download**: Downloading plot as a PNG.
+
+### Test completion modal results
+
+The operator panel now displays comprehensive test completion results through modal windows that provide immediate visual feedback about test outcomes.
+
+**Modal types**:
+
+- **PASS Modal**: Green background with auto-dismiss countdown timer
+- **FAIL Modal**: Red background with scrollable list of failed test cases including module names, test case names, and assertion messages
+- **STOP Modal**: Yellow background showing the stopped test case details
+
+**User interaction**:
+
+- **Auto-dismiss**: PASS modals automatically close after a configurable timeout (default: 5 seconds)
+- **Manual dismissal**: Click anywhere on the modal or press any key to close
+- **Space key protection**: Prevents accidental test start/stop during modal display
+- **Cooldown period**: Brief delay after modal dismissal before space key actions are enabled
+
+**Configuration**:
+Enable and customize modal results in your `hardpy.toml`:
+
+```toml
+[frontend.modal_result]
+enable = true    
+auto_dismiss_pass = true
+auto_dismiss_timeout = 15
+```
+
+=== "PASS modal result"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/modal_result_pass.png" alt="PASS modal result" style="width:400px;">
+    </h1>
+
+=== "FAIL modal result"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/modal_result_fail.png" alt="FAIL modal result" style="width:400px;">
+    </h1>
+
+=== "STOP modal result"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/modal_result_stop.png" alt="STOP modal result" style="width:400px;">
+    </h1>

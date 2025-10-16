@@ -49,6 +49,17 @@ class FrontendConfig(BaseModel):
     host: str = "localhost"
     port: int = 8000
     language: str = "en"
+    modal_result: ModalResultConfig = Field(default_factory=lambda: ModalResultConfig())
+
+
+class ModalResultConfig(BaseModel):
+    """Modal result configuration."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    enable: bool = False
+    auto_dismiss_pass: bool = True
+    auto_dismiss_timeout: int = 5
 
 
 class StandCloudConfig(BaseModel):
