@@ -110,7 +110,7 @@ Available languages are [there](hardpy_panel.md#languages).
 
 #### full_size_button
 
-Enable enlarged start/stop button layout in operator panel.
+Enable full-size start/stop button layout in operator panel.
 When set to `true`, the button will be displayed in full-size layout with larger dimensions and centered positioning.
 Default is `false`.
 

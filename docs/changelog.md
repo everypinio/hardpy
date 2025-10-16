@@ -2,7 +2,7 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
-* Added configurable enlarged start/stop button for the operator panel with full-size layout option.
+* Add configurable full-size start/stop button for the operator panel with full-size layout option.
   [[PR-206](https://github.com/everypinio/hardpy/pull/206)]
 * Added configurable modal result windows that display test completion status (PASS/FAIL/STOP)
   with auto-dismiss functionality and enhanced keyboard interaction handling.
