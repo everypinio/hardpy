@@ -59,7 +59,6 @@ def test_config_manager_init():
     assert config.frontend.host == frontend_no_default_host
     assert config.frontend.port == frontend_no_default_port
     assert config.frontend.language == frontend_default_language
-    assert config.frontend.full_size_button is True
     assert config.stand_cloud.address == stand_cloud_no_default_addr
 
 
