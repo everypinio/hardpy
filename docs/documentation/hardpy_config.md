@@ -41,7 +41,7 @@ language = "en"
 full_size_button = true
 
 [frontend.modal_result]
-enable = true
+enable = false
 auto_dismiss_pass = true
 auto_dismiss_timeout = 5
 
@@ -120,7 +120,7 @@ Modal result windows settings for test completion display.
 
 ```toml
 [frontend.modal_result]
-enable = true
+enable = false
 auto_dismiss_pass = true
 auto_dismiss_timeout = 5
 ```
