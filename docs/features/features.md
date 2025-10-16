@@ -44,12 +44,12 @@ The example of file:
 language = "zh"
 ```
 
-### Enlarged start/stop button
+### Full-size start/stop button
 
-**HardPy** provides an enlarged start/stop button layout option for improved usability across different devices and use cases.
+**HardPy** provides a full-size start/stop button layout option for improved usability across different devices and use cases.
 
 **Configuration**:
-Enable the enlarged button in your `hardpy.toml`:
+Enable the full-size button in your `hardpy.toml`:
 
 ```toml
 [frontend]
