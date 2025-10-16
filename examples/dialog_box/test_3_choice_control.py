@@ -26,6 +26,7 @@ test_html = """
 </html>
 """
 
+
 @pytest.mark.case_name("Test dialog box with radiobutton")
 def test_radiobutton():
     dbx = DialogBox(
@@ -33,9 +34,10 @@ def test_radiobutton():
         title_bar="Radiobutton example",
         widget=RadiobuttonWidget(fields=["one", "two", "three"]),
     )
-    response = run_dialog_box(dbx)
-    set_message(f"Selected item {response}")
-    assert response == "one", "The answer is not correct"
+    result = run_dialog_box(dbx)
+    set_message(f"Selected item {result.widget_result}")
+    assert result.pass_fail_result is None
+    assert result.widget_result == "one", "The answer is not correct"
 
 
 @pytest.mark.case_name("Test dialog box with radiobutton with image")
@@ -46,9 +48,10 @@ def test_radiobutton_with_image():
         widget=RadiobuttonWidget(fields=["one", "two", "three"]),
         image=ImageComponent(address="assets/test.png", width=100),
     )
-    response = run_dialog_box(dbx)
-    set_message(f"Selected item {response}")
-    assert response == "one", "The answer is not correct"
+    result = run_dialog_box(dbx)
+    set_message(f"Selected item {result.widget_result}")
+    assert result.pass_fail_result is None
+    assert result.widget_result == "one", "The answer is not correct"
 
 
 @pytest.mark.case_name("Test dialog box with radiobutton with html")
@@ -63,9 +66,24 @@ def test_radiobutton_with_html():
             width=50,
         ),
     )
-    response = run_dialog_box(dbx)
-    set_message(f"Selected item {response}")
-    assert response == "one", "The answer is not correct"
+    result = run_dialog_box(dbx)
+    set_message(f"Selected item {result.widget_result}")
+    assert result.pass_fail_result is None
+    assert result.widget_result == "one", "The answer is not correct"
+
+
+@pytest.mark.case_name("Test dialog box with radiobutton with pass_fail")
+def test_radiobutton_with_pass_fail():
+    dbx = DialogBox(
+        dialog_text='Select item "one" out of several and click PASS or FAIL.',
+        title_bar="Radiobutton example with pass/fail",
+        widget=RadiobuttonWidget(fields=["one", "two", "three"]),
+        pass_fail=True,
+    )
+    result = run_dialog_box(dbx)
+    assert result.is_pass
+    assert result.widget_result == "one"
+    set_message(f"Pass/Fail: {result.is_pass}, Selected item: {result.widget_result}")
 
 
 @pytest.mark.case_name("Test dialog box with checkbox")
@@ -75,10 +93,11 @@ def test_checkbox():
         title_bar="Checkbox example",
         widget=CheckboxWidget(fields=["one", "two", "three"]),
     )
-    response = run_dialog_box(dbx)
-    set_message(f"Selected item {response}")
+    result = run_dialog_box(dbx)
+    set_message(f"Selected items {result.widget_result}")
     correct_answer = {"one", "two"}
-    assert set(response) == correct_answer, "The answer is not correct"
+    assert result.pass_fail_result is None
+    assert set(result.widget_result) == correct_answer, "The answer is not correct"
 
 
 @pytest.mark.case_name("Test dialog box with checkbox with image")
@@ -89,10 +108,11 @@ def test_checkbox_with_image():
         widget=CheckboxWidget(fields=["one", "two", "three"]),
         image=ImageComponent(address="assets/test.png", width=100),
     )
-    response = run_dialog_box(dbx)
-    set_message(f"Selected item {response}")
+    result = run_dialog_box(dbx)
+    set_message(f"Selected items {result.widget_result}")
     correct_answer = {"one", "two"}
-    assert set(response) == correct_answer, "The answer is not correct"
+    assert result.pass_fail_result is None
+    assert set(result.widget_result) == correct_answer, "The answer is not correct"
 
 
 @pytest.mark.case_name("Test dialog box with checkbox with html")
@@ -107,7 +127,23 @@ def test_checkbox_with_html():
             width=50,
         ),
     )
-    response = run_dialog_box(dbx)
-    set_message(f"Selected item {response}")
+    result = run_dialog_box(dbx)
+    set_message(f"Selected items {result.widget_result}")
     correct_answer = {"one", "two"}
-    assert set(response) == correct_answer, "The answer is not correct"
+    assert result.pass_fail_result is None
+    assert set(result.widget_result) == correct_answer, "The answer is not correct"
+
+
+@pytest.mark.case_name("Test dialog box with checkbox with pass_fail")
+def test_checkbox_with_pass_fail():
+    dbx = DialogBox(
+        dialog_text='Select items "one" and "two" and click PASS or FAIL button',
+        title_bar="Checkbox example with pass/fail",
+        widget=CheckboxWidget(fields=["one", "two", "three"]),
+        pass_fail=True,
+    )
+    result = run_dialog_box(dbx)
+    assert result.is_pass
+    correct_answer = {"one", "two"}
+    assert set(result.widget_result) == correct_answer
+    set_message(f"Pass/Fail: {result.is_pass}, Selected items: {result.widget_result}")

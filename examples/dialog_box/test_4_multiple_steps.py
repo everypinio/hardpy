@@ -26,6 +26,7 @@ test_html = """
 </html>
 """
 
+
 @pytest.mark.case_name("Multistep")
 def test_multiple_steps():
     steps = [
@@ -48,8 +49,10 @@ def test_multiple_steps():
         dialog_text="Follow the steps and click Confirm",
         widget=MultistepWidget(steps),
     )
-    response = run_dialog_box(dbx)
-    assert response
+    result = run_dialog_box(dbx)
+    assert result
+    assert result.pass_fail_result is None
+    assert result.widget_result is True
 
 
 @pytest.mark.case_name("Multistep with image")
@@ -89,8 +92,10 @@ def test_multiple_steps_with_main_image():
         widget=MultistepWidget(steps),
         image=ImageComponent(address="assets/test.png", width=50),
     )
-    response = run_dialog_box(dbx)
-    assert response
+    result = run_dialog_box(dbx)
+    assert result
+    assert result.pass_fail_result is None
+    assert result.widget_result is True
 
 
 @pytest.mark.case_name("Multistep with html")
@@ -133,8 +138,10 @@ def test_multiple_steps_with_main_html():
             is_raw_html=True,
         ),
     )
-    response = run_dialog_box(dbx)
-    assert response
+    result = run_dialog_box(dbx)
+    assert result
+    assert result.pass_fail_result is None
+    assert result.widget_result is True
 
 
 @pytest.mark.case_name("Multistep with html and image")
@@ -178,5 +185,35 @@ def test_multiple_steps_with_main_html_and_main_image():
             is_raw_html=True,
         ),
     )
-    response = run_dialog_box(dbx)
-    assert response
+    result = run_dialog_box(dbx)
+    assert result
+    assert result.pass_fail_result is None
+    assert result.widget_result is True
+
+
+@pytest.mark.case_name("Multistep with pass_fail")
+def test_multiple_steps_with_pass_fail():
+    steps = [
+        StepWidget("Step 1", text="Content for step"),
+        StepWidget(
+            "Step 2",
+            text="Content for step 2",
+            image=ImageComponent(address="assets/test.png", width=100),
+        ),
+        StepWidget(
+            "Step 3",
+            text=None,
+            html=HTMLComponent(
+                html=test_html,
+                is_raw_html=True,
+            ),
+        ),
+    ]
+    dbx = DialogBox(
+        dialog_text="Follow the steps and click PASS or FAIL",
+        widget=MultistepWidget(steps),
+        pass_fail=True,
+    )
+    result = run_dialog_box(dbx)
+    assert result.is_pass
+    assert result.widget_result is True

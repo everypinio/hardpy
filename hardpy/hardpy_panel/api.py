@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+import json
 import os
 import re
 from enum import Enum
@@ -125,25 +126,40 @@ def database_document_id() -> dict:
     return {"document_id": config_manager.config.database.doc_id}
 
 
-@app.post("/api/confirm_dialog_box/{dialog_box_output}")
-def confirm_dialog_box(dialog_box_output: str) -> dict:
-    """Confirm dialog box.
+@app.post("/api/confirm_dialog_box")
+def confirm_dialog_box(payload: dict) -> dict:
+    """Confirm dialog box with unified JSON structure.
 
     Args:
-        dialog_box_output (str): output data from dialog box.
+        payload: dict with 'result' (pass/fail), 'data' (widget data), and 'has_pass_fail' flag
 
     Returns:
         dict[str, RunStatus]: run status
-    """
+    """  # noqa: E501
     hex_base = 16
-    unquoted_string = unquote(dialog_box_output)
+
+    result = payload.get("result", "")
+    widget_data = payload.get("data", "")
+    has_pass_fail = payload.get("has_pass_fail", False)
+
+    unquoted_string = unquote(widget_data)
     decoded_string = re.sub(
         "%([0-9a-fA-F]{2})",
         lambda match: chr(int(match.group(1), hex_base)),
         unquoted_string,
     )
 
-    if app.state.pytest_wrp.send_data(str(decoded_string)):
+    # Create JSON structure for all dialog types
+    dialog_result = {
+        "has_pass_fail": has_pass_fail,
+        "result": result,
+        "data": decoded_string,
+    }
+
+    # Convert to JSON string for transmission
+    combined_data = json.dumps(dialog_result)
+
+    if app.state.pytest_wrp.send_data(combined_data):
         return {"status": Status.BUSY}
     return {"status": Status.ERROR}
 

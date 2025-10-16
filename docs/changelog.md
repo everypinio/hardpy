@@ -2,6 +2,10 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Added pass/fail button functionality to dialog boxes for manual test verification.
+  [[PR-207](https://github.com/everypinio/hardpy/pull/207)]
+* Add configurable full-size start/stop button for the operator panel with full-size layout option.
+  [[PR-206](https://github.com/everypinio/hardpy/pull/206)]
 * Added configurable modal result windows that display test completion status (PASS/FAIL/STOP)
   with auto-dismiss functionality and enhanced keyboard interaction handling.
   [[PR-204](https://github.com/everypinio/hardpy/pull/204)]
