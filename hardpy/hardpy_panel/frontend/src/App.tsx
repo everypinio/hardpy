@@ -48,6 +48,7 @@ type StatusKey = keyof typeof STATUS_MAP;
 interface HardpyConfig {
   frontend?: {
     full_size_button?: boolean;
+    sound_on?: boolean;
     modal_result?: {
       enable?: boolean;
       auto_dismiss_pass?: boolean;
