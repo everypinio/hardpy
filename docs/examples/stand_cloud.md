@@ -36,7 +36,7 @@ The code for this example can be seen inside the hardpy package
 
 ### hardpy.toml
 
-Replace the settings in the `[frontend.modal_result]` section with those shown in the **hardpy.toml** example file below.
+Replace the settings in the `[frontend]` and `[frontend.modal_result]` sections with those shown in the **hardpy.toml** example file below.
 
 ```toml
 title = "HardPy TOML config"
