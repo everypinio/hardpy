@@ -45,6 +45,17 @@ const STATUS_MAP = {
 
 type StatusKey = keyof typeof STATUS_MAP;
 
+interface AppConfig {
+  frontend?: {
+    full_size_button?: boolean;
+    modal_result?: {
+      enable?: boolean;
+      auto_dismiss_pass?: boolean;
+      auto_dismiss_timeout?: number;
+    };
+  };
+}
+
 /**
  * Checks if the provided status is a valid status key.
  * @param {string} status - The status string to validate
@@ -146,6 +157,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const { t } = useTranslation();
   const [use_end_test_sound, setUseEndTestSound] = React.useState(false);
   const [use_debug_info, setUseDebugInfo] = React.useState(false);
+  const [appConfig, setAppConfig] = React.useState<AppConfig | null>(null);
+  const [isConfigLoaded, setIsConfigLoaded] = React.useState(false);
 
   const [lastRunStatus, setLastRunStatus] = React.useState<
     StatusKey | "unknown"
@@ -153,9 +166,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const [lastProgress, setProgress] = React.useState(0);
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
   const [lastRunDuration, setLastRunDuration] = React.useState<number>(0);
-
-  // HardPy config state
-  const [hardpyConfig, setHardpyConfig] = React.useState<any>(null);
 
   // Test completion ModalResult state
   const [showCompletionModalResult, setShowCompletionModalResult] =
@@ -181,14 +191,14 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
 
   /**
    * Loads HardPy configuration from the backend API on component mount
-   * Initializes sound settings and other frontend configurations
+   * Initializes frontend configurations
    */
   React.useEffect(() => {
     const loadConfig = async () => {
       try {
         const response = await fetch("/api/hardpy_config");
         const config = await response.json();
-        setHardpyConfig(config);
+        setAppConfig(config);
 
         // Initialize sound setting from TOML config
         if (config.sound_on !== undefined) {
@@ -196,6 +206,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         }
       } catch (error) {
         console.error("Failed to load HardPy config:", error);
+      } finally {
+        setIsConfigLoaded(true);
       }
     };
 
@@ -369,7 +381,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     // Detect test completion and show ModalResult (only if enabled in config)
     const prevStatus = lastRunStatus;
     const ModalResultEnable =
-      hardpyConfig?.frontend?.modal_result?.enable ?? false;
+      appConfig?.frontend?.modal_result?.enable ?? false;
     if (
       ModalResultEnable &&
       prevStatus === "run" &&
@@ -431,7 +443,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     lastProgress,
     lastRunDuration,
     isAuthenticated,
-    hardpyConfig,
+    appConfig,
   ]);
 
   /**
@@ -564,6 +576,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     return t(STATUS_MAP[status]);
   };
 
+  const useBigButton = appConfig?.frontend?.full_size_button !== false;
+
   /**
    * Handles ModalResult dismissal by hiding it and clearing completion data
    */
@@ -598,7 +612,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
               display: "flex",
               flexDirection: wide ? "row" : "column",
               alignItems: "center",
-              gap: wide ? "10px" : "5px",
+              gap: wide ? "10px" : "2px",
+              fontSize: wide ? "inherit" : "12px",
             }}
           >
             <Navbar.Heading
@@ -609,6 +624,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                 alignItems: "center",
                 gap: "5px",
                 whiteSpace: "nowrap",
+                flexWrap: wide ? "nowrap" : "wrap",
               }}
             >
               <div>{t("app.lastLaunch")}</div>
@@ -621,9 +637,11 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
             {use_end_test_sound && (
               <PlaySound key="sound" status={lastRunStatus} />
             )}
-            <Navbar.Divider />
-            <Navbar.Heading>
-              {t("app.duration")}: {lastRunDuration} {t("app.seconds")}
+
+            {wide && <Navbar.Divider />}
+
+            <Navbar.Heading style={{ whiteSpace: "nowrap" }}>
+              {t("app.duration")}: {lastRunDuration}s
             </Navbar.Heading>
           </div>
 
@@ -643,34 +661,81 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       </div>
 
       {/* Footer with progress bar and control buttons */}
-      <div
-        className={Classes.DRAWER_FOOTER}
-        style={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "row",
-          position: "fixed",
-          bottom: 0,
-          background: Colors.LIGHT_GRAY5,
-          margin: "auto",
-        }}
-      >
+      {isConfigLoaded && (
         <div
+          className={Classes.DRAWER_FOOTER}
           style={{
+            width: "100%",
+            display: "flex",
             flexDirection: "column",
-            flexGrow: 1,
-            flexShrink: 1,
-            marginTop: "auto",
-            marginBottom: "auto",
-            padding: "20px",
+            position: "fixed",
+            bottom: 0,
+            background: Colors.LIGHT_GRAY5,
+            margin: "auto",
           }}
         >
-          <ProgressView percentage={lastProgress} status={lastRunStatus} />
+          {useBigButton ? (
+            <>
+              <div
+                style={{
+                  width: "100%",
+                  padding: "10px 20px 0px 20px",
+                }}
+              >
+                <ProgressView
+                  percentage={lastProgress}
+                  status={lastRunStatus}
+                />
+              </div>
+              <div
+                style={{
+                  width: "100%",
+                  padding: "10px 20px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <div style={{ width: "100%" }}>
+                  <StartStopButton
+                    testing_status={lastRunStatus}
+                    useBigButton={true}
+                  />
+                </div>
+              </div>
+            </>
+          ) : (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              <div
+                style={{
+                  flexDirection: "column",
+                  flexGrow: 1,
+                  flexShrink: 1,
+                  marginTop: "auto",
+                  marginBottom: "auto",
+                  padding: "20px",
+                }}
+              >
+                <ProgressView
+                  percentage={lastProgress}
+                  status={lastRunStatus}
+                />
+              </div>
+              <div style={{ flexDirection: "column" }}>
+                <StartStopButton
+                  testing_status={lastRunStatus}
+                  useBigButton={false}
+                />
+              </div>
+            </div>
+          )}
         </div>
-        <div style={{ flexDirection: "column" }}>
-          <StartStopButton testing_status={lastRunStatus} />
-        </div>
-      </div>
+      )}
 
       {/* Test Completion ModalResult */}
       <TestCompletionModalResult
@@ -682,10 +747,10 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         onDismiss={handleModalResultDismiss}
         onVisibilityChange={handleModalResultVisibilityChange}
         autoDismissPass={
-          hardpyConfig?.frontend?.modal_result?.auto_dismiss_pass ?? true
+          appConfig?.frontend?.modal_result?.auto_dismiss_pass ?? true
         }
         autoDismissTimeout={
-          hardpyConfig?.frontend?.modal_result?.auto_dismiss_timeout ?? 5
+          appConfig?.frontend?.modal_result?.auto_dismiss_timeout ?? 5
         }
       />
     </div>

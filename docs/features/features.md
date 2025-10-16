@@ -44,6 +44,18 @@ The example of file:
 language = "zh"
 ```
 
+### Full-size start/stop button
+
+**HardPy** provides a full-size start/stop button layout option for improved usability across different devices and use cases.
+
+**Configuration**:
+Enable the full-size button in your `hardpy.toml`:
+
+```toml
+[frontend]
+full_size_button = true
+```
+
 ### Test completion modal results
 
 **HardPy** provides configurable modal result windows that display test completion status with detailed information:

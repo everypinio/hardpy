@@ -5,7 +5,10 @@ import * as React from "react";
 import { AnchorButton, AnchorButtonProps } from "@blueprintjs/core";
 import { withTranslation, WithTranslation } from "react-i18next";
 
-type Props = { testing_status: string } & WithTranslation;
+type Props = {
+  testing_status: string;
+  useBigButton?: boolean;
+} & WithTranslation;
 
 type State = {
   isStopButtonDisabled: boolean;
@@ -242,30 +245,69 @@ class StartStopButton extends React.Component<Props, State> {
    * @returns {React.ReactNode} The Start/Stop button component.
    */
   render(): React.ReactNode {
-    const { t, testing_status } = this.props;
+    const { t, testing_status, useBigButton = false } = this.props;
     const is_testing: boolean = testing_status == "run";
     const button_id: string = "start-stop-button";
 
-    const stop_button: AnchorButtonProps = {
-      text: t("button.stop"),
-      intent: "danger",
-      large: true,
-      rightIcon: "stop",
-      onClick: this.hardpy_stop,
-      id: button_id,
-    };
+    if (useBigButton) {
+      const bigButtonStyle = {
+        width: "100%",
+        height: "96px",
+        fontSize: "24px",
+        fontWeight: "bold",
+      };
 
-    const start_button: AnchorButtonProps = {
-      text: t("button.start"),
-      intent: is_testing ? undefined : "primary",
-      large: true,
-      rightIcon: "play",
-      onClick: this.handleButtonClick,
-      id: button_id,
-      disabled: this.state.isStopButtonDisabled,
-    };
+      const iconStyle = {
+        fontSize: "28px",
+        marginLeft: "12px",
+      };
 
-    return <AnchorButton {...(is_testing ? stop_button : start_button)} />;
+      const stop_button: AnchorButtonProps = {
+        text: t("button.stop"),
+        intent: "danger",
+        large: true,
+        rightIcon: <span style={iconStyle}>&#9632;</span>,
+        onClick: this.hardpy_stop,
+        id: button_id,
+        fill: true,
+        style: bigButtonStyle,
+      };
+
+      const start_button: AnchorButtonProps = {
+        text: t("button.start"),
+        intent: is_testing ? undefined : "primary",
+        large: true,
+        rightIcon: <span style={iconStyle}>&#9658;</span>,
+        onClick: this.handleButtonClick,
+        id: button_id,
+        disabled: this.state.isStopButtonDisabled,
+        fill: true,
+        style: bigButtonStyle,
+      };
+
+      return <AnchorButton {...(is_testing ? stop_button : start_button)} />;
+    } else {
+      const stop_button: AnchorButtonProps = {
+        text: t("button.stop"),
+        intent: "danger",
+        large: true,
+        rightIcon: "stop",
+        onClick: this.hardpy_stop,
+        id: button_id,
+      };
+
+      const start_button: AnchorButtonProps = {
+        text: t("button.start"),
+        intent: is_testing ? undefined : "primary",
+        large: true,
+        rightIcon: "play",
+        onClick: this.handleButtonClick,
+        id: button_id,
+        disabled: this.state.isStopButtonDisabled,
+      };
+
+      return <AnchorButton {...(is_testing ? stop_button : start_button)} />;
+    }
   }
 }
 

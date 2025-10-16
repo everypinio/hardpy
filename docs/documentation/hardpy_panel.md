@@ -80,6 +80,38 @@ the **Turn on the sound** button.
 
 Sound is disabled by default.
 
+### Full-size start/stop button
+
+The operator panel supports a full-size start/stop button layout for improved usability in various scenarios. 
+This feature is particularly useful for:
+
+- Touchscreen interfaces
+- Mobile devices
+- Situations requiring prominent control elements
+
+**Configuration:**
+Enable the full-size button in your `hardpy.toml`:
+
+```toml
+[frontend]
+full_size_button = true
+```
+
+=== "Desktop layout"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/full_screen_button_big.png" alt="Full-size button desktop layout" style="width:600px;">
+    </h1>
+
+=== "Mobile horizontal"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/full_screen_button_phone_gorizontal.png" alt="Full-size button mobile horizontal" style="width:400px;">
+    </h1>
+
+=== "Mobile vertical"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/ful_screen_button_phone_vertical.png" alt="Full-size button mobile vertical" style="width:200px;">
+    </h1>
+
 ### Dialog box
 
 For user interaction with the test, it is possible to use dialog boxes.

@@ -49,6 +49,7 @@ class FrontendConfig(BaseModel):
     host: str = "localhost"
     port: int = 8000
     language: str = "en"
+    full_size_button: bool = False
     modal_result: ModalResultConfig = Field(default_factory=lambda: ModalResultConfig())
 
 
