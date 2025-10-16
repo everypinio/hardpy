@@ -46,7 +46,6 @@ const STATUS_MAP = {
 type StatusKey = keyof typeof STATUS_MAP;
 
 interface HardpyConfig {
-  sound_on?: boolean;
   frontend?: {
     full_size_button?: boolean;
   };
@@ -193,11 +192,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         const response = await fetch("/api/hardpy_config");
         const config = await response.json();
         setHardpyConfig(config);
-
-        // Initialize sound setting from TOML config
-        if (config.sound_on !== undefined) {
-          setUseEndTestSound(config.sound_on);
-        }
       } catch (error) {
         console.error("Failed to load HardPy config:", error);
       } finally {
@@ -218,11 +212,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         const response = await fetch("/api/hardpy_config");
         const config = await response.json();
         setHardpyConfig(config);
-
-        // Initialize sound setting from TOML config
-        if (config.sound_on !== undefined) {
-          setUseEndTestSound(config.sound_on);
-        }
       } catch (error) {
         console.error("Failed to load HardPy config:", error);
       }
