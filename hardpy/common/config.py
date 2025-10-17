@@ -50,6 +50,7 @@ class FrontendConfig(BaseModel):
     port: int = 8000
     language: str = "en"
     full_size_button: bool = False
+    sound_on: bool = False
     modal_result: ModalResultConfig = Field(default_factory=lambda: ModalResultConfig())
 
 

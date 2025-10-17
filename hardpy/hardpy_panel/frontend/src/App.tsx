@@ -202,8 +202,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         setAppConfig(config);
 
         // Initialize sound setting from TOML config
-        if (config.sound_on !== undefined) {
-          setUseEndTestSound(config.sound_on);
+        if (config.frontend.sound_on !== undefined) {
+          setUseEndTestSound(config.frontend.sound_on);
         }
       } catch (error) {
         console.error("Failed to load HardPy config:", error);
