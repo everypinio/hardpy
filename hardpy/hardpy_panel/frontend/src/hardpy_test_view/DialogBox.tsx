@@ -181,14 +181,14 @@ const TextInputComponent = ({
  * When `pass_fail` is enabled and Enter is pressed, it focuses the "Pass" button
  * without submitting or selecting anything automatically.
  *
- * @param {string[]} fields - Options to display as radio buttons.
- * @param {string} selectedRadioButton - Currently selected option.
- * @param {function} setSelectedRadioButton - Updates the selected option.
- * @param {function} handleKeyDown - Handles key events.
- * @param {number} fontSize - Font size for labels.
+ * @param {string[]} fields - An array of options to display as radio buttons.
+ * @param {string} selectedRadioButton - The currently selected radio button value.
+ * @param {function} setSelectedRadioButton - A function to update the selected radio button.
+ * @param {function} handleKeyDown - A function to handle keydown events on the radio buttons.
+ * @param {number} fontSize - The font size for the radio button labels.
  * @param {boolean} pass_fail - Whether pass/fail mode is active.
  * @param {function} onEnterPress - Callback to focus "Pass" button on Enter.
- * @returns {JSX.Element} - Group of radio buttons.
+ * @returns {JSX.Element} - A group of radio buttons with dynamic styling and auto-focus on the first option.
  */
 const RadioButtonComponent = ({
   fields,
@@ -226,7 +226,7 @@ const RadioButtonComponent = ({
 };
 
 /**
- * CheckboxComponent renders a group of checkboxes.
+ * CheckboxComponent is a reusable component that renders a group of checkboxes.
  * When `pass_fail` is enabled and Enter is pressed, it focuses the "Pass" button
  * without triggering any action.
  *
@@ -237,7 +237,7 @@ const RadioButtonComponent = ({
  * @param {number} fontSize - The font size for the checkbox labels.
  * @param {boolean} pass_fail - Whether pass/fail mode is active.
  * @param {function} onEnterPress - Callback to focus "Pass" button on Enter.
- * @returns {JSX.Element} - Group of checkboxes.
+ * @returns {JSX.Element} - A group of checkboxes with dynamic styling and auto-focus on the first option.
  */
 const CheckboxComponent = ({
   fields,
@@ -597,7 +597,6 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
       }, 1);
     }
   };
-
 
   /**
    * Encodes a URL component, replacing special characters with their hexadecimal equivalents.
