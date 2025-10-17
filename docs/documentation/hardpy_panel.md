@@ -78,6 +78,7 @@ Debug mode is disabled by default.
 The user can turn on the sound of the end of the test by clicking on
 the **Turn on the sound** button.
 
+Sound can also be enabled by setting `sound_on = true` in the frontend configuration section.
 Sound is disabled by default.
 
 ### Full-size start/stop button

@@ -39,6 +39,7 @@ host = "localhost"
 port = 8000
 language = "en"
 full_size_button = false
+sound_on = false
 
 [frontend.modal_result]
 enable = false
@@ -112,6 +113,12 @@ Available languages are [there](hardpy_panel.md#languages).
 
 Enable full-size start/stop button layout in operator panel.
 When set to `true`, the button will be displayed in full-size layout with larger dimensions and centered positioning.
+Default is `false`.
+
+#### sound_on
+
+Enable or disable test completion sound notifications.
+When set to `true`, sound will play when test execution completes (PASS/FAIL/STOP status).
 Default is `false`.
 
 #### modal_result

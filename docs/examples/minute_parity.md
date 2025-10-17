@@ -32,6 +32,7 @@ host = "localhost"
 port = 8000
 language = "en"
 full_size_button = true
+sound_on = true
 
 [frontend.modal_result]
 enable = true
