@@ -624,6 +624,15 @@ def run_dialog_box(dialog_box_data: DialogBox) -> DialogResult:
     Args:
         dialog_box_data (DialogBox): Data for creating the dialog box.
 
+
+        DialogBox attributes:
+        - dialog_text (str): The text of the dialog box.
+        - title_bar (str | None): The title bar of the dialog box.
+          If the title_bar field is missing, it is the case name.
+        - widget (DialogBoxWidget | None): Widget information.
+        - image (ImageComponent | None): Image information.
+        - html (HTMLComponent | None): HTML information.
+
     Returns:
         DialogResult: Structured result containing pass/fail status and widget data.
     """
