@@ -45,7 +45,7 @@ const STATUS_MAP = {
 
 type StatusKey = keyof typeof STATUS_MAP;
 
-interface HardpyConfig {
+interface AppConfig {
   frontend?: {
     full_size_button?: boolean;
     sound_on?: boolean;
@@ -158,7 +158,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const { t } = useTranslation();
   const [use_end_test_sound, setUseEndTestSound] = React.useState(false);
   const [use_debug_info, setUseDebugInfo] = React.useState(false);
-  const [appConfig, setAppConfig] = React.useState<HardpyConfig | null>(null);
+  const [appConfig, setAppConfig] = React.useState<AppConfig | null>(null);
   const [isConfigLoaded, setIsConfigLoaded] = React.useState(false);
 
   const [lastRunStatus, setLastRunStatus] = React.useState<
