@@ -825,7 +825,7 @@ def _process_dialog_result(dialog_box_data: DialogBox, input_data: str) -> Dialo
                 result.widget_result = True
 
     except json.JSONDecodeError:
-        # Simple fallback - treat as normal dialog without pass/fail
+        # Simple fallback - treat as confirm dialog box
         # This maintains basic functionality even if JSON parsing fails
         result.pass_fail_result = None
         if dialog_box_data.widget:
