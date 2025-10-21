@@ -127,11 +127,11 @@ def database_document_id() -> dict:
 
 
 @app.post("/api/confirm_dialog_box")
-def confirm_dialog_box(payload: dict) -> dict:
+def confirm_dialog_box(dbx_data: dict) -> dict:
     """Confirm dialog box with unified JSON structure.
 
     Args:
-        payload: dict with 'result' (pass/fail/confirm) and 'data' (widget data)
+        dbx_data: dict with 'result' (pass/fail/confirm) and 'data' (widget data)
 
     Returns:
         dict[str, RunStatus]: run status
@@ -144,8 +144,8 @@ def confirm_dialog_box(payload: dict) -> dict:
     HEX_BASE = 16  # noqa: N806
     HEX_PATTERN = r"%([0-9a-fA-F]{2})"  # noqa: N806
 
-    result = payload.get(RESULT_KEY, EMPTY_STRING)
-    widget_data = payload.get(DATA_KEY, EMPTY_STRING)
+    result = dbx_data.get(RESULT_KEY, EMPTY_STRING)
+    widget_data = dbx_data.get(DATA_KEY, EMPTY_STRING)
 
     unquoted_string = unquote(widget_data)
     decoded_string = re.sub(
