@@ -35,9 +35,9 @@ def test_text_input():
         widget=TextInputWidget(),
         font_size=18,
     )
-    result = run_dialog_box(dbx)
-    assert result == "ok"
-    set_message(f"Entered text {result}")
+    response = run_dialog_box(dbx)
+    assert response == "ok"
+    set_message(f"Entered text {response}")
 
 
 @pytest.mark.case_name("Text input with image")
@@ -49,9 +49,9 @@ def test_text_input_with_image():
         image=ImageComponent(address="assets/test.png", width=100),
         font_size=18,
     )
-    result = run_dialog_box(dbx)
-    assert result == "ok"
-    set_message(f"Entered text {result}")
+    response = run_dialog_box(dbx)
+    assert response == "ok"
+    set_message(f"Entered text {response}")
 
 
 @pytest.mark.case_name("Text input with html")
@@ -67,9 +67,9 @@ def test_text_input_with_html():
         ),
         font_size=18,
     )
-    result = run_dialog_box(dbx)
-    assert result == "ok"
-    set_message(f"Entered text {result}")
+    response = run_dialog_box(dbx)
+    assert response == "ok"
+    set_message(f"Entered text {response}")
 
 
 @pytest.mark.case_name("Text input with pass_fail")
@@ -81,10 +81,10 @@ def test_text_input_with_pass_fail():
         font_size=18,
         pass_fail=True,
     )
-    result = run_dialog_box(dbx)
-    assert result.is_pass
-    assert result.data == "ok"
-    set_message(f"Pass/Fail: {result.is_pass}, Entered text: {result.data}")
+    response = run_dialog_box(dbx)
+    assert response.result
+    assert response.data == "ok"
+    set_message(f"Pass/Fail: {response.result}, Entered text: {response.data}")
 
 
 @pytest.mark.case_name("Numeric input")
@@ -95,9 +95,9 @@ def test_num_input():
         title_bar="Example of entering a number",
         widget=NumericInputWidget(),
     )
-    result = run_dialog_box(dbx)
-    assert int(result) == test_num
-    set_message(f"Entered number {result}")
+    response = run_dialog_box(dbx)
+    assert int(response) == test_num
+    set_message(f"Entered number {response}")
 
 
 @pytest.mark.case_name("Numeric input with image")
@@ -109,9 +109,9 @@ def test_num_input_with_image():
         widget=NumericInputWidget(),
         image=ImageComponent(address="assets/test.png", width=100),
     )
-    result = run_dialog_box(dbx)
-    assert int(result) == test_num
-    set_message(f"Entered number {result}")
+    response = run_dialog_box(dbx)
+    assert int(response) == test_num
+    set_message(f"Entered number {response}")
 
 
 @pytest.mark.case_name("Numeric input with html")
@@ -123,9 +123,9 @@ def test_num_input_with_html():
         widget=NumericInputWidget(),
         html=HTMLComponent(html=test_html, is_raw_html=True, width=50),
     )
-    result = run_dialog_box(dbx)
-    assert int(result) == test_num
-    set_message(f"Entered number {result}")
+    response = run_dialog_box(dbx)
+    assert int(response) == test_num
+    set_message(f"Entered number {response}")
 
 
 @pytest.mark.case_name("Numeric input with pass_fail")
@@ -137,7 +137,7 @@ def test_num_input_with_pass_fail():
         widget=NumericInputWidget(),
         pass_fail=True,
     )
-    result = run_dialog_box(dbx)
-    assert result.is_pass
-    assert int(result.data) == test_num
-    set_message(f"Pass/Fail: {result.is_pass}, Entered number: {result.data}")
+    response = run_dialog_box(dbx)
+    assert response.result
+    assert int(response.data) == test_num
+    set_message(f"Pass/Fail: {response.result}, Entered number: {response.data}")

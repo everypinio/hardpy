@@ -131,25 +131,21 @@ def confirm_dialog_box(payload: dict) -> dict:
     """Confirm dialog box with unified JSON structure.
 
     Args:
-        payload: dict with 'result' (pass/fail), 'data' (widget data), and 'has_pass_fail' flag
+        payload: dict with 'result' (pass/fail/confirm) and 'data' (widget data)
 
     Returns:
         dict[str, RunStatus]: run status
-    """  # noqa: E501
-    # String constants
+    """
     RESULT_KEY = "result"  # noqa: N806
     DATA_KEY = "data"  # noqa: N806
-    HAS_PASS_FAIL_KEY = "has_pass_fail"  # noqa: N806, S105
     STATUS_KEY = "status"  # noqa: N806
     EMPTY_STRING = ""  # noqa: N806
 
-    # Numeric constants
     HEX_BASE = 16  # noqa: N806
     HEX_PATTERN = r"%([0-9a-fA-F]{2})"  # noqa: N806
 
     result = payload.get(RESULT_KEY, EMPTY_STRING)
     widget_data = payload.get(DATA_KEY, EMPTY_STRING)
-    has_pass_fail = payload.get(HAS_PASS_FAIL_KEY, False)
 
     unquoted_string = unquote(widget_data)
     decoded_string = re.sub(
@@ -160,7 +156,6 @@ def confirm_dialog_box(payload: dict) -> dict:
 
     # Create JSON structure for all dialog types
     dialog_result = {
-        HAS_PASS_FAIL_KEY: has_pass_fail,
         RESULT_KEY: result,
         DATA_KEY: decoded_string,
     }

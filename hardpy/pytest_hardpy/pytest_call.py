@@ -32,14 +32,6 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
 
 
-class DialogConstants:
-    """Dialog constants."""
-
-    PASSED_VALUE = "passed"
-    FAILED_VALUE = "failed"
-    CONFIRM_VALUE = "confirm"
-
-
 @dataclass
 class CurrentTestInfo:
     """Current test info."""
@@ -54,7 +46,7 @@ class PassFailDialog:
 
     Attributes:
         result: True if the dialog was successful
-        widget_result: Data from widget if any, None otherwise
+        data: Data from widget if any, None otherwise
     """
 
     result: bool = False
@@ -63,16 +55,6 @@ class PassFailDialog:
     def __bool__(self) -> bool:
         """Return True if the dialog was successful."""
         return self.result
-
-    @property
-    def is_pass(self) -> bool | None:
-        """Convenience property to check pass/fail status."""
-        return self.result
-
-    @property
-    def widget_result(self) -> Any:  # noqa: ANN401
-        """Convenience property to get widget result."""
-        return self.data
 
 
 class ErrorCode:
@@ -636,6 +618,14 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
         - html (HTMLComponent | None): HTML information.
 
     Returns:
+        Any: An object containing the user's response.
+        The type of the return value depends on the widget type:
+        - BASE: bool.
+        - TEXT_INPUT: str.
+        - NUMERIC_INPUT: float.
+        - RADIOBUTTON: str.
+        - CHECKBOX: list[str].
+        - MULTISTEP: bool.
         Any: The return value of the dialog box.
 
     Raises:
@@ -815,7 +805,7 @@ def _process_pass_fail_dialog(
         result_value = data_dict.get("result", "")
         widget_data = data_dict.get("data", "")
 
-        result.result = result_value == DialogConstants.PASSED_VALUE
+        result.result = result_value == "passed"
 
         if dialog_box_data.widget and widget_data:
             result.data = dialog_box_data.widget.convert_data(widget_data)

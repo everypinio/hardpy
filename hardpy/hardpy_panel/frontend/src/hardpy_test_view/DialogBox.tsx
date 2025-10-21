@@ -729,7 +729,6 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
       const response = await axios.post(`/api/confirm_dialog_box`, {
         result: result,
         data: widgetData,
-        has_pass_fail: true,
       });
       console.log(response.data);
     } catch (error) {
@@ -757,9 +756,8 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
     try {
       // Send unified JSON payload structure
       const response = await axios.post(`/api/confirm_dialog_box`, {
-        result: "",
+        result: "confirm",
         data: widgetData,
-        has_pass_fail: false,
       });
       console.log(response.data);
     } catch (error) {
