@@ -33,9 +33,11 @@ def test_base_dialog_box_with_image():
         dialog_text="Press the Confirm button",
         image=ImageComponent(address="assets/test.png", width=100, border=1),
         html=HTMLComponent(html="https://everypinio.github.io/hardpy/", width=50, is_raw_html=False),
+        pass_fail=True,
     )
     response = run_dialog_box(dbx)
-    assert response
+    assert response.result
+    assert response.data
 
 @pytest.mark.case_name("Empty test after")
 def test_after():

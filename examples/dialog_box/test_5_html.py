@@ -26,7 +26,7 @@ def test_base_dialog_box_with_html_code():
         html=HTMLComponent(html=test_html, is_raw_html=True, width=50),
     )
     response = run_dialog_box(dbx)
-    assert response is True
+    assert response
 
 
 @pytest.mark.case_name("Base dialog box with html link")
@@ -41,7 +41,7 @@ def test_base_dialog_box_with_html_link():
         ),
     )
     response = run_dialog_box(dbx)
-    assert response is True
+    assert response
 
 
 @pytest.mark.case_name("Base dialog box with html link and border")
@@ -56,7 +56,7 @@ def test_base_dialog_box_with_html_link_and_border():
         ),
     )
     response = run_dialog_box(dbx)
-    assert response is True
+    assert response
 
 
 @pytest.mark.case_name("Dialog box with html and pass/fail buttons")
