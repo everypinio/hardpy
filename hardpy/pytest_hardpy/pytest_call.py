@@ -817,7 +817,7 @@ def _process_dialog_result(dialog_box_data: DialogBox, input_data: str) -> Dialo
             else:
                 result.widget_result = None
         else:
-            # For normal mode
+            # For Confirm mode
             result.pass_fail_result = None
             if dialog_box_data.widget:
                 result.widget_result = dialog_box_data.widget.convert_data(widget_data)
