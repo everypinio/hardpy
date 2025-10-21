@@ -21,9 +21,7 @@ def test_base_dialog_box():
         dialog_text="Press the Confirm button",
     )
     result = run_dialog_box(dbx)
-    assert result
-    assert result.pass_fail_result is None
-    assert result.widget_result is True
+    assert result is True
 
 
 @pytest.mark.case_name("Base dialog box with image")
@@ -34,34 +32,32 @@ def test_base_dialog_box_with_image():
         image=ImageComponent(address="assets/test.png", width=100),
     )
     result = run_dialog_box(dbx)
-    assert result
-    assert result.pass_fail_result is None
-    assert result.widget_result is True
+    assert result is True
 
 
 @pytest.mark.case_name("Base dialog box with pass_fail")
 def test_base_dialog_box_with_pass_fail():
     dbx = DialogBox(
         title_bar="Operator check",
-        dialog_text="Press PASS or FAIL button",
+        dialog_text="Press Pass or Fail button",
         pass_fail=True,
     )
     result = run_dialog_box(dbx)
     assert result.is_pass
-    assert result.widget_result
+    assert result.data is True
 
 
 @pytest.mark.case_name("Base dialog box with image and pass_fail")
 def test_base_dialog_box_with_image_and_pass_fail():
     dbx = DialogBox(
         title_bar="Operator check",
-        dialog_text="Press PASS or FAIL button",
+        dialog_text="Press Pass or Fail button",
         image=ImageComponent(address="assets/test.png", width=100),
         pass_fail=True,
     )
     result = run_dialog_box(dbx)
     assert result.is_pass
-    assert result.widget_result
+    assert result.data is True
 
 
 @pytest.mark.case_name("Empty test after")

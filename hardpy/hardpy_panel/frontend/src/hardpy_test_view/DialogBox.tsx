@@ -106,7 +106,7 @@ interface TextInputComponentProps {
   handleKeyDown: (event: React.KeyboardEvent) => void;
   inputPlaceholder?: string;
   type: string;
-  pass_fail?: boolean;
+  passFail?: boolean;
   onEnterPress?: () => void;
 }
 
@@ -116,7 +116,7 @@ interface RadioButtonComponentProps {
   setSelectedRadioButton: (value: string) => void;
   handleKeyDown: (event: React.KeyboardEvent) => void;
   fontSize: number;
-  pass_fail?: boolean;
+  passFail?: boolean;
   onEnterPress?: () => void;
 }
 
@@ -126,7 +126,7 @@ interface CheckboxComponentProps {
   setSelectedCheckboxes: (value: string[]) => void;
   handleKeyDown: (event: React.KeyboardEvent) => void;
   fontSize: number;
-  pass_fail?: boolean;
+  passFail?: boolean;
   onEnterPress?: () => void;
 }
 
@@ -140,7 +140,7 @@ interface CheckboxComponentProps {
  * @param {function} handleKeyDown - A function to handle keydown events on the input field.
  * @param {string} inputPlaceholder - The placeholder text to display in the input field.
  * @param {string} type - The type of the input field.
- * @param {boolean} pass_fail - Whether pass/fail buttons are enabled.
+ * @param {boolean} passFail - Whether pass/fail buttons are enabled.
  * @param {function} onEnterPress - Callback to focus the "Pass" button (not trigger it).
  * @returns {JSX.Element} - A controlled input component with auto-focus enabled.
  */
@@ -150,7 +150,7 @@ const TextInputComponent = ({
   handleKeyDown,
   inputPlaceholder,
   type,
-  pass_fail,
+  passFail: pass_fail,
   onEnterPress,
 }: TextInputComponentProps): JSX.Element => {
   const handleKeyDownWithFocus = (event: React.KeyboardEvent) => {
@@ -186,7 +186,7 @@ const TextInputComponent = ({
  * @param {function} setSelectedRadioButton - A function to update the selected radio button.
  * @param {function} handleKeyDown - A function to handle keydown events on the radio buttons.
  * @param {number} fontSize - The font size for the radio button labels.
- * @param {boolean} pass_fail - Whether pass/fail mode is active.
+ * @param {boolean} passFail - Whether pass/fail mode is active.
  * @param {function} onEnterPress - Callback to focus "Pass" button on Enter.
  * @returns {JSX.Element} - A group of radio buttons with dynamic styling and auto-focus on the first option.
  */
@@ -196,7 +196,7 @@ const RadioButtonComponent = ({
   setSelectedRadioButton,
   handleKeyDown,
   fontSize,
-  pass_fail,
+  passFail: pass_fail,
   onEnterPress,
 }: RadioButtonComponentProps): JSX.Element => {
   const handleKeyDownWithFocus = (event: React.KeyboardEvent) => {
@@ -235,7 +235,7 @@ const RadioButtonComponent = ({
  * @param {function} setSelectedCheckboxes - A function to update the selected checkboxes.
  * @param {function} handleKeyDown - A function to handle keydown events on the checkboxes.
  * @param {number} fontSize - The font size for the checkbox labels.
- * @param {boolean} pass_fail - Whether pass/fail mode is active.
+ * @param {boolean} passFail - Whether pass/fail mode is active.
  * @param {function} onEnterPress - Callback to focus "Pass" button on Enter.
  * @returns {JSX.Element} - A group of checkboxes with dynamic styling and auto-focus on the first option.
  */
@@ -245,7 +245,7 @@ const CheckboxComponent = ({
   setSelectedCheckboxes,
   handleKeyDown,
   fontSize,
-  pass_fail,
+  passFail: pass_fail,
   onEnterPress,
 }: CheckboxComponentProps): JSX.Element => {
   const handleKeyDownWithFocus = (event: React.KeyboardEvent) => {
@@ -304,7 +304,7 @@ const renderTextInput = (
     handleKeyDown={handleKeyDown}
     inputPlaceholder={t("operatorDialog.enterAnswer")}
     type="text"
-    pass_fail={props.pass_fail}
+    passFail={props.pass_fail}
     onEnterPress={onEnterPress}
   />
 );
@@ -331,7 +331,7 @@ const renderNumericInput = (
     handleKeyDown={handleKeyDown}
     inputPlaceholder={t("operatorDialog.enterAnswer")}
     type="number"
-    pass_fail={props.pass_fail}
+    passFail={props.pass_fail}
     onEnterPress={onEnterPress}
   />
 );
@@ -357,7 +357,7 @@ const renderRadioButton = (
     setSelectedRadioButton={setSelectedRadioButton}
     handleKeyDown={handleKeyDown}
     fontSize={props.font_size ?? 12}
-    pass_fail={props.pass_fail}
+    passFail={props.pass_fail}
     onEnterPress={onEnterPress}
   />
 );
@@ -383,7 +383,7 @@ const renderCheckbox = (
     setSelectedCheckboxes={setSelectedCheckboxes}
     handleKeyDown={handleKeyDown}
     fontSize={props.font_size ?? 12}
-    pass_fail={props.pass_fail}
+    passFail={props.pass_fail}
     onEnterPress={onEnterPress}
   />
 );
@@ -724,7 +724,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
     const widgetData = prepareWidgetData();
 
     try {
-      const result = passed ? "pass" : "fail";
+      const result = passed ? "passed" : "failed";
       // Send unified JSON payload structure
       const response = await axios.post(`/api/confirm_dialog_box`, {
         result: result,
@@ -1151,7 +1151,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
             <Button
               ref={passButtonRef}
               intent="success"
-              text={t("operatorDialog.pass")}
+              text={t("button.pass")}
               onClick={() => handlePassFail(true)}
               autoFocus={!hasInputField}
               style={{
@@ -1161,7 +1161,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
             />
             <Button
               intent="danger"
-              text={t("operatorDialog.fail")}
+              text={t("button.fail")}
               onClick={() => handlePassFail(false)}
               style={{
                 minWidth: "65px",

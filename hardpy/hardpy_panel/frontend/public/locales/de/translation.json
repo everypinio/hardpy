@@ -27,7 +27,9 @@
   "button": {
     "start": "Starten",
     "stop": "Stoppen",
-    "confirm": "Bestätigen"
+    "confirm": "Bestätigen",
+    "pass": "Bestanden",
+    "fail": "Fehlgeschlagen"
   },
   "error": {
     "dbConnectionTitle": "Datenbankverbindungsfehler",
@@ -53,9 +55,7 @@
     "notificationDesc": "Das Fenster wurde geschlossen. Tests gestoppt.",
     "numericInputError": "Bitte geben Sie eine Zahl ein",
     "radioButtonError": "Bitte wählen Sie eine Option",
-    "checkboxError": "Bitte wählen Sie mindestens eine Option",
-    "pass": "BESTANDEN",
-    "fail": "FEHLGESCHLAGEN"
+    "checkboxError": "Bitte wählen Sie mindestens eine Option"
   },
   "suiteList": {
     "loadingTests": "Tests werden geladen... 🤔",

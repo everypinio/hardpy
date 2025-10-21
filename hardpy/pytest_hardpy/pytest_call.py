@@ -31,8 +31,13 @@ from hardpy.pytest_hardpy.utils import (
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
-PASS_VALUE = "pass"  # noqa: S105
-FAIL_VALUE = "fail"
+
+class DialogConstants:
+    """Dialog constants."""
+
+    PASSED_VALUE = "passed"
+    FAILED_VALUE = "failed"
+    CONFIRM_VALUE = "confirm"
 
 
 @dataclass
@@ -44,32 +49,30 @@ class CurrentTestInfo:
 
 
 @dataclass
-class DialogResult:
+class PassFailDialog:
     """Result of dialog box interaction.
 
     Attributes:
-        pass_fail_result: True for PASS, False for FAIL, None if pass_fail is not enabled
+        result: True if the dialog was successful
         widget_result: Data from widget if any, None otherwise
-    """  # noqa: E501
+    """
 
-    pass_fail_result: bool | None = None
-    widget_result: Any = None
+    result: bool = False
+    data: Any = None
 
     def __bool__(self) -> bool:
         """Return True if the dialog was successful."""
-        if self.pass_fail_result is not None:
-            return self.pass_fail_result
-        return bool(self.widget_result) if self.widget_result is not None else True
+        return self.result
 
     @property
     def is_pass(self) -> bool | None:
         """Convenience property to check pass/fail status."""
-        return self.pass_fail_result
+        return self.result
 
     @property
-    def data(self) -> Any:  # noqa: ANN401
-        """Convenience property to get widget data."""
-        return self.widget_result
+    def widget_result(self) -> Any:  # noqa: ANN401
+        """Convenience property to get widget result."""
+        return self.data
 
 
 class ErrorCode:
@@ -618,12 +621,11 @@ def set_case_chart(chart: Chart) -> None:
     reporter.update_db_by_doc()
 
 
-def run_dialog_box(dialog_box_data: DialogBox) -> DialogResult:
+def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     """Display a dialog box.
 
     Args:
         dialog_box_data (DialogBox): Data for creating the dialog box.
-
 
         DialogBox attributes:
         - dialog_text (str): The text of the dialog box.
@@ -634,7 +636,10 @@ def run_dialog_box(dialog_box_data: DialogBox) -> DialogResult:
         - html (HTMLComponent | None): HTML information.
 
     Returns:
-        DialogResult: Structured result containing pass/fail status and widget data.
+        Any: The return value of the dialog box.
+
+    Raises:
+        ValueError: If the 'dialog_text' argument is empty.
     """
     if not dialog_box_data.dialog_text:
         msg = "The 'dialog_text' argument cannot be empty."
@@ -657,7 +662,15 @@ def run_dialog_box(dialog_box_data: DialogBox) -> DialogResult:
     input_dbx_data = _get_operator_data()
     _cleanup_widget(reporter, key)
 
-    return _process_dialog_result(dialog_box_data, input_dbx_data)
+    if dialog_box_data.pass_fail:
+        return _process_pass_fail_dialog(dialog_box_data, input_dbx_data)
+
+    try:
+        data_dict = json.loads(input_dbx_data)
+        widget_data = data_dict.get("data", "")
+        return dialog_box_data.widget.convert_data(widget_data)
+    except json.JSONDecodeError:
+        return dialog_box_data.widget.convert_data(input_dbx_data)
 
 
 def set_operator_message(  # noqa: PLR0913
@@ -790,47 +803,30 @@ def _cleanup_widget(reporter: RunnerReporter, key: str) -> None:
     reporter.update_db_by_doc()
 
 
-def _process_dialog_result(dialog_box_data: DialogBox, input_data: str) -> DialogResult:
-    """Process dialog box result data with JSON structure.
-
-    Args:
-        dialog_box_data: Dialog box configuration
-        input_data: Raw input data from operator panel (JSON string)
-
-    Returns:
-        DialogResult: Processed dialog result
-    """
-    result = DialogResult()
+def _process_pass_fail_dialog(
+    dialog_box_data: DialogBox,
+    input_data: str,
+) -> PassFailDialog:
+    """Process pass/fail dialog result."""
+    result = PassFailDialog()
 
     try:
-        # Try to parse as JSON first
         data_dict = json.loads(input_data)
-        has_pass_fail = data_dict.get("has_pass_fail", False)
         result_value = data_dict.get("result", "")
         widget_data = data_dict.get("data", "")
 
-        if has_pass_fail:
-            # For pass/fail mode
-            result.pass_fail_result = result_value.lower() == PASS_VALUE
-            if dialog_box_data.widget and widget_data:
-                result.widget_result = dialog_box_data.widget.convert_data(widget_data)
-            else:
-                result.widget_result = None
+        result.result = result_value == DialogConstants.PASSED_VALUE
+
+        if dialog_box_data.widget and widget_data:
+            result.data = dialog_box_data.widget.convert_data(widget_data)
         else:
-            # For Confirm mode
-            result.pass_fail_result = None
-            if dialog_box_data.widget:
-                result.widget_result = dialog_box_data.widget.convert_data(widget_data)
-            else:
-                result.widget_result = True
+            result.data = True
 
     except json.JSONDecodeError:
-        # Simple fallback - treat as confirm dialog box
-        # This maintains basic functionality even if JSON parsing fails
-        result.pass_fail_result = None
+        result.result = False
         if dialog_box_data.widget:
-            result.widget_result = dialog_box_data.widget.convert_data(input_data)
+            result.data = dialog_box_data.widget.convert_data(input_data)
         else:
-            result.widget_result = True
+            result.data = True
 
     return result

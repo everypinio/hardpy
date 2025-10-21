@@ -136,32 +136,41 @@ def confirm_dialog_box(payload: dict) -> dict:
     Returns:
         dict[str, RunStatus]: run status
     """  # noqa: E501
-    hex_base = 16
+    # String constants
+    RESULT_KEY = "result"  # noqa: N806
+    DATA_KEY = "data"  # noqa: N806
+    HAS_PASS_FAIL_KEY = "has_pass_fail"  # noqa: N806, S105
+    STATUS_KEY = "status"  # noqa: N806
+    EMPTY_STRING = ""  # noqa: N806
 
-    result = payload.get("result", "")
-    widget_data = payload.get("data", "")
-    has_pass_fail = payload.get("has_pass_fail", False)
+    # Numeric constants
+    HEX_BASE = 16  # noqa: N806
+    HEX_PATTERN = r"%([0-9a-fA-F]{2})"  # noqa: N806
+
+    result = payload.get(RESULT_KEY, EMPTY_STRING)
+    widget_data = payload.get(DATA_KEY, EMPTY_STRING)
+    has_pass_fail = payload.get(HAS_PASS_FAIL_KEY, False)
 
     unquoted_string = unquote(widget_data)
     decoded_string = re.sub(
-        "%([0-9a-fA-F]{2})",
-        lambda match: chr(int(match.group(1), hex_base)),
+        HEX_PATTERN,
+        lambda match: chr(int(match.group(1), HEX_BASE)),
         unquoted_string,
     )
 
     # Create JSON structure for all dialog types
     dialog_result = {
-        "has_pass_fail": has_pass_fail,
-        "result": result,
-        "data": decoded_string,
+        HAS_PASS_FAIL_KEY: has_pass_fail,
+        RESULT_KEY: result,
+        DATA_KEY: decoded_string,
     }
 
     # Convert to JSON string for transmission
     combined_data = json.dumps(dialog_result)
 
     if app.state.pytest_wrp.send_data(combined_data):
-        return {"status": Status.BUSY}
-    return {"status": Status.ERROR}
+        return {STATUS_KEY: Status.BUSY}
+    return {STATUS_KEY: Status.ERROR}
 
 
 @app.post("/api/confirm_operator_msg/{is_msg_visible}")

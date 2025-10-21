@@ -50,9 +50,7 @@ def test_multiple_steps():
         widget=MultistepWidget(steps),
     )
     result = run_dialog_box(dbx)
-    assert result
-    assert result.pass_fail_result is None
-    assert result.widget_result is True
+    assert result is True
 
 
 @pytest.mark.case_name("Multistep with image")
@@ -93,9 +91,7 @@ def test_multiple_steps_with_main_image():
         image=ImageComponent(address="assets/test.png", width=50),
     )
     result = run_dialog_box(dbx)
-    assert result
-    assert result.pass_fail_result is None
-    assert result.widget_result is True
+    assert result is True
 
 
 @pytest.mark.case_name("Multistep with html")
@@ -139,9 +135,7 @@ def test_multiple_steps_with_main_html():
         ),
     )
     result = run_dialog_box(dbx)
-    assert result
-    assert result.pass_fail_result is None
-    assert result.widget_result is True
+    assert result is True
 
 
 @pytest.mark.case_name("Multistep with html and image")
@@ -186,9 +180,7 @@ def test_multiple_steps_with_main_html_and_main_image():
         ),
     )
     result = run_dialog_box(dbx)
-    assert result
-    assert result.pass_fail_result is None
-    assert result.widget_result is True
+    assert result is True
 
 
 @pytest.mark.case_name("Multistep with pass_fail")
@@ -210,10 +202,10 @@ def test_multiple_steps_with_pass_fail():
         ),
     ]
     dbx = DialogBox(
-        dialog_text="Follow the steps and click PASS or FAIL",
+        dialog_text="Follow the steps and click Pass or Fail",
         widget=MultistepWidget(steps),
         pass_fail=True,
     )
     result = run_dialog_box(dbx)
     assert result.is_pass
-    assert result.widget_result is True
+    assert result.data is True

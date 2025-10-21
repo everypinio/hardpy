@@ -27,7 +27,9 @@
   "button": {
     "start": "開始",
     "stop": "停止",
-    "confirm": "確認"
+    "confirm": "確認",
+    "pass": "合格",
+    "fail": "不合格"
   },
   "error": {
     "dbConnectionTitle": "データベース接続エラー",
@@ -53,9 +55,7 @@
     "notificationDesc": "ウィンドウが閉じられました。テストを停止しました。",
     "numericInputError": "数字を入力してください",
     "radioButtonError": "いずれかのオプションを選択してください",
-    "checkboxError": "少なくとも1つのオプションを選択してください",
-    "pass": "合格",
-    "fail": "不合格"
+    "checkboxError": "少なくとも1つのオプションを選択してください"
   },
   "suiteList": {
     "loadingTests": "テストを読み込み中... 🤔",
