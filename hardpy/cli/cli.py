@@ -67,15 +67,15 @@ def init(  # noqa: PLR0913
         help="Specify a frontend port.",
     ),
     sc_address: str = typer.Option(
-        default="",
+        default=default_config.stand_cloud.address,
         help="Specify a StandCloud address.",
     ),
     sc_connection_only: bool = typer.Option(
-        default=False,
+        default=default_config.stand_cloud.connection_only,
         help="Check StandCloud service availability before start.",
     ),
     sc_api_key: str | None = typer.Option(
-        default=None,
+        default=default_config.stand_cloud.api_key,
         help="Specify a StandCloud API key.",
     ),
 ) -> None:
