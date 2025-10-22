@@ -78,9 +78,9 @@ def test_radiobutton_with_pass_fail():
         pass_fail=True,
     )
     response = run_dialog_box(dbx)
+    set_message(f"Pass/Fail: {response.result}, Selected item: {response.data}")
     assert response.result
     assert response.data == "one"
-    set_message(f"Pass/Fail: {response.result}, Selected item: {response.data}")
 
 
 @pytest.mark.case_name("Test dialog box with checkbox")
@@ -137,7 +137,7 @@ def test_checkbox_with_pass_fail():
         pass_fail=True,
     )
     response = run_dialog_box(dbx)
+    set_message(f"Pass/Fail: {response.result}, Selected items: {response.data}")
     assert response.result
     correct_answer = {"one", "two"}
     assert set(response.data) == correct_answer
-    set_message(f"Pass/Fail: {response.result}, Selected items: {response.data}")

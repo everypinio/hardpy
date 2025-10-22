@@ -36,8 +36,8 @@ def test_text_input():
         font_size=18,
     )
     response = run_dialog_box(dbx)
-    assert response == "ok"
     set_message(f"Entered text {response}")
+    assert response == "ok"
 
 
 @pytest.mark.case_name("Text input with image")
@@ -50,8 +50,8 @@ def test_text_input_with_image():
         font_size=18,
     )
     response = run_dialog_box(dbx)
-    assert response == "ok"
     set_message(f"Entered text {response}")
+    assert response == "ok"
 
 
 @pytest.mark.case_name("Text input with html")
@@ -68,8 +68,8 @@ def test_text_input_with_html():
         font_size=18,
     )
     response = run_dialog_box(dbx)
-    assert response == "ok"
     set_message(f"Entered text {response}")
+    assert response == "ok"
 
 
 @pytest.mark.case_name("Text input with pass_fail")
@@ -82,9 +82,9 @@ def test_text_input_with_pass_fail():
         pass_fail=True,
     )
     response = run_dialog_box(dbx)
+    set_message(f"Pass/Fail: {response.result}, Entered text: {response.data}")
     assert response.result
     assert response.data == "ok"
-    set_message(f"Pass/Fail: {response.result}, Entered text: {response.data}")
 
 
 @pytest.mark.case_name("Numeric input")
@@ -96,8 +96,8 @@ def test_num_input():
         widget=NumericInputWidget(),
     )
     response = run_dialog_box(dbx)
-    assert int(response) == test_num
     set_message(f"Entered number {response}")
+    assert int(response) == test_num
 
 
 @pytest.mark.case_name("Numeric input with image")
@@ -110,8 +110,8 @@ def test_num_input_with_image():
         image=ImageComponent(address="assets/test.png", width=100),
     )
     response = run_dialog_box(dbx)
-    assert int(response) == test_num
     set_message(f"Entered number {response}")
+    assert int(response) == test_num
 
 
 @pytest.mark.case_name("Numeric input with html")
@@ -124,8 +124,8 @@ def test_num_input_with_html():
         html=HTMLComponent(html=test_html, is_raw_html=True, width=50),
     )
     response = run_dialog_box(dbx)
-    assert int(response) == test_num
     set_message(f"Entered number {response}")
+    assert int(response) == test_num
 
 
 @pytest.mark.case_name("Numeric input with pass_fail")
@@ -138,6 +138,6 @@ def test_num_input_with_pass_fail():
         pass_fail=True,
     )
     response = run_dialog_box(dbx)
+    set_message(f"Pass/Fail: {response.result}, Entered number: {response.data}")
     assert response.result
     assert int(response.data) == test_num
-    set_message(f"Pass/Fail: {response.result}, Entered number: {response.data}")
