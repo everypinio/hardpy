@@ -27,7 +27,9 @@
   "button": {
     "start": "Commencer",
     "stop": "Arrêter",
-    "confirm": "Confirmer"
+    "confirm": "Confirmer",
+    "pass": "Réussi",
+    "fail": "Échoué"
   },
   "error": {
     "dbConnectionTitle": "Erreur de connexion à la base de données",

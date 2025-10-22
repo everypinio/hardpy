@@ -118,7 +118,7 @@ For user interaction with the test, it is possible to use dialog boxes.
 An example of usage can be seen in the example [dialog box](../examples/dialog_box.md) and in [dialog box documentation](pytest_hardpy.md#run_dialog_box).
 Currently, there are some types of dialog boxes.
 
-Each dialog box can contain an image.
+Each dialog box can contain an image, HTML page or pass/fail buttons.
 
 * Allows the width to be changed using the `width` parameter.
 * Allows changing the border thickness with the `border` parameter.
@@ -148,6 +148,11 @@ Contains an instruction or question and a `confirm` button for confirmation.
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_html_raw_code.png" alt="base_dialog_box_with_html_raw_code">
     </h1>
 
+=== "Widget with pass/fail buttons"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/base_dbx_with_pass_fail.png" alt="base_dialog_box_with_pass_fail">
+    </h1>
+
 
 #### text input field
 
@@ -167,6 +172,11 @@ The text is transmitted in UTF-8 encoding.
 === "Widget with HTML"
     <h1 align="center">
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_text_input_and_html.png" alt="text_input_dialog_box_with_html">
+    </h1>
+
+=== "Widget with pass/fail buttons"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_text_input_and_pass_fail.png" alt="text_input_dialog_box_with_pass_fail">
     </h1>
 
 #### number input field
@@ -193,6 +203,11 @@ Contains an instruction or question, a number input field, and a `confirm` butto
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_num_input_and_html.png" alt="num_input_dialog_box_with_html">
     </h1>
 
+=== "Widget with pass/fail buttons"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_num_input_and_pass_fail.png" alt="num_input_dialog_box_with_pass_fail">
+    </h1>
+
 #### radiobutton
 
 Contains radiobutton widget.
@@ -214,6 +229,11 @@ Contains radiobutton widget.
 === "Widget with html"
     <h1 align="center">
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_radio_and_html.png" alt="radiobutton_dialog_box_with_html">
+    </h1>
+
+=== "Widget with pass/fail buttons"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_radio_and_pass_fail.png" alt="radiobutton_dialog_box_with_pass_fail">
     </h1>
 
 #### checkbox
@@ -239,6 +259,11 @@ Contains checkbox widget.
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_checkbox_and_html.png" alt="checkbox_dialog_box_with_html">
     </h1>
 
+=== "Widget with pass/fail buttons"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_checkbox_and_pass_fail.png" alt="checkbox_dialog_box_with_pass_fail">
+    </h1>
+
 #### multiple steps
 
 Contains an instruction with multiple steps and `confirm` button for confirmation.
@@ -257,6 +282,11 @@ Allows steps with text and image.
 === "Step 3"
     <h1 align="center">
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_step_with_html.png" alt="dialog_box_with_step_with_html">
+    </h1>
+
+=== "Step with pass/fail buttons"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_step_with_pass_fail.png" alt="dialog_box_with_step_with_pass_fail">
     </h1>
 
 ### Operator message

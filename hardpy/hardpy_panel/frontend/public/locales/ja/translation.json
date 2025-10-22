@@ -27,7 +27,9 @@
   "button": {
     "start": "開始",
     "stop": "停止",
-    "confirm": "確認"
+    "confirm": "確認",
+    "pass": "合格",
+    "fail": "不合格"
   },
   "error": {
     "dbConnectionTitle": "データベース接続エラー",
