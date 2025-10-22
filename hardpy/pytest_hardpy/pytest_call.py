@@ -626,7 +626,7 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
         - RADIOBUTTON: str.
         - CHECKBOX: list[str].
         - MULTISTEP: bool.
-        Any: The return value of the dialog box.
+        - Pass/Fail widget: PassFailDialog.
 
     Raises:
         ValueError: If the 'dialog_text' argument is empty.
