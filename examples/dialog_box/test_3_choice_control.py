@@ -36,7 +36,7 @@ def test_radiobutton():
     )
     response = run_dialog_box(dbx)
     set_message(f"Selected item {response}")
-    assert response == "one"
+    assert response == "one", "The answer is not correct"
 
 
 @pytest.mark.case_name("Test dialog box with radiobutton with image")
@@ -49,7 +49,7 @@ def test_radiobutton_with_image():
     )
     response = run_dialog_box(dbx)
     set_message(f"Selected item {response}")
-    assert response == "one"
+    assert response == "one", "The answer is not correct"
 
 
 @pytest.mark.case_name("Test dialog box with radiobutton with html")
@@ -66,7 +66,7 @@ def test_radiobutton_with_html():
     )
     response = run_dialog_box(dbx)
     set_message(f"Selected item {response}")
-    assert response == "one"
+    assert response == "one", "The answer is not correct"
 
 
 @pytest.mark.case_name("Test dialog box with radiobutton with pass_fail")
@@ -80,7 +80,7 @@ def test_radiobutton_with_pass_fail():
     response = run_dialog_box(dbx)
     set_message(f"Pass/Fail: {response.result}, Selected item: {response.data}")
     assert response.result
-    assert response.data == "one"
+    assert response.data == "one", "The answer is not correct"
 
 
 @pytest.mark.case_name("Test dialog box with checkbox")
@@ -93,7 +93,7 @@ def test_checkbox():
     response = run_dialog_box(dbx)
     set_message(f"Selected items {response}")
     correct_answer = {"one", "two"}
-    assert set(response) == correct_answer
+    assert set(response) == correct_answer, "The answer is not correct"
 
 
 @pytest.mark.case_name("Test dialog box with checkbox with image")
@@ -107,7 +107,7 @@ def test_checkbox_with_image():
     response = run_dialog_box(dbx)
     set_message(f"Selected items {response}")
     correct_answer = {"one", "two"}
-    assert set(response) == correct_answer
+    assert set(response) == correct_answer, "The answer is not correct"
 
 
 @pytest.mark.case_name("Test dialog box with checkbox with html")
@@ -125,7 +125,7 @@ def test_checkbox_with_html():
     response = run_dialog_box(dbx)
     set_message(f"Selected items {response}")
     correct_answer = {"one", "two"}
-    assert set(response) == correct_answer
+    assert set(response) == correct_answer, "The answer is not correct"
 
 
 @pytest.mark.case_name("Test dialog box with checkbox with pass_fail")
@@ -140,4 +140,4 @@ def test_checkbox_with_pass_fail():
     set_message(f"Pass/Fail: {response.result}, Selected items: {response.data}")
     assert response.result
     correct_answer = {"one", "two"}
-    assert set(response.data) == correct_answer
+    assert set(response.data) == correct_answer, "The answer is not correct"
