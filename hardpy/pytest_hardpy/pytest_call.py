@@ -802,21 +802,22 @@ def _process_pass_fail_dialog(
 
     try:
         data_dict = json.loads(input_data)
-        result_value = data_dict.get("result", "")
-        widget_data = data_dict.get("data", "")
-
-        result.result = result_value == "passed"
-
-        if dialog_box_data.widget and widget_data:
-            result.data = dialog_box_data.widget.convert_data(widget_data)
-        else:
-            result.data = True
-
     except json.JSONDecodeError:
         result.result = False
         if dialog_box_data.widget:
             result.data = dialog_box_data.widget.convert_data(input_data)
         else:
             result.data = True
+        return result
+
+    result_value = data_dict.get("result", "")
+    widget_data = data_dict.get("data", "")
+
+    result.result = result_value == "passed"
+
+    if dialog_box_data.widget and widget_data:
+        result.data = dialog_box_data.widget.convert_data(widget_data)
+    else:
+        result.data = True
 
     return result
