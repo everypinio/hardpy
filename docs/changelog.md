@@ -4,6 +4,8 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 
 * Add `sound_on` configuration option to the frontend settings for enabling/disabling test completion sound notifications.
   [[PR-208](https://github.com/everypinio/hardpy/pull/208)]
+* Add pass/fail button functionality to dialog boxes for manual test verification.
+  [[PR-207](https://github.com/everypinio/hardpy/pull/207)]
 * Add configurable full-size start/stop button for the operator panel with full-size layout option.
   [[PR-206](https://github.com/everypinio/hardpy/pull/206)]
 * Added configurable modal result windows that display test completion status (PASS/FAIL/STOP)
