@@ -657,10 +657,10 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
 
     try:
         data_dict = json.loads(input_dbx_data)
-        widget_data = data_dict.get("data", "")
-        return dialog_box_data.widget.convert_data(widget_data)
     except json.JSONDecodeError:
         return dialog_box_data.widget.convert_data(input_dbx_data)
+    widget_data = data_dict.get("data", "")
+    return dialog_box_data.widget.convert_data(widget_data)
 
 
 def set_operator_message(  # noqa: PLR0913
