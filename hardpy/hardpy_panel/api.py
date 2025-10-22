@@ -127,41 +127,45 @@ def database_document_id() -> dict:
 
 
 @app.post("/api/confirm_dialog_box")
-def confirm_dialog_box(payload: dict) -> dict:
+def confirm_dialog_box(dbx_data: dict) -> dict:
     """Confirm dialog box with unified JSON structure.
 
     Args:
-        payload: dict with 'result' (pass/fail), 'data' (widget data), and 'has_pass_fail' flag
+        dbx_data: dict with 'result' (pass/fail/confirm) and 'data' (widget data)
 
     Returns:
         dict[str, RunStatus]: run status
-    """  # noqa: E501
-    hex_base = 16
+    """
+    RESULT_KEY = "result"  # noqa: N806
+    DATA_KEY = "data"  # noqa: N806
+    STATUS_KEY = "status"  # noqa: N806
+    EMPTY_STRING = ""  # noqa: N806
 
-    result = payload.get("result", "")
-    widget_data = payload.get("data", "")
-    has_pass_fail = payload.get("has_pass_fail", False)
+    HEX_BASE = 16  # noqa: N806
+    HEX_PATTERN = r"%([0-9a-fA-F]{2})"  # noqa: N806
+
+    result = dbx_data.get(RESULT_KEY, EMPTY_STRING)
+    widget_data = dbx_data.get(DATA_KEY, EMPTY_STRING)
 
     unquoted_string = unquote(widget_data)
     decoded_string = re.sub(
-        "%([0-9a-fA-F]{2})",
-        lambda match: chr(int(match.group(1), hex_base)),
+        HEX_PATTERN,
+        lambda match: chr(int(match.group(1), HEX_BASE)),
         unquoted_string,
     )
 
     # Create JSON structure for all dialog types
     dialog_result = {
-        "has_pass_fail": has_pass_fail,
-        "result": result,
-        "data": decoded_string,
+        RESULT_KEY: result,
+        DATA_KEY: decoded_string,
     }
 
     # Convert to JSON string for transmission
     combined_data = json.dumps(dialog_result)
 
     if app.state.pytest_wrp.send_data(combined_data):
-        return {"status": Status.BUSY}
-    return {"status": Status.ERROR}
+        return {STATUS_KEY: Status.BUSY}
+    return {STATUS_KEY: Status.ERROR}
 
 
 @app.post("/api/confirm_operator_msg/{is_msg_visible}")

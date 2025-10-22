@@ -27,7 +27,9 @@
   "button": {
     "start": "Start",
     "stop": "Stop",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "pass": "Pass",
+    "fail": "Fail"
   },
   "error": {
     "dbConnectionTitle": "Database Connection Error",
@@ -53,9 +55,7 @@
     "notificationDesc": "The window was closed. Tests stopped.",
     "numericInputError": "Please enter a number",
     "radioButtonError": "Please select one option",
-    "checkboxError": "Please select at least one option",
-    "pass": "PASS",
-    "fail": "FAIL"
+    "checkboxError": "Please select at least one option"
   },
   "suiteList": {
     "loadingTests": "Loading tests... 🤔",

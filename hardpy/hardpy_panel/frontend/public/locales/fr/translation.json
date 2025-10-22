@@ -27,7 +27,9 @@
   "button": {
     "start": "Commencer",
     "stop": "Arrêter",
-    "confirm": "Confirmer"
+    "confirm": "Confirmer",
+    "pass": "Réussi",
+    "fail": "Échoué"
   },
   "error": {
     "dbConnectionTitle": "Erreur de connexion à la base de données",
@@ -53,9 +55,7 @@
     "notificationDesc": "La fenêtre a été fermée. Tests arrêtés.",
     "numericInputError": "Veuillez entrer un nombre",
     "radioButtonError": "Veuillez sélectionner une option",
-    "checkboxError": "Veuillez sélectionner au moins une option",
-    "pass": "RÉUSSI",
-    "fail": "ÉCHOUÉ"
+    "checkboxError": "Veuillez sélectionner au moins une option"
   },
   "suiteList": {
     "loadingTests": "Chargement des tests... 🤔",

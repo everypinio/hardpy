@@ -27,7 +27,9 @@
   "button": {
     "start": "Iniciar",
     "stop": "Detener",
-    "confirm": "Confirmar"
+    "confirm": "Confirmar",
+    "pass": "Aprobado",
+    "fail": "Fallado"
   },
   "error": {
     "dbConnectionTitle": "Error de conexión a la base de datos",
@@ -53,9 +55,7 @@
     "notificationDesc": "La ventana fue cerrada. Pruebas detenidas.",
     "numericInputError": "Por favor ingrese un número",
     "radioButtonError": "Por favor seleccione una opción",
-    "checkboxError": "Por favor seleccione al menos una opción",
-    "pass": "APROBADO",
-    "fail": "REPROBADO"
+    "checkboxError": "Por favor seleccione al menos una opción"
   },
   "suiteList": {
     "loadingTests": "Cargando pruebas... 🤔",

@@ -11,6 +11,7 @@ from hardpy.pytest_hardpy.db import (
 )
 from hardpy.pytest_hardpy.pytest_call import (
     ErrorCode,
+    PassFailDialog,
     clear_operator_message,
     get_current_attempt,
     get_current_report,
@@ -84,6 +85,7 @@ __all__ = [
     "MultistepWidget",
     "NumericInputWidget",
     "NumericMeasurement",
+    "PassFailDialog",
     "RadiobuttonWidget",
     "StandCloudConnector",
     "StandCloudError",
@@ -103,7 +105,6 @@ __all__ = [
     "set_case_chart",
     "set_case_measurement",
     "set_driver_info",
-    "set_dut",
     "set_dut_info",
     "set_dut_name",
     "set_dut_part_number",

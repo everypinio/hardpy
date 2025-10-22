@@ -25,10 +25,8 @@ def test_base_dialog_box_with_html_code():
         dialog_text="Press the Confirm button",
         html=HTMLComponent(html=test_html, is_raw_html=True, width=50),
     )
-    result = run_dialog_box(dbx)
-    assert result
-    assert result.pass_fail_result is None
-    assert result.widget_result is True
+    response = run_dialog_box(dbx)
+    assert response
 
 
 @pytest.mark.case_name("Base dialog box with html link")
@@ -42,10 +40,8 @@ def test_base_dialog_box_with_html_link():
             width=50,
         ),
     )
-    result = run_dialog_box(dbx)
-    assert result
-    assert result.pass_fail_result is None
-    assert result.widget_result is True
+    response = run_dialog_box(dbx)
+    assert response
 
 
 @pytest.mark.case_name("Base dialog box with html link and border")
@@ -59,10 +55,8 @@ def test_base_dialog_box_with_html_link_and_border():
             border=3,
         ),
     )
-    result = run_dialog_box(dbx)
-    assert result
-    assert result.pass_fail_result is None
-    assert result.widget_result is True
+    response = run_dialog_box(dbx)
+    assert response
 
 
 @pytest.mark.case_name("Dialog box with html and pass/fail buttons")
@@ -93,7 +87,7 @@ def test_dialog_box_with_html_and_pass_fail():
             <p>Temperature: <span class="fail">45°C ⚠️</span></p>
         </div>
 
-        <p>Please verify the equipment status and click PASS or FAIL</p>
+        <p>Please verify the equipment status and click Pass or Fail</p>
     </body>
     </html>
     """
@@ -103,6 +97,6 @@ def test_dialog_box_with_html_and_pass_fail():
         html=HTMLComponent(html=test_html, is_raw_html=True, width=60),
         pass_fail=True,
     )
-    result = run_dialog_box(dbx)
-    assert result.is_pass
-    assert result.widget_result
+    response = run_dialog_box(dbx)
+    assert response.result
+    assert response.data
