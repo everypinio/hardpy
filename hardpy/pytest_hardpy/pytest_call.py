@@ -67,7 +67,7 @@ class ErrorCode:
         message (str): error message.
     """
 
-    def __init__(self, code: int, message: str | None = None) -> str | None:  # type: ignore
+    def __init__(self, code: int, message: str | None = None) -> str | None:
         """Add error code to document.
 
         Args:
