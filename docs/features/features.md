@@ -80,6 +80,18 @@ auto_dismiss_timeout = 5
 - **Keyboard integration**: Space key handling respects modal visibility states.
 - **Responsive design**: Adapts to different screen sizes with optimal readability.
 
+### Sound notifications
+
+**HardPy** provides configurable sound notifications for test completion events.
+Users can enable audio feedback when tests reach completion status (PASS/FAIL/STOP).
+
+**Configuration**:
+Enable sound notifications in your `hardpy.toml`:
+
+```toml
+[frontend]
+sound_on = true
+
 ## CLI
 
 ### Creating template project
