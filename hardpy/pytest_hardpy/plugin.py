@@ -251,6 +251,7 @@ class HardpyPlugin:
         except ValueError:
             msg = "No tests collected"
             self._reporter.set_alert(msg)
+            self._reporter.update_db_by_doc()
             exit(msg, ExitCode.NO_TESTS_COLLECTED)
         if session.config.option.collectonly:
             # ignore collect only mode
@@ -267,6 +268,7 @@ class HardpyPlugin:
             except StandCloudError as exc:
                 msg = str(exc)
                 self._reporter.set_alert(msg)
+                self._reporter.update_db_by_doc()
                 exit(msg, ExitCode.INTERNAL_ERROR)
             try:
                 sc_connector.healthcheck()
