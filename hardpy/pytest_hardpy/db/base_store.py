@@ -1,6 +1,7 @@
 # Copyright (c) 2024 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+from json import dumps
 from logging import getLogger
 from typing import Any
 
@@ -55,6 +56,11 @@ class BaseStore:
             key (str): document key
             value: document value
         """
+        try:
+            dumps(value)
+        except Exception:  # noqa: BLE001
+            # serialize non-serializable objects as string
+            value = dumps(value, default=str)
         if "." in key:
             assign(self._doc, key, value)
         else:

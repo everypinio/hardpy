@@ -748,6 +748,7 @@ def _get_current_test() -> CurrentTestInfo:
         caller = stack()[1].function
         msg = f"Function {caller} can't be called outside of the test."
         reporter.set_alert(msg)
+        reporter.update_db_by_doc()
         raise RuntimeError(msg)
 
     module_delimiter = ".py::"

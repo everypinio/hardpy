@@ -2,13 +2,17 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add database updating after the alert has been called.
+  [[PR-211](https://github.com/everypinio/hardpy/pull/211)]
+* Add a handler for JSON objects that cannot be serialized for the database.
+  [[PR-211](https://github.com/everypinio/hardpy/pull/211)]
 * Add `sound_on` configuration option to the frontend settings for enabling/disabling test completion sound notifications.
   [[PR-208](https://github.com/everypinio/hardpy/pull/208)]
 * Add pass/fail button functionality to dialog boxes for manual test verification.
   [[PR-207](https://github.com/everypinio/hardpy/pull/207)]
 * Add configurable full-size start/stop button for the operator panel with full-size layout option.
   [[PR-206](https://github.com/everypinio/hardpy/pull/206)]
-* Added configurable modal result windows that display test completion status (PASS/FAIL/STOP)
+* Add configurable modal result windows that display test completion status (PASS/FAIL/STOP)
   with auto-dismiss functionality and enhanced keyboard interaction handling.
   [[PR-204](https://github.com/everypinio/hardpy/pull/204)]
 * Exclude the `Skipped` status from the `caused_dut_failure_id` reason.
