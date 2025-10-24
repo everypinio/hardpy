@@ -2,7 +2,6 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
-from json import dumps
 from logging import getLogger
 from typing import Any
 
@@ -50,11 +49,6 @@ class BaseReporter:
         if runstore_only and statestore_only:
             msg = "Both runstore_only and statestore_only cannot be True"
             raise ValueError(msg)
-        try:
-            dumps(value)
-        except Exception as exc:
-            msg = f"Value is not JSON serializable: {value}"
-            raise ValueError(msg) from exc
         if runstore_only:
             self._runstore.update_doc_value(key, value)
             return
