@@ -78,7 +78,40 @@ Debug mode is disabled by default.
 The user can turn on the sound of the end of the test by clicking on
 the **Turn on the sound** button.
 
+Sound can also be enabled by setting `sound_on = true` in the frontend configuration section.
 Sound is disabled by default.
+
+### Full-size start/stop button
+
+The operator panel supports a full-size start/stop button layout for improved usability in various scenarios. 
+This feature is particularly useful for:
+
+- Touchscreen interfaces
+- Mobile devices
+- Situations requiring prominent control elements
+
+**Configuration:**
+Enable the full-size button in your `hardpy.toml`:
+
+```toml
+[frontend]
+full_size_button = true
+```
+
+=== "Desktop layout"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/full_screen_button_big.png" alt="Full-size button desktop layout" style="width:600px;">
+    </h1>
+
+=== "Mobile horizontal"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/full_screen_button_phone_gorizontal.png" alt="Full-size button mobile horizontal" style="width:400px;">
+    </h1>
+
+=== "Mobile vertical"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/ful_screen_button_phone_vertical.png" alt="Full-size button mobile vertical" style="width:200px;">
+    </h1>
 
 ### Dialog box
 
@@ -86,7 +119,7 @@ For user interaction with the test, it is possible to use dialog boxes.
 An example of usage can be seen in the example [dialog box](../examples/dialog_box.md) and in [dialog box documentation](pytest_hardpy.md#run_dialog_box).
 Currently, there are some types of dialog boxes.
 
-Each dialog box can contain an image.
+Each dialog box can contain an image, HTML page or pass/fail buttons.
 
 * Allows the width to be changed using the `width` parameter.
 * Allows changing the border thickness with the `border` parameter.
@@ -116,6 +149,11 @@ Contains an instruction or question and a `confirm` button for confirmation.
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_html_raw_code.png" alt="base_dialog_box_with_html_raw_code">
     </h1>
 
+=== "Widget with pass/fail buttons"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/base_dbx_with_pass_fail.png" alt="base_dialog_box_with_pass_fail">
+    </h1>
+
 
 #### text input field
 
@@ -135,6 +173,11 @@ The text is transmitted in UTF-8 encoding.
 === "Widget with HTML"
     <h1 align="center">
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_text_input_and_html.png" alt="text_input_dialog_box_with_html">
+    </h1>
+
+=== "Widget with pass/fail buttons"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_text_input_and_pass_fail.png" alt="text_input_dialog_box_with_pass_fail">
     </h1>
 
 #### number input field
@@ -161,6 +204,11 @@ Contains an instruction or question, a number input field, and a `confirm` butto
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_num_input_and_html.png" alt="num_input_dialog_box_with_html">
     </h1>
 
+=== "Widget with pass/fail buttons"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_num_input_and_pass_fail.png" alt="num_input_dialog_box_with_pass_fail">
+    </h1>
+
 #### radiobutton
 
 Contains radiobutton widget.
@@ -182,6 +230,11 @@ Contains radiobutton widget.
 === "Widget with html"
     <h1 align="center">
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_radio_and_html.png" alt="radiobutton_dialog_box_with_html">
+    </h1>
+
+=== "Widget with pass/fail buttons"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_radio_and_pass_fail.png" alt="radiobutton_dialog_box_with_pass_fail">
     </h1>
 
 #### checkbox
@@ -207,6 +260,11 @@ Contains checkbox widget.
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_checkbox_and_html.png" alt="checkbox_dialog_box_with_html">
     </h1>
 
+=== "Widget with pass/fail buttons"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_checkbox_and_pass_fail.png" alt="checkbox_dialog_box_with_pass_fail">
+    </h1>
+
 #### multiple steps
 
 Contains an instruction with multiple steps and `confirm` button for confirmation.
@@ -225,6 +283,11 @@ Allows steps with text and image.
 === "Step 3"
     <h1 align="center">
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_step_with_html.png" alt="dialog_box_with_step_with_html">
+    </h1>
+
+=== "Step with pass/fail buttons"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_step_with_pass_fail.png" alt="dialog_box_with_step_with_pass_fail">
     </h1>
 
 ### Operator message
@@ -322,7 +385,7 @@ Both axes can be set to logarithmic scale for data that requires logarithmic rep
     <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/chart_log_x_log_y.png" alt="logarithmic_xy_chart">
 </h1>
 
-### Chart interaction
+#### Chart interaction
 
 * **Zoom**: Click and drag to select an area to zoom into
 * **Pan**: Click and drag to move around the chart when zoomed in
@@ -330,3 +393,45 @@ Both axes can be set to logarithmic scale for data that requires logarithmic rep
 * **Data points**: Hover over data points to see exact values
 * **Legend**: Click on legend items to show/hide specific datasets
 * **Download**: Downloading plot as a PNG.
+
+### Test completion modal results
+
+The operator panel now displays comprehensive test completion results through modal windows that provide immediate visual feedback about test outcomes.
+
+**Modal types**:
+
+- **PASS Modal**: Green background with auto-dismiss countdown timer
+- **FAIL Modal**: Red background with scrollable list of failed test cases including module names, test case names, and assertion messages
+- **STOP Modal**: Yellow background showing the stopped test case details
+
+**User interaction**:
+
+- **Auto-dismiss**: PASS modals automatically close after a configurable timeout (default: 5 seconds)
+- **Manual dismissal**: Click anywhere on the modal or press any key to close
+- **Space key protection**: Prevents accidental test start/stop during modal display
+- **Cooldown period**: Brief delay after modal dismissal before space key actions are enabled
+
+**Configuration**:
+Enable and customize modal results in your `hardpy.toml`:
+
+```toml
+[frontend.modal_result]
+enable = true    
+auto_dismiss_pass = true
+auto_dismiss_timeout = 15
+```
+
+=== "PASS modal result"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/modal_result_pass.png" alt="PASS modal result" style="width:400px;">
+    </h1>
+
+=== "FAIL modal result"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/modal_result_fail.png" alt="FAIL modal result" style="width:400px;">
+    </h1>
+
+=== "STOP modal result"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/modal_result_stop.png" alt="STOP modal result" style="width:400px;">
+    </h1>
