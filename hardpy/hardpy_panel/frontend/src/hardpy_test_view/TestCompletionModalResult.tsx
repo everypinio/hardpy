@@ -250,7 +250,7 @@ const TestCompletionModalResult: React.FC<TestCompletionModalResultProps> = ({
               {testCase.moduleName} → {testCase.caseName}
             </div>
             {testCase.assertionMsg && (
-              <div style={assertionStyle}>{testCase.assertionMsg}</div>
+              <div style={assertionStyle}>{testCase.assertionMsg.split("\n")[0]}</div>
             )}
           </div>
         ))}
