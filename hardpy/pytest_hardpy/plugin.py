@@ -181,7 +181,7 @@ class HardpyPlugin:
         # must be init after config data is set
         try:
             self._reporter = HookReporter(bool(is_clear_database))
-        except RuntimeError as exc:
+        except Exception as exc:  # noqa: BLE001
             exit(str(exc), ExitCode.INTERNAL_ERROR)
 
     def pytest_sessionfinish(self, session: Session, exitstatus: int) -> None:

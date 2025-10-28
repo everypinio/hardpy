@@ -4,6 +4,8 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 
 ## 0.17.0
 
+* Add a named volume to the **docker-compose.yaml** generator.
+  [[PR-216](https://github.com/everypinio/hardpy/pull/216)]
 * Add database updating after the alert has been called.
   [[PR-211](https://github.com/everypinio/hardpy/pull/211)]
 * Add a handler for JSON objects that cannot be serialized for the database.
