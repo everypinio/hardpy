@@ -28,7 +28,7 @@ HardPy allows you to:
 * Store test results in the [CouchDB](https://couchdb.apache.org/) database.
 
 <h1 align="center">
-    <img src="https://raw.githubusercontent.com/everypinio/hardpy/blob/feature/add_video/docs/img/hardpy_panel.gif" alt="hardpy panel" style="width:550px;">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/feature/add_video/docs/img/hardpy_panel.gif" alt="hardpy panel" style="width:550px;">
 </h1>
 
 ## To Install
