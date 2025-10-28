@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## 0.17.0
+
 * Add database updating after the alert has been called.
   [[PR-211](https://github.com/everypinio/hardpy/pull/211)]
 * Add a handler for JSON objects that cannot be serialized for the database.
