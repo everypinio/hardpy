@@ -5,9 +5,7 @@ from pathlib import Path
 
 from hardpy.common.config import HardpyConfig
 
-docker_compose_yaml = """version: "3.8"
-
-services:
+docker_compose_yaml = """services:
   couchserver:
     image: couchdb:3.4
     ports:
@@ -16,8 +14,11 @@ services:
       COUCHDB_USER: {}
       COUCHDB_PASSWORD: {}
     volumes:
-      - ./database/dbdata:/opt/couchdb/data
+      - couchdb_data:/opt/couchdb/data
       - ./database/couchdb.ini:/opt/couchdb/etc/local.ini
+
+volumes:
+  couchdb_data:
 """
 
 couchdb_ini = """; CouchDB Configuration Settings

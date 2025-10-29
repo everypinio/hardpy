@@ -10,3 +10,10 @@ port = 5984
 host = "localhost"
 port = 8000
 language = "en"
+full_size_button = false
+sound_on = false
+
+[frontend.modal_result]
+enable = false
+auto_dismiss_pass = true
+auto_dismiss_timeout = 5

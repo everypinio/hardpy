@@ -44,6 +44,54 @@ The example of file:
 language = "zh"
 ```
 
+### Full-size start/stop button
+
+**HardPy** provides a full-size start/stop button layout option for improved usability across different devices and use cases.
+
+**Configuration**:
+Enable the full-size button in your `hardpy.toml`:
+
+```toml
+[frontend]
+full_size_button = true
+```
+
+### Test completion modal results
+
+**HardPy** provides configurable modal result windows that display test completion status with detailed information:
+
+- **PASS results**: Green modal with auto-dismiss functionality
+- **FAIL results**: Red modal showing detailed failed test cases list
+- **STOP results**: Yellow modal displaying stopped test case information
+
+**Configuration Options** in `hardpy.toml`:
+```toml
+[frontend.modal_result]
+enable = true
+auto_dismiss_pass = true
+auto_dismiss_timeout = 5
+```
+
+**Features**:
+
+- **Auto-dismiss**: PASS results automatically close after configurable timeout.
+- **Manual dismissal**: Click anywhere or press any key to close modal.
+- **Detailed reporting**: Failed test cases show module names, case names, and assertion messages.
+- **Keyboard integration**: Space key handling respects modal visibility states.
+- **Responsive design**: Adapts to different screen sizes with optimal readability.
+
+### Sound notifications
+
+**HardPy** provides configurable sound notifications for test completion events.
+Users can enable audio feedback when tests reach completion status (PASS/FAIL/STOP).
+
+**Configuration**:
+Enable sound notifications in your `hardpy.toml`:
+
+```toml
+[frontend]
+sound_on = true
+
 ## CLI
 
 ### Creating template project

@@ -60,3 +60,16 @@ hardpy run
 ## Examples
 
 For more examples of using **HardPy**, see the [examples](https://github.com/everypinio/hardpy/tree/main/examples) folder and the [documentation](https://everypinio.github.io/hardpy/examples/).
+
+## Measurement instruments
+
+**HardPy** does not contain any drivers for interacting with measuring equipment. 
+However, **HardPy** allows you to work with any Python code, meaning you can use 
+open libraries to interact with measuring equipment.
+
+* [InstrumentKit](https://github.com/instrumentkit/InstrumentKit)
+* [Instrumental](https://github.com/mabuchilab/Instrumental)
+* [PyMeasure](https://github.com/pymeasure/pymeasure)
+* [PyTango](https://gitlab.com/tango-controls/pytango)
+* [QCoDeS](https://github.com/microsoft/Qcodes)
+* [QCoDeS contrib drivers](https://github.com/QCoDeS/Qcodes_contrib_drivers) 

@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from inspect import stack
 from os import environ
@@ -37,6 +38,23 @@ class CurrentTestInfo:
 
     module_id: str
     case_id: str
+
+
+@dataclass
+class PassFailDialog:
+    """Result of dialog box interaction.
+
+    Attributes:
+        result: True if the dialog was successful
+        data: Data from widget if any, None otherwise
+    """
+
+    result: bool = False
+    data: Any = None
+
+    def __bool__(self) -> bool:
+        """Return True if the dialog was successful."""
+        return self.result
 
 
 class ErrorCode:
@@ -592,7 +610,6 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
         dialog_box_data (DialogBox): Data for creating the dialog box.
 
         DialogBox attributes:
-
         - dialog_text (str): The text of the dialog box.
         - title_bar (str | None): The title bar of the dialog box.
           If the title_bar field is missing, it is the case name.
@@ -602,22 +619,22 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
 
     Returns:
         Any: An object containing the user's response.
-
         The type of the return value depends on the widget type:
-
         - BASE: bool.
         - TEXT_INPUT: str.
         - NUMERIC_INPUT: float.
         - RADIOBUTTON: str.
         - CHECKBOX: list[str].
         - MULTISTEP: bool.
+        - Pass/Fail widget: PassFailDialog.
 
     Raises:
-        ValueError: If the 'message' argument is empty.
+        ValueError: If the 'dialog_text' argument is empty.
     """
     if not dialog_box_data.dialog_text:
         msg = "The 'dialog_text' argument cannot be empty."
         raise ValueError(msg)
+
     reporter = RunnerReporter()
     current_test = _get_current_test()
     key = reporter.generate_key(
@@ -633,9 +650,17 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     reporter.update_db_by_doc()
 
     input_dbx_data = _get_operator_data()
-
     _cleanup_widget(reporter, key)
-    return dialog_box_data.widget.convert_data(input_dbx_data)
+
+    if dialog_box_data.pass_fail:
+        return _process_pass_fail_dialog(dialog_box_data, input_dbx_data)
+
+    try:
+        data_dict = json.loads(input_dbx_data)
+    except json.JSONDecodeError:
+        return dialog_box_data.widget.convert_data(input_dbx_data)
+    widget_data = data_dict.get("data", "")
+    return dialog_box_data.widget.convert_data(widget_data)
 
 
 def set_operator_message(  # noqa: PLR0913
@@ -723,6 +748,7 @@ def _get_current_test() -> CurrentTestInfo:
         caller = stack()[1].function
         msg = f"Function {caller} can't be called outside of the test."
         reporter.set_alert(msg)
+        reporter.update_db_by_doc()
         raise RuntimeError(msg)
 
     module_delimiter = ".py::"
@@ -766,3 +792,33 @@ def _get_operator_data() -> str:
 def _cleanup_widget(reporter: RunnerReporter, key: str) -> None:
     reporter.set_doc_value(key, {}, statestore_only=True)
     reporter.update_db_by_doc()
+
+
+def _process_pass_fail_dialog(
+    dialog_box_data: DialogBox,
+    input_data: str,
+) -> PassFailDialog:
+    """Process pass/fail dialog result."""
+    result = PassFailDialog()
+
+    try:
+        data_dict = json.loads(input_data)
+    except json.JSONDecodeError:
+        result.result = False
+        if dialog_box_data.widget:
+            result.data = dialog_box_data.widget.convert_data(input_data)
+        else:
+            result.data = True
+        return result
+
+    result_value = data_dict.get("result", "")
+    widget_data = data_dict.get("data", "")
+
+    result.result = result_value == "passed"
+
+    if dialog_box_data.widget and widget_data:
+        result.data = dialog_box_data.widget.convert_data(widget_data)
+    else:
+        result.data = True
+
+    return result

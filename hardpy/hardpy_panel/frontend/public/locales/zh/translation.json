@@ -11,6 +11,10 @@
       "connection": "正在建立连接... 🧐🔎",
       "dbError": "数据库连接错误. 🙅🏽‍♀️🚫",
       "noEntries": "数据库中没有条目 🙅🏽‍♀️🚫",
+      "stoppedTestCase": "已停止的测试用例",
+      "failedTestCases": "失败的测试用例",
+      "modalResultDismissHint": "点击任意位置或按任意键关闭",
+      "modalResultAutoDismissHint": "{{seconds}}秒后自动关闭...",
       "status": {
         "ready": "就绪",
         "run": "运行中",
@@ -23,7 +27,9 @@
   "button": {
     "start": "开始",
     "stop": "停止",
-    "confirm": "确认"
+    "confirm": "确认",
+    "pass": "通过",
+    "fail": "失败"
   },
   "error": {
     "dbConnectionTitle": "数据库连接错误",
