@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import tomli
 import tomli_w
 
 from hardpy.common.config import (
@@ -125,9 +126,10 @@ def test_config_manager_create_config(tmp_path: Path):
     config_manager.create_config(tests_dir)
 
     config_file: Path = tests_dir / "hardpy.toml"
-    assert config_file.read_text() == tomli_w.dumps(
-        config_manager.config.model_dump(),
-    )
+    config_data = tomli.loads(config_file.read_text())
+    expected_data = config_manager.config.model_dump()
+
+    assert config_data == expected_data
 
 
 def test_read_config_success(tmp_path: Path):
@@ -169,3 +171,33 @@ def test_read_config_success(tmp_path: Path):
     assert config.frontend.port == test_config_data["frontend"]["port"]
     assert config.frontend.language == test_config_data["frontend"]["language"]
     assert config.stand_cloud.address == test_config_data["stand_cloud"]["address"]
+
+
+def test_read_config_without_modal_result(tmp_path: Path):
+    """Test reading config without modal_result section (backward compatibility)."""
+    test_config_data = {
+        "title": "Test HardPy Config",
+        "tests_name": "My tests",
+        "database": {
+            "user": db_default_user,
+            "password": db_default_password,
+            "host": db_default_host,
+            "port": db_default_port,
+        },
+        "frontend": {
+            "host": frontend_default_host,
+            "port": frontend_default_port,
+            "language": frontend_default_language,
+        },
+        "stand_cloud": {
+            "address": stand_cloud_default_addr,
+        },
+    }
+    tests_dir = tmp_path / "tests"
+    Path.mkdir(tests_dir, exist_ok=True, parents=True)
+    with Path.open(tests_dir / "hardpy.toml", "w") as file:
+        file.write(tomli_w.dumps(test_config_data))
+
+    config_manager = ConfigManager()
+    config = config_manager.read_config(tests_dir)
+    assert isinstance(config, HardpyConfig)

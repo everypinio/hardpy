@@ -181,7 +181,7 @@ class HardpyPlugin:
         # must be init after config data is set
         try:
             self._reporter = HookReporter(bool(is_clear_database))
-        except RuntimeError as exc:
+        except Exception as exc:  # noqa: BLE001
             exit(str(exc), ExitCode.INTERNAL_ERROR)
 
     def pytest_sessionfinish(self, session: Session, exitstatus: int) -> None:
@@ -251,6 +251,7 @@ class HardpyPlugin:
         except ValueError:
             msg = "No tests collected"
             self._reporter.set_alert(msg)
+            self._reporter.update_db_by_doc()
             exit(msg, ExitCode.NO_TESTS_COLLECTED)
         if session.config.option.collectonly:
             # ignore collect only mode
@@ -267,6 +268,7 @@ class HardpyPlugin:
             except StandCloudError as exc:
                 msg = str(exc)
                 self._reporter.set_alert(msg)
+                self._reporter.update_db_by_doc()
                 exit(msg, ExitCode.INTERNAL_ERROR)
             try:
                 sc_connector.healthcheck()
@@ -360,9 +362,12 @@ class HardpyPlugin:
                 is_dut_failure = True
                 if current_attempt == attempt:
                     break
-
         # set the caused dut failure id only the first time
-        if is_dut_failure and caused_dut_failure_id is None:
+        if (
+            is_dut_failure
+            and caused_dut_failure_id is None
+            and call.excinfo.typename != "Skipped"
+        ):
             self._reporter.set_caused_dut_failure_id(module_id, case_id)
 
     # Reporting hooks
