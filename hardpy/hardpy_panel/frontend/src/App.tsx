@@ -383,6 +383,13 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     const prevStatus = lastRunStatus;
     const ModalResultEnable =
       appConfig?.frontend?.modal_result?.enable ?? false;
+
+    // Close ModalResult when test starts running (status changes to "run")
+    if (prevStatus !== "run" && status === "run" && showCompletionModalResult) {
+      setShowCompletionModalResult(false);
+      setTestCompletionData(null);
+    }
+
     if (
       ModalResultEnable &&
       prevStatus === "run" &&
@@ -445,6 +452,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     lastRunDuration,
     isAuthenticated,
     appConfig,
+    showCompletionModalResult,
   ]);
 
   /**

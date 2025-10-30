@@ -554,8 +554,6 @@ headers = accept, authorization, content-type, origin, referer, x-csrf-token
 3. Create a `docker-compose.yaml` file in project's root directory.
 
 ```yaml
-version: "3.8"
-
 services:
   couchserver:
     image: couchdb:3.4
@@ -565,8 +563,11 @@ services:
       COUCHDB_USER: dev
       COUCHDB_PASSWORD: dev
     volumes:
-      - ./docker/dbdata:/opt/couchdb/data
-      - ./docker/couchdb.ini:/opt/couchdb/etc/local.ini
+      - couchdb_data:/opt/couchdb/data
+      - ./database/couchdb.ini:/opt/couchdb/etc/local.ini
+
+volumes:
+  couchdb_data:
 ```
 4. Run **docker compose** in the root directory.
 
