@@ -2,6 +2,9 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Fixed issue where when using a large button, it overlaps the content.
+  [[PR-217](https://github.com/everypinio/hardpy/pull/217)]
+
 ## 0.17.0
 
 * Add a named volume to the **docker-compose.yaml** generator.
