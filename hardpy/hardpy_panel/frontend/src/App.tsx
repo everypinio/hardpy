@@ -665,7 +665,13 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       </Navbar>
 
       {/* Main content area with test suites and results */}
-      <div className={Classes.DRAWER_BODY} style={{ marginBottom: "60px" }}>
+      <div 
+        className={Classes.DRAWER_BODY} 
+        style={{ 
+          marginBottom: "60px",
+          paddingBottom: useBigButton ? "120px" : "80px"
+        }}
+      >
         {renderDbContent()}
       </div>
 
