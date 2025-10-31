@@ -32,6 +32,7 @@ class StandCloudConnector:
         addr: str,
         api_mode: StandCloudAPIMode = StandCloudAPIMode.HARDPY,
         api_version: int = 1,
+        api_key: str | None = None,
     ) -> None:
         """Create StandCloud API connector.
 
@@ -42,6 +43,8 @@ class StandCloudConnector:
                 Default: StandCloudAPIMode.HARDPY.
             api_version (int): StandCloud API version.
                 Default: 1.
+            api_key (str | None): StandCloud API key.
+                Default: None.
         """
         https_prefix = "https://"
         auth_addr = addr + "/auth"
@@ -57,6 +60,7 @@ class StandCloudConnector:
         self._client_id = "hardpy-report-uploader"
         self._verify_ssl = not __debug__
         self._token_manager = TokenManager(self._addr.domain)
+        self._token_manager.save_token(api_key)
         self._token: BearerToken = self.get_access_token()
         self._log = getLogger(__name__)
 
@@ -84,6 +88,8 @@ class StandCloudConnector:
         Returns:
             bool: True if token is valid, False otherwise.
         """
+        if self._token_manager.api_key:
+            return False
         try:
             OAuth2(
                 sc_addr=self._addr,
@@ -214,6 +220,15 @@ class StandCloudConnector:
                 f"Login to {self._addr.domain} first"
             )
             raise StandCloudError(msg)
+        if self._token_manager.api_key:
+            session = requests.Session()
+            session.headers["Authorization"] = f"Bearer {self._token_manager.api_key}"
+            return ApiClient(
+                f"{self._addr.api}/{endpoint}",
+                session=session,
+                timeout=10,
+            )
+
         try:
             auth = OAuth2(
                 sc_addr=self._addr,

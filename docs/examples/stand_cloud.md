@@ -10,15 +10,16 @@ The code for this example can be seen inside the hardpy package
 
 ### how to start
 
-1. Get your own **StandCloud** service address by contacting **info@everypin.io**, e.g. `demo.standcloud.localhost`.
-2. Launch `hardpy init stand_cloud --sc-address demo.standcloud.localhost --sc-connection-only --sc-autosync`.
-3. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
-4. Modify the files described below.
-5. You can remove `connection_only = true` if you don't want to check the
+1. Login to [standcloud.io](https://standcloud.io).
+2. Create company.
+3. Create test stand.
+4. Copy stand API key.
+5. Launch `hardpy init stand_cloud --sc-api-key <your_api_key> --sc-autosync`.
+6. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
+7. Modify the files described below.
+8. You can remove `connection_only = true` if you don't want to check the
     **StandCloud** connection before each **HardPy** start.
-6. If you don't want autosynchronisation with the **StandCloud**, 
-   you can remove `autosync = true`.
-7. Login in the **StandCloud**:
+9. Login in the **StandCloud**:
 
     ```bash
     hardpy sc-login demo.standcloud.localhost

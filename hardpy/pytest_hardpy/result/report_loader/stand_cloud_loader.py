@@ -30,7 +30,8 @@ class StandCloudLoader:
         self._verify_ssl = not __debug__
         config_manager = ConfigManager()
         sc_addr = address if address else config_manager.config.stand_cloud.address
-        self._sc_connector = StandCloudConnector(sc_addr)
+        api_key = config_manager.config.stand_cloud.api_key
+        self._sc_connector = StandCloudConnector(sc_addr, api_key=api_key)
 
     def load(self, report: ResultRunStore, timeout: int = 20) -> Response:
         """Load report to the StandCloud.

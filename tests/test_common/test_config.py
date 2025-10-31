@@ -20,6 +20,8 @@ db_no_default_url = f"http://{db_no_default_user}:{db_no_default_password}@{db_n
 frontend_no_default_host = "localhost1"
 frontend_no_default_port = 8001
 stand_cloud_no_default_addr = "everypin1.standcloud.localhost"
+stand_cloud_no_default_connection_only = True
+stand_cloud_no_default_api_key = "1"
 db_no_default_doc_id = f"{frontend_no_default_host}_{frontend_no_default_port}"
 
 db_default_user = "dev"
@@ -30,7 +32,9 @@ db_default_url = f"http://{db_default_user}:{db_default_password}@{db_default_ho
 frontend_default_host = "localhost"
 frontend_default_port = 8000
 frontend_default_language = "en"
-stand_cloud_default_addr = ""
+stand_cloud_default_addr = "standcloud.io"
+stand_cloud_dafault_connection_only = False
+stand_cloud_default_api_key = ""
 db_default_doc_id = f"{frontend_default_host}_{frontend_default_port}"
 
 
@@ -46,6 +50,8 @@ def test_config_manager_init():
         frontend_port=frontend_no_default_port,
         frontend_language=frontend_default_language,
         sc_address=stand_cloud_no_default_addr,
+        sc_connection_only=stand_cloud_no_default_connection_only,
+        sc_api_key=stand_cloud_no_default_api_key,
     )
     config = config_manager.config
     assert isinstance(config, HardpyConfig)
@@ -60,6 +66,8 @@ def test_config_manager_init():
     assert config.frontend.port == frontend_no_default_port
     assert config.frontend.language == frontend_default_language
     assert config.stand_cloud.address == stand_cloud_no_default_addr
+    assert config.stand_cloud.connection_only == stand_cloud_no_default_connection_only
+    assert config.stand_cloud.api_key == stand_cloud_no_default_api_key
 
 
 def test_database_config():
@@ -104,6 +112,8 @@ def test_hardpy_config():
     assert config.frontend.port == frontend_default_port
     assert config.frontend.language == frontend_default_language
     assert config.stand_cloud.address == stand_cloud_default_addr
+    assert config.stand_cloud.connection_only == stand_cloud_dafault_connection_only
+    assert config.stand_cloud.api_key == stand_cloud_default_api_key
 
 
 def test_config_manager_create_config(tmp_path: Path):
@@ -121,6 +131,8 @@ def test_config_manager_create_config(tmp_path: Path):
         frontend_port=frontend_default_port,
         frontend_language=frontend_default_language,
         sc_address=stand_cloud_default_addr,
+        sc_connection_only=stand_cloud_dafault_connection_only,
+        sc_api_key=stand_cloud_default_api_key,
     )
 
     config_manager.create_config(tests_dir)

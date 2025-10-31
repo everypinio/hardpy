@@ -51,6 +51,8 @@ More info in [hardpy config](./hardpy_config.md).
 |                                                         [default: no-sc-connection-only]                   │
 │ --sc-autosync        --no-sc-autosync                   Enable StandCloud autosyncronization.              | 
 |                                                         [default: no-sc-autosync]                          │
+|                                                         [default: check-stand-cloud]                       │
+│ --sc-api-key                                  TEXT      Specify a StandCloud API key.                      │
 │ --help                                                  Show this message and exit.                        │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```

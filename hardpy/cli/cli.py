@@ -67,16 +67,20 @@ def init(  # noqa: PLR0913
         help="Specify a frontend port.",
     ),
     sc_address: str = typer.Option(
-        default="",
+        default=default_config.stand_cloud.address,
         help="Specify a StandCloud address.",
     ),
     sc_connection_only: bool = typer.Option(
-        default=False,
+        default=default_config.stand_cloud.connection_only,
         help="Check StandCloud service availability before start.",
     ),
     sc_autosync: bool = typer.Option(
-        default=False,
+        default=default_config.stand_cloud.autosync,
         help="Enable StandCloud autosyncronization.",
+    ),
+    sc_api_key: str | None = typer.Option(
+        default=default_config.stand_cloud.api_key,
+        help="Specify a StandCloud API key.",
     ),
 ) -> None:
     """Initialize HardPy tests directory.
@@ -95,6 +99,7 @@ def init(  # noqa: PLR0913
         sc_address (str): StandCloud address
         sc_connection_only (bool): Flag to check StandCloud service availability
         sc_autosync (bool): Flag to enable StandCloud autosyncronization
+        sc_api_key (str | None): StandCloud API key
     """
     dir_path = Path(Path.cwd() / tests_dir if tests_dir else "tests")
     config_manager = ConfigManager()
@@ -110,6 +115,7 @@ def init(  # noqa: PLR0913
         sc_address=sc_address,
         sc_connection_only=sc_connection_only,
         sc_autosync=sc_autosync,
+        sc_api_key=sc_api_key,
     )
     # create tests directory
     Path.mkdir(dir_path, exist_ok=True, parents=True)

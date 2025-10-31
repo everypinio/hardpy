@@ -50,6 +50,7 @@ auto_dismiss_timeout = 5
 address = "demo.standcloud.io"
 connection_only = true
 autosync = true
+api-key = "1234567890"
 ```
 
 ## Configuration fields description
@@ -182,3 +183,7 @@ Boolean variable, if set to `true`, **HardPy** will automatically send data
 to **StandCloud** upon completion of testing.
 
 The default value is `false`.
+
+#### api-key
+
+**StandCloud** API key.
