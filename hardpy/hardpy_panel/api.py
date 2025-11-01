@@ -15,9 +15,11 @@ from fastapi.staticfiles import StaticFiles
 
 from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
+from hardpy.pytest_hardpy.result.report_synchronizer import StandCloudSynchronizer
 
 app = FastAPI()
 app.state.pytest_wrp = PyTestWrapper()
+app.state.sc_synchronizer = StandCloudSynchronizer()
 
 
 class Status(str, Enum):
@@ -125,6 +127,14 @@ def database_document_id() -> dict:
     config_manager = ConfigManager()
     return {"document_id": config_manager.config.database.doc_id}
 
+@app.get("/api/stand_cloud_sync")
+def stand_cloud_sync() -> dict:
+    """Stop pytest subprocess.
+
+    Returns:
+        dict[status, str]: synchronization status
+    """
+    return {"status": app.state.sc_synchronizer.sync()}
 
 @app.post("/api/confirm_dialog_box")
 def confirm_dialog_box(dbx_data: dict) -> dict:
