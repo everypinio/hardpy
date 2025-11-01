@@ -6,7 +6,7 @@ The user can change the fields at creation by using [hardpy init](./cli.md#hardp
 ???+ note
     All **HardPy** project must have `hardpy.toml` file.
 
-## Default config
+## Minimal configuration file
 
 ```toml
 title = "HardPy TOML config"
@@ -22,7 +22,7 @@ host = "localhost"
 port = 8000
 ```
 
-## Maximum configuration file
+## Full configuration file
 
 ```toml
 title = "HardPy TOML config"
