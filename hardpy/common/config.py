@@ -51,6 +51,7 @@ class FrontendConfig(BaseModel):
     language: str = "en"
     full_size_button: bool = False
     sound_on: bool = False
+    measurement_display: bool = False
     modal_result: ModalResultConfig = Field(default_factory=lambda: ModalResultConfig())
 
 

@@ -90,6 +90,18 @@ interface DialogBoxProps {
   html?: HTMLInfo;
 }
 
+interface Measurement {
+  name?: string;
+  result?: boolean;
+  type: string;
+  value: number | string;
+  unit?: string;
+  comparison_value?: number | string;
+  operation?: string;
+  lower_limit?: number;
+  upper_limit?: number;
+}
+
 /**
  * Interface representing a test case
  * @interface Case
@@ -110,6 +122,7 @@ interface Case {
   stop_time: number;
   assertion_msg: string | null;
   msg: string[] | null;
+  measurements: Measurement[];
   artifact: Record<string, unknown>;
   dialog_box: DialogBoxProps;
   chart?: ChartData;
@@ -175,6 +188,7 @@ type Props = {
   test: TestItem;
   defaultOpen?: boolean;
   commonTestRunStatus: string | undefined;
+  measurementDisplay?: boolean;
 } & WithTranslation;
 
 /**
@@ -623,10 +637,12 @@ export class TestSuite extends React.Component<Props, State> {
         <TestData
           assertion_msg={test.assertion_msg}
           msg={test.msg}
+          measurements={test.measurements} 
           testSuiteIndex={this.props.index}
           testCaseIndex={rowIndex}
           chart={test.chart}
           dataColumnWidth={this.state.dataColumnWidth}
+          measurementDisplay={this.props.measurementDisplay}
         />
       </div>,
       `data_${rowIndex}_${row_}`
@@ -712,5 +728,7 @@ export class TestSuite extends React.Component<Props, State> {
  * Higher-order component that wraps TestSuite with translation capabilities
  * @type {React.ComponentType<Omit<Props, keyof WithTranslation>>}
  */
-const TestSuiteComponent: React.ComponentType<Omit<Props, keyof WithTranslation>> = withTranslation()(TestSuite);
+const TestSuiteComponent: React.ComponentType<
+  Omit<Props, keyof WithTranslation>
+> = withTranslation()(TestSuite);
 export { TestSuiteComponent };

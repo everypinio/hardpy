@@ -10,6 +10,19 @@ import { withTranslation, WithTranslation } from "react-i18next";
 
 import _ from "lodash";
 
+interface Measurement {
+  name?: string;
+  result?: boolean;
+  type: string;
+  value: number | string;
+  unit?: string;
+  comparison_value?: number | string;
+  operation?: string;
+  lower_limit?: number;
+  upper_limit?: number;
+  disp?: boolean;
+}
+
 /**
  * Interface representing chart data structure for test results
  * @interface ChartData
@@ -74,6 +87,8 @@ interface Props extends WithTranslation {
   testCaseIndex: number;
   chart?: ChartData;
   dataColumnWidth?: number;
+  measurements?: Measurement[];
+  measurementDisplay?: boolean;
 }
 
 /**
@@ -122,6 +137,83 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
    */
   const storageKey: string = `chartState_${props.testSuiteIndex}_${props.testCaseIndex}`;
 
+  const formatMeasurement = (
+    measurement: Measurement,
+    index: number
+  ): string => {
+    if (measurement.name) {
+      let display = `${measurement.name} ${measurement.value}`;
+      if (measurement.unit) {
+        display += ` ${measurement.unit}`;
+      }
+      return display;
+    } else {
+      let display = `${measurement.value}`;
+      if (measurement.unit) {
+        display += ` ${measurement.unit}`;
+      }
+
+      const hasLowerLimit =
+        measurement.lower_limit !== undefined &&
+        measurement.lower_limit !== null;
+      const hasUpperLimit =
+        measurement.upper_limit !== undefined &&
+        measurement.upper_limit !== null;
+
+      if (hasLowerLimit || hasUpperLimit) {
+        display += "   [";
+        if (hasLowerLimit && hasUpperLimit) {
+          display += `${measurement.lower_limit} : ${measurement.upper_limit}`;
+        } else if (hasLowerLimit) {
+          display += `${measurement.lower_limit} :`;
+        } else if (hasUpperLimit) {
+          display += `: ${measurement.upper_limit}`;
+        }
+        if (measurement.unit) {
+          display += ` ${measurement.unit}`;
+        }
+        display += "]";
+      }
+
+      if (
+        measurement.operation &&
+        measurement.comparison_value !== undefined &&
+        measurement.comparison_value !== null
+      ) {
+        display += ` [${measurement.operation} ${measurement.comparison_value}]`;
+      }
+
+      return display;
+    }
+  };
+
+  // const formatMeasurement = (
+  //   measurement: Measurement,
+  //   index: number
+  // ): string => {
+  //   if (measurement.name) {
+  //     let display = `${measurement.name} ${measurement.value}`;
+  //     if (measurement.unit) {
+  //       if (["°", "°C", "°F", "%"].includes(measurement.unit)) {
+  //         display += measurement.unit;
+  //       } else {
+  //         display += ` ${measurement.unit}`;
+  //       }
+  //     }
+  //     return display;
+  //   } else {
+  //     let display = `${measurement.value}`;
+  //     if (measurement.unit) {
+  //       if (["°", "°C", "°F", "%"].includes(measurement.unit)) {
+  //         display += measurement.unit;
+  //       } else {
+  //         display += ` ${measurement.unit}`;
+  //       }
+  //     }
+  //     return display;
+  //   }
+  // };
+
   /**
    * State hook for chart collapse/expand functionality with localStorage persistence
    * @type {[boolean, React.Dispatch<React.SetStateAction<boolean>>]}
@@ -133,7 +225,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
         const { isCollapsed } = JSON.parse(savedState);
         return isCollapsed || false;
       } catch (e: unknown) {
-        console.error(`Error parsing local storage: ${e as Error}.message`);
+        console.error(`Error parsing local storage: ${(e as Error).message}`);
         return false;
       }
     }
@@ -244,6 +336,33 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
 
   return (
     <div className="test-data" style={{ width: "100%" }}>
+      {/* Render measurements first */}
+      {props.measurementDisplay !== false &&
+        _.map(
+          props.measurements?.filter(
+            (measurement) => measurement.disp !== false
+          ),
+          (measurement: Measurement, index: number) => {
+            const intent =
+              measurement.result === true
+                ? "success"
+                : measurement.result === false
+                  ? "danger"
+                  : "none";
+
+            return (
+              <Tag
+                key={`measurement-${index}`}
+                style={TAG_ELEMENT_STYLE}
+                minimal={true}
+                intent={intent}
+              >
+                {formatMeasurement(measurement, index)}
+              </Tag>
+            );
+          }
+        )}
+
       {/* Render test messages as primary tags */}
       {_.map(props.msg, (value: string, key: string) => {
         return (
