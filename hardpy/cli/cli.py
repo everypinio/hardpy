@@ -275,6 +275,30 @@ def sc_logout(address: Annotated[str, typer.Argument()]) -> None:
         print(f"HardPy logout failed from {address}")
 
 
+@cli.command()
+def sc_sync(
+    tests_dir: Annotated[Optional[str], typer.Argument()] = None,
+    timeout: int = typer.Option(
+        default="60",
+        help="Specify a synchronization timeout.",
+    ),
+) -> str:
+    """Synchronize HardPy tests with StandCloud.
+
+    Args:
+        tests_dir (Optional[str]): Test directory. Current directory by default
+        timeout (int): Synchronization timeout
+    """
+    try:
+        _timeout = int(timeout)
+    except ValueError:
+        print("Timeout must be a number.")
+        sys.exit()
+    config = _get_config(tests_dir, validate=True)
+    url = f"http://{config.frontend.host}:{config.frontend.port}/api/stand_cloud_sync"
+    return _request_hardpy(url, timeout=_timeout)
+
+
 def _get_config(tests_dir: str | None = None, validate: bool = False) -> HardpyConfig:
     dir_path = Path.cwd() / tests_dir if tests_dir else Path.cwd()
     config_manager = ConfigManager()
@@ -305,18 +329,19 @@ def _validate_config(config: HardpyConfig, tests_dir: str) -> None:
         sys.exit()
 
 
-def _request_hardpy(url: str) -> None:
+def _request_hardpy(url: str, timeout: int = 5) -> str:
     try:
-        response = requests.get(url, timeout=2)
+        response = requests.get(url, timeout=timeout)
     except Exception:
         print("HardPy operator panel is not running.")
         sys.exit()
     try:
         status: dict = response.json().get("status", "ERROR")
     except ValueError:
-        print(f"Hardpy internal error: {response}.")
+        print(f"HardPy internal error: {response}.")
         sys.exit()
     print(f"HardPy status: {status}.")
+    return status
 
 
 if __name__ == "__main__":
