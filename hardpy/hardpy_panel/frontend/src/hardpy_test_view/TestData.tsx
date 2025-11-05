@@ -141,78 +141,21 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
     measurement: Measurement,
     index: number
   ): string => {
+    let display = "";
     if (measurement.name) {
-      let display = `${measurement.name} ${measurement.value}`;
-      if (measurement.unit) {
-        display += ` ${measurement.unit}`;
-      }
-      return display;
-    } else {
-      let display = `${measurement.value}`;
-      if (measurement.unit) {
-        display += ` ${measurement.unit}`;
-      }
-
-      const hasLowerLimit =
-        measurement.lower_limit !== undefined &&
-        measurement.lower_limit !== null;
-      const hasUpperLimit =
-        measurement.upper_limit !== undefined &&
-        measurement.upper_limit !== null;
-
-      if (hasLowerLimit || hasUpperLimit) {
-        display += "   [";
-        if (hasLowerLimit && hasUpperLimit) {
-          display += `${measurement.lower_limit} : ${measurement.upper_limit}`;
-        } else if (hasLowerLimit) {
-          display += `${measurement.lower_limit} :`;
-        } else if (hasUpperLimit) {
-          display += `: ${measurement.upper_limit}`;
-        }
-        if (measurement.unit) {
-          display += ` ${measurement.unit}`;
-        }
-        display += "]";
-      }
-
-      if (
-        measurement.operation &&
-        measurement.comparison_value !== undefined &&
-        measurement.comparison_value !== null
-      ) {
-        display += ` [${measurement.operation} ${measurement.comparison_value}]`;
-      }
-
-      return display;
+      display += `${measurement.name} `;
     }
-  };
+    display += `${measurement.value}`;
+    if (measurement.unit) {
+      if (["°", "°C", "°F", "%"].includes(measurement.unit)) {
+        display += measurement.unit;
+      } else {
+        display += ` ${measurement.unit}`;
+      }
+    }
 
-  // const formatMeasurement = (
-  //   measurement: Measurement,
-  //   index: number
-  // ): string => {
-  //   if (measurement.name) {
-  //     let display = `${measurement.name} ${measurement.value}`;
-  //     if (measurement.unit) {
-  //       if (["°", "°C", "°F", "%"].includes(measurement.unit)) {
-  //         display += measurement.unit;
-  //       } else {
-  //         display += ` ${measurement.unit}`;
-  //       }
-  //     }
-  //     return display;
-  //   } else {
-  //     let display = `${measurement.value}`;
-  //     if (measurement.unit) {
-  //       if (["°", "°C", "°F", "%"].includes(measurement.unit)) {
-  //         display += measurement.unit;
-  //       } else {
-  //         display += ` ${measurement.unit}`;
-  //       }
-  //     }
-  //     return display;
-  //   }
-  // };
+    return display;
+  };
 
   /**
    * State hook for chart collapse/expand functionality with localStorage persistence
@@ -338,29 +281,24 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
     <div className="test-data" style={{ width: "100%" }}>
       {/* Render measurements first */}
       {props.measurementDisplay !== false &&
-        _.map(
-          props.measurements?.filter(
-            (measurement) => measurement.disp !== false
-          ),
-          (measurement: Measurement, index: number) => {
-            const intent =
-              measurement.result === true
-                ? "success"
-                : measurement.result === false
-                  ? "danger"
-                  : "none";
-
-            return (
-              <Tag
-                key={`measurement-${index}`}
-                style={TAG_ELEMENT_STYLE}
-                minimal={true}
-                intent={intent}
-              >
-                {formatMeasurement(measurement, index)}
-              </Tag>
-            );
-          }
+        props.measurements &&
+        props.measurements.length > 0 && (
+          <div style={{ marginBottom: "10px" }}>
+            {_.map(
+              props.measurements,
+              (measurement: Measurement, index: number) => {
+                return (
+                  <Tag
+                    key={`measurement-${index}`}
+                    style={TAG_ELEMENT_STYLE}
+                    minimal={true}
+                  >
+                    {formatMeasurement(measurement, index)}
+                  </Tag>
+                );
+              }
+            )}
+          </div>
         )}
 
       {/* Render test messages as primary tags */}
