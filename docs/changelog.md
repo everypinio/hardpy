@@ -5,6 +5,8 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 * Add measurement display functionality to operator panel showing numeric and string measurements with name-value-unit formatting.
   [[PR-223](https://github.com/everypinio/hardpy/pull/223)]
 
+## 0.17.1
+
 * Fix issue where when using a large button, it overlaps the content.
   [[PR-219](https://github.com/everypinio/hardpy/pull/219)]
 
