@@ -1,4 +1,5 @@
 import pytest
+
 from hardpy import (
     ComparisonOperation as CompOp,
     NumericMeasurement,
@@ -7,7 +8,7 @@ from hardpy import (
     set_message,
 )
 
-pytestmark = pytest.mark.module_name("Measurement Demonstration")
+pytestmark = pytest.mark.module_name("Measurement demonstration")
 
 
 @pytest.mark.case_name("All measurement types")
