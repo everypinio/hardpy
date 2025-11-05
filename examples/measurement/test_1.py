@@ -10,52 +10,33 @@ from hardpy import (
 pytestmark = pytest.mark.module_name("Numeric measurement")
 
 
-@pytest.mark.case_name("Basic numeric measurements")
-def test_basic_numeric():
+@pytest.mark.case_name("Test 1")
+def test_1():
     meas0 = NumericMeasurement(value=1.0)
     set_case_measurement(meas0)
-    set_message(f"Simple value: {meas0.value}")
-
-    meas1 = NumericMeasurement(
-        name="Length", value=10, unit="cm", operation=CompOp.EQ, comparison_value=10
-    )
+    set_message(f"{meas0.value}")
+    meas1 = NumericMeasurement(value=10, operation=CompOp.EQ, comparison_value=10)
     set_case_measurement(meas1)
-
-    meas2 = NumericMeasurement(
-        name="Width", value=9, unit="cm", operation=CompOp.EQ, comparison_value=10
-    )
+    meas2 = NumericMeasurement(value=9, operation=CompOp.EQ, comparison_value=10)
     set_case_measurement(meas2)
-
     assert meas1.result
-    assert meas2.result, "Width is not equal to 10 cm"
+    assert meas2.result, "value is not equal to 10"
 
 
-@pytest.mark.case_name("Range measurements")
-def test_range_measurements():
+@pytest.mark.case_name("Test 2")
+def test_2():
+    meas = NumericMeasurement(value=5, operation=CompOp.NE, comparison_value=3)
+    set_case_measurement(meas)
+    assert meas.result
+
+
+@pytest.mark.case_name("Test 3")
+def test_3():
     meas = NumericMeasurement(
-        name="Temperature",
         value=7,
-        unit="°C",
         operation=CompOp.GELE,
         lower_limit=5,
         upper_limit=10,
     )
     set_case_measurement(meas)
     assert meas.result
-
-
-@pytest.mark.case_name("Unit variations")
-def test_unit_variations():
-    meas1 = NumericMeasurement(name="Angle", value=90, unit="°")
-    set_case_measurement(meas1)
-
-    meas2 = NumericMeasurement(name="Efficiency", value=95.5, unit="%")
-    set_case_measurement(meas2)
-
-    meas3 = NumericMeasurement(name="Frequency", value=1000, unit="Hz")
-    set_case_measurement(meas3)
-
-    meas4 = NumericMeasurement(name="Count", value=42)
-    set_case_measurement(meas4)
-
-    assert all([meas1.result, meas2.result, meas3.result, meas4.result])
