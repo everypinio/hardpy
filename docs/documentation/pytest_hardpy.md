@@ -401,20 +401,6 @@ When called again, the information will be added to case measurement list.
 
 - *(int)*: measurement index
 
-**Display format:**
-
-Measurements are displayed in the operator panel according to the following format:
-
-- **Name Value Unit** - for measurements with all components (e.g., "Voltage 12.3 V")
-- **Value Unit** - for measurements without names (e.g., "5°")  
-- **Name Value** - for measurements without units (e.g., "Banana 15")
-- **Value** - for string measurements (e.g., "abc")
-
-**Visibility:**
-
-By default, measurements are not displayed in the operator panel.
-To enable measurement display, set `measurement_display = true` in the frontend configuration section of your `hardpy.toml` file.
-
 **Example:**
 
 ```python
