@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   couchserver:
     image: couchdb:3.4
@@ -9,5 +7,8 @@ services:
       COUCHDB_USER: dev
       COUCHDB_PASSWORD: dev
     volumes:
-      - ./database/dbdata:/opt/couchdb/data
+      - couchdb_data:/opt/couchdb/data
       - ./database/couchdb.ini:/opt/couchdb/etc/local.ini
+
+volumes:
+  couchdb_data:

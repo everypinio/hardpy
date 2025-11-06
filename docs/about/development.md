@@ -6,7 +6,7 @@
 
 * **python** version must be equal to or greater than  **3.10**;
 * **yarn** version must be equal to 4.0.1;
-* **node.js** version must be equal to or greater than **16.10.0**;
+* **node.js** version must be equal to or greater than **18.12.0**;
 * **CouchDB** version must be equal to or greater than **3.2.0**;
 
 ### Conda
@@ -206,66 +206,79 @@ To add or modify translations for the HardPy operator panel:
 
 3. Inside the language folder, create a `translation.json` file with the following structure:
    ```json
-   {
-     "app": {
-       "title": "HardPy Operator Panel",
-       "lastLaunch": "Last launch:",
+  {
+    "app": {
+      "title": "HardPy Operator Panel",
+      "lastLaunch": "Last launch:",
       "duration": "Duration",
       "seconds": "s",
-       "soundOn": "Turn on the sound",
-       "soundOff": "Turn off the sound",
-       "debugOn": "Turn on the debug mode",
-       "debugOff": "Turn off the debug mode",
-       "connection": "Establishing a connection... 🧐🔎",
-       "dbError": "Database connection error. 🙅🏽‍♀️🚫",
-       "noEntries": "No entries in the database 🙅🏽‍♀️🚫",
-       "status": {
-         "ready": "ready",
-         "run": "run",
-         "passed": "pass",
-         "failed": "fail",
-         "stopped": "stopped",
-         "unknown": "unknown"
-       }
-     },
-     "button": {
-       "start": "Start",
-       "stop": "Stop",
-       "confirm": "Confirm"
-     },
-     "error": {
-       "dbConnectionTitle": "Database Connection Error",
-       "dbConnectionMessage": "Failed to establish connection with the database"
-     },
-     "operatorDialog": {
-       "defaultTitle": "Message",
-       "imageAlt": "Operator message image",
-       "htmlCodeTitle": "HTML Code",
-       "htmlLinkTitle": "HTML Link",
-       "enterAnswer": "Enter answer",
-       "fieldNotEmpty": "The field must not be empty",
-       "notificationTitle": "Notification",
-       "notificationDesc": "The window was closed. Tests stopped.",
-       "numericInputError": "Please enter a number",
-       "radioButtonError": "Please select one option",
-       "checkboxError": "Please select at least one option"
-     },
-     "suiteList": {
-       "loadingTests": "Loading tests... 🤔",
-       "refreshHint": "Try refreshing the page.",
-       "standName": "Stand name",
-       "status": "Status",
-       "startTime": "Start time",
-       "finishTime": "Finish time",
-       "alert": "Alert"
-     },
-     "testSuite": {
-       "nameColumn": "Name",
-       "dataColumn": "Data",
-       "loading": "Loading...",
-       "stubName": "Test Suite"
-     }
-   }
+      "soundOn": "Turn on the sound",
+      "soundOff": "Turn off the sound",
+      "debugOn": "Turn on the debug mode",
+      "debugOff": "Turn off the debug mode",
+      "connection": "Establishing a connection... 🧐🔎",
+      "dbError": "Database connection error. 🙅🏽‍♀️🚫",
+      "noEntries": "No entries in the database 🙅🏽‍♀️🚫",
+      "stoppedTestCase": "Stopped Test Case",
+      "failedTestCases": "Failed Test Cases",
+      "modalResultDismissHint": "Click anywhere or press any key to dismiss",
+      "modalResultAutoDismissHint": "Auto-dismissing in {{seconds}} seconds...",
+      "status": {
+        "ready": "Ready",
+        "run": "Run",
+        "passed": "Pass",
+        "failed": "Fail",
+        "stopped": "Stopped",
+        "unknown": "Unknown"
+      }
+    },
+    "button": {
+      "start": "Start",
+      "stop": "Stop",
+      "confirm": "Confirm"
+    },
+    "error": {
+      "dbConnectionTitle": "Database Connection Error",
+      "dbConnectionMessage": "Failed to establish connection with the database"
+    },
+    "chart": {
+      "dataChart": "Chart Data",
+      "xAxis": "X Axis",
+      "yAxis": "Y Axis",
+      "chart": "Chart",
+      "showChart": "Show chart {{title}}",
+      "fullscreenButton": "Open chart in full screen",
+      "series": "Series {{number}}"
+    },  
+    "operatorDialog": {
+      "defaultTitle": "Message",
+      "imageAlt": "Operator message image",
+      "htmlCodeTitle": "HTML Code",
+      "htmlLinkTitle": "HTML Link",
+      "enterAnswer": "Enter answer",
+      "fieldNotEmpty": "The field must not be empty",
+      "notificationTitle": "Notification",
+      "notificationDesc": "The window was closed. Tests stopped.",
+      "numericInputError": "Please enter a number",
+      "radioButtonError": "Please select one option",
+      "checkboxError": "Please select at least one option"
+    },
+    "suiteList": {
+      "loadingTests": "Loading tests... 🤔",
+      "refreshHint": "Try refreshing the page.",
+      "standName": "Stand name",
+      "status": "Status",
+      "startTime": "Start time",
+      "finishTime": "Finish time",
+      "alert": "Alert"
+    },
+    "testSuite": {
+      "nameColumn": "Name",
+      "dataColumn": "Data",
+      "loading": "Loading...",
+      "stubName": "Test Suite"
+    }
+  }
    ```
 
 4. Translate all values while keeping the same JSON structure and keys.

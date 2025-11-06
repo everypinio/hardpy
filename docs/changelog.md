@@ -2,25 +2,66 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## 0.17.1
+
+* Fix issue where when using a large button, it overlaps the content.
+  [[PR-219](https://github.com/everypinio/hardpy/pull/219)]
+
+## 0.17.0
+
+* Add a named volume to the **docker-compose.yaml** generator.
+  [[PR-216](https://github.com/everypinio/hardpy/pull/216)]
+* Add database updating after the alert has been called.
+  [[PR-211](https://github.com/everypinio/hardpy/pull/211)]
+* Add a handler for JSON objects that cannot be serialized for the database.
+  [[PR-211](https://github.com/everypinio/hardpy/pull/211)]
+* Add `sound_on` configuration option to the frontend settings for enabling/disabling test completion sound notifications.
+  [[PR-208](https://github.com/everypinio/hardpy/pull/208)]
+* Add pass/fail button functionality to dialog boxes for manual test verification.
+  [[PR-207](https://github.com/everypinio/hardpy/pull/207)]
+* Add configurable full-size start/stop button for the operator panel with full-size layout option.
+  [[PR-206](https://github.com/everypinio/hardpy/pull/206)]
+* Add configurable modal result windows that display test completion status (PASS/FAIL/STOP)
+  with auto-dismiss functionality and enhanced keyboard interaction handling.
+  [[PR-204](https://github.com/everypinio/hardpy/pull/204)]
+* Exclude the `Skipped` status from the `caused_dut_failure_id` reason.
+  [[PR-202](https://github.com/everypinio/hardpy/pull/202)]
+
+## 0.16.0
+
+* Add error code cleanup in the `attempts`.
+  [[PR-200](https://github.com/everypinio/hardpy/pull/200)]
+* Add an event handler for the inability to collect tests and the
+  absence of a database launch.
+  [[PR-200](https://github.com/everypinio/hardpy/pull/200)]
+* Add **unknown** values in the `StandCloudLoader` class.
+  [[PR-200](https://github.com/everypinio/hardpy/pull/200)]
+* Add the type `None` to info field in the `Dut`, `SubUnit`, `Instrument`,
+  and `TestStand` tables.
+  [[PR-200](https://github.com/everypinio/hardpy/pull/200)]
+* Add `serial_number` and `part_number` to the **Instrument** table.
+  [[PR-200](https://github.com/everypinio/hardpy/pull/200)]
+* Update js packages.
+  [[PR-197](https://github.com/everypinio/hardpy/pull/197)]
 * Add the charts view to the HardPy operator panel.
   [[PR-186](https://github.com/everypinio/hardpy/pull/186)]
 * Added storage of the operator message state to avoid reopening the window after closing.
   [[PR-190](https://github.com/everypinio/hardpy/pull/190)]
 * Change the database and interface synchronization mechanism.
-  The **statestore** and **runstore** databases can contain multiple documents, 
+  The **statestore** and **runstore** databases can contain multiple documents,
   which are defined by the frontend host name and port.
   The **current** document is no longer being created.
-  The name of the document in the database consists of the 
+  The name of the document in the database consists of the
   host name and port for the frontend, as described in the **hardpy.toml** file.
   [[PR-187](https://github.com/everypinio/hardpy/pull/187)]
-* Simplify the process of working with multiple **HardPy** instances by 
+* Simplify the process of working with multiple **HardPy** instances by
   using a single **CouchDB** instance instead of multiple instances.
   [[PR-187](https://github.com/everypinio/hardpy/pull/187)]
 
 ## HardPy 0.15.2
 
 * Change the logic of the test case attempts.
-  The test case fields (msg, assertion_message, chart, measurements, and artifact) 
+  The test case fields (msg, assertion_message, chart, measurements, and artifact)
   are now cleared when the test case passes on the second or subsequent attempt.
   The error code is now cleared when a test case passes on the second or subsequent attempt.
   [[PR-192](https://github.com/everypinio/hardpy/pull/192)]
@@ -43,7 +84,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
   [[PR-179](https://github.com/everypinio/hardpy/pull/179)]
 * Add arguments for `hardpy start`.
   [[PR-175](https://github.com/everypinio/hardpy/pull/175)]
-* Add numeric and string measurements: `set_case_measurement` function and 
+* Add numeric and string measurements: `set_case_measurement` function and
   `NumericMeasurement` and `StringMeasurement` classes.
   [[PR-177](https://github.com/everypinio/hardpy/pull/177)]
 * Update database schema by **SubUnit** table.
@@ -53,7 +94,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 * Add markers `case_group` and `module_group`.
   [[PR-173](https://github.com/everypinio/hardpy/pull/173)]
 * Add functions: `set_user_name`, `set_batch_serial_number`, `set_stand_revision`, `set_instrument`
-  `set_process_name`, `set_process_number`, `set_process_info`, `set_dut_name`, `set_dut_type`, 
+  `set_process_name`, `set_process_number`, `set_process_info`, `set_dut_name`, `set_dut_type`,
   `set_dut_revision`, `set_stand_info`.
   [[PR-172](https://github.com/everypinio/hardpy/pull/172)]
 * Change `DuplicateSerialNumberError` and `DuplicatePartNumberError` to `DuplicateParameterError`.

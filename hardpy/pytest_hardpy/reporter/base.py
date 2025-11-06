@@ -1,11 +1,16 @@
-# Copyright (c) 2024 Everypin
+# Copyright (c) 2025 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import annotations
 
 from logging import getLogger
 from typing import Any
 
+from pycouchdb.exceptions import NotFound
+from pydantic import ValidationError
+
 from hardpy.pytest_hardpy.db import (
     DatabaseField as DF,  # noqa: N817
+    ResultRunStore,
     RunStore,
     StateStore,
 )
@@ -81,6 +86,21 @@ class BaseReporter:
             str: database key
         """
         return ".".join(args)
+
+    def get_report(self) -> ResultRunStore | None:
+        """Get current report from runstore database.
+
+        Returns:
+            ResultRunStore | None: report, or None if not found or invalid
+        """
+        try:
+            return self._runstore.get_document()  # type: ignore
+        except NotFound:
+            return None
+        except ValidationError:
+            return None
+        except TypeError:
+            return None
 
     def get_current_attempt(self, module_id: str, case_id: str) -> int:
         """Get current attempt.

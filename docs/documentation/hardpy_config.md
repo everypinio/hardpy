@@ -6,7 +6,7 @@ The user can change the fields at creation by using [hardpy init](./cli.md#hardp
 ???+ note
     All **HardPy** project must have `hardpy.toml` file.
 
-## Default config
+## Minimal configuration file
 
 ```toml
 title = "HardPy TOML config"
@@ -22,7 +22,7 @@ host = "localhost"
 port = 8000
 ```
 
-## Maximum configuration file
+## Full configuration file
 
 ```toml
 title = "HardPy TOML config"
@@ -38,6 +38,13 @@ port = 5984
 host = "localhost"
 port = 8000
 language = "en"
+full_size_button = false
+sound_on = false
+
+[frontend.modal_result]
+enable = false
+auto_dismiss_pass = true
+auto_dismiss_timeout = 5
 
 [stand_cloud]
 address = "demo.standcloud.io"
@@ -101,6 +108,48 @@ The user can change this value with the `hardpy init --frontend-port` option.
 
 Language of operator panel. The default is `en`.
 Available languages are [there](hardpy_panel.md#languages).
+
+#### full_size_button
+
+Enable full-size start/stop button layout in operator panel.
+When set to `true`, the button will be displayed in full-size layout with larger dimensions and centered positioning.
+Default is `false`.
+
+#### sound_on
+
+Enable or disable test completion sound notifications.
+When set to `true`, sound will play when test execution completes (PASS/FAIL/STOP status).
+Default is `false`.
+
+#### modal_result
+
+Modal result windows settings for test completion display.
+
+```toml
+[frontend.modal_result]
+enable = false
+auto_dismiss_pass = true
+auto_dismiss_timeout = 5
+```
+
+##### enable
+
+Enable or disable test completion modal result windows.
+When set to `true`, modal windows will display test completion status (PASS/FAIL/STOP) at the end of test execution.
+Default is `false`.
+
+##### auto_dismiss_pass
+
+Automatically dismiss PASS result modals after the timeout period.
+When set to `true`, PASS results will automatically close without requiring user interaction.
+FAIL and STOP results always require manual dismissal.
+Default is `true`.
+
+##### auto_dismiss_timeout
+
+Timeout in seconds for auto-dismissing PASS result modals.
+Applies only when `auto_dismiss_pass = true`.
+Default is `5` seconds.
 
 ### stand_cloud
 

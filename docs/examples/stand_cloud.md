@@ -32,8 +32,38 @@ The code for this example can be seen inside the hardpy package
 
     Learn more in the [StandCloud](./../documentation/stand_cloud.md) section.
 
-
 7. Launch `hardpy run stand_cloud`.
+
+### hardpy.toml
+
+Replace the settings in the `[frontend]` and `[frontend.modal_result]` sections with those shown in the **hardpy.toml** example file below.
+
+```toml
+title = "HardPy TOML config"
+tests_name = "StandCloud"
+
+[database]
+user = "dev"
+password = "dev"
+host = "localhost"
+port = 5984
+
+[frontend]
+host = "localhost"
+port = 8000
+language = "en"
+full_size_button = false
+sound_on = true
+
+[frontend.modal_result]
+enable = true
+auto_dismiss_pass = true
+auto_dismiss_timeout = 5
+
+[stand_cloud]
+address = "demo.standcloud.localhost"
+connection_only = true
+```
 
 ### conftest.py
 

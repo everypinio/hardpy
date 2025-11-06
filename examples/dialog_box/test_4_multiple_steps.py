@@ -26,6 +26,7 @@ test_html = """
 </html>
 """
 
+
 @pytest.mark.case_name("Multistep")
 def test_multiple_steps():
     steps = [
@@ -180,3 +181,31 @@ def test_multiple_steps_with_main_html_and_main_image():
     )
     response = run_dialog_box(dbx)
     assert response
+
+
+@pytest.mark.case_name("Multistep with pass_fail")
+def test_multiple_steps_with_pass_fail():
+    steps = [
+        StepWidget("Step 1", text="Content for step"),
+        StepWidget(
+            "Step 2",
+            text="Content for step 2",
+            image=ImageComponent(address="assets/test.png", width=100),
+        ),
+        StepWidget(
+            "Step 3",
+            text=None,
+            html=HTMLComponent(
+                html=test_html,
+                is_raw_html=True,
+            ),
+        ),
+    ]
+    dbx = DialogBox(
+        dialog_text="Follow the steps and click Pass or Fail",
+        widget=MultistepWidget(steps),
+        pass_fail=True,
+    )
+    response = run_dialog_box(dbx)
+    assert response.result
+    assert response.data

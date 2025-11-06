@@ -11,6 +11,13 @@ port = 5984
 host = "localhost"
 port = 8000
 language = "en"
+full_size_button = false
+sound_on = true
+
+[frontend.modal_result]
+enable = true
+auto_dismiss_pass = true
+auto_dismiss_timeout = 5
 
 [stand_cloud]
 address = "demo.standcloud.localhost"

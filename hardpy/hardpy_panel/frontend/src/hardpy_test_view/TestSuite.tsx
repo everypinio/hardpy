@@ -860,6 +860,7 @@ export class TestSuite extends React.Component<Props, State> {
               }
               html_width={test.dialog_box.html?.width}
               html_border={test.dialog_box.html?.border}
+              pass_fail={test.dialog_box.pass_fail}
             />
           )}
         <TestStatus

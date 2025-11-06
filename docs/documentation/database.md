@@ -122,6 +122,8 @@ The user can specify the instrument information by using [set_instrument](./pyte
 
 - **name**: instrument name.
 - **revision** instrument revision.
+- **serial_number** instrument serial number.
+- **part_number** instrument part number.
 - **number**: instrument number.
 - **comment**: comment on the instrument.
 - **info**: dictionary containing additional information about the instrument.
@@ -133,6 +135,8 @@ The user can specify the instrument information by using [set_instrument](./pyte
 {
   "name": "Everypin Power Supply",
   "revision": "1.1.0",
+  "serial_number": "4235098",
+  "part_number": "E012",
   "number": 1,
   "comment": "",
   "info": {
@@ -159,6 +163,8 @@ The user can specify the instrument information by using [set_instrument](./pyte
     {
       "name": "Everypin Power Supply",
       "revision": "1.1.0",
+      "serial_number": "1238",
+      "part_number": "EPS_08",
       "number": 1,
       "comment": "",
       "info": {
@@ -184,6 +190,8 @@ The user can specify the instrument information by using [set_instrument](./pyte
     {
       "name": "Everypin Power Supply",
       "revision": "1.1.0",
+      "serial_number": "1237",
+      "part_number": "EPS_08",
       "number": 1,
       "comment": "",
       "info": {
@@ -454,6 +462,8 @@ Example of a document:
           {
             "name": "Everypin Power Supply",
             "revision": "2.0",
+            "serial_number": "1238",
+            "part_number": "EPS_08",
             "number": 1,
             "comment": "",
             "info": {}
@@ -544,8 +554,6 @@ headers = accept, authorization, content-type, origin, referer, x-csrf-token
 3. Create a `docker-compose.yaml` file in project's root directory.
 
 ```yaml
-version: "3.8"
-
 services:
   couchserver:
     image: couchdb:3.4
@@ -555,8 +563,11 @@ services:
       COUCHDB_USER: dev
       COUCHDB_PASSWORD: dev
     volumes:
-      - ./docker/dbdata:/opt/couchdb/data
-      - ./docker/couchdb.ini:/opt/couchdb/etc/local.ini
+      - couchdb_data:/opt/couchdb/data
+      - ./database/couchdb.ini:/opt/couchdb/etc/local.ini
+
+volumes:
+  couchdb_data:
 ```
 4. Run **docker compose** in the root directory.
 
