@@ -406,9 +406,14 @@ When called again, the information will be added to case measurement list.
 Measurements are displayed in the operator panel according to the following format:
 
 - **Name Value Unit** - for measurements with all components (e.g., "Voltage 12.3 V")
-- **Value Unit** - for measurements without names (e.g., "5°")  
+- **Value Unit** - for measurements without names (e.g., "5°", "98.6%", "45″")  
 - **Name Value** - for measurements without units (e.g., "Banana 15")
 - **Value** - for string measurements (e.g., "abc")
+
+**Special formatting for units:**
+
+- Symbols `%`, `°`, `′`, `″` are displayed without space (e.g., "23.5°C", "98.6%")
+- Other units are displayed with space (e.g., "12.3 V", "3.14 rad")
 
 **Visibility:**
 

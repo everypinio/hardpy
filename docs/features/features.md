@@ -417,9 +417,14 @@ function allows each individual test case to store measurements as a list.
 **Display format in operator panel:**
 
 - **Name Value Unit** - for measurements with all components (e.g., "Voltage 12.3 V")
-- **Value Unit** - for measurements without names (e.g., "5°")  
+- **Value Unit** - for measurements without names (e.g., "5°", "98.6%", "45″")  
 - **Name Value** - for measurements without units (e.g., "Banana 15")
 - **Value** - for string measurements (e.g., "abc")
+
+**Special formatting for units:**
+
+- Symbols `%`, `°`, `′`, `″` are displayed without space (e.g., "23.5°C", "98.6%")
+- Other units are displayed with space (e.g., "12.3 V", "3.14 rad")
 
 **Configuration:**
 Enable measurement display in your `hardpy.toml`:

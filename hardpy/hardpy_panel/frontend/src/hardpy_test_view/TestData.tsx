@@ -146,7 +146,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
     }
     display += `${measurement.value}`;
     if (measurement.unit) {
-      if (["°", "°C", "°F", "%"].includes(measurement.unit)) {
+      if (["%", "°", "′", "″"].includes(measurement.unit)) {
         display += measurement.unit;
       } else {
         display += ` ${measurement.unit}`;
