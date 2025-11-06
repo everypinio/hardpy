@@ -40,7 +40,7 @@ port = 8000
 language = "en"
 full_size_button = false
 sound_on = false
-measurement_display = false
+measurement_display = true
 
 [frontend.modal_result]
 enable = false
@@ -127,7 +127,7 @@ Default is `false`.
 Enable or disable measurement display in the operator panel.
 When set to `true`, measurements created using `set_case_measurement` will be displayed as tags 
 showing name, value, and unit information.
-Default is `false`.
+Default is `true`.
 
 #### modal_result
 

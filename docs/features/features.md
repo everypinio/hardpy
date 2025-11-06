@@ -93,32 +93,6 @@ Enable sound notifications in your `hardpy.toml`:
 sound_on = true
 ```
 
-### Measurement display
-
-**HardPy** provides measurement display functionality in the operator panel, allowing operators to view quantitative and qualitative test data alongside test messages and results.
-
-**Display format:**
-
-- **Name Value Unit** - for measurements with all components (e.g., "Voltage 12.3 V")
-- **Value Unit** - for measurements without names (e.g., "5°")  
-- **Name Value** - for measurements without units (e.g., "Banana 15")
-- **Value** - for string measurements (e.g., "abc")
-
-**Configuration:**
-Enable measurement display in your `hardpy.toml`:
-
-```toml
-[frontend]
-measurement_display = true
-```
-
-**Features:**
-
-- Support for both numeric and string measurements
-- Clean, minimal tag-based display
-- Proper handling of special units (°, %, etc.)
-- Integration with existing test workflows
-
 ## CLI
 
 ### Creating template project
@@ -454,6 +428,13 @@ Enable measurement display in your `hardpy.toml`:
 [frontend]
 measurement_display = true
 ```
+
+**Features:**
+
+- Support for both numeric and string measurements
+- Clean, minimal tag-based display
+- Proper handling of special units (°, %, etc.)
+- Integration with existing test workflows
 
 An example of its use can be found on page [measurement](./../examples/measurement.md).
 

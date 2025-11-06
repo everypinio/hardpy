@@ -20,7 +20,6 @@ interface Measurement {
   operation?: string;
   lower_limit?: number;
   upper_limit?: number;
-  disp?: boolean;
 }
 
 /**

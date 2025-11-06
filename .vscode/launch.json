@@ -169,10 +169,7 @@
             "args": [
                 "run",
                 "examples/measurement"
-            ],
-            "env": {
-                "DEBUG_FRONTEND": "1"
-            }
+            ]
         },
         {
             "name": "Python: Example Attempts",
