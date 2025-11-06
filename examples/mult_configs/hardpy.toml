@@ -1,0 +1,33 @@
+title = "HardPy TOML config"
+tests_name = "Multiple configs"
+current_test_config = ""
+
+[database]
+user = "dev"
+password = "dev"
+host = "localhost"
+port = 5984
+
+[frontend]
+host = "localhost"
+port = 8000
+language = "en"
+full_size_button = false
+sound_on = false
+
+[frontend.modal_result]
+enable = false
+auto_dismiss_pass = true
+auto_dismiss_timeout = 5
+
+[[test_configs]]
+name = "Config 1"
+file = "config1_pytest.ini"
+
+[[test_configs]]
+name = "Config 2"
+file = "config2_pytest.ini"
+
+[[test_configs]]
+name = "Config 3"
+file = "config3_pytest.ini"
