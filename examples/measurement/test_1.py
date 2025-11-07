@@ -4,7 +4,6 @@ from hardpy import (
     ComparisonOperation as CompOp,
     NumericMeasurement,
     set_case_measurement,
-    set_message,
 )
 
 pytestmark = pytest.mark.module_name("Numeric measurement")
@@ -14,7 +13,6 @@ pytestmark = pytest.mark.module_name("Numeric measurement")
 def test_basic_numeric_operations():
     meas0 = NumericMeasurement(value=1.0)
     set_case_measurement(meas0)
-    set_message(f"Raw measurement value: {meas0.value}")
 
     meas1 = NumericMeasurement(value=10, operation=CompOp.EQ, comparison_value=10)
     set_case_measurement(meas1)
@@ -41,8 +39,6 @@ def test_basic_numeric_operations():
 
 @pytest.mark.case_name("Advanced numeric measurements")
 def test_advanced_numeric_measurements():
-    set_message("Starting advanced measurements...")
-
     voltage_meas = NumericMeasurement(
         name="Voltage",
         value=1.2,
@@ -63,22 +59,6 @@ def test_advanced_numeric_measurements():
     )
     set_case_measurement(temperature_meas)
 
-    angle_meas = NumericMeasurement(
-        value=5,
-        unit="°",
-        operation=CompOp.EQ,
-        comparison_value=5,
-    )
-    set_case_measurement(angle_meas)
-
-    custom_meas = NumericMeasurement(
-        name="Banana",
-        value=15,
-        operation=CompOp.GT,
-        comparison_value=10,
-    )
-    set_case_measurement(custom_meas)
-
     percentage_meas = NumericMeasurement(
         value=98.6,
         unit="%",
@@ -96,26 +76,13 @@ def test_advanced_numeric_measurements():
     )
     set_case_measurement(minutes_meas)
 
-    seconds_meas = NumericMeasurement(
-        value=45,
-        unit="″",
-        operation=CompOp.EQ,
-        comparison_value=45,
-    )
-    set_case_measurement(seconds_meas)
-
-    set_message("Advanced measurements completed")
-
     assert all(
         [
             voltage_meas.result,
             temperature_meas.result,
-            angle_meas.result,
-            custom_meas.result,
             percentage_meas.result,
             minutes_meas.result,
-            seconds_meas.result,
-        ]
+        ],
     )
 
 

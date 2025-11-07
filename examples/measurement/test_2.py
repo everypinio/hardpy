@@ -2,10 +2,8 @@ import pytest
 
 from hardpy import (
     ComparisonOperation as CompOp,
-    NumericMeasurement,
     StringMeasurement,
     set_case_measurement,
-    set_message,
 )
 
 pytestmark = pytest.mark.module_name("String measurement")
@@ -42,8 +40,6 @@ def test_basic_string_operations():
 
 @pytest.mark.case_name("Advanced string measurements")
 def test_advanced_string_measurements():
-    set_message("Starting string measurements...")
-
     simple_str_meas = StringMeasurement(
         value="abc", operation=CompOp.EQ, comparison_value="abc"
     )
@@ -65,32 +61,6 @@ def test_advanced_string_measurements():
     info_meas = StringMeasurement(value="INFO")
     set_case_measurement(info_meas)
 
-    set_message("String measurements completed")
-
     assert simple_str_meas.result
     assert serial_meas.result
     assert not failed_str_meas.result, "Wrong status code"
-
-
-@pytest.mark.case_name("Mixed measurements with messages")
-def test_mixed_measurements_with_messages():
-    set_message("Starting mixed measurements...")
-
-    voltage_meas = NumericMeasurement(name="Input Voltage", value=12.3, unit="V")
-    set_case_measurement(voltage_meas)
-
-    set_message("Voltage measurement completed")
-
-    current_meas = NumericMeasurement(name="Current", value=0.5, unit="A")
-    set_case_measurement(current_meas)
-
-    status_meas = StringMeasurement(
-        name="Status", value="OK", operation=CompOp.EQ, comparison_value="OK"
-    )
-    set_case_measurement(status_meas)
-
-    set_message("All measurements done")
-
-    assert voltage_meas.value > 10
-    assert current_meas.value < 1.0
-    assert status_meas.result
