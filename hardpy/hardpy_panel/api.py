@@ -185,18 +185,33 @@ def confirm_operator_msg(is_msg_visible: str) -> dict:
 
 @app.post("/api/selected_tests")
 async def set_selected_tests(request: Request) -> dict:
+    """Set the selected tests in the application state.
+
+    Args:
+        request (Request): The incoming request object.
+
+    Returns:
+        dict[str, str]: A dictionary containing the status and message of the operation.
+            - status (str): The status of the operation. Possible values are "success" or "error".
+            - message (str): A message describing the result of the operation.
+
+    Raises:
+        TypeError: If the `selected_tests_list` is not a list.
+
+    """  # noqa: E501
     try:
         selected_tests_list = await request.json()
 
         if not isinstance(selected_tests_list, list):
-            raise TypeError("Expected list.")
+            msg = "Expected list."
+            raise TypeError(msg)  # noqa: TRY301
 
         app.state.selected_tests = selected_tests_list
         return {
             "status": "success",
             "message": f"Selected {len(selected_tests_list)} tests",
         }
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         return {"status": "error", "message": str(e)}
 
 

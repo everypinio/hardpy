@@ -6,12 +6,14 @@ import signal
 import subprocess
 import sys
 from platform import system
-
-from fastapi import FastAPI
+from typing import TYPE_CHECKING
 
 from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
 from hardpy.pytest_hardpy.reporter import RunnerReporter
+
+if TYPE_CHECKING:
+    from fastapi import FastAPI
 
 
 class PyTestWrapper:
@@ -172,9 +174,10 @@ class PyTestWrapper:
         """
         try:
             self._app.state.selected_tests = selected_tests
-            return True
-        except Exception:
+        except Exception:  # noqa: BLE001
             return False
+        else:
+            return True
 
     def is_running(self) -> bool | None:
         """Check if pytest is running.
