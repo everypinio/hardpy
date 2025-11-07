@@ -13,6 +13,7 @@ port = 8000
 language = "en"
 full_size_button = false
 sound_on = true
+manual_tests_selection = true
 
 [frontend.modal_result]
 enable = true

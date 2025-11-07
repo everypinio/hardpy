@@ -88,6 +88,7 @@ interface Props extends WithTranslation {
   defaultClose: boolean;
   onTestsSelectionChange?: (selectedTests: string[]) => void;
   selectedTests?: string[];
+  selectionSupported?: boolean; 
 }
 
 const SECONDS_TO_MILLISECONDS = 1000;
@@ -265,6 +266,7 @@ export class SuiteList extends React.Component<
         moduleTechName={suite.name}
         onTestsSelectionChange={this.props.onTestsSelectionChange}
         selectedTests={this.props.selectedTests}
+        selectionSupported={this.props.selectionSupported}
       />
     );
   }

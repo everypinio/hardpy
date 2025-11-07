@@ -49,6 +49,7 @@ interface AppConfig {
   frontend?: {
     full_size_button?: boolean;
     sound_on?: boolean;
+    manual_tests_selection?: boolean;
     modal_result?: {
       enable?: boolean;
       auto_dismiss_pass?: boolean;
@@ -190,6 +191,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const [timerIntervalId, setTimerIntervalId] =
     React.useState<NodeJS.Timeout | null>(null);
   const [selectedTests, setSelectedTests] = React.useState<string[]>([]);
+  const [allTests, setAllTests] = React.useState<string[]>([]);
 
   /**
    * Loads HardPy configuration from the backend API on component mount
@@ -203,8 +205,15 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         setAppConfig(config);
 
         // Initialize sound setting from TOML config
-        if (config.frontend.sound_on !== undefined) {
+        if (config.frontend?.sound_on !== undefined) {
           setUseEndTestSound(config.frontend.sound_on);
+        }
+
+        if (config.frontend?.manual_tests_selection) {
+          const savedTests = localStorage.getItem("hardpy_selected_tests");
+          if (savedTests) {
+            setSelectedTests(JSON.parse(savedTests));
+          }
         }
       } catch (error) {
         console.error("Failed to load HardPy config:", error);
@@ -380,7 +389,28 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       }
     }
 
-    // Detect test completion and show ModalResult (only if enabled in config)
+    // Extract all available tests
+    if (db_row.modules) {
+      const allAvailableTests: string[] = [];
+      Object.entries(db_row.modules).forEach(([moduleId, module]) => {
+        if (module.cases) {
+          Object.keys(module.cases).forEach((caseId) => {
+            allAvailableTests.push(`${moduleId}::${caseId}`);
+          });
+        }
+      });
+      setAllTests(allAvailableTests);
+
+      // If manual selection is enabled and no tests are selected yet, select all by default
+      if (
+        appConfig?.frontend?.manual_tests_selection &&
+        selectedTests.length === 0
+      ) {
+        setSelectedTests(allAvailableTests);
+      }
+    }
+
+    // --- Test completion logic starts here ---
     const prevStatus = lastRunStatus;
     const ModalResultEnable =
       appConfig?.frontend?.modal_result?.enable ?? false;
@@ -391,6 +421,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       setTestCompletionData(null);
     }
 
+    // Show ModalResult on test completion
     if (
       ModalResultEnable &&
       prevStatus === "run" &&
@@ -405,25 +436,20 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         assertionMsg?: string;
       }> = [];
 
-      // Extract failed test cases if test failed
       if (!testPassed && !testStopped && db_row.modules) {
-        Object.entries(db_row.modules).forEach(
-          ([moduleId, module]: [string, any]) => {
-            if (module.cases) {
-              Object.entries(module.cases).forEach(
-                ([caseId, testCase]: [string, any]) => {
-                  if (testCase.status === "failed") {
-                    failedTestCases.push({
-                      moduleName: module.name || moduleId,
-                      caseName: testCase.name || caseId,
-                      assertionMsg: testCase.assertion_msg || undefined,
-                    });
-                  }
-                }
-              );
-            }
+        Object.entries(db_row.modules).forEach(([moduleId, module]) => {
+          if (module.cases) {
+            Object.entries(module.cases).forEach(([caseId, testCase]) => {
+              if (testCase.status === "failed") {
+                failedTestCases.push({
+                  moduleName: module.name || moduleId,
+                  caseName: testCase.name || caseId,
+                  assertionMsg: testCase.assertion_msg || undefined,
+                });
+              }
+            });
           }
-        );
+        });
       }
 
       const stoppedTestCase = testStopped
@@ -454,6 +480,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     isAuthenticated,
     appConfig,
     showCompletionModalResult,
+    syncDocumentId,
+    selectedTests.length,
   ]);
 
   /**
@@ -461,6 +489,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
    */
   const handleTestsSelectionChange = (tests: string[]) => {
     setSelectedTests(tests);
+    localStorage.setItem("hardpy_selected_tests", JSON.stringify(tests));
   };
 
   /**
@@ -538,7 +567,10 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                 defaultClose={!ultrawide}
                 onTestsSelectionChange={handleTestsSelectionChange}
                 selectedTests={selectedTests}
-              ></SuiteList>
+                selectionSupported={
+                  appConfig?.frontend?.manual_tests_selection || false
+                }
+              />
             </Card>
           )}
           {use_debug_info && (
