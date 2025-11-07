@@ -51,6 +51,14 @@ export function TestStatus(props: Readonly<Props>): React.ReactElement {
           className="status-icon status-icon-fail"
         />
       );
+    case "skipped":
+      return (
+        <Icon
+          icon="disable"
+          intent="warning"
+          className="status-icon status-icon-skipped"
+        />
+      )
     case "":
       return (
         <Icon

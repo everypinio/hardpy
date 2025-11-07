@@ -29,6 +29,9 @@ class PyTestWrapper:
         # before clients come in
         self._config_manager = ConfigManager()
         self.config = self._config_manager.config
+
+        # Store the full test structure from collection
+        self._full_test_structure = None
         self.collect(is_clear_database=True)
 
     def start(self, start_args: dict | None = None) -> bool:
@@ -79,6 +82,12 @@ class PyTestWrapper:
             for key, value in start_args.items():
                 arg_str = f"{key}={value}"
                 cmd.extend(["--hardpy-start-arg", arg_str])
+
+        # Store current selection before starting
+        self._current_selection = selected_tests or []
+
+        # Preserve full test structure in database before starting selected tests
+        self._preserve_full_test_structure()
 
         if system() == "Windows":
             self._proc = subprocess.Popen(  # noqa: S603
@@ -138,11 +147,75 @@ class PyTestWrapper:
         if is_clear_database:
             args.append("--hardpy-clear-database")
 
-        subprocess.Popen(  # noqa: S603
+        # Run collection and store the full test structure
+        process = subprocess.Popen(  # noqa: S603
             [self.python_executable, *args],
             cwd=self._config_manager.tests_path,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
         )
+
+        # Wait for collection to complete and store the structure
+        process.wait()
+        self._store_full_test_structure()
+
         return True
+
+    def _store_full_test_structure(self):
+        """Store the full test structure from the last collection."""
+        try:
+            self._reporter.update_doc_by_db()
+            # Extract modules structure from the database
+            modules_key = self._reporter.generate_key(DF.MODULES)
+            full_structure = self._reporter.get_field(modules_key)
+            self._full_test_structure = full_structure
+        except Exception as e:
+            print(f"Failed to store full test structure: {e}")
+            self._full_test_structure = None
+
+    def _preserve_full_test_structure(self):
+        """Preserve full test structure when running selected tests."""
+        if not self._full_test_structure:
+            return
+
+        try:
+            self._reporter.update_doc_by_db()
+
+            # Get current selected tests
+            selected_tests = getattr(self._app.state, "selected_tests", [])
+
+            # Create a copy of full structure with selection info
+            preserved_structure = {}
+            for module_name, module_data in self._full_test_structure.items():
+                preserved_module = module_data.copy()
+                preserved_module_cases = {}
+
+                if module_data.get("cases"):
+                    for case_name, case_data in module_data["cases"].items():
+                        full_test_path = f"{module_name}::{case_name}"
+                        is_selected = full_test_path in selected_tests
+
+                        # Mark unselected tests as skipped from the beginning
+                        preserved_case = case_data.copy()
+                        if not is_selected:
+                            preserved_case["status"] = "skipped"
+                            preserved_case["start_time"] = None
+                            preserved_case["stop_time"] = None
+                            preserved_case["assertion_msg"] = None
+                            preserved_case["msg"] = None
+
+                        preserved_module_cases[case_name] = preserved_case
+
+                preserved_module["cases"] = preserved_module_cases
+                preserved_structure[module_name] = preserved_module
+
+            # Update database with preserved structure
+            modules_key = self._reporter.generate_key(DF.MODULES)
+            self._reporter.set_doc_value(modules_key, preserved_structure)
+            self._reporter.update_db_by_doc()
+
+        except Exception as e:
+            print(f"Failed to preserve full test structure: {e}")
 
     def send_data(self, data: str) -> bool:
         """Send data to pytest subprocess.

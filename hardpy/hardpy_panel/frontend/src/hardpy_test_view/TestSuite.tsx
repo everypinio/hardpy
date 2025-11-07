@@ -768,9 +768,28 @@ export class TestSuite extends React.Component<Props, State> {
     rowIndex: number
   ): React.ReactElement {
     const test = test_topics[rowIndex];
+    const { selectedTests = [] } = this.props;
+    const testFullPath = `${this.getModuleTechName()}::${row_}`;
+    const isSelected = selectedTests.includes(testFullPath);
+
+    const nameStyle: React.CSSProperties = {
+      marginTop: "0.2em",
+      marginBottom: "0.2em",
+      opacity: isSelected ? 1 : 0.6,
+    };
+
     return this.commonCellRender(
-      <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
+      <div style={nameStyle}>
         <TestName name={test.name} />
+        {!isSelected && (
+          <Tag
+            minimal
+            style={{ marginLeft: "8px" }}
+            title={this.props.t("testSuite.notSelected")}
+          >
+            {this.props.t("testSuite.skipped")}
+          </Tag>
+        )}
       </div>,
       `name_${rowIndex}_${row_}`
     );
@@ -823,6 +842,17 @@ export class TestSuite extends React.Component<Props, State> {
     rowIndex: number
   ): React.ReactElement {
     const test = test_topics[rowIndex];
+    const { selectedTests = [] } = this.props;
+    const testFullPath = `${this.getModuleTechName()}::${row_}`;
+    const isSelected = selectedTests.includes(testFullPath);
+
+    let displayStatus = test.status;
+    if (test.status === 'skipped') {
+      displayStatus = 'skipped';
+    } else if (!isSelected && this.props.commonTestRunStatus === "run") {
+      displayStatus = "skipped";
+    }
+
     const { info: widget_info, type: widget_type } =
       test.dialog_box.widget || {};
     const {
@@ -836,7 +866,7 @@ export class TestSuite extends React.Component<Props, State> {
         {test.dialog_box.dialog_text &&
           test.status === "run" &&
           this.props.commonTestRunStatus === "run" &&
-          test.dialog_box.visible && (
+          test.dialog_box.visible && isSelected && (
             <StartConfirmationDialog
               title_bar={test.dialog_box.title_bar ?? test.name}
               dialog_text={test.dialog_box.dialog_text}
@@ -866,9 +896,9 @@ export class TestSuite extends React.Component<Props, State> {
         <TestStatus
           status={
             this.props.commonTestRunStatus !== "run" &&
-            (test.status === "run" || test.status === "ready")
+            (displayStatus === "run" || displayStatus === "ready")
               ? "stucked"
-              : test.status
+              : displayStatus
           }
         />
       </div>,
