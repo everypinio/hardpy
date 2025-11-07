@@ -49,6 +49,7 @@ interface AppConfig {
   frontend?: {
     full_size_button?: boolean;
     sound_on?: boolean;
+    measurement_display?: boolean;
     modal_result?: {
       enable?: boolean;
       auto_dismiss_pass?: boolean;
@@ -528,6 +529,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
               <SuiteList
                 db_state={testRunData}
                 defaultClose={!ultrawide}
+                measurementDisplay={appConfig?.frontend?.measurement_display}
               ></SuiteList>
             </Card>
           )}
