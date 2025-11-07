@@ -5,9 +5,9 @@ import * as React from "react";
 import { AnchorButton, AnchorButtonProps } from "@blueprintjs/core";
 import { withTranslation, WithTranslation } from "react-i18next";
 
-type Props = { 
+type Props = {
   testing_status: string;
-  selectedTests: string[];
+  selectedTests?: string[];
   useBigButton?: boolean;
 } & WithTranslation;
 
@@ -33,6 +33,11 @@ class StartStopButton extends React.Component<Props, State> {
     this.state = {
       isStopButtonDisabled: false,
     };
+
+    if (!props.selectedTests) {
+      props.selectedTests = [];
+    }
+
     this.hardpy_start = this.hardpy_start.bind(this);
     this.hardpy_stop = this.hardpy_stop.bind(this);
   }
@@ -41,28 +46,32 @@ class StartStopButton extends React.Component<Props, State> {
    * Sends selected tests to backend
    * @private
    */
-  private sendSelectedTestsToBackend(selectedTests: string[]): void {
-    if (selectedTests.length === 0) {
+  private sendSelectedTestsToBackend(
+    selectedTests: string[] | undefined
+  ): void {
+    const testsToSend = selectedTests || [];
+
+    if (testsToSend.length === 0) {
       console.log("No tests selected, sending empty array");
     }
-    
-    const testsJsonString = JSON.stringify(selectedTests);
-    
-    console.log("Selected tests being sent after START:", selectedTests);
+
+    const testsJsonString = JSON.stringify(testsToSend);
+
+    console.log("Selected tests being sent after START:", testsToSend);
     fetch(`/api/selected_tests`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: testsJsonString,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: testsJsonString,
     })
-        .then((response) => response.json())
-        .then((data) => {
-            console.log("Selected tests sent to backend:", data);
-        })
-        .catch((error) => {
-            console.error("Error sending selected tests:", error);
-        });
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Selected tests sent to backend:", data);
+      })
+      .catch((error) => {
+        console.error("Error sending selected tests:", error);
+      });
   }
 
   /**
@@ -92,7 +101,6 @@ class StartStopButton extends React.Component<Props, State> {
    */
   private hardpy_start(): void {
     this.sendSelectedTestsToBackend(this.props.selectedTests);
-    
     console.log("StartStopButton: Starting test execution");
     this.hardpy_call("api/start");
   }

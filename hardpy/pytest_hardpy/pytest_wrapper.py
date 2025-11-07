@@ -58,8 +58,16 @@ class PyTestWrapper:
 
         selected_tests = getattr(self._app.state, "selected_tests", None)
         if selected_tests:
+            pytest_test_paths = []
             for test_path in selected_tests:
-                cmd.append(test_path)
+                if "::" in test_path:
+                    file_name, test_name = test_path.split("::", 1)
+                    pytest_path = f"{file_name}.py::{test_name}"
+                    pytest_test_paths.append(pytest_path)
+                else:
+                    pytest_test_paths.append(f"{test_path}.py")
+
+            cmd.extend(pytest_test_paths)
 
         if self.config.stand_cloud.connection_only:
             cmd.append("--sc-connection-only")

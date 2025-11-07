@@ -724,6 +724,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                   <StartStopButton
                     testing_status={lastRunStatus}
                     useBigButton={true}
+                    selectedTests={selectedTests}
                   />
                 </div>
               </div>
@@ -755,6 +756,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                 <StartStopButton
                   testing_status={lastRunStatus}
                   useBigButton={false}
+                  selectedTests={selectedTests}
                 />
               </div>
             </div>
