@@ -27,6 +27,7 @@ class StandCloudSynchronizer:
         """
         invalid_reports = []
         success_report_counter = 0
+        msg = ""
         try:
             loader = StandCloudLoader()
             response = loader.healthcheck()
