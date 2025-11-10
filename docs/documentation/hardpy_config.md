@@ -6,7 +6,7 @@ The user can change the fields at creation by using [hardpy init](./cli.md#hardp
 ???+ note
     All **HardPy** project must have `hardpy.toml` file.
 
-## Default config
+## Minimal configuration file
 
 ```toml
 title = "HardPy TOML config"
@@ -22,7 +22,7 @@ host = "localhost"
 port = 8000
 ```
 
-## Maximum configuration file
+## Full configuration file
 
 ```toml
 title = "HardPy TOML config"
@@ -40,6 +40,7 @@ port = 8000
 language = "en"
 full_size_button = false
 sound_on = false
+measurement_display = true
 
 [frontend.modal_result]
 enable = false
@@ -121,6 +122,13 @@ Default is `false`.
 Enable or disable test completion sound notifications.
 When set to `true`, sound will play when test execution completes (PASS/FAIL/STOP status).
 Default is `false`.
+
+#### measurement_display
+
+Enable or disable measurement display in the operator panel.
+When set to `true`, measurements created using `set_case_measurement` will be displayed as tags 
+showing name, value, and unit information.
+Default is `true`.
 
 #### modal_result
 

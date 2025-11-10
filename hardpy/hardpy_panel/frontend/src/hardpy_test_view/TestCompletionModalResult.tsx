@@ -106,13 +106,13 @@ const TestCompletionModalResult: React.FC<TestCompletionModalResultProps> = ({
 
   if (testStopped) {
     statusText = "STOP";
-    statusTranslation = t("app.status.stopped") || "停止";
+    statusTranslation = t("app.status.stopped");
   } else if (testPassed) {
     statusText = "PASS";
-    statusTranslation = t("app.status.passed") || "通过";
+    statusTranslation = t("app.status.passed");
   } else {
     statusText = "FAIL";
-    statusTranslation = t("app.status.failed") || "失败";
+    statusTranslation = t("app.status.failed");
   }
 
   const ModalResultStyle: React.CSSProperties = {

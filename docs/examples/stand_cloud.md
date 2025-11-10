@@ -57,6 +57,7 @@ port = 8000
 language = "en"
 full_size_button = false
 sound_on = true
+measurement_display = true
 
 [frontend.modal_result]
 enable = true

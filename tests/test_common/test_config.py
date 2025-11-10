@@ -19,6 +19,9 @@ db_no_default_port = 5985
 db_no_default_url = f"http://{db_no_default_user}:{db_no_default_password}@{db_no_default_host}:{db_no_default_port}/"
 frontend_no_default_host = "localhost1"
 frontend_no_default_port = 8001
+frontend_no_default_full_size_button = True
+frontend_no_default_sound_on = True
+frontend_no_default_measurement_display = False
 stand_cloud_no_default_addr = "everypin1.standcloud.localhost"
 stand_cloud_no_default_connection_only = True
 stand_cloud_no_default_api_key = "1"
@@ -32,6 +35,9 @@ db_default_url = f"http://{db_default_user}:{db_default_password}@{db_default_ho
 frontend_default_host = "localhost"
 frontend_default_port = 8000
 frontend_default_language = "en"
+frontend_default_full_size_button = False
+frontend_default_sound_on = False
+frontend_default_measurement_display = True
 stand_cloud_default_addr = "standcloud.io"
 stand_cloud_dafault_connection_only = False
 stand_cloud_default_api_key = ""
@@ -85,6 +91,9 @@ def test_frontend_config():
     assert config.host == frontend_default_host
     assert config.port == frontend_default_port
     assert config.language == frontend_default_language
+    assert config.full_size_button == frontend_default_full_size_button
+    assert config.sound_on == frontend_default_sound_on
+    assert config.measurement_display == frontend_default_measurement_display
 
 
 def test_stand_cloud_config():
@@ -111,6 +120,9 @@ def test_hardpy_config():
     assert config.frontend.host == frontend_default_host
     assert config.frontend.port == frontend_default_port
     assert config.frontend.language == frontend_default_language
+    assert config.frontend.full_size_button == frontend_default_full_size_button
+    assert config.frontend.sound_on == frontend_default_sound_on
+    assert config.frontend.measurement_display == frontend_default_measurement_display
     assert config.stand_cloud.address == stand_cloud_default_addr
     assert config.stand_cloud.connection_only == stand_cloud_dafault_connection_only
     assert config.stand_cloud.api_key == stand_cloud_default_api_key
@@ -158,6 +170,9 @@ def test_read_config_success(tmp_path: Path):
             "host": frontend_default_host,
             "port": frontend_default_port,
             "language": frontend_default_language,
+            "full_size_button": frontend_default_full_size_button,
+            "sound_on": frontend_default_sound_on,
+            "measurement_display": frontend_default_measurement_display,
         },
         "stand_cloud": {
             "address": stand_cloud_default_addr,
@@ -182,34 +197,13 @@ def test_read_config_success(tmp_path: Path):
     assert config.frontend.host == test_config_data["frontend"]["host"]
     assert config.frontend.port == test_config_data["frontend"]["port"]
     assert config.frontend.language == test_config_data["frontend"]["language"]
+    assert (
+        config.frontend.full_size_button
+        == test_config_data["frontend"]["full_size_button"]
+    )
+    assert config.frontend.sound_on == test_config_data["frontend"]["sound_on"]
+    assert (
+        config.frontend.measurement_display
+        == test_config_data["frontend"]["measurement_display"]
+    )
     assert config.stand_cloud.address == test_config_data["stand_cloud"]["address"]
-
-
-def test_read_config_without_modal_result(tmp_path: Path):
-    """Test reading config without modal_result section (backward compatibility)."""
-    test_config_data = {
-        "title": "Test HardPy Config",
-        "tests_name": "My tests",
-        "database": {
-            "user": db_default_user,
-            "password": db_default_password,
-            "host": db_default_host,
-            "port": db_default_port,
-        },
-        "frontend": {
-            "host": frontend_default_host,
-            "port": frontend_default_port,
-            "language": frontend_default_language,
-        },
-        "stand_cloud": {
-            "address": stand_cloud_default_addr,
-        },
-    }
-    tests_dir = tmp_path / "tests"
-    Path.mkdir(tests_dir, exist_ok=True, parents=True)
-    with Path.open(tests_dir / "hardpy.toml", "w") as file:
-        file.write(tomli_w.dumps(test_config_data))
-
-    config_manager = ConfigManager()
-    config = config_manager.read_config(tests_dir)
-    assert isinstance(config, HardpyConfig)
