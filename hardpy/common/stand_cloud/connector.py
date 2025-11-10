@@ -61,6 +61,9 @@ class StandCloudConnector:
         self._verify_ssl = not __debug__
         self._token_manager = TokenManager(self._addr.domain)
         self._token_manager.save_token(api_key)
+        # TODO(xorialexandrov): Change the self._abc logic for storing the
+        # API key in the file system to secure storage.
+        # Remove device flow process.
         self._token: BearerToken = self.get_access_token()
         self._log = getLogger(__name__)
 
@@ -214,12 +217,6 @@ class StandCloudConnector:
                 return new_token
 
     def _get_api(self, endpoint: str) -> ApiClient:
-        if self._token is None:
-            msg = (
-                f"Access token to {self._addr.domain} is not set."
-                f"Login to {self._addr.domain} first"
-            )
-            raise StandCloudError(msg)
         if self._token_manager.api_key:
             session = requests.Session()
             session.headers["Authorization"] = f"Bearer {self._token_manager.api_key}"
@@ -228,6 +225,13 @@ class StandCloudConnector:
                 session=session,
                 timeout=10,
             )
+
+        if self._token is None:
+            msg = (
+                f"Access token to {self._addr.domain} is not set."
+                f"Login to {self._addr.domain} first"
+            )
+            raise StandCloudError(msg)
 
         try:
             auth = OAuth2(
