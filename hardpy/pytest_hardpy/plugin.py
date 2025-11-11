@@ -541,6 +541,8 @@ class HardpyPlugin:
             msg = "Empty report cannot be uploaded to StandCloud"
             self._reporter.set_alert(msg)
             return
+        if self._sc_syncronizer.push_to_sc(report):
+            return
         if not self._sc_syncronizer.push_to_tempstore(report):
             msg = "Report not uploaded to temporary storage"
             self._reporter.set_alert(msg)
