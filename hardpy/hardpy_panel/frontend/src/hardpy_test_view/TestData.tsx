@@ -238,6 +238,15 @@ const getComparisonOperator = (operation?: string): string => {
  * @component
  * @param {Props} props - Component properties
  * @returns {React.ReactElement} Rendered test data component with messages and charts
+ * 
+ * @example
+ * <TestData
+ *   msg={["Test passed", "Measurement complete"]}
+ *   assertion_msg="Assertion failed: expected 5, got 4"
+ *   testSuiteIndex={0}
+ *   testCaseIndex={1}
+ *   chart={chartData}
+ * />
  */
 export function TestData(props: Readonly<Props>): React.ReactElement {
   const { t } = props;
