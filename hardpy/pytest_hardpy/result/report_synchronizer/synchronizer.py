@@ -1,16 +1,20 @@
 # Copyright (c) 2025 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import annotations
 
 from http import HTTPStatus
+from typing import TYPE_CHECKING
 
 from pydantic import ValidationError
 
 from hardpy.common.stand_cloud.exception import StandCloudError
-from hardpy.pytest_hardpy.db.schema import ResultRunStore
 from hardpy.pytest_hardpy.db.tempstore import TempStore
 from hardpy.pytest_hardpy.result.report_loader.stand_cloud_loader import (
     StandCloudLoader,
 )
+
+if TYPE_CHECKING:
+    from hardpy.pytest_hardpy.db.schema import ResultRunStore
 
 
 class StandCloudSynchronizer:
@@ -25,14 +29,15 @@ class StandCloudSynchronizer:
         Returns:
             str: Synchronization message
         """
+        if not self._tempstore.reports():
+            return "All reports are synchronized with StandCloud"
+        try:
+            loader = self._create_sc_loader()
+        except StandCloudError as err:
+            raise StandCloudError("...") from err
+
         invalid_reports = []
         success_report_counter = 0
-        msg = ""
-        try:
-            loader = StandCloudLoader()
-            response = loader.healthcheck()
-        except StandCloudError as exc:
-            return f"StandCloud service is not available: {exc}"
         for _report in self._tempstore.reports():
             try:
                 report_id = _report.get("id")
@@ -67,16 +72,7 @@ class StandCloudSynchronizer:
                 reason = f"Report {report_id} not deleted from the temporary storage"
                 invalid_reports.append({report_id: reason})
             success_report_counter += 1
-        if success_report_counter:
-            msg = (
-                f"Reports successfully uploaded to StandCloud: {success_report_counter}"
-            )
-        if invalid_reports:
-            msg += "\nInvalid reports:\n\n"
-            for _report in invalid_reports:
-                report_id, reason = next(iter(_report.items()))
-                msg += f"{report_id}: {reason}\n"
-        return msg
+        return self._create_sync_message(success_report_counter, invalid_reports)
 
     def push_to_tempstore(self, report: ResultRunStore) -> bool:
         """Push report to the report database.
@@ -88,3 +84,38 @@ class StandCloudSynchronizer:
             bool: True if success, else False
         """
         return self._tempstore.push_report(report)
+
+    def push_to_sc(self, report: ResultRunStore) -> bool:
+        """Push report to the StandCloud.
+
+        Args:
+            report (ResultRunStore): report
+        """
+        try:
+            loader = self._create_sc_loader()
+        except StandCloudError:
+            return False
+        try:
+            response = loader.load(report)
+        except StandCloudError:
+            return False
+        return response.status_code == HTTPStatus.CREATED
+
+    def _create_sync_message(self, success_report: int, invalid_reports: list) -> str:
+        msg = ""
+        if success_report:
+            msg = f"Reports successfully uploaded to StandCloud: {success_report}"
+        if invalid_reports:
+            msg += "\nInvalid reports:\n\n"
+            for _report in invalid_reports:
+                report_id, reason = next(iter(_report.items()))
+                msg += f"{report_id}: {reason}\n"
+            raise StandCloudError(msg)
+        if not msg:
+            msg = "All reports are synchronized with StandCloud"
+        return msg
+
+    def _create_sc_loader(self) -> StandCloudLoader:
+        loader = StandCloudLoader()
+        loader.healthcheck()
+        return loader
