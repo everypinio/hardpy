@@ -112,7 +112,7 @@ const findStoppedTestCase = (
 ):
   | { moduleName: string; caseName: string; assertionMsg?: string }
   | undefined => {
-  if (!testRunData.modules) return undefined;
+  if (!testRunData.modules) {return undefined;}
 
   // First, look for explicitly stopped test cases
   for (const [moduleId, module] of Object.entries(testRunData.modules)) {
@@ -130,6 +130,7 @@ const findStoppedTestCase = (
   }
 
   // If no explicitly stopped case found, return the last failed test case
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let lastFailedTestCase: any = null;
   for (const [moduleId, module] of Object.entries(testRunData.modules)) {
     if (module.cases) {
@@ -350,10 +351,10 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
    * Handles test status changes, progress updates, and ModalResult display
    */
   React.useEffect(() => {
-    if (rows.length === 0) return;
+    if (rows.length === 0) {return;}
 
     const index = findRowIndex(rows, syncDocumentId);
-    if (index === -1) return;
+    if (index === -1) {return;}
     const db_row = rows[index].doc as TestRunI;
     const status = db_row.status || "";
     const progress = db_row.progress || 0;
@@ -408,9 +409,11 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       // Extract failed test cases if test failed
       if (!testPassed && !testStopped && db_row.modules) {
         Object.entries(db_row.modules).forEach(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ([moduleId, module]: [string, any]) => {
             if (module.cases) {
               Object.entries(module.cases).forEach(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 ([caseId, testCase]: [string, any]) => {
                   if (testCase.status === "failed") {
                     failedTestCases.push({
