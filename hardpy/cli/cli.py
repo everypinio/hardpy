@@ -154,6 +154,7 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
         tests_dir (Optional[str]): Test directory. Current directory by default
     """
     config = _get_config(tests_dir)
+    _validate_config(config)
 
     print("\nLaunch the HardPy operator panel...")
 
@@ -309,12 +310,12 @@ def _get_config(tests_dir: str | None = None, validate: bool = False) -> HardpyC
         sys.exit()
 
     if validate:
-        _validate_config(config, dir_path)
+        _validate_running_config(config, dir_path)
 
     return config
 
 
-def _validate_config(config: HardpyConfig, tests_dir: str) -> None:
+def _validate_running_config(config: HardpyConfig, tests_dir: str) -> None:
     url = f"http://{config.frontend.host}:{config.frontend.port}/api/hardpy_config"
     error_msg = f"HardPy in directory {tests_dir} does not run."
     try:
@@ -326,6 +327,11 @@ def _validate_config(config: HardpyConfig, tests_dir: str) -> None:
     running_config: dict = response.json()
     if config.model_dump() != running_config:
         print(error_msg)
+        sys.exit()
+
+def _validate_config(config: HardpyConfig) -> None:
+    if config.stand_cloud.autosync_timeout < 1:
+        print("StandCloud autosync timeout must be greater than 0.")
         sys.exit()
 
 
