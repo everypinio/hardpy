@@ -285,20 +285,38 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
         }
       }
 
-      if (
-        measurement.unit &&
-        !["%", "°", "′", "″"].includes(measurement.unit)
-      ) {
-        display += ` ${measurement.unit}`;
-      }
     } else if (
       measurement.operation &&
       measurement.comparison_value !== undefined &&
       measurement.comparison_value !== null &&
       !isRangeOp
     ) {
-      const operator = getComparisonOperator(measurement.operation);
-      display += ` [${operator} ${measurement.comparison_value}]`;
+      const operator = measurement.operation;
+      const comparisonValue = measurement.comparison_value;
+      
+      switch (operator) {
+        case "gt":
+          display += ` (${comparisonValue}; ∞)`;
+          break;
+        case "ge":
+          display += ` [${comparisonValue}; ∞)`;
+          break;
+        case "lt":
+          display += ` (-∞; ${comparisonValue})`;
+          break;
+        case "le":
+          display += ` (-∞; ${comparisonValue}]`;
+          break;
+        case "eq":
+          display += ` [= ${comparisonValue}]`;
+          break;
+        case "ne":
+          display += ` [≠ ${comparisonValue}]`;
+          break;
+        default:
+          { const defaultOperator = getComparisonOperator(measurement.operation);
+          display += ` [${defaultOperator} ${comparisonValue}]`; }
+      }
     }
 
     return display;
@@ -439,7 +457,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
                     ? "success"
                     : measurement.result === false
                       ? "danger"
-                      : "none";
+                      : "success";
                 return (
                   <Tag
                     key={`measurement-${index}`}
