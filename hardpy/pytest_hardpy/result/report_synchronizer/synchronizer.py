@@ -34,7 +34,7 @@ class StandCloudSynchronizer:
         try:
             loader = self._create_sc_loader()
         except StandCloudError as err:
-            raise StandCloudError("...") from err
+            raise StandCloudError(str(err)) from err
 
         invalid_reports = []
         success_report_counter = 0
