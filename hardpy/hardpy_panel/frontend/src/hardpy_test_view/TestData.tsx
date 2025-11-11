@@ -110,6 +110,11 @@ const MODAL_CONSTANTS = {
  */
 const TAG_ELEMENT_STYLE = { margin: 2 };
 
+/**
+ * Determines the lower bracket for range operations (inside range)
+ * @param operation - The comparison operation type
+ * @returns The lower bracket character - "(" for strict inequalities, "[" for inclusive
+ */
 const getLowerBracket = (operation?: string): string => {
   switch (operation) {
     case "gtlt":
@@ -127,6 +132,11 @@ const getLowerBracket = (operation?: string): string => {
   }
 };
 
+/**
+ * Determines the upper bracket for range operations (inside range)
+ * @param operation - The comparison operation type
+ * @returns The upper bracket character - ")" for strict inequalities, "]" for inclusive
+ */
 const getUpperBracket = (operation?: string): string => {
   switch (operation) {
     case "gtlt":
@@ -144,6 +154,11 @@ const getUpperBracket = (operation?: string): string => {
   }
 };
 
+/**
+ * Determines the lower bracket for outside range operations
+ * @param operation - The comparison operation type for outside range
+ * @returns The lower bracket character for the outside range
+ */
 const getOutsideLowerBracket = (operation?: string): string => {
   switch (operation) {
     case "ltgt":
@@ -157,6 +172,11 @@ const getOutsideLowerBracket = (operation?: string): string => {
   }
 };
 
+/**
+ * Determines the upper bracket for outside range operations
+ * @param operation - The comparison operation type for outside range
+ * @returns The upper bracket character for the outside range
+ */
 const getOutsideUpperBracket = (operation?: string): string => {
   switch (operation) {
     case "ltgt":
@@ -170,6 +190,11 @@ const getOutsideUpperBracket = (operation?: string): string => {
   }
 };
 
+/**
+ * Checks if the operation is a range operation (involving both lower and upper limits)
+ * @param operation - The comparison operation type to check
+ * @returns True if the operation is a range operation, false otherwise
+ */
 const isRangeOperation = (operation?: string): boolean => {
   const rangeOperations = [
     "gtlt",
@@ -184,6 +209,11 @@ const isRangeOperation = (operation?: string): boolean => {
   return operation ? rangeOperations.includes(operation) : false;
 };
 
+/**
+ * Converts operation type to its corresponding mathematical symbol
+ * @param operation - The comparison operation type
+ * @returns The mathematical symbol representing the operation
+ */
 const getComparisonOperator = (operation?: string): string => {
   switch (operation) {
     case "eq":
@@ -208,15 +238,6 @@ const getComparisonOperator = (operation?: string): string => {
  * @component
  * @param {Props} props - Component properties
  * @returns {React.ReactElement} Rendered test data component with messages and charts
- *
- * @example
- * <TestData
- *   msg={["Test passed", "Measurement complete"]}
- *   assertion_msg="Assertion failed: expected 5, got 4"
- *   testSuiteIndex={0}
- *   testCaseIndex={1}
- *   chart={chartData}
- * />
  */
 export function TestData(props: Readonly<Props>): React.ReactElement {
   const { t } = props;
@@ -229,6 +250,12 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
    */
   const storageKey: string = `chartState_${props.testSuiteIndex}_${props.testCaseIndex}`;
 
+    /**
+   * Formats a measurement for display with proper mathematical notation
+   * @param measurement - The measurement object containing value, limits, and operation
+   * @param index - The index of the measurement in the list (for React keys)
+   * @returns Formatted string representation of the measurement
+   */
   const formatMeasurement = (
     measurement: Measurement,
     index: number
