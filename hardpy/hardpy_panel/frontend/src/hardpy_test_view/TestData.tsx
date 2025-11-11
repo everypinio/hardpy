@@ -255,35 +255,31 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
     const isRangeOp = isRangeOperation(measurement.operation);
 
     if (isRangeOp && (hasLowerLimit || hasUpperLimit)) {
-      display += " [";
-
-      const lowerBracket = getLowerBracket(measurement.operation);
-      const upperBracket = getUpperBracket(measurement.operation);
+      display += " ";
 
       const isOutsideRangeOp =
         measurement.operation &&
         ["ltgt", "lege", "legt", "ltge"].includes(measurement.operation);
 
       if (isOutsideRangeOp) {
-        const outsideLowerBracket = getOutsideLowerBracket(
-          measurement.operation
-        );
-        const outsideUpperBracket = getOutsideUpperBracket(
-          measurement.operation
-        );
+        const lowerBracket = getOutsideLowerBracket(measurement.operation);
+        const upperBracket = getOutsideUpperBracket(measurement.operation);
 
         if (hasLowerLimit && hasUpperLimit) {
-          display += `(-∞; ${measurement.lower_limit}${outsideLowerBracket} ∪ ${measurement.upper_limit}${outsideUpperBracket}; ∞)`;
+          display += `(-∞; ${measurement.lower_limit}${lowerBracket} ∪ ${upperBracket}${measurement.upper_limit}; ∞)`;
         } else if (hasLowerLimit) {
-          display += `(-∞; ${measurement.lower_limit}${outsideLowerBracket}`;
+          display += `(-∞; ${measurement.lower_limit}${lowerBracket}`;
         } else if (hasUpperLimit) {
-          display += `${measurement.upper_limit}${outsideUpperBracket}; ∞)`;
+          display += `${upperBracket}${measurement.upper_limit}; ∞)`;
         }
       } else {
+        const lowerBracket = getLowerBracket(measurement.operation);
+        const upperBracket = getUpperBracket(measurement.operation);
+
         if (hasLowerLimit && hasUpperLimit) {
           display += `${lowerBracket}${measurement.lower_limit}; ${measurement.upper_limit}${upperBracket}`;
         } else if (hasLowerLimit) {
-          display += `${lowerBracket}${measurement.lower_limit};∞)`;
+          display += `${lowerBracket}${measurement.lower_limit}; ∞)`;
         } else if (hasUpperLimit) {
           display += `(-∞; ${measurement.upper_limit}${upperBracket}`;
         }
@@ -295,7 +291,6 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
       ) {
         display += ` ${measurement.unit}`;
       }
-      display += "]";
     } else if (
       measurement.operation &&
       measurement.comparison_value !== undefined &&
