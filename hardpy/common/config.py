@@ -73,6 +73,7 @@ class StandCloudConfig(BaseModel):
     address: str = "standcloud.io"
     connection_only: bool = False
     autosync: bool = False
+    autosync_timeout: int = 30  # 30 minutes
     api_key: str = ""
 
 
