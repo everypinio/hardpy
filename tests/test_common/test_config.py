@@ -24,6 +24,7 @@ frontend_no_default_sound_on = True
 frontend_no_default_measurement_display = False
 stand_cloud_no_default_addr = "everypin1.standcloud.localhost"
 stand_cloud_no_default_connection_only = True
+stand_cloud_no_default_autosync = True
 stand_cloud_no_default_api_key = "1"
 db_no_default_doc_id = f"{frontend_no_default_host}_{frontend_no_default_port}"
 
@@ -41,6 +42,8 @@ frontend_default_measurement_display = True
 stand_cloud_default_addr = "standcloud.io"
 stand_cloud_dafault_connection_only = False
 stand_cloud_default_api_key = ""
+stand_cloud_default_autosync = False
+stand_cloud_default_autosync_timeout = 30
 db_default_doc_id = f"{frontend_default_host}_{frontend_default_port}"
 
 
@@ -57,6 +60,7 @@ def test_config_manager_init():
         frontend_language=frontend_default_language,
         sc_address=stand_cloud_no_default_addr,
         sc_connection_only=stand_cloud_no_default_connection_only,
+        sc_autosync=stand_cloud_no_default_autosync,
         sc_api_key=stand_cloud_no_default_api_key,
     )
     config = config_manager.config
@@ -73,6 +77,7 @@ def test_config_manager_init():
     assert config.frontend.language == frontend_default_language
     assert config.stand_cloud.address == stand_cloud_no_default_addr
     assert config.stand_cloud.connection_only == stand_cloud_no_default_connection_only
+    assert config.stand_cloud.autosync == stand_cloud_no_default_autosync
     assert config.stand_cloud.api_key == stand_cloud_no_default_api_key
 
 
@@ -126,6 +131,8 @@ def test_hardpy_config():
     assert config.stand_cloud.address == stand_cloud_default_addr
     assert config.stand_cloud.connection_only == stand_cloud_dafault_connection_only
     assert config.stand_cloud.api_key == stand_cloud_default_api_key
+    assert config.stand_cloud.autosync == stand_cloud_default_autosync
+    assert config.stand_cloud.autosync_timeout == stand_cloud_default_autosync_timeout
 
 
 def test_config_manager_create_config(tmp_path: Path):
@@ -144,6 +151,7 @@ def test_config_manager_create_config(tmp_path: Path):
         frontend_language=frontend_default_language,
         sc_address=stand_cloud_default_addr,
         sc_connection_only=stand_cloud_dafault_connection_only,
+        sc_autosync=stand_cloud_default_autosync,
         sc_api_key=stand_cloud_default_api_key,
     )
 
@@ -176,6 +184,10 @@ def test_read_config_success(tmp_path: Path):
         },
         "stand_cloud": {
             "address": stand_cloud_default_addr,
+            "connection_only": stand_cloud_dafault_connection_only,
+            "autosync": stand_cloud_default_autosync,
+            "autosync_timeout": stand_cloud_default_autosync_timeout,
+            "api_key": stand_cloud_default_api_key,
         },
     }
     tests_dir = tmp_path / "tests"
@@ -207,3 +219,13 @@ def test_read_config_success(tmp_path: Path):
         == test_config_data["frontend"]["measurement_display"]
     )
     assert config.stand_cloud.address == test_config_data["stand_cloud"]["address"]
+    assert (
+        config.stand_cloud.connection_only
+        == test_config_data["stand_cloud"]["connection_only"]
+    )
+    assert config.stand_cloud.api_key == test_config_data["stand_cloud"]["api_key"]
+    assert config.stand_cloud.autosync == test_config_data["stand_cloud"]["autosync"]
+    assert (
+        config.stand_cloud.autosync_timeout
+        == test_config_data["stand_cloud"]["autosync_timeout"]
+    )
