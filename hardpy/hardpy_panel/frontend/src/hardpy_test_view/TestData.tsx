@@ -110,6 +110,99 @@ const MODAL_CONSTANTS = {
  */
 const TAG_ELEMENT_STYLE = { margin: 2 };
 
+const getLowerBracket = (operation?: string): string => {
+  switch (operation) {
+    case "gtlt":
+    case "gtle":
+    case "legt":
+    case "ltge":
+      return "(";
+    case "gele":
+    case "gelt":
+    case "lege":
+    case "ltgt":
+      return "[";
+    default:
+      return "[";
+  }
+};
+
+const getUpperBracket = (operation?: string): string => {
+  switch (operation) {
+    case "gtlt":
+    case "gelt":
+    case "ltgt":
+    case "ltge":
+      return ")";
+    case "gele":
+    case "gtle":
+    case "lege":
+    case "legt":
+      return "]";
+    default:
+      return "]";
+  }
+};
+
+const getOutsideLowerBracket = (operation?: string): string => {
+  switch (operation) {
+    case "ltgt":
+    case "ltge":
+      return ")";
+    case "lege":
+    case "legt":
+      return "]";
+    default:
+      return ")";
+  }
+};
+
+const getOutsideUpperBracket = (operation?: string): string => {
+  switch (operation) {
+    case "ltgt":
+    case "legt":
+      return "(";
+    case "lege":
+    case "ltge":
+      return "[";
+    default:
+      return "(";
+  }
+};
+
+const isRangeOperation = (operation?: string): boolean => {
+  const rangeOperations = [
+    "gtlt",
+    "gele",
+    "gelt",
+    "gtle",
+    "ltgt",
+    "lege",
+    "legt",
+    "ltge",
+  ];
+  return operation ? rangeOperations.includes(operation) : false;
+};
+
+const getComparisonOperator = (operation?: string): string => {
+  switch (operation) {
+    case "eq":
+      return "=";
+    case "ne":
+      return "≠";
+    case "gt":
+      return ">";
+    case "ge":
+      return "≥";
+    case "lt":
+      return "<";
+    case "le":
+      return "≤";
+    default:
+      return operation || "";
+  }
+};
+
 /**
  * TestData component displays test messages, assertions, and optional chart visualizations
  * @component
@@ -142,15 +235,75 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
   ): string => {
     let display = "";
     if (measurement.name) {
-      display += `${measurement.name} `;
+      display += `${measurement.name}: `;
     }
+
     display += `${measurement.value}`;
+
     if (measurement.unit) {
       if (["%", "°", "′", "″"].includes(measurement.unit)) {
         display += measurement.unit;
       } else {
         display += ` ${measurement.unit}`;
       }
+    }
+
+    const hasLowerLimit =
+      measurement.lower_limit !== undefined && measurement.lower_limit !== null;
+    const hasUpperLimit =
+      measurement.upper_limit !== undefined && measurement.upper_limit !== null;
+    const isRangeOp = isRangeOperation(measurement.operation);
+
+    if (isRangeOp && (hasLowerLimit || hasUpperLimit)) {
+      display += " [";
+
+      const lowerBracket = getLowerBracket(measurement.operation);
+      const upperBracket = getUpperBracket(measurement.operation);
+
+      const isOutsideRangeOp =
+        measurement.operation &&
+        ["ltgt", "lege", "legt", "ltge"].includes(measurement.operation);
+
+      if (isOutsideRangeOp) {
+        const outsideLowerBracket = getOutsideLowerBracket(
+          measurement.operation
+        );
+        const outsideUpperBracket = getOutsideUpperBracket(
+          measurement.operation
+        );
+
+        if (hasLowerLimit && hasUpperLimit) {
+          display += `(-∞; ${measurement.lower_limit}${outsideLowerBracket} ∪ ${measurement.upper_limit}${outsideUpperBracket}; ∞)`;
+        } else if (hasLowerLimit) {
+          display += `(-∞; ${measurement.lower_limit}${outsideLowerBracket}`;
+        } else if (hasUpperLimit) {
+          display += `${measurement.upper_limit}${outsideUpperBracket}; ∞)`;
+        }
+      } else {
+        if (hasLowerLimit && hasUpperLimit) {
+          display += `${lowerBracket}${measurement.lower_limit}; ${measurement.upper_limit}${upperBracket}`;
+        } else if (hasLowerLimit) {
+          display += `${lowerBracket}${measurement.lower_limit};∞)`;
+        } else if (hasUpperLimit) {
+          display += `(-∞; ${measurement.upper_limit}${upperBracket}`;
+        }
+      }
+
+      if (
+        measurement.unit &&
+        !["%", "°", "′", "″"].includes(measurement.unit)
+      ) {
+        display += ` ${measurement.unit}`;
+      }
+      display += "]";
+    } else if (
+      measurement.operation &&
+      measurement.comparison_value !== undefined &&
+      measurement.comparison_value !== null &&
+      !isRangeOp
+    ) {
+      const operator = getComparisonOperator(measurement.operation);
+      display += ` [${operator} ${measurement.comparison_value}]`;
     }
 
     return display;
@@ -286,11 +439,18 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
             {_.map(
               props.measurements,
               (measurement: Measurement, index: number) => {
+                const intent =
+                  measurement.result === true
+                    ? "success"
+                    : measurement.result === false
+                      ? "danger"
+                      : "none";
                 return (
                   <Tag
                     key={`measurement-${index}`}
                     style={TAG_ELEMENT_STYLE}
                     minimal={true}
+                    intent={intent}
                   >
                     {formatMeasurement(measurement, index)}
                   </Tag>
