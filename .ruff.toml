@@ -25,6 +25,7 @@ indent-width = 4
         "FBT002", # Boolean default value in function call
         "FBT003", # Boolean positional arg in function definition
         "PT013",  # Pytest import
+        "G004",   # Using f-string in logging statement
     ]
 
     [lint.isort]
