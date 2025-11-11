@@ -105,21 +105,40 @@ class HookReporter(BaseReporter):
         )
         self.set_doc_value(key, msg)
 
-    def add_case(self, node_info: NodeInfo) -> None:
+    def add_case(self, node_info: NodeInfo, is_selected: bool = True) -> None:
         """Add test case to document.
+
+        Args:
+            node_info (NodeInfo): node info
+            is_selected (bool): whether test is selected for execution
+        """
+        key = DF.MODULES
+
+        item_statestore = self._statestore.get_field(key)
+        self._init_case(
+            item_statestore, node_info, is_only_statestore=True, is_selected=is_selected
+        )
+        self.set_doc_value(key, item_statestore, statestore_only=True)
+
+        if is_selected:
+            item_runstore = self._runstore.get_field(key)
+            self._init_case(
+                item_runstore, node_info, is_only_runstore=True, is_selected=is_selected
+            )
+            self.set_doc_value(key, item_runstore, runstore_only=True)
+
+    def add_case_to_runstore(self, node_info: NodeInfo) -> None:
+        """Add test case only to runstore.
 
         Args:
             node_info (NodeInfo): node info
         """
         key = DF.MODULES
-
-        item_statestore = self._statestore.get_field(key)
         item_runstore = self._runstore.get_field(key)
 
-        self._init_case(item_statestore, node_info, is_only_statestore=True)
-        self._init_case(item_runstore, node_info, is_only_runstore=True)
-
-        self.set_doc_value(key, item_statestore, statestore_only=True)
+        self._init_case(
+            item_runstore, node_info, is_only_runstore=True, is_selected=True
+        )
         self.set_doc_value(key, item_runstore, runstore_only=True)
 
     def set_case_status(self, module_id: str, case_id: str, status: TestStatus) -> None:
@@ -290,20 +309,49 @@ class HookReporter(BaseReporter):
         key = self.generate_key(DF.ERROR_CODE)
         self.set_doc_value(key, None)
 
-    def update_node_order(self, nodes: dict) -> None:
+    def update_node_order(
+        self, all_nodes: dict, selected_nodes: dict | None = None
+    ) -> None:
         """Update node order.
 
         Args:
-            nodes (dict): modules and cases.
+            all_nodes (dict): ALL modules and cases for statestore
+            selected_nodes (dict | None): SELECTED modules and cases for runstore
         """
         key = DF.MODULES
-        old_modules = self._statestore.get_field(key)
-        modules_copy = deepcopy(old_modules)
 
-        rm_outdated_nodes = self._remove_outdate_node(old_modules, modules_copy, nodes)
-        updated_case_order = self._update_case_order(rm_outdated_nodes, nodes)
-        updated_module_order = self._update_module_order(updated_case_order)
-        self.set_doc_value(key, updated_module_order, statestore_only=True)
+        old_statestore_modules = self._statestore.get_field(key)
+        statestore_copy = (
+            deepcopy(old_statestore_modules) if old_statestore_modules else {}
+        )
+
+        rm_outdated_nodes_statstore = self._remove_outdate_node(
+            old_statestore_modules, statestore_copy, all_nodes
+        )
+        updated_case_order_statestore = self._update_case_order(
+            rm_outdated_nodes_statstore, all_nodes
+        )
+        updated_module_order_statestore = self._update_module_order(
+            updated_case_order_statestore
+        )
+        self.set_doc_value(key, updated_module_order_statestore, statestore_only=True)
+
+        if selected_nodes is not None:
+            old_runstore_modules = self._runstore.get_field(key)
+            if old_runstore_modules:
+                runstore_copy = deepcopy(old_runstore_modules)
+                rm_outdated_nodes_runstore = self._remove_outdate_node(
+                    old_runstore_modules, runstore_copy, selected_nodes
+                )
+                updated_case_order_runstore = self._update_case_order(
+                    rm_outdated_nodes_runstore, selected_nodes
+                )
+                updated_module_order_runstore = self._update_module_order(
+                    updated_case_order_runstore
+                )
+                self.set_doc_value(
+                    key, updated_module_order_runstore, runstore_only=True
+                )
 
     def _set_time(self, key: str) -> None:
         current_time = self._statestore.get_field(key)
@@ -316,6 +364,7 @@ class HookReporter(BaseReporter):
         node_info: NodeInfo,
         is_only_runstore: bool = False,
         is_only_statestore: bool = False,
+        is_selected: bool = True,
     ) -> None:
         module_default = {
             DF.STATUS: TestStatus.READY,
@@ -325,6 +374,7 @@ class HookReporter(BaseReporter):
             DF.STOP_TIME: None,
             DF.CASES: {},
         }
+
         case_default = {
             DF.STATUS: TestStatus.READY,
             DF.NAME: self._get_case_name(node_info),
@@ -338,6 +388,9 @@ class HookReporter(BaseReporter):
             DF.CHART: None,
         }
 
+        if is_only_statestore:
+            case_default["is_selected"] = is_selected
+
         if item.get(node_info.module_id) is None:
             if is_only_runstore:
                 module_default[DF.ARTIFACT] = {}
@@ -348,6 +401,7 @@ class HookReporter(BaseReporter):
             item[node_info.module_id][DF.GROUP] = self._get_module_group(node_info)
             item[node_info.module_id][DF.START_TIME] = None
             item[node_info.module_id][DF.STOP_TIME] = None
+
         item[node_info.module_id][DF.NAME] = self._get_module_name(node_info)
 
         if is_only_runstore:
@@ -355,6 +409,7 @@ class HookReporter(BaseReporter):
 
         if is_only_statestore:
             case_default[DF.DIALOG_BOX] = {}
+
         item[node_info.module_id][DF.CASES][node_info.case_id] = case_default
 
     def _remove_outdate_node(

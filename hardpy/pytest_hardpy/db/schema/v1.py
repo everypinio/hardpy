@@ -38,6 +38,7 @@ class CaseStateStore(IBaseResult):
     attempt: int = 0
     group: Group
     dialog_box: dict = {}
+    is_selected: bool = True
 
 
 class CaseRunStore(IBaseResult):

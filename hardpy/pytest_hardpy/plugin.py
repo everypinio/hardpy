@@ -101,6 +101,12 @@ def pytest_addoption(parser: Parser) -> None:
         default=[],
         help="Dynamic arguments for test execution (key=value format)",
     )
+    parser.addoption(
+        "--hardpy-selected-tests",
+        action="store",
+        default="",
+        help="Comma-separated list of selected tests to run",
+    )
 
 
 # Bootstrapping hooks
@@ -129,6 +135,7 @@ class HardpyPlugin:
         self._tests_name: str = ""
         self._is_critical_not_passed = False
         self._start_args = {}
+        self._selected_tests: set[str] = set()
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -169,6 +176,17 @@ class HardpyPlugin:
         _args = config.getoption("--hardpy-start-arg") or []
         if _args:
             self._start_args = dict(arg.split("=", 1) for arg in _args if "=" in arg)
+
+        # Parse selected tests from command line
+        selected_tests_option = config.getoption("--hardpy-selected-tests")
+        try:
+            selected_tests_str = str(selected_tests_option)
+            if selected_tests_str and selected_tests_str != "<NotSet>":
+                self._selected_tests = set(selected_tests_str.split(","))
+            else:
+                self._selected_tests = set()
+        except (ValueError, AttributeError):
+            self._selected_tests = set()
 
         config.addinivalue_line("markers", "case_name")
         config.addinivalue_line("markers", "module_name")
@@ -212,12 +230,15 @@ class HardpyPlugin:
         self._reporter.init_doc(self._tests_name)
 
         nodes = {}
+        all_nodes = {}
         modules = set()
 
         session.items = natsorted(
             session.items,
             key=lambda x: x.parent.name if x.parent is not None else x.name,
         )
+
+        # FIRST PASS: Collect ALL tests for statestore
         for item in session.items:
             if item.parent is None:
                 continue
@@ -227,19 +248,52 @@ class HardpyPlugin:
                 error_msg = f"Error creating NodeInfo for item: {item}. {exc}"
                 exit(error_msg, ExitCode.NO_TESTS_COLLECTED)
 
-            self._init_case_result(node_info.module_id, node_info.case_id)
-            if node_info.module_id not in nodes:
-                nodes[node_info.module_id] = [node_info.case_id]
-            else:
-                nodes[node_info.module_id].append(node_info.case_id)
+            # Determine if test is selected
+            test_full_path = f"{node_info.module_id}::{node_info.case_id}"
+            is_selected = (
+                test_full_path in self._selected_tests if self._selected_tests else True
+            )
 
-            self._reporter.add_case(node_info)
+            self._init_case_result(node_info.module_id, node_info.case_id)
+
+            if node_info.module_id not in all_nodes:
+                all_nodes[node_info.module_id] = [node_info.case_id]
+            else:
+                all_nodes[node_info.module_id].append(node_info.case_id)
+
+            if is_selected:
+                if node_info.module_id not in nodes:
+                    nodes[node_info.module_id] = [node_info.case_id]
+                else:
+                    nodes[node_info.module_id].append(node_info.case_id)
+
+            # Add ALL cases to statestore with selection status
+            self._reporter.add_case(node_info, is_selected=is_selected)
 
             self._add_dependency(node_info, nodes)
             modules.add(node_info.module_id)
+
+        # SECOND PASS: Filter items for execution and update runstore
+        if self._selected_tests:
+            items_to_remove = []
+            for item in session.items:
+                if item.parent is None:
+                    continue
+                node_info = NodeInfo(item)
+                test_full_path = f"{node_info.module_id}::{node_info.case_id}"
+                if test_full_path not in self._selected_tests:
+                    items_to_remove.append(item)
+                else:
+                    self._reporter.add_case_to_runstore(node_info)
+
+            # Remove unselected items from execution
+            for item in items_to_remove:
+                session.items.remove(item)
+
         for module_id in modules:
             self._reporter.set_module_status(module_id, TestStatus.READY)
-        self._reporter.update_node_order(nodes)
+
+        self._reporter.update_node_order(all_nodes, nodes)
         self._reporter.update_db_by_doc()
 
     # Test running (runtest) hooks

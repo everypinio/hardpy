@@ -49,6 +49,8 @@ class PyTestWrapper:
         if self.is_running():
             return False
 
+        self._preserve_full_test_structure()
+
         cmd = [
             self.python_executable,
             "-m",
@@ -74,6 +76,9 @@ class PyTestWrapper:
 
             cmd.extend(pytest_test_paths)
 
+            selected_tests_str = ",".join(selected_tests)
+            cmd.extend(["--hardpy-selected-tests", selected_tests_str])
+
         if self.config.stand_cloud.connection_only:
             cmd.append("--sc-connection-only")
         cmd.append("--hardpy-pt")
@@ -82,12 +87,6 @@ class PyTestWrapper:
             for key, value in start_args.items():
                 arg_str = f"{key}={value}"
                 cmd.extend(["--hardpy-start-arg", arg_str])
-
-        # Store current selection before starting
-        self._current_selection = selected_tests or []
-
-        # Preserve full test structure in database before starting selected tests
-        self._preserve_full_test_structure()
 
         if system() == "Windows":
             self._proc = subprocess.Popen(  # noqa: S603
@@ -176,6 +175,7 @@ class PyTestWrapper:
     def _preserve_full_test_structure(self):
         """Preserve full test structure when running selected tests."""
         if not self._full_test_structure:
+            print("No full test structure available to preserve")
             return
 
         try:
@@ -183,8 +183,8 @@ class PyTestWrapper:
 
             # Get current selected tests
             selected_tests = getattr(self._app.state, "selected_tests", [])
+            print(f"Preserving structure for {len(selected_tests)} selected tests")
 
-            # Create a copy of full structure with selection info
             preserved_structure = {}
             for module_name, module_data in self._full_test_structure.items():
                 preserved_module = module_data.copy()
@@ -195,10 +195,11 @@ class PyTestWrapper:
                         full_test_path = f"{module_name}::{case_name}"
                         is_selected = full_test_path in selected_tests
 
-                        # Mark unselected tests as skipped from the beginning
                         preserved_case = case_data.copy()
+                        preserved_case["is_selected"] = is_selected
+
                         if not is_selected:
-                            preserved_case["status"] = "skipped"
+                            preserved_case["status"] = "ready"
                             preserved_case["start_time"] = None
                             preserved_case["stop_time"] = None
                             preserved_case["assertion_msg"] = None
@@ -209,10 +210,13 @@ class PyTestWrapper:
                 preserved_module["cases"] = preserved_module_cases
                 preserved_structure[module_name] = preserved_module
 
-            # Update database with preserved structure
             modules_key = self._reporter.generate_key(DF.MODULES)
-            self._reporter.set_doc_value(modules_key, preserved_structure)
+            self._reporter.set_doc_value(
+                modules_key, preserved_structure, statestore_only=True
+            )
+
             self._reporter.update_db_by_doc()
+            print("Successfully preserved full test structure in statestore")
 
         except Exception as e:
             print(f"Failed to preserve full test structure: {e}")
