@@ -161,7 +161,7 @@ class PyTestWrapper:
 
         return True
 
-    def _store_full_test_structure(self):
+    def _store_full_test_structure(self) -> None:
         """Store the full test structure from the last collection."""
         try:
             self._reporter.update_doc_by_db()
@@ -169,11 +169,10 @@ class PyTestWrapper:
             modules_key = self._reporter.generate_key(DF.MODULES)
             full_structure = self._reporter.get_field(modules_key)
             self._full_test_structure = full_structure
-        except Exception as e:
-            print(f"Failed to store full test structure: {e}")
+        except Exception:  # noqa: BLE001
             self._full_test_structure = None
 
-    def _preserve_full_test_structure(self):
+    def _preserve_full_test_structure(self) -> None:
         """Preserve full test structure when running selected tests."""
         if not self._full_test_structure:
             return
@@ -214,8 +213,8 @@ class PyTestWrapper:
             self._reporter.set_doc_value(modules_key, preserved_structure)
             self._reporter.update_db_by_doc()
 
-        except Exception as e:
-            print(f"Failed to preserve full test structure: {e}")
+        except Exception:  # noqa: BLE001, S110
+            pass
 
     def send_data(self, data: str) -> bool:
         """Send data to pytest subprocess.
