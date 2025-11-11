@@ -50,6 +50,7 @@ interface AppConfig {
     full_size_button?: boolean;
     sound_on?: boolean;
     manual_tests_selection?: boolean;
+    measurement_display?: boolean;
     modal_result?: {
       enable?: boolean;
       auto_dismiss_pass?: boolean;
@@ -570,6 +571,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                 selectionSupported={
                   appConfig?.frontend?.manual_tests_selection || false
                 }
+                measurementDisplay={appConfig?.frontend?.measurement_display}
               />
             </Card>
           )}

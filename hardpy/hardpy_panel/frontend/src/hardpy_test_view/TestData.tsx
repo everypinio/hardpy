@@ -10,6 +10,18 @@ import { withTranslation, WithTranslation } from "react-i18next";
 
 import _ from "lodash";
 
+interface Measurement {
+  name?: string;
+  result?: boolean;
+  type: string;
+  value: number | string;
+  unit?: string;
+  comparison_value?: number | string;
+  operation?: string;
+  lower_limit?: number;
+  upper_limit?: number;
+}
+
 /**
  * Interface representing chart data structure for test results
  * @interface ChartData
@@ -74,6 +86,8 @@ interface Props extends WithTranslation {
   testCaseIndex: number;
   chart?: ChartData;
   dataColumnWidth?: number;
+  measurements?: Measurement[];
+  measurementDisplay?: boolean;
 }
 
 /**
@@ -122,6 +136,26 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
    */
   const storageKey: string = `chartState_${props.testSuiteIndex}_${props.testCaseIndex}`;
 
+  const formatMeasurement = (
+    measurement: Measurement,
+    index: number
+  ): string => {
+    let display = "";
+    if (measurement.name) {
+      display += `${measurement.name} `;
+    }
+    display += `${measurement.value}`;
+    if (measurement.unit) {
+      if (["%", "°", "′", "″"].includes(measurement.unit)) {
+        display += measurement.unit;
+      } else {
+        display += ` ${measurement.unit}`;
+      }
+    }
+
+    return display;
+  };
+
   /**
    * State hook for chart collapse/expand functionality with localStorage persistence
    * @type {[boolean, React.Dispatch<React.SetStateAction<boolean>>]}
@@ -133,7 +167,7 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
         const { isCollapsed } = JSON.parse(savedState);
         return isCollapsed || false;
       } catch (e: unknown) {
-        console.error(`Error parsing local storage: ${e as Error}.message`);
+        console.error(`Error parsing local storage: ${(e as Error).message}`);
         return false;
       }
     }
@@ -244,6 +278,28 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
 
   return (
     <div className="test-data" style={{ width: "100%" }}>
+      {/* Render measurements first */}
+      {props.measurementDisplay !== false &&
+        props.measurements &&
+        props.measurements.length > 0 && (
+          <div style={{ marginBottom: "10px" }}>
+            {_.map(
+              props.measurements,
+              (measurement: Measurement, index: number) => {
+                return (
+                  <Tag
+                    key={`measurement-${index}`}
+                    style={TAG_ELEMENT_STYLE}
+                    minimal={true}
+                  >
+                    {formatMeasurement(measurement, index)}
+                  </Tag>
+                );
+              }
+            )}
+          </div>
+        )}
+
       {/* Render test messages as primary tags */}
       {_.map(props.msg, (value: string, key: string) => {
         return (
