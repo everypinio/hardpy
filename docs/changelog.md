@@ -2,6 +2,8 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Enhance measurement display with mathematical interval notation and proper bracket handling.
+  [[PR-226](https://github.com/everypinio/hardpy/pull/226)]
 * Add measurement display functionality to operator panel showing numeric and string measurements with name-value-unit formatting.
   [[PR-223](https://github.com/everypinio/hardpy/pull/223)]
 
