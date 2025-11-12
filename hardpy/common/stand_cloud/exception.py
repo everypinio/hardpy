@@ -6,4 +6,4 @@ class StandCloudError(Exception):
     """Base StandCloud error."""
 
     def __init__(self, msg: str) -> None:
-        super().__init__(f"StandCloud error: {msg}")
+        super().__init__(f"{msg}")
