@@ -29,7 +29,7 @@ class StandCloudConnector:
 
     def __init__(
         self,
-        addr: str,
+        addr: str = "standcloud.io",
         api_mode: StandCloudAPIMode = StandCloudAPIMode.HARDPY,
         api_version: int = 1,
         api_key: str | None = None,
