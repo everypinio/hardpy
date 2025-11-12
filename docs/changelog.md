@@ -2,6 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## 0.18.1
+
+* Expand the log for the StandCloud data synchronisation process.
+  [[PR-227](https://github.com/everypinio/hardpy/pull/227)]
+
 ## 0.18.0
 
 * Add a mechanism to automatically synchronise test data with the StandCloud platform.
