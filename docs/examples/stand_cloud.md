@@ -7,6 +7,11 @@ but the test results are stored in StandCloud instead of CouchDB.
 The code for this example can be seen inside the hardpy package
 [StandCloud](https://github.com/everypinio/hardpy/tree/main/examples/stand_cloud).
 
+After testing is complete, data is sent to **StandCloud** by setting the 
+`autosync` to `true` in the **[stand_cloud]** section of the **hardpy.toml** file, 
+and by setting the value of the `api_key` variable.
+If there is no connection to **StandCloud**, **HardPy** will attempt to send data 
+to **StandCloud** at the specified `autosync_timeout` interval (in minutes).
 
 ### how to start
 
