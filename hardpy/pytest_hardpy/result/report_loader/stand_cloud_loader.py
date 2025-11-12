@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from oauthlib.oauth2.rfc6749.errors import OAuth2Error
-from requests.exceptions import HTTPError
+from requests.exceptions import ConnectionError, HTTPError  # noqa: A004
 
 from hardpy.common.config import ConfigManager
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
@@ -30,7 +30,8 @@ class StandCloudLoader:
         self._verify_ssl = not __debug__
         config_manager = ConfigManager()
         sc_addr = address if address else config_manager.config.stand_cloud.address
-        self._sc_connector = StandCloudConnector(sc_addr)
+        api_key = config_manager.config.stand_cloud.api_key
+        self._sc_connector = StandCloudConnector(sc_addr, api_key=api_key)
 
     def load(self, report: ResultRunStore, timeout: int = 20) -> Response:
         """Load report to the StandCloud.
@@ -46,7 +47,10 @@ class StandCloudLoader:
         Raises:
             StandCloudError: if report not uploaded to StandCloud
         """
-        api = self._sc_connector.get_api("test_report")
+        try:
+            api = self._sc_connector.get_api("test_report")
+        except ConnectionError as exc:
+            raise StandCloudError(str(exc)) from exc
         sc_report = self._convert_to_sc_format(report)
 
         try:
@@ -55,7 +59,7 @@ class StandCloudLoader:
                 json=sc_report.model_dump(),
                 timeout=timeout,
             )
-        except RuntimeError as exc:
+        except (RuntimeError, ConnectionError) as exc:
             raise StandCloudError(str(exc)) from exc
         except OAuth2Error as exc:
             raise StandCloudError(exc.description) from exc

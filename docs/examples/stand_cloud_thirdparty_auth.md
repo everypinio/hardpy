@@ -1,5 +1,8 @@
 # StandCloud third party authorization
 
+???+ warning
+    The information on this page is currently out of date!
+
 This documentation describes how to authorize a **HardPy** application on a
 **StandCloud** system using the OAuth 2.0 Device Authorization Flow process.
 

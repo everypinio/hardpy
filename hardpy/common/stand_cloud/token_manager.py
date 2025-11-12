@@ -27,6 +27,16 @@ class TokenManager:
 
     def __init__(self, service_name: str) -> None:
         self._service_name = f"HardPy_{service_name}"
+        self._api_key = None
+
+    @property
+    def api_key(self) -> str | None:
+        """Get personal access token.
+
+        Returns:
+            str | None: personal access token
+        """
+        return self._api_key
 
     def remove_token(self) -> bool:
         """Remove token from keyring storage.
@@ -46,6 +56,14 @@ class TokenManager:
             with suppress(KeyringError):
                 storage_keyring.delete_password(self._service_name, "refresh_token")
         return True
+
+    def save_token(self, token: str) -> None:
+        """Save personal access token.
+
+        Args:
+            token (str): personal access token
+        """
+        self._api_key = token
 
     def save_token_info(self, token: BearerToken | dict) -> None:
         """Save token to keyring storage.
@@ -74,8 +92,15 @@ class TokenManager:
         Returns:
             BearerToken: access token
         """
-        _, mem_keyring = self._get_store()
+        storage_keyring, mem_keyring = self._get_store()
+        pat = storage_keyring.get_password(self._service_name, "pat")
+        if pat:
+            return BearerToken(access_token=pat)
+
         token_info = mem_keyring.get_password(self._service_name, "access_token")
+        if not token_info:
+            msg = "Access token not found"
+            raise FileNotFoundError(msg)
         secret = self._add_expires_in(json.loads(token_info))  # type: ignore
         return BearerToken(**secret)
 
