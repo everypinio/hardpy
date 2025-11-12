@@ -5,7 +5,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 ## 0.18.1
 
 * Expand the log for the StandCloud data synchronisation process.
-  [[PR-227](https://github.com/everypinio/hardpy/pull/227)]
+  [[PR-228](https://github.com/everypinio/hardpy/pull/228)]
 
 ## 0.18.0
 
