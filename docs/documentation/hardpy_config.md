@@ -48,7 +48,7 @@ auto_dismiss_pass = true
 auto_dismiss_timeout = 5
 
 [stand_cloud]
-address = "demo.standcloud.io"
+address = "standcloud.io"
 connection_only = true
 autosync = true
 autosync_timeout = 30

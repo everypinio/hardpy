@@ -1467,7 +1467,7 @@ The default is *False*.
 
 #### sc-autosync
 
-Enable **HardPy** to **StandCloud** test report data auto syncroniztion.
+Enable **HardPy** to **StandCloud** test report data auto synchroniztion.
 The default is *False*.
 
 ```bash

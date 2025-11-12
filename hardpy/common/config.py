@@ -152,7 +152,7 @@ class ConfigManager(metaclass=SingletonMeta):
             frontend_language (str): Operator panel language.
             sc_address (str): StandCloud address.
             sc_connection_only (bool): StandCloud check availability.
-            sc_autosync (bool): StandCloud autosyncronization
+            sc_autosync (bool): StandCloud auto syncronization.
             sc_api_key (str): StandCloud API key.
         """
         self._config.tests_name = tests_name

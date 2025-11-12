@@ -76,7 +76,7 @@ def init(  # noqa: PLR0913
     ),
     sc_autosync: bool = typer.Option(
         default=default_config.stand_cloud.autosync,
-        help="Enable StandCloud autosyncronization.",
+        help="Enable StandCloud auto syncronization.",
     ),
     sc_api_key: str | None = typer.Option(
         default=default_config.stand_cloud.api_key,
@@ -98,7 +98,7 @@ def init(  # noqa: PLR0913
         frontend_language (str): Panel operator language
         sc_address (str): StandCloud address
         sc_connection_only (bool): Flag to check StandCloud service availability
-        sc_autosync (bool): Flag to enable StandCloud autosyncronization
+        sc_autosync (bool): Flag to enable StandCloud auto syncronization
         sc_api_key (str | None): StandCloud API key
     """
     dir_path = Path(Path.cwd() / tests_dir if tests_dir else "tests")
