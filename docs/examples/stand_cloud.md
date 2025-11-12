@@ -11,35 +11,17 @@ The code for this example can be seen inside the hardpy package
 ### how to start
 
 1. Login to [standcloud.io](https://standcloud.io).
-2. Create company.
-3. Create test stand.
-4. Copy stand API key.
-5. Launch `hardpy init stand_cloud --sc-api-key <your_api_key> --sc-autosync`.
-6. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
-7. Modify the files described below.
-8. You can remove `connection_only = true` if you don't want to check the
-    **StandCloud** connection before each **HardPy** start.
-9. Login in the **StandCloud**:
-
-    ```bash
-    hardpy sc-login demo.standcloud.localhost
-    ```
-
-    The duration of the authorization is defined in the **StandCloud** service itself.
-    Registration must be completed once, then you can check authorization
-    using the command:
-
-    ```
-    hardpy sc-login --check demo.standcloud.localhost
-    ```
-
-    Learn more in the [StandCloud](./../documentation/stand_cloud.md) section.
-
+2. Create a company or login to an existing one.
+3. Create and copy the API key.
+4. Launch `hardpy init stand_cloud --sc-api-key <your_api_key> --sc-autosync` 
+   or `hardpy init stand_cloud` and manually modify the 
+   **[stand_cloud]** section in **hardpy.toml**.
+5. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
+6. Modify the files described below. Copying the **hardpy.toml** file will 
+   suffice for sending data to **StandCloud** after testing.
 7. Launch `hardpy run stand_cloud`.
 
 ### hardpy.toml
-
-Replace the settings in the `[frontend]` and `[frontend.modal_result]` sections with those shown in the **hardpy.toml** example file below.
 
 ```toml
 title = "HardPy TOML config"
@@ -65,17 +47,18 @@ auto_dismiss_pass = true
 auto_dismiss_timeout = 5
 
 [stand_cloud]
-address = "demo.standcloud.localhost"
-connection_only = true
+address = "standcloud.io"
+connection_only = false
+autosync = false
+autosync_timeout = 30
+api_key = "<your_api_key>"
 ```
 
 ### conftest.py
 
 Contains settings and fixtures for all tests:
 
-- The function to generate a report and record it in the **StandCloud** `finish_executing`;
 - The example of devices used as a fixture in `driver_example`;
-- The list of actions that will be performed after testing is filled in function `fill_actions_after_test`;
 
 ```python
 import pytest
