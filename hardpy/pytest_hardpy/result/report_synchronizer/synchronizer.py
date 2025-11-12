@@ -26,9 +26,6 @@ class StandCloudSynchronizer:
     def sync(self) -> str:
         """Sync reports with StandCloud.
 
-        Raises:
-            StandCloudError: if StandCloud is unavailable
-
         Returns:
             str: Synchronization message
         """
