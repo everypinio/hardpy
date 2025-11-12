@@ -23,5 +23,6 @@ auto_dismiss_timeout = 5
 [stand_cloud]
 address = "standcloud.io"
 connection_only = false
-autosync = true
+autosync = false
+autosync_timeout = 30
 api_key = ""
