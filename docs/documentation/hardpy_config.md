@@ -40,6 +40,7 @@ port = 8000
 language = "en"
 full_size_button = false
 sound_on = false
+measurement_display = true
 
 [frontend.modal_result]
 enable = false
@@ -47,8 +48,11 @@ auto_dismiss_pass = true
 auto_dismiss_timeout = 5
 
 [stand_cloud]
-address = "demo.standcloud.io"
+address = "standcloud.io"
 connection_only = true
+autosync = true
+autosync_timeout = 30
+api-key = "1234567890"
 ```
 
 ## Configuration fields description
@@ -121,6 +125,13 @@ Enable or disable test completion sound notifications.
 When set to `true`, sound will play when test execution completes (PASS/FAIL/STOP status).
 Default is `false`.
 
+#### measurement_display
+
+Enable or disable measurement display in the operator panel.
+When set to `true`, measurements created using `set_case_measurement` will be displayed as tags 
+showing name, value, and unit information.
+Default is `true`.
+
 #### modal_result
 
 Modal result windows settings for test completion display.
@@ -159,6 +170,9 @@ Default is `5` seconds.
 [stand_cloud]
 address = "demo.standcloud.localhost"
 connection_only = true
+autosync = true
+autosync_timeout = 30
+api-key = "1234567890"
 ```
 
 #### address
@@ -173,3 +187,21 @@ to the **StandCloud** service at each startup before running tests.
 The default value is `false`.
 
 If the connection fails, the tests will not run.
+
+#### autosync
+
+Boolean variable, if set to `true`, **HardPy** will automatically send data 
+to **StandCloud** upon completion of testing.
+
+The default value is `false`.
+
+#### autosync_timeout
+
+This is an integer variable greater than 1, representing the time interval 
+in minutes between StandCloud synchronisation attempts.
+
+The default value is `30`.
+
+#### api-key
+
+**StandCloud** API key.

@@ -51,6 +51,7 @@ class FrontendConfig(BaseModel):
     language: str = "en"
     full_size_button: bool = False
     sound_on: bool = False
+    measurement_display: bool = True
     modal_result: ModalResultConfig = Field(default_factory=lambda: ModalResultConfig())
 
 
@@ -69,8 +70,11 @@ class StandCloudConfig(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    address: str = ""
+    address: str = "standcloud.io"
     connection_only: bool = False
+    autosync: bool = False
+    autosync_timeout: int = 30  # 30 minutes
+    api_key: str = ""
 
 
 class HardpyConfig(BaseModel, extra="allow"):
@@ -128,8 +132,10 @@ class ConfigManager(metaclass=SingletonMeta):
         frontend_host: str,
         frontend_port: int,
         frontend_language: str,
-        sc_address: str = "",
-        sc_connection_only: bool = False,
+        sc_address: str,
+        sc_connection_only: bool,
+        sc_autosync: bool,
+        sc_api_key: str,
     ) -> None:
         """Initialize the HardPy configuration.
 
@@ -146,6 +152,8 @@ class ConfigManager(metaclass=SingletonMeta):
             frontend_language (str): Operator panel language.
             sc_address (str): StandCloud address.
             sc_connection_only (bool): StandCloud check availability.
+            sc_autosync (bool): StandCloud auto syncronization.
+            sc_api_key (str): StandCloud API key.
         """
         self._config.tests_name = tests_name
         self._config.frontend.host = frontend_host
@@ -159,6 +167,8 @@ class ConfigManager(metaclass=SingletonMeta):
         self._config.database.url = self._config.database.get_url()
         self._config.stand_cloud.address = sc_address
         self._config.stand_cloud.connection_only = sc_connection_only
+        self._config.stand_cloud.autosync = sc_autosync
+        self._config.stand_cloud.api_key = sc_api_key
 
     def create_config(self, parent_dir: Path) -> None:
         """Create HardPy configuration.
@@ -166,14 +176,7 @@ class ConfigManager(metaclass=SingletonMeta):
         Args:
             parent_dir (Path): Configuration file parent directory.
         """
-        config = self._config
-        if not self._config.stand_cloud.address:
-            del config.stand_cloud
-        if not self._config.tests_name:
-            del config.tests_name
-        if not self._config.database.doc_id:
-            del config.database.doc_id
-        config_str = tomli_w.dumps(config.model_dump())
+        config_str = tomli_w.dumps(self._config.model_dump())
         with Path.open(parent_dir / "hardpy.toml", "w") as file:
             file.write(config_str)
 

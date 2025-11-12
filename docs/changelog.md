@@ -2,6 +2,17 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## 0.18.0
+
+* Add a mechanism to automatically synchronise test data with the StandCloud platform.
+  [[PR-205](https://github.com/everypinio/hardpy/pull/205)]
+* Add an authorization mechanism to StandCloud via API keys.
+  [[PR-205](https://github.com/everypinio/hardpy/pull/205)]
+* Enhance measurement display with mathematical interval notation and proper bracket handling.
+  [[PR-226](https://github.com/everypinio/hardpy/pull/226)]
+* Add measurement display functionality to operator panel showing numeric and string measurements with name-value-unit formatting.
+  [[PR-223](https://github.com/everypinio/hardpy/pull/223)]
+
 ## 0.17.1
 
 * Fix issue where when using a large button, it overlaps the content.

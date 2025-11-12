@@ -2,12 +2,16 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+import asyncio
+import contextlib
 import json
+import logging
 import os
 import re
+from concurrent.futures import ThreadPoolExecutor
 from enum import Enum
 from pathlib import Path
-from typing import Annotated
+from typing import TYPE_CHECKING, Annotated, Any, Final
 from urllib.parse import unquote
 
 from fastapi import FastAPI, Query
@@ -15,9 +19,46 @@ from fastapi.staticfiles import StaticFiles
 
 from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
+from hardpy.pytest_hardpy.result.report_synchronizer import StandCloudSynchronizer
 
-app = FastAPI()
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
+
+# TODO (xorialexandrov): Move logging to own module
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s:\t %(message)s",
+)
+logger = logging.getLogger(__name__)
+
+
+@contextlib.asynccontextmanager
+async def lifespan_sync_scheduler(app: FastAPI) -> AsyncGenerator[Any, Any]:
+    """Manages the lifecycle events (startup and shutdown) for background tasks."""
+    config_manager = ConfigManager()
+    sc_autosync = config_manager.config.stand_cloud.autosync
+    if sc_autosync:
+        autosync_timeout = config_manager.config.stand_cloud.autosync_timeout
+        app.state.sync_task = asyncio.create_task(sync_stand_cloud(autosync_timeout))
+
+    yield
+
+    if sc_autosync:
+        if hasattr(app.state, "sync_task"):
+            app.state.sync_task.cancel()
+            # Wait for the task to be cancelled/finish its current cycle
+            await asyncio.gather(app.state.sync_task, return_exceptions=True)
+            logger.info("Cancelled StandCloud synchronization task.")
+
+        if hasattr(app.state, "executor"):
+            app.state.executor.shutdown(wait=False)
+            logger.info("Shut down ThreadPoolExecutor.")
+
+
+app = FastAPI(lifespan=lifespan_sync_scheduler)
 app.state.pytest_wrp = PyTestWrapper()
+app.state.sc_synchronizer = StandCloudSynchronizer()
+app.state.executor = ThreadPoolExecutor(max_workers=1)
 
 
 class Status(str, Enum):
@@ -32,6 +73,30 @@ class Status(str, Enum):
     BUSY = "busy"
     READY = "ready"
     ERROR = "error"
+
+
+async def sync_stand_cloud(sc_sync_interval_minutes: int) -> None:
+    """Periodically calls the blocking stand_cloud_sync logic in a separate thread."""
+    sc_sync_interval: Final[int] = sc_sync_interval_minutes * 60
+    initial_pause: Final[int] = 30
+
+    loop = asyncio.get_event_loop()
+    await asyncio.sleep(initial_pause)
+
+    while True:
+        try:
+            sync_result = await loop.run_in_executor(
+                app.state.executor,
+                app.state.sc_synchronizer.sync,
+            )
+            logger.info(f"StandCloud synchronization status: {sync_result}")
+        except asyncio.CancelledError:
+            logger.info("StandCloud synchronization task cancelled.")
+            break
+        except Exception:  # noqa: BLE001
+            # TODO (xorialexandrov): add more information to logging
+            logger.info("Error during StandCloud synchronization")
+        await asyncio.sleep(sc_sync_interval)
 
 
 @app.get("/api/hardpy_config")
@@ -60,7 +125,9 @@ def start_pytest(args: Annotated[list[str] | None, Query()] = None) -> dict:
         args_dict = dict(arg.split("=", 1) for arg in args if "=" in arg)
 
     if app.state.pytest_wrp.start(start_args=args_dict):
+        logger.info("Start testing process.")
         return {"status": Status.STARTED}
+    logger.info("Testing process is already running.")
     return {"status": Status.BUSY}
 
 
@@ -72,7 +139,9 @@ def stop_pytest() -> dict:
         dict[str, RunStatus]: run status
     """
     if app.state.pytest_wrp.stop():
+        logger.info("Stop testing process.")
         return {"status": Status.STOPPED}
+    logger.info("Testing process is not running.")
     return {"status": Status.READY}
 
 
@@ -124,6 +193,28 @@ def database_document_id() -> dict:
     """
     config_manager = ConfigManager()
     return {"document_id": config_manager.config.database.doc_id}
+
+
+@app.get("/api/stand_cloud_sync")
+async def stand_cloud_sync() -> dict:
+    """Stop pytest subprocess.
+
+    Returns:
+        dict[status, str]: synchronization status
+    """
+    loop = asyncio.get_event_loop()
+    try:
+        sync_result = await loop.run_in_executor(
+            app.state.executor,
+            app.state.sc_synchronizer.sync,
+        )
+    except Exception:  # noqa: BLE001
+        msg = "Error during StandCloud synchronization"
+        # TODO (xorialexandrov): add more information to logging
+        logger.info("Error during StandCloud synchronization")
+        return {"status": msg}
+    logger.info(f"StandCloud sucnronization status: {sync_result}")
+    return {"status": sync_result}
 
 
 @app.post("/api/confirm_dialog_box")

@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Everypin
+# Copyright (c) 2025 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
@@ -35,6 +35,9 @@ from pytest import (
 from hardpy.common.config import ConfigManager, HardpyConfig
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
 from hardpy.pytest_hardpy.reporter import HookReporter
+from hardpy.pytest_hardpy.result.report_synchronizer.synchronizer import (
+    StandCloudSynchronizer,
+)
 from hardpy.pytest_hardpy.utils import NodeInfo, ProgressCalculator, TestStatus
 from hardpy.pytest_hardpy.utils.node_info import TestDependencyInfo
 
@@ -96,6 +99,12 @@ def pytest_addoption(parser: Parser) -> None:
         help="check StandCloud availability",
     )
     parser.addoption(
+        "--sc-autosync",
+        action="store_true",
+        default=default_config.stand_cloud.autosync,
+        help="StandCloud auto syncronization",
+    )
+    parser.addoption(
         "--hardpy-start-arg",
         action="append",
         default=[],
@@ -129,6 +138,7 @@ class HardpyPlugin:
         self._tests_name: str = ""
         self._is_critical_not_passed = False
         self._start_args = {}
+        self._sc_syncronizer = StandCloudSynchronizer()
 
         if system() == "Linux":
             signal.signal(signal.SIGTERM, self._stop_handler)
@@ -166,6 +176,10 @@ class HardpyPlugin:
         if sc_connection_only:
             hardpy_config.stand_cloud.connection_only = bool(sc_connection_only)  # type: ignore
 
+        sc_autosync = config.getoption("--sc-autosync")
+        if sc_autosync:
+            hardpy_config.stand_cloud.autosync = bool(sc_autosync)  # type: ignore
+
         _args = config.getoption("--hardpy-start-arg") or []
         if _args:
             self._start_args = dict(arg.split("=", 1) for arg in _args if "=" in arg)
@@ -199,6 +213,11 @@ class HardpyPlugin:
         if self._post_run_functions:
             for action in self._post_run_functions:
                 action()
+
+        config_manager = ConfigManager()
+
+        if config_manager.config.stand_cloud.autosync:
+            self._send_report_to_sc()
 
     # Collection hooks
 
@@ -264,6 +283,7 @@ class HardpyPlugin:
             try:
                 sc_connector = StandCloudConnector(
                     addr=config_manager.config.stand_cloud.address,
+                    api_key=config_manager.config.stand_cloud.api_key,
                 )
             except StandCloudError as exc:
                 msg = str(exc)
@@ -513,6 +533,19 @@ class HardpyPlugin:
         self._results[module_id][case_id] = case_status
         self._reporter.set_case_status(module_id, case_id, case_status)
         return is_case_stopped
+
+    def _send_report_to_sc(self) -> None:
+        """Send report to StandCloud."""
+        report = self._reporter.get_report()
+        if not report:
+            msg = "Empty report cannot be uploaded to StandCloud"
+            self._reporter.set_alert(msg)
+            return
+        if self._sc_syncronizer.push_to_sc(report):
+            return
+        if not self._sc_syncronizer.push_to_tempstore(report):
+            msg = "Report not uploaded to temporary storage"
+            self._reporter.set_alert(msg)
 
     def _decode_assertion_msg(
         self,

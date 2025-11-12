@@ -14,7 +14,8 @@ HardPy allows you to:
 
 * Create test benches for devices using [pytest](https://docs.pytest.org/);
 * Use a browser to view, start, stop, and interact with tests;
-* Store test results in the [CouchDB](https://couchdb.apache.org/) database.
+* Store test results in the [CouchDB](https://couchdb.apache.org/) database;
+* Store test results on the [StandCloud](https://standcloud.io/) analytics platform.
 
 <h1 align="center">
     <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/hardpy_panel.gif" alt="hardpy panel" style="width:600;">
