@@ -24,6 +24,19 @@
         "unknown": "Unbekannt"
       }
   },
+  "auth": {
+    "title": "Bedienerautorisierung",
+    "username": "Benutzername",
+    "usernamePlaceholder": "Benutzernamen eingeben",
+    "password": "Passwort",
+    "passwordPlaceholder": "Passwort eingeben",
+    "loginButton": "Anmelden",
+    "logout": "Abmelden",
+    "loggedInAs": "Angemeldet als: {{user}}",
+    "pleaseLogin": "Autorisierung erforderlich",
+    "loginToAccess": "Bitte melden Sie sich an, um auf das Testpanel zuzugreifen",
+    "invalidCredentials": "Ungültiger Benutzername oder Passwort"
+  },
   "button": {
     "start": "Starten",
     "stop": "Stoppen",

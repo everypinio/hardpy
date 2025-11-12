@@ -24,6 +24,19 @@
         "unknown": "Неизвестно"
       }
   },
+  "auth": {
+    "title": "Авторизация оператора",
+    "username": "Имя пользователя",
+    "usernamePlaceholder": "Введите имя пользователя",
+    "password": "Пароль",
+    "passwordPlaceholder": "Введите пароль",
+    "loginButton": "Войти",
+    "logout": "Выйти",
+    "loggedInAs": "Вы вошли как: {{user}}",
+    "pleaseLogin": "Требуется авторизация",
+    "loginToAccess": "Пожалуйста, войдите, чтобы получить доступ к панели тестирования",
+    "invalidCredentials": "Неверное имя пользователя или пароль"
+  },
   "button": {
     "start": "Старт",
     "stop": "Стоп",

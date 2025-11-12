@@ -24,6 +24,19 @@
       "unknown": "Unknown"
     }
   },
+  "auth": {
+    "title": "Operator Authorization",
+    "username": "Username", 
+    "usernamePlaceholder": "Enter username",
+    "password": "Password",
+    "passwordPlaceholder": "Enter password",
+    "loginButton": "Login",
+    "logout": "Logout",
+    "loggedInAs": "Logged in as: {{user}}",
+    "pleaseLogin": "Authorization Required",
+    "loginToAccess": "Please log in to access the test panel",
+    "invalidCredentials": "Invalid username or password"
+  },
   "button": {
     "start": "Start",
     "stop": "Stop",

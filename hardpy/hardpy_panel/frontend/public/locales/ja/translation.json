@@ -24,6 +24,19 @@
         "unknown": "不明"
       }
   },
+  "auth": {
+    "title": "オペレーター認証",
+    "username": "ユーザー名",
+    "usernamePlaceholder": "ユーザー名を入力してください",
+    "password": "パスワード",
+    "passwordPlaceholder": "パスワードを入力してください",
+    "loginButton": "ログイン",
+    "logout": "ログアウト",
+    "loggedInAs": "ログイン中：{{user}}",
+    "pleaseLogin": "認証が必要です",
+    "loginToAccess": "テストパネルにアクセスするにはログインしてください",
+    "invalidCredentials": "ユーザー名またはパスワードが正しくありません"
+  },
   "button": {
     "start": "開始",
     "stop": "停止",

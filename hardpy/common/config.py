@@ -52,6 +52,8 @@ class FrontendConfig(BaseModel):
     full_size_button: bool = False
     sound_on: bool = False
     measurement_display: bool = True
+    auth_enabled: bool = False
+    auth_timeout_hours: int = 1
     modal_result: ModalResultConfig = Field(default_factory=lambda: ModalResultConfig())
 
 

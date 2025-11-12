@@ -24,6 +24,19 @@
         "unknown": "未知"
       }
   },
+  "auth": {
+    "title": "操作员授权",
+    "username": "用户名",
+    "usernamePlaceholder": "请输入用户名",
+    "password": "密码",
+    "passwordPlaceholder": "请输入密码",
+    "loginButton": "登录",
+    "logout": "退出",
+    "loggedInAs": "当前用户：{{user}}",
+    "pleaseLogin": "需要授权",
+    "loginToAccess": "请登录以访问测试面板",
+    "invalidCredentials": "用户名或密码错误"
+  },
   "button": {
     "start": "开始",
     "stop": "停止",

@@ -15,6 +15,7 @@ import {
   H2,
   Popover,
   Card,
+  MenuDivider,
 } from "@blueprintjs/core";
 
 import StartStopButton from "./button/StartStop";
@@ -25,6 +26,8 @@ import TestStatus from "./hardpy_test_view/TestStatus";
 import ReloadAlert from "./restart_alert/RestartAlert";
 import PlaySound from "./hardpy_test_view/PlaySound";
 import TestCompletionModalResult from "./hardpy_test_view/TestCompletionModalResult";
+import LoginModal from "./hardpy_test_view/LoginModal";
+import { useAuth } from "./hardpy_test_view/useAuth";
 
 import { useAllDocs } from "use-pouchdb";
 
@@ -50,6 +53,8 @@ interface AppConfig {
     full_size_button?: boolean;
     sound_on?: boolean;
     measurement_display?: boolean;
+    auth_enabled?: boolean;
+    auth_timeout_hours?: number;
     modal_result?: {
       enable?: boolean;
       auto_dismiss_pass?: boolean;
@@ -112,7 +117,9 @@ const findStoppedTestCase = (
 ):
   | { moduleName: string; caseName: string; assertionMsg?: string }
   | undefined => {
-  if (!testRunData.modules) {return undefined;}
+  if (!testRunData.modules) {
+    return undefined;
+  }
 
   // First, look for explicitly stopped test cases
   for (const [moduleId, module] of Object.entries(testRunData.modules)) {
@@ -192,6 +199,17 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const [timerIntervalId, setTimerIntervalId] =
     React.useState<NodeJS.Timeout | null>(null);
 
+  const {
+    user,
+    isAuthenticated: isUserAuthenticated,
+    isLoading: authLoading,
+    error: authError,
+    login,
+    logout,
+    recordActivity,
+    isAuthEnabled,
+  } = useAuth(appConfig);
+
   /**
    * Loads HardPy configuration from the backend API on component mount
    * Initializes frontend configurations
@@ -216,6 +234,33 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
 
     loadConfig();
   }, []);
+
+  React.useEffect(() => {
+    if (!isAuthEnabled) return;
+
+    const handleUserActivity = () => {
+      recordActivity();
+    };
+
+    document.addEventListener("click", handleUserActivity);
+    document.addEventListener("keydown", handleUserActivity);
+
+    const activityInterval = setInterval(() => {
+      recordActivity();
+    }, 60000);
+
+    return () => {
+      document.removeEventListener("click", handleUserActivity);
+      document.removeEventListener("keydown", handleUserActivity);
+      clearInterval(activityInterval);
+    };
+  }, [isAuthEnabled, recordActivity]);
+
+  React.useEffect(() => {
+    if (lastRunStatus === "run" || lastRunStatus === "stopped") {
+      recordActivity();
+    }
+  }, [lastRunStatus, recordActivity]);
 
   /**
    * Custom hook to determine if the window width is greater than a specified size
@@ -351,10 +396,14 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
    * Handles test status changes, progress updates, and ModalResult display
    */
   React.useEffect(() => {
-    if (rows.length === 0) {return;}
+    if (rows.length === 0) {
+      return;
+    }
 
     const index = findRowIndex(rows, syncDocumentId);
-    if (index === -1) {return;}
+    if (index === -1) {
+      return;
+    }
     const db_row = rows[index].doc as TestRunI;
     const status = db_row.status || "";
     const progress = db_row.progress || 0;
@@ -464,6 +513,15 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
    * @returns {JSX.Element} The rendered database content component
    */
   const renderDbContent = (): JSX.Element => {
+    if (isAuthEnabled && !isUserAuthenticated) {
+      return (
+        <Card style={{ marginTop: "60px", textAlign: "center" }}>
+          <H2>{t("auth.pleaseLogin")}</H2>
+          <p>{t("auth.loginToAccess")}</p>
+        </Card>
+      );
+    }
+
     if (loading && rows.length === 0) {
       return (
         <Card style={{ marginTop: "60px" }}>
@@ -574,6 +632,15 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           id="use_debug_info"
           onClick={() => setUseDebugInfo(!use_debug_info)}
         />
+        {isAuthEnabled && user && <MenuDivider />}
+        {isAuthEnabled && user && (
+          <MenuItem
+            text={t("auth.logout")}
+            icon={"log-out"}
+            onClick={logout}
+            id="logout-button"
+          />
+        )}
       </Menu>
     );
   };
@@ -603,6 +670,13 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   return (
     <div className="App">
       <ReloadAlert reload_timeout_s={3} />
+
+      <LoginModal
+        isVisible={isAuthEnabled && !isUserAuthenticated}
+        isLoading={authLoading}
+        error={authError}
+        onLogin={login}
+      />
 
       {/* Header with navigation and status information */}
       <Navbar
@@ -663,6 +737,11 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         </Navbar.Group>
 
         <Navbar.Group align={Alignment.RIGHT}>
+          {isAuthEnabled && user && (
+            <Navbar.Heading style={{ marginRight: "10px", fontSize: "14px" }}>
+              {t("auth.loggedInAs", { user: user.name })}
+            </Navbar.Heading>
+          )}
           <Popover content={renderSettingsMenu()}>
             <Button className="bp3-minimal" icon="cog" />
           </Popover>
@@ -670,11 +749,11 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       </Navbar>
 
       {/* Main content area with test suites and results */}
-      <div 
-        className={Classes.DRAWER_BODY} 
-        style={{ 
+      <div
+        className={Classes.DRAWER_BODY}
+        style={{
           marginBottom: "60px",
-          paddingBottom: useBigButton ? "120px" : "80px"
+          paddingBottom: useBigButton ? "120px" : "80px",
         }}
       >
         {renderDbContent()}

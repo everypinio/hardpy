@@ -14,6 +14,8 @@ language = "en"
 full_size_button = false
 sound_on = false
 measurement_display = true
+auth_enabled = true
+auth_timeout_hours = 1
 
 [frontend.modal_result]
 enable = false
