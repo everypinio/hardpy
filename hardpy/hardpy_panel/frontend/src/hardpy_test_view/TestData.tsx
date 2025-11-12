@@ -111,11 +111,134 @@ const MODAL_CONSTANTS = {
 const TAG_ELEMENT_STYLE = { margin: 2 };
 
 /**
+ * Determines the lower bracket for range operations (inside range)
+ * @param operation - The comparison operation type
+ * @returns The lower bracket character - "(" for strict inequalities, "[" for inclusive
+ */
+const getLowerBracket = (operation?: string): string => {
+  switch (operation) {
+    case "gtlt":
+    case "gtle":
+    case "legt":
+    case "ltge":
+      return "(";
+    case "gele":
+    case "gelt":
+    case "lege":
+    case "ltgt":
+      return "[";
+    default:
+      return "[";
+  }
+};
+
+/**
+ * Determines the upper bracket for range operations (inside range)
+ * @param operation - The comparison operation type
+ * @returns The upper bracket character - ")" for strict inequalities, "]" for inclusive
+ */
+const getUpperBracket = (operation?: string): string => {
+  switch (operation) {
+    case "gtlt":
+    case "gelt":
+    case "ltgt":
+    case "ltge":
+      return ")";
+    case "gele":
+    case "gtle":
+    case "lege":
+    case "legt":
+      return "]";
+    default:
+      return "]";
+  }
+};
+
+/**
+ * Determines the lower bracket for outside range operations
+ * @param operation - The comparison operation type for outside range
+ * @returns The lower bracket character for the outside range
+ */
+const getOutsideLowerBracket = (operation?: string): string => {
+  switch (operation) {
+    case "ltgt":
+    case "ltge":
+      return ")";
+    case "lege":
+    case "legt":
+      return "]";
+    default:
+      return ")";
+  }
+};
+
+/**
+ * Determines the upper bracket for outside range operations
+ * @param operation - The comparison operation type for outside range
+ * @returns The upper bracket character for the outside range
+ */
+const getOutsideUpperBracket = (operation?: string): string => {
+  switch (operation) {
+    case "ltgt":
+    case "legt":
+      return "(";
+    case "lege":
+    case "ltge":
+      return "[";
+    default:
+      return "(";
+  }
+};
+
+/**
+ * Checks if the operation is a range operation (involving both lower and upper limits)
+ * @param operation - The comparison operation type to check
+ * @returns True if the operation is a range operation, false otherwise
+ */
+const isRangeOperation = (operation?: string): boolean => {
+  const rangeOperations = [
+    "gtlt",
+    "gele",
+    "gelt",
+    "gtle",
+    "ltgt",
+    "lege",
+    "legt",
+    "ltge",
+  ];
+  return operation ? rangeOperations.includes(operation) : false;
+};
+
+/**
+ * Converts operation type to its corresponding mathematical symbol
+ * @param operation - The comparison operation type
+ * @returns The mathematical symbol representing the operation
+ */
+const getComparisonOperator = (operation?: string): string => {
+  switch (operation) {
+    case "eq":
+      return "=";
+    case "ne":
+      return "≠";
+    case "gt":
+      return ">";
+    case "ge":
+      return "≥";
+    case "lt":
+      return "<";
+    case "le":
+      return "≤";
+    default:
+      return operation || "";
+  }
+};
+
+/**
  * TestData component displays test messages, assertions, and optional chart visualizations
  * @component
  * @param {Props} props - Component properties
  * @returns {React.ReactElement} Rendered test data component with messages and charts
- *
+ * 
  * @example
  * <TestData
  *   msg={["Test passed", "Measurement complete"]}
@@ -136,20 +259,99 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
    */
   const storageKey: string = `chartState_${props.testSuiteIndex}_${props.testCaseIndex}`;
 
+    /**
+   * Formats a measurement for display with proper mathematical notation
+   * @param measurement - The measurement object containing value, limits, and operation
+   * @param index - The index of the measurement in the list (for React keys)
+   * @returns Formatted string representation of the measurement
+   */
   const formatMeasurement = (
     measurement: Measurement,
     index: number
   ): string => {
     let display = "";
     if (measurement.name) {
-      display += `${measurement.name} `;
+      display += `${measurement.name}: `;
     }
+
     display += `${measurement.value}`;
+
     if (measurement.unit) {
       if (["%", "°", "′", "″"].includes(measurement.unit)) {
         display += measurement.unit;
       } else {
         display += ` ${measurement.unit}`;
+      }
+    }
+
+    const hasLowerLimit =
+      measurement.lower_limit !== undefined && measurement.lower_limit !== null;
+    const hasUpperLimit =
+      measurement.upper_limit !== undefined && measurement.upper_limit !== null;
+    const isRangeOp = isRangeOperation(measurement.operation);
+
+    if (isRangeOp && (hasLowerLimit || hasUpperLimit)) {
+      display += " ";
+
+      const isOutsideRangeOp =
+        measurement.operation &&
+        ["ltgt", "lege", "legt", "ltge"].includes(measurement.operation);
+
+      if (isOutsideRangeOp) {
+        const lowerBracket = getOutsideLowerBracket(measurement.operation);
+        const upperBracket = getOutsideUpperBracket(measurement.operation);
+
+        if (hasLowerLimit && hasUpperLimit) {
+          display += `(-∞; ${measurement.lower_limit}${lowerBracket} ∪ ${upperBracket}${measurement.upper_limit}; ∞)`;
+        } else if (hasLowerLimit) {
+          display += `(-∞; ${measurement.lower_limit}${lowerBracket}`;
+        } else if (hasUpperLimit) {
+          display += `${upperBracket}${measurement.upper_limit}; ∞)`;
+        }
+      } else {
+        const lowerBracket = getLowerBracket(measurement.operation);
+        const upperBracket = getUpperBracket(measurement.operation);
+
+        if (hasLowerLimit && hasUpperLimit) {
+          display += `${lowerBracket}${measurement.lower_limit}; ${measurement.upper_limit}${upperBracket}`;
+        } else if (hasLowerLimit) {
+          display += `${lowerBracket}${measurement.lower_limit}; ∞)`;
+        } else if (hasUpperLimit) {
+          display += `(-∞; ${measurement.upper_limit}${upperBracket}`;
+        }
+      }
+
+    } else if (
+      measurement.operation &&
+      measurement.comparison_value !== undefined &&
+      measurement.comparison_value !== null &&
+      !isRangeOp
+    ) {
+      const operator = measurement.operation;
+      const comparisonValue = measurement.comparison_value;
+      
+      switch (operator) {
+        case "gt":
+          display += ` (${comparisonValue}; ∞)`;
+          break;
+        case "ge":
+          display += ` [${comparisonValue}; ∞)`;
+          break;
+        case "lt":
+          display += ` (-∞; ${comparisonValue})`;
+          break;
+        case "le":
+          display += ` (-∞; ${comparisonValue}]`;
+          break;
+        case "eq":
+          display += ` [= ${comparisonValue}]`;
+          break;
+        case "ne":
+          display += ` [≠ ${comparisonValue}]`;
+          break;
+        default:
+          { const defaultOperator = getComparisonOperator(measurement.operation);
+          display += ` [${defaultOperator} ${comparisonValue}]`; }
       }
     }
 
@@ -286,11 +488,18 @@ export function TestData(props: Readonly<Props>): React.ReactElement {
             {_.map(
               props.measurements,
               (measurement: Measurement, index: number) => {
+                const intent =
+                  measurement.result === true
+                    ? "success"
+                    : measurement.result === false
+                      ? "danger"
+                      : "success";
                 return (
                   <Tag
                     key={`measurement-${index}`}
                     style={TAG_ELEMENT_STYLE}
                     minimal={true}
+                    intent={intent}
                   >
                     {formatMeasurement(measurement, index)}
                   </Tag>
