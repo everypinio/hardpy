@@ -61,7 +61,7 @@ class StandCloudConnector:
         self._verify_ssl = not __debug__
         self._token_manager = TokenManager(self._addr.domain)
         self._token_manager.save_token(api_key)
-        # TODO(xorialexandrov): Change the self._abc logic for storing the
+        # TODO(xorialexandrov): Change the self._token logic for storing the
         # API key in the file system to secure storage.
         # Remove device flow process.
         self._token: BearerToken = self.get_access_token()
