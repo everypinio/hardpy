@@ -53,7 +53,7 @@ class FrontendConfig(BaseModel):
     sound_on: bool = False
     measurement_display: bool = True
     auth_enabled: bool = False
-    auth_timeout_hours: int = 1
+    auth_timeout_minutes: int = 60
     modal_result: ModalResultConfig = Field(default_factory=lambda: ModalResultConfig())
 
 

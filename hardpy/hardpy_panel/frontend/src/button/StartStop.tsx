@@ -134,6 +134,24 @@ class StartStopButton extends React.Component<Props, State> {
   }
 
   /**
+   * Checks if the authentication modal is currently visible.
+   * Uses the data-auth-modal attribute from LoginModal component.
+   * @returns {boolean} True if the auth modal is visible, false otherwise.
+   */
+  private isAuthModalVisible(): boolean {
+    const authModalElements = document.querySelectorAll(
+      '[data-auth-modal="true"]'
+    );
+    for (const modal of authModalElements) {
+      const style = window.getComputedStyle(modal);
+      if (style.display !== "none" && style.visibility !== "hidden") {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Checks if the application is in the cooldown period after ModalResult dismissal.
    * Prevents immediate space key actions after the ModalResult is dismissed.
    * @returns {boolean} True if within the cooldown period, false otherwise.
@@ -154,8 +172,16 @@ class StartStopButton extends React.Component<Props, State> {
   }
 
   /**
+   * Checks if any blocking modal is currently visible (auth or completion).
+   * @returns {boolean} True if any blocking modal is visible, false otherwise.
+   */
+  private isAnyBlockingModalVisible(): boolean {
+    return this.isAuthModalVisible() || this.isCompletionModalResultVisible();
+  }
+
+  /**
    * Handles the space keydown event to start or stop the testing process.
-   * Prevents space key actions when ModalResult is visible or during cooldown period.
+   * Prevents space key actions when ModalResult or Auth modal is visible or during cooldown period.
    * Also prevents action when dialogs are open or interactive elements are focused.
    * @param {KeyboardEvent} event - The keyboard event object
    */
@@ -165,8 +191,8 @@ class StartStopButton extends React.Component<Props, State> {
       return;
     }
 
-    // Check if completion ModalResult is visible
-    if (this.isCompletionModalResultVisible()) {
+    // Check if any blocking modal (auth or completion) is visible
+    if (this.isAnyBlockingModalVisible()) {
       event.preventDefault();
       event.stopPropagation();
       return;
@@ -203,12 +229,12 @@ class StartStopButton extends React.Component<Props, State> {
 
   /**
    * Handles the button click event to start the testing process.
-   * Prevents button clicks when ModalResult is visible or during cooldown period.
+   * Prevents button clicks when ModalResult or Auth modal is visible or during cooldown period.
    * @private
    */
   private readonly handleButtonClick = (): void => {
-    // Check if completion ModalResult is visible
-    if (this.isCompletionModalResultVisible()) {
+    // Check if any blocking modal (auth or completion) is visible
+    if (this.isAnyBlockingModalVisible()) {
       return;
     }
 
@@ -218,6 +244,25 @@ class StartStopButton extends React.Component<Props, State> {
     }
 
     this.hardpy_start();
+  };
+
+  /**
+   * Handles the stop button click event.
+   * Prevents stop button clicks when ModalResult or Auth modal is visible or during cooldown period.
+   * @private
+   */
+  private readonly handleStopButtonClick = (): void => {
+    // Check if any blocking modal (auth or completion) is visible
+    if (this.isAnyBlockingModalVisible()) {
+      return;
+    }
+
+    // Check if we're in cooldown period after ModalResult dismissal
+    if (this.isInModalResultDismissCooldown()) {
+      return;
+    }
+
+    this.hardpy_stop();
   };
 
   /**
@@ -267,7 +312,7 @@ class StartStopButton extends React.Component<Props, State> {
         intent: "danger",
         large: true,
         rightIcon: <span style={iconStyle}>&#9632;</span>,
-        onClick: this.hardpy_stop,
+        onClick: this.handleStopButtonClick, // Use the new stop handler
         id: button_id,
         fill: true,
         style: bigButtonStyle,
@@ -292,7 +337,7 @@ class StartStopButton extends React.Component<Props, State> {
         intent: "danger",
         large: true,
         rightIcon: "stop",
-        onClick: this.hardpy_stop,
+        onClick: this.handleStopButtonClick, // Use the new stop handler
         id: button_id,
       };
 

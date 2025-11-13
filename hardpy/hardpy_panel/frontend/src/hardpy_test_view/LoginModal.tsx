@@ -59,6 +59,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
   return (
     <div
+      data-auth-modal="true"
       style={{
         position: "fixed",
         top: 0,

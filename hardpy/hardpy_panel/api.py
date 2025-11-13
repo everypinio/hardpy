@@ -58,7 +58,7 @@ async def login_user(credentials: dict) -> dict:
     username = credentials.get("username", "").strip()
     password = credentials.get("password", "").strip()
 
-    valid_users = {"operator": "password123", "admin": "admin", "test": "test"}
+    valid_users = {"test": "test"}
 
     if username in valid_users and valid_users[username] == password:
         return {"authenticated": True, "user": {"name": username, "role": "operator"}}
@@ -77,10 +77,10 @@ async def validate_session(session_data: dict) -> dict:
         dict: validation result
     """
     last_activity = session_data.get("lastActivity", 0)
-    timeout_hours = 1
+    timeout_minutes = 60
 
-    hours_in_ms = timeout_hours * 60 * 60 * 1000
-    is_expired = (time.time() * 1000 - last_activity) > hours_in_ms
+    minutes_in_ms = timeout_minutes * 60 * 1000
+    is_expired = (time.time() * 1000 - last_activity) > minutes_in_ms
 
     if is_expired:
         return {"valid": False, "error": "Session expired"}
@@ -97,7 +97,7 @@ async def get_auth_config() -> dict:
     """
     return {
         "auth_enabled": True,
-        "auth_timeout_hours": 1,
+        "auth_timeout_minutes": 60,
     }
 
 

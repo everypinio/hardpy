@@ -54,7 +54,7 @@ interface AppConfig {
     sound_on?: boolean;
     measurement_display?: boolean;
     auth_enabled?: boolean;
-    auth_timeout_hours?: number;
+    auth_timeout_minutes?: number; // Changed from auth_timeout_hours to auth_timeout_minutes
     modal_result?: {
       enable?: boolean;
       auto_dismiss_pass?: boolean;
@@ -242,25 +242,28 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       recordActivity();
     };
 
-    document.addEventListener("click", handleUserActivity);
-    document.addEventListener("keydown", handleUserActivity);
-
-    const activityInterval = setInterval(() => {
-      recordActivity();
-    }, 60000);
+    // Track various user activities
+    const events = ['click', 'keydown', 'mousemove', 'scroll', 'touchstart'];
+    
+    events.forEach(event => {
+      document.addEventListener(event, handleUserActivity, { passive: true });
+    });
 
     return () => {
-      document.removeEventListener("click", handleUserActivity);
-      document.removeEventListener("keydown", handleUserActivity);
-      clearInterval(activityInterval);
+      events.forEach(event => {
+        document.removeEventListener(event, handleUserActivity);
+      });
     };
   }, [isAuthEnabled, recordActivity]);
 
   React.useEffect(() => {
-    if (lastRunStatus === "run" || lastRunStatus === "stopped") {
+    if (
+      isAuthEnabled &&
+      (lastRunStatus === "run" || lastRunStatus === "stopped")
+    ) {
       recordActivity();
     }
-  }, [lastRunStatus, recordActivity]);
+  }, [lastRunStatus, recordActivity, isAuthEnabled]);
 
   /**
    * Custom hook to determine if the window width is greater than a specified size
@@ -613,6 +616,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
 
   /**
    * Renders the settings menu with sound and debug options
+   * Only shows logout option if authentication is enabled
    * @returns {JSX.Element} The settings menu component
    */
   const renderSettingsMenu = (): JSX.Element => {
