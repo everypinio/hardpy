@@ -1,41 +1,14 @@
-// Copyright (c) 2024 Everypin
+// Copyright (c) 2025 Everypin
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import * as React from "react";
 
 interface User {
   name: string;
+  role: string;
   loginTime: number;
   lastActivity: number;
 }
-
-/**
- * Temporary mock authentication
- * Replace with real API calls when backend is ready
- */
-const mockAuth = {
-  login: async (username: string, password: string): Promise<boolean> => {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    // Default credentials for testing
-    const validCredentials = [
-      { username: "operator", password: "password123" },
-      { username: "admin", password: "admin" },
-      { username: "test", password: "test" },
-    ];
-
-    const isValid = validCredentials.some(
-      (cred) => cred.username === username && cred.password === password
-    );
-
-    return isValid;
-  },
-
-  logout: async (): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-  },
-};
 
 /**
  * Hook for managing user authentication
@@ -57,6 +30,15 @@ export const useAuth = (
    */
   React.useEffect(() => {
     if (!isAuthEnabled) {
+      if (!user) {
+        const defaultUser: User = {
+          name: "operator",
+          role: "operator",
+          loginTime: Date.now(),
+          lastActivity: Date.now(),
+        };
+        setUser(defaultUser);
+      }
       return;
     }
 
@@ -64,7 +46,10 @@ export const useAuth = (
     if (savedUser) {
       try {
         const userData: User = JSON.parse(savedUser);
-        if (isSessionValid(userData, timeoutHours)) {
+        const hoursInMs = timeoutHours * 60 * 60 * 1000;
+        const isExpired = Date.now() - userData.lastActivity > hoursInMs;
+
+        if (!isExpired) {
           setUser(userData);
           updateLastActivity();
         } else {
@@ -76,12 +61,6 @@ export const useAuth = (
     }
   }, [isAuthEnabled, timeoutHours]);
 
-  const isSessionValid = (userData: User, hours: number): boolean => {
-    const now = Date.now();
-    const hoursInMs = hours * 60 * 60 * 1000;
-    return now - userData.lastActivity < hoursInMs;
-  };
-
   const updateLastActivity = () => {
     if (user) {
       const updatedUser = { ...user, lastActivity: Date.now() };
@@ -90,7 +69,13 @@ export const useAuth = (
     }
   };
 
-  const login = async (username: string, password: string) => {
+  /**
+   * Authenticate user with backend API
+   */
+  const login = async (
+    username: string,
+    password: string
+  ): Promise<boolean> => {
     if (!isAuthEnabled) {
       return true;
     }
@@ -99,12 +84,20 @@ export const useAuth = (
     setError(undefined);
 
     try {
-      // Use mock auth for now - replace with real API call later
-      const isAuthenticated = await mockAuth.login(username, password);
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
 
-      if (isAuthenticated) {
+      const result = await response.json();
+
+      if (result.authenticated) {
         const userData: User = {
-          name: username,
+          name: result.user.name,
+          role: result.user.role,
           loginTime: Date.now(),
           lastActivity: Date.now(),
         };
@@ -114,11 +107,11 @@ export const useAuth = (
         setError(undefined);
         return true;
       } else {
-        setError("Invalid username or password");
+        setError(result.error || "Authentication failed");
         return false;
       }
     } catch (err) {
-      setError("Authentication error. Please try again.");
+      setError("Authentication service unavailable. Please try again.");
       return false;
     } finally {
       setIsLoading(false);
@@ -126,18 +119,11 @@ export const useAuth = (
   };
 
   const logout = async () => {
-    try {
-      await mockAuth.logout();
-    } catch (err) {
-      console.error("Logout error:", err);
-    } finally {
-      setUser(null);
-      localStorage.removeItem("hardpy_user");
-    }
+    setUser(null);
+    localStorage.removeItem("hardpy_user");
   };
 
-  const isAuthenticated =
-    !isAuthEnabled || (user !== null && isSessionValid(user, timeoutHours));
+  const isAuthenticated = !isAuthEnabled || user !== null;
 
   const recordActivity = () => {
     if (isAuthEnabled && user) {

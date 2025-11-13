@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import time
 from enum import Enum
 from pathlib import Path
 from typing import Annotated
@@ -42,6 +43,62 @@ def hardpy_config() -> dict:
         dict: HardPy config
     """
     return app.state.pytest_wrp.get_config()
+
+
+@app.post("/api/auth/login")
+async def login_user(credentials: dict) -> dict:
+    """Authenticate user with username and password.
+
+    Args:
+        credentials: dict with 'username' and 'password'
+
+    Returns:
+        dict: authentication result with user info or error
+    """
+    username = credentials.get("username", "").strip()
+    password = credentials.get("password", "").strip()
+
+    valid_users = {"operator": "password123", "admin": "admin", "test": "test"}
+
+    if username in valid_users and valid_users[username] == password:
+        return {"authenticated": True, "user": {"name": username, "role": "operator"}}
+
+    return {"authenticated": False, "error": "Invalid username or password"}
+
+
+@app.post("/api/auth/validate_session")
+async def validate_session(session_data: dict) -> dict:
+    """Validate user session.
+
+    Args:
+        session_data: dict with user session information
+
+    Returns:
+        dict: validation result
+    """
+    last_activity = session_data.get("lastActivity", 0)
+    timeout_hours = 1
+
+    hours_in_ms = timeout_hours * 60 * 60 * 1000
+    is_expired = (time.time() * 1000 - last_activity) > hours_in_ms
+
+    if is_expired:
+        return {"valid": False, "error": "Session expired"}
+
+    return {"valid": True}
+
+
+@app.get("/api/auth/config")
+async def get_auth_config() -> dict:
+    """Get authentication configuration.
+
+    Returns:
+        dict: auth configuration
+    """
+    return {
+        "auth_enabled": True,
+        "auth_timeout_hours": 1,
+    }
 
 
 @app.get("/api/start")
