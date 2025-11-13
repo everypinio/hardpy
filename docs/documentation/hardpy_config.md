@@ -198,7 +198,7 @@ The default value is `false`.
 #### autosync_timeout
 
 This is an integer variable greater than 1, representing the time interval 
-in minutes between StandCloud synchronisation attempts.
+in minutes between StandCloud synchronization attempts.
 
 The default value is `30`.
 

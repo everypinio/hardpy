@@ -166,7 +166,7 @@ class StandCloudConnector:
         except OAuth2Error as exc:
             raise StandCloudError(exc.description) from exc
         except RequestException as exc:
-            raise StandCloudError(exc.strerror) from exc  # type: ignore
+            raise StandCloudError(exc.strerror or str(exc)) from exc  # type: ignore
 
         return resp
 
