@@ -31,10 +31,7 @@ class StandCloudSynchronizer:
         """
         if not self._tempstore.reports():
             return "All reports are synchronized with StandCloud"
-        try:
-            loader = self._create_sc_loader()
-        except StandCloudError as err:
-            raise StandCloudError(str(err)) from err
+        loader = self._create_sc_loader()
 
         invalid_reports = []
         success_report_counter = 0
@@ -117,5 +114,13 @@ class StandCloudSynchronizer:
 
     def _create_sc_loader(self) -> StandCloudLoader:
         loader = StandCloudLoader()
-        loader.healthcheck()
+        response = loader.healthcheck()
+        if response.status_code != HTTPStatus.OK:
+            url = response.url
+            code = response.status_code
+            msg = f"StandCloud healthcheck at {url} is unavailable, status code: {code}"
+            raise StandCloudError(msg)
+        if response.status_code == HTTPStatus.OK and response.text != "{}":
+            msg = f"StandCloud healthcheck at {response.url} is unavailable"
+            raise StandCloudError(msg)
         return loader

@@ -93,9 +93,8 @@ async def sync_stand_cloud(sc_sync_interval_minutes: int) -> None:
         except asyncio.CancelledError:
             logger.info("StandCloud synchronization task cancelled.")
             break
-        except Exception:  # noqa: BLE001
-            # TODO (xorialexandrov): add more information to logging
-            logger.info("Error during StandCloud synchronization")
+        except Exception as exc:  # noqa: BLE001
+            logger.info(f"Error during StandCloud synchronization. {exc}")
         await asyncio.sleep(sc_sync_interval)
 
 
@@ -208,12 +207,11 @@ async def stand_cloud_sync() -> dict:
             app.state.executor,
             app.state.sc_synchronizer.sync,
         )
-    except Exception:  # noqa: BLE001
-        msg = "Error during StandCloud synchronization"
-        # TODO (xorialexandrov): add more information to logging
-        logger.info("Error during StandCloud synchronization")
+    except Exception as exc:  # noqa: BLE001
+        msg = f"Error during StandCloud synchronization. {exc}"
+        logger.info(msg)
         return {"status": msg}
-    logger.info(f"StandCloud sucnronization status: {sync_result}")
+    logger.info(f"StandCloud syncronization status: {sync_result}")
     return {"status": sync_result}
 
 

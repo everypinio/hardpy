@@ -330,9 +330,13 @@ def _validate_running_config(config: HardpyConfig, tests_dir: str) -> None:
         sys.exit()
 
 def _validate_config(config: HardpyConfig) -> None:
-    if config.stand_cloud.autosync_timeout < 1:
-        print("StandCloud autosync timeout must be greater than 0.")
-        sys.exit()
+    if config.stand_cloud.autosync:
+        if config.stand_cloud.autosync_timeout < 1:
+            print("StandCloud autosync timeout must be greater than 0.")
+            sys.exit()
+        if not config.stand_cloud.api_key:
+            print("StandCloud API key is empty.")
+            sys.exit()
 
 
 def _request_hardpy(url: str, timeout: int = 5) -> str:
