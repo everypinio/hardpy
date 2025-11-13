@@ -211,7 +211,7 @@ async def stand_cloud_sync() -> dict:
         msg = f"Error during StandCloud synchronization. {exc}"
         logger.info(msg)
         return {"status": msg}
-    logger.info(f"StandCloud sucnronization status: {sync_result}")
+    logger.info(f"StandCloud syncronization status: {sync_result}")
     return {"status": sync_result}
 
 
