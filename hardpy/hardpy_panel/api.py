@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Annotated
 from urllib.parse import unquote
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, HTTPException, Query, status
 from fastapi.staticfiles import StaticFiles
 
 from hardpy.common.config import ConfigManager
@@ -19,6 +19,9 @@ from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
 
 app = FastAPI()
 app.state.pytest_wrp = PyTestWrapper()
+
+# Store authentication state
+app.state.authenticated_users = set()
 
 
 class Status(str, Enum):
@@ -33,6 +36,19 @@ class Status(str, Enum):
     BUSY = "busy"
     READY = "ready"
     ERROR = "error"
+    UNAUTHORIZED = "unauthorized"
+
+
+def _is_authenticated(session_id: str | None = None) -> bool:
+    """Check if user is authenticated."""
+    config_manager = ConfigManager()
+    if not config_manager.config.frontend.auth.enabled:
+        return True
+
+    if not session_id:
+        return False
+
+    return session_id in app.state.authenticated_users
 
 
 @app.get("/api/hardpy_config")
@@ -55,13 +71,25 @@ async def login_user(credentials: dict) -> dict:
     Returns:
         dict: authentication result with user info or error
     """
+    config_manager = ConfigManager()
+    if not config_manager.config.frontend.auth.enabled:
+        return {"authenticated": True, "user": {"name": "guest", "role": "operator"}}
+
     username = credentials.get("username", "").strip()
     password = credentials.get("password", "").strip()
 
     valid_users = {"test": "test"}
 
     if username in valid_users and valid_users[username] == password:
-        return {"authenticated": True, "user": {"name": username, "role": "operator"}}
+        # Generate session ID
+        session_id = f"{username}_{int(time.time())}"
+        app.state.authenticated_users.add(session_id)
+
+        return {
+            "authenticated": True,
+            "user": {"name": username, "role": "operator"},
+            "session_id": session_id,
+        }
 
     return {"authenticated": False, "error": "Invalid username or password"}
 
@@ -76,41 +104,61 @@ async def validate_session(session_data: dict) -> dict:
     Returns:
         dict: validation result
     """
+    config_manager = ConfigManager()
+    if not config_manager.config.frontend.auth.enabled:
+        return {"valid": True}
+
+    session_id = session_data.get("session_id")
     last_activity = session_data.get("lastActivity", 0)
-    timeout_minutes = 60
+    timeout_minutes = config_manager.config.frontend.auth.timeout_minutes
+
+    if not session_id or session_id not in app.state.authenticated_users:
+        return {"valid": False, "error": "Invalid session"}
 
     minutes_in_ms = timeout_minutes * 60 * 1000
     is_expired = (time.time() * 1000 - last_activity) > minutes_in_ms
 
     if is_expired:
+        app.state.authenticated_users.discard(session_id)
         return {"valid": False, "error": "Session expired"}
 
     return {"valid": True}
 
 
-@app.get("/api/auth/config")
-async def get_auth_config() -> dict:
-    """Get authentication configuration.
+@app.post("/api/auth/logout")
+async def logout_user(session_data: dict) -> dict:
+    """Logout user and invalidate session.
+
+    Args:
+        session_data: dict with session information
 
     Returns:
-        dict: auth configuration
+        dict: logout result
     """
-    return {
-        "auth_enabled": True,
-        "auth_timeout_minutes": 60,
-    }
+    session_id = session_data.get("session_id")
+    if session_id:
+        app.state.authenticated_users.discard(session_id)
+
+    return {"success": True}
 
 
 @app.get("/api/start")
-def start_pytest(args: Annotated[list[str] | None, Query()] = None) -> dict:
+def start_pytest(
+    args: Annotated[list[str] | None, Query()] = None,
+    session_id: Annotated[str | None, Query()] = None,
+) -> dict:
     """Start pytest subprocess.
 
     Args:
         args: List of arguments in key=value format
+        session_id: User session ID for authentication
 
     Returns:
         dict[str, RunStatus]: run status
     """
+    if not _is_authenticated(session_id):
+        return {"status": Status.UNAUTHORIZED}
+
     if args is None:
         args_dict = []
     else:
@@ -122,25 +170,36 @@ def start_pytest(args: Annotated[list[str] | None, Query()] = None) -> dict:
 
 
 @app.get("/api/stop")
-def stop_pytest() -> dict:
+def stop_pytest(session_id: Annotated[str | None, Query()] = None) -> dict:
     """Stop pytest subprocess.
+
+    Args:
+        session_id: User session ID for authentication
 
     Returns:
         dict[str, RunStatus]: run status
     """
+    if not _is_authenticated(session_id):
+        return {"status": Status.UNAUTHORIZED}
+
     if app.state.pytest_wrp.stop():
         return {"status": Status.STOPPED}
     return {"status": Status.READY}
 
 
 @app.get("/api/collect")
-def collect_pytest() -> dict:
+def collect_pytest(session_id: Annotated[str | None, Query()] = None) -> dict:
     """Collect pytest subprocess.
+
+    Args:
+        session_id: User session ID for authentication
 
     Returns:
         dict[str, RunStatus]: run status
-
     """
+    if not _is_authenticated(session_id):
+        return {"status": Status.UNAUTHORIZED}
+
     if app.state.pytest_wrp.collect():
         return {"status": Status.COLLECTED}
     return {"status": Status.BUSY}
@@ -184,15 +243,21 @@ def database_document_id() -> dict:
 
 
 @app.post("/api/confirm_dialog_box")
-def confirm_dialog_box(dbx_data: dict) -> dict:
+def confirm_dialog_box(
+    dbx_data: dict, session_id: Annotated[str | None, Query()] = None
+) -> dict:
     """Confirm dialog box with unified JSON structure.
 
     Args:
         dbx_data: dict with 'result' (pass/fail/confirm) and 'data' (widget data)
+        session_id: User session ID for authentication
 
     Returns:
         dict[str, RunStatus]: run status
     """
+    if not _is_authenticated(session_id):
+        return {"status": Status.UNAUTHORIZED}
+
     RESULT_KEY = "result"  # noqa: N806
     DATA_KEY = "data"  # noqa: N806
     STATUS_KEY = "status"  # noqa: N806
@@ -226,15 +291,21 @@ def confirm_dialog_box(dbx_data: dict) -> dict:
 
 
 @app.post("/api/confirm_operator_msg/{is_msg_visible}")
-def confirm_operator_msg(is_msg_visible: str) -> dict:
+def confirm_operator_msg(
+    is_msg_visible: str, session_id: Annotated[str | None, Query()] = None
+) -> dict:
     """Confirm operator msg.
 
     Args:
         is_msg_visible (bool): is operator message is visible
+        session_id: User session ID for authentication
 
     Returns:
         dict[str, RunStatus]: run status
     """
+    if not _is_authenticated(session_id):
+        return {"status": Status.UNAUTHORIZED}
+
     if app.state.pytest_wrp.send_data(str(is_msg_visible)):
         return {"status": Status.BUSY}
     return {"status": Status.ERROR}

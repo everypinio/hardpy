@@ -53,7 +53,10 @@ interface AppConfig {
     full_size_button?: boolean;
     sound_on?: boolean;
     measurement_display?: boolean;
-    auth_enabled?: boolean;
+    auth?: {
+      enable?: boolean;
+      timeout_minutes?: number;
+    }
     auth_timeout_minutes?: number; // Changed from auth_timeout_hours to auth_timeout_minutes
     modal_result?: {
       enable?: boolean;
@@ -802,6 +805,10 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                   <StartStopButton
                     testing_status={lastRunStatus}
                     useBigButton={true}
+                    isAuthenticated={isAuthenticated}
+                    onUnauthorizedAction={() => {
+                      console.log("User needs to authenticate");
+                    }}
                   />
                 </div>
               </div>
@@ -833,6 +840,10 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                 <StartStopButton
                   testing_status={lastRunStatus}
                   useBigButton={false}
+                  isAuthenticated={isAuthenticated}
+                  onUnauthorizedAction={() => {
+                    console.log("User needs to authenticate");
+                  }}
                 />
               </div>
             </div>

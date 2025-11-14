@@ -8,38 +8,76 @@ interface User {
   role: string;
   loginTime: number;
   lastActivity: number;
+  sessionId: string;
+}
+
+interface AuthConfig {
+  enabled?: boolean;
+  timeout_minutes?: number;
+}
+
+interface FrontendConfig {
+  auth?: AuthConfig;
+}
+
+interface AppConfig {
+  frontend?: FrontendConfig;
 }
 
 /**
  * Hook for managing user authentication
  */
-export const useAuth = (
-  appConfig: {
-    frontend?: { auth_enabled?: boolean; auth_timeout_minutes?: number };
-  } | null
-) => {
+export const useAuth = (appConfig: AppConfig | null) => {
   const [user, setUser] = React.useState<User | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>();
   const [sessionValid, setSessionValid] = React.useState(true);
   const sessionCheckRef = React.useRef<NodeJS.Timeout | null>(null);
 
-  const isAuthEnabled = appConfig?.frontend?.auth_enabled ?? false;
-  const timeoutMinutes = appConfig?.frontend?.auth_timeout_minutes ?? 60;
+  const isAuthEnabled = appConfig?.frontend?.auth?.enabled ?? false;
+  const timeoutMinutes = appConfig?.frontend?.auth?.timeout_minutes ?? 60;
+
+  /**
+   * Validate session with backend
+   */
+  const validateSessionWithBackend =
+    React.useCallback(async (): Promise<boolean> => {
+      if (!isAuthEnabled || !user) {
+        return true;
+      }
+
+      try {
+        const response = await fetch("/api/auth/validate_session", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            session_id: user.sessionId,
+            lastActivity: user.lastActivity,
+          }),
+        });
+
+        const result = await response.json();
+        return result.valid === true;
+      } catch (err) {
+        console.error("Session validation failed:", err);
+        return false;
+      }
+    }, [isAuthEnabled, user]);
 
   /**
    * Check if session is expired
    */
-  const checkSessionExpiry = React.useCallback(() => {
+  const checkSessionExpiry = React.useCallback(async () => {
     if (!isAuthEnabled || !user) {
       setSessionValid(true);
       return true;
     }
 
-    const minutesInMs = timeoutMinutes * 60 * 1000;
-    const isExpired = Date.now() - user.lastActivity > minutesInMs;
+    const isValid = await validateSessionWithBackend();
 
-    if (isExpired) {
+    if (!isValid) {
       setSessionValid(false);
       setUser(null);
       localStorage.removeItem("hardpy_user");
@@ -48,7 +86,7 @@ export const useAuth = (
 
     setSessionValid(true);
     return true;
-  }, [isAuthEnabled, user, timeoutMinutes]);
+  }, [isAuthEnabled, user, validateSessionWithBackend]);
 
   /**
    * Start session validation interval
@@ -58,17 +96,21 @@ export const useAuth = (
       clearInterval(sessionCheckRef.current);
     }
 
-    // Check every 10 seconds
+    if (!isAuthEnabled || !user) {
+      return;
+    }
+
+    // Check every 30 seconds
     sessionCheckRef.current = setInterval(() => {
       checkSessionExpiry();
-    }, 10000);
+    }, 30000);
 
     return () => {
       if (sessionCheckRef.current) {
         clearInterval(sessionCheckRef.current);
       }
     };
-  }, [checkSessionExpiry]);
+  }, [isAuthEnabled, user, checkSessionExpiry]);
 
   /**
    * Load user from localStorage on component mount and start session validation
@@ -87,17 +129,19 @@ export const useAuth = (
     if (savedUser) {
       try {
         const userData: User = JSON.parse(savedUser);
-        const minutesInMs = timeoutMinutes * 60 * 1000;
-        const isExpired = Date.now() - userData.lastActivity > minutesInMs;
+        setUser(userData);
+        setSessionValid(true);
 
-        if (!isExpired) {
-          setUser(userData);
-          setSessionValid(true);
-          startSessionValidation();
-        } else {
-          localStorage.removeItem("hardpy_user");
-          setSessionValid(false);
-        }
+        // Validate session with backend on load
+        validateSessionWithBackend().then((isValid) => {
+          if (!isValid) {
+            setUser(null);
+            setSessionValid(false);
+            localStorage.removeItem("hardpy_user");
+          } else {
+            startSessionValidation();
+          }
+        });
       } catch (e) {
         localStorage.removeItem("hardpy_user");
         setSessionValid(false);
@@ -105,18 +149,15 @@ export const useAuth = (
     } else {
       setSessionValid(false);
     }
-  }, [isAuthEnabled, timeoutMinutes, startSessionValidation]);
+  }, [isAuthEnabled, startSessionValidation, validateSessionWithBackend]);
 
   const updateLastActivity = React.useCallback(() => {
     if (user) {
       const updatedUser = { ...user, lastActivity: Date.now() };
       setUser(updatedUser);
       localStorage.setItem("hardpy_user", JSON.stringify(updatedUser));
-
-      // Restart session validation to ensure fresh interval
-      startSessionValidation();
     }
-  }, [user, startSessionValidation]);
+  }, [user]);
 
   /**
    * Authenticate user with backend API
@@ -151,6 +192,7 @@ export const useAuth = (
           role: result.user.role,
           loginTime: Date.now(),
           lastActivity: Date.now(),
+          sessionId: result.session_id,
         };
 
         setUser(userData);
@@ -177,6 +219,20 @@ export const useAuth = (
   };
 
   const logout = async () => {
+    if (user?.sessionId) {
+      try {
+        await fetch("/api/auth/logout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ session_id: user.sessionId }),
+        });
+      } catch (err) {
+        console.error("Logout request failed:", err);
+      }
+    }
+
     setUser(null);
     setSessionValid(false);
     localStorage.removeItem("hardpy_user");
