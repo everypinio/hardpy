@@ -57,7 +57,6 @@ interface AppConfig {
       enable?: boolean;
       timeout_minutes?: number;
     }
-    auth_timeout_minutes?: number; // Changed from auth_timeout_hours to auth_timeout_minutes
     modal_result?: {
       enable?: boolean;
       auto_dismiss_pass?: boolean;
