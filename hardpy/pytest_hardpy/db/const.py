@@ -58,6 +58,7 @@ class DatabaseField(str, Enum):
     HTML = "html"
     ID = "id"
     PASS_FAIL = "pass_fail"  # noqa: S105
+    NAV_STATUS = "nav_status"
 
     # runstore
     ARTIFACT = "artifact"

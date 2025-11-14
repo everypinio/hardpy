@@ -100,6 +100,8 @@ type Props = {
 
 type State = {
   isOpen: boolean;
+  prevIsOpen: boolean;
+  automaticallyOpened: boolean;
 };
 
 const LOADING_ICON_MARGIN = 30;
@@ -175,6 +177,26 @@ export class TestSuite extends React.Component<Props, State> {
     );
   }
 
+  // When this.props.test has any that is run or failed, set open to true
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any): void {
+    if (this.props.test === prevProps.test) {
+      return;
+    }
+    const anyRunningOrFailed = Object.values(this.props.test.cases).some(
+      (test_case) => test_case.status === "run" || test_case.status === "failed"
+    );
+
+    if (anyRunningOrFailed && !this.state.isOpen && !this.state.automaticallyOpened) {
+      this.setState({ isOpen: true, prevIsOpen: this.state.isOpen, automaticallyOpened: true });
+      return;
+    }
+
+    if (!anyRunningOrFailed && this.state.isOpen && this.state.automaticallyOpened) {
+      this.setState({ isOpen: false, prevIsOpen: this.state.isOpen, automaticallyOpened: false });
+      return;
+    }
+  }
+
   /**
    * Constructs the TestSuite component.
    * @param {Props} props - The properties passed to the component.
@@ -184,6 +206,8 @@ export class TestSuite extends React.Component<Props, State> {
 
     this.state = {
       isOpen: props.defaultOpen,
+      prevIsOpen: props.defaultOpen,
+      automaticallyOpened: false,
     };
 
     this.handleClick = this.handleClick.bind(this);

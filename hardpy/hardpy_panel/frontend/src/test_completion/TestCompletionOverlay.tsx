@@ -37,6 +37,30 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
     }
   }, [isVisible, testPassed, onDismiss]);
 
+  React.useEffect(() => {
+    if (!isVisible) {
+      return;
+    }
+
+    // focus the overlay to capture key events
+    const overlay = document.getElementById("test-completion-overlay");
+    if (overlay) {
+      overlay.focus();
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isVisible) {
+        e.preventDefault();
+        onDismiss();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isVisible, testPassed, onDismiss]);
+
   if (!isVisible) {
     return null;
   }
@@ -106,14 +130,22 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
   };
 
   return (
-    <div style={overlayStyle} onClick={onDismiss} className={Classes.DARK}>
+    <div
+      style={overlayStyle}
+      onClick={onDismiss}
+      className={Classes.DARK}
+      // Dialog is used to ensure start/stop button doesnt get pressed when dismissing
+      role="dialog"
+      id="test-completion-overlay"
+      tabIndex={-1}
+    >
       <div style={titleStyle}>
         {testPassed ? "PASS" : "FAIL"}
       </div>
       <div style={subtitleStyle}>
         {testPassed ? "通过" : "失败"}
       </div>
-      
+
       {!testPassed && failedTestCases.length > 0 && (
         <div style={failedCasesStyle}>
           <h3 style={{ marginTop: 0, marginBottom: "20px", fontSize: "24px" }}>
@@ -133,12 +165,12 @@ const TestCompletionOverlay: React.FC<TestCompletionOverlayProps> = ({
           ))}
         </div>
       )}
-      
-      <div style={{ 
-        position: "absolute", 
-        bottom: "40px", 
-        fontSize: "16px", 
-        opacity: 0.8 
+
+      <div style={{
+        position: "absolute",
+        bottom: "40px",
+        fontSize: "16px",
+        opacity: 0.8
       }}>
         Click anywhere to dismiss
       </div>

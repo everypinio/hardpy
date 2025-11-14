@@ -4,6 +4,7 @@
 import * as React from "react";
 import { AnchorButton, AnchorButtonProps } from "@blueprintjs/core";
 import { withTranslation, WithTranslation } from "react-i18next";
+import { isDialogOpen } from '../dialogueUtils';
 
 type Props = { testing_status: string } & WithTranslation;
 
@@ -74,34 +75,10 @@ class StartStopButton extends React.Component<Props, State> {
   }
 
   /**
-   * Checks if any dialog is currently open.
-   * @returns {boolean} True if a dialog is open, else false.
-   */
-  private isDialogOpen(): boolean {
-    const blueprintDialogs = document.querySelectorAll('.bp3-dialog');
-    for (const dialog of blueprintDialogs) {
-      const style = window.getComputedStyle(dialog);
-      if (style.display !== 'none' && style.visibility !== 'hidden') {
-        return true;
-      }
-    }
-
-    const ariaDialogs = document.querySelectorAll('[role="dialog"]');
-    for (const dialog of ariaDialogs) {
-      const style = window.getComputedStyle(dialog);
-      if (style.display !== 'none' && style.visibility !== 'hidden') {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  /**
    * Handles the space keydown event to start or stop the process.
    */
   private readonly handleSpaceKey = (event: KeyboardEvent) => {
-    if (this.isDialogOpen()) {
+    if (isDialogOpen()) {
       return;
     }
 

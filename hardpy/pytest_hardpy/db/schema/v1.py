@@ -195,6 +195,16 @@ class OperatorData(BaseModel):
     dialog: str | None = None
 
 
+class NavStatus(BaseModel):
+    """Navigation status for HardPy UI."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: str
+    value: str | bool
+    display: bool
+
+
 class ResultStateStore(IBaseResult):
     """Test run description."""
 
@@ -215,6 +225,7 @@ class ResultStateStore(IBaseResult):
     operator_msg: dict = {}
     alert: str
     operator_data: OperatorData
+    nav_status: dict[str, NavStatus] = {}
 
 
 class ResultRunStore(IBaseResult):

@@ -43,6 +43,7 @@ class HookReporter(BaseReporter):
         self.set_doc_value(DF.OPERATOR_MSG, {}, statestore_only=True)
         self.set_doc_value(DF.ALERT, "", statestore_only=True)
         self.set_doc_value(DF.OPERATOR_DATA, {}, statestore_only=True)
+        self.set_doc_value(DF.NAV_STATUS, {}, statestore_only=True)
 
         test_stand_tz = self.generate_key(DF.TEST_STAND, DF.TIMEZONE)
         self.set_doc_value(test_stand_tz, str(get_localzone().key))

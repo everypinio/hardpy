@@ -43,6 +43,41 @@ const TestConfigOverlay: React.FC<TestConfigOverlayProps> = ({
     }
   };
 
+  React.useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    // Make up and down arrow keys navigate between buttons
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const buttons = Array.from(document.querySelectorAll("button.test-selection"));
+      const focusedElement = document.activeElement;
+      const currentIndex = buttons.indexOf(focusedElement as HTMLButtonElement);
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        const nextIndex = (currentIndex + 1) % buttons.length;
+        (buttons[nextIndex] as HTMLButtonElement).focus();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        const prevIndex = (currentIndex - 1 + buttons.length) % buttons.length;
+        (buttons[prevIndex] as HTMLButtonElement).focus();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        if (!focusedElement || !(focusedElement instanceof HTMLButtonElement)) {
+          return;
+        }
+
+        focusedElement.click();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen]);
+
   return (
     <Dialog
       isOpen={isOpen}
@@ -98,6 +133,7 @@ const TestConfigOverlay: React.FC<TestConfigOverlayProps> = ({
                   opacity: isTestRunning ? 0.5 : (isSelected ? 0.8 : 1),
                 }}
                 onClick={() => handleConfigSelect(config.name)}
+                className="test-selection"
               >
                 {isSelected && "✓ "}{config.name}
                 {config.description && (

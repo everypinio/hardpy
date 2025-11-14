@@ -569,6 +569,40 @@ def test_clear_operator_msg():
     clear_operator_message()
 ```
 
+
+#### set_nav_status
+
+Sets the navigation status for HardPy UI.
+
+**Arguments:**
+
+- `status` *(str)*: The status to be set.
+- `value` *(str | bool)*: The value of the status.
+- `display` *(bool=True)*: If True, the status will be displayed in the UI.
+- `name` *(str | None)*: Optional name for the status. If not provided, the status string will be used as the name.
+
+**Example:**
+
+```python
+def test_set_nav_status():
+    set_nav_status("test_status", "active")
+    set_nav_status("test_status", False)
+    set_nav_status("test_status", "inactive", name="Test Status")
+```
+
+#### clear_nav_status
+Clears the navigation status for HardPy UI if it exists, otherwise does nothing.
+
+
+**Arguments:**
+- `status` *(str | None = None)*: The status to be cleared. If None, all statuses will be cleared.
+
+```python
+def test_clear_nav_status():
+    clear_nav_status("test_status")
+    clear_nav_status()
+```
+
 #### run_dialog_box
 
 Displays a dialog box and updates the `dialog_box` field in the **statestore** database.

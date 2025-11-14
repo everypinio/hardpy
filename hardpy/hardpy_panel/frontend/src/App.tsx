@@ -15,6 +15,7 @@ import {
   H2,
   Popover,
   Card,
+  Tag,
 } from "@blueprintjs/core";
 
 import StartStopButton from "./button/StartStop";
@@ -30,6 +31,7 @@ import TestCompletionOverlay from "./test_completion/TestCompletionOverlay";
 import { useAllDocs } from "use-pouchdb";
 
 import "./App.css";
+import { isDialogOpen } from "./dialogueUtils";
 
 const WINDOW_WIDTH_THRESHOLDS = {
   ULTRAWIDE: 490,
@@ -278,6 +280,24 @@ function App(): JSX.Element {
     showCompletionOverlay,
   ]);
 
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isDialogOpen()) {
+        return;
+      }
+
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        setShowConfigOverlay(true);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   /**
    * Renders the database content.
    * @returns {JSX.Element} The rendered content.
@@ -309,7 +329,7 @@ function App(): JSX.Element {
     }
 
     return (
-      <div style={{ marginTop: "40px" }}>
+      <div>
         {rows.map((row) => (
           <div key={row.id} style={{ display: "flex", flexDirection: "row" }}>
             {(ultrawide || !use_debug_info) && (
@@ -384,6 +404,48 @@ function App(): JSX.Element {
       return t("app.status.unknown") || "Unknown status";
     }
     return t(STATUS_MAP[status]);
+  };
+
+  const renderNavStatusTags = (): JSX.Element => {
+    if (rows.length === 0) {
+      return <div></div>;
+    }
+
+    const db_row = rows[0].doc as TestRunI;
+    const nav_status = db_row.nav_status;
+    if (!nav_status) {
+      return <div></div>;
+    }
+
+    const tags = Object.entries(nav_status).map(([key, value]) => {
+      if (typeof value !== "object") {
+        return null;
+      }
+
+      if (Object.keys(value).length === 0) {
+        return null;
+      }
+
+      if (!value.display) {
+        return null;
+      }
+
+      const statusName = value.name || key;
+      let statusValue = "unknown";
+      if (typeof value.value === "string") {
+        statusValue = value.value;
+      } else if (typeof value.value === "boolean") {
+        statusValue = value.value.toString();
+      }
+
+      return (
+        <Tag key={key} minimal>
+          {statusName}: {statusValue}
+        </Tag>
+      );
+    });
+
+    return <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>{tags}</div>;
   };
 
   return (
@@ -464,6 +526,14 @@ function App(): JSX.Element {
           </Popover>
         </Navbar.Group>
       </Navbar>
+
+      <div
+        style={{
+          marginTop: '60px',
+        }}
+      >
+        {renderNavStatusTags()}
+      </div>
 
       {/* Tests panel */}
       <div className={Classes.DRAWER_BODY} style={{ marginBottom: "140px" }}>

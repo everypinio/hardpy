@@ -61,6 +61,9 @@ The **current** document of the **statestore** database contains some section.
 - **operator_msg**: text of an operator message.
   This is filled in when the [set_operator_message](./../documentation/pytest_hardpy.md#set_operator_message) or
   [clear_operator_message](./../documentation/pytest_hardpy.md#clear_operator_message) functions is called.
+- **nav_status**: navigation status for HardPy UI.
+  This is filled in when the [set_nav_status](./../documentation/pytest_hardpy.md#set_nav_status) or
+  [clear_nav_status](./../documentation/pytest_hardpy.md#clear_nav_status) functions is called.
 
 #### test_stand
 

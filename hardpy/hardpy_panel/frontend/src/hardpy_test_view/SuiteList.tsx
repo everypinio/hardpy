@@ -65,6 +65,12 @@ interface OperatorMsgProps {
   pass_fail?: boolean;
 }
 
+interface NavStatus {
+  name: string;
+  value: string | boolean;
+  display: boolean;
+}
+
 export interface TestRunI {
   modules?: Modules;
   test_stand?: TestStand;
@@ -79,6 +85,7 @@ export interface TestRunI {
   artifact?: Record<string, unknown>;
   operator_msg?: OperatorMsgProps;
   alert?: string;
+  nav_status?: Record<string, NavStatus>;
 }
 
 /**

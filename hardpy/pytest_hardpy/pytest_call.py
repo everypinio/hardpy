@@ -17,6 +17,7 @@ from hardpy.pytest_hardpy.db import (
     ResultRunStore,
     RunStore,
 )
+from hardpy.pytest_hardpy.db.schema.v1 import NavStatus
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 from hardpy.pytest_hardpy.utils import (
     Chart,
@@ -718,6 +719,55 @@ def clear_operator_message() -> None:
     key = reporter.generate_key(DF.OPERATOR_MSG)
 
     _cleanup_widget(reporter, key)
+
+
+def set_nav_status(
+    status: str, value: str | bool, display: bool = True, name: str | None = None
+) -> None:
+    """Set navigation status for HardPy UI.
+
+    Args:
+        status (str): navigation status type
+        value (str | bool): navigation status value
+        display (bool): whether to display the navigation status
+        name (str | None): navigation status name
+    """
+
+    reporter = RunnerReporter()
+    key = reporter.generate_key(DF.NAV_STATUS, status)
+    _cleanup_widget(reporter, key)
+
+    if not name:
+        name = status
+
+    nav_status_data: NavStatus = NavStatus(
+        name=name,
+        value=value,
+        display=display,
+    )
+
+    reporter.set_doc_value(key, nav_status_data.model_dump(), statestore_only=True)
+    reporter.update_db_by_doc()
+
+
+def clear_nav_status(status_type: str | None = None) -> None:
+    """Clear navigation status for HardPy UI.
+
+    Args:
+        status_type (str): navigation status type
+    """
+    reporter = RunnerReporter()
+    keys = []
+    if status_type is not None:
+        keys.append(reporter.generate_key(DF.NAV_STATUS, status_type))
+    else:
+        nav_status_dict = reporter.get_field(reporter.generate_key(DF.NAV_STATUS))
+        if isinstance(nav_status_dict, dict):
+            for status_type_key in nav_status_dict.keys():
+                keys.append(reporter.generate_key(DF.NAV_STATUS, status_type_key))
+
+    for key in keys:
+        _cleanup_widget(reporter, key)
 
 
 def get_current_attempt() -> int:
