@@ -11,6 +11,7 @@ from platform import system
 from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
 from hardpy.pytest_hardpy.reporter import RunnerReporter
+from hardpy.pytest_hardpy.utils.connection_data import ConnectionData
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -21,10 +22,12 @@ class PyTestWrapper:
 
     def __init__(self) -> None:
         self._proc = None
+        self.config = ConfigManager().get_config()
+        database_config = self.config.database
+        ConnectionData().database_url = f"http://{database_config.user}:{database_config.password}@{database_config.host}:{database_config.port}/"
         self._reporter = RunnerReporter()
         self.python_executable = sys.executable
 
-        self.config = ConfigManager().get_config()
         #Check to see if there are any test configs defined in the TOML file
         if not self.config.test_configs:
             logger.info(
