@@ -2,6 +2,7 @@
   "app": {
       "title": "HardPy オペレーターパネル",
       "lastLaunch": "最終起動:",
+      "loading": "読み込み中...",
       "duration": "期間",
       "seconds": "秒",
       "soundOn": "音をオンにする",

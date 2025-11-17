@@ -172,7 +172,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const [use_debug_info, setUseDebugInfo] = React.useState(false);
   const [appConfig, setAppConfig] = React.useState<AppConfig | null>(null);
   const [isConfigLoaded, setIsConfigLoaded] = React.useState(false);
-  const [isInitializing, setIsInitializing] = React.useState(true);
 
   const [lastRunStatus, setLastRunStatus] = React.useState<
     StatusKey | "unknown"
@@ -206,6 +205,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     user,
     isAuthenticated: isUserAuthenticated,
     isLoading: authLoading,
+    isInitializing: authInitializing,
     error: authError,
     login,
     logout,
@@ -213,6 +213,9 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     getSessionId,
     isAuthEnabled,
   } = useAuth(appConfig);
+
+  // Combined loading state - show spinner until both config and auth are initialized
+  const isInitializing = !isConfigLoaded || authInitializing;
 
   /**
    * Loads HardPy configuration from the backend API on component mount
@@ -233,8 +236,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         console.error("Failed to load HardPy config:", error);
       } finally {
         setIsConfigLoaded(true);
-        // Give auth system time to restore session
-        setTimeout(() => setIsInitializing(false), 100);
       }
     };
 
@@ -772,7 +773,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       </div>
 
       {/* Footer with progress bar and control buttons */}
-      {isConfigLoaded && !isInitializing && (
+      {!isInitializing && (
         <div
           className={Classes.DRAWER_FOOTER}
           style={{

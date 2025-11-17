@@ -2,6 +2,7 @@
   "app": {
       "title": "HardPy Bedienfeld",
       "lastLaunch": "Letzter Start:",
+      "loading": "Laden...",
       "duration": "Dauer",
       "seconds": "s",
       "soundOn": "Ton einschalten",

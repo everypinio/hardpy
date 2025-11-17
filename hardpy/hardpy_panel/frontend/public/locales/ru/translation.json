@@ -2,6 +2,7 @@
   "app": {
       "title": "Панель оператора HardPy",
       "lastLaunch": "Последний запуск:",
+      "loading": "Загрузка...",
       "duration": "Длительность",
       "seconds": "с",
       "soundOn": "Включить звук",

@@ -38,6 +38,7 @@ export const useAuth = (appConfig: AppConfig | null) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>();
   const [sessionValid, setSessionValid] = React.useState(true);
+  const [isInitializing, setIsInitializing] = React.useState(true);
   const sessionCheckRef = React.useRef<NodeJS.Timeout | null>(null);
 
   const isAuthEnabled = appConfig?.frontend?.auth?.enabled ?? false;
@@ -148,6 +149,7 @@ export const useAuth = (appConfig: AppConfig | null) => {
     const restoreSession = async () => {
       if (!isAuthEnabled) {
         setSessionValid(true);
+        setIsInitializing(false);
         return;
       }
 
@@ -155,6 +157,7 @@ export const useAuth = (appConfig: AppConfig | null) => {
 
       if (!savedUser) {
         setSessionValid(false);
+        setIsInitializing(false);
         return;
       }
 
@@ -163,35 +166,49 @@ export const useAuth = (appConfig: AppConfig | null) => {
         console.log("Session expired locally");
         clearUserFromStorage();
         setSessionValid(false);
+        setIsInitializing(false);
         return;
       }
 
       // Validate with backend
-      const validationResult = await validateSessionWithBackend(
-        savedUser.sessionId
-      );
+      try {
+        const validationResult = await validateSessionWithBackend(
+          savedUser.sessionId
+        );
 
-      if (validationResult.valid && validationResult.user) {
-        // Update user data with backend response
-        const updatedUser: User = {
-          ...savedUser,
-          name: validationResult.user.name,
-          role: validationResult.user.role,
-          lastActivity: Date.now(),
-        };
+        if (validationResult.valid && validationResult.user) {
+          // Update user data with backend response
+          const updatedUser: User = {
+            ...savedUser,
+            name: validationResult.user.name,
+            role: validationResult.user.role,
+            lastActivity: Date.now(),
+          };
 
-        setUser(updatedUser);
-        saveUserToStorage(updatedUser);
-        setSessionValid(true);
-        setError(undefined);
-      } else {
-        console.log("Session validation failed with backend");
+          setUser(updatedUser);
+          saveUserToStorage(updatedUser);
+          setSessionValid(true);
+          setError(undefined);
+        } else {
+          console.log("Session validation failed with backend");
+          clearUserFromStorage();
+          setSessionValid(false);
+        }
+      } catch (error) {
+        console.error("Session validation error:", error);
         clearUserFromStorage();
         setSessionValid(false);
+      } finally {
+        setIsInitializing(false);
       }
     };
 
-    restoreSession();
+    // Add small delay to ensure smooth transition from app loading
+    const timer = setTimeout(() => {
+      restoreSession();
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [
     isAuthEnabled,
     loadUserFromStorage,
@@ -347,6 +364,7 @@ export const useAuth = (appConfig: AppConfig | null) => {
     user,
     isAuthenticated,
     isLoading,
+    isInitializing: isAuthEnabled ? isInitializing : false,
     error,
     login,
     logout,

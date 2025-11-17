@@ -2,6 +2,7 @@
   "app": {
       "title": "Panel de operador HardPy",
       "lastLaunch": "Última lanzamiento:",
+      "loading": "Cargando...",
       "duration": "Duración",
       "seconds": "s",
       "soundOn": "Activar sonido",

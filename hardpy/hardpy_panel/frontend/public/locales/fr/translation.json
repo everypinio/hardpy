@@ -2,6 +2,7 @@
   "app": {
       "title": "Panneau opérateur HardPy",
       "lastLaunch": "Dernière lancement:",
+      "loading": "Chargement...",
       "duration": "Durée",
       "seconds": "s",
       "soundOn": "Activer le son",
