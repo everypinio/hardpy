@@ -352,7 +352,8 @@ async def stand_cloud_sync() -> dict:
 
 @app.post("/api/confirm_dialog_box")
 def confirm_dialog_box(
-    dbx_data: dict, session_id: Annotated[str | None, Query()] = None
+    dbx_data: dict,
+    session_id: Annotated[str | None, Query()] = None,
 ) -> dict:
     """Confirm dialog box with unified JSON structure.
 
@@ -400,7 +401,8 @@ def confirm_dialog_box(
 
 @app.post("/api/confirm_operator_msg/{is_msg_visible}")
 def confirm_operator_msg(
-    is_msg_visible: str, session_id: Annotated[str | None, Query()] = None
+    is_msg_visible: str,
+    session_id: Annotated[str | None, Query()] = None,
 ) -> dict:
     """Confirm operator msg.
 
