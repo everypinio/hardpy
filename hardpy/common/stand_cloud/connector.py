@@ -29,9 +29,10 @@ class StandCloudConnector:
 
     def __init__(
         self,
-        addr: str,
+        addr: str = "standcloud.io",
         api_mode: StandCloudAPIMode = StandCloudAPIMode.HARDPY,
         api_version: int = 1,
+        api_key: str | None = None,
     ) -> None:
         """Create StandCloud API connector.
 
@@ -42,6 +43,8 @@ class StandCloudConnector:
                 Default: StandCloudAPIMode.HARDPY.
             api_version (int): StandCloud API version.
                 Default: 1.
+            api_key (str | None): StandCloud API key.
+                Default: None.
         """
         https_prefix = "https://"
         auth_addr = addr + "/auth"
@@ -57,6 +60,10 @@ class StandCloudConnector:
         self._client_id = "hardpy-report-uploader"
         self._verify_ssl = not __debug__
         self._token_manager = TokenManager(self._addr.domain)
+        self._token_manager.save_token(api_key)
+        # TODO(xorialexandrov): Change the self._token logic for storing the
+        # API key in the file system to secure storage.
+        # Remove device flow process.
         self._token: BearerToken = self.get_access_token()
         self._log = getLogger(__name__)
 
@@ -84,6 +91,8 @@ class StandCloudConnector:
         Returns:
             bool: True if token is valid, False otherwise.
         """
+        if self._token_manager.api_key:
+            return False
         try:
             OAuth2(
                 sc_addr=self._addr,
@@ -157,7 +166,7 @@ class StandCloudConnector:
         except OAuth2Error as exc:
             raise StandCloudError(exc.description) from exc
         except RequestException as exc:
-            raise StandCloudError(exc.strerror) from exc  # type: ignore
+            raise StandCloudError(exc.strerror or str(exc)) from exc  # type: ignore
 
         return resp
 
@@ -208,12 +217,22 @@ class StandCloudConnector:
                 return new_token
 
     def _get_api(self, endpoint: str) -> ApiClient:
+        if self._token_manager.api_key:
+            session = requests.Session()
+            session.headers["Authorization"] = f"Bearer {self._token_manager.api_key}"
+            return ApiClient(
+                f"{self._addr.api}/{endpoint}",
+                session=session,
+                timeout=10,
+            )
+
         if self._token is None:
             msg = (
                 f"Access token to {self._addr.domain} is not set."
                 f"Login to {self._addr.domain} first"
             )
             raise StandCloudError(msg)
+
         try:
             auth = OAuth2(
                 sc_addr=self._addr,
