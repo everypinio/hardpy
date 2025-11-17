@@ -38,6 +38,14 @@ export const useAuth = (appConfig: AppConfig | null) => {
   const timeoutMinutes = appConfig?.frontend?.auth?.timeout_minutes ?? 60;
 
   /**
+   * Get session ID for API calls
+   */
+  const getSessionId = React.useCallback((): string | null => {
+    if (!isAuthEnabled) return null;
+    return user?.sessionId || null;
+  }, [isAuthEnabled, user]);
+
+  /**
    * Validate session with backend
    */
   const validateSessionWithBackend =
@@ -267,6 +275,7 @@ export const useAuth = (appConfig: AppConfig | null) => {
     login,
     logout,
     recordActivity,
+    getSessionId,
     isAuthEnabled,
   };
 };

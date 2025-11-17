@@ -9,6 +9,7 @@ type Props = {
   testing_status: string;
   useBigButton?: boolean;
   isAuthenticated: boolean;
+  sessionId?: string | null;
   onUnauthorizedAction?: () => void;
 } & WithTranslation;
 
@@ -56,7 +57,13 @@ class StartStopButton extends React.Component<Props, State> {
     }
 
     try {
-      const response = await fetch(uri);
+      // Add session_id to the request if available
+      const url = new URL(uri, window.location.origin);
+      if (this.props.sessionId) {
+        url.searchParams.append("session_id", this.props.sessionId);
+      }
+
+      const response = await fetch(url.toString());
       if (response.ok) {
         const result = await response.json();
 

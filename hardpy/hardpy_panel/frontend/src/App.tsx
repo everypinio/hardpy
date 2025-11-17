@@ -56,7 +56,7 @@ interface AppConfig {
     auth?: {
       enable?: boolean;
       timeout_minutes?: number;
-    }
+    };
     modal_result?: {
       enable?: boolean;
       auto_dismiss_pass?: boolean;
@@ -176,7 +176,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     StatusKey | "unknown"
   >("ready");
   const [lastProgress, setProgress] = React.useState(0);
-  const [isAuthenticated, setIsAuthenticated] = React.useState(true);
   const [lastRunDuration, setLastRunDuration] = React.useState<number>(0);
 
   // Test completion ModalResult state
@@ -209,6 +208,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     login,
     logout,
     recordActivity,
+    getSessionId,
     isAuthEnabled,
   } = useAuth(appConfig);
 
@@ -245,14 +245,14 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     };
 
     // Track various user activities
-    const events = ['click', 'keydown', 'mousemove', 'scroll', 'touchstart'];
-    
-    events.forEach(event => {
+    const events = ["click", "keydown", "mousemove", "scroll", "touchstart"];
+
+    events.forEach((event) => {
       document.addEventListener(event, handleUserActivity, { passive: true });
     });
 
     return () => {
-      events.forEach(event => {
+      events.forEach((event) => {
         document.removeEventListener(event, handleUserActivity);
       });
     };
@@ -495,20 +495,12 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       });
       setShowCompletionModalResult(true);
     }
-
-    // Handle authentication state based on database connection
-    if (state === "error") {
-      setIsAuthenticated(false);
-    } else if (isAuthenticated === false) {
-      setIsAuthenticated(true);
-    }
   }, [
     rows,
     state,
     lastRunStatus,
     lastProgress,
     lastRunDuration,
-    isAuthenticated,
     appConfig,
     showCompletionModalResult,
   ]);
@@ -804,7 +796,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                   <StartStopButton
                     testing_status={lastRunStatus}
                     useBigButton={true}
-                    isAuthenticated={isAuthenticated}
+                    isAuthenticated={isUserAuthenticated}
+                    sessionId={getSessionId()}
                     onUnauthorizedAction={() => {
                       console.log("User needs to authenticate");
                     }}
@@ -839,7 +832,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                 <StartStopButton
                   testing_status={lastRunStatus}
                   useBigButton={false}
-                  isAuthenticated={isAuthenticated}
+                  isAuthenticated={isUserAuthenticated}
+                  sessionId={getSessionId()}
                   onUnauthorizedAction={() => {
                     console.log("User needs to authenticate");
                   }}
