@@ -16,6 +16,7 @@ import {
   Popover,
   Card,
   MenuDivider,
+  Spinner,
 } from "@blueprintjs/core";
 
 import StartStopButton from "./button/StartStop";
@@ -171,6 +172,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const [use_debug_info, setUseDebugInfo] = React.useState(false);
   const [appConfig, setAppConfig] = React.useState<AppConfig | null>(null);
   const [isConfigLoaded, setIsConfigLoaded] = React.useState(false);
+  const [isInitializing, setIsInitializing] = React.useState(true);
 
   const [lastRunStatus, setLastRunStatus] = React.useState<
     StatusKey | "unknown"
@@ -231,6 +233,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         console.error("Failed to load HardPy config:", error);
       } finally {
         setIsConfigLoaded(true);
+        // Give auth system time to restore session
+        setTimeout(() => setIsInitializing(false), 100);
       }
     };
 
@@ -510,6 +514,16 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
    * @returns {JSX.Element} The rendered database content component
    */
   const renderDbContent = (): JSX.Element => {
+    // Show loading spinner during initialization
+    if (isInitializing) {
+      return (
+        <Card style={{ marginTop: "60px", textAlign: "center" }}>
+          <Spinner size={50} />
+          <H2 style={{ marginTop: "20px" }}>{t("app.loading")}</H2>
+        </Card>
+      );
+    }
+
     if (isAuthEnabled && !isUserAuthenticated) {
       return (
         <Card style={{ marginTop: "60px", textAlign: "center" }}>
@@ -670,7 +684,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       <ReloadAlert reload_timeout_s={3} />
 
       <LoginModal
-        isVisible={isAuthEnabled && !isUserAuthenticated}
+        isVisible={!isInitializing && isAuthEnabled && !isUserAuthenticated}
         isLoading={authLoading}
         error={authError}
         onLogin={login}
@@ -758,7 +772,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       </div>
 
       {/* Footer with progress bar and control buttons */}
-      {isConfigLoaded && (
+      {isConfigLoaded && !isInitializing && (
         <div
           className={Classes.DRAWER_FOOTER}
           style={{

@@ -24,8 +24,14 @@ interface AppConfig {
   frontend?: FrontendConfig;
 }
 
+// Storage keys
+const STORAGE_KEYS = {
+  USER: "hardpy_user",
+  SESSION_ID: "hardpy_session_id",
+};
+
 /**
- * Hook for managing user authentication
+ * Hook for managing user authentication with persistent session storage
  */
 export const useAuth = (appConfig: AppConfig | null) => {
   const [user, setUser] = React.useState<User | null>(null);
@@ -38,20 +44,69 @@ export const useAuth = (appConfig: AppConfig | null) => {
   const timeoutMinutes = appConfig?.frontend?.auth?.timeout_minutes ?? 60;
 
   /**
+   * Save user data to localStorage
+   */
+  const saveUserToStorage = React.useCallback((userData: User) => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(userData));
+      localStorage.setItem(STORAGE_KEYS.SESSION_ID, userData.sessionId);
+    } catch (e) {
+      console.warn("Failed to save user data to localStorage:", e);
+    }
+  }, []);
+
+  /**
+   * Load user data from localStorage
+   */
+  const loadUserFromStorage = React.useCallback((): User | null => {
+    try {
+      const userData = localStorage.getItem(STORAGE_KEYS.USER);
+      const sessionId = localStorage.getItem(STORAGE_KEYS.SESSION_ID);
+
+      if (userData && sessionId) {
+        const parsedUser = JSON.parse(userData);
+        // Verify session ID matches
+        if (parsedUser.sessionId === sessionId) {
+          return parsedUser;
+        }
+      }
+    } catch (e) {
+      console.warn("Failed to load user data from localStorage:", e);
+    }
+    return null;
+  }, []);
+
+  /**
+   * Clear user data from localStorage
+   */
+  const clearUserFromStorage = React.useCallback(() => {
+    try {
+      localStorage.removeItem(STORAGE_KEYS.USER);
+      localStorage.removeItem(STORAGE_KEYS.SESSION_ID);
+    } catch (e) {
+      console.warn("Failed to clear user data from localStorage:", e);
+    }
+  }, []);
+
+  /**
    * Get session ID for API calls
    */
   const getSessionId = React.useCallback((): string | null => {
     if (!isAuthEnabled) return null;
-    return user?.sessionId || null;
+    return (
+      user?.sessionId || localStorage.getItem(STORAGE_KEYS.SESSION_ID) || null
+    );
   }, [isAuthEnabled, user]);
 
   /**
    * Validate session with backend
    */
-  const validateSessionWithBackend =
-    React.useCallback(async (): Promise<boolean> => {
-      if (!isAuthEnabled || !user) {
-        return true;
+  const validateSessionWithBackend = React.useCallback(
+    async (
+      sessionId: string
+    ): Promise<{ valid: boolean; user?: { name: string; role: string } }> => {
+      if (!isAuthEnabled) {
+        return { valid: true };
       }
 
       try {
@@ -61,40 +116,90 @@ export const useAuth = (appConfig: AppConfig | null) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            session_id: user.sessionId,
-            lastActivity: user.lastActivity,
+            session_id: sessionId,
+            lastActivity: Date.now(),
           }),
         });
 
-        const result = await response.json();
-        return result.valid === true;
+        return await response.json();
       } catch (err) {
         console.error("Session validation failed:", err);
-        return false;
+        return { valid: false };
       }
-    }, [isAuthEnabled, user]);
+    },
+    [isAuthEnabled]
+  );
 
   /**
-   * Check if session is expired
+   * Check if session is expired locally
    */
-  const checkSessionExpiry = React.useCallback(async () => {
-    if (!isAuthEnabled || !user) {
-      setSessionValid(true);
-      return true;
-    }
+  const isSessionExpiredLocally = React.useCallback(
+    (userData: User): boolean => {
+      const timeoutMs = timeoutMinutes * 60 * 1000;
+      return Date.now() - userData.lastActivity > timeoutMs;
+    },
+    [timeoutMinutes]
+  );
 
-    const isValid = await validateSessionWithBackend();
+  /**
+   * Restore session from storage on component mount
+   */
+  React.useEffect(() => {
+    const restoreSession = async () => {
+      if (!isAuthEnabled) {
+        setSessionValid(true);
+        return;
+      }
 
-    if (!isValid) {
-      setSessionValid(false);
-      setUser(null);
-      localStorage.removeItem("hardpy_user");
-      return false;
-    }
+      const savedUser = loadUserFromStorage();
 
-    setSessionValid(true);
-    return true;
-  }, [isAuthEnabled, user, validateSessionWithBackend]);
+      if (!savedUser) {
+        setSessionValid(false);
+        return;
+      }
+
+      // Check local expiration first
+      if (isSessionExpiredLocally(savedUser)) {
+        console.log("Session expired locally");
+        clearUserFromStorage();
+        setSessionValid(false);
+        return;
+      }
+
+      // Validate with backend
+      const validationResult = await validateSessionWithBackend(
+        savedUser.sessionId
+      );
+
+      if (validationResult.valid && validationResult.user) {
+        // Update user data with backend response
+        const updatedUser: User = {
+          ...savedUser,
+          name: validationResult.user.name,
+          role: validationResult.user.role,
+          lastActivity: Date.now(),
+        };
+
+        setUser(updatedUser);
+        saveUserToStorage(updatedUser);
+        setSessionValid(true);
+        setError(undefined);
+      } else {
+        console.log("Session validation failed with backend");
+        clearUserFromStorage();
+        setSessionValid(false);
+      }
+    };
+
+    restoreSession();
+  }, [
+    isAuthEnabled,
+    loadUserFromStorage,
+    clearUserFromStorage,
+    validateSessionWithBackend,
+    isSessionExpiredLocally,
+    saveUserToStorage,
+  ]);
 
   /**
    * Start session validation interval
@@ -108,68 +213,41 @@ export const useAuth = (appConfig: AppConfig | null) => {
       return;
     }
 
-    // Check every 30 seconds
-    sessionCheckRef.current = setInterval(() => {
-      checkSessionExpiry();
-    }, 30000);
+    // Check every minute
+    sessionCheckRef.current = setInterval(async () => {
+      if (user) {
+        const isValid = await validateSessionWithBackend(user.sessionId);
+        if (!isValid.valid) {
+          setSessionValid(false);
+          setUser(null);
+          clearUserFromStorage();
+        }
+      }
+    }, 60000);
 
     return () => {
       if (sessionCheckRef.current) {
         clearInterval(sessionCheckRef.current);
       }
     };
-  }, [isAuthEnabled, user, checkSessionExpiry]);
+  }, [isAuthEnabled, user, validateSessionWithBackend, clearUserFromStorage]);
 
-  /**
-   * Load user from localStorage on component mount and start session validation
-   */
   React.useEffect(() => {
-    if (!isAuthEnabled) {
-      if (user) {
-        setUser(null);
-        localStorage.removeItem("hardpy_user");
-      }
-      setSessionValid(true);
-      return;
+    if (user && isAuthEnabled) {
+      startSessionValidation();
     }
-
-    const savedUser = localStorage.getItem("hardpy_user");
-    if (savedUser) {
-      try {
-        const userData: User = JSON.parse(savedUser);
-        setUser(userData);
-        setSessionValid(true);
-
-        // Validate session with backend on load
-        validateSessionWithBackend().then((isValid) => {
-          if (!isValid) {
-            setUser(null);
-            setSessionValid(false);
-            localStorage.removeItem("hardpy_user");
-          } else {
-            startSessionValidation();
-          }
-        });
-      } catch (e) {
-        localStorage.removeItem("hardpy_user");
-        setSessionValid(false);
-      }
-    } else {
-      setSessionValid(false);
-    }
-  }, [isAuthEnabled, startSessionValidation, validateSessionWithBackend]);
+  }, [user, isAuthEnabled, startSessionValidation]);
 
   const updateLastActivity = React.useCallback(() => {
     if (user) {
       const updatedUser = { ...user, lastActivity: Date.now() };
       setUser(updatedUser);
-      localStorage.setItem("hardpy_user", JSON.stringify(updatedUser));
+      saveUserToStorage(updatedUser);
     }
-  }, [user]);
+  }, [user, saveUserToStorage]);
 
   /**
    * Authenticate user with backend API
-   * If authentication is disabled, immediately return true
    */
   const login = async (
     username: string,
@@ -205,11 +283,8 @@ export const useAuth = (appConfig: AppConfig | null) => {
 
         setUser(userData);
         setSessionValid(true);
-        localStorage.setItem("hardpy_user", JSON.stringify(userData));
+        saveUserToStorage(userData);
         setError(undefined);
-
-        // Start session validation after successful login
-        startSessionValidation();
 
         return true;
       } else {
@@ -227,14 +302,15 @@ export const useAuth = (appConfig: AppConfig | null) => {
   };
 
   const logout = async () => {
-    if (user?.sessionId) {
+    const sessionId = getSessionId();
+    if (sessionId) {
       try {
         await fetch("/api/auth/logout", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ session_id: user.sessionId }),
+          body: JSON.stringify({ session_id: sessionId }),
         });
       } catch (err) {
         console.error("Logout request failed:", err);
@@ -243,7 +319,7 @@ export const useAuth = (appConfig: AppConfig | null) => {
 
     setUser(null);
     setSessionValid(false);
-    localStorage.removeItem("hardpy_user");
+    clearUserFromStorage();
 
     if (sessionCheckRef.current) {
       clearInterval(sessionCheckRef.current);

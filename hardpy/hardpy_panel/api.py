@@ -5,13 +5,14 @@ from __future__ import annotations
 import json
 import os
 import re
+import secrets
 import time
 from enum import Enum
 from pathlib import Path
 from typing import Annotated
 from urllib.parse import unquote
 
-from fastapi import FastAPI, HTTPException, Query, status
+from fastapi import FastAPI, Query
 from fastapi.staticfiles import StaticFiles
 
 from hardpy.common.config import ConfigManager
@@ -20,8 +21,8 @@ from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
 app = FastAPI()
 app.state.pytest_wrp = PyTestWrapper()
 
-# Store authentication state
-app.state.authenticated_users = set()
+# Store authentication state with session data
+app.state.authenticated_users = {}
 
 
 class Status(str, Enum):
@@ -48,7 +49,23 @@ def _is_authenticated(session_id: str | None = None) -> bool:
     if not session_id:
         return False
 
-    return session_id in app.state.authenticated_users
+    # Check if session exists and is not expired
+    if session_id in app.state.authenticated_users:
+        session_data = app.state.authenticated_users[session_id]
+        timeout_minutes = config_manager.config.frontend.auth.timeout_minutes
+        minutes_in_ms = timeout_minutes * 60 * 1000
+
+        # Check if session expired
+        if (time.time() * 1000 - session_data["last_activity"]) > minutes_in_ms:
+            # Remove expired session
+            app.state.authenticated_users.pop(session_id, None)
+            return False
+
+        # Update last activity
+        session_data["last_activity"] = time.time() * 1000
+        return True
+
+    return False
 
 
 @app.get("/api/hardpy_config")
@@ -81,9 +98,15 @@ async def login_user(credentials: dict) -> dict:
     valid_users = {"test": "test"}
 
     if username in valid_users and valid_users[username] == password:
-        # Generate session ID
-        session_id = f"{username}_{int(time.time())}"
-        app.state.authenticated_users.add(session_id)
+        # Generate secure session ID
+        session_id = secrets.token_urlsafe(32)
+        current_time = time.time() * 1000
+
+        app.state.authenticated_users[session_id] = {
+            "username": username,
+            "login_time": current_time,
+            "last_activity": current_time,
+        }
 
         return {
             "authenticated": True,
@@ -109,20 +132,16 @@ async def validate_session(session_data: dict) -> dict:
         return {"valid": True}
 
     session_id = session_data.get("session_id")
-    last_activity = session_data.get("lastActivity", 0)
-    timeout_minutes = config_manager.config.frontend.auth.timeout_minutes
 
-    if not session_id or session_id not in app.state.authenticated_users:
-        return {"valid": False, "error": "Invalid session"}
+    if not session_id or not _is_authenticated(session_id):
+        return {"valid": False, "error": "Invalid or expired session"}
 
-    minutes_in_ms = timeout_minutes * 60 * 1000
-    is_expired = (time.time() * 1000 - last_activity) > minutes_in_ms
-
-    if is_expired:
-        app.state.authenticated_users.discard(session_id)
-        return {"valid": False, "error": "Session expired"}
-
-    return {"valid": True}
+    # Session is valid, return user info
+    session_info = app.state.authenticated_users.get(session_id, {})
+    return {
+        "valid": True,
+        "user": {"name": session_info.get("username", ""), "role": "operator"},
+    }
 
 
 @app.post("/api/auth/logout")
@@ -137,7 +156,7 @@ async def logout_user(session_data: dict) -> dict:
     """
     session_id = session_data.get("session_id")
     if session_id:
-        app.state.authenticated_users.discard(session_id)
+        app.state.authenticated_users.pop(session_id, None)
 
     return {"success": True}
 
