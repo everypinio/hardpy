@@ -657,6 +657,54 @@ def run_dialog_box(dialog_box_data: DialogBox) -> Any:  # noqa: ANN401
     return dialog_box_data.widget.convert_data(input_dbx_data)
 
 
+def run_async_dialog_box(dialog_box_data: DialogBox) -> None:  # noqa: ANN401
+    """Display a dialog box.
+
+    Args:
+        dialog_box_data (DialogBox): Data for creating the dialog box.
+
+        DialogBox attributes:
+
+        - dialog_text (str): The text of the dialog box.
+        - title_bar (str | None): The title bar of the dialog box.
+          If the title_bar field is missing, it is the case name.
+        - widget (DialogBoxWidget | None): Widget information.
+        - image (ImageComponent | None): Image information.
+        - html (HTMLComponent | None): HTML information.
+        - pass_fail (bool): If True, show PASS/FAIL buttons instead of normal widget.
+    """
+    if not dialog_box_data.dialog_text:
+        msg = "The 'dialog_text' argument cannot be empty."
+        raise ValueError(msg)
+    reporter = RunnerReporter()
+    current_test = _get_current_test()
+    key = reporter.generate_key(
+        DF.MODULES,
+        current_test.module_id,
+        DF.CASES,
+        current_test.case_id,
+        DF.DIALOG_BOX,
+    )
+    _cleanup_widget(reporter, key)
+
+    reporter.set_doc_value(key, dialog_box_data.to_dict(), statestore_only=True)
+    reporter.update_db_by_doc()
+
+
+def clear_dialog_box() -> None:
+    """Clear dialog box."""
+    reporter = RunnerReporter()
+    current_test = _get_current_test()
+    key = reporter.generate_key(
+        DF.MODULES,
+        current_test.module_id,
+        DF.CASES,
+        current_test.case_id,
+        DF.DIALOG_BOX,
+    )
+    _cleanup_widget(reporter, key)
+
+
 def set_operator_message(  # noqa: PLR0913
     msg: str,
     title: str | None = None,
@@ -808,6 +856,29 @@ def _get_current_test() -> CurrentTestInfo:
     return CurrentTestInfo(module_id=module_id, case_id=case_id)
 
 
+def get_operator_dialog_data() -> str | None:
+    """Get operator panel dialog data.
+
+    Clears the dialog data after retrieving it, if exists.
+
+    Returns:
+        str: operator panel data
+    """
+    reporter = RunnerReporter()
+
+    data: str | None = None
+    key = reporter.generate_key(DF.OPERATOR_DATA, DF.DIALOG)
+    reporter.update_doc_by_db()
+
+    data = reporter.get_field(key)
+    if data:
+        reporter.set_doc_value(key, "", statestore_only=True)
+    else:
+        data = None
+
+    return data
+
+
 def _get_operator_data() -> str:
     """Get operator panel data.
 
@@ -816,16 +887,11 @@ def _get_operator_data() -> str:
     """
     reporter = RunnerReporter()
 
-    data = ""
-    key = reporter.generate_key(DF.OPERATOR_DATA, DF.DIALOG)
+    data: str | None = None
     while not data:
-        reporter.update_doc_by_db()
-
-        data = reporter.get_field(key)
-        if data:
-            reporter.set_doc_value(key, "", statestore_only=True)
-            break
+        data = get_operator_dialog_data()
         sleep(0.1)
+
     return data
 
 
