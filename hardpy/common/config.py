@@ -52,6 +52,7 @@ class FrontendConfig(BaseModel):
     full_size_button: bool = False
     sound_on: bool = False
     manual_tests_selection: bool = False
+    manual_collect: bool = False
     measurement_display: bool = True
     modal_result: ModalResultConfig = Field(default_factory=lambda: ModalResultConfig())
 

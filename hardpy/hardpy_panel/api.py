@@ -18,6 +18,7 @@ from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
 
 app = FastAPI()
 app.state.pytest_wrp = PyTestWrapper(app)
+app.state.manual_collect_mode = False
 
 
 class Status(str, Enum):
@@ -54,6 +55,9 @@ def start_pytest(args: Annotated[list[str] | None, Query()] = None) -> dict:
     Returns:
         dict[str, RunStatus]: run status
     """
+    if app.state.manual_collect_mode:
+        return {"status": Status.BUSY, "message": "Manual collect mode is active"}
+
     if args is None:
         args_dict = []
     else:
@@ -71,6 +75,9 @@ def stop_pytest() -> dict:
     Returns:
         dict[str, RunStatus]: run status
     """
+    if app.state.manual_collect_mode:
+        return {"status": Status.BUSY, "message": "Manual collect mode is active"}
+
     if app.state.pytest_wrp.stop():
         return {"status": Status.STOPPED}
     return {"status": Status.READY}
@@ -211,6 +218,38 @@ async def set_selected_tests(request: Request) -> dict:
             "status": "success",
             "message": f"Selected {len(selected_tests_list)} tests",
         }
+    except Exception as e:  # noqa: BLE001
+        return {"status": "error", "message": str(e)}
+
+
+@app.get("/api/manual_collect_mode")
+def get_manual_collect_mode() -> dict:
+    """Get manual collect mode status.
+
+    Returns:
+        dict[str, bool]: manual collect mode status
+    """
+    return {"manual_collect_mode": app.state.manual_collect_mode}
+
+
+@app.post("/api/manual_collect_mode")
+def set_manual_collect_mode(mode_data: dict) -> dict:
+    """Set manual collect mode.
+
+    Args:
+        mode_data: dict with 'enabled' key
+
+    Returns:
+        dict[str, str]: operation status
+    """
+    try:
+        enabled = mode_data.get("enabled", False)
+        app.state.manual_collect_mode = enabled
+
+        if enabled:
+            app.state.pytest_wrp.collect()
+
+        return {"status": "success", "manual_collect_mode": enabled}
     except Exception as e:  # noqa: BLE001
         return {"status": "error", "message": str(e)}
 

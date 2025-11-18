@@ -14,6 +14,7 @@ language = "en"
 full_size_button = false
 sound_on = true
 manual_tests_selection = true
+manual_collect = true
 measurement_display = true
 
 [frontend.modal_result]

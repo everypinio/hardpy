@@ -15,6 +15,10 @@
       "failedTestCases": "Cas de test échoués",
       "modalResultDismissHint": "Cliquez n'importe où ou appuyez sur n'importe quelle touche pour fermer",
       "modalResultAutoDismissHint": "Fermeture automatique dans {{seconds}} secondes...",
+      "manualCollectOn": "Collecte manuelle activée",
+      "manualCollectOff": "Collecte manuelle désactivée",
+      "manualCollectModeActive": "Mode collecte manuelle actif - exécution des tests désactivée",
+      "manualCollectModeInactive": "Mode collecte manuelle inactif",
       "status": {
         "ready": "Prêt",
         "run": "En cours",
@@ -76,6 +80,7 @@
     "testsStarted": "{{count}} tests démarrés",
     "startError": "Erreur de démarrage des tests",
     "connectionError": "Erreur de connexion",
-    "selectionColumn": "Sélectionner"
+    "selectionColumn": "Sélectionner",
+    "skipped": "Ignoré"
   }
 }

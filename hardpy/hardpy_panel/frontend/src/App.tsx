@@ -15,6 +15,10 @@ import {
   H2,
   Popover,
   Card,
+  Switch,
+  Position,
+  Tooltip,
+  Icon,
 } from "@blueprintjs/core";
 
 import StartStopButton from "./button/StartStop";
@@ -50,6 +54,7 @@ interface AppConfig {
     full_size_button?: boolean;
     sound_on?: boolean;
     manual_tests_selection?: boolean;
+    manual_collect?: boolean;
     measurement_display?: boolean;
     modal_result?: {
       enable?: boolean;
@@ -162,6 +167,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const [use_debug_info, setUseDebugInfo] = React.useState(false);
   const [appConfig, setAppConfig] = React.useState<AppConfig | null>(null);
   const [isConfigLoaded, setIsConfigLoaded] = React.useState(false);
+  const [manualCollectMode, setManualCollectMode] = React.useState(false);
 
   const [lastRunStatus, setLastRunStatus] = React.useState<
     StatusKey | "unknown"
@@ -193,6 +199,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     React.useState<NodeJS.Timeout | null>(null);
   const [selectedTests, setSelectedTests] = React.useState<string[]>([]);
   const [allTests, setAllTests] = React.useState<string[]>([]);
+  const [previousTestStructure, setPreviousTestStructure] =
+    React.useState<string>("");
 
   /**
    * Loads HardPy configuration from the backend API on component mount
@@ -210,6 +218,11 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           setUseEndTestSound(config.frontend.sound_on);
         }
 
+        // Load manual collect mode state
+        const manualCollectResponse = await fetch("/api/manual_collect_mode");
+        const manualCollectData = await manualCollectResponse.json();
+        setManualCollectMode(manualCollectData.manual_collect_mode);
+
         if (config.frontend?.manual_tests_selection) {
           const savedTests = localStorage.getItem("hardpy_selected_tests");
           if (savedTests) {
@@ -224,6 +237,51 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     };
 
     loadConfig();
+  }, []);
+
+  /**
+   * Toggles manual collect mode
+   */
+  const toggleManualCollectMode = async () => {
+    try {
+      const newMode = !manualCollectMode;
+      const response = await fetch("/api/manual_collect_mode", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ enabled: newMode }),
+      });
+
+      const result = await response.json();
+      if (result.status === "success") {
+        setManualCollectMode(newMode);
+
+        if (!newMode) {
+          await fetch("/api/collect");
+        }
+      }
+    } catch (error) {
+      console.error("Failed to toggle manual collect mode:", error);
+    }
+  };
+
+  /**
+   * Filters selected tests to only include those that exist in current test structure
+   */
+  const filterSelectedTests = React.useCallback((currentAllTests: string[]) => {
+    setSelectedTests((prevSelected) => {
+      const filtered = prevSelected.filter((test) =>
+        currentAllTests.includes(test)
+      );
+
+      if (JSON.stringify(filtered) !== JSON.stringify(prevSelected)) {
+        localStorage.setItem("hardpy_selected_tests", JSON.stringify(filtered));
+        console.log("Filtered selected tests:", filtered);
+      }
+
+      return filtered;
+    });
   }, []);
 
   /**
@@ -390,7 +448,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       }
     }
 
-    // Extract all available tests
+    // Extract all available tests and detect structure changes
     if (db_row.modules) {
       const allAvailableTests: string[] = [];
       Object.entries(db_row.modules).forEach(([moduleId, module]) => {
@@ -400,14 +458,33 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           });
         }
       });
-      setAllTests(allAvailableTests);
+
+      // Check if test structure has changed
+      const currentStructure = JSON.stringify(allAvailableTests.sort());
+      if (currentStructure !== previousTestStructure) {
+        setAllTests(allAvailableTests);
+        setPreviousTestStructure(currentStructure);
+
+        // Filter selected tests when test structure changes
+        filterSelectedTests(allAvailableTests);
+
+        console.log(
+          "Test structure updated, available tests:",
+          allAvailableTests
+        );
+      }
 
       // If manual selection is enabled and no tests are selected yet, select all by default
       if (
         appConfig?.frontend?.manual_tests_selection &&
-        selectedTests.length === 0
+        selectedTests.length === 0 &&
+        allAvailableTests.length > 0
       ) {
         setSelectedTests(allAvailableTests);
+        localStorage.setItem(
+          "hardpy_selected_tests",
+          JSON.stringify(allAvailableTests)
+        );
       }
     }
 
@@ -483,6 +560,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     showCompletionModalResult,
     syncDocumentId,
     selectedTests.length,
+    previousTestStructure,
+    filterSelectedTests,
   ]);
 
   /**
@@ -492,6 +571,13 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     setSelectedTests(tests);
     localStorage.setItem("hardpy_selected_tests", JSON.stringify(tests));
   };
+
+  /**
+   * Clears selected tests when starting a new test run
+   */
+  const handleTestRunStart = React.useCallback(() => {
+    filterSelectedTests(allTests);
+  }, [allTests, filterSelectedTests]);
 
   /**
    * Renders the database content including test suites and debug information
@@ -569,7 +655,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                 onTestsSelectionChange={handleTestsSelectionChange}
                 selectedTests={selectedTests}
                 selectionSupported={
-                  appConfig?.frontend?.manual_tests_selection || false
+                  (appConfig?.frontend?.manual_tests_selection || false) &&
+                  manualCollectMode
                 }
                 measurementDisplay={appConfig?.frontend?.measurement_display}
               />
@@ -599,6 +686,18 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const renderSettingsMenu = (): JSX.Element => {
     return (
       <Menu>
+        {appConfig?.frontend?.manual_tests_selection && (
+          <MenuItem
+            shouldDismissPopover={false}
+            text={
+              manualCollectMode
+                ? t("app.manualCollectOff")
+                : t("app.manualCollectOn")
+            }
+            icon={manualCollectMode ? "disable" : "selection"}
+            onClick={toggleManualCollectMode}
+          />
+        )}
         <MenuItem
           shouldDismissPopover={false}
           text={use_end_test_sound ? t("app.soundOff") : t("app.soundOn")}
@@ -614,6 +713,52 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           onClick={() => setUseDebugInfo(!use_debug_info)}
         />
       </Menu>
+    );
+  };
+
+  /**
+   * Renders manual collect mode indicator
+   * @returns {JSX.Element} The manual collect mode indicator
+   */
+  const renderManualCollectIndicator = (): JSX.Element => {
+    if (!appConfig?.frontend?.manual_tests_selection) {
+      return <></>;
+    }
+
+    return (
+      <Tooltip
+        content={
+          manualCollectMode
+            ? t("app.manualCollectModeActive")
+            : t("app.manualCollectModeInactive")
+        }
+        position={Position.BOTTOM}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginRight: "15px",
+            padding: "5px 10px",
+            backgroundColor: manualCollectMode
+              ? Colors.ORANGE5
+              : Colors.LIGHT_GRAY3,
+            borderRadius: "3px",
+            border: `1px solid ${manualCollectMode ? Colors.ORANGE3 : Colors.GRAY3}`,
+          }}
+        >
+          <Icon
+            icon={manualCollectMode ? "selection" : "disable"}
+            size={12}
+            style={{ marginRight: "5px" }}
+          />
+          <span style={{ fontSize: "12px", fontWeight: "bold" }}>
+            {manualCollectMode
+              ? t("app.manualCollectOn")
+              : t("app.manualCollectOff")}
+          </span>
+        </div>
+      </Tooltip>
     );
   };
 
@@ -702,6 +847,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         </Navbar.Group>
 
         <Navbar.Group align={Alignment.RIGHT}>
+          {renderManualCollectIndicator()}
           <Popover content={renderSettingsMenu()}>
             <Button className="bp3-minimal" icon="cog" />
           </Popover>
@@ -759,6 +905,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                     testing_status={lastRunStatus}
                     useBigButton={true}
                     selectedTests={selectedTests}
+                    manualCollectMode={manualCollectMode}
+                    onTestRunStart={handleTestRunStart}
                   />
                 </div>
               </div>
@@ -791,6 +939,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                   testing_status={lastRunStatus}
                   useBigButton={false}
                   selectedTests={selectedTests}
+                  manualCollectMode={manualCollectMode}
+                  onTestRunStart={handleTestRunStart}
                 />
               </div>
             </div>
