@@ -38,7 +38,7 @@ export const useAuth = (appConfig: AppConfig | null) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>();
   const [sessionValid, setSessionValid] = React.useState(true);
-  const [isInitializing, setIsInitializing] = React.useState(true);
+  const [isCheckingSession, setIsCheckingSession] = React.useState(true);
   const sessionCheckRef = React.useRef<NodeJS.Timeout | null>(null);
 
   const isAuthEnabled = appConfig?.frontend?.auth?.enabled ?? false;
@@ -149,15 +149,16 @@ export const useAuth = (appConfig: AppConfig | null) => {
     const restoreSession = async () => {
       if (!isAuthEnabled) {
         setSessionValid(true);
-        setIsInitializing(false);
+        setIsCheckingSession(false);
         return;
       }
 
+      setIsCheckingSession(true);
       const savedUser = loadUserFromStorage();
 
       if (!savedUser) {
         setSessionValid(false);
-        setIsInitializing(false);
+        setIsCheckingSession(false);
         return;
       }
 
@@ -166,7 +167,7 @@ export const useAuth = (appConfig: AppConfig | null) => {
         console.log("Session expired locally");
         clearUserFromStorage();
         setSessionValid(false);
-        setIsInitializing(false);
+        setIsCheckingSession(false);
         return;
       }
 
@@ -199,7 +200,7 @@ export const useAuth = (appConfig: AppConfig | null) => {
         clearUserFromStorage();
         setSessionValid(false);
       } finally {
-        setIsInitializing(false);
+        setIsCheckingSession(false);
       }
     };
 
@@ -364,7 +365,7 @@ export const useAuth = (appConfig: AppConfig | null) => {
     user,
     isAuthenticated,
     isLoading,
-    isInitializing: isAuthEnabled ? isInitializing : false,
+    isCheckingSession: isAuthEnabled ? isCheckingSession : false,
     error,
     login,
     logout,

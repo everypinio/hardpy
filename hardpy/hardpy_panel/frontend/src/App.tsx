@@ -205,7 +205,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     user,
     isAuthenticated: isUserAuthenticated,
     isLoading: authLoading,
-    isInitializing: authInitializing,
+    isCheckingSession: authCheckingSession,
     error: authError,
     login,
     logout,
@@ -215,7 +215,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   } = useAuth(appConfig);
 
   // Combined loading state - show spinner until both config and auth are initialized
-  const isInitializing = !isConfigLoaded || authInitializing;
+  const isInitializing = !isConfigLoaded || authCheckingSession;
 
   /**
    * Loads HardPy configuration from the backend API on component mount
@@ -676,7 +676,12 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       <ReloadAlert reload_timeout_s={3} />
 
       <LoginModal
-        isVisible={!isInitializing && isAuthEnabled && !isUserAuthenticated}
+        isVisible={
+          !isInitializing &&
+          isAuthEnabled &&
+          !isUserAuthenticated &&
+          !authCheckingSession
+        }
         isLoading={authLoading}
         error={authError}
         onLogin={login}
