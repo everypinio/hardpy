@@ -525,15 +525,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       );
     }
 
-    if (isAuthEnabled && !isUserAuthenticated) {
-      return (
-        <Card style={{ marginTop: "60px", textAlign: "center" }}>
-          <H2>{t("auth.pleaseLogin")}</H2>
-          <p>{t("auth.loginToAccess")}</p>
-        </Card>
-      );
-    }
-
     if (loading && rows.length === 0) {
       return (
         <Card style={{ marginTop: "60px" }}>
