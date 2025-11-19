@@ -1465,6 +1465,15 @@ The default is *False*.
 --sc-connection-only
 ```
 
+#### sc-autosync
+
+Enable **HardPy** to **StandCloud** test report data auto synchroniztion.
+The default is *False*.
+
+```bash
+--sc-autosync
+```
+
 #### hardpy-start-arg
 
 Dynamic arguments for test execution in key=value format. Can be specified multiple times.
