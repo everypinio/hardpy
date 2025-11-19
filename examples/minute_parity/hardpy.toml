@@ -15,6 +15,10 @@ full_size_button = false
 sound_on = true
 measurement_display = true
 
+[frontend.auth]
+enabled = true
+timeout_minutes = 60
+
 [frontend.modal_result]
 enable = true
 auto_dismiss_pass = true
