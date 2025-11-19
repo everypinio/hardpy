@@ -14,9 +14,17 @@ language = "en"
 full_size_button = false
 sound_on = true
 manual_tests_selection = true
+manual_collect = true
 measurement_display = true
 
 [frontend.modal_result]
 enable = true
 auto_dismiss_pass = true
 auto_dismiss_timeout = 5
+
+[stand_cloud]
+address = "standcloud.io"
+connection_only = false
+autosync = false
+autosync_timeout = 30
+api_key = ""

@@ -1,5 +1,8 @@
 # StandCloud reader
 
+???+ warning
+    The information on this page is currently out of date!
+
 **HardPy** allows you to read test data from the **StandCloud**.
 For this purpose, the [StandCloudReader](./../documentation/pytest_hardpy.md#standcloudreader)
 class is available in **HardPy**, which provides access to the REST API of the **StandCloud** service.
@@ -33,7 +36,7 @@ function.
 ```python
 import hardpy
 
-sc_connector = hardpy.StandCloudConnector(addr="demo.standcloud.io")
+sc_connector = hardpy.StandCloudConnector(api_key="your_api_key")
 reader = hardpy.StandCloudReader(sc_connector)
 
 response = reader.test_run(run_id="0196434d-e8f7-7ce1-81f7-e16f20487494")

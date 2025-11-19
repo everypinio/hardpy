@@ -15,6 +15,10 @@
       "failedTestCases": "失败的测试用例",
       "modalResultDismissHint": "点击任意位置或按任意键关闭",
       "modalResultAutoDismissHint": "{{seconds}}秒后自动关闭...",
+      "manualCollectOn": "手动收集开启",
+      "manualCollectOff": "手动收集关闭",
+      "manualCollectModeActive": "手动收集模式激活 - 测试执行已禁用",
+      "manualCollectModeInactive": "手动收集模式未激活",
       "status": {
         "ready": "就绪",
         "run": "运行中",
@@ -76,6 +80,7 @@
     "testsStarted": "已启动 {{count}} 个测试",
     "startError": "启动测试时出错",
     "connectionError": "连接错误",
-    "selectionColumn": "选择"
+    "selectionColumn": "选择",
+    "skipped": "已跳过"
   }
 }

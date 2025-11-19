@@ -48,8 +48,11 @@ auto_dismiss_pass = true
 auto_dismiss_timeout = 5
 
 [stand_cloud]
-address = "demo.standcloud.io"
+address = "standcloud.io"
 connection_only = true
+autosync = true
+autosync_timeout = 30
+api-key = "1234567890"
 ```
 
 ## Configuration fields description
@@ -167,6 +170,9 @@ Default is `5` seconds.
 [stand_cloud]
 address = "demo.standcloud.localhost"
 connection_only = true
+autosync = true
+autosync_timeout = 30
+api-key = "1234567890"
 ```
 
 #### address
@@ -181,3 +187,21 @@ to the **StandCloud** service at each startup before running tests.
 The default value is `false`.
 
 If the connection fails, the tests will not run.
+
+#### autosync
+
+Boolean variable, if set to `true`, **HardPy** will automatically send data 
+to **StandCloud** upon completion of testing.
+
+The default value is `false`.
+
+#### autosync_timeout
+
+This is an integer variable greater than 1, representing the time interval 
+in minutes between StandCloud synchronization attempts.
+
+The default value is `30`.
+
+#### api-key
+
+**StandCloud** API key.

@@ -15,6 +15,10 @@
       "failedTestCases": "失敗したテストケース",
       "modalResultDismissHint": "どこかをクリックするか、任意のキーを押して閉じます",
       "modalResultAutoDismissHint": "{{seconds}}秒後に自動的に閉じます...",
+      "manualCollectOn": "手動収集オン",
+      "manualCollectOff": "手動収集オフ",
+      "manualCollectModeActive": "手動収集モードが有効です - テスト実行は無効です",
+      "manualCollectModeInactive": "手動収集モードは無効です",
       "status": {
         "ready": "準備完了",
         "run": "実行中",
@@ -76,6 +80,7 @@
     "testsStarted": "{{count}}個のテストを開始しました",
     "startError": "テストの開始エラー",
     "connectionError": "接続エラー",
-    "selectionColumn": "選択"
+    "selectionColumn": "選択",
+    "skipped": "スキップ済み"
   }
 }
