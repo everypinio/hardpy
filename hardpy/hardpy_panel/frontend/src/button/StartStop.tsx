@@ -8,10 +8,14 @@ import { withTranslation, WithTranslation } from "react-i18next";
 type Props = {
   testing_status: string;
   useBigButton?: boolean;
+  isAuthenticated: boolean;
+  sessionId?: string | null;
+  onUnauthorizedAction?: () => void;
 } & WithTranslation;
 
 type State = {
   isStopButtonDisabled: boolean;
+  showAuthWarning: boolean;
 };
 
 // Global variables for ModalResult state
@@ -26,35 +30,79 @@ declare const MODAL_RESULT_DISMISS_COOLDOWN: number;
  */
 class StartStopButton extends React.Component<Props, State> {
   private stopButtonTimer: NodeJS.Timeout | null = null;
+  private authWarningTimer: NodeJS.Timeout | null = null;
 
   constructor(props: Props) {
     super(props);
     this.state = {
       isStopButtonDisabled: false,
+      showAuthWarning: false,
     };
     this.hardpy_start = this.hardpy_start.bind(this);
     this.hardpy_stop = this.hardpy_stop.bind(this);
   }
 
   /**
-   * Makes a fetch call to the specified URI.
+   * Makes a fetch call to the specified URI with authentication check.
    * @param {string} uri - The URI to which the fetch request is made.
    * @private
    */
-  private hardpy_call(uri: string): void {
-    fetch(uri)
-      .then((response) => {
-        if (response.ok) {
-          return response.text();
-        } else {
-          console.log(
-            this.props.t("error.requestFailed", { status: response.status })
-          );
+  private async hardpy_call(uri: string): Promise<void> {
+    if (!this.props.isAuthenticated) {
+      this.showAuthWarning();
+      if (this.props.onUnauthorizedAction) {
+        this.props.onUnauthorizedAction();
+      }
+      return;
+    }
+
+    try {
+      // Add session_id to the request if available
+      const url = new URL(uri, window.location.origin);
+      if (this.props.sessionId) {
+        url.searchParams.append("session_id", this.props.sessionId);
+      }
+
+      const response = await fetch(url.toString());
+      if (response.ok) {
+        const result = await response.json();
+
+        if (result.status === "unauthorized") {
+          console.log(this.props.t("error.unauthorized"));
+          this.showAuthWarning();
+          if (this.props.onUnauthorizedAction) {
+            this.props.onUnauthorizedAction();
+          }
+          return;
         }
-      })
-      .catch((error) => {
-        console.log(this.props.t("error.requestError", { error }));
-      });
+
+        return result;
+      } else {
+        console.log(
+          this.props.t("error.requestFailed", { status: response.status })
+        );
+      }
+    } catch (error) {
+      console.log(this.props.t("error.requestError", { error }));
+    }
+  }
+
+  /**
+   * Shows authentication warning and hides it after timeout
+   * @private
+   */
+  private showAuthWarning(): void {
+    this.setState({ showAuthWarning: true });
+
+    // Clear existing timer
+    if (this.authWarningTimer) {
+      clearTimeout(this.authWarningTimer);
+    }
+
+    // Hide warning after 3 seconds
+    this.authWarningTimer = setTimeout(() => {
+      this.setState({ showAuthWarning: false });
+    }, 3000);
   }
 
   /**
@@ -62,6 +110,16 @@ class StartStopButton extends React.Component<Props, State> {
    * @private
    */
   private hardpy_start(): void {
+    // Early check for authentication
+    if (!this.props.isAuthenticated) {
+      console.log("StartStopButton: User not authenticated, cannot start test");
+      this.showAuthWarning();
+      if (this.props.onUnauthorizedAction) {
+        this.props.onUnauthorizedAction();
+      }
+      return;
+    }
+
     console.log("StartStopButton: Starting test execution");
     this.hardpy_call("api/start");
   }
@@ -72,6 +130,16 @@ class StartStopButton extends React.Component<Props, State> {
    * @private
    */
   private hardpy_stop(): void {
+    // Early check for authentication
+    if (!this.props.isAuthenticated) {
+      console.log("StartStopButton: User not authenticated, cannot stop test");
+      this.showAuthWarning();
+      if (this.props.onUnauthorizedAction) {
+        this.props.onUnauthorizedAction();
+      }
+      return;
+    }
+
     if (this.state.isStopButtonDisabled) {
       return;
     }
@@ -134,6 +202,24 @@ class StartStopButton extends React.Component<Props, State> {
   }
 
   /**
+   * Checks if the authentication modal is currently visible.
+   * Uses the data-auth-modal attribute from LoginModal component.
+   * @returns {boolean} True if the auth modal is visible, false otherwise.
+   */
+  private isAuthModalVisible(): boolean {
+    const authModalElements = document.querySelectorAll(
+      '[data-auth-modal="true"]'
+    );
+    for (const modal of authModalElements) {
+      const style = window.getComputedStyle(modal);
+      if (style.display !== "none" && style.visibility !== "hidden") {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Checks if the application is in the cooldown period after ModalResult dismissal.
    * Prevents immediate space key actions after the ModalResult is dismissed.
    * @returns {boolean} True if within the cooldown period, false otherwise.
@@ -154,8 +240,16 @@ class StartStopButton extends React.Component<Props, State> {
   }
 
   /**
+   * Checks if any blocking modal is currently visible (auth or completion).
+   * @returns {boolean} True if any blocking modal is visible, false otherwise.
+   */
+  private isAnyBlockingModalVisible(): boolean {
+    return this.isAuthModalVisible() || this.isCompletionModalResultVisible();
+  }
+
+  /**
    * Handles the space keydown event to start or stop the testing process.
-   * Prevents space key actions when ModalResult is visible or during cooldown period.
+   * Prevents space key actions when ModalResult or Auth modal is visible or during cooldown period.
    * Also prevents action when dialogs are open or interactive elements are focused.
    * @param {KeyboardEvent} event - The keyboard event object
    */
@@ -165,8 +259,8 @@ class StartStopButton extends React.Component<Props, State> {
       return;
     }
 
-    // Check if completion ModalResult is visible
-    if (this.isCompletionModalResultVisible()) {
+    // Check if any blocking modal (auth or completion) is visible
+    if (this.isAnyBlockingModalVisible()) {
       event.preventDefault();
       event.stopPropagation();
       return;
@@ -196,6 +290,17 @@ class StartStopButton extends React.Component<Props, State> {
       return;
     }
 
+    // Check authentication before proceeding
+    if (!this.props.isAuthenticated) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.showAuthWarning();
+      if (this.props.onUnauthorizedAction) {
+        this.props.onUnauthorizedAction();
+      }
+      return;
+    }
+
     event.preventDefault();
     const is_testing_in_progress = this.props.testing_status == "run";
     is_testing_in_progress ? this.hardpy_stop() : this.hardpy_start();
@@ -203,12 +308,12 @@ class StartStopButton extends React.Component<Props, State> {
 
   /**
    * Handles the button click event to start the testing process.
-   * Prevents button clicks when ModalResult is visible or during cooldown period.
+   * Prevents button clicks when ModalResult or Auth modal is visible or during cooldown period.
    * @private
    */
   private readonly handleButtonClick = (): void => {
-    // Check if completion ModalResult is visible
-    if (this.isCompletionModalResultVisible()) {
+    // Check if any blocking modal (auth or completion) is visible
+    if (this.isAnyBlockingModalVisible()) {
       return;
     }
 
@@ -217,7 +322,44 @@ class StartStopButton extends React.Component<Props, State> {
       return;
     }
 
+    // Check authentication
+    if (!this.props.isAuthenticated) {
+      this.showAuthWarning();
+      if (this.props.onUnauthorizedAction) {
+        this.props.onUnauthorizedAction();
+      }
+      return;
+    }
+
     this.hardpy_start();
+  };
+
+  /**
+   * Handles the stop button click event.
+   * Prevents stop button clicks when ModalResult or Auth modal is visible or during cooldown period.
+   * @private
+   */
+  private readonly handleStopButtonClick = (): void => {
+    // Check if any blocking modal (auth or completion) is visible
+    if (this.isAnyBlockingModalVisible()) {
+      return;
+    }
+
+    // Check if we're in cooldown period after ModalResult dismissal
+    if (this.isInModalResultDismissCooldown()) {
+      return;
+    }
+
+    // Check authentication
+    if (!this.props.isAuthenticated) {
+      this.showAuthWarning();
+      if (this.props.onUnauthorizedAction) {
+        this.props.onUnauthorizedAction();
+      }
+      return;
+    }
+
+    this.hardpy_stop();
   };
 
   /**
@@ -237,17 +379,32 @@ class StartStopButton extends React.Component<Props, State> {
     if (this.stopButtonTimer) {
       clearTimeout(this.stopButtonTimer);
     }
+    if (this.authWarningTimer) {
+      clearTimeout(this.authWarningTimer);
+    }
   }
 
   /**
    * Renders the Start/Stop button with appropriate properties based on the testing status.
    * Shows stop button when testing is in progress, start button otherwise.
+   * Includes authentication warning when user is not authenticated.
    * @returns {React.ReactNode} The Start/Stop button component.
    */
   render(): React.ReactNode {
-    const { t, testing_status, useBigButton = false } = this.props;
+    const {
+      t,
+      testing_status,
+      useBigButton = false,
+      isAuthenticated,
+    } = this.props;
+    const { showAuthWarning } = this.state;
     const is_testing: boolean = testing_status == "run";
     const button_id: string = "start-stop-button";
+
+    // Determine button properties based on authentication status
+    const isButtonDisabled =
+      !isAuthenticated || this.state.isStopButtonDisabled;
+    const buttonTooltip = !isAuthenticated ? t("auth.pleaseLogin") : undefined;
 
     if (useBigButton) {
       const bigButtonStyle = {
@@ -255,6 +412,7 @@ class StartStopButton extends React.Component<Props, State> {
         height: "96px",
         fontSize: "24px",
         fontWeight: "bold",
+        position: "relative" as const,
       };
 
       const iconStyle = {
@@ -262,15 +420,32 @@ class StartStopButton extends React.Component<Props, State> {
         marginLeft: "12px",
       };
 
+      const warningStyle = {
+        position: "absolute" as const,
+        top: "-30px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        backgroundColor: "#DB3737",
+        color: "white",
+        padding: "5px 10px",
+        borderRadius: "3px",
+        fontSize: "14px",
+        fontWeight: "normal",
+        whiteSpace: "nowrap" as const,
+        zIndex: 10,
+      };
+
       const stop_button: AnchorButtonProps = {
         text: t("button.stop"),
         intent: "danger",
         large: true,
         rightIcon: <span style={iconStyle}>&#9632;</span>,
-        onClick: this.hardpy_stop,
+        onClick: this.handleStopButtonClick,
         id: button_id,
         fill: true,
         style: bigButtonStyle,
+        disabled: isButtonDisabled,
+        title: buttonTooltip,
       };
 
       const start_button: AnchorButtonProps = {
@@ -280,20 +455,50 @@ class StartStopButton extends React.Component<Props, State> {
         rightIcon: <span style={iconStyle}>&#9658;</span>,
         onClick: this.handleButtonClick,
         id: button_id,
-        disabled: this.state.isStopButtonDisabled,
+        disabled: isButtonDisabled,
         fill: true,
         style: bigButtonStyle,
+        title: buttonTooltip,
       };
 
-      return <AnchorButton {...(is_testing ? stop_button : start_button)} />;
+      return (
+        <div style={{ position: "relative" }}>
+          {showAuthWarning && (
+            <div style={warningStyle}>{t("auth.pleaseLogin")}</div>
+          )}
+          <AnchorButton {...(is_testing ? stop_button : start_button)} />
+        </div>
+      );
     } else {
+      const containerStyle = {
+        position: "relative" as const,
+        display: "inline-block",
+      };
+
+      const warningStyle = {
+        position: "absolute" as const,
+        top: "-35px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        backgroundColor: "#DB3737",
+        color: "white",
+        padding: "4px 8px",
+        borderRadius: "3px",
+        fontSize: "12px",
+        fontWeight: "normal",
+        whiteSpace: "nowrap" as const,
+        zIndex: 10,
+      };
+
       const stop_button: AnchorButtonProps = {
         text: t("button.stop"),
         intent: "danger",
         large: true,
         rightIcon: "stop",
-        onClick: this.hardpy_stop,
+        onClick: this.handleStopButtonClick,
         id: button_id,
+        disabled: isButtonDisabled,
+        title: buttonTooltip,
       };
 
       const start_button: AnchorButtonProps = {
@@ -303,10 +508,18 @@ class StartStopButton extends React.Component<Props, State> {
         rightIcon: "play",
         onClick: this.handleButtonClick,
         id: button_id,
-        disabled: this.state.isStopButtonDisabled,
+        disabled: isButtonDisabled,
+        title: buttonTooltip,
       };
 
-      return <AnchorButton {...(is_testing ? stop_button : start_button)} />;
+      return (
+        <div style={containerStyle}>
+          {showAuthWarning && (
+            <div style={warningStyle}>{t("auth.pleaseLogin")}</div>
+          )}
+          <AnchorButton {...(is_testing ? stop_button : start_button)} />
+        </div>
+      );
     }
   }
 }

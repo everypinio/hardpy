@@ -2,6 +2,7 @@
   "app": {
       "title": "Panneau opérateur HardPy",
       "lastLaunch": "Dernière lancement:",
+      "loading": "Chargement...",
       "duration": "Durée",
       "seconds": "s",
       "soundOn": "Activer le son",
@@ -23,6 +24,19 @@
         "stopped": "Arrêté",
         "unknown": "Inconnu"
       }
+  },
+  "auth": {
+    "title": "Authentification de l’opérateur",
+    "username": "Nom d’utilisateur",
+    "usernamePlaceholder": "Saisissez votre nom d’utilisateur",
+    "password": "Mot de passe",
+    "passwordPlaceholder": "Saisissez votre mot de passe",
+    "loginButton": "Connexion",
+    "logout": "Déconnexion",
+    "loggedInAs": "Connecté en tant que : {{user}}",
+    "pleaseLogin": "Authentification requise",
+    "loginToAccess": "Veuillez vous connecter pour accéder au panneau de test",
+    "invalidCredentials": "Nom d’utilisateur ou mot de passe incorrect"
   },
   "button": {
     "start": "Commencer",

@@ -15,6 +15,8 @@ import {
   H2,
   Popover,
   Card,
+  MenuDivider,
+  Spinner,
 } from "@blueprintjs/core";
 
 import StartStopButton from "./button/StartStop";
@@ -25,6 +27,8 @@ import TestStatus from "./hardpy_test_view/TestStatus";
 import ReloadAlert from "./restart_alert/RestartAlert";
 import PlaySound from "./hardpy_test_view/PlaySound";
 import TestCompletionModalResult from "./hardpy_test_view/TestCompletionModalResult";
+import LoginModal from "./hardpy_test_view/LoginModal";
+import { useAuth } from "./hardpy_test_view/useAuth";
 
 import { useAllDocs } from "use-pouchdb";
 
@@ -50,6 +54,10 @@ interface AppConfig {
     full_size_button?: boolean;
     sound_on?: boolean;
     measurement_display?: boolean;
+    auth?: {
+      enable?: boolean;
+      timeout_minutes?: number;
+    };
     modal_result?: {
       enable?: boolean;
       auto_dismiss_pass?: boolean;
@@ -112,7 +120,9 @@ const findStoppedTestCase = (
 ):
   | { moduleName: string; caseName: string; assertionMsg?: string }
   | undefined => {
-  if (!testRunData.modules) {return undefined;}
+  if (!testRunData.modules) {
+    return undefined;
+  }
 
   // First, look for explicitly stopped test cases
   for (const [moduleId, module] of Object.entries(testRunData.modules)) {
@@ -167,7 +177,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     StatusKey | "unknown"
   >("ready");
   const [lastProgress, setProgress] = React.useState(0);
-  const [isAuthenticated, setIsAuthenticated] = React.useState(true);
   const [lastRunDuration, setLastRunDuration] = React.useState<number>(0);
 
   // Test completion ModalResult state
@@ -191,6 +200,22 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const startTimeRef = React.useRef<number | null>(null);
   const [timerIntervalId, setTimerIntervalId] =
     React.useState<NodeJS.Timeout | null>(null);
+
+  const {
+    user,
+    isAuthenticated: isUserAuthenticated,
+    isLoading: authLoading,
+    isCheckingSession: authCheckingSession,
+    error: authError,
+    login,
+    logout,
+    recordActivity,
+    getSessionId,
+    isAuthEnabled,
+  } = useAuth(appConfig);
+
+  // Combined loading state - show spinner until both config and auth are initialized
+  const isInitializing = !isConfigLoaded || authCheckingSession;
 
   /**
    * Loads HardPy configuration from the backend API on component mount
@@ -216,6 +241,36 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
 
     loadConfig();
   }, []);
+
+  React.useEffect(() => {
+    if (!isAuthEnabled) return;
+
+    const handleUserActivity = () => {
+      recordActivity();
+    };
+
+    // Track various user activities
+    const events = ["click", "keydown", "mousemove", "scroll", "touchstart"];
+
+    events.forEach((event) => {
+      document.addEventListener(event, handleUserActivity, { passive: true });
+    });
+
+    return () => {
+      events.forEach((event) => {
+        document.removeEventListener(event, handleUserActivity);
+      });
+    };
+  }, [isAuthEnabled, recordActivity]);
+
+  React.useEffect(() => {
+    if (
+      isAuthEnabled &&
+      (lastRunStatus === "run" || lastRunStatus === "stopped")
+    ) {
+      recordActivity();
+    }
+  }, [lastRunStatus, recordActivity, isAuthEnabled]);
 
   /**
    * Custom hook to determine if the window width is greater than a specified size
@@ -351,10 +406,14 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
    * Handles test status changes, progress updates, and ModalResult display
    */
   React.useEffect(() => {
-    if (rows.length === 0) {return;}
+    if (rows.length === 0) {
+      return;
+    }
 
     const index = findRowIndex(rows, syncDocumentId);
-    if (index === -1) {return;}
+    if (index === -1) {
+      return;
+    }
     const db_row = rows[index].doc as TestRunI;
     const status = db_row.status || "";
     const progress = db_row.progress || 0;
@@ -441,20 +500,12 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       });
       setShowCompletionModalResult(true);
     }
-
-    // Handle authentication state based on database connection
-    if (state === "error") {
-      setIsAuthenticated(false);
-    } else if (isAuthenticated === false) {
-      setIsAuthenticated(true);
-    }
   }, [
     rows,
     state,
     lastRunStatus,
     lastProgress,
     lastRunDuration,
-    isAuthenticated,
     appConfig,
     showCompletionModalResult,
   ]);
@@ -464,6 +515,16 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
    * @returns {JSX.Element} The rendered database content component
    */
   const renderDbContent = (): JSX.Element => {
+    // Show loading spinner during initialization
+    if (isInitializing) {
+      return (
+        <Card style={{ marginTop: "60px", textAlign: "center" }}>
+          <Spinner size={50} />
+          <H2 style={{ marginTop: "20px" }}>{t("app.loading")}</H2>
+        </Card>
+      );
+    }
+
     if (loading && rows.length === 0) {
       return (
         <Card style={{ marginTop: "60px" }}>
@@ -555,6 +616,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
 
   /**
    * Renders the settings menu with sound and debug options
+   * Only shows logout option if authentication is enabled
    * @returns {JSX.Element} The settings menu component
    */
   const renderSettingsMenu = (): JSX.Element => {
@@ -574,6 +636,15 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           id="use_debug_info"
           onClick={() => setUseDebugInfo(!use_debug_info)}
         />
+        {isAuthEnabled && user && <MenuDivider />}
+        {isAuthEnabled && user && (
+          <MenuItem
+            text={t("auth.logout")}
+            icon={"log-out"}
+            onClick={logout}
+            id="logout-button"
+          />
+        )}
       </Menu>
     );
   };
@@ -603,6 +674,18 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   return (
     <div className="App">
       <ReloadAlert reload_timeout_s={3} />
+
+      <LoginModal
+        isVisible={
+          !isInitializing &&
+          isAuthEnabled &&
+          !isUserAuthenticated &&
+          !authCheckingSession
+        }
+        isLoading={authLoading}
+        error={authError}
+        onLogin={login}
+      />
 
       {/* Header with navigation and status information */}
       <Navbar
@@ -663,6 +746,11 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         </Navbar.Group>
 
         <Navbar.Group align={Alignment.RIGHT}>
+          {isAuthEnabled && user && (
+            <Navbar.Heading style={{ marginRight: "10px", fontSize: "14px" }}>
+              {t("auth.loggedInAs", { user: user.name })}
+            </Navbar.Heading>
+          )}
           <Popover content={renderSettingsMenu()}>
             <Button className="bp3-minimal" icon="cog" />
           </Popover>
@@ -670,18 +758,18 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       </Navbar>
 
       {/* Main content area with test suites and results */}
-      <div 
-        className={Classes.DRAWER_BODY} 
-        style={{ 
+      <div
+        className={Classes.DRAWER_BODY}
+        style={{
           marginBottom: "60px",
-          paddingBottom: useBigButton ? "120px" : "80px"
+          paddingBottom: useBigButton ? "120px" : "80px",
         }}
       >
         {renderDbContent()}
       </div>
 
       {/* Footer with progress bar and control buttons */}
-      {isConfigLoaded && (
+      {!isInitializing && (
         <div
           className={Classes.DRAWER_FOOTER}
           style={{
@@ -719,6 +807,11 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                   <StartStopButton
                     testing_status={lastRunStatus}
                     useBigButton={true}
+                    isAuthenticated={isUserAuthenticated}
+                    sessionId={getSessionId()}
+                    onUnauthorizedAction={() => {
+                      console.log("User needs to authenticate");
+                    }}
                   />
                 </div>
               </div>
@@ -750,6 +843,11 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                 <StartStopButton
                   testing_status={lastRunStatus}
                   useBigButton={false}
+                  isAuthenticated={isUserAuthenticated}
+                  sessionId={getSessionId()}
+                  onUnauthorizedAction={() => {
+                    console.log("User needs to authenticate");
+                  }}
                 />
               </div>
             </div>

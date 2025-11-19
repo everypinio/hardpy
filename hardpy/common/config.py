@@ -52,7 +52,17 @@ class FrontendConfig(BaseModel):
     full_size_button: bool = False
     sound_on: bool = False
     measurement_display: bool = True
+    auth: AuthConfig = Field(default_factory=lambda: AuthConfig())
     modal_result: ModalResultConfig = Field(default_factory=lambda: ModalResultConfig())
+
+
+class AuthConfig(BaseModel):
+    """Authentication configuration."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    enabled: bool = False
+    timeout_minutes: int = 60
 
 
 class ModalResultConfig(BaseModel):
