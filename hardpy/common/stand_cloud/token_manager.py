@@ -124,6 +124,8 @@ class TokenManager:
             storage_keyring = load_keyring("keyring.backends.SecretService.Keyring")
         elif system() == "Windows":
             storage_keyring = load_keyring("keyring.backends.Windows.WinVaultKeyring")
+        elif system() == "Darwin":
+            storage_keyring = load_keyring("keyring.backends.macOS.KeyChain")
         # TODO(xorialexandrov): add memory keyring or other store
         mem_keyring = storage_keyring
 

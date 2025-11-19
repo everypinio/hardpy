@@ -2,6 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## 0.18.2
+
+* Add support for working with macOS.
+  [[PR-231](https://github.com/everypinio/hardpy/pull/231)]
+
 ## 0.18.1
 
 * Expand the log for the StandCloud data synchronization process.

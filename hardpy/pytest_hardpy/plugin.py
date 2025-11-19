@@ -140,10 +140,10 @@ class HardpyPlugin:
         self._start_args = {}
         self._sc_syncronizer = StandCloudSynchronizer()
 
-        if system() == "Linux":
-            signal.signal(signal.SIGTERM, self._stop_handler)
-        elif system() == "Windows":
+        if system() == "Windows":
             signal.signal(signal.SIGBREAK, self._stop_handler)  # type: ignore
+        else:
+            signal.signal(signal.SIGTERM, self._stop_handler)
         self._log = getLogger(__name__)
 
     # Initialization hooks

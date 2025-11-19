@@ -65,7 +65,7 @@ class PyTestWrapper:
                 cwd=self._config_manager.tests_path,
                 creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
             )
-        if system() == "Linux":
+        else:
             self._proc = subprocess.Popen(  # noqa: S603
                 cmd,
                 cwd=self._config_manager.tests_path,
@@ -80,10 +80,10 @@ class PyTestWrapper:
             bool: True if pytest was running and stopped
         """
         if self.is_running() and self._proc:
-            if system() == "Linux":
-                self._proc.terminate()
-            elif system() == "Windows":
+            if system() == "Windows":
                 self._proc.send_signal(signal.CTRL_BREAK_EVENT)  # type: ignore
+            else:
+                self._proc.terminate()
             return True
         return False
 
