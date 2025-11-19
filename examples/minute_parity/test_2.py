@@ -9,7 +9,6 @@ pytestmark = pytest.mark.module_name("Main tests")
 @pytest.mark.case_name("Minute check")
 def test_minute_parity(driver_example: DriverExample):
     minute = driver_example.current_minute
-    hardpy.set_message(f"Current minute {minute}")
     result = minute % 2
     hardpy.set_case_measurement(
         hardpy.NumericMeasurement(value=minute, name="Current minute"),
