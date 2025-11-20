@@ -77,9 +77,6 @@ class PyTestWrapper:
                     pytest_test_paths.append(f"{test_path}.py")
 
             cmd.extend(pytest_test_paths)
-            print(
-                f"DEBUG: Running selected tests: {pytest_test_paths}"
-            )
 
         if self.config.stand_cloud.connection_only:
             cmd.append("--sc-connection-only")
@@ -97,10 +94,6 @@ class PyTestWrapper:
 
         # Preserve full test structure in database before starting selected tests
         self._preserve_full_test_structure()
-
-        print(
-            f"DEBUG: Final pytest command: {' '.join(cmd)}"
-        )
 
         if system() == "Windows":
             self._proc = subprocess.Popen(  # noqa: S603
@@ -164,10 +157,6 @@ class PyTestWrapper:
         if is_clear_database:
             args.append("--hardpy-clear-database")
 
-        print(
-            f"DEBUG: Collection command: {' '.join([self.python_executable] + args)}"
-        )
-
         # Run collection and store the full test structure
         process = subprocess.Popen(  # noqa: S603
             [self.python_executable, *args],
@@ -190,11 +179,7 @@ class PyTestWrapper:
             modules_key = self._reporter.generate_key(DF.MODULES)
             full_structure = self._reporter.get_field(modules_key)
             self._full_test_structure = full_structure
-            print(
-                f"DEBUG: Stored test structure with {len(full_structure) if full_structure else 0} modules"
-            )
         except Exception as e:  # noqa: BLE001
-            print(f"DEBUG: Failed to store test structure: {e}")
             self._full_test_structure = None
 
     def _preserve_full_test_structure(self) -> None:
@@ -207,6 +192,7 @@ class PyTestWrapper:
 
             # Get current selected tests
             selected_tests = getattr(self._app.state, "selected_tests", [])
+            manual_collect_mode = getattr(self._app.state, "manual_collect_mode", False)
 
             # Create a copy of full structure with selection info
             preserved_structure = {}
@@ -217,16 +203,21 @@ class PyTestWrapper:
                 if module_data.get("cases"):
                     for case_name, case_data in module_data["cases"].items():
                         full_test_path = f"{module_name}::{case_name}"
-                        is_selected = full_test_path in selected_tests
+                        if manual_collect_mode:
+                            is_selected = full_test_path in selected_tests
+                        else:
+                            is_selected = True
 
-                        # Mark unselected tests as skipped from the beginning
                         preserved_case = case_data.copy()
-                        if not is_selected:
+
+                        if manual_collect_mode and not is_selected:
                             preserved_case["status"] = "skipped"
                             preserved_case["start_time"] = None
                             preserved_case["stop_time"] = None
                             preserved_case["assertion_msg"] = None
                             preserved_case["msg"] = None
+                        else:
+                            preserved_case["status"] = case_data.get("status", "ready")
 
                         preserved_module_cases[case_name] = preserved_case
 

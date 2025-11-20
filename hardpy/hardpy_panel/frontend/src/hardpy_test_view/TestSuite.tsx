@@ -193,6 +193,7 @@ type Props = {
   moduleTechName: string;
   selectedTests?: string[];
   measurementDisplay?: boolean;
+  manualCollectMode?: boolean;
 } & WithTranslation;
 
 /**
@@ -361,13 +362,15 @@ export class TestSuite extends React.Component<Props, State> {
    * Checks if all tests in a module are selected.
    */
   private isAllTestsSelected(): boolean {
-    const { test, selectedTests = [] } = this.props;
+    const { test, selectedTests = [], manualCollectMode = false } = this.props;
     const case_names = Object.keys(test.cases || {});
 
     if (case_names.length === 0) {
       return false;
     }
-
+    if (!manualCollectMode) {
+      return true;
+    }
     return case_names.every((caseName) => {
       const testFullPath = `${this.getModuleTechName()}::${caseName}`;
       return selectedTests.includes(testFullPath);
@@ -378,19 +381,23 @@ export class TestSuite extends React.Component<Props, State> {
    * Checks if some (but not all) tests in a module are selected
    */
   private isSomeTestsSelected(): boolean {
-    const { test, selectedTests = [] } = this.props;
+    const { test, selectedTests = [], manualCollectMode = false } = this.props;
     const case_names = Object.keys(test.cases || {});
 
     if (case_names.length === 0) {
       return false;
-    } else {
-      const selectedCount = case_names.filter((caseName) => {
-        const testFullPath = `${this.getModuleTechName()}::${caseName}`;
-        return selectedTests.includes(testFullPath);
-      }).length;
-
-      return selectedCount > 0 && selectedCount < case_names.length;
     }
+
+    if (!manualCollectMode) {
+      return false;
+    }
+
+    const selectedCount = case_names.filter((caseName) => {
+      const testFullPath = `${this.getModuleTechName()}::${caseName}`;
+      return selectedTests.includes(testFullPath);
+    }).length;
+
+    return selectedCount > 0 && selectedCount < case_names.length;
   }
 
   /**
@@ -603,9 +610,11 @@ export class TestSuite extends React.Component<Props, State> {
     row_: string,
     rowIndex: number
   ): React.ReactElement {
-    const { selectedTests = [] } = this.props;
+    const { selectedTests = [], manualCollectMode = false } = this.props;
     const testFullPath = `${this.getModuleTechName()}::${row_}`;
-    const isSelected = selectedTests.includes(testFullPath);
+    const isSelected = manualCollectMode
+      ? selectedTests.includes(testFullPath)
+      : true;
 
     return this.commonCellRender(
       <div
@@ -617,6 +626,7 @@ export class TestSuite extends React.Component<Props, State> {
       >
         <Checkbox
           checked={isSelected}
+          disabled={!manualCollectMode}
           onChange={(e) =>
             this.handleTestSelection(testFullPath, e.target.checked)
           }
@@ -632,7 +642,15 @@ export class TestSuite extends React.Component<Props, State> {
    * @param {boolean} isChecked - Whether the checkbox is checked.
    */
   private handleTestSelection(testPath: string, isChecked: boolean): void {
-    const { selectedTests = [], onTestsSelectionChange } = this.props;
+    const {
+      selectedTests = [],
+      onTestsSelectionChange,
+      manualCollectMode = false,
+    } = this.props;
+
+    if (!manualCollectMode) {
+      return;
+    }
 
     let newSelectedTests: string[];
     if (isChecked) {
@@ -650,7 +668,17 @@ export class TestSuite extends React.Component<Props, State> {
    * Handles select all/deselect all.
    */
   private handleSelectAll(e: React.ChangeEvent<HTMLInputElement>): void {
-    const { test, selectedTests = [], onTestsSelectionChange } = this.props;
+    const {
+      test,
+      selectedTests = [],
+      onTestsSelectionChange,
+      manualCollectMode = false,
+    } = this.props;
+
+    if (!manualCollectMode) {
+      return;
+    }
+
     const case_names = Object.keys(test.cases || {});
 
     let newSelectedTests: string[];
@@ -791,9 +819,11 @@ export class TestSuite extends React.Component<Props, State> {
     rowIndex: number
   ): React.ReactElement {
     const test = test_topics[rowIndex];
-    const { selectedTests = [] } = this.props;
+    const { selectedTests = [], manualCollectMode = false } = this.props;
     const testFullPath = `${this.getModuleTechName()}::${row_}`;
-    const isSelected = selectedTests.includes(testFullPath);
+    const isSelected = manualCollectMode
+      ? selectedTests.includes(testFullPath)
+      : true;
 
     const nameStyle: React.CSSProperties = {
       marginTop: "0.2em",
@@ -806,7 +836,7 @@ export class TestSuite extends React.Component<Props, State> {
       return this.commonCellRender(
         <div style={nameStyle}>
           <TestName name={""} />
-          {!isSelected && (
+          {manualCollectMode && !isSelected && (
             <Tag
               minimal
               style={{ marginLeft: "8px" }}
@@ -823,7 +853,7 @@ export class TestSuite extends React.Component<Props, State> {
     return this.commonCellRender(
       <div style={nameStyle}>
         <TestName name={test.name} />
-        {!isSelected && (
+        {manualCollectMode && !isSelected && (
           <Tag
             minimal
             style={{ marginLeft: "8px" }}
@@ -897,14 +927,20 @@ export class TestSuite extends React.Component<Props, State> {
     rowIndex: number
   ): React.ReactElement {
     const test = test_topics[rowIndex];
-    const { selectedTests = [] } = this.props;
+    const { selectedTests = [], manualCollectMode = false } = this.props;
     const testFullPath = `${this.getModuleTechName()}::${row_}`;
-    const isSelected = selectedTests.includes(testFullPath);
+    const isSelected = manualCollectMode
+      ? selectedTests.includes(testFullPath)
+      : true;
 
     // Safe check for test existence
     if (!test) {
       let displayStatus = "";
-      if (!isSelected && this.props.commonTestRunStatus === "run") {
+      if (
+        manualCollectMode &&
+        !isSelected &&
+        this.props.commonTestRunStatus === "run"
+      ) {
         displayStatus = "skipped";
       }
 
@@ -926,7 +962,11 @@ export class TestSuite extends React.Component<Props, State> {
     let displayStatus = test.status;
     if (test.status === "skipped") {
       displayStatus = "skipped";
-    } else if (!isSelected && this.props.commonTestRunStatus === "run") {
+    } else if (
+      manualCollectMode &&
+      !isSelected &&
+      this.props.commonTestRunStatus === "run"
+    ) {
       displayStatus = "skipped";
     }
 

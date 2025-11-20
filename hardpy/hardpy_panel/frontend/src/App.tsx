@@ -671,6 +671,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                   manualCollectMode
                 }
                 measurementDisplay={appConfig?.frontend?.measurement_display}
+                manualCollectMode={manualCollectMode} 
               />
             </Card>
           )}

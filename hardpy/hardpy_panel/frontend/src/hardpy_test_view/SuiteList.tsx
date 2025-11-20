@@ -90,6 +90,7 @@ interface Props extends WithTranslation {
   selectedTests?: string[];
   selectionSupported?: boolean;
   measurementDisplay?: boolean;
+  manualCollectMode?: boolean; 
 }
 
 const SECONDS_TO_MILLISECONDS = 1000;
@@ -269,6 +270,7 @@ export class SuiteList extends React.Component<
         selectedTests={this.props.selectedTests}
         selectionSupported={this.props.selectionSupported}
         measurementDisplay={this.props.measurementDisplay}
+        manualCollectMode={this.props.manualCollectMode} 
       />
     );
   }
