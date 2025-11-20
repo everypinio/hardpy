@@ -73,7 +73,7 @@ async def sync_stand_cloud(sc_sync_interval_minutes: int, app: FastAPI) -> None:
 async def lifespan_sync_scheduler(app: FastAPI) -> AsyncGenerator[Any, Any]:
     """Manages the lifecycle events (startup and shutdown) for background tasks."""
     # Initialize application state
-    app.state.pytest_wrp = PyTestWrapper(app) 
+    app.state.pytest_wrp = PyTestWrapper(app)
     app.state.sc_synchronizer = StandCloudSynchronizer()
     app.state.executor = ThreadPoolExecutor(max_workers=1)
     app.state.manual_collect_mode = False
@@ -84,7 +84,7 @@ async def lifespan_sync_scheduler(app: FastAPI) -> AsyncGenerator[Any, Any]:
     if sc_autosync:
         autosync_timeout = config_manager.config.stand_cloud.autosync_timeout
         app.state.sync_task = asyncio.create_task(
-            sync_stand_cloud(autosync_timeout, app)
+            sync_stand_cloud(autosync_timeout, app),
         )
 
     yield
@@ -342,7 +342,7 @@ def set_manual_collect_mode(mode_data: dict) -> dict:
         if enabled:
             app.state.pytest_wrp.collect()
 
-        return {"status": "success", "manual_collect_mode": enabled}
+        return {"status": "success", "manual_collect_mode": enabled}  # noqa: TRY300
     except Exception as e:  # noqa: BLE001
         return {"status": "error", "message": str(e)}
 

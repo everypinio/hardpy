@@ -34,7 +34,7 @@ class PyTestWrapper:
         self._full_test_structure = None
         self.collect(is_clear_database=True)
 
-    def start(self, start_args: dict | None = None) -> bool:
+    def start(self, start_args: dict | None = None) -> bool:  # noqa: C901, PLR0912
         """Start pytest subprocess.
 
         Args:
@@ -179,7 +179,7 @@ class PyTestWrapper:
             modules_key = self._reporter.generate_key(DF.MODULES)
             full_structure = self._reporter.get_field(modules_key)
             self._full_test_structure = full_structure
-        except Exception as e:  # noqa: BLE001
+        except Exception:  # noqa: BLE001
             self._full_test_structure = None
 
     def _preserve_full_test_structure(self) -> None:
@@ -229,8 +229,8 @@ class PyTestWrapper:
             self._reporter.set_doc_value(modules_key, preserved_structure)
             self._reporter.update_db_by_doc()
 
-        except Exception as e:  # noqa: BLE001
-            print(f"DEBUG: Failed to preserve test structure: {e}")
+        except Exception:  # noqa: BLE001, S110
+            pass
 
     def send_data(self, data: str) -> bool:
         """Send data to pytest subprocess.
