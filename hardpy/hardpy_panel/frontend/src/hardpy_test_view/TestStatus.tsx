@@ -10,7 +10,7 @@ interface Props {
 
 /**
  * Renders a status icon or spinner based on the provided status.
- * 
+ *
  * @param {Object} props - The component props.
  * @param {string} props.status - The status to display. Possible values: "ready", "run", "passed", "failed", "", or any other value.
  * @returns {React.ReactElement} - A React element representing the status icon or spinner.
@@ -58,7 +58,15 @@ export function TestStatus(props: Readonly<Props>): React.ReactElement {
           intent="warning"
           className="status-icon status-icon-skipped"
         />
-      )
+      );
+    case "stucked":
+      return (
+        <Icon
+          icon="time"
+          intent="success"
+          className="status-icon status-icon-wait"
+        />
+      );
     case "":
       return (
         <Icon

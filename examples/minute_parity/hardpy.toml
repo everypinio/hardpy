@@ -13,8 +13,8 @@ port = 8000
 language = "en"
 full_size_button = false
 sound_on = true
-manual_tests_selection = true
-manual_collect = true
+manual_tests_selection = false
+manual_collect = false
 measurement_display = true
 
 [frontend.modal_result]

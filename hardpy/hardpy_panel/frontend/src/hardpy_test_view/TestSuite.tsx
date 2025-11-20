@@ -362,7 +362,7 @@ export class TestSuite extends React.Component<Props, State> {
    */
   private isAllTestsSelected(): boolean {
     const { test, selectedTests = [] } = this.props;
-    const case_names = Object.keys(test.cases);
+    const case_names = Object.keys(test.cases || {});
 
     if (case_names.length === 0) {
       return false;
@@ -379,7 +379,7 @@ export class TestSuite extends React.Component<Props, State> {
    */
   private isSomeTestsSelected(): boolean {
     const { test, selectedTests = [] } = this.props;
-    const case_names = Object.keys(test.cases);
+    const case_names = Object.keys(test.cases || {});
 
     if (case_names.length === 0) {
       return false;
@@ -510,7 +510,13 @@ export class TestSuite extends React.Component<Props, State> {
     if (test_topics) {
       case_names = Object.keys(test_topics);
     }
-    const case_array: Case[] = case_names.map((n) => test_topics[n]);
+
+    // Filter out undefined test cases and create safe arrays
+    const case_names_filtered = case_names.filter((n) => {
+      const testCase = test_topics[n];
+      return testCase !== undefined && testCase !== null;
+    });
+    const case_array: Case[] = case_names_filtered.map((n) => test_topics[n]);
 
     /**
      * Column configuration for the test cases data table
@@ -573,7 +579,7 @@ export class TestSuite extends React.Component<Props, State> {
         <DataTable
           noHeader={true}
           columns={columns}
-          data={case_names}
+          data={case_names_filtered}
           highlightOnHover={true}
           dense={true}
           responsive={true}
@@ -645,7 +651,7 @@ export class TestSuite extends React.Component<Props, State> {
    */
   private handleSelectAll(e: React.ChangeEvent<HTMLInputElement>): void {
     const { test, selectedTests = [], onTestsSelectionChange } = this.props;
-    const case_names = Object.keys(test.cases);
+    const case_names = Object.keys(test.cases || {});
 
     let newSelectedTests: string[];
     if (e.target.checked) {
@@ -684,7 +690,10 @@ export class TestSuite extends React.Component<Props, State> {
       >
         {!this.state.isOpen && (
           <>
-            {Object.entries(test_topics.cases).map(([_key, value]) => {
+            {Object.entries(test_topics.cases || {}).map(([key, value]) => {
+              if (!value) {
+                return null;
+              }
               return (
                 <span key={value.name} style={{ margin: "2px" }}>
                   <TestStatus status={value.status} />
@@ -792,6 +801,25 @@ export class TestSuite extends React.Component<Props, State> {
       opacity: isSelected ? 1 : 0.6,
     };
 
+    // Safe check for test existence
+    if (!test) {
+      return this.commonCellRender(
+        <div style={nameStyle}>
+          <TestName name={""} />
+          {!isSelected && (
+            <Tag
+              minimal
+              style={{ marginLeft: "8px" }}
+              title={this.props.t("testSuite.notSelected")}
+            >
+              {this.props.t("testSuite.skipped")}
+            </Tag>
+          )}
+        </div>,
+        `name_${rowIndex}_${row_}`
+      );
+    }
+
     return this.commonCellRender(
       <div style={nameStyle}>
         <TestName name={test.name} />
@@ -824,6 +852,17 @@ export class TestSuite extends React.Component<Props, State> {
   ): React.ReactElement {
     const test = test_topics[rowIndex];
 
+    // Safe check for test existence
+    if (!test) {
+      return this.commonCellRender(
+        <div
+          style={{ marginTop: "0.2em", marginBottom: "0.2em" }}
+          data-column-id="data"
+        ></div>,
+        `data_${rowIndex}_${row_}`
+      );
+    }
+
     return this.commonCellRender(
       <div
         style={{ marginTop: "0.2em", marginBottom: "0.2em" }}
@@ -832,7 +871,7 @@ export class TestSuite extends React.Component<Props, State> {
         <TestData
           assertion_msg={test.assertion_msg}
           msg={test.msg}
-          measurements={test.measurements} 
+          measurements={test.measurements}
           testSuiteIndex={this.props.index}
           testCaseIndex={rowIndex}
           chart={test.chart}
@@ -862,27 +901,50 @@ export class TestSuite extends React.Component<Props, State> {
     const testFullPath = `${this.getModuleTechName()}::${row_}`;
     const isSelected = selectedTests.includes(testFullPath);
 
+    // Safe check for test existence
+    if (!test) {
+      let displayStatus = "";
+      if (!isSelected && this.props.commonTestRunStatus === "run") {
+        displayStatus = "skipped";
+      }
+
+      return this.commonCellRender(
+        <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
+          <TestStatus
+            status={
+              this.props.commonTestRunStatus !== "run" &&
+              (displayStatus === "run" || displayStatus === "ready")
+                ? "stucked"
+                : displayStatus
+            }
+          />
+        </div>,
+        `status_${rowIndex}_${row_}`
+      );
+    }
+
     let displayStatus = test.status;
-    if (test.status === 'skipped') {
-      displayStatus = 'skipped';
+    if (test.status === "skipped") {
+      displayStatus = "skipped";
     } else if (!isSelected && this.props.commonTestRunStatus === "run") {
       displayStatus = "skipped";
     }
 
     const { info: widget_info, type: widget_type } =
-      test.dialog_box.widget || {};
+      test.dialog_box?.widget || {};
     const {
       base64: image_base64,
       width: image_width,
       border: image_border,
-    } = test.dialog_box.image || {};
+    } = test.dialog_box?.image || {};
 
     return this.commonCellRender(
       <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
-        {test.dialog_box.dialog_text &&
+        {test.dialog_box?.dialog_text &&
           test.status === "run" &&
           this.props.commonTestRunStatus === "run" &&
-          test.dialog_box.visible && isSelected && (
+          test.dialog_box?.visible &&
+          isSelected && (
             <StartConfirmationDialog
               title_bar={test.dialog_box.title_bar ?? test.name}
               dialog_text={test.dialog_box.dialog_text}
