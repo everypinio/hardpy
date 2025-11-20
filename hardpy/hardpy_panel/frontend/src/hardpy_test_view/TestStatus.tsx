@@ -59,14 +59,6 @@ export function TestStatus(props: Readonly<Props>): React.ReactElement {
           className="status-icon status-icon-skipped"
         />
       );
-    case "stucked":
-      return (
-        <Icon
-          icon="circle"
-          intent="none"
-          className="status-icon status-icon-empty"
-        />
-      );
     case "":
       return (
         <Icon

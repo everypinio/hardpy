@@ -53,27 +53,15 @@ class StartStopButton extends React.Component<Props, State> {
   ): void {
     const testsToSend = selectedTests || [];
 
-    if (testsToSend.length === 0) {
-      console.log("No tests selected, sending empty array");
-    }
-
     const testsJsonString = JSON.stringify(testsToSend);
 
-    console.log("Selected tests being sent after START:", testsToSend);
     fetch(`/api/selected_tests`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: testsJsonString,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Selected tests sent to backend:", data);
-      })
-      .catch((error) => {
-        console.error("Error sending selected tests:", error);
-      });
+    }).then((response) => response.json());
   }
 
   /**
@@ -82,19 +70,11 @@ class StartStopButton extends React.Component<Props, State> {
    * @private
    */
   private hardpy_call(uri: string): void {
-    fetch(uri)
-      .then((response) => {
-        if (response.ok) {
-          return response.text();
-        } else {
-          console.log(
-            this.props.t("error.requestFailed", { status: response.status })
-          );
-        }
-      })
-      .catch((error) => {
-        console.log(this.props.t("error.requestError", { error }));
-      });
+    fetch(uri).then((response) => {
+      if (response.ok) {
+        return response.text();
+      }
+    });
   }
 
   /**
@@ -103,9 +83,6 @@ class StartStopButton extends React.Component<Props, State> {
    */
   private hardpy_start(): void {
     if (this.props.manualCollectMode) {
-      console.log(
-        "StartStopButton: Cannot start test - manual collect mode is active"
-      );
       return;
     }
 
@@ -114,7 +91,6 @@ class StartStopButton extends React.Component<Props, State> {
     }
 
     this.sendSelectedTestsToBackend(this.props.selectedTests);
-    console.log("StartStopButton: Starting test execution");
     this.hardpy_call("api/start");
   }
 
@@ -125,16 +101,12 @@ class StartStopButton extends React.Component<Props, State> {
    */
   private hardpy_stop(): void {
     if (this.props.manualCollectMode) {
-      console.log(
-        "StartStopButton: Cannot stop test - manual collect mode is active"
-      );
       return;
     }
 
     if (this.state.isStopButtonDisabled) {
       return;
     }
-    console.log("StartStopButton: Stopping test execution");
     this.hardpy_call("api/stop");
 
     // Disable the stop button for some time to prevent multiple rapid clicks
@@ -223,7 +195,6 @@ class StartStopButton extends React.Component<Props, State> {
       return;
     }
 
-    // Don't handle space if manual collect mode is active
     if (this.props.manualCollectMode) {
       event.preventDefault();
       event.stopPropagation();
@@ -250,7 +221,9 @@ class StartStopButton extends React.Component<Props, State> {
     }
 
     const target = event.target as HTMLElement;
-    if (!target) return;
+    if (!target) {
+      return;
+    }
 
     // Don't handle space if focused on interactive elements
     const interactiveElements = ["INPUT", "TEXTAREA", "SELECT", "BUTTON"];
@@ -272,7 +245,6 @@ class StartStopButton extends React.Component<Props, State> {
    * @private
    */
   private readonly handleButtonClick = (): void => {
-    // Don't handle click if manual collect mode is active
     if (this.props.manualCollectMode) {
       return;
     }

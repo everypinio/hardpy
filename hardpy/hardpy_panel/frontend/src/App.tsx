@@ -282,7 +282,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
 
       if (JSON.stringify(filtered) !== JSON.stringify(prevSelected)) {
         localStorage.setItem("hardpy_selected_tests", JSON.stringify(filtered));
-        console.log("Filtered selected tests:", filtered);
       }
 
       return filtered;
@@ -479,11 +478,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
 
         // Filter selected tests when test structure changes
         filterSelectedTests(allAvailableTests);
-
-        console.log(
-          "Test structure updated, available tests:",
-          allAvailableTests
-        );
       }
 
       // If manual selection is enabled and no tests are selected yet, select all by default
