@@ -53,7 +53,6 @@ interface AppConfig {
   frontend?: {
     full_size_button?: boolean;
     sound_on?: boolean;
-    manual_tests_selection?: boolean;
     manual_collect?: boolean;
     measurement_display?: boolean;
     modal_result?: {
@@ -229,7 +228,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         const manualCollectData = await manualCollectResponse.json();
         setManualCollectMode(manualCollectData.manual_collect_mode);
 
-        if (config.frontend?.manual_tests_selection) {
+        if (config.frontend?.manual_collect) {
           const savedTests = localStorage.getItem("hardpy_selected_tests");
           if (savedTests) {
             setSelectedTests(JSON.parse(savedTests));
@@ -489,7 +488,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
 
       // If manual selection is enabled and no tests are selected yet, select all by default
       if (
-        appConfig?.frontend?.manual_tests_selection &&
+        appConfig?.frontend?.manual_collect &&
         selectedTests.length === 0 &&
         allAvailableTests.length > 0
       ) {
@@ -668,7 +667,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                 onTestsSelectionChange={handleTestsSelectionChange}
                 selectedTests={selectedTests}
                 selectionSupported={
-                  (appConfig?.frontend?.manual_tests_selection || false) &&
+                  (appConfig?.frontend?.manual_collect || false) &&
                   manualCollectMode
                 }
                 measurementDisplay={appConfig?.frontend?.measurement_display}
@@ -699,7 +698,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const renderSettingsMenu = (): JSX.Element => {
     return (
       <Menu>
-        {appConfig?.frontend?.manual_tests_selection && (
+        {appConfig?.frontend?.manual_collect && (
           <MenuItem
             shouldDismissPopover={false}
             text={
@@ -734,7 +733,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
    * @returns {JSX.Element} The manual collect mode indicator
    */
   const renderManualCollectIndicator = (): JSX.Element => {
-    if (!appConfig?.frontend?.manual_tests_selection) {
+    if (!appConfig?.frontend?.manual_collect) {
       return <></>;
     }
 
