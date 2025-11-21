@@ -494,7 +494,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       }
     }
 
-    // --- Test completion logic starts here ---
     const prevStatus = lastRunStatus;
     const ModalResultEnable =
       appConfig?.frontend?.modal_result?.enable ?? false;

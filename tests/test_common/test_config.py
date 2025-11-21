@@ -100,7 +100,7 @@ def test_frontend_config():
     assert config.language == frontend_default_language
     assert config.full_size_button == frontend_default_full_size_button
     assert config.sound_on == frontend_default_sound_on
-    assert config.manual_collect == frontend_default_manual_collect  # new field
+    assert config.manual_collect == frontend_default_manual_collect
     assert config.measurement_display == frontend_default_measurement_display
 
 
