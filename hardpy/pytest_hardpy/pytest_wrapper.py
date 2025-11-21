@@ -34,7 +34,7 @@ class PyTestWrapper:
         self._full_test_structure = None
         self.collect(is_clear_database=True)
 
-    def start(self, start_args: dict | None = None) -> bool:  # noqa: C901, PLR0912
+    def start(self, start_args: dict | None = None) -> bool:
         """Start pytest subprocess.
 
         Args:
