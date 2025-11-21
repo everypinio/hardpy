@@ -25,6 +25,7 @@ def test_batch_info():
 def test_dut_info():
     serial_number = str(uuid4())[:6]
     hardpy.set_dut_serial_number(serial_number)
+    hardpy.set_message(f"Serial number: {serial_number}")
     hardpy.set_dut_part_number("part_number_1")
     hardpy.set_dut_name("Test Device")
     hardpy.set_dut_type("PCBA")

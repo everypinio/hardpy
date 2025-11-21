@@ -5,6 +5,11 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 * Add manual test selection mode allowing users to choose specific tests to run via new UI checkboxes.
   [[PR-224](https://github.com/everypinio/hardpy/pull/224)]
 
+## 0.18.2
+
+* Add support for working with macOS.
+  [[PR-231](https://github.com/everypinio/hardpy/pull/231)]
+
 ## 0.18.1
 
 * Expand the log for the StandCloud data synchronization process.
