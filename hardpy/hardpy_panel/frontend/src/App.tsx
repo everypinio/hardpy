@@ -15,6 +15,10 @@ import {
   H2,
   Popover,
   Card,
+  Switch,
+  Position,
+  Tooltip,
+  Icon,
 } from "@blueprintjs/core";
 
 import StartStopButton from "./button/StartStop";
@@ -49,6 +53,7 @@ interface AppConfig {
   frontend?: {
     full_size_button?: boolean;
     sound_on?: boolean;
+    manual_collect?: boolean;
     measurement_display?: boolean;
     modal_result?: {
       enable?: boolean;
@@ -112,7 +117,9 @@ const findStoppedTestCase = (
 ):
   | { moduleName: string; caseName: string; assertionMsg?: string }
   | undefined => {
-  if (!testRunData.modules) {return undefined;}
+  if (!testRunData.modules) {
+    return undefined;
+  }
 
   // First, look for explicitly stopped test cases
   for (const [moduleId, module] of Object.entries(testRunData.modules)) {
@@ -130,8 +137,11 @@ const findStoppedTestCase = (
   }
 
   // If no explicitly stopped case found, return the last failed test case
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let lastFailedTestCase: any = null;
+  let lastFailedTestCase: {
+    moduleName: string;
+    caseName: string;
+    assertionMsg?: string;
+  } | null = null;
   for (const [moduleId, module] of Object.entries(testRunData.modules)) {
     if (module.cases) {
       for (const [caseId, testCase] of Object.entries(module.cases)) {
@@ -146,7 +156,7 @@ const findStoppedTestCase = (
     }
   }
 
-  return lastFailedTestCase;
+  return lastFailedTestCase || undefined;
 };
 
 /**
@@ -162,6 +172,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const [use_debug_info, setUseDebugInfo] = React.useState(false);
   const [appConfig, setAppConfig] = React.useState<AppConfig | null>(null);
   const [isConfigLoaded, setIsConfigLoaded] = React.useState(false);
+  const [manualCollectMode, setManualCollectMode] = React.useState(false);
 
   const [lastRunStatus, setLastRunStatus] = React.useState<
     StatusKey | "unknown"
@@ -191,6 +202,10 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const startTimeRef = React.useRef<number | null>(null);
   const [timerIntervalId, setTimerIntervalId] =
     React.useState<NodeJS.Timeout | null>(null);
+  const [selectedTests, setSelectedTests] = React.useState<string[]>([]);
+  const [allTests, setAllTests] = React.useState<string[]>([]);
+  const [previousTestStructure, setPreviousTestStructure] =
+    React.useState<string>("");
 
   /**
    * Loads HardPy configuration from the backend API on component mount
@@ -204,8 +219,20 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         setAppConfig(config);
 
         // Initialize sound setting from TOML config
-        if (config.frontend.sound_on !== undefined) {
+        if (config.frontend?.sound_on !== undefined) {
           setUseEndTestSound(config.frontend.sound_on);
+        }
+
+        // Load manual collect mode state
+        const manualCollectResponse = await fetch("/api/manual_collect_mode");
+        const manualCollectData = await manualCollectResponse.json();
+        setManualCollectMode(manualCollectData.manual_collect_mode);
+
+        if (config.frontend?.manual_collect) {
+          const savedTests = localStorage.getItem("hardpy_selected_tests");
+          if (savedTests) {
+            setSelectedTests(JSON.parse(savedTests));
+          }
         }
       } catch (error) {
         console.error("Failed to load HardPy config:", error);
@@ -215,6 +242,50 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     };
 
     loadConfig();
+  }, []);
+
+  /**
+   * Toggles manual collect mode
+   */
+  const toggleManualCollectMode = async () => {
+    try {
+      const newMode = !manualCollectMode;
+      const response = await fetch("/api/manual_collect_mode", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ enabled: newMode }),
+      });
+
+      const result = await response.json();
+      if (result.status === "success") {
+        setManualCollectMode(newMode);
+
+        if (!newMode) {
+          await fetch("/api/collect");
+        }
+      }
+    } catch (error) {
+      console.error("Failed to toggle manual collect mode:", error);
+    }
+  };
+
+  /**
+   * Filters selected tests to only include those that exist in current test structure
+   */
+  const filterSelectedTests = React.useCallback((currentAllTests: string[]) => {
+    setSelectedTests((prevSelected) => {
+      const filtered = prevSelected.filter((test) =>
+        currentAllTests.includes(test)
+      );
+
+      if (JSON.stringify(filtered) !== JSON.stringify(prevSelected)) {
+        localStorage.setItem("hardpy_selected_tests", JSON.stringify(filtered));
+      }
+
+      return filtered;
+    });
   }, []);
 
   /**
@@ -351,10 +422,14 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
    * Handles test status changes, progress updates, and ModalResult display
    */
   React.useEffect(() => {
-    if (rows.length === 0) {return;}
+    if (rows.length === 0) {
+      return;
+    }
 
     const index = findRowIndex(rows, syncDocumentId);
-    if (index === -1) {return;}
+    if (index === -1) {
+      return;
+    }
     const db_row = rows[index].doc as TestRunI;
     const status = db_row.status || "";
     const progress = db_row.progress || 0;
@@ -381,7 +456,44 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       }
     }
 
-    // Detect test completion and show ModalResult (only if enabled in config)
+    // Extract all available tests and detect structure changes
+    if (db_row.modules) {
+      const allAvailableTests: string[] = [];
+      Object.entries(db_row.modules).forEach(([moduleId, module]) => {
+        if (module.cases) {
+          Object.keys(module.cases).forEach((caseId) => {
+            // Safe check for case existence
+            if (module.cases[caseId]) {
+              allAvailableTests.push(`${moduleId}::${caseId}`);
+            }
+          });
+        }
+      });
+
+      // Check if test structure has changed
+      const currentStructure = JSON.stringify(allAvailableTests.sort());
+      if (currentStructure !== previousTestStructure) {
+        setAllTests(allAvailableTests);
+        setPreviousTestStructure(currentStructure);
+
+        // Filter selected tests when test structure changes
+        filterSelectedTests(allAvailableTests);
+      }
+
+      // If manual selection is enabled and no tests are selected yet, select all by default
+      if (
+        appConfig?.frontend?.manual_collect &&
+        selectedTests.length === 0 &&
+        allAvailableTests.length > 0
+      ) {
+        setSelectedTests(allAvailableTests);
+        localStorage.setItem(
+          "hardpy_selected_tests",
+          JSON.stringify(allAvailableTests)
+        );
+      }
+    }
+
     const prevStatus = lastRunStatus;
     const ModalResultEnable =
       appConfig?.frontend?.modal_result?.enable ?? false;
@@ -392,6 +504,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       setTestCompletionData(null);
     }
 
+    // Show ModalResult on test completion
     if (
       ModalResultEnable &&
       prevStatus === "run" &&
@@ -406,27 +519,20 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         assertionMsg?: string;
       }> = [];
 
-      // Extract failed test cases if test failed
       if (!testPassed && !testStopped && db_row.modules) {
-        Object.entries(db_row.modules).forEach(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ([moduleId, module]: [string, any]) => {
-            if (module.cases) {
-              Object.entries(module.cases).forEach(
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                ([caseId, testCase]: [string, any]) => {
-                  if (testCase.status === "failed") {
-                    failedTestCases.push({
-                      moduleName: module.name || moduleId,
-                      caseName: testCase.name || caseId,
-                      assertionMsg: testCase.assertion_msg || undefined,
-                    });
-                  }
-                }
-              );
-            }
+        Object.entries(db_row.modules).forEach(([moduleId, module]) => {
+          if (module.cases) {
+            Object.entries(module.cases).forEach(([caseId, testCase]) => {
+              if (testCase.status === "failed") {
+                failedTestCases.push({
+                  moduleName: module.name || moduleId,
+                  caseName: testCase.name || caseId,
+                  assertionMsg: testCase.assertion_msg || undefined,
+                });
+              }
+            });
           }
-        );
+        });
       }
 
       const stoppedTestCase = testStopped
@@ -457,7 +563,26 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     isAuthenticated,
     appConfig,
     showCompletionModalResult,
+    syncDocumentId,
+    selectedTests.length,
+    previousTestStructure,
+    filterSelectedTests,
   ]);
+
+  /**
+   * Handles selection change from SuiteList
+   */
+  const handleTestsSelectionChange = (tests: string[]) => {
+    setSelectedTests(tests);
+    localStorage.setItem("hardpy_selected_tests", JSON.stringify(tests));
+  };
+
+  /**
+   * Clears selected tests when starting a new test run
+   */
+  const handleTestRunStart = React.useCallback(() => {
+    filterSelectedTests(allTests);
+  }, [allTests, filterSelectedTests]);
 
   /**
    * Renders the database content including test suites and debug information
@@ -532,8 +657,15 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
               <SuiteList
                 db_state={testRunData}
                 defaultClose={!ultrawide}
+                onTestsSelectionChange={handleTestsSelectionChange}
+                selectedTests={selectedTests}
+                selectionSupported={
+                  (appConfig?.frontend?.manual_collect || false) &&
+                  manualCollectMode
+                }
                 measurementDisplay={appConfig?.frontend?.measurement_display}
-              ></SuiteList>
+                manualCollectMode={manualCollectMode} 
+              />
             </Card>
           )}
           {use_debug_info && (
@@ -560,6 +692,18 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const renderSettingsMenu = (): JSX.Element => {
     return (
       <Menu>
+        {appConfig?.frontend?.manual_collect && (
+          <MenuItem
+            shouldDismissPopover={false}
+            text={
+              manualCollectMode
+                ? t("app.manualCollectOff")
+                : t("app.manualCollectOn")
+            }
+            icon={manualCollectMode ? "disable" : "selection"}
+            onClick={toggleManualCollectMode}
+          />
+        )}
         <MenuItem
           shouldDismissPopover={false}
           text={use_end_test_sound ? t("app.soundOff") : t("app.soundOn")}
@@ -575,6 +719,52 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           onClick={() => setUseDebugInfo(!use_debug_info)}
         />
       </Menu>
+    );
+  };
+
+  /**
+   * Renders manual collect mode indicator
+   * @returns {JSX.Element} The manual collect mode indicator
+   */
+  const renderManualCollectIndicator = (): JSX.Element => {
+    if (!appConfig?.frontend?.manual_collect) {
+      return <></>;
+    }
+
+    return (
+      <Tooltip
+        content={
+          manualCollectMode
+            ? t("app.manualCollectModeActive")
+            : t("app.manualCollectModeInactive")
+        }
+        position={Position.BOTTOM}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginRight: "15px",
+            padding: "5px 10px",
+            backgroundColor: manualCollectMode
+              ? Colors.ORANGE5
+              : Colors.LIGHT_GRAY3,
+            borderRadius: "3px",
+            border: `1px solid ${manualCollectMode ? Colors.ORANGE3 : Colors.GRAY3}`,
+          }}
+        >
+          <Icon
+            icon={manualCollectMode ? "selection" : "disable"}
+            size={12}
+            style={{ marginRight: "5px" }}
+          />
+          <span style={{ fontSize: "12px", fontWeight: "bold" }}>
+            {manualCollectMode
+              ? t("app.manualCollectOn")
+              : t("app.manualCollectOff")}
+          </span>
+        </div>
+      </Tooltip>
     );
   };
 
@@ -663,6 +853,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         </Navbar.Group>
 
         <Navbar.Group align={Alignment.RIGHT}>
+          {renderManualCollectIndicator()}
           <Popover content={renderSettingsMenu()}>
             <Button className="bp3-minimal" icon="cog" />
           </Popover>
@@ -670,11 +861,11 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       </Navbar>
 
       {/* Main content area with test suites and results */}
-      <div 
-        className={Classes.DRAWER_BODY} 
-        style={{ 
+      <div
+        className={Classes.DRAWER_BODY}
+        style={{
           marginBottom: "60px",
-          paddingBottom: useBigButton ? "120px" : "80px"
+          paddingBottom: useBigButton ? "120px" : "80px",
         }}
       >
         {renderDbContent()}
@@ -719,6 +910,9 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                   <StartStopButton
                     testing_status={lastRunStatus}
                     useBigButton={true}
+                    selectedTests={selectedTests}
+                    manualCollectMode={manualCollectMode}
+                    onTestRunStart={handleTestRunStart}
                   />
                 </div>
               </div>
@@ -750,6 +944,9 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                 <StartStopButton
                   testing_status={lastRunStatus}
                   useBigButton={false}
+                  selectedTests={selectedTests}
+                  manualCollectMode={manualCollectMode}
+                  onTestRunStart={handleTestRunStart}
                 />
               </div>
             </div>
