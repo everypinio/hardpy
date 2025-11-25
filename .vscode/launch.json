@@ -139,6 +139,17 @@
             ]
         },
         {
+            "name": "Python: Example Stand template",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "run",
+                "examples/stand_template"
+            ]
+        },
+        {
             "name": "Python: Example StandCloud",
             "type": "debugpy",
             "request": "launch",
