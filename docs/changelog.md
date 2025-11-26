@@ -2,6 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## 0.18.3
+
+* Add support for pytest 9.
+  [[PR-233](https://github.com/everypinio/hardpy/pull/233)]
+
 ## 0.18.2
 
 * Add support for working with macOS.
