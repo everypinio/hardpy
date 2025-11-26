@@ -32,7 +32,7 @@ class PyTestWrapper:
 
         # Store the full test structure from collection
         self._full_test_structure = None
-        self.collect(is_clear_database=True)
+        self.collect(is_clear_database=True, is_update_full_tests=True)
 
     def start(self, start_args: dict | None = None) -> bool:  # noqa: PLR0912
         """Start pytest subprocess.
@@ -127,12 +127,16 @@ class PyTestWrapper:
             return True
         return False
 
-    def collect(self, *, is_clear_database: bool = False) -> bool:
+    def collect(
+        self, *, is_clear_database: bool = False, is_update_full_tests: bool = False
+    ) -> bool:
         """Perform pytest collection.
 
         Args:
             is_clear_database (bool): indicates whether database
                                       should be cleared. Defaults to False.
+            is_update_full_tests (bool): indicates whether to update full test structure.
+                                      Defaults to False.
 
         Returns:
             bool: True if collection was started
@@ -157,7 +161,7 @@ class PyTestWrapper:
         if is_clear_database:
             args.append("--hardpy-clear-database")
 
-        # Run collection and store the full test structure
+        # Run collection
         process = subprocess.Popen(  # noqa: S603
             [self.python_executable, *args],
             cwd=self._config_manager.tests_path,
@@ -165,9 +169,10 @@ class PyTestWrapper:
             stderr=subprocess.PIPE,
         )
 
-        # Wait for collection to complete and store the structure
-        process.wait()
-        self._store_full_test_structure()
+        # Only wait and store structure if explicitly requested
+        if is_update_full_tests:
+            process.wait()
+            self._store_full_test_structure()
 
         return True
 
