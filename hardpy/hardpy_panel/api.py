@@ -32,6 +32,40 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+@contextlib.asynccontextmanager
+async def lifespan_sync_scheduler(app: FastAPI) -> AsyncGenerator[Any, Any]:
+    """Manages the lifecycle events (startup and shutdown) for background tasks."""
+    # Initialize application state
+    app.state.pytest_wrp = PyTestWrapper(app)
+    app.state.sc_synchronizer = StandCloudSynchronizer()
+    app.state.executor = ThreadPoolExecutor(max_workers=1)
+    app.state.manual_collect_mode = False
+
+    # Start StandCloud synchronization if enabled
+    config_manager = ConfigManager()
+    sc_autosync = config_manager.config.stand_cloud.autosync
+    if sc_autosync:
+        autosync_timeout = config_manager.config.stand_cloud.autosync_timeout
+        app.state.sync_task = asyncio.create_task(
+            sync_stand_cloud(autosync_timeout, app),
+        )
+
+    yield
+
+    # Cleanup on shutdown
+    if sc_autosync and hasattr(app.state, "sync_task"):
+        app.state.sync_task.cancel()
+        await asyncio.gather(app.state.sync_task, return_exceptions=True)
+        logger.info("Cancelled StandCloud synchronization task.")
+
+    if hasattr(app.state, "executor"):
+        app.state.executor.shutdown(wait=False)
+        logger.info("Shut down ThreadPoolExecutor.")
+
+
+app = FastAPI(lifespan=lifespan_sync_scheduler)
+
+
 class Status(str, Enum):
     """HardPy status.
 
@@ -67,40 +101,6 @@ async def sync_stand_cloud(sc_sync_interval_minutes: int, app: FastAPI) -> None:
         except Exception as exc:  # noqa: BLE001
             logger.info(f"Error during StandCloud synchronization. {exc}")
         await asyncio.sleep(sc_sync_interval)
-
-
-@contextlib.asynccontextmanager
-async def lifespan_sync_scheduler(app: FastAPI) -> AsyncGenerator[Any, Any]:
-    """Manages the lifecycle events (startup and shutdown) for background tasks."""
-    # Initialize application state
-    app.state.pytest_wrp = PyTestWrapper(app)
-    app.state.sc_synchronizer = StandCloudSynchronizer()
-    app.state.executor = ThreadPoolExecutor(max_workers=1)
-    app.state.manual_collect_mode = False
-
-    # Start StandCloud synchronization if enabled
-    config_manager = ConfigManager()
-    sc_autosync = config_manager.config.stand_cloud.autosync
-    if sc_autosync:
-        autosync_timeout = config_manager.config.stand_cloud.autosync_timeout
-        app.state.sync_task = asyncio.create_task(
-            sync_stand_cloud(autosync_timeout, app),
-        )
-
-    yield
-
-    # Cleanup on shutdown
-    if sc_autosync and hasattr(app.state, "sync_task"):
-        app.state.sync_task.cancel()
-        await asyncio.gather(app.state.sync_task, return_exceptions=True)
-        logger.info("Cancelled StandCloud synchronization task.")
-
-    if hasattr(app.state, "executor"):
-        app.state.executor.shutdown(wait=False)
-        logger.info("Shut down ThreadPoolExecutor.")
-
-
-app = FastAPI(lifespan=lifespan_sync_scheduler)
 
 
 @app.get("/api/hardpy_config")
