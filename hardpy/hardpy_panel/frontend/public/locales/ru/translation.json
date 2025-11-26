@@ -17,8 +17,6 @@
       "modalResultAutoDismissHint": "Автоматическое закрытие через {{seconds}} секунд...",
       "manualCollectOn": "Ручной сбор включен",
       "manualCollectOff": "Ручной сбор выключен",
-      "manualCollectModeActive": "Режим ручного сбора активен - выполнение тестов отключено",
-      "manualCollectModeInactive": "Режим ручного сбора неактивен",
       "status": {
         "ready": "Готов",
         "run": "Выполнение",

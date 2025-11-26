@@ -17,8 +17,6 @@
     "modalResultAutoDismissHint": "Auto-dismissing in {{seconds}} seconds...",
     "manualCollectOn": "Manual collect on",
     "manualCollectOff": "Manual collect off",
-    "manualCollectModeActive": "Manual collect mode active - test execution disabled",
-    "manualCollectModeInactive": "Manual collect mode inactive",
     "status": {
       "ready": "Ready",
       "run": "Run",

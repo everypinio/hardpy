@@ -15,10 +15,10 @@ import {
   H2,
   Popover,
   Card,
-  Switch,
-  Position,
-  Tooltip,
-  Icon,
+  // Switch,
+  // Position,
+  // Tooltip,
+  // Icon,
 } from "@blueprintjs/core";
 
 import StartStopButton from "./button/StartStop";
@@ -692,18 +692,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const renderSettingsMenu = (): JSX.Element => {
     return (
       <Menu>
-        {appConfig?.frontend?.manual_collect && (
-          <MenuItem
-            shouldDismissPopover={false}
-            text={
-              manualCollectMode
-                ? t("app.manualCollectOff")
-                : t("app.manualCollectOn")
-            }
-            icon={manualCollectMode ? "disable" : "selection"}
-            onClick={toggleManualCollectMode}
-          />
-        )}
         <MenuItem
           shouldDismissPopover={false}
           text={use_end_test_sound ? t("app.soundOff") : t("app.soundOn")}
@@ -718,53 +706,19 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           id="use_debug_info"
           onClick={() => setUseDebugInfo(!use_debug_info)}
         />
-      </Menu>
-    );
-  };
-
-  /**
-   * Renders manual collect mode indicator
-   * @returns {JSX.Element} The manual collect mode indicator
-   */
-  const renderManualCollectIndicator = (): JSX.Element => {
-    if (!appConfig?.frontend?.manual_collect) {
-      return <></>;
-    }
-
-    return (
-      <Tooltip
-        content={
-          manualCollectMode
-            ? t("app.manualCollectModeActive")
-            : t("app.manualCollectModeInactive")
-        }
-        position={Position.BOTTOM}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginRight: "15px",
-            padding: "5px 10px",
-            backgroundColor: manualCollectMode
-              ? Colors.ORANGE5
-              : Colors.LIGHT_GRAY3,
-            borderRadius: "3px",
-            border: `1px solid ${manualCollectMode ? Colors.ORANGE3 : Colors.GRAY3}`,
-          }}
-        >
-          <Icon
-            icon={manualCollectMode ? "selection" : "disable"}
-            size={12}
-            style={{ marginRight: "5px" }}
+        {appConfig?.frontend?.manual_collect && (
+          <MenuItem
+            shouldDismissPopover={false}
+            text={
+              manualCollectMode
+                ? t("app.manualCollectOff")
+                : t("app.manualCollectOn")
+            }
+            icon={manualCollectMode ? "disable" : "selection"}
+            onClick={toggleManualCollectMode}
           />
-          <span style={{ fontSize: "12px", fontWeight: "bold" }}>
-            {manualCollectMode
-              ? t("app.manualCollectOn")
-              : t("app.manualCollectOff")}
-          </span>
-        </div>
-      </Tooltip>
+        )}
+      </Menu>
     );
   };
 
@@ -853,7 +807,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         </Navbar.Group>
 
         <Navbar.Group align={Alignment.RIGHT}>
-          {renderManualCollectIndicator()}
           <Popover content={renderSettingsMenu()}>
             <Button className="bp3-minimal" icon="cog" />
           </Popover>

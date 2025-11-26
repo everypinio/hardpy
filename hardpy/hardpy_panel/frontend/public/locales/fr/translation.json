@@ -17,8 +17,6 @@
       "modalResultAutoDismissHint": "Fermeture automatique dans {{seconds}} secondes...",
       "manualCollectOn": "Collecte manuelle activée",
       "manualCollectOff": "Collecte manuelle désactivée",
-      "manualCollectModeActive": "Mode collecte manuelle actif - exécution des tests désactivée",
-      "manualCollectModeInactive": "Mode collecte manuelle inactif",
       "status": {
         "ready": "Prêt",
         "run": "En cours",
