@@ -2,6 +2,9 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add manual test selection mode allowing users to choose specific tests to run via new UI checkboxes.
+  [[PR-224](https://github.com/everypinio/hardpy/pull/224)]
+
 ## 0.18.2
 
 * Add support for working with macOS.

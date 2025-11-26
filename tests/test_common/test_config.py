@@ -21,6 +21,7 @@ frontend_no_default_host = "localhost1"
 frontend_no_default_port = 8001
 frontend_no_default_full_size_button = True
 frontend_no_default_sound_on = True
+frontend_no_default_manual_collect = True
 frontend_no_default_measurement_display = False
 stand_cloud_no_default_addr = "everypin1.standcloud.localhost"
 stand_cloud_no_default_connection_only = True
@@ -38,6 +39,7 @@ frontend_default_port = 8000
 frontend_default_language = "en"
 frontend_default_full_size_button = False
 frontend_default_sound_on = False
+frontend_default_manual_collect = False
 frontend_default_measurement_display = True
 stand_cloud_default_addr = "standcloud.io"
 stand_cloud_dafault_connection_only = False
@@ -98,6 +100,7 @@ def test_frontend_config():
     assert config.language == frontend_default_language
     assert config.full_size_button == frontend_default_full_size_button
     assert config.sound_on == frontend_default_sound_on
+    assert config.manual_collect == frontend_default_manual_collect
     assert config.measurement_display == frontend_default_measurement_display
 
 
@@ -127,6 +130,7 @@ def test_hardpy_config():
     assert config.frontend.language == frontend_default_language
     assert config.frontend.full_size_button == frontend_default_full_size_button
     assert config.frontend.sound_on == frontend_default_sound_on
+    assert config.frontend.manual_collect == frontend_default_manual_collect
     assert config.frontend.measurement_display == frontend_default_measurement_display
     assert config.stand_cloud.address == stand_cloud_default_addr
     assert config.stand_cloud.connection_only == stand_cloud_dafault_connection_only
@@ -180,6 +184,7 @@ def test_read_config_success(tmp_path: Path):
             "language": frontend_default_language,
             "full_size_button": frontend_default_full_size_button,
             "sound_on": frontend_default_sound_on,
+            "manual_collect": True,
             "measurement_display": frontend_default_measurement_display,
         },
         "stand_cloud": {
@@ -214,6 +219,9 @@ def test_read_config_success(tmp_path: Path):
         == test_config_data["frontend"]["full_size_button"]
     )
     assert config.frontend.sound_on == test_config_data["frontend"]["sound_on"]
+    assert (
+        config.frontend.manual_collect == test_config_data["frontend"]["manual_collect"]
+    )
     assert (
         config.frontend.measurement_display
         == test_config_data["frontend"]["measurement_display"]
