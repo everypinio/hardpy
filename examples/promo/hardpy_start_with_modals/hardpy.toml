@@ -1,0 +1,28 @@
+title = "HardPy TOML config"
+tests_name = "hardpy_start_with_modals"
+
+[database]
+user = "dev"
+password = "dev"
+host = "localhost"
+port = 5984
+
+[frontend]
+host = "localhost"
+port = 8000
+language = "en"
+full_size_button = false
+sound_on = false
+measurement_display = true
+
+[frontend.modal_result]
+enable = true
+auto_dismiss_pass = true
+auto_dismiss_timeout = 5
+
+[stand_cloud]
+address = "standcloud.io"
+connection_only = false
+autosync = false
+autosync_timeout = 30
+api_key = ""
