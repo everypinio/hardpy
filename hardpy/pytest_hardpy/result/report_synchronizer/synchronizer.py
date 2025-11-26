@@ -120,6 +120,7 @@ class StandCloudSynchronizer:
             code = response.status_code
             msg = f"StandCloud healthcheck at {url} is unavailable, status code: {code}"
             raise StandCloudError(msg)
+        # if the response.text contains invalid page data but status code is 200:
         if response.status_code == HTTPStatus.OK and response.text != "{}":
             msg = f"StandCloud healthcheck at {response.url} is unavailable"
             raise StandCloudError(msg)
