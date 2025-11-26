@@ -106,7 +106,7 @@ class StandCloudSynchronizer:
             msg += "\nInvalid reports:\n\n"
             for _report in invalid_reports:
                 report_id, reason = next(iter(_report.items()))
-                msg += f"{report_id}: {reason}\n"
+                msg += f"Report id: {report_id}: {reason}\n"
             raise StandCloudError(msg)
         if not msg:
             msg = "All reports are synchronized with StandCloud"
