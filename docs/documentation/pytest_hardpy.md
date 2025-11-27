@@ -394,7 +394,7 @@ When called again, the information will be added to case measurement list.
 
 **Arguments:**
 
-- `measurement` [NumericMeasurement](#numericmeasurement) | 
+- `measurement` [NumericMeasurement](#numericmeasurement) |
   [StringMeasurement](#stringmeasurement): measurement data.
 
 **Returns:**
@@ -405,20 +405,59 @@ When called again, the information will be added to case measurement list.
 
 ```python
 def test_measurement():
-    meas_1 = NumericMeasurement(value=10, operation=ComparisonOperation.EQ, comparison_value=10)
+    meas_1 = NumericMeasurement(
+        name="Voltage", 
+        value=12.3, 
+        unit="V",
+        operation=ComparisonOperation.GELE, 
+        lower_limit=10.0, 
+        upper_limit=15.0
+    )
     set_case_measurement(meas_1)
-    meas_2 = NumericMeasurement(value=3, unit="V", operation=ComparisonOperation.GTLT, lower_limit=2.9, upper_limit=3.5)
+    
+    meas_2 = NumericMeasurement(
+        value=5, 
+        unit="°", 
+        operation=ComparisonOperation.EQ, 
+        comparison_value=5
+    )
     set_case_measurement(meas_2)
-    meas_3 = NumericMeasurement(value=1.0)
+    
+    meas_3 = NumericMeasurement(
+        name="Count",
+        value=42
+    )
     set_case_measurement(meas_3)
+
+    meas_4 = StringMeasurement(
+        value="1.2.0", 
+        operation=ComparisonOperation.EQ, 
+        comparison_value="1.2.0"
+    )
+    set_case_measurement(meas_4)
+
+    meas_5 = StringMeasurement(
+        name="Version",
+        value="v2.1.0", 
+        operation=ComparisonOperation.EQ, 
+        comparison_value="v2.1.0"
+    )
+    set_case_measurement(meas_5)
 
     assert meas_1.result
     assert meas_2.result
-
-    meas_4 = StringMeasurement(value="1.2.0", operation=ComparisonOperation.EQ, comparison_value="1.2.0")
-    set_case_measurement(meas_4)
     assert meas_4.result
+    assert meas_5.result
 ```
+
+**Operator panel display:**
+The example above would display in the operator panel as:
+
+- `Voltage 12.3 V`
+- `5°`
+- `Count 42`
+- `1.2.0`
+- `Version v2.1.0`
 
 #### set_case_chart
 
@@ -1424,6 +1463,15 @@ The default is *False*.
 
 ```bash
 --sc-connection-only
+```
+
+#### sc-autosync
+
+Enable **HardPy** to **StandCloud** test report data auto synchroniztion.
+The default is *False*.
+
+```bash
+--sc-autosync
 ```
 
 #### hardpy-start-arg

@@ -87,6 +87,7 @@ interface Props extends WithTranslation {
   db_state: TestRunI;
   defaultClose: boolean;
   currentTestConfig?: string;
+  measurementDisplay?: boolean; 
 }
 
 const SECONDS_TO_MILLISECONDS = 1000;
@@ -261,6 +262,7 @@ export class SuiteList extends React.Component<
         test={suite.test}
         defaultOpen={this.elements_count < 5 && !this.props.defaultClose}
         commonTestRunStatus={this.props.db_state.status}
+        measurementDisplay={this.props.measurementDisplay}
       />
     );
   }

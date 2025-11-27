@@ -91,6 +91,7 @@ Enable sound notifications in your `hardpy.toml`:
 ```toml
 [frontend]
 sound_on = true
+```
 
 ## CLI
 
@@ -409,9 +410,35 @@ An example of its use can be found on page [StandCloud reader](./../examples/sta
 
 ### Measurement
 
-**HardPy** allows users to save their measurement data to a database.
-The [set_case_measurement](./../documentation/pytest_hardpy.md#set_case_measurement) 
+**HardPy** allows users to save their measurement data to a database and display it in the operator panel.
+The [set_case_measurement](./../documentation/pytest_hardpy.md#set_case_measurement)
 function allows each individual test case to store measurements as a list.
+
+**Display format in operator panel:**
+
+- **Name Value Unit** - for measurements with all components (e.g., "Voltage 12.3 V")
+- **Value Unit** - for measurements without names (e.g., "5°", "98.6%", "45″")  
+- **Name Value** - for measurements without units (e.g., "Banana 15")
+
+**Special formatting for units:**
+
+- Symbols `%`, `°`, `′`, `″` are displayed without space (e.g., "23.5°C", "98.6%")
+- Other units are displayed with space (e.g., "12.3 V", "3.14 rad")
+
+**Configuration:**
+Enable measurement display in your `hardpy.toml`:
+
+```toml
+[frontend]
+measurement_display = true
+```
+
+**Features:**
+
+- Support for both numeric and string measurements
+- Clean, minimal tag-based display
+- Proper handling of special units (°, %, etc.)
+
 An example of its use can be found on page [measurement](./../examples/measurement.md).
 
 ### Chart

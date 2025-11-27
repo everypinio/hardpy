@@ -7,36 +7,26 @@ but the test results are stored in StandCloud instead of CouchDB.
 The code for this example can be seen inside the hardpy package
 [StandCloud](https://github.com/everypinio/hardpy/tree/main/examples/stand_cloud).
 
+After testing is complete, data is sent to **StandCloud** by setting the 
+`autosync` to `true` in the **[stand_cloud]** section of the **hardpy.toml** file, 
+and by setting the value of the `api_key` variable.
+If there is no connection to **StandCloud**, **HardPy** will attempt to send data 
+to **StandCloud** at the specified `autosync_timeout` interval (in minutes).
 
 ### how to start
 
-1. Get your own **StandCloud** service address by contacting **info@everypin.io**, e.g. `demo.standcloud.localhost`.
-2. Launch `hardpy init stand_cloud --sc-address demo.standcloud.localhost --sc-connection-only`.
-3. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
-4. Modify the files described below.
-5. You can remove `connection_only = true` if you don't want to check the
-    **StandCloud** connection before each **HardPy** start.
-6. Login in the **StandCloud**:
-
-    ```bash
-    hardpy sc-login demo.standcloud.localhost
-    ```
-
-    The duration of the authorization is defined in the **StandCloud** service itself.
-    Registration must be completed once, then you can check authorization
-    using the command:
-
-    ```
-    hardpy sc-login --check demo.standcloud.localhost
-    ```
-
-    Learn more in the [StandCloud](./../documentation/stand_cloud.md) section.
-
+1. Login to [standcloud.io](https://standcloud.io).
+2. Create a company or login to an existing one.
+3. Create and copy the API key.
+4. Launch `hardpy init stand_cloud --sc-api-key <your_api_key> --sc-autosync` 
+   or `hardpy init stand_cloud` and manually modify the 
+   **[stand_cloud]** section in **hardpy.toml**.
+5. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
+6. Modify the files described below. Copying the **hardpy.toml** file will 
+   suffice for sending data to **StandCloud** after testing.
 7. Launch `hardpy run stand_cloud`.
 
 ### hardpy.toml
-
-Replace the settings in the `[frontend]` and `[frontend.modal_result]` sections with those shown in the **hardpy.toml** example file below.
 
 ```toml
 title = "HardPy TOML config"
@@ -54,6 +44,7 @@ port = 8000
 language = "en"
 full_size_button = false
 sound_on = true
+measurement_display = true
 
 [frontend.modal_result]
 enable = true
@@ -61,54 +52,27 @@ auto_dismiss_pass = true
 auto_dismiss_timeout = 5
 
 [stand_cloud]
-address = "demo.standcloud.localhost"
-connection_only = true
+address = "standcloud.io"
+connection_only = false
+autosync = false
+autosync_timeout = 30
+api_key = "<your_api_key>"
 ```
 
 ### conftest.py
 
 Contains settings and fixtures for all tests:
 
-- The function to generate a report and record it in the **StandCloud** `finish_executing`;
 - The example of devices used as a fixture in `driver_example`;
-- The list of actions that will be performed after testing is filled in function `fill_actions_after_test`;
 
 ```python
-from http import HTTPStatus
-
 import pytest
 from driver_example import DriverExample
-
-from hardpy import (
-    StandCloudError,
-    StandCloudLoader,
-    get_current_report,
-    set_operator_message,
-)
 
 @pytest.fixture(scope="session")
 def driver_example():
     example = DriverExample()
     yield example
-
-def finish_executing():
-    report = get_current_report()
-    if report:
-        try:
-            loader = StandCloudLoader()
-            response = loader.load(report)
-            if response.status_code != HTTPStatus.CREATED:
-                set_operator_message(
-                    "Report not uploaded to StandCloud, "
-                    f"status code: {response.status_code}, text: {response.text}",
-                )
-        except StandCloudError as exc:
-            set_operator_message(f"{exc}")
-
-@pytest.fixture(scope="session", autouse=True)
-def fill_actions_after_test(post_run_functions: list):
-    post_run_functions.append(finish_executing)
-    yield
 ```
 
 ### driver_example.py
@@ -160,6 +124,7 @@ def test_batch_info():
 def test_dut_info():
     serial_number = str(uuid4())[:6]
     hardpy.set_dut_serial_number(serial_number)
+    hardpy.set_message(f"Serial number: {serial_number}")
     hardpy.set_dut_part_number("part_number_1")
     hardpy.set_dut_name("Test Device")
     hardpy.set_dut_type("PCBA")
@@ -215,7 +180,6 @@ pytestmark = pytest.mark.module_name("Main tests")
 @pytest.mark.case_name("Minute check")
 def test_minute_parity(driver_example: DriverExample):
     minute = driver_example.current_minute
-    hardpy.set_message(f"Current minute {minute}")
     result = minute % 2
     hardpy.set_case_measurement(hardpy.NumericMeasurement(value=minute, name="Current minute"))
     error_code = 1
@@ -251,4 +215,52 @@ def test_one():
         sleep(1)
     hardpy.set_message("Testing ended", "updated_status")
     assert True
+```
+
+### manual StandCloud syncronization
+
+If you want to control the sending of reports to **StandCloud** yourself, 
+the following code, which you can add to `conftest.py`, will allow you to do so.
+
+Remember to also set `autosync=false` in the stand_cloud section of 
+the **hardpy.toml** file.
+
+
+```python
+# conftest.py
+from http import HTTPStatus
+
+import pytest
+from driver_example import DriverExample
+
+from hardpy import (
+    StandCloudError,
+    StandCloudLoader,
+    get_current_report,
+    set_operator_message,
+)
+
+@pytest.fixture(scope="session")
+def driver_example():
+    example = DriverExample()
+    yield example
+
+def finish_executing():
+    report = get_current_report()
+    if report:
+        try:
+            loader = StandCloudLoader()
+            response = loader.load(report)
+            if response.status_code != HTTPStatus.CREATED:
+                set_operator_message(
+                    "Report not uploaded to StandCloud, "
+                    f"status code: {response.status_code}, text: {response.text}",
+                )
+        except StandCloudError as exc:
+            set_operator_message(f"{exc}")
+
+@pytest.fixture(scope="session", autouse=True)
+def fill_actions_after_test(post_run_functions: list):
+    post_run_functions.append(finish_executing)
+    yield
 ```
