@@ -188,7 +188,26 @@ class PyTestWrapper:
             self._full_test_structure = None
 
     def _preserve_full_test_structure(self) -> None:
-        """Preserve full test structure when running selected tests."""
+        """Preserve full test structure in database when running selected tests.
+
+        This method ensures that the complete test structure remains visible in the database
+        even when only a subset of tests is executed. It handles two main scenarios:
+
+        1. Manual collect mode: Marks non-selected tests as "skipped" with cleared timestamps
+        and messages to indicate they were not executed.
+
+        2. Automatic mode: Preserves all tests with their current statuses.
+
+        The method creates a modified copy of the full test structure where:
+        - Selected tests retain their original status and data
+        - Non-selected tests (in manual mode) are marked as skipped with reset metadata
+        - The complete hierarchy (modules → cases) is maintained
+
+        This allows the UI to display the full test suite structure while clearly indicating
+        which tests were actually executed in the current run.
+
+        Note: The method fails silently if any errors occur during database operations.
+        """
         if not self._full_test_structure:
             return
 
