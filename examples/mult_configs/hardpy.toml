@@ -30,4 +30,5 @@ file = "config2_pytest.ini"
 
 [[test_configs]]
 name = "Config 3"
+description = "Example description"
 file = "config3_pytest.ini"
