@@ -106,7 +106,7 @@ class HardpyConfig(BaseModel, extra="allow"):
     frontend: FrontendConfig = FrontendConfig()
     stand_cloud: StandCloudConfig = StandCloudConfig()
     current_test_config: str = ""
-    test_configs: list[TestConfig] | None = None
+    test_configs: list[TestConfig] = []
 
     def model_post_init(self, __context) -> None:  # noqa: ANN001,PYI063
         """Get database document name."""
@@ -196,33 +196,10 @@ class ConfigManager(metaclass=SingletonMeta):
         Args:
             parent_dir (Path): Configuration file parent directory.
         """
-        config_dict = self._config.model_dump(exclude_none=True)
-
-        config_dict = self._clean_none_values(config_dict)
-
-        if "database" in config_dict:
-            config_dict["database"].pop("doc_id", None)
-            config_dict["database"].pop("url", None)
-
-        # Remove empty sections
-        if not config_dict.get("stand_cloud", {}).get("address"):
-            config_dict.pop("stand_cloud", None)
-        if not config_dict.get("tests_name"):
-            config_dict.pop("tests_name", None)
-
-        config_str = tomli_w.dumps(config_dict)
+        # test_config is filled in by the user as an array
+        config_str = tomli_w.dumps(self._config.model_dump(exclude="test_configs"))
         with Path.open(parent_dir / "hardpy.toml", "w") as file:
             file.write(config_str)
-
-    def _clean_none_values(self, obj: any) -> any:
-        """Recursively remove None values from nested dictionaries and lists."""
-        if isinstance(obj, dict):
-            return {
-                k: self._clean_none_values(v) for k, v in obj.items() if v is not None
-            }
-        if isinstance(obj, list):
-            return [self._clean_none_values(item) for item in obj if item is not None]
-        return obj
 
     def read_config(self, toml_path: Path) -> HardpyConfig | None:
         """Read HardPy configuration.
@@ -236,7 +213,7 @@ class ConfigManager(metaclass=SingletonMeta):
         self._tests_path = toml_path
         toml_file = toml_path / "hardpy.toml"
         if not toml_file.exists():
-            logger.error("File hardpy.toml not found at path: %s", toml_file)
+            # TODO (xorialexandrov): Add a log that cannot cause tests to fail
             return None
         try:
             with Path.open(toml_path / "hardpy.toml", "rb") as f:
@@ -253,28 +230,13 @@ class ConfigManager(metaclass=SingletonMeta):
             return None
         return self._config
 
-    def get_test_configs(self) -> TestConfigs:
-        """Get test configurations for statestore.
-
-        Returns:
-            TestConfigs: Test configurations with current and available
-        """
-        if self._config.test_configs is None:
-            return TestConfigs(available=[])
-
-        available_configs = [config.name for config in self._config.test_configs]
-
-        return TestConfigs(
-            available=available_configs,
-        )
-
     def set_current_test_config(self, config_name: str) -> None:
         """Set current test configuration.
 
         Args:
             config_name (str): Test configuration name
         """
-        if self._config.test_configs is None:
+        if self._config.test_configs == []:
             logger.warning("No test configurations available.")
             return
 
@@ -282,31 +244,8 @@ class ConfigManager(metaclass=SingletonMeta):
         if config_name in available_configs:
             self._config.current_test_config = config_name
         else:
-            logger.warning(
-                "Test configuration '%s' not found among available configurations.",
-                config_name,
+            msg = (
+                f"Test configuration {config_name} not ",
+                "found among available configurations.",
             )
-
-    def get_current_test_config(self) -> str:
-        """Get current test configuration.
-
-        Returns:
-            str: Current test configuration name
-        """
-        return self._config.current_test_config
-
-    def get_test_config_file(self, config_name: str) -> str | None:
-        """Get test configuration file by name.
-
-        Args:
-            config_name (str): Test configuration name
-
-        Returns:
-            str | None: Test configuration file or None if not found
-        """
-        if self._config.test_configs is None:
-            return None
-        for config in self._config.test_configs:
-            if config.name == config_name:
-                return config.file
-        return None
+            logger.warning(msg)
