@@ -1,5 +1,5 @@
 title = "HardPy TOML config"
-tests_name = "dbx_with_checkbox_and_modals"
+tests_name = "Production Test"
 
 [database]
 user = "dev"

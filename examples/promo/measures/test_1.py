@@ -6,111 +6,128 @@ from hardpy import (
     set_case_measurement,
 )
 
-pytestmark = pytest.mark.module_name("Numeric measurement")
+pytestmark = pytest.mark.module_name("Production Test - Electrical Parameters")
 
 
-@pytest.mark.case_name("Basic numeric operations")
-def test_basic_numeric_operations():
-    meas0 = NumericMeasurement(value=1.0)
-    set_case_measurement(meas0)
+@pytest.mark.case_name("Basic Electrical Measurements")
+def test_basic_electrical_measurements():
+    # Test basic voltage measurement without limits
+    voltage_raw = NumericMeasurement(value=12.0, unit="V")
+    set_case_measurement(voltage_raw)
 
-    meas1 = NumericMeasurement(value=10, operation=CompOp.EQ, comparison_value=10)
-    set_case_measurement(meas1)
-
-    meas2 = NumericMeasurement(value=9, operation=CompOp.EQ, comparison_value=10)
-    set_case_measurement(meas2)
-
-    meas3 = NumericMeasurement(value=5, operation=CompOp.NE, comparison_value=3)
-    set_case_measurement(meas3)
-
-    meas4 = NumericMeasurement(
-        value=7, operation=CompOp.GELE, lower_limit=5, upper_limit=10
+    # Test exact voltage match (nominal voltage)
+    voltage_nominal = NumericMeasurement(
+        value=12.0, operation=CompOp.EQ, comparison_value=12.0, unit="V"
     )
-    set_case_measurement(meas4)
+    set_case_measurement(voltage_nominal)
 
-    assert meas1.result
-    assert meas2.result, "value is not equal to 10"
-    assert meas3.result
-    assert meas4.result
+    # Test voltage tolerance failure
+    voltage_tolerance = NumericMeasurement(
+        value=11.8, operation=CompOp.EQ, comparison_value=12.0, unit="V"
+    )
+    set_case_measurement(voltage_tolerance)
+
+    # Test current not equal to zero (system active)
+    current_active = NumericMeasurement(
+        value=0.5, operation=CompOp.NE, comparison_value=0, unit="A"
+    )
+    set_case_measurement(current_active)
+
+    # Test voltage within operating range
+    voltage_range = NumericMeasurement(
+        value=12.2, operation=CompOp.GELE, lower_limit=11.5, upper_limit=12.5, unit="V"
+    )
+    set_case_measurement(voltage_range)
+
+    assert voltage_nominal.result
+    assert voltage_tolerance.result, "Voltage out of tolerance"
+    assert current_active.result
+    assert voltage_range.result
 
 
-@pytest.mark.case_name("Advanced numeric measurements")
-def test_advanced_numeric_measurements():
-    voltage_meas = NumericMeasurement(
-        name="Voltage",
-        value=1.2,
+@pytest.mark.case_name("Critical Parameter Verification")
+def test_critical_parameter_verification():
+    # Power supply voltage verification
+    main_voltage = NumericMeasurement(
+        name="Main Supply Voltage",
+        value=24.0,
         unit="V",
         operation=CompOp.GELE,
-        lower_limit=1.0,
-        upper_limit=1.5,
+        lower_limit=23.0,
+        upper_limit=25.0,
     )
-    set_case_measurement(voltage_meas)
+    set_case_measurement(main_voltage)
 
-    temperature_meas = NumericMeasurement(
-        name="Temperature",
-        value=23.5,
+    # Operating temperature check
+    board_temperature = NumericMeasurement(
+        name="PCB Temperature",
+        value=45.2,
         unit="°C",
         operation=CompOp.GELE,
-        lower_limit=20,
-        upper_limit=25,
+        lower_limit=0,
+        upper_limit=85,
     )
-    set_case_measurement(temperature_meas)
+    set_case_measurement(board_temperature)
 
-    percentage_meas = NumericMeasurement(
-        value=98.6,
+    # Efficiency measurement
+    power_efficiency = NumericMeasurement(
+        value=94.8,
         unit="%",
         operation=CompOp.GE,
-        comparison_value=95,
+        comparison_value=90,
     )
-    set_case_measurement(percentage_meas)
+    set_case_measurement(power_efficiency)
 
-    minutes_meas = NumericMeasurement(
-        name="Time",
-        value=30,
-        unit="′",
+    # Frequency stability test
+    clock_frequency = NumericMeasurement(
+        name="Crystal Frequency",
+        value=16.0,
+        unit="MHz",
         operation=CompOp.EQ,
-        comparison_value=30,
+        comparison_value=16.0,
     )
-    set_case_measurement(minutes_meas)
+    set_case_measurement(clock_frequency)
 
     assert all(
         [
-            voltage_meas.result,
-            temperature_meas.result,
-            percentage_meas.result,
-            minutes_meas.result,
+            main_voltage.result,
+            board_temperature.result,
+            power_efficiency.result,
+            clock_frequency.result,
         ],
     )
 
 
-@pytest.mark.case_name("Failed numeric measurements")
-def test_failed_numeric_measurements():
-    high_voltage_meas = NumericMeasurement(
-        name="High Voltage",
-        value=15.0,
+@pytest.mark.case_name("Out-of-Spec Measurements")
+def test_out_of_spec_measurements():
+    # Over-voltage protection test
+    over_voltage = NumericMeasurement(
+        name="Over-voltage Protection",
+        value=15.5,
         unit="V",
         operation=CompOp.LE,
-        comparison_value=12.0,
+        comparison_value=13.8,
     )
-    set_case_measurement(high_voltage_meas)
+    set_case_measurement(over_voltage)
 
-    low_temp_meas = NumericMeasurement(
-        name="Low Temp",
-        value=-10,
+    # Under-temperature shutdown test
+    low_temperature = NumericMeasurement(
+        name="Low Temperature Operation",
+        value=-15,
         unit="°C",
         operation=CompOp.GELE,
-        lower_limit=0,
-        upper_limit=50,
+        lower_limit=-10,
+        upper_limit=60,
     )
-    set_case_measurement(low_temp_meas)
+    set_case_measurement(low_temperature)
 
-    raw_meas = NumericMeasurement(name="Raw Value", value=42.0)
-    set_case_measurement(raw_meas)
+    # Raw resistance measurement
+    shunt_resistance = NumericMeasurement(name="Shunt Resistor", value=0.1, unit="Ω")
+    set_case_measurement(shunt_resistance)
 
-    rad_meas = NumericMeasurement(value=3.14, unit="rad")
-    set_case_measurement(rad_meas)
+    # Phase measurement
+    phase_angle = NumericMeasurement(value=0.78, unit="rad")
+    set_case_measurement(phase_angle)
 
-    assert not high_voltage_meas.result, "Voltage too high"
-    assert not low_temp_meas.result, "Temperature too low"
-
-
+    assert not over_voltage.result, "Over-voltage protection failed"
+    assert not low_temperature.result, "Temperature below operating limit"

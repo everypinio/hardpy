@@ -4,18 +4,24 @@ import hardpy
 
 # hardpy run
 
-# hardpy start --arg test_mode=debug --arg device_id=DUT-007 --arg retry_count=3
+# hardpy start --arg test_station_id=STATION-42 --arg device_serial=DUT-007 --arg test_retry_count=3
 
-pytestmark = pytest.mark.module_name("HardPy template")
+pytestmark = pytest.mark.module_name("Production Test - Device Configuration")
 
-def test_with_start_args(hardpy_start_args):
 
-    if hardpy_start_args.get("test_mode") == "debug":
-        hardpy.set_message("Running in debug mode")
+def test_device_configuration_validation(hardpy_start_args):
+    if hardpy_start_args.get("test_station_id"):
+        hardpy.set_message(
+            f"Test station initialized: {hardpy_start_args['test_station_id']}"
+        )
 
-    device_id = hardpy_start_args.get("device_id")
-    if device_id:
-        hardpy.set_message(f"Testing device: {device_id}")
-        hardpy.set_case_artifact({"device_id": device_id})
+    device_serial = hardpy_start_args.get("device_serial")
+    if device_serial:
+        hardpy.set_message(f"Testing device with serial number: {device_serial}")
+        hardpy.set_case_artifact({"device_serial_number": device_serial})
     else:
-        hardpy.set_message("No device ID provided")
+        hardpy.set_message("Warning: No device serial number provided")
+
+    test_retry_count = hardpy_start_args.get("test_retry_count")
+    if test_retry_count:
+        hardpy.set_message(f"Test retry count configured: {test_retry_count}")

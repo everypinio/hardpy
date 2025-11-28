@@ -1,11 +1,11 @@
 import pytest
 
-pytestmark = pytest.mark.module_name("Skipped tests")
+pytestmark = pytest.mark.module_name("Critical Functionality Tests")
 
-def test_a():
+def test_power_supply_validation():
     assert False
 
 
-@pytest.mark.dependency("test_1::test_a")
-def test_b():
+@pytest.mark.dependency("test_power_supply_validation")
+def test_voltage_regulation_circuit():
     assert False

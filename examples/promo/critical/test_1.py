@@ -1,10 +1,10 @@
 import pytest
 
-pytestmark = pytest.mark.module_name("Critical tests")
+pytestmark = pytest.mark.module_name("Critical Production Tests")
 
 @pytest.mark.critical
-def test_core_feature():
+def test_power_supply_validation():
     assert False  # This will fail
 
-def test_secondary_feature():
+def test_led_indicator_check():
     assert True  # This will be skipped

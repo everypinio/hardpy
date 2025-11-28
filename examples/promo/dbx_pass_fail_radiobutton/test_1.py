@@ -1,27 +1,24 @@
 import pytest
 
 from hardpy import (
-    CheckboxWidget,
     DialogBox,
-    HTMLComponent,
-    ImageComponent,
     RadiobuttonWidget,
     run_dialog_box,
     set_message,
 )
 
-pytestmark = pytest.mark.module_name("Choice control dialog boxes")
+pytestmark = pytest.mark.module_name("Production Test - Operator Configuration")
 
 
-@pytest.mark.case_name("Test dialog box with radiobutton with pass_fail")
-def test_radiobutton_with_pass_fail():
+@pytest.mark.case_name("Voltage Range Selection Test")
+def test_voltage_range_selection():
     dbx = DialogBox(
-        dialog_text='Select item "one" out of several and click Pass or Fail.',
-        title_bar="Radiobutton example with pass/fail",
-        widget=RadiobuttonWidget(fields=["one", "two", "three"]),
+        dialog_text='Select "230V" as operating voltage range and confirm with Pass.',
+        title_bar="Operating Voltage Configuration",
+        widget=RadiobuttonWidget(fields=["115V", "230V", "400V"]),
         pass_fail=True,
     )
     response = run_dialog_box(dbx)
-    set_message(f"Pass/Fail: {response.result}, Selected item: {response.data}")
+    set_message(f"Test Result: {response.result}, Selected Voltage: {response.data}")
     assert response.result
-    assert response.data == "one", "The answer is not correct"
+    assert response.data == "230V", "Incorrect voltage range selected"

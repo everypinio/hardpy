@@ -5,21 +5,22 @@ import pytest
 import hardpy
 from hardpy import DialogBox, TextInputWidget, run_dialog_box
 
-pytestmark = pytest.mark.module_name("Attempts")
+pytestmark = pytest.mark.module_name("Production Testing")
+
 
 @pytest.mark.attempt(3)
-def test_dialog_box():
+def test_operator_confirmation():
     dbx = DialogBox(
-        dialog_text="Print 'ok', if you want to pass attempt.",
-        title_bar="Example of text input",
+        dialog_text="Enter 'PASS' to confirm successful equipment testing",
+        title_bar="Operator Confirmation",
         widget=TextInputWidget(),
     )
     response = run_dialog_box(dbx)
-    if response != "ok":
+    if response != "PASS":
         dbx = DialogBox(
-            dialog_text=f"Test attempt {hardpy.get_current_attempt()}",
-            title_bar="Attempt message",
+            dialog_text=f"Failed attempt {hardpy.get_current_attempt()}/3. Check the equipment and repeat the test.",
+            title_bar="Testing Status",
         )
         run_dialog_box(dbx)
 
-    assert response == "ok", "The entered text is not correct"
+    assert response == "PASS", "Operator did not confirm successful equipment testing"

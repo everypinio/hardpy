@@ -7,17 +7,17 @@ from hardpy import (
     set_message,
 )
 
-pytestmark = pytest.mark.module_name("Choice control dialog boxes")
+pytestmark = pytest.mark.module_name("Production Test - Function Verification")
 
 
-@pytest.mark.case_name("Test dialog box with checkbox")
-def test_checkbox():
+@pytest.mark.case_name("Optional Features Selection Test")
+def test_optional_features_selection():
     dbx = DialogBox(
-        dialog_text='Select items "one" and "two" and click the Confirm button',
-        title_bar="Checkbox example",
-        widget=CheckboxWidget(fields=["one", "two", "three"]),
+        dialog_text='Select "Ethernet" and "RS-485" communication interfaces and click Confirm',
+        title_bar="Communication Interfaces Configuration",
+        widget=CheckboxWidget(fields=["Ethernet", "RS-485", "Wi-Fi"]),
     )
     response = run_dialog_box(dbx)
-    set_message(f"Selected items {response}")
-    correct_answer = {"one", "two"}
-    assert set(response) == correct_answer, "The answer is not correct"
+    set_message(f"Selected interfaces: {response}")
+    correct_answer = {"Ethernet", "RS-485"}
+    assert set(response) == correct_answer, "Incorrect communication interfaces selected"

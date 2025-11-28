@@ -1,5 +1,5 @@
 title = "HardPy TOML config"
-tests_name = "critical"
+tests_name = "Critical Production Tests"
 
 [database]
 user = "dev"

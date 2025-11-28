@@ -1,5 +1,5 @@
 title = "HardPy TOML config"
-tests_name = "dbx_pass_fail_radiobutton"
+tests_name = "Production Test"
 
 [database]
 user = "dev"
