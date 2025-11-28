@@ -15,10 +15,6 @@ import {
   H2,
   Popover,
   Card,
-  // Switch,
-  // Position,
-  // Tooltip,
-  // Icon,
 } from "@blueprintjs/core";
 
 import StartStopButton from "./button/StartStop";
