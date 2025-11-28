@@ -123,7 +123,6 @@ to run instead of executing the entire test plan.
 - **Checkbox Interface**: Each test case displays a checkbox for selection in the test suite view
 - **Bulk Selection**: Checkboxes at the module level allow selecting/deselecting all tests in a module  
 - **Visual Indicators**: Selected tests are displayed normally, while non-selected tests are visually muted and marked as "Skipped"
-- **Dynamic Start Button**: The start button shows the count of selected tests and is disabled when no tests are selected
 
 **Usage**:
 

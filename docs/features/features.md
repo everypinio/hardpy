@@ -103,7 +103,6 @@ to run instead of executing the entire test plan.
 - **Checkbox-based selection**: Each test case and module displays checkboxes for selection
 - **Bulk operations**: Select or deselect all tests in a module with a single checkbox
 - **Visual feedback**: Selected tests are marked for execution, non-selected tests are skipped
-- **Dynamic interface**: Start button updates to show the count of selected tests
 
 **Workflow**:
 
