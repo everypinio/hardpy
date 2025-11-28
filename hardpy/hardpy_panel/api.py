@@ -120,7 +120,7 @@ def set_test_config(config_name: str) -> dict:
     try:
         config_manager = ConfigManager()
         config_manager.set_current_test_config(config_name)
-        app.state.pytest_wrp.collect(is_clear_database=True, test_config=config_name)
+        app.state.pytest_wrp.collect(is_clear_database=True)
     except (ValueError, RuntimeError) as e:
         return {"status": "error", "message": str(e)}
     else:
