@@ -281,6 +281,19 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           await fetch("/api/collect");
         }
       }
+
+      if (result.manual_collect_mode === false) {
+        const testsToSend = selectedTests || [];
+        const testsJsonString = JSON.stringify(testsToSend);
+
+        fetch(`/api/selected_tests`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: testsJsonString,
+        }).then((response) => response.json()); 
+      }
     } catch (error) {
       console.error("Failed to toggle manual collect mode:", error);
       }
@@ -935,7 +948,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                   <StartStopButton
                     testing_status={lastRunStatus}
                     useBigButton={true}
-                    selectedTests={selectedTests}
                     manualCollectMode={manualCollectMode}
                     onTestRunStart={handleTestRunStart}
                   />
@@ -969,7 +981,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                 <StartStopButton
                   testing_status={lastRunStatus}
                   useBigButton={false}
-                  selectedTests={selectedTests}
                   manualCollectMode={manualCollectMode}
                   onTestRunStart={handleTestRunStart}
                 />

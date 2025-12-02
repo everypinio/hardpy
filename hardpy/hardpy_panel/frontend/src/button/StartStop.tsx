@@ -7,7 +7,6 @@ import { withTranslation, WithTranslation } from "react-i18next";
 
 type Props = {
   testing_status: string;
-  selectedTests?: string[];
   useBigButton?: boolean;
   manualCollectMode?: boolean;
   onTestRunStart?: () => void;
@@ -36,35 +35,12 @@ class StartStopButton extends React.Component<Props, State> {
       isStopButtonDisabled: false,
     };
 
-    if (!props.selectedTests) {
-      props.selectedTests = [];
-    }
 
     this.hardpy_start = this.hardpy_start.bind(this);
     this.hardpy_stop = this.hardpy_stop.bind(this);
   }
 
-  /**
-   * Sends selected tests to backend
-   * @private
-   */
-  private sendSelectedTestsToBackend(
-    selectedTests: string[] | undefined
-  ): void {
-    const testsToSend = selectedTests || [];
-
-    const testsJsonString = JSON.stringify(testsToSend);
-
-    fetch(`/api/selected_tests`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: testsJsonString,
-    }).then((response) => response.json());
-  }
-
-  /**
+   /**
    * Makes a fetch call to the specified URI.
    * @param {string} uri - The URI to which the fetch request is made.
    * @private
@@ -90,7 +66,6 @@ class StartStopButton extends React.Component<Props, State> {
       this.props.onTestRunStart();
     }
 
-    this.sendSelectedTestsToBackend(this.props.selectedTests);
     this.hardpy_call("api/start");
   }
 
