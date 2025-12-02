@@ -3,6 +3,7 @@
 
 import * as React from "react";
 import { Button, Dialog, H2, Classes } from "@blueprintjs/core";
+import { useTranslation } from "react-i18next";
 
 interface TestConfig {
   name: string;
@@ -43,6 +44,8 @@ const TestConfigOverlay: React.FC<TestConfigOverlayProps> = ({
     }
   };
 
+  const { t } = useTranslation();
+
   return (
     <Dialog
       isOpen={isOpen}
@@ -59,7 +62,7 @@ const TestConfigOverlay: React.FC<TestConfigOverlayProps> = ({
     >
       <div className={Classes.DIALOG_BODY}>
         <H2 style={{ textAlign: "center", marginBottom: "30px" }}>
-          Select Test Configuration
+          {t("app.testConfigurationSelector")}
         </H2>
 
         {isTestRunning && (
