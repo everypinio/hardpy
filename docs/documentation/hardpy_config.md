@@ -27,6 +27,7 @@ port = 8000
 ```toml
 title = "HardPy TOML config"
 tests_name = "My tests"
+current_test_config = ""
 
 [database]
 user = "dev"
@@ -69,6 +70,11 @@ The value is always `HardPy TOML config`.
 #### tests_name
 
 Tests name. The user can change this value with the `hardpy init --tests-name` argument.
+
+#### current_test_config
+
+Tests file configuration name. 
+An example of its use can be found on page [Multiple configs](./../examples/multiple_configs.md).
 
 ### database
 
@@ -205,3 +211,19 @@ The default value is `30`.
 #### api-key
 
 **StandCloud** API key.
+
+### test_configs
+
+Test configurations describes using the `[[test_configs]]` table array. 
+
+#### name
+
+A user-friendly name for the configuration.
+
+#### file
+
+The path to the `pytest.ini` file that defines the specific pytest arguments and test selection for this configuration.
+
+#### description
+
+An optional field to provide a more detailed explanation of the configuration.
