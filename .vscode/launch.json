@@ -146,7 +146,7 @@
             "console": "integratedTerminal",
             "args": [
                 "run",
-                "examples/mult_configs"
+                "examples/multiple_configs"
             ]
         },
         {
