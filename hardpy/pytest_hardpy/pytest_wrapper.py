@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+import logging
 import signal
 import subprocess
 import sys
@@ -10,6 +11,9 @@ from platform import system
 from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
 from hardpy.pytest_hardpy.reporter import RunnerReporter
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 class PyTestWrapper:
@@ -24,7 +28,23 @@ class PyTestWrapper:
         # before clients come in
         self._config_manager = ConfigManager()
         self.config = self._config_manager.config
-        self.collect(is_clear_database=True)
+
+        # Check to see if there are any test configs defined in the TOML file
+        if not self.config.test_configs:
+            self.collect(is_clear_database=True)
+        else:
+            self._reporter.clear_database()
+            # Check if there's a current test config selected in statestore
+            config_name = self.config.current_test_config
+            if config_name:
+                try:
+                    self.collect(is_clear_database=True)
+                except Exception:
+                    # No existing test configs in statestore, will be initialized later
+                    msg = "Error retrieving current test config from statestore."
+                    logger.exception(msg)
+            else:
+                logger.info("No existing test config selection found.")
 
     def start(self, start_args: dict | None = None) -> bool:
         """Start pytest subprocess.
@@ -45,10 +65,13 @@ class PyTestWrapper:
             "--hardpy-db-url",
             self.config.database.url,
             "--hardpy-tests-name",
-            self.config.tests_name,
+            self._tests_name(),
             "--sc-address",
             self.config.stand_cloud.address,
         ]
+
+        self._add_config_file(cmd)
+
         if self.config.stand_cloud.connection_only:
             cmd.append("--sc-connection-only")
         if self.config.stand_cloud.autosync:
@@ -87,7 +110,11 @@ class PyTestWrapper:
             return True
         return False
 
-    def collect(self, *, is_clear_database: bool = False) -> bool:
+    def collect(
+        self,
+        *,
+        is_clear_database: bool = False,
+    ) -> bool:
         """Perform pytest collection.
 
         Args:
@@ -110,12 +137,14 @@ class PyTestWrapper:
             "--hardpy-db-url",
             self.config.database.url,
             "--hardpy-tests-name",
-            self.config.tests_name,
+            self._tests_name(),
             "--hardpy-pt",
         ]
 
         if is_clear_database:
             args.append("--hardpy-clear-database")
+
+        self._add_config_file(args)
 
         subprocess.Popen(  # noqa: S603
             [self.python_executable, *args],
@@ -158,3 +187,25 @@ class PyTestWrapper:
         """
         config_manager = ConfigManager()
         return config_manager.config.model_dump()
+
+    def _tests_name(self) -> str:
+        return (
+            self.config.tests_name + f" {self.config.current_test_config}"
+            if self.config.current_test_config
+            else self.config.tests_name
+        )
+
+    def _add_config_file(self, cmd: list) -> None:
+        """Add test configuration file if specified."""
+        config_name = self.config.current_test_config
+        test_config_file = None
+
+        if self.config.test_configs:
+            for config in self.config.test_configs:
+                if config.name == config_name:
+                    test_config_file = config.file
+                    break
+
+        if test_config_file:
+            logging.info(f"Using test configuration file: {test_config_file}")
+            cmd.extend(["--config-file", test_config_file])

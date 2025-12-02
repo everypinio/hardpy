@@ -2,6 +2,9 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add multiple test plan configurations.
+  [[PR-225]](https://github.com/everypinio/hardpy/pull/225)
+
 ## 0.18.3
 
 * Add support for pytest 9.

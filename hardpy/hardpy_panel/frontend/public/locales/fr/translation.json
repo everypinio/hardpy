@@ -15,6 +15,7 @@
       "failedTestCases": "Cas de test échoués",
       "modalResultDismissHint": "Cliquez n'importe où ou appuyez sur n'importe quelle touche pour fermer",
       "modalResultAutoDismissHint": "Fermeture automatique dans {{seconds}} secondes...",
+      "testConfigurationSelector": "Sélectionner la configuration de test",
       "status": {
         "ready": "Prêt",
         "run": "En cours",

@@ -86,6 +86,7 @@ export interface TestRunI {
 interface Props extends WithTranslation {
   db_state: TestRunI;
   defaultClose: boolean;
+  currentTestConfig?: string;
   measurementDisplay?: boolean; 
 }
 

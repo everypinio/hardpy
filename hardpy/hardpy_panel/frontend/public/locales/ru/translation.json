@@ -15,6 +15,7 @@
       "failedTestCases": "Проваленные тестовые случаи",
       "modalResultDismissHint": "Нажмите на любое место на экране или нажмите любую клавишу для закрытия",
       "modalResultAutoDismissHint": "Автоматическое закрытие через {{seconds}} секунд...",
+      "testConfigurationSelector": "Выберите конфигурацию теста",
       "status": {
         "ready": "Готов",
         "run": "Выполнение",
