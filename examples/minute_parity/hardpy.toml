@@ -1,5 +1,6 @@
 title = "HardPy TOML config"
 tests_name = "Minute Parity"
+current_test_config = ""
 
 [database]
 user = "dev"
