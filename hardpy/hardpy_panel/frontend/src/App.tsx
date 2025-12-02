@@ -239,16 +239,16 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           if (savedTests) {
             setSelectedTests(JSON.parse(savedTests));
           }
+        }
           
         // Show overlay if no current test config is selected
         if (
           !config.current_test_config &&
           config.test_configs &&
           config.test_configs.length > 0
-          ) {
-            setShowConfigOverlay(true);
-          }
-        }  
+        ) {
+          setShowConfigOverlay(true);
+        }
       } catch (error) {
         console.error("Failed to load HardPy config:", error);
       } finally {
