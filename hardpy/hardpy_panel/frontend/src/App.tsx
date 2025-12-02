@@ -277,9 +277,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       if (result.status === "success") {
         setManualCollectMode(newMode);
 
-        if (!newMode) {
-          await fetch("/api/collect");
-        }
       }
 
       if (result.manual_collect_mode === false) {
