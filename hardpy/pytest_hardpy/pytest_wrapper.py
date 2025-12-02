@@ -65,7 +65,7 @@ class PyTestWrapper:
             "--hardpy-db-url",
             self.config.database.url,
             "--hardpy-tests-name",
-            self.config.tests_name,
+            self._tests_name(),
             "--sc-address",
             self.config.stand_cloud.address,
         ]
@@ -137,7 +137,7 @@ class PyTestWrapper:
             "--hardpy-db-url",
             self.config.database.url,
             "--hardpy-tests-name",
-            self.config.tests_name,
+            self._tests_name(),
             "--hardpy-pt",
         ]
 
@@ -187,6 +187,13 @@ class PyTestWrapper:
         """
         config_manager = ConfigManager()
         return config_manager.config.model_dump()
+
+    def _tests_name(self) -> str:
+        return (
+            self.config.tests_name + f" {self.config.current_test_config}"
+            if self.config.current_test_config
+            else self.config.tests_name
+        )
 
     def _add_config_file(self, cmd: list) -> None:
         """Add test configuration file if specified."""
