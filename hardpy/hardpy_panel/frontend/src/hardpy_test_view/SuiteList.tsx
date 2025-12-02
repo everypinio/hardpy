@@ -172,7 +172,7 @@ export class SuiteList extends React.Component<
     return (
       <>
         <div>
-          <H1>{this.props.currentTestConfig || db_state.name}</H1>
+          <H1>{db_state.name}</H1>
           {db_state.test_stand && (
             <Tag minimal style={TAG_ELEMENT_STYLE}>
               {t("suiteList.standName")}: {db_state.test_stand?.name}
