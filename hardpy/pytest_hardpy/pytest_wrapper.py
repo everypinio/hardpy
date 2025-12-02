@@ -13,9 +13,6 @@ from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
 from hardpy.pytest_hardpy.reporter import RunnerReporter
 
-if TYPE_CHECKING:
-    from fastapi import FastAPI
-
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -23,11 +20,10 @@ logger = logging.getLogger(__name__)
 class PyTestWrapper:
     """Wrapper for pytest subprocess."""
 
-    def __init__(self, app: FastAPI) -> None:
+    def __init__(self) -> None:
         self._proc = None
         self._reporter = RunnerReporter()
         self.python_executable = sys.executable
-        self._app = app
         self._selected_tests = []
 
         # Make sure test structure is stored in DB
@@ -54,7 +50,7 @@ class PyTestWrapper:
 
         # Store the full test structure from collection
         self._full_test_structure = None
-        self.collect(is_clear_database=True, is_update_full_tests=True)
+        self.collect(is_clear_database=True)
 
     def start(self, start_args: dict | None = None) -> bool:
         """Start pytest subprocess.
@@ -111,9 +107,6 @@ class PyTestWrapper:
         # Store current selection before starting
         self._current_selection = self._selected_tests or []
 
-        # Preserve full test structure in database before starting selected tests
-        self._preserve_full_test_structure()
-
         if system() == "Windows":
             self._proc = subprocess.Popen(  # noqa: S603
                 cmd,
@@ -146,15 +139,14 @@ class PyTestWrapper:
         self,
         *,
         is_clear_database: bool = False,
-        is_update_full_tests: bool = False,
+        selected_tests: list[str] | None = None,
     ) -> bool:
         """Perform pytest collection.
 
         Args:
             is_clear_database (bool): indicates whether database
                                       should be cleared. Defaults to False.
-            is_update_full_tests (bool): indicates whether to update full test structure.
-                                      Defaults to False.
+            selected_tests (list[str]): list of selected tests
 
         Returns:
             bool: True if collection was started
@@ -181,17 +173,24 @@ class PyTestWrapper:
 
         self._add_config_file(args)
 
-        process = subprocess.Popen(  # noqa: S603
+        if selected_tests:
+            pytest_test_paths = []
+            for test_path in selected_tests:
+                if "::" in test_path:
+                    file_name, test_name = test_path.split("::", 1)
+                    pytest_path = f"{file_name}.py::{test_name}"
+                    pytest_test_paths.append(pytest_path)
+                else:
+                    pytest_test_paths.append(f"{test_path}.py")
+
+            args.extend(pytest_test_paths)
+
+        subprocess.Popen(  # noqa: S603
             [self.python_executable, *args],
             cwd=self._config_manager.tests_path,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
-
-        # Only wait and store structure if explicitly requested
-        if is_update_full_tests:
-            process.wait()
-            self._store_full_test_structure()
 
         return True
 
@@ -261,81 +260,3 @@ class PyTestWrapper:
             logging.info(f"Using test configuration file: {test_config_file}")
             cmd.extend(["--config-file", test_config_file])
 
-    def _store_full_test_structure(self) -> None:
-        """Store the full test structure from the last collection."""
-        try:
-            self._reporter.update_doc_by_db()
-            # Extract modules structure from the database
-            modules_key = self._reporter.generate_key(DF.MODULES)
-            full_structure = self._reporter.get_field(modules_key)
-            self._full_test_structure = full_structure
-        except Exception:  # noqa: BLE001
-            self._full_test_structure = None
-
-    def _preserve_full_test_structure(self) -> None:
-        """Preserve full test structure in database when running selected tests.
-
-        This method ensures that the complete test structure remains visible in the database
-        even when only a subset of tests is executed. It handles two main scenarios:
-
-        1. Manual collect mode: Marks non-selected tests as "skipped" with cleared timestamps
-        and messages to indicate they were not executed.
-
-        2. Automatic mode: Preserves all tests with their current statuses.
-
-        The method creates a modified copy of the full test structure where:
-        - Selected tests retain their original status and data
-        - Non-selected tests (in manual mode) are marked as skipped with reset metadata
-        - The complete hierarchy (modules → cases) is maintained
-
-        This allows the UI to display the full test suite structure while clearly indicating
-        which tests were actually executed in the current run.
-
-        Note: The method fails silently if any errors occur during database operations.
-        """
-        if not self._full_test_structure:
-            return
-
-        try:
-            self._reporter.update_doc_by_db()
-
-            # Get current selected tests
-            manual_collect_mode = getattr(self._app.state, "manual_collect_mode", False)
-
-            # Create a copy of full structure with selection info
-            preserved_structure = {}
-            for module_name, module_data in self._full_test_structure.items():
-                preserved_module = module_data.copy()
-                preserved_module_cases = {}
-
-                if module_data.get("cases"):
-                    for case_name, case_data in module_data["cases"].items():
-                        full_test_path = f"{module_name}::{case_name}"
-                        if manual_collect_mode:
-                            is_selected = full_test_path in self._selected_tests
-                        else:
-                            is_selected = True
-
-                        preserved_case = case_data.copy()
-
-                        if manual_collect_mode and not is_selected:
-                            preserved_case["status"] = "skipped"
-                            preserved_case["start_time"] = None
-                            preserved_case["stop_time"] = None
-                            preserved_case["assertion_msg"] = None
-                            preserved_case["msg"] = None
-                        else:
-                            preserved_case["status"] = case_data.get("status", "ready")
-
-                        preserved_module_cases[case_name] = preserved_case
-
-                preserved_module["cases"] = preserved_module_cases
-                preserved_structure[module_name] = preserved_module
-
-            # Update database with preserved structure
-            modules_key = self._reporter.generate_key(DF.MODULES)
-            self._reporter.set_doc_value(modules_key, preserved_structure)
-            self._reporter.update_db_by_doc()
-
-        except Exception:  # noqa: BLE001, S110
-            pass
