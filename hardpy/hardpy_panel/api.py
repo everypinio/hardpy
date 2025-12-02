@@ -325,7 +325,7 @@ async def set_selected_tests(request: Request) -> dict:
             msg = "Expected list."
             raise TypeError(msg)  # noqa: TRY301
 
-        app.state.selected_tests = selected_tests_list
+        app.state.pytest_wrp.select_tests(selected_tests_list)
         return {
             "status": "success",
             "message": f"Selected {len(selected_tests_list)} tests",

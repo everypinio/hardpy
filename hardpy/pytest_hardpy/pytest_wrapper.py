@@ -28,6 +28,7 @@ class PyTestWrapper:
         self._reporter = RunnerReporter()
         self.python_executable = sys.executable
         self._app = app
+        self._selected_tests = []
 
         # Make sure test structure is stored in DB
         # before clients come in
@@ -55,7 +56,7 @@ class PyTestWrapper:
         self._full_test_structure = None
         self.collect(is_clear_database=True, is_update_full_tests=True)
 
-    def start(self, start_args: dict | None = None) -> bool:  # noqa: PLR0912
+    def start(self, start_args: dict | None = None) -> bool:
         """Start pytest subprocess.
 
         Args:
@@ -64,10 +65,6 @@ class PyTestWrapper:
         Returns:
             bool: True if pytest was started
         """
-        # Check if manual collect mode is active
-        if getattr(self._app.state, "manual_collect_mode", False):
-            return False
-
         if self.python_executable is None:
             return False
 
@@ -86,10 +83,9 @@ class PyTestWrapper:
             self.config.stand_cloud.address,
         ]
 
-        selected_tests = getattr(self._app.state, "selected_tests", None)
-        if selected_tests:
+        if self._selected_tests:
             pytest_test_paths = []
-            for test_path in selected_tests:
+            for test_path in self._selected_tests:
                 if "::" in test_path:
                     file_name, test_name = test_path.split("::", 1)
                     pytest_path = f"{file_name}.py::{test_name}"
@@ -113,7 +109,7 @@ class PyTestWrapper:
                 cmd.extend(["--hardpy-start-arg", arg_str])
 
         # Store current selection before starting
-        self._current_selection = selected_tests or []
+        self._current_selection = self._selected_tests or []
 
         # Preserve full test structure in database before starting selected tests
         self._preserve_full_test_structure()
@@ -138,10 +134,6 @@ class PyTestWrapper:
         Returns:
             bool: True if pytest was running and stopped
         """
-        # Check if manual collect mode is active
-        if getattr(self._app.state, "manual_collect_mode", False):
-            return False
-
         if self.is_running() and self._proc:
             if system() == "Windows":
                 self._proc.send_signal(signal.CTRL_BREAK_EVENT)  # type: ignore
@@ -203,6 +195,72 @@ class PyTestWrapper:
 
         return True
 
+    def send_data(self, data: str) -> bool:
+        """Send data to pytest subprocess.
+
+        Args:
+            data (str): Data to be sent. Can be dialog
+                        box output or operator message visibility.
+
+        Returns:
+            bool: True if dialog box was confirmed/closed, else False
+        """
+        try:
+            self._reporter.update_doc_by_db()
+            key = self._reporter.generate_key(DF.OPERATOR_DATA, DF.DIALOG)
+            self._reporter.set_doc_value(key, data, statestore_only=True)
+            self._reporter.update_db_by_doc()
+        except Exception:  # noqa: BLE001
+            return False
+        return True
+
+    def is_running(self) -> bool | None:
+        """Check if pytest is running.
+
+        Returns:
+            bool | None: True if self._proc is not None
+        """
+        return self._proc and self._proc.poll() is None
+
+    def get_config(self) -> dict:
+        """Get HardPy configuration.
+
+        Returns:
+            dict: HardPy configuration
+        """
+        config_manager = ConfigManager()
+        return config_manager.config.model_dump()
+
+    def select_tests(self, selected_tests: list[str]) -> None:
+        """Select tests for the manual run.
+
+        Args:
+            selected_tests: A list of selected tests.
+        """
+        self._selected_tests = selected_tests
+
+    def _tests_name(self) -> str:
+        return (
+            self.config.tests_name + f" {self.config.current_test_config}"
+            if self.config.current_test_config
+            else self.config.tests_name
+        )
+
+    def _add_config_file(self, cmd: list) -> None:
+        """Add test configuration file if specified."""
+        config_name = self.config.current_test_config
+        test_config_file = None
+
+        if self.config.test_configs:
+            for config in self.config.test_configs:
+                if config.name == config_name:
+                    test_config_file = config.file
+                    break
+
+        if test_config_file:
+            logging.info(f"Using test configuration file: {test_config_file}")
+            cmd.extend(["--config-file", test_config_file])
+
     def _store_full_test_structure(self) -> None:
         """Store the full test structure from the last collection."""
         try:
@@ -242,7 +300,6 @@ class PyTestWrapper:
             self._reporter.update_doc_by_db()
 
             # Get current selected tests
-            selected_tests = getattr(self._app.state, "selected_tests", [])
             manual_collect_mode = getattr(self._app.state, "manual_collect_mode", False)
 
             # Create a copy of full structure with selection info
@@ -255,7 +312,7 @@ class PyTestWrapper:
                     for case_name, case_data in module_data["cases"].items():
                         full_test_path = f"{module_name}::{case_name}"
                         if manual_collect_mode:
-                            is_selected = full_test_path in selected_tests
+                            is_selected = full_test_path in self._selected_tests
                         else:
                             is_selected = True
 
@@ -282,77 +339,3 @@ class PyTestWrapper:
 
         except Exception:  # noqa: BLE001, S110
             pass
-
-    def send_data(self, data: str) -> bool:
-        """Send data to pytest subprocess.
-
-        Args:
-            data (str): Data to be sent. Can be dialog
-                        box output or operator message visibility.
-
-        Returns:
-            bool: True if dialog box was confirmed/closed, else False
-        """
-        try:
-            self._reporter.update_doc_by_db()
-            key = self._reporter.generate_key(DF.OPERATOR_DATA, DF.DIALOG)
-            self._reporter.set_doc_value(key, data, statestore_only=True)
-            self._reporter.update_db_by_doc()
-        except Exception:  # noqa: BLE001
-            return False
-        return True
-
-    def send_selected_tests(self, selected_tests: list[str]) -> bool:
-        """Send selected tests to the FastAPI application's state.
-
-        Args:
-            selected_tests: A list of selected test paths.
-
-        Returns:
-            bool: True if the data was sent successfully.
-        """
-        try:
-            self._app.state.selected_tests = selected_tests
-        except Exception:  # noqa: BLE001
-            return False
-        else:
-            return True
-
-    def is_running(self) -> bool | None:
-        """Check if pytest is running.
-
-        Returns:
-            bool | None: True if self._proc is not None
-        """
-        return self._proc and self._proc.poll() is None
-
-    def get_config(self) -> dict:
-        """Get HardPy configuration.
-
-        Returns:
-            dict: HardPy configuration
-        """
-        config_manager = ConfigManager()
-        return config_manager.config.model_dump()
-
-    def _tests_name(self) -> str:
-        return (
-            self.config.tests_name + f" {self.config.current_test_config}"
-            if self.config.current_test_config
-            else self.config.tests_name
-        )
-
-    def _add_config_file(self, cmd: list) -> None:
-        """Add test configuration file if specified."""
-        config_name = self.config.current_test_config
-        test_config_file = None
-
-        if self.config.test_configs:
-            for config in self.config.test_configs:
-                if config.name == config_name:
-                    test_config_file = config.file
-                    break
-
-        if test_config_file:
-            logging.info(f"Using test configuration file: {test_config_file}")
-            cmd.extend(["--config-file", test_config_file])
