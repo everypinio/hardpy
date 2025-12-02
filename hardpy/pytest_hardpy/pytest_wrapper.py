@@ -189,7 +189,7 @@ class PyTestWrapper:
 
         self._add_config_file(args)
 
-        subprocess.Popen(  # noqa: S603
+        process = subprocess.Popen(  # noqa: S603
             [self.python_executable, *args],
             cwd=self._config_manager.tests_path,
             stdout=subprocess.PIPE,
