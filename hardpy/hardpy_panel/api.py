@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 async def lifespan_sync_scheduler(app: FastAPI) -> AsyncGenerator[Any, Any]:
     """Manages the lifecycle events (startup and shutdown) for background tasks."""
     # Initialize application state
-    app.state.pytest_wrp = PyTestWrapper(app)
+    app.state.pytest_wrp = PyTestWrapper()
     app.state.sc_synchronizer = StandCloudSynchronizer()
     app.state.executor = ThreadPoolExecutor(max_workers=1)
     app.state.manual_collect_mode = False
@@ -326,6 +326,10 @@ async def set_selected_tests(request: Request) -> dict:
             raise TypeError(msg)  # noqa: TRY301
 
         app.state.pytest_wrp.select_tests(selected_tests_list)
+        app.state.pytest_wrp.collect(
+            is_clear_database=True,
+            selected_tests=selected_tests_list,
+        )
         return {
             "status": "success",
             "message": f"Selected {len(selected_tests_list)} tests",
