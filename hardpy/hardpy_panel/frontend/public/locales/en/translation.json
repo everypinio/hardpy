@@ -17,6 +17,7 @@
     "modalResultAutoDismissHint": "Auto-dismissing in {{seconds}} seconds...",
     "manualCollectOn": "Manual collect on",
     "manualCollectOff": "Manual collect off",
+    "testConfigurationSelector": "Select test configuration",
     "status": {
       "ready": "Ready",
       "run": "Run",

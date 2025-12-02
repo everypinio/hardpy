@@ -163,7 +163,7 @@ def test_config_manager_create_config(tmp_path: Path):
 
     config_file: Path = tests_dir / "hardpy.toml"
     config_data = tomli.loads(config_file.read_text())
-    expected_data = config_manager.config.model_dump()
+    expected_data = config_manager.config.model_dump(exclude="test_configs")
 
     assert config_data == expected_data
 

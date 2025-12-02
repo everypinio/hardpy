@@ -46,9 +46,9 @@ jobs:
             python-version: "3.10"
           - pytest-version: "~=7.0.0"
             python-version: "3.12"
-          - pytest-version: "~=8.0.0"
+          - pytest-version: "~=9.0.0"
             python-version: "3.10"
-          - pytest-version: "~=8.0.0"
+          - pytest-version: "~=9.0.0"
             python-version: "3.13"
     services:
       db:

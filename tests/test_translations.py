@@ -135,6 +135,7 @@ class App(BaseModel):
     dbError: str
     noEntries: str
     status: AppStatus
+    testConfigurationSelector: str
 
 
 class SuiteList(BaseModel):

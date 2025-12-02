@@ -17,6 +17,7 @@
       "modalResultAutoDismissHint": "Automatisches Schließen in {{seconds}} Sekunden...",
       "manualCollectOn": "Manuelle Sammlung ein",
       "manualCollectOff": "Manuelle Sammlung aus",
+      "testConfigurationSelector": "Testkonfiguration auswählen",
       "status": {
         "ready": "Bereit",
         "run": "Läuft",

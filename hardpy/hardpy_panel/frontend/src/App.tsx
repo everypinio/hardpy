@@ -24,6 +24,7 @@ import ProgressView from "./progress/ProgressView";
 import TestStatus from "./hardpy_test_view/TestStatus";
 import ReloadAlert from "./restart_alert/RestartAlert";
 import PlaySound from "./hardpy_test_view/PlaySound";
+import TestConfigOverlay from "./hardpy_test_view/TestConfigOverlay";
 import TestCompletionModalResult from "./hardpy_test_view/TestCompletionModalResult";
 
 import { useAllDocs } from "use-pouchdb";
@@ -57,6 +58,12 @@ interface AppConfig {
       auto_dismiss_timeout?: number;
     };
   };
+  current_test_config?: string;
+  test_configs?: Array<{
+    name: string;
+    description: string;
+    file?: string;
+  }>;
 }
 
 /**
@@ -177,6 +184,9 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
   const [lastRunDuration, setLastRunDuration] = React.useState<number>(0);
 
+  // Test config selection state
+  const [showConfigOverlay, setShowConfigOverlay] = React.useState(false);
+
   // Test completion ModalResult state
   const [showCompletionModalResult, setShowCompletionModalResult] =
     React.useState(false);
@@ -229,7 +239,16 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           if (savedTests) {
             setSelectedTests(JSON.parse(savedTests));
           }
-        }
+          
+        // Show overlay if no current test config is selected
+        if (
+          !config.current_test_config &&
+          config.test_configs &&
+          config.test_configs.length > 0
+          ) {
+            setShowConfigOverlay(true);
+          }
+        }  
       } catch (error) {
         console.error("Failed to load HardPy config:", error);
       } finally {
@@ -264,9 +283,9 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       }
     } catch (error) {
       console.error("Failed to toggle manual collect mode:", error);
-    }
-  };
-
+      }
+    };
+  
   /**
    * Filters selected tests to only include those that exist in current test structure
    */
@@ -283,6 +302,39 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       return filtered;
     });
   }, []);
+
+   /**
+   * Handler for test config selection
+   */
+  const handleConfigSelection = async (configName: string) => {
+    // Prevent config changes during test runs
+    if (lastRunStatus === "run") {
+      console.warn("Cannot change test config while test is running");
+      return;
+    }
+
+    try {
+      // Update the backend with the selected config
+      const response = await fetch(
+        `/api/set_test_config/${encodeURIComponent(configName)}`,
+        {
+          method: "POST",
+        }
+      );
+
+      if (response.ok) {
+        // Update local state
+        setAppConfig((prev) =>
+          prev ? { ...prev, current_test_config: configName } : null
+        );
+        setShowConfigOverlay(false);
+      } else {
+        console.error("Failed to set test config");
+      }
+    } catch (error) {
+      console.error("Error setting test config:", error);
+    }
+  };
 
   /**
    * Custom hook to determine if the window width is greater than a specified size
@@ -361,6 +413,15 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       };
     }
   }, [showCompletionModalResult]);
+
+  /**
+   * Close config overlay when test starts running
+   */
+  React.useEffect(() => {
+    if (lastRunStatus === "run" && showConfigOverlay) {
+      setShowConfigOverlay(false);
+    }
+  }, [lastRunStatus, showConfigOverlay]);
 
   /**
    * Manages test execution timer and duration calculation
@@ -659,6 +720,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                   (appConfig?.frontend?.manual_collect || false) &&
                   manualCollectMode
                 }
+                currentTestConfig={appConfig?.current_test_config}
                 measurementDisplay={appConfig?.frontend?.measurement_display}
                 manualCollectMode={manualCollectMode} 
               />
@@ -803,6 +865,20 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         </Navbar.Group>
 
         <Navbar.Group align={Alignment.RIGHT}>
+          {appConfig && appConfig.current_test_config && (
+            <Button
+              className="bp3-minimal"
+              text={appConfig.current_test_config}
+              icon="projects"
+              disabled={lastRunStatus === "run"}
+              onClick={() => setShowConfigOverlay(true)}
+              style={{
+                marginRight: "8px",
+                fontWeight: "bold",
+                color: lastRunStatus === "run" ? Colors.GRAY3 : Colors.BLUE3,
+              }}
+            />
+          )}
           <Popover content={renderSettingsMenu()}>
             <Button className="bp3-minimal" icon="cog" />
           </Popover>
@@ -901,6 +977,18 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
             </div>
           )}
         </div>
+      )}
+
+      {/* Test Config Selection Overlay */}
+      {appConfig && (
+        <TestConfigOverlay
+          isOpen={showConfigOverlay}
+          testConfigs={appConfig.test_configs || []}
+          currentConfig={appConfig.current_test_config}
+          isTestRunning={lastRunStatus === "run"}
+          onSelect={handleConfigSelection}
+          onClose={() => setShowConfigOverlay(false)}
+        />
       )}
 
       {/* Test Completion ModalResult */}

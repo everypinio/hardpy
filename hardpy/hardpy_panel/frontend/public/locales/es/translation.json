@@ -17,6 +17,7 @@
       "modalResultAutoDismissHint": "Cierre automático en {{seconds}} segundos...",
       "manualCollectOn": "Recolección manual activada",
       "manualCollectOff": "Recolección manual desactivada",
+      "testConfigurationSelector": "Seleccionar configuración de prueba",
       "status": {
         "ready": "Listo",
         "run": "Ejecutando",

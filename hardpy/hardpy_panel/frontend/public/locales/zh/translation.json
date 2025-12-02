@@ -17,6 +17,7 @@
       "modalResultAutoDismissHint": "{{seconds}}秒后自动关闭...",
       "manualCollectOn": "手动收集开启",
       "manualCollectOff": "手动收集关闭",
+      "testConfigurationSelector": "选择测试配置",
       "status": {
         "ready": "就绪",
         "run": "运行中",

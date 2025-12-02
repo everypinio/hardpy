@@ -17,6 +17,7 @@
       "modalResultAutoDismissHint": "Автоматическое закрытие через {{seconds}} секунд...",
       "manualCollectOn": "Ручной сбор включен",
       "manualCollectOff": "Ручной сбор выключен",
+      "testConfigurationSelector": "Выберите конфигурацию теста",
       "status": {
         "ready": "Готов",
         "run": "Выполнение",
