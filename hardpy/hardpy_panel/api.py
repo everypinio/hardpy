@@ -35,20 +35,12 @@ logger = logging.getLogger(__name__)
 @contextlib.asynccontextmanager
 async def lifespan_sync_scheduler(app: FastAPI) -> AsyncGenerator[Any, Any]:
     """Manages the lifecycle events (startup and shutdown) for background tasks."""
-    # Initialize application state
-    app.state.pytest_wrp = PyTestWrapper()
-    app.state.sc_synchronizer = StandCloudSynchronizer()
-    app.state.executor = ThreadPoolExecutor(max_workers=1)
-    app.state.manual_collect_mode = False
-
     # Start StandCloud synchronization if enabled
     config_manager = ConfigManager()
     sc_autosync = config_manager.config.stand_cloud.autosync
     if sc_autosync:
         autosync_timeout = config_manager.config.stand_cloud.autosync_timeout
-        app.state.sync_task = asyncio.create_task(
-            sync_stand_cloud(autosync_timeout, app),
-        )
+        app.state.sync_task = asyncio.create_task(sync_stand_cloud(autosync_timeout))
 
     yield
 
@@ -63,7 +55,12 @@ async def lifespan_sync_scheduler(app: FastAPI) -> AsyncGenerator[Any, Any]:
         logger.info("Shut down ThreadPoolExecutor.")
 
 
+# Initialize application state
 app = FastAPI(lifespan=lifespan_sync_scheduler)
+app.state.pytest_wrp = PyTestWrapper()
+app.state.sc_synchronizer = StandCloudSynchronizer()
+app.state.executor = ThreadPoolExecutor(max_workers=1)
+app.state.manual_collect_mode = False
 
 
 class Status(str, Enum):
@@ -80,7 +77,7 @@ class Status(str, Enum):
     ERROR = "error"
 
 
-async def sync_stand_cloud(sc_sync_interval_minutes: int, app: FastAPI) -> None:
+async def sync_stand_cloud(sc_sync_interval_minutes: int) -> None:
     """Periodically calls the blocking stand_cloud_sync logic in a separate thread."""
     sc_sync_interval: Final[int] = sc_sync_interval_minutes * 60
     initial_pause: Final[int] = 30

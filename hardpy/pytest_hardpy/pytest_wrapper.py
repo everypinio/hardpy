@@ -7,7 +7,6 @@ import signal
 import subprocess
 import sys
 from platform import system
-from typing import TYPE_CHECKING
 
 from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
