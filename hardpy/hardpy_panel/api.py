@@ -61,6 +61,7 @@ app.state.pytest_wrp = PyTestWrapper()
 app.state.sc_synchronizer = StandCloudSynchronizer()
 app.state.executor = ThreadPoolExecutor(max_workers=1)
 app.state.manual_collect_mode = False
+app.state.selected_tests = []
 
 
 class Status(str, Enum):
@@ -119,9 +120,9 @@ def set_test_config(config_name: str) -> dict:
     Returns:
         dict: Status of the operation.
     """
+    config_manager = ConfigManager()
+    config_manager.set_current_test_config(config_name)
     try:
-        config_manager = ConfigManager()
-        config_manager.set_current_test_config(config_name)
         app.state.pytest_wrp.collect(is_clear_database=True)
     except (ValueError, RuntimeError) as e:
         return {"status": "error", "message": str(e)}
@@ -147,7 +148,10 @@ def start_pytest(args: Annotated[list[str] | None, Query()] = None) -> dict:
     else:
         args_dict = dict(arg.split("=", 1) for arg in args if "=" in arg)
 
-    if app.state.pytest_wrp.start(start_args=args_dict):
+    if app.state.pytest_wrp.start(
+        start_args=args_dict,
+        selected_tests=app.state.selected_tests,
+    ):
         logger.info("Start testing process.")
         return {"status": Status.STARTED}
     logger.info("Testing process is already running.")
@@ -307,32 +311,25 @@ async def set_selected_tests(request: Request) -> dict:
         request (Request): The incoming request object.
 
     Returns:
-        dict[str, str]: A dictionary containing the status and message of the operation.
-            - status (str): The status of the operation. Possible values are "success" or "error".
-            - message (str): A message describing the result of the operation.
+        dict[str, str]: A dictionary containing the
+                        status and message of the operation.
+            - status (str): The status of the operation.
+                            Possible values are "success" or "error".
+            - message (str): A message describing the
+                             result of the operation.
 
     Raises:
-        TypeError: If the `selected_tests_list` is not a list.
+        TypeError: If the `selected_tests` is not a list.
+    """
+    selected_tests = await request.json()
 
-    """  # noqa: E501
-    try:
-        selected_tests_list = await request.json()
+    if not isinstance(selected_tests, list):
+        msg = "Expected list."
+        raise TypeError(msg)
 
-        if not isinstance(selected_tests_list, list):
-            msg = "Expected list."
-            raise TypeError(msg)  # noqa: TRY301
-
-        app.state.pytest_wrp.select_tests(selected_tests_list)
-        app.state.pytest_wrp.collect(
-            is_clear_database=True,
-            selected_tests=selected_tests_list,
-        )
-        return {
-            "status": "success",
-            "message": f"Selected {len(selected_tests_list)} tests",
-        }
-    except Exception as e:  # noqa: BLE001
-        return {"status": "error", "message": str(e)}
+    app.state.selected_tests = selected_tests
+    app.state.pytest_wrp.collect(is_clear_database=True, selected_tests=selected_tests)
+    return {"status": "success", "message": f"Selected {len(selected_tests)} tests"}
 
 
 @app.get("/api/manual_collect_mode")
@@ -355,16 +352,13 @@ def set_manual_collect_mode(mode_data: dict) -> dict:
     Returns:
         dict[str, str]: operation status
     """
-    try:
-        enabled = mode_data.get("enabled", False)
-        app.state.manual_collect_mode = enabled
+    enabled = mode_data.get("enabled", False)
+    app.state.manual_collect_mode = enabled
 
-        if enabled:
-            app.state.pytest_wrp.collect()
+    if enabled:
+        app.state.pytest_wrp.collect()
 
-        return {"status": "success", "manual_collect_mode": enabled}  # noqa: TRY300
-    except Exception as e:  # noqa: BLE001
-        return {"status": "error", "message": str(e)}
+    return {"status": "success", "manual_collect_mode": enabled}
 
 
 if "DEBUG_FRONTEND" not in os.environ:
