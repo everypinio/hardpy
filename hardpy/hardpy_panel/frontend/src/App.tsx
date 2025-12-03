@@ -208,10 +208,10 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const startTimeRef = React.useRef<number | null>(null);
   const [timerIntervalId, setTimerIntervalId] =
     React.useState<NodeJS.Timeout | null>(null);
-  const [selectedTests, setSelectedTests] = React.useState<string[]>([]);
   const [allTests, setAllTests] = React.useState<string[]>([]);
   const [previousTestStructure, setPreviousTestStructure] =
     React.useState<string>("");
+  let [selectedTests, setSelectedTests] = React.useState<string[]>([]);
 
   /**
    * Loads HardPy configuration from the backend API on component mount
@@ -524,41 +524,47 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     }
 
     // Extract all available tests and detect structure changes
-    if (db_row.modules) {
-      const allAvailableTests: string[] = [];
-      Object.entries(db_row.modules).forEach(([moduleId, module]) => {
-        if (module.cases) {
-          Object.keys(module.cases).forEach((caseId) => {
-            // Safe check for case existence
-            if (module.cases[caseId]) {
-              allAvailableTests.push(`${moduleId}::${caseId}`);
-            }
-          });
-        }
+    if (db_row.modules) {      
+      const allAvailableTests: string[] = [];      
+      Object.entries(db_row.modules).forEach(([moduleId, module]) => {        
+        if (module.cases) {          
+          Object.keys(module.cases).forEach((caseId) => {            
+            // Safe check for case existence            
+            if (module.cases[caseId]) {              
+              allAvailableTests.push(`${moduleId}::${caseId}`);            
+            }          
+          });        
+        }      
       });
+      
+      const currentStructure = JSON.stringify(allAvailableTests); 
 
-      // Check if test structure has changed
-      const currentStructure = JSON.stringify(allAvailableTests.sort());
-      if (currentStructure !== previousTestStructure) {
-        setAllTests(allAvailableTests);
+      // Sort selected tests by Available tests order
+      const selectedTestsSet = new Set(selectedTests);
+      selectedTests = allAvailableTests.filter((test) =>
+        selectedTestsSet.has(test)
+      );
+      
+      if (currentStructure !== previousTestStructure) {        
+        setAllTests(allAvailableTests);        
         setPreviousTestStructure(currentStructure);
 
-        // Filter selected tests when test structure changes
-        filterSelectedTests(allAvailableTests);
+        // Filter selected tests when test structure changes        
+        filterSelectedTests(allAvailableTests);      
       }
-
+      
       // If manual selection is enabled and no tests are selected yet, select all by default
-      if (
-        appConfig?.frontend?.manual_collect &&
-        selectedTests.length === 0 &&
-        allAvailableTests.length > 0
-      ) {
-        setSelectedTests(allAvailableTests);
-        localStorage.setItem(
-          "hardpy_selected_tests",
-          JSON.stringify(allAvailableTests)
-        );
-      }
+      if (        
+        appConfig?.frontend?.manual_collect &&        
+        selectedTests.length === 0 &&        
+        allAvailableTests.length > 0      
+      ) {        
+        setSelectedTests(allAvailableTests);        
+        localStorage.setItem(          
+          "hardpy_selected_tests",          
+          JSON.stringify(allAvailableTests)        
+        );      
+      }    
     }
 
     const prevStatus = lastRunStatus;
