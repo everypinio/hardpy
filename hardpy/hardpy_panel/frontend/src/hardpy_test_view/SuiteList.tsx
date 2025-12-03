@@ -92,7 +92,6 @@ interface Props extends WithTranslation {
   measurementDisplay?: boolean;
   manualCollectMode?: boolean; 
   currentTestConfig?: string;
-  measurementDisplay?: boolean; 
 }
 
 const SECONDS_TO_MILLISECONDS = 1000;
