@@ -35,12 +35,11 @@ class StartStopButton extends React.Component<Props, State> {
       isStopButtonDisabled: false,
     };
 
-
     this.hardpy_start = this.hardpy_start.bind(this);
     this.hardpy_stop = this.hardpy_stop.bind(this);
   }
 
-   /**
+  /**
    * Makes a fetch call to the specified URI.
    * @param {string} uri - The URI to which the fetch request is made.
    * @private
