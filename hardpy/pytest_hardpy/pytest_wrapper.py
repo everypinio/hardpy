@@ -23,7 +23,6 @@ class PyTestWrapper:
         self._proc = None
         self._reporter = RunnerReporter()
         self.python_executable = sys.executable
-        self._selected_tests = []
 
         # Make sure test structure is stored in DB
         # before clients come in
@@ -47,15 +46,16 @@ class PyTestWrapper:
             else:
                 logger.info("No existing test config selection found.")
 
-        # Store the full test structure from collection
-        self._full_test_structure = None
-        self.collect(is_clear_database=True)
-
-    def start(self, start_args: dict | None = None) -> bool:
+    def start(
+        self,
+        start_args: dict | None = None,
+        selected_tests: list[str] | None = None,
+    ) -> bool:
         """Start pytest subprocess.
 
         Args:
             start_args: Additional start arguments
+            selected_tests: List of selected tests
 
         Returns:
             bool: True if pytest was started
@@ -78,17 +78,9 @@ class PyTestWrapper:
             self.config.stand_cloud.address,
         ]
 
-        if self._selected_tests:
-            pytest_test_paths = []
-            for test_path in self._selected_tests:
-                if "::" in test_path:
-                    file_name, test_name = test_path.split("::", 1)
-                    pytest_path = f"{file_name}.py::{test_name}"
-                    pytest_test_paths.append(pytest_path)
-                else:
-                    pytest_test_paths.append(f"{test_path}.py")
-
-            cmd.extend(pytest_test_paths)
+        if selected_tests:
+            selected_test_cases = self._select_test_cases(selected_tests)
+            cmd.extend(selected_test_cases)
 
         self._add_config_file(cmd)
 
@@ -102,9 +94,6 @@ class PyTestWrapper:
             for key, value in start_args.items():
                 arg_str = f"{key}={value}"
                 cmd.extend(["--hardpy-start-arg", arg_str])
-
-        # Store current selection before starting
-        self._current_selection = self._selected_tests or []
 
         if system() == "Windows":
             self._proc = subprocess.Popen(  # noqa: S603
@@ -173,16 +162,8 @@ class PyTestWrapper:
         self._add_config_file(args)
 
         if selected_tests:
-            pytest_test_paths = []
-            for test_path in selected_tests:
-                if "::" in test_path:
-                    file_name, test_name = test_path.split("::", 1)
-                    pytest_path = f"{file_name}.py::{test_name}"
-                    pytest_test_paths.append(pytest_path)
-                else:
-                    pytest_test_paths.append(f"{test_path}.py")
-
-            args.extend(pytest_test_paths)
+            selected_test_cases = self._select_test_cases(selected_tests)
+            args.extend(selected_test_cases)
 
         subprocess.Popen(  # noqa: S603
             [self.python_executable, *args],
@@ -229,14 +210,6 @@ class PyTestWrapper:
         config_manager = ConfigManager()
         return config_manager.config.model_dump()
 
-    def select_tests(self, selected_tests: list[str]) -> None:
-        """Select tests for the manual run.
-
-        Args:
-            selected_tests: A list of selected tests.
-        """
-        self._selected_tests = selected_tests
-
     def _tests_name(self) -> str:
         return (
             self.config.tests_name + f" {self.config.current_test_config}"
@@ -259,3 +232,13 @@ class PyTestWrapper:
             logging.info(f"Using test configuration file: {test_config_file}")
             cmd.extend(["--config-file", test_config_file])
 
+    def _select_test_cases(self, selected_tests: list[str]) -> list[str]:
+        test_cases = []
+        for test_path in selected_tests:
+            if "::" in test_path:
+                file_name, test_name = test_path.split("::", 1)
+                pytest_path = f"{file_name}.py::{test_name}"
+                test_cases.append(pytest_path)
+            else:
+                test_cases.append(f"{test_path}.py")
+        return test_cases
