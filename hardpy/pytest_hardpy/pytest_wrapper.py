@@ -168,10 +168,7 @@ class PyTestWrapper:
         subprocess.Popen(  # noqa: S603
             [self.python_executable, *args],
             cwd=self._config_manager.tests_path,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
         )
-
         return True
 
     def send_data(self, data: str) -> bool:
