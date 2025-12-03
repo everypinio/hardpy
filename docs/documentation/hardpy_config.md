@@ -141,7 +141,7 @@ Default is `true`.
 
 #### manual_collect
 
-Enable or disable manual test collection mode in the operator panel.
+Enable or disable manual test collection mode in the [operator panel](./hardpy_panel.md#manual-test-selection).
 When set to `true`, users can selectively choose which tests to run by checking individual test cases,
 and only the selected tests will be executed when starting the test run.
 When set to `false`, all discovered tests will run automatically as before.

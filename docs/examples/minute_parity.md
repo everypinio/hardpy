@@ -5,6 +5,9 @@ the result to CouchDB and writing a simple driver.
 The code for this example can be seen inside the hardpy package
 [Minute parity](https://github.com/everypinio/hardpy/tree/main/examples/minute_parity).
 
+This example includes the results of the [test completion modal](./../features/features.md#test-completion-modal-results), 
+[sound notifications](./../features/features.md#sound-notifications) and 
+[manual test selection](./../features/features.md#manual-test-selection) features.
 
 ### how to start
 
@@ -15,7 +18,8 @@ The code for this example can be seen inside the hardpy package
 
 ### hardpy.toml
 
-Replace the settings in the `[frontend]` and `[frontend.modal_result]` sections with those shown in the **hardpy.toml** example file below.
+Replace the settings in the `[frontend]` and `[frontend.modal_result]` sections 
+with those shown in the **hardpy.toml** example file below.
 
 ```toml
 title = "HardPy TOML config"
@@ -34,7 +38,7 @@ language = "en"
 full_size_button = false
 sound_on = true
 measurement_display = true
-manual_collect = false
+manual_collect = true
 
 [frontend.modal_result]
 enable = true
