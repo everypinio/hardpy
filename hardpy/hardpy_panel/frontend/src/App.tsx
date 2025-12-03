@@ -240,7 +240,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
             setSelectedTests(JSON.parse(savedTests));
           }
         }
-          
+
         // Show overlay if no current test config is selected
         if (
           !config.current_test_config &&
@@ -276,7 +276,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       const result = await response.json();
       if (result.status === "success") {
         setManualCollectMode(newMode);
-
       }
 
       if (result.manual_collect_mode === false) {
@@ -289,13 +288,13 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
             "Content-Type": "application/json",
           },
           body: testsJsonString,
-        }).then((response) => response.json()); 
+        }).then((response) => response.json());
       }
     } catch (error) {
       console.error("Failed to toggle manual collect mode:", error);
-      }
-    };
-  
+    }
+  };
+
   /**
    * Filters selected tests to only include those that exist in current test structure
    */
@@ -313,7 +312,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     });
   }, []);
 
-   /**
+  /**
    * Handler for test config selection
    */
   const handleConfigSelection = async (configName: string) => {
@@ -524,47 +523,47 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     }
 
     // Extract all available tests and detect structure changes
-    if (db_row.modules) {      
-      const allAvailableTests: string[] = [];      
-      Object.entries(db_row.modules).forEach(([moduleId, module]) => {        
-        if (module.cases) {          
-          Object.keys(module.cases).forEach((caseId) => {            
-            // Safe check for case existence            
-            if (module.cases[caseId]) {              
-              allAvailableTests.push(`${moduleId}::${caseId}`);            
-            }          
-          });        
-        }      
+    if (db_row.modules) {
+      const allAvailableTests: string[] = [];
+      Object.entries(db_row.modules).forEach(([moduleId, module]) => {
+        if (module.cases) {
+          Object.keys(module.cases).forEach((caseId) => {
+            // Safe check for case existence
+            if (module.cases[caseId]) {
+              allAvailableTests.push(`${moduleId}::${caseId}`);
+            }
+          });
+        }
       });
-      
-      const currentStructure = JSON.stringify(allAvailableTests); 
+
+      const currentStructure = JSON.stringify(allAvailableTests);
 
       // Sort selected tests by Available tests order
       const selectedTestsSet = new Set(selectedTests);
       selectedTests = allAvailableTests.filter((test) =>
         selectedTestsSet.has(test)
       );
-      
-      if (currentStructure !== previousTestStructure) {        
-        setAllTests(allAvailableTests);        
+
+      if (currentStructure !== previousTestStructure) {
+        setAllTests(allAvailableTests);
         setPreviousTestStructure(currentStructure);
 
-        // Filter selected tests when test structure changes        
-        filterSelectedTests(allAvailableTests);      
+        // Filter selected tests when test structure changes
+        filterSelectedTests(allAvailableTests);
       }
-      
+
       // If manual selection is enabled and no tests are selected yet, select all by default
-      if (        
-        appConfig?.frontend?.manual_collect &&        
-        selectedTests.length === 0 &&        
-        allAvailableTests.length > 0      
-      ) {        
-        setSelectedTests(allAvailableTests);        
-        localStorage.setItem(          
-          "hardpy_selected_tests",          
-          JSON.stringify(allAvailableTests)        
-        );      
-      }    
+      if (
+        appConfig?.frontend?.manual_collect &&
+        selectedTests.length === 0 &&
+        allAvailableTests.length > 0
+      ) {
+        setSelectedTests(allAvailableTests);
+        localStorage.setItem(
+          "hardpy_selected_tests",
+          JSON.stringify(allAvailableTests)
+        );
+      }
     }
 
     const prevStatus = lastRunStatus;
@@ -738,7 +737,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                 }
                 currentTestConfig={appConfig?.current_test_config}
                 measurementDisplay={appConfig?.frontend?.measurement_display}
-                manualCollectMode={manualCollectMode} 
+                manualCollectMode={manualCollectMode}
               />
             </Card>
           )}
