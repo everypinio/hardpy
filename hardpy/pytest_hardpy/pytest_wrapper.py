@@ -233,9 +233,9 @@ class PyTestWrapper:
         test_cases = []
         for test_path in selected_tests:
             if "::" in test_path:
-                file_name, test_name = test_path.split("::", 1)
-                pytest_path = f"{file_name}.py::{test_name}"
-                test_cases.append(pytest_path)
+                module_name, case_name = test_path.split("::", 1)
+                case_path = f"{module_name}.py::{case_name}"
+                test_cases.append(case_path)
             else:
                 test_cases.append(f"{test_path}.py")
         return test_cases
