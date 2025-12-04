@@ -13,6 +13,7 @@ host = "localhost"
 port = 8000
 language = "en"
 full_size_button = false
+manual_collect = false
 sound_on = false
 measurement_display = false
 

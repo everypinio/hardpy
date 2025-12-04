@@ -46,8 +46,16 @@ class PyTestWrapper:
             else:
                 logger.info("No existing test config selection found.")
 
-    def start(self, start_args: dict | None = None) -> bool:
+    def start(
+        self,
+        start_args: dict | None = None,
+        selected_tests: list[str] | None = None,
+    ) -> bool:
         """Start pytest subprocess.
+
+        Args:
+            start_args: Additional start arguments
+            selected_tests: List of selected tests
 
         Returns:
             bool: True if pytest was started
@@ -70,6 +78,10 @@ class PyTestWrapper:
             self.config.stand_cloud.address,
         ]
 
+        if selected_tests:
+            selected_test_cases = self._select_test_cases(selected_tests)
+            cmd.extend(selected_test_cases)
+
         self._add_config_file(cmd)
 
         if self.config.stand_cloud.connection_only:
@@ -77,6 +89,7 @@ class PyTestWrapper:
         if self.config.stand_cloud.autosync:
             cmd.append("--sc-autosync")
         cmd.append("--hardpy-pt")
+
         if start_args:
             for key, value in start_args.items():
                 arg_str = f"{key}={value}"
@@ -114,12 +127,14 @@ class PyTestWrapper:
         self,
         *,
         is_clear_database: bool = False,
+        selected_tests: list[str] | None = None,
     ) -> bool:
         """Perform pytest collection.
 
         Args:
             is_clear_database (bool): indicates whether database
                                       should be cleared. Defaults to False.
+            selected_tests (list[str]): list of selected tests
 
         Returns:
             bool: True if collection was started
@@ -145,6 +160,10 @@ class PyTestWrapper:
             args.append("--hardpy-clear-database")
 
         self._add_config_file(args)
+
+        if selected_tests:
+            selected_test_cases = self._select_test_cases(selected_tests)
+            args.extend(selected_test_cases)
 
         subprocess.Popen(  # noqa: S603
             [self.python_executable, *args],
@@ -209,3 +228,14 @@ class PyTestWrapper:
         if test_config_file:
             logging.info(f"Using test configuration file: {test_config_file}")
             cmd.extend(["--config-file", test_config_file])
+
+    def _select_test_cases(self, selected_tests: list[str]) -> list[str]:
+        test_cases = []
+        for test_path in selected_tests:
+            if "::" in test_path:
+                module_name, case_name = test_path.split("::", 1)
+                case_path = f"{module_name}.py::{case_name}"
+                test_cases.append(case_path)
+            else:
+                test_cases.append(f"{test_path}.py")
+        return test_cases

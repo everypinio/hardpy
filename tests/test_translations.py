@@ -174,6 +174,14 @@ class _TestSuite(BaseModel):
     dataColumn: str
     loading: str
     stubName: str
+    stubName: str
+    runSelectedTests: str
+    noTestsSelected: str
+    testsStarted: str
+    startError: str
+    connectionError: str
+    selectionColumn: str
+    skipped: str
 
 
 class TranslationModel(BaseModel):

@@ -15,6 +15,7 @@ language = "en"
 full_size_button = false
 sound_on = false
 measurement_display = true
+manual_collect = false
 
 [frontend.modal_result]
 enable = false

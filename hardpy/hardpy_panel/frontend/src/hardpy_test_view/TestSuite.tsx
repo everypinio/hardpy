@@ -24,7 +24,7 @@ import TestData from "./TestData";
 import RunTimer from "./RunTimer";
 
 import "./TestSuite.css";
-import { Spin } from "antd";
+import { Spin, Checkbox } from "antd";
 
 /**
  * Interface representing widget description for dialog boxes
@@ -188,7 +188,12 @@ type Props = {
   test: TestItem;
   defaultOpen?: boolean;
   commonTestRunStatus: string | undefined;
+  onTestsSelectionChange?: (selectedTests: string[]) => void;
+  selectionSupported?: boolean;
+  moduleTechName: string;
+  selectedTests?: string[];
   measurementDisplay?: boolean;
+  manualCollectMode?: boolean;
 } & WithTranslation;
 
 /**
@@ -228,7 +233,7 @@ export class TestSuite extends React.Component<Props, State> {
    * @static
    * @type {React.ReactElement}
    */
-  private static readonly LOADING_ICON = (
+  private static readonly LOADING_ICON: React.ReactElement = (
     <div style={{ margin: LOADING_ICON_MARGIN }}>
       <LoadingOutlined spin />
     </div>
@@ -241,6 +246,7 @@ export class TestSuite extends React.Component<Props, State> {
    */
   static defaultProps: Partial<Props> = {
     defaultOpen: true,
+    selectionSupported: true,
   };
 
   /**
@@ -269,6 +275,9 @@ export class TestSuite extends React.Component<Props, State> {
       dataColumnWidth: 0,
     };
 
+    this.handleClick = this.handleClick.bind(this);
+    this.handleTestSelection = this.handleTestSelection.bind(this);
+    this.handleSelectAll = this.handleSelectAll.bind(this);
     this.dataColumnRef = React.createRef();
   }
 
@@ -305,9 +314,30 @@ export class TestSuite extends React.Component<Props, State> {
                   style={{ marginRight: "10px", marginLeft: "10px" }}
                   icon={this.state.isOpen ? "chevron-down" : "chevron-right"}
                 ></Icon>
-                <span>
-                  {this.renderName(this.props.test.name, this.props.index + 1)}
-                </span>
+                {this.props.selectionSupported && (
+                  <Checkbox
+                    style={{ marginRight: "60px" }}
+                    checked={this.isAllTestsSelected()}
+                    indeterminate={this.isSomeTestsSelected()}
+                    onChange={this.handleSelectAll}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                )}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    minWidth: "65px",
+                  }}
+                >
+                  <span
+                    className={Classes.TEXT_DISABLED}
+                    style={{ marginRight: "20px" }}
+                  >
+                    {this.props.index + 1}
+                  </span>
+                  <span>{this.renderName(this.props.test.name)}</span>
+                </div>
               </div>
             </Button>
           </div>
@@ -326,6 +356,48 @@ export class TestSuite extends React.Component<Props, State> {
         </Collapse>
       </Callout>
     );
+  }
+
+  /**
+   * Checks if all tests in a module are selected.
+   */
+  private isAllTestsSelected(): boolean {
+    const { test, selectedTests = [], manualCollectMode = false } = this.props;
+    const case_names = Object.keys(test.cases || {});
+
+    if (case_names.length === 0) {
+      return false;
+    }
+    if (!manualCollectMode) {
+      return true;
+    }
+    return case_names.every((caseName) => {
+      const testFullPath = `${this.getModuleTechName()}::${caseName}`;
+      return selectedTests.includes(testFullPath);
+    });
+  }
+
+  /**
+   * Checks if some (but not all) tests in a module are selected
+   */
+  private isSomeTestsSelected(): boolean {
+    const { test, selectedTests = [], manualCollectMode = false } = this.props;
+    const case_names = Object.keys(test.cases || {});
+
+    if (case_names.length === 0) {
+      return false;
+    }
+
+    if (!manualCollectMode) {
+      return false;
+    }
+
+    const selectedCount = case_names.filter((caseName) => {
+      const testFullPath = `${this.getModuleTechName()}::${caseName}`;
+      return selectedTests.includes(testFullPath);
+    }).length;
+
+    return selectedCount > 0 && selectedCount < case_names.length;
   }
 
   /**
@@ -417,21 +489,18 @@ export class TestSuite extends React.Component<Props, State> {
   /**
    * Renders the name of the test suite with optional loading state
    * @param {string} name - The name of the test suite
-   * @param {number} test_number - The numerical identifier of the test suite
    * @returns {React.ReactElement} The rendered name element
-   * @private
+   *
    */
-  private renderName(name: string, test_number: number): React.ReactElement {
+  private renderName(name: string): React.ReactElement {
     const is_loading = _.isEmpty(name);
 
     return (
-      <H4 className={`test-suite-name ${is_loading ? Classes.SKELETON : ""}`}>
-        {<span className={Classes.TEXT_DISABLED}>{test_number}</span>}
-        {
-          <span style={{ marginLeft: "0.5em" }}>
-            {is_loading ? this.props.t("testSuite.stubName") : name}
-          </span>
-        }
+      <H4
+        className={`test-suite-name ${is_loading ? Classes.SKELETON : ""}`}
+        style={{ margin: 0 }}
+      >
+        {is_loading ? this.props.t("testSuite.stubName") : name}
       </H4>
     );
   }
@@ -448,7 +517,13 @@ export class TestSuite extends React.Component<Props, State> {
     if (test_topics) {
       case_names = Object.keys(test_topics);
     }
-    const case_array: Case[] = case_names.map((n) => test_topics[n]);
+
+    // Filter out undefined test cases and create safe arrays
+    const case_names_filtered = case_names.filter((n) => {
+      const testCase = test_topics[n];
+      return testCase !== undefined && testCase !== null;
+    });
+    const case_array: Case[] = case_names_filtered.map((n) => test_topics[n]);
 
     /**
      * Column configuration for the test cases data table
@@ -463,6 +538,19 @@ export class TestSuite extends React.Component<Props, State> {
         grow: 0.5,
         width: "10px",
       },
+      ...(this.props.selectionSupported
+        ? [
+            {
+              id: "selection",
+              name: this.props.t("testSuite.selectionColumn"),
+              selector: (row: any) => row,
+              cell: this.cellRendererSelection.bind(this, case_array),
+              grow: 0.5,
+              width: "80px",
+              center: true,
+            },
+          ]
+        : []),
       {
         id: "test_number",
         name: "",
@@ -470,6 +558,7 @@ export class TestSuite extends React.Component<Props, State> {
         cell: this.cellRendererNumber.bind(this, case_array),
         grow: 0.5,
         width: "65px",
+        style: { paddingLeft: "12px" },
       },
       {
         id: "name",
@@ -497,7 +586,7 @@ export class TestSuite extends React.Component<Props, State> {
         <DataTable
           noHeader={true}
           columns={columns}
-          data={case_names}
+          data={case_names_filtered}
           highlightOnHover={true}
           dense={true}
           responsive={true}
@@ -507,6 +596,112 @@ export class TestSuite extends React.Component<Props, State> {
         />
       </div>
     );
+  }
+
+  /**
+   * Renders the selection checkbox in a cell.
+   * @param {Case[]} test_topics - The test cases.
+   * @param {string} row_ - The row data.
+   * @param {number} rowIndex - The index of the row.
+   * @returns {React.ReactElement} The rendered selection cell.
+   */
+  private cellRendererSelection(
+    test_topics: Case[],
+    row_: string,
+    rowIndex: number
+  ): React.ReactElement {
+    const { selectedTests = [], manualCollectMode = false } = this.props;
+    const testFullPath = `${this.getModuleTechName()}::${row_}`;
+    const isSelected = manualCollectMode
+      ? selectedTests.includes(testFullPath)
+      : true;
+
+    return this.commonCellRender(
+      <div
+        style={{
+          marginTop: "0.2em",
+          marginBottom: "0.2em",
+          textAlign: "center",
+        }}
+      >
+        <Checkbox
+          checked={isSelected}
+          disabled={!manualCollectMode}
+          onChange={(e) =>
+            this.handleTestSelection(testFullPath, e.target.checked)
+          }
+        />
+      </div>,
+      `selection_${rowIndex}_${row_}`
+    );
+  }
+
+  /**
+   * Handles individual test selection.
+   * @param {string} testPath - The full path of the test.
+   * @param {boolean} isChecked - Whether the checkbox is checked.
+   */
+  private handleTestSelection(testPath: string, isChecked: boolean): void {
+    const {
+      selectedTests = [],
+      onTestsSelectionChange,
+      manualCollectMode = false,
+    } = this.props;
+
+    if (!manualCollectMode) {
+      return;
+    }
+
+    let newSelectedTests: string[];
+    if (isChecked) {
+      newSelectedTests = [...selectedTests, testPath];
+    } else {
+      newSelectedTests = selectedTests.filter((test) => test !== testPath);
+    }
+
+    if (onTestsSelectionChange) {
+      onTestsSelectionChange(newSelectedTests);
+    }
+  }
+
+  /**
+   * Handles select all/deselect all.
+   */
+  private handleSelectAll(e: React.ChangeEvent<HTMLInputElement>): void {
+    const {
+      test,
+      selectedTests = [],
+      onTestsSelectionChange,
+      manualCollectMode = false,
+    } = this.props;
+
+    if (!manualCollectMode) {
+      return;
+    }
+
+    const case_names = Object.keys(test.cases || {});
+
+    let newSelectedTests: string[];
+    if (e.target.checked) {
+      // Select all
+      newSelectedTests = [
+        ...selectedTests.filter(
+          (test) => !test.startsWith(`${this.getModuleTechName()}::`)
+        ),
+        ...case_names.map(
+          (caseName) => `${this.getModuleTechName()}::${caseName}`
+        ),
+      ];
+    } else {
+      // Deselect all
+      newSelectedTests = selectedTests.filter(
+        (test) => !test.startsWith(`${this.getModuleTechName()}::`)
+      );
+    }
+
+    if (onTestsSelectionChange) {
+      onTestsSelectionChange(newSelectedTests);
+    }
   }
 
   /**
@@ -523,7 +718,10 @@ export class TestSuite extends React.Component<Props, State> {
       >
         {!this.state.isOpen && (
           <>
-            {Object.entries(test_topics.cases).map(([_key, value]) => {
+            {Object.entries(test_topics.cases || {}).map(([key, value]) => {
+              if (!value) {
+                return null;
+              }
               return (
                 <span key={value.name} style={{ margin: "2px" }}>
                   <TestStatus status={value.status} />
@@ -545,6 +743,15 @@ export class TestSuite extends React.Component<Props, State> {
         </Tag>
       </div>
     );
+  }
+
+  /**
+   * Returns the module tech name
+   * @returns {string} The module tech name
+   * @private
+   */
+  private getModuleTechName(): string {
+    return this.props.moduleTechName;
   }
 
   /**
@@ -585,7 +792,13 @@ export class TestSuite extends React.Component<Props, State> {
     rowIndex: number
   ): React.ReactElement {
     return this.commonCellRender(
-      <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
+      <div
+        style={{
+          marginTop: "0.2em",
+          marginBottom: "0.2em",
+          paddingLeft: "12px",
+        }}
+      >
         <TestNumber val={rowIndex + 1} />
       </div>,
       `number_${rowIndex}_${row_}`
@@ -606,9 +819,49 @@ export class TestSuite extends React.Component<Props, State> {
     rowIndex: number
   ): React.ReactElement {
     const test = test_topics[rowIndex];
+    const { selectedTests = [], manualCollectMode = false } = this.props;
+    const testFullPath = `${this.getModuleTechName()}::${row_}`;
+    const isSelected = manualCollectMode
+      ? selectedTests.includes(testFullPath)
+      : true;
+
+    const nameStyle: React.CSSProperties = {
+      marginTop: "0.2em",
+      marginBottom: "0.2em",
+      opacity: isSelected ? 1 : 0.6,
+    };
+
+    // Safe check for test existence
+    if (!test) {
+      return this.commonCellRender(
+        <div style={nameStyle}>
+          <TestName name={""} />
+          {manualCollectMode && !isSelected && (
+            <Tag
+              minimal
+              style={{ marginLeft: "8px" }}
+              title={this.props.t("testSuite.notSelected")}
+            >
+              {this.props.t("testSuite.skipped")}
+            </Tag>
+          )}
+        </div>,
+        `name_${rowIndex}_${row_}`
+      );
+    }
+
     return this.commonCellRender(
-      <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
+      <div style={nameStyle}>
         <TestName name={test.name} />
+        {manualCollectMode && !isSelected && (
+          <Tag
+            minimal
+            style={{ marginLeft: "8px" }}
+            title={this.props.t("testSuite.notSelected")}
+          >
+            {this.props.t("testSuite.skipped")}
+          </Tag>
+        )}
       </div>,
       `name_${rowIndex}_${row_}`
     );
@@ -629,6 +882,17 @@ export class TestSuite extends React.Component<Props, State> {
   ): React.ReactElement {
     const test = test_topics[rowIndex];
 
+    // Safe check for test existence
+    if (!test) {
+      return this.commonCellRender(
+        <div
+          style={{ marginTop: "0.2em", marginBottom: "0.2em" }}
+          data-column-id="data"
+        ></div>,
+        `data_${rowIndex}_${row_}`
+      );
+    }
+
     return this.commonCellRender(
       <div
         style={{ marginTop: "0.2em", marginBottom: "0.2em" }}
@@ -637,7 +901,7 @@ export class TestSuite extends React.Component<Props, State> {
         <TestData
           assertion_msg={test.assertion_msg}
           msg={test.msg}
-          measurements={test.measurements} 
+          measurements={test.measurements}
           testSuiteIndex={this.props.index}
           testCaseIndex={rowIndex}
           chart={test.chart}
@@ -663,20 +927,64 @@ export class TestSuite extends React.Component<Props, State> {
     rowIndex: number
   ): React.ReactElement {
     const test = test_topics[rowIndex];
+    const { selectedTests = [], manualCollectMode = false } = this.props;
+    const testFullPath = `${this.getModuleTechName()}::${row_}`;
+    const isSelected = manualCollectMode
+      ? selectedTests.includes(testFullPath)
+      : true;
+
+    // Safe check for test existence
+    if (!test) {
+      let displayStatus = "";
+      if (
+        manualCollectMode &&
+        !isSelected &&
+        this.props.commonTestRunStatus === "run"
+      ) {
+        displayStatus = "skipped";
+      }
+
+      return this.commonCellRender(
+        <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
+          <TestStatus
+            status={
+              this.props.commonTestRunStatus !== "run" &&
+              (displayStatus === "run" || displayStatus === "ready")
+                ? "stucked"
+                : displayStatus
+            }
+          />
+        </div>,
+        `status_${rowIndex}_${row_}`
+      );
+    }
+
+    let displayStatus = test.status;
+    if (test.status === "skipped") {
+      displayStatus = "skipped";
+    } else if (
+      manualCollectMode &&
+      !isSelected &&
+      this.props.commonTestRunStatus === "run"
+    ) {
+      displayStatus = "skipped";
+    }
+
     const { info: widget_info, type: widget_type } =
-      test.dialog_box.widget || {};
+      test.dialog_box?.widget || {};
     const {
       base64: image_base64,
       width: image_width,
       border: image_border,
-    } = test.dialog_box.image || {};
+    } = test.dialog_box?.image || {};
 
     return this.commonCellRender(
       <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
-        {test.dialog_box.dialog_text &&
+        {test.dialog_box?.dialog_text &&
           test.status === "run" &&
           this.props.commonTestRunStatus === "run" &&
-          test.dialog_box.visible && (
+          test.dialog_box?.visible &&
+          isSelected && (
             <StartConfirmationDialog
               title_bar={test.dialog_box.title_bar ?? test.name}
               dialog_text={test.dialog_box.dialog_text}
@@ -706,9 +1014,9 @@ export class TestSuite extends React.Component<Props, State> {
         <TestStatus
           status={
             this.props.commonTestRunStatus !== "run" &&
-            (test.status === "run" || test.status === "ready")
+            (displayStatus === "run" || displayStatus === "ready")
               ? "stucked"
-              : test.status
+              : displayStatus
           }
         />
       </div>,
@@ -723,6 +1031,11 @@ export class TestSuite extends React.Component<Props, State> {
   private readonly handleClick = () =>
     this.setState((state) => ({ isOpen: !state.isOpen }));
 }
+
+TestSuite.defaultProps = {
+  defaultOpen: true,
+  selectionSupported: true,
+};
 
 /**
  * Higher-order component that wraps TestSuite with translation capabilities

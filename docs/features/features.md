@@ -93,6 +93,32 @@ Enable sound notifications in your `hardpy.toml`:
 sound_on = true
 ```
 
+### Manual test selection
+
+**HardPy** supports manual test selection, allowing operators to choose specific test cases
+to run instead of executing the entire test plan.
+
+**Key capabilities**:
+
+- **Checkbox-based selection**: Each test case and module displays checkboxes for selection
+- **Bulk operations**: Select or deselect all tests in a module with a single checkbox
+- **Visual feedback**: Selected tests are marked for execution, non-selected tests are skipped
+
+**Workflow**:
+
+1. Enable manual collect mode in settings menu
+2. Select desired tests using checkboxes
+3. Disable manual collect mode
+4. Start test execution - only selected tests will run
+
+**Configuration**:
+Enable manual test selection in your `hardpy.toml`:
+
+```toml
+[frontend]
+manual_collect = true
+```
+
 ## CLI
 
 ### Creating template project

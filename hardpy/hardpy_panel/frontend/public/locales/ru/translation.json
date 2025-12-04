@@ -15,6 +15,8 @@
       "failedTestCases": "Проваленные тестовые случаи",
       "modalResultDismissHint": "Нажмите на любое место на экране или нажмите любую клавишу для закрытия",
       "modalResultAutoDismissHint": "Автоматическое закрытие через {{seconds}} секунд...",
+      "manualCollectOn": "Ручной сбор включен",
+      "manualCollectOff": "Ручной сбор выключен",
       "testConfigurationSelector": "Выберите конфигурацию теста",
       "status": {
         "ready": "Готов",
@@ -71,6 +73,13 @@
     "nameColumn": "Название",
     "dataColumn": "Данные",
     "loading": "Загрузка...",
-    "stubName": "Тестовый набор"
+    "stubName": "Тестовый набор",
+    "runSelectedTests": "Запустить {{count}} выбранных тестов",
+    "noTestsSelected": "Тесты не выбраны",
+    "testsStarted": "Запущено {{count}} тестов",
+    "startError": "Ошибка запуска тестов",
+    "connectionError": "Ошибка соединения",
+    "selectionColumn": "Выбрать",
+    "skipped": "Пропущен"
   }
 }

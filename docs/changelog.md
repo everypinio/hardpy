@@ -2,6 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## 0.19.0
+
+* Add manual test selection mode allowing users to choose specific 
+  tests to run via UI checkboxes.
+  [[PR-224](https://github.com/everypinio/hardpy/pull/224)]
 * Add multiple test plan configurations.
   [[PR-225]](https://github.com/everypinio/hardpy/pull/225)
 
