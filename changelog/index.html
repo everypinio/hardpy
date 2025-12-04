@@ -1,0 +1,2477 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Everypin">
+      
+      
+        <link rel="canonical" href="https://everypinio.github.io/hardpy/changelog/">
+      
+      
+        <link rel="prev" href="../about/frontend_sync/">
+      
+      
+      
+      <link rel="icon" href="../img/logo192.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.10">
+    
+    
+      
+        <title>Changelog - HardPy</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e359304.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/print-site-enum-headings1.css">
+    
+      <link rel="stylesheet" href="../css/print-site-enum-headings2.css">
+    
+      <link rel="stylesheet" href="../css/print-site-enum-headings3.css">
+    
+      <link rel="stylesheet" href="../css/print-site-enum-headings4.css">
+    
+      <link rel="stylesheet" href="../css/print-site-enum-headings5.css">
+    
+      <link rel="stylesheet" href="../css/print-site-enum-headings6.css">
+    
+      <link rel="stylesheet" href="../css/print-site.css">
+    
+      <link rel="stylesheet" href="../css/print-site-material.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function n(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],n("js",new Date),n("config","G-6Z35DZJBP7"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){this.value&&n("event","search",{search_term:this.value})}),document$.subscribe(function(){var a=document.forms.feedback;if(void 0!==a)for(var e of a.querySelectorAll("[type=submit]"))e.addEventListener("click",function(e){e.preventDefault();var t=document.location.pathname,e=this.getAttribute("data-md-value");n("event","feedback",{page:t,data:e}),a.firstElementChild.disabled=!0;e=a.querySelector(".md-feedback__note [data-md-value='"+e+"']");e&&(e.hidden=!1)}),a.hidden=!1}),location$.subscribe(function(e){n("config","G-6Z35DZJBP7",{page_path:e.pathname})})});var e=document.createElement("script");e.async=!0,e.src="https://www.googletagmanager.com/gtag/js?id=G-6Z35DZJBP7",document.getElementById("__analytics").insertAdjacentElement("afterEnd",e)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+   <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#changelog" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="HardPy" class="md-header__button md-logo" aria-label="HardPy" data-md-component="logo">
+      
+  <img src="../img/logo192.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            HardPy
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Changelog
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/everypinio/hardpy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    everypinio/hardpy
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+    
+  
+  HardPy
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../features/features/" class="md-tabs__link">
+        
+  
+    
+  
+  Features
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../documentation/" class="md-tabs__link">
+          
+  
+    
+  
+  Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../examples/" class="md-tabs__link">
+          
+  
+    
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../about/development/" class="md-tabs__link">
+          
+  
+    
+  
+  About
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="HardPy" class="md-nav__button md-logo" aria-label="HardPy" data-md-component="logo">
+      
+  <img src="../img/logo192.png" alt="logo">
+
+    </a>
+    HardPy
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/everypinio/hardpy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    everypinio/hardpy
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HardPy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/features/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Features
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../documentation/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Documentation
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../documentation/cli/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CLI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../documentation/hardpy_config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../documentation/database/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../documentation/hardpy_panel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HardPy panel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../documentation/pytest_hardpy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pytest-hardpy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../documentation/stand_cloud/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../examples/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Examples
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/attempts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Attempts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/chart/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chart
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/db_in_ram/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CouchDB in RAM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/couchdb_load/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CouchDB load
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/critical_test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Critical test
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/dialog_box/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dialog box
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/hardpy_launch/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HardPy launch
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/hello_hardpy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hello HardPy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/launch_arguments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Launch arguments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/logging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pytest logging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/measurement/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Measurement
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/minute_parity/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Minute parity
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/multiple_configs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multiple configs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/multiple_stands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multiple stands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/operator_msg/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Operator message
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/frontend_remote_access/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Remote access
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/skip_test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skip test
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/stand_cloud/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/stand_cloud_reader/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud read data
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/stand_cloud_thirdparty_auth/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud third party authorization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/stand_equipment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stand equipment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            About
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/development/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Development
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/frontend_sync/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frontend data synchronization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="Contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0190" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.19.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0183" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.18.3
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0182" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.18.2
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0181" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.18.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0180" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.18.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0171" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.17.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0170" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.17.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0160" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.16.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0152" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.15.2
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0151" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.15.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0150" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.15.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0140" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.14.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0130" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.13.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0121" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.12.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0120" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.12.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0112" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.11.2
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0111" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.11.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0110" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.11.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0101" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.10.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0100" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.10.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-090" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.9.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-080" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.8.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-070" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.7.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-061" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.6.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-060" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.6.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-051" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.5.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-050" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.5.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-040" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.4.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-030" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.3.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-020" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.2.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-010" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.1.0
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="Contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0190" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.19.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0183" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.18.3
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0182" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.18.2
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0181" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.18.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0180" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.18.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0171" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.17.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0170" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.17.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0160" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.16.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0152" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.15.2
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0151" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.15.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0150" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.15.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0140" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.14.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0130" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.13.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0121" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.12.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0120" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.12.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0112" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.11.2
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0111" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.11.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0110" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.11.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0101" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.10.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-0100" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.10.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-090" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.9.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-080" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.8.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-070" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.7.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-061" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.6.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-060" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.6.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-051" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.5.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-050" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.5.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-040" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.4.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-030" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.3.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-020" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.2.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardpy-010" class="md-nav__link">
+    <span class="md-ellipsis">
+      HardPy 0.1.0
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/everypinio/hardpy/edit/master/docs/changelog.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/everypinio/hardpy/raw/master/docs/changelog.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
+    </a>
+  
+
+
+<h1 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h1>
+<p>Versions follow <a href="https://semver.org/">Semantic Versioning</a>: <code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code>.</p>
+<h2 id="0190">0.19.0<a class="headerlink" href="#0190" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Add manual test selection mode allowing users to choose specific 
+  tests to run via UI checkboxes.
+  [<a href="https://github.com/everypinio/hardpy/pull/224">PR-224</a>]</li>
+<li>Add multiple test plan configurations.
+  <a href="https://github.com/everypinio/hardpy/pull/225">[PR-225]</a></li>
+</ul>
+<h2 id="0183">0.18.3<a class="headerlink" href="#0183" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Add support for pytest 9.
+  [<a href="https://github.com/everypinio/hardpy/pull/233">PR-233</a>]</li>
+</ul>
+<h2 id="0182">0.18.2<a class="headerlink" href="#0182" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Add support for working with macOS.
+  [<a href="https://github.com/everypinio/hardpy/pull/231">PR-231</a>]</li>
+</ul>
+<h2 id="0181">0.18.1<a class="headerlink" href="#0181" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Expand the log for the StandCloud data synchronization process.
+  [<a href="https://github.com/everypinio/hardpy/pull/228">PR-228</a>]</li>
+</ul>
+<h2 id="0180">0.18.0<a class="headerlink" href="#0180" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Add a mechanism to automatically synchronize test data with the StandCloud platform.
+  [<a href="https://github.com/everypinio/hardpy/pull/205">PR-205</a>]</li>
+<li>Add an authorization mechanism to StandCloud via API keys.
+  [<a href="https://github.com/everypinio/hardpy/pull/205">PR-205</a>]</li>
+<li>Enhance measurement display with mathematical interval notation and proper bracket handling.
+  [<a href="https://github.com/everypinio/hardpy/pull/226">PR-226</a>]</li>
+<li>Add measurement display functionality to operator panel showing numeric and string measurements with name-value-unit formatting.
+  [<a href="https://github.com/everypinio/hardpy/pull/223">PR-223</a>]</li>
+</ul>
+<h2 id="0171">0.17.1<a class="headerlink" href="#0171" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Fix issue where when using a large button, it overlaps the content.
+  [<a href="https://github.com/everypinio/hardpy/pull/219">PR-219</a>]</li>
+</ul>
+<h2 id="0170">0.17.0<a class="headerlink" href="#0170" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Add a named volume to the <strong>docker-compose.yaml</strong> generator.
+  [<a href="https://github.com/everypinio/hardpy/pull/216">PR-216</a>]</li>
+<li>Add database updating after the alert has been called.
+  [<a href="https://github.com/everypinio/hardpy/pull/211">PR-211</a>]</li>
+<li>Add a handler for JSON objects that cannot be serialized for the database.
+  [<a href="https://github.com/everypinio/hardpy/pull/211">PR-211</a>]</li>
+<li>Add <code>sound_on</code> configuration option to the frontend settings for enabling/disabling test completion sound notifications.
+  [<a href="https://github.com/everypinio/hardpy/pull/208">PR-208</a>]</li>
+<li>Add pass/fail button functionality to dialog boxes for manual test verification.
+  [<a href="https://github.com/everypinio/hardpy/pull/207">PR-207</a>]</li>
+<li>Add configurable full-size start/stop button for the operator panel with full-size layout option.
+  [<a href="https://github.com/everypinio/hardpy/pull/206">PR-206</a>]</li>
+<li>Add configurable modal result windows that display test completion status (PASS/FAIL/STOP)
+  with auto-dismiss functionality and enhanced keyboard interaction handling.
+  [<a href="https://github.com/everypinio/hardpy/pull/204">PR-204</a>]</li>
+<li>Exclude the <code>Skipped</code> status from the <code>caused_dut_failure_id</code> reason.
+  [<a href="https://github.com/everypinio/hardpy/pull/202">PR-202</a>]</li>
+</ul>
+<h2 id="0160">0.16.0<a class="headerlink" href="#0160" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Add error code cleanup in the <code>attempts</code>.
+  [<a href="https://github.com/everypinio/hardpy/pull/200">PR-200</a>]</li>
+<li>Add an event handler for the inability to collect tests and the
+  absence of a database launch.
+  [<a href="https://github.com/everypinio/hardpy/pull/200">PR-200</a>]</li>
+<li>Add <strong>unknown</strong> values in the <code>StandCloudLoader</code> class.
+  [<a href="https://github.com/everypinio/hardpy/pull/200">PR-200</a>]</li>
+<li>Add the type <code>None</code> to info field in the <code>Dut</code>, <code>SubUnit</code>, <code>Instrument</code>,
+  and <code>TestStand</code> tables.
+  [<a href="https://github.com/everypinio/hardpy/pull/200">PR-200</a>]</li>
+<li>Add <code>serial_number</code> and <code>part_number</code> to the <strong>Instrument</strong> table.
+  [<a href="https://github.com/everypinio/hardpy/pull/200">PR-200</a>]</li>
+<li>Update js packages.
+  [<a href="https://github.com/everypinio/hardpy/pull/197">PR-197</a>]</li>
+<li>Add the charts view to the HardPy operator panel.
+  [<a href="https://github.com/everypinio/hardpy/pull/186">PR-186</a>]</li>
+<li>Added storage of the operator message state to avoid reopening the window after closing.
+  [<a href="https://github.com/everypinio/hardpy/pull/190">PR-190</a>]</li>
+<li>Change the database and interface synchronization mechanism.
+  The <strong>statestore</strong> and <strong>runstore</strong> databases can contain multiple documents,
+  which are defined by the frontend host name and port.
+  The <strong>current</strong> document is no longer being created.
+  The name of the document in the database consists of the
+  host name and port for the frontend, as described in the <strong>hardpy.toml</strong> file.
+  [<a href="https://github.com/everypinio/hardpy/pull/187">PR-187</a>]</li>
+<li>Simplify the process of working with multiple <strong>HardPy</strong> instances by
+  using a single <strong>CouchDB</strong> instance instead of multiple instances.
+  [<a href="https://github.com/everypinio/hardpy/pull/187">PR-187</a>]</li>
+</ul>
+<h2 id="hardpy-0152">HardPy 0.15.2<a class="headerlink" href="#hardpy-0152" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Change the logic of the test case attempts.
+  The test case fields (msg, assertion_message, chart, measurements, and artifact)
+  are now cleared when the test case passes on the second or subsequent attempt.
+  The error code is now cleared when a test case passes on the second or subsequent attempt.
+  [<a href="https://github.com/everypinio/hardpy/pull/192">PR-192</a>]</li>
+</ul>
+<h2 id="hardpy-0151">HardPy 0.15.1<a class="headerlink" href="#hardpy-0151" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Remove the <code>datetime</code> type from the info fields in all tables.
+  [<a href="https://github.com/everypinio/hardpy/pull/188">PR-188</a>]</li>
+</ul>
+<h2 id="hardpy-0150">HardPy 0.15.0<a class="headerlink" href="#hardpy-0150" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Remove <code>tests_dir</code> variable from <strong>hardpy.toml</strong>. 
+  [<a href="https://github.com/everypinio/hardpy/pull/182">PR-182</a>]</li>
+<li>Add check for message presence in set_operator_message.
+  [<a href="https://github.com/everypinio/hardpy/pull/180">PR-180</a>]</li>
+<li>Add the <code>ErrorCode</code> class.
+  [<a href="https://github.com/everypinio/hardpy/pull/180">PR-180</a>]</li>
+<li>Add the ability to store charts (data series) in the database.
+  Add <code>set_case_chart</code> function and <code>Chart</code> class.
+  [<a href="https://github.com/everypinio/hardpy/pull/179">PR-179</a>]</li>
+<li>Add arguments for <code>hardpy start</code>.
+  [<a href="https://github.com/everypinio/hardpy/pull/175">PR-175</a>]</li>
+<li>Add numeric and string measurements: <code>set_case_measurement</code> function and
+  <code>NumericMeasurement</code> and <code>StringMeasurement</code> classes.
+  [<a href="https://github.com/everypinio/hardpy/pull/177">PR-177</a>]</li>
+<li>Update database schema by <strong>SubUnit</strong> table.
+  [<a href="https://github.com/everypinio/hardpy/pull/174">PR-174</a>]</li>
+<li>Add <code>set_dut_sub_unit</code> function.
+  [<a href="https://github.com/everypinio/hardpy/pull/174">PR-174</a>]</li>
+<li>Add markers <code>case_group</code> and <code>module_group</code>.
+  [<a href="https://github.com/everypinio/hardpy/pull/173">PR-173</a>]</li>
+<li>Add functions: <code>set_user_name</code>, <code>set_batch_serial_number</code>, <code>set_stand_revision</code>, <code>set_instrument</code>
+  <code>set_process_name</code>, <code>set_process_number</code>, <code>set_process_info</code>, <code>set_dut_name</code>, <code>set_dut_type</code>,
+  <code>set_dut_revision</code>, <code>set_stand_info</code>.
+  [<a href="https://github.com/everypinio/hardpy/pull/172">PR-172</a>]</li>
+<li>Change <code>DuplicateSerialNumberError</code> and <code>DuplicatePartNumberError</code> to <code>DuplicateParameterError</code>.
+  [<a href="https://github.com/everypinio/hardpy/pull/172">PR-172</a>]</li>
+<li>Update database schema by some tables: <strong>Process</strong>, <strong>Instrument</strong>, <strong>NumericMeasurement</strong>.
+  [<a href="https://github.com/everypinio/hardpy/pull/162">PR-162</a>]</li>
+<li>Update database schema by some fields: <strong>user</strong>, <strong>batch_serial_number</strong>, <strong>caused_dut_failure_id</strong>, <strong>error_code</strong>
+  <strong>process</strong>, <strong>revision</strong>, <strong>instruments</strong>, <strong>group</strong>, <strong>measurements</strong>.
+  [<a href="https://github.com/everypinio/hardpy/pull/162">PR-162</a>]</li>
+<li>Add the <code>caused_dut_failure_id</code> logic to the filling process.
+  [<a href="https://github.com/everypinio/hardpy/pull/162">PR-162</a>]</li>
+</ul>
+<h2 id="hardpy-0140">HardPy 0.14.0<a class="headerlink" href="#hardpy-0140" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Add status display in words depending on the testing status.
+  [<a href="https://github.com/everypinio/hardpy/pull/165">PR-165</a>]</li>
+<li>Add a timeout to the <code>load</code> function of the <code>StandCloudLoader</code> class.
+  [<a href="https://github.com/everypinio/hardpy/pull/166">PR-166</a>]</li>
+<li>Fix logic for processing spacebar pressing.
+  [<a href="https://github.com/everypinio/hardpy/pull/164">PR-164</a>]</li>
+<li>Fix the display of the module duration after the operator panel has been restarted.
+  [<a href="https://github.com/everypinio/hardpy/pull/163">PR-163</a>]</li>
+<li>Add the display of last test run duration.
+  [<a href="https://github.com/everypinio/hardpy/pull/163">PR-163</a>]</li>
+<li>Add the option to translate the HardPy operator panel using ISO 639 language codes.
+  [<a href="https://github.com/everypinio/hardpy/pull/159">PR-159</a>]</li>
+</ul>
+<h2 id="hardpy-0130">HardPy 0.13.0<a class="headerlink" href="#hardpy-0130" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Change CI settings, add testing of tests on different versions of packages.
+  [<a href="https://github.com/everypinio/hardpy/pull/157">PR-157</a>]</li>
+<li>Add an alert to operator panel when the following are called not from tests:
+  <code>set_message</code>, <code>set_case_artifact</code>, <code>set_module_artifact</code>, <code>run_dialog_box</code>,
+  and <code>get_current_attempt</code>.
+  [<a href="https://github.com/everypinio/hardpy/pull/154">PR-154</a>]</li>
+<li>Update the status of the test case and module when the test stops.
+  Only one case and one module receive the "stopped" status, while the rest are marked as "skipped."
+  [<a href="https://github.com/everypinio/hardpy/pull/154">PR-154</a>]</li>
+<li>Change <strong>StandCloud</strong> authorization process to OAuth2 Device Flow by
+  <a href="https://datatracker.ietf.org/doc/html/rfc8628">RFC8628</a>.
+  [<a href="https://github.com/everypinio/hardpy/pull/152">PR-152</a>]</li>
+</ul>
+<h2 id="hardpy-0121">HardPy 0.12.1<a class="headerlink" href="#hardpy-0121" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Fix the situation in which the module and case stop times stop updating when the user stops the tests.
+  [<a href="https://github.com/everypinio/hardpy/pull/149">PR-149</a>]</li>
+</ul>
+<h2 id="hardpy-0120">HardPy 0.12.0<a class="headerlink" href="#hardpy-0120" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Update <code>test_run</code> <strong>StandCloudReader</strong> function.
+  The <code>test_run</code> function provides access to 2 endpoints: <code>/test_run/{test_run_id}</code> and <code>/test_run</code>.
+  [<a href="https://github.com/everypinio/hardpy/pull/145">PR-145</a>]</li>
+<li>Update database scheme description.
+  [<a href="https://github.com/everypinio/hardpy/pull/140">PR-140</a>]</li>
+<li>Add test stand number by using <code>set_stand_number</code> function.
+  [<a href="https://github.com/everypinio/hardpy/pull/140">PR-140</a>]</li>
+<li>Add prohibition to run tests on the port if the port is busy.
+  [<a href="https://github.com/everypinio/hardpy/pull/136">PR-136</a>]</li>
+<li>Add marker <strong>critical</strong>.
+  [<a href="https://github.com/everypinio/hardpy/pull/135">PR-135</a>],
+  [<a href="https://github.com/everypinio/hardpy/pull/142">PR-142</a>],
+  [<a href="https://github.com/everypinio/hardpy/pull/143">PR-143</a>]</li>
+<li>Change dependency behaviour when a case or module name does not exist.
+  Such a test or module will be executed.
+  [<a href="https://github.com/everypinio/hardpy/pull/130">PR-130</a>]</li>
+<li>Add the ability to add dependency from multiple tests.
+  [<a href="https://github.com/everypinio/hardpy/pull/130">PR-130</a>]</li>
+<li>Transfer frontend from CRA to Vite.
+  [<a href="https://github.com/everypinio/hardpy/pull/122">PR-122</a>]</li>
+<li>Remove bug with scrolling tests with operator messages.
+  [<a href="https://github.com/everypinio/hardpy/pull/122">PR-122</a>]</li>
+<li>Logging to <strong>pytest.ini</strong> is no longer configured during <strong>HardPy</strong> project initialization by <code>hardpy init</code>.
+  [<a href="https://github.com/everypinio/hardpy/pull/122">PR-122</a>]</li>
+</ul>
+<h2 id="hardpy-0112">HardPy 0.11.2<a class="headerlink" href="#hardpy-0112" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Fix StandCloud login support in version 3.12+.
+  [<a href="https://github.com/everypinio/hardpy/pull/134">PR-134</a>]</li>
+</ul>
+<h2 id="hardpy-0111">HardPy 0.11.1<a class="headerlink" href="#hardpy-0111" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Change <strong>StandCloud</strong> URL for publish test report to <code>/test_report</code>.
+  [<a href="https://github.com/everypinio/hardpy/pull/131">PR-131</a>]</li>
+<li>Add <code>StandCloudReader</code> class for reading data from <strong>StandCloud</strong>.
+  [<a href="https://github.com/everypinio/hardpy/pull/131">PR-131</a>]</li>
+<li>Fix the behavior with empty module start time with skipped test.
+  [<a href="https://github.com/everypinio/hardpy/pull/131">PR-131</a>]</li>
+<li>Fix the behavior with empty module stop time with skipped test.
+  [<a href="https://github.com/everypinio/hardpy/pull/129">PR-129</a>]</li>
+<li>Add Stand info to Operator panel.
+  [<a href="https://github.com/everypinio/hardpy/pull/127">PR-127</a>]</li>
+<li>Add the <code>tests_name</code> field to <strong>hardpy.toml</strong>.
+  The <code>tests_name</code> allows to name the test suite in the operator panel.
+  [<a href="https://github.com/everypinio/hardpy/pull/126">PR-126</a>]</li>
+<li>Add CLI commands: <code>hardpy start</code>, <code>hardpy stop</code> and <code>hardpy status</code>.
+  [<a href="https://github.com/everypinio/hardpy/pull/126">PR-126</a>]</li>
+<li>Change the StandCloud API address to <code>/hardpy/api</code>.
+  [<a href="https://github.com/everypinio/hardpy/pull/125">PR-125</a>]</li>
+</ul>
+<h2 id="hardpy-0110">HardPy 0.11.0<a class="headerlink" href="#hardpy-0110" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Remove the internal <strong>HardPy</strong> socket on port 6525. Pytest plugin arguments <code>--hardpy-sh</code> and <code>--hardpy-sp</code>
+  are left for backward compatibility with version below 0.10.1.
+  [<a href="https://github.com/everypinio/hardpy/pull/114">PR-114</a>]</li>
+<li>Add the ability to add HTML pages using <code>HTMLComponent</code> to dialog boxes and operator messages.
+  [<a href="https://github.com/everypinio/hardpy/pull/104">PR-104</a>]</li>
+</ul>
+<h2 id="hardpy-0101">HardPy 0.10.1<a class="headerlink" href="#hardpy-0101" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Fix <strong>StandCloud</strong> authorization process in Windows.
+  [<a href="https://github.com/everypinio/hardpy/pull/110">PR-110</a>]</li>
+</ul>
+<h2 id="hardpy-0100">HardPy 0.10.0<a class="headerlink" href="#hardpy-0100" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Add the <code>[stand_cloud]</code> section to the <strong>hardpy.toml</strong> configuration file.
+  [<a href="https://github.com/everypinio/hardpy/pull/85">PR-85</a>]</li>
+<li>Add the <code>StandCloudLoader</code> class to append the test result to the <strong>StandCloud</strong>.
+  [<a href="https://github.com/everypinio/hardpy/pull/85">PR-85</a>]</li>
+<li>Add support for <strong>StandCloud</strong> login and logout with <code>sc-login</code> and <code>sc-logout</code> commands.
+  [<a href="https://github.com/everypinio/hardpy/pull/85">PR-85</a>]</li>
+<li>Add <strong>alert</strong> field in <strong>statestore</strong> database.
+  [<a href="https://github.com/everypinio/hardpy/pull/85">PR-85</a>]</li>
+<li>Add alert to control panel by calling <code>set_alert</code> method in <code>HardpyPlugin</code>.
+  [<a href="https://github.com/everypinio/hardpy/pull/85">PR-85</a>]</li>
+</ul>
+<h2 id="hardpy-090">HardPy 0.9.0<a class="headerlink" href="#hardpy-090" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Add the ability to add images to operator messages like a dialog box.
+  [<a href="https://github.com/everypinio/hardpy/pull/95">PR-95</a>]</li>
+<li>Add non-blocking mode for operator message.
+  [<a href="https://github.com/everypinio/hardpy/pull/95">PR-95</a>]</li>
+<li>Add <code>clear_operator_message</code> function for closing operator message.
+  [<a href="https://github.com/everypinio/hardpy/pull/95">PR-95</a>]</li>
+<li>Add <strong>font_size</strong> parameter for operator message and dialog box text.
+  [<a href="https://github.com/everypinio/hardpy/pull/97">PR-97</a>]</li>
+<li>Add a 1 second pause between attempts in the <code>attempt</code> marker.
+  [<a href="https://github.com/everypinio/hardpy/pull/98">PR-98</a>]</li>
+<li>Fix an issue where operator messages and dialog boxes sometimes did not
+  open before the browser page reloaded.
+  [<a href="https://github.com/everypinio/hardpy/pull/98">PR-98</a>]</li>
+</ul>
+<h2 id="hardpy-080">HardPy 0.8.0<a class="headerlink" href="#hardpy-080" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Modify API for dialog boxes with images.
+  [<a href="https://github.com/everypinio/hardpy/pull/84">PR-84</a>]</li>
+<li>Add the ability to add images to all widgets.
+  [<a href="https://github.com/everypinio/hardpy/pull/84">PR-84</a>]</li>
+<li>Add ability to add borders to images.
+  [<a href="https://github.com/everypinio/hardpy/pull/84">PR-84</a>]</li>
+<li>Fix timezone format using the <strong>tzlocal</strong> package.
+  [<a href="https://github.com/everypinio/hardpy/pull/79">PR-79</a>]</li>
+<li>Add ability to close <code>set_operator_message</code> with <code>Escape</code> button.
+  [<a href="https://github.com/everypinio/hardpy/pull/84">PR-84</a>]</li>
+<li>Fix skipped test case and module status. Now skipped test status is <strong>skipped</strong>, not <strong>ready</strong>.
+  [<a href="https://github.com/everypinio/hardpy/pull/77">PR-77</a>]</li>
+<li>Add an exception when entering the same selection items or step names in dialog boxes.
+  [<a href="https://github.com/everypinio/hardpy/pull/86">PR-86</a>]</li>
+<li>Add the ability to clear the <strong>runstore</strong> database before running hardpy
+  using the the <code>--hardpy-clear-database</code> option of the <strong>pytest-hardpy</strong> plugin.
+  [<a href="https://github.com/everypinio/hardpy/pull/83">PR-83</a>]</li>
+</ul>
+<h2 id="hardpy-070">HardPy 0.7.0<a class="headerlink" href="#hardpy-070" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Add an <strong>attempt</strong> marker to indicate the number of attempts to run a test before it passes successfully.
+  [<a href="https://github.com/everypinio/hardpy/pull/65">PR-65</a>]</li>
+<li>Add a <strong>get_current_attempt</strong> method to get the current attempt number.
+  [<a href="https://github.com/everypinio/hardpy/pull/65">PR-65</a>]</li>
+<li>Add the ability to run multiple dialog boxes in a single test.
+  [<a href="https://github.com/everypinio/hardpy/pull/65">PR-65</a>]</li>
+<li>Fix the problem of freezing the dialog box in some test cases.
+  [<a href="https://github.com/everypinio/hardpy/pull/65">PR-65</a>]</li>
+<li>Add autofocus on dialog boxes (on the <strong>Confirm</strong> button or the first item in the list).
+  [<a href="https://github.com/everypinio/hardpy/pull/65">PR-65</a>]</li>
+<li>Remove the <strong>progress</strong> field from the <strong>runstore</strong> database.
+  [<a href="https://github.com/everypinio/hardpy/pull/66">PR-66</a>]</li>
+<li>Add the <strong>hw_id</strong> variable to the <strong>test_stand</strong> field in the database obtained from the stand computer.
+  [<a href="https://github.com/everypinio/hardpy/pull/67">PR-67</a>]</li>
+<li>Add the <strong>location</strong> variables to the <strong>test_stand</strong> field in the database.
+  [<a href="https://github.com/everypinio/hardpy/pull/66">PR-66</a>]</li>
+<li>Move the <strong>timezone</strong> and <strong>driver</strong> database variables to the <strong>test_stand</strong> field.
+  [<a href="https://github.com/everypinio/hardpy/pull/66">PR-66</a>]</li>
+<li>Add a schema version. The schema version is fixed to version 1.
+  [<a href="https://github.com/everypinio/hardpy/pull/66">PR-66</a>]</li>
+<li>Change <strong>timezone</strong> from two strings to one string.
+  [<a href="https://github.com/everypinio/hardpy/pull/69">PR-69</a>]</li>
+<li>Replace the <strong>Flake8</strong> linter with a <strong>Ruff</strong> linter.
+  [<a href="https://github.com/everypinio/hardpy/pull/58">PR-58</a>]</li>
+</ul>
+<h2 id="hardpy-061">HardPy 0.6.1<a class="headerlink" href="#hardpy-061" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Fix running tests with a simple <code>pytest</code> command.
+  [<a href="https://github.com/everypinio/hardpy/pull/60">PR-60</a>]</li>
+</ul>
+<h2 id="hardpy-060">HardPy 0.6.0<a class="headerlink" href="#hardpy-060" title="Permanent link">&para;</a></h2>
+<p>In HardPy, the startup principle has changed compared to version 0.5.0 and lower.
+The <code>hardpy-panel</code> command is no longer available.</p>
+<p>The HardPy project of version 0.6.0 or later must contain the file <strong>hardpy.toml</strong>.</p>
+<ul>
+<li>Add the ability to clear the <strong>statestore</strong> database before running hardpy
+  using the the <code>--hardpy-clear-database</code> option of the <strong>pytest-hardpy</strong> plugin.
+  [<a href="https://github.com/everypinio/hardpy/pull/49">PR-49</a>]</li>
+<li>Add the <strong>name</strong> and <strong>info</strong> fields to <strong>test_stand</strong> in the database schema.
+  [<a href="https://github.com/everypinio/hardpy/pull/49">PR-49</a>]</li>
+<li>Add the <strong>part_number</strong> field to <strong>dut</strong> in the database schema.
+  [<a href="https://github.com/everypinio/hardpy/pull/49">PR-49</a>]</li>
+<li>Add the <strong>attempt</strong> field to the test case in the database schema.
+  [<a href="https://github.com/everypinio/hardpy/pull/54">PR-54</a>]</li>
+<li>Add <code>set_stand_name</code> and <code>set_dut_part_number</code> functions.
+  [<a href="https://github.com/everypinio/hardpy/pull/49">PR-49</a>]</li>
+<li>Add a hardpy template project using the <code>hardpy init</code> command.
+  [<a href="https://github.com/everypinio/hardpy/pull/44">PR-44</a>]</li>
+<li>Add a hardpy config .toml file - <strong>hardpy.toml</strong>.
+  [<a href="https://github.com/everypinio/hardpy/pull/44">PR-44</a>]</li>
+<li>Refactor <strong>pytest-hardpy</strong> plugin options.
+  [<a href="https://github.com/everypinio/hardpy/pull/44">PR-44</a>]</li>
+<li>Add CLI to hardpy as an entry point. The <code>hardpy-panel</code> command is no longer available.
+  [<a href="https://github.com/everypinio/hardpy/pull/44">PR-44</a>]</li>
+<li>Fix use of special characters in dialog boxes. ASCII symbols are passed from frontend to backend.
+  [<a href="https://github.com/everypinio/hardpy/pull/40">PR-40</a>]</li>
+<li>Fix status of stopped tests.
+  [<a href="https://github.com/everypinio/hardpy/pull/45">PR-45</a>]</li>
+<li>Fix progress bar for skipped tests. Progress bar fills to the end when tests are skipped.
+  [<a href="https://github.com/everypinio/hardpy/pull/43">PR-43</a>]</li>
+<li>Add report name generation when serial number is missing.
+  [<a href="https://github.com/everypinio/hardpy/pull/47">PR-47</a>]</li>
+</ul>
+<h2 id="hardpy-051">HardPy 0.5.1<a class="headerlink" href="#hardpy-051" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Add the ability to work with cloud couchdb via couchdb config.
+  [<a href="https://github.com/everypinio/hardpy/pull/51">PR-51</a>]</li>
+</ul>
+<h2 id="hardpy-050">HardPy 0.5.0<a class="headerlink" href="#hardpy-050" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Refactor dialog box API.
+  [<a href="https://github.com/everypinio/hardpy/pull/33">PR-33</a>]</li>
+<li>Add conda.yaml example.
+  [<a href="https://github.com/everypinio/hardpy/pull/32">PR-32</a>]</li>
+<li>Add .vscode folder.
+  [<a href="https://github.com/everypinio/hardpy/pull/32">PR-32</a>]</li>
+<li>Fix catching exceptions and displaying them in the operator panel.
+  [<a href="https://github.com/everypinio/hardpy/pull/32">PR-32</a>]</li>
+<li>Add dialog box with radiobutton, checkbox, image, multiple steps.
+  [<a href="https://github.com/everypinio/hardpy/pull/29">PR-29</a>]
+  [<a href="https://github.com/everypinio/hardpy/pull/31">PR-31</a>]
+  [<a href="https://github.com/everypinio/hardpy/pull/31">PR-31</a>]</li>
+</ul>
+<h2 id="hardpy-040">HardPy 0.4.0<a class="headerlink" href="#hardpy-040" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Add base dialog box, text input and numeric input.
+  [<a href="https://github.com/everypinio/hardpy/pull/24">PR-24</a>]</li>
+<li>Add dialog box invocation functionality.
+  [<a href="https://github.com/everypinio/hardpy/pull/25">PR-25</a>]</li>
+<li>Add a socket mechanism to transfer data from the uvicorn server to the pytest subprocess.
+  [<a href="https://github.com/everypinio/hardpy/pull/25">PR-25</a>]</li>
+</ul>
+<h2 id="hardpy-030">HardPy 0.3.0<a class="headerlink" href="#hardpy-030" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Add implementation of test dependencies without using third-party plugins.
+  [<a href="https://github.com/everypinio/hardpy/pull/15">PR-15</a>]</li>
+<li>Reduce the number of database calls.
+  [<a href="https://github.com/everypinio/hardpy/pull/12">PR-12</a>]</li>
+<li>Speed up test collection.
+  [<a href="https://github.com/everypinio/hardpy/pull/12">PR-12</a>]</li>
+</ul>
+<h2 id="hardpy-020">HardPy 0.2.0<a class="headerlink" href="#hardpy-020" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Add documentation page.
+  [<a href="https://github.com/everypinio/hardpy/pull/5">PR-5</a>]</li>
+<li>Remove the ability to access the <code>HardPyPlugin</code>.
+  Users can now only register via the ini file.
+  [<a href="https://github.com/everypinio/hardpy/pull/6">PR-6</a>]</li>
+</ul>
+<h2 id="hardpy-010">HardPy 0.1.0<a class="headerlink" href="#hardpy-010" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Add pytest-hardpy and hardpy panel to the package.
+  [<a href="https://github.com/everypinio/hardpy/pull/1">PR-1</a>]</li>
+<li>Add frontend data synchronization via CouchDB data replication to PouchDB.
+  [<a href="https://github.com/everypinio/hardpy/pull/1">PR-1</a>]</li>
+<li>Add documentation.
+  [<a href="https://github.com/everypinio/hardpy/pull/1">PR-1</a>]</li>
+<li>CouchDB is the main database.
+  [<a href="https://github.com/everypinio/hardpy/pull/1">PR-1</a>]</li>
+</ul>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../about/frontend_sync/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Frontend data synchronization">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Frontend data synchronization
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.path", "navigation.top", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.8fd75fb4.min.js"></script>
+      
+        <script src="../js/print-site.js"></script>
+      
+    
+  <script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
+</html>

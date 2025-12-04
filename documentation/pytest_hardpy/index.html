@@ -1,0 +1,4087 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Everypin">
+      
+      
+        <link rel="canonical" href="https://everypinio.github.io/hardpy/documentation/pytest_hardpy/">
+      
+      
+        <link rel="prev" href="../hardpy_panel/">
+      
+      
+        <link rel="next" href="../stand_cloud/">
+      
+      
+      <link rel="icon" href="../../img/logo192.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.10">
+    
+    
+      
+        <title>Pytest-hardpy - HardPy</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e359304.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings1.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings2.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings3.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings4.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings5.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings6.css">
+    
+      <link rel="stylesheet" href="../../css/print-site.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-material.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function n(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],n("js",new Date),n("config","G-6Z35DZJBP7"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){this.value&&n("event","search",{search_term:this.value})}),document$.subscribe(function(){var a=document.forms.feedback;if(void 0!==a)for(var e of a.querySelectorAll("[type=submit]"))e.addEventListener("click",function(e){e.preventDefault();var t=document.location.pathname,e=this.getAttribute("data-md-value");n("event","feedback",{page:t,data:e}),a.firstElementChild.disabled=!0;e=a.querySelector(".md-feedback__note [data-md-value='"+e+"']");e&&(e.hidden=!1)}),a.hidden=!1}),location$.subscribe(function(e){n("config","G-6Z35DZJBP7",{page_path:e.pathname})})});var e=document.createElement("script");e.async=!0,e.src="https://www.googletagmanager.com/gtag/js?id=G-6Z35DZJBP7",document.getElementById("__analytics").insertAdjacentElement("afterEnd",e)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pytest-hardpy" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="HardPy" class="md-header__button md-logo" aria-label="HardPy" data-md-component="logo">
+      
+  <img src="../../img/logo192.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            HardPy
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Pytest-hardpy
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/everypinio/hardpy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    everypinio/hardpy
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  HardPy
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../features/features/" class="md-tabs__link">
+        
+  
+    
+  
+  Features
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+    
+  
+  Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/" class="md-tabs__link">
+          
+  
+    
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../about/development/" class="md-tabs__link">
+          
+  
+    
+  
+  About
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../changelog/" class="md-tabs__link">
+        
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="HardPy" class="md-nav__button md-logo" aria-label="HardPy" data-md-component="logo">
+      
+  <img src="../../img/logo192.png" alt="logo">
+
+    </a>
+    HardPy
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/everypinio/hardpy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    everypinio/hardpy
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HardPy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/features/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Features
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Documentation
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CLI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardpy_config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../database/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardpy_panel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HardPy panel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Pytest-hardpy
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Pytest-hardpy
+  </span>
+  
+
+      </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="Contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#plugin-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plugin registration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#set_user_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_user_name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_batch_serial_number" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_batch_serial_number
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_dut_info" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_dut_info
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_dut_serial_number" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_dut_serial_number
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_dut_part_number" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_dut_part_number
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_dut_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_dut_name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_dut_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_dut_type
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_dut_revision" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_dut_revision
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_dut_sub_unit" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_dut_sub_unit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_dut_revision_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_dut_revision
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_stand_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_stand_name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_stand_info" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_stand_info
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_stand_location" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_stand_location
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_stand_number" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_stand_number
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_stand_revision" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_stand_revision
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_driver_info" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_driver_info
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_instrument" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_instrument
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_process_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_process_name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_process_number" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_process_number
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_process_info" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_process_info
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_case_measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_case_measurement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_case_chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_case_chart
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_case_artifact" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_case_artifact
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_module_artifact" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_module_artifact
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_run_artifact" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_run_artifact
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_message
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_operator_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_operator_message
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clear_operator_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      clear_operator_message
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run_dialog_box" class="md-nav__link">
+    <span class="md-ellipsis">
+      run_dialog_box
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_current_report" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_current_report
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_current_attempt" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_current_attempt
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#class" class="md-nav__link">
+    <span class="md-ellipsis">
+      Class
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Class">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dialogbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      DialogBox
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#textinputwidget" class="md-nav__link">
+    <span class="md-ellipsis">
+      TextInputWidget
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numericinputwidget" class="md-nav__link">
+    <span class="md-ellipsis">
+      NumericInputWidget
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#radiobuttonwidget" class="md-nav__link">
+    <span class="md-ellipsis">
+      RadiobuttonWidget
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checkboxwidget" class="md-nav__link">
+    <span class="md-ellipsis">
+      CheckboxWidget
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stepwidget" class="md-nav__link">
+    <span class="md-ellipsis">
+      StepWidget
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multistepwidget" class="md-nav__link">
+    <span class="md-ellipsis">
+      MultistepWidget
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imagecomponent" class="md-nav__link">
+    <span class="md-ellipsis">
+      ImageComponent
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#htmlcomponent" class="md-nav__link">
+    <span class="md-ellipsis">
+      HTMLComponent
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#couchdbloader" class="md-nav__link">
+    <span class="md-ellipsis">
+      CouchdbLoader
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standcloudloader" class="md-nav__link">
+    <span class="md-ellipsis">
+      StandCloudLoader
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standcloudconnector" class="md-nav__link">
+    <span class="md-ellipsis">
+      StandCloudConnector
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standcloudreader" class="md-nav__link">
+    <span class="md-ellipsis">
+      StandCloudReader
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instrument" class="md-nav__link">
+    <span class="md-ellipsis">
+      Instrument
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subunit" class="md-nav__link">
+    <span class="md-ellipsis">
+      SubUnit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numericmeasurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      NumericMeasurement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stringmeasurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      StringMeasurement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chart
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#errorcode" class="md-nav__link">
+    <span class="md-ellipsis">
+      ErrorCode
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enum" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enum
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Enum">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comparisonoperation" class="md-nav__link">
+    <span class="md-ellipsis">
+      ComparisonOperation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#charttype" class="md-nav__link">
+    <span class="md-ellipsis">
+      ChartType
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fixture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Fixture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#post_run_functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      post_run_functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardpy_start_args" class="md-nav__link">
+    <span class="md-ellipsis">
+      hardpy_start_args
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#marker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Marker
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Marker">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#case_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      case_name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      module_name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case_group" class="md-nav__link">
+    <span class="md-ellipsis">
+      case_group
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module_group" class="md-nav__link">
+    <span class="md-ellipsis">
+      module_group
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      dependency
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attempt" class="md-nav__link">
+    <span class="md-ellipsis">
+      attempt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#critical" class="md-nav__link">
+    <span class="md-ellipsis">
+      critical
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hardpy-pt" class="md-nav__link">
+    <span class="md-ellipsis">
+      hardpy-pt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardpy-db-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      hardpy-db-url
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardpy-tests-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      hardpy-tests-name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardpy-clear-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      hardpy-clear-database
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sc-address" class="md-nav__link">
+    <span class="md-ellipsis">
+      sc-address
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sc-connection-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      sc-connection-only
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sc-autosync" class="md-nav__link">
+    <span class="md-ellipsis">
+      sc-autosync
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardpy-start-arg" class="md-nav__link">
+    <span class="md-ellipsis">
+      hardpy-start-arg
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stand_cloud/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Examples
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/attempts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Attempts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/chart/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chart
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/db_in_ram/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CouchDB in RAM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/couchdb_load/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CouchDB load
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/critical_test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Critical test
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/dialog_box/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dialog box
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/hardpy_launch/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HardPy launch
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/hello_hardpy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hello HardPy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/launch_arguments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Launch arguments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/logging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pytest logging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/measurement/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Measurement
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/minute_parity/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Minute parity
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/multiple_configs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multiple configs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/multiple_stands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multiple stands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/operator_msg/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Operator message
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/frontend_remote_access/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Remote access
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/skip_test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skip test
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/stand_cloud/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/stand_cloud_reader/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud read data
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/stand_cloud_thirdparty_auth/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud third party authorization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/stand_equipment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stand equipment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            About
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/development/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Development
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/frontend_sync/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frontend data synchronization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="Contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#plugin-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plugin registration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#set_user_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_user_name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_batch_serial_number" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_batch_serial_number
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_dut_info" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_dut_info
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_dut_serial_number" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_dut_serial_number
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_dut_part_number" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_dut_part_number
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_dut_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_dut_name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_dut_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_dut_type
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_dut_revision" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_dut_revision
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_dut_sub_unit" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_dut_sub_unit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_dut_revision_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_dut_revision
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_stand_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_stand_name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_stand_info" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_stand_info
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_stand_location" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_stand_location
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_stand_number" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_stand_number
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_stand_revision" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_stand_revision
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_driver_info" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_driver_info
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_instrument" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_instrument
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_process_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_process_name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_process_number" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_process_number
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_process_info" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_process_info
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_case_measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_case_measurement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_case_chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_case_chart
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_case_artifact" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_case_artifact
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_module_artifact" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_module_artifact
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_run_artifact" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_run_artifact
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_message
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_operator_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_operator_message
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clear_operator_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      clear_operator_message
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run_dialog_box" class="md-nav__link">
+    <span class="md-ellipsis">
+      run_dialog_box
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_current_report" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_current_report
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_current_attempt" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_current_attempt
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#class" class="md-nav__link">
+    <span class="md-ellipsis">
+      Class
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Class">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dialogbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      DialogBox
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#textinputwidget" class="md-nav__link">
+    <span class="md-ellipsis">
+      TextInputWidget
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numericinputwidget" class="md-nav__link">
+    <span class="md-ellipsis">
+      NumericInputWidget
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#radiobuttonwidget" class="md-nav__link">
+    <span class="md-ellipsis">
+      RadiobuttonWidget
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checkboxwidget" class="md-nav__link">
+    <span class="md-ellipsis">
+      CheckboxWidget
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stepwidget" class="md-nav__link">
+    <span class="md-ellipsis">
+      StepWidget
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multistepwidget" class="md-nav__link">
+    <span class="md-ellipsis">
+      MultistepWidget
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imagecomponent" class="md-nav__link">
+    <span class="md-ellipsis">
+      ImageComponent
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#htmlcomponent" class="md-nav__link">
+    <span class="md-ellipsis">
+      HTMLComponent
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#couchdbloader" class="md-nav__link">
+    <span class="md-ellipsis">
+      CouchdbLoader
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standcloudloader" class="md-nav__link">
+    <span class="md-ellipsis">
+      StandCloudLoader
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standcloudconnector" class="md-nav__link">
+    <span class="md-ellipsis">
+      StandCloudConnector
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standcloudreader" class="md-nav__link">
+    <span class="md-ellipsis">
+      StandCloudReader
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instrument" class="md-nav__link">
+    <span class="md-ellipsis">
+      Instrument
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subunit" class="md-nav__link">
+    <span class="md-ellipsis">
+      SubUnit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numericmeasurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      NumericMeasurement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stringmeasurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      StringMeasurement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chart
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#errorcode" class="md-nav__link">
+    <span class="md-ellipsis">
+      ErrorCode
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enum" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enum
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Enum">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comparisonoperation" class="md-nav__link">
+    <span class="md-ellipsis">
+      ComparisonOperation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#charttype" class="md-nav__link">
+    <span class="md-ellipsis">
+      ChartType
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fixture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Fixture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#post_run_functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      post_run_functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardpy_start_args" class="md-nav__link">
+    <span class="md-ellipsis">
+      hardpy_start_args
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#marker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Marker
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Marker">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#case_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      case_name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      module_name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case_group" class="md-nav__link">
+    <span class="md-ellipsis">
+      case_group
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module_group" class="md-nav__link">
+    <span class="md-ellipsis">
+      module_group
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      dependency
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attempt" class="md-nav__link">
+    <span class="md-ellipsis">
+      attempt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#critical" class="md-nav__link">
+    <span class="md-ellipsis">
+      critical
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hardpy-pt" class="md-nav__link">
+    <span class="md-ellipsis">
+      hardpy-pt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardpy-db-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      hardpy-db-url
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardpy-tests-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      hardpy-tests-name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardpy-clear-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      hardpy-clear-database
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sc-address" class="md-nav__link">
+    <span class="md-ellipsis">
+      sc-address
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sc-connection-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      sc-connection-only
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sc-autosync" class="md-nav__link">
+    <span class="md-ellipsis">
+      sc-autosync
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardpy-start-arg" class="md-nav__link">
+    <span class="md-ellipsis">
+      hardpy-start-arg
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/everypinio/hardpy/edit/master/docs/documentation/pytest_hardpy.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/everypinio/hardpy/raw/master/docs/documentation/pytest_hardpy.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
+    </a>
+  
+
+
+<h1 id="pytest-hardpy">pytest-hardpy<a class="headerlink" href="#pytest-hardpy" title="Permanent link">&para;</a></h1>
+<p><strong>pytest-hardpy</strong> is a pytest plugin that helps you save test data in a
+database for test reporting and viewing test data in the web interface.</p>
+<h2 id="plugin-registration">Plugin registration<a class="headerlink" href="#plugin-registration" title="Permanent link">&para;</a></h2>
+<p>To use the <strong>pytest-hardpy</strong> you need to enable it.
+You can do this via the <code>pytest.ini</code> file.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># pytest.ini</span>
+<span class="k">[pytest]</span>
+<span class="na">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">--hardpy-pt</span>
+</code></pre></div>
+<p>Another way to enable a plugin without <code>pytest.ini</code> file is to run tests with the option <code>--hardpy-pt</code>.</p>
+<div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>--hardpy-pt<span class="w"> </span>tests
+</code></pre></div>
+<p>If tests are run via <a href="../hardpy_panel/">hardpy panel</a>, then the pytest-hardpy plugin will be enabled for tests by default.</p>
+<h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h2>
+<h4 id="set_user_name">set_user_name<a class="headerlink" href="#set_user_name" title="Permanent link">&para;</a></h4>
+<p>Writes a string with a <strong>HardPy</strong> operator panel user name.
+When called again, the exception <code>DuplicateParameterError</code> will be raised.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>name</code> <em>(str)</em>: User name</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_user_name</span><span class="p">():</span>
+    <span class="n">set_user_name</span><span class="p">(</span><span class="s2">&quot;test_operator&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">DuplicateParameterError</span><span class="p">):</span>
+        <span class="n">set_user_name</span><span class="p">(</span><span class="s2">&quot;another_operator&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_batch_serial_number">set_batch_serial_number<a class="headerlink" href="#set_batch_serial_number" title="Permanent link">&para;</a></h4>
+<p>Writes a string with the serial number of the device batch.
+When called again, the exception <code>DuplicateParameterError</code> will be raised.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>serial_number</code> <em>(str)</em>: Batch serial number</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_batch_number</span><span class="p">():</span>
+    <span class="n">set_batch_serial_number</span><span class="p">(</span><span class="s2">&quot;BATCH-001&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_dut_info">set_dut_info<a class="headerlink" href="#set_dut_info" title="Permanent link">&para;</a></h4>
+<p>This function records a dictionary containing information about the test stand.
+When called again, the information will be added to DB.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>info</code> <em>(Mapping[str, str | int | float  | None])</em>: DUT info</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_dut_info</span><span class="p">():</span>
+    <span class="n">set_dut_info</span><span class="p">({</span><span class="s2">&quot;sw_version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">})</span>
+</code></pre></div>
+<h4 id="set_dut_serial_number">set_dut_serial_number<a class="headerlink" href="#set_dut_serial_number" title="Permanent link">&para;</a></h4>
+<p>Writes a string with a serial number.
+When called again, the exception <code>DuplicateParameterError</code> will be caused.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>serial_number</code> <em>(str)</em>: DUT serial number</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_serial_number</span><span class="p">():</span>
+    <span class="n">set_dut_serial_number</span><span class="p">(</span><span class="s2">&quot;1234&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_dut_part_number">set_dut_part_number<a class="headerlink" href="#set_dut_part_number" title="Permanent link">&para;</a></h4>
+<p>Writes a string with a part number.
+When called again, the exception <code>DuplicateParameterError</code> will be caused.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>part_number</code> <em>(str)</em>: DUT part number</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_part_number</span><span class="p">():</span>
+    <span class="n">set_dut_part_number</span><span class="p">(</span><span class="s2">&quot;part_1&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_dut_name">set_dut_name<a class="headerlink" href="#set_dut_name" title="Permanent link">&para;</a></h4>
+<p>Writes a string with a human-readable name of the DUT.
+When called again, the exception <code>DuplicateParameterError</code> will be raised.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>name</code> <em>(str)</em>: DUT name</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_dut_name</span><span class="p">():</span>
+    <span class="n">set_dut_name</span><span class="p">(</span><span class="s2">&quot;Test Device&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_dut_type">set_dut_type<a class="headerlink" href="#set_dut_type" title="Permanent link">&para;</a></h4>
+<p>Writes a string with a type of DUT, f.e "PCBA", "Casing", etc.
+When called again, the exception <code>DuplicateParameterError</code> will be raised.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>dut_type</code> <em>(str)</em>: DUT type</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_dut_type</span><span class="p">():</span>
+    <span class="n">set_dut_type</span><span class="p">(</span><span class="s2">&quot;PCBA&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_dut_revision">set_dut_revision<a class="headerlink" href="#set_dut_revision" title="Permanent link">&para;</a></h4>
+<p>Writes a string with a DUT revision.
+When called again, the exception <code>DuplicateParameterError</code> will be raised.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>revision</code> <em>(str)</em>: DUT revision (e.g. "REV1.0")</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_dut_revision</span><span class="p">():</span>
+    <span class="n">set_dut_revision</span><span class="p">(</span><span class="s2">&quot;HW1.0&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_dut_sub_unit">set_dut_sub_unit<a class="headerlink" href="#set_dut_sub_unit" title="Permanent link">&para;</a></h4>
+<p>Writes a sub unit of DUT.
+It accepts a <a href="#subunit">SubUnit</a> object containing all the details of the sub unit.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>sub_unit</code> <em>(SubUnit)</em>: SubUnit object</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><em>(int)</em>: sub unit index</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_dut_sub_unit</span><span class="p">():</span>
+    <span class="n">sub_unit</span> <span class="o">=</span> <span class="n">SubUnit</span><span class="p">(</span>
+        <span class="n">serial_number</span><span class="o">=</span><span class="s2">&quot;12345&quot;</span><span class="p">,</span>
+        <span class="n">part_number</span><span class="o">=</span><span class="s2">&quot;part_number_1&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Test Device&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;PCBA&quot;</span><span class="p">,</span>
+        <span class="n">revision</span><span class="o">=</span><span class="s2">&quot;REV1.0&quot;</span><span class="p">,</span>
+        <span class="n">info</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;sw_version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">hardpy</span><span class="o">.</span><span class="n">set_dut_sub_unit</span><span class="p">(</span><span class="n">sub_unit</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_dut_revision_1">set_dut_revision<a class="headerlink" href="#set_dut_revision_1" title="Permanent link">&para;</a></h4>
+<p>Writes a string with a DUT revision.
+When called again, the exception <code>DuplicateParameterError</code> will be raised.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>revision</code> <em>(str)</em>: DUT revision (e.g. "REV1.0")</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_dut_revision</span><span class="p">():</span>
+    <span class="n">set_dut_revision</span><span class="p">(</span><span class="s2">&quot;HW1.0&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_stand_name">set_stand_name<a class="headerlink" href="#set_stand_name" title="Permanent link">&para;</a></h4>
+<p>Writes a string with a test stand name.
+When called again, the exception <code>DuplicateParameterError</code> will be caused.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>name</code> <em>(str)</em>: test stand name</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_stand_name</span><span class="p">():</span>
+    <span class="n">set_stand_name</span><span class="p">(</span><span class="s2">&quot;name 1&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_stand_info">set_stand_info<a class="headerlink" href="#set_stand_info" title="Permanent link">&para;</a></h4>
+<p>Writes a dictionary with information about the test stand.
+When called again, the information will be merged with existing data.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>info</code> <em>(Mapping[str, str | int | float ])</em>: Test stand info dictionary</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_stand_info</span><span class="p">():</span>
+    <span class="n">set_stand_info</span><span class="p">({</span><span class="s2">&quot;calibration_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2023-01-15&quot;</span><span class="p">})</span>
+</code></pre></div>
+<h4 id="set_stand_location">set_stand_location<a class="headerlink" href="#set_stand_location" title="Permanent link">&para;</a></h4>
+<p>Writes a string with a test stand location.
+When called again, the exception <code>DuplicateParameterError</code> will be caused.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_stand_info</span><span class="p">():</span>
+    <span class="n">set_stand_location</span><span class="p">(</span><span class="s2">&quot;Moon&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_stand_number">set_stand_number<a class="headerlink" href="#set_stand_number" title="Permanent link">&para;</a></h4>
+<p>Writes a integer number with a test stand number.
+When called again, the exception <code>DuplicateParameterError</code> will be caused.
+When called with negative or non-integer number, the exception <code>TestStandNumberError</code> will be caused.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>number</code> <em>(int)</em>: test stand number</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_stand_number</span><span class="p">():</span>
+    <span class="n">set_stand_number</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_stand_revision">set_stand_revision<a class="headerlink" href="#set_stand_revision" title="Permanent link">&para;</a></h4>
+<p>Writes a string with a test stand revision.
+When called again, the exception <code>DuplicateParameterError</code> will be raised.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>revision</code> <em>(str)</em>: Test stand revision</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_stand_revision</span><span class="p">():</span>
+    <span class="n">set_stand_revision</span><span class="p">(</span><span class="s2">&quot;HW1.0&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_driver_info">set_driver_info<a class="headerlink" href="#set_driver_info" title="Permanent link">&para;</a></h4>
+<p><strong>DEPRECATED, DO NOT USE IT.</strong></p>
+<p>The function records a dictionary containing information about the test stand driver.
+The data is updated with new information each time the function is called.</p>
+<p>Driver data is stored in both <strong>statestore</strong> and <strong>runstore</strong> databases.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>drivers</code> <em>(dict)</em>: A dictionary of drivers, where keys are driver names and values are driver-specific data.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_driver_info</span><span class="p">():</span>
+    <span class="n">drivers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;driver_1&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Driver A&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;network&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">set_driver_info</span><span class="p">(</span><span class="n">drivers</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_instrument">set_instrument<a class="headerlink" href="#set_instrument" title="Permanent link">&para;</a></h4>
+<p>Adds a new information about the instrument (i.e equipment) that form part of the test bench.</p>
+<p>Can be called multiple times to add multiple instruments.
+Accepts an <a href="#instrument">Instrument</a> object containing all instrument details.</p>
+<p><strong>Instrument Parameters:</strong></p>
+<ul>
+<li><code>name</code> <em>(str | None)</em>: Instrument name</li>
+<li><code>revision</code> <em>(str | None)</em>: Instrument revision</li>
+<li><code>serial_number</code> <em>(str | None)</em> Instrument serial number</li>
+<li><code>part_number</code> <em>(str | None)</em>  Instrument part number</li>
+<li><code>number</code> <em>(int | None)</em>: Instrument number  </li>
+<li><code>comment</code> <em>(str | None)</em>: Instrument comment  </li>
+<li><code>info</code> <em>(Mapping[str, str | int | float ] | None)</em>: Additional instrument info </li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_instruments</span><span class="p">():</span>
+    <span class="n">instrument</span> <span class="o">=</span> <span class="n">Instrument</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Oscilloscope&quot;</span><span class="p">,</span>
+        <span class="n">revision</span><span class="o">=</span><span class="s2">&quot;1.2&quot;</span><span class="p">,</span>
+        <span class="n">serial_number</span><span class="o">=</span><span class="s2">&quot;4235098&quot;</span><span class="p">,</span>
+        <span class="n">part_number</span><span class="o">=</span><span class="s2">&quot;E012&quot;</span><span class="p">,</span>
+        <span class="n">number</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">info</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;DSO-X 2024A&quot;</span><span class="p">,</span> <span class="s2">&quot;bandwidth&quot;</span><span class="p">:</span> <span class="s2">&quot;200MHz&quot;</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">set_instrument</span><span class="p">(</span><span class="n">instrument</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_process_name">set_process_name<a class="headerlink" href="#set_process_name" title="Permanent link">&para;</a></h4>
+<p>Writes a string with a process name.
+When called again, the exception <code>DuplicateParameterError</code> will be raised.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>name</code> <em>(str)</em>: Process name (e.g. "Production Test")</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_process</span><span class="p">():</span>
+    <span class="n">set_process_name</span><span class="p">(</span><span class="s2">&quot;Acceptance Test&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_process_number">set_process_number<a class="headerlink" href="#set_process_number" title="Permanent link">&para;</a></h4>
+<p>Writes an integer with a process number.
+When called again, the exception <code>DuplicateParameterError</code> will be raised.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>number</code> <em>(int)</em>: Process number</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_process</span><span class="p">():</span>
+    <span class="n">set_process_number</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_process_info">set_process_info<a class="headerlink" href="#set_process_info" title="Permanent link">&para;</a></h4>
+<p>Writes a dictionary with additional information about the process.
+When called again, the information will be merged with existing data.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>info</code> <em>(Mapping[str, str | int | float | None])</em>: Process info dictionary</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_process_info</span><span class="p">():</span>
+    <span class="n">set_process_info</span><span class="p">({</span>
+        <span class="s2">&quot;stage&quot;</span><span class="p">:</span> <span class="s2">&quot;production&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="p">})</span>
+</code></pre></div>
+<h4 id="set_case_measurement">set_case_measurement<a class="headerlink" href="#set_case_measurement" title="Permanent link">&para;</a></h4>
+<p>Writes measurement information to a database in the form of a case measurement list.
+When called again, the information will be added to case measurement list.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>measurement</code> <a href="#numericmeasurement">NumericMeasurement</a> |
+  <a href="#stringmeasurement">StringMeasurement</a>: measurement data.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><em>(int)</em>: measurement index</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_measurement</span><span class="p">():</span>
+    <span class="n">meas_1</span> <span class="o">=</span> <span class="n">NumericMeasurement</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Voltage&quot;</span><span class="p">,</span> 
+        <span class="n">value</span><span class="o">=</span><span class="mf">12.3</span><span class="p">,</span> 
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;V&quot;</span><span class="p">,</span>
+        <span class="n">operation</span><span class="o">=</span><span class="n">ComparisonOperation</span><span class="o">.</span><span class="n">GELE</span><span class="p">,</span> 
+        <span class="n">lower_limit</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> 
+        <span class="n">upper_limit</span><span class="o">=</span><span class="mf">15.0</span>
+    <span class="p">)</span>
+    <span class="n">set_case_measurement</span><span class="p">(</span><span class="n">meas_1</span><span class="p">)</span>
+
+    <span class="n">meas_2</span> <span class="o">=</span> <span class="n">NumericMeasurement</span><span class="p">(</span>
+        <span class="n">value</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;°&quot;</span><span class="p">,</span> 
+        <span class="n">operation</span><span class="o">=</span><span class="n">ComparisonOperation</span><span class="o">.</span><span class="n">EQ</span><span class="p">,</span> 
+        <span class="n">comparison_value</span><span class="o">=</span><span class="mi">5</span>
+    <span class="p">)</span>
+    <span class="n">set_case_measurement</span><span class="p">(</span><span class="n">meas_2</span><span class="p">)</span>
+
+    <span class="n">meas_3</span> <span class="o">=</span> <span class="n">NumericMeasurement</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Count&quot;</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="mi">42</span>
+    <span class="p">)</span>
+    <span class="n">set_case_measurement</span><span class="p">(</span><span class="n">meas_3</span><span class="p">)</span>
+
+    <span class="n">meas_4</span> <span class="o">=</span> <span class="n">StringMeasurement</span><span class="p">(</span>
+        <span class="n">value</span><span class="o">=</span><span class="s2">&quot;1.2.0&quot;</span><span class="p">,</span> 
+        <span class="n">operation</span><span class="o">=</span><span class="n">ComparisonOperation</span><span class="o">.</span><span class="n">EQ</span><span class="p">,</span> 
+        <span class="n">comparison_value</span><span class="o">=</span><span class="s2">&quot;1.2.0&quot;</span>
+    <span class="p">)</span>
+    <span class="n">set_case_measurement</span><span class="p">(</span><span class="n">meas_4</span><span class="p">)</span>
+
+    <span class="n">meas_5</span> <span class="o">=</span> <span class="n">StringMeasurement</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Version&quot;</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="s2">&quot;v2.1.0&quot;</span><span class="p">,</span> 
+        <span class="n">operation</span><span class="o">=</span><span class="n">ComparisonOperation</span><span class="o">.</span><span class="n">EQ</span><span class="p">,</span> 
+        <span class="n">comparison_value</span><span class="o">=</span><span class="s2">&quot;v2.1.0&quot;</span>
+    <span class="p">)</span>
+    <span class="n">set_case_measurement</span><span class="p">(</span><span class="n">meas_5</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">meas_1</span><span class="o">.</span><span class="n">result</span>
+    <span class="k">assert</span> <span class="n">meas_2</span><span class="o">.</span><span class="n">result</span>
+    <span class="k">assert</span> <span class="n">meas_4</span><span class="o">.</span><span class="n">result</span>
+    <span class="k">assert</span> <span class="n">meas_5</span><span class="o">.</span><span class="n">result</span>
+</code></pre></div>
+<p><strong>Operator panel display:</strong>
+The example above would display in the operator panel as:</p>
+<ul>
+<li><code>Voltage 12.3 V</code></li>
+<li><code>5°</code></li>
+<li><code>Count 42</code></li>
+<li><code>1.2.0</code></li>
+<li><code>Version v2.1.0</code></li>
+</ul>
+<h4 id="set_case_chart">set_case_chart<a class="headerlink" href="#set_case_chart" title="Permanent link">&para;</a></h4>
+<p>Writes chart (data series) information to a test case in the database.
+Only one <a href="#chart">Chart</a> object can be stored per test case in the database.
+When called again, the exception <code>DuplicateParameterError</code> will be raised.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>chart</code> <a href="#chart">Chart</a>: chart data.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_chart</span><span class="p">():</span>
+    <span class="n">chart</span> <span class="o">=</span> <span class="n">hardpy</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">hardpy</span><span class="o">.</span><span class="n">ChartType</span><span class="o">.</span><span class="n">LINE</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;title&quot;</span><span class="p">,</span>
+        <span class="n">x_label</span><span class="o">=</span><span class="s2">&quot;x_label&quot;</span><span class="p">,</span>
+        <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;y_label&quot;</span><span class="p">,</span>
+        <span class="n">marker_name</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;marker_name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+        <span class="n">x_data</span><span class="o">=</span><span class="p">[</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="p">],</span>
+        <span class="n">y_data</span><span class="o">=</span><span class="p">[</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">hardpy</span><span class="o">.</span><span class="n">set_case_chart</span><span class="p">(</span><span class="n">chart</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_case_artifact">set_case_artifact<a class="headerlink" href="#set_case_artifact" title="Permanent link">&para;</a></h4>
+<p>Writes a dictionary with a test case artifact.
+When called again, the data will be added to DB.</p>
+<p>Artifacts are saved only in the <strong>runstore</strong> database
+because the state in <strong>statestore</strong> and case artifact must be separated.</p>
+<p>The <code>set_case_artifact</code> function must be called from a test case.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>data</code> <em>(dict)</em>: data</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_case_artifact</span><span class="p">():</span>
+    <span class="n">set_case_artifact</span><span class="p">({</span><span class="s2">&quot;data_str&quot;</span><span class="p">:</span> <span class="s2">&quot;123DATA&quot;</span><span class="p">})</span>
+</code></pre></div>
+<h4 id="set_module_artifact">set_module_artifact<a class="headerlink" href="#set_module_artifact" title="Permanent link">&para;</a></h4>
+<p>Writes a dictionary with a module test artifact.
+When called again, the data will be added to DB.</p>
+<p>Artifacts are saved only in the <strong>runstore</strong> database
+because the state in <strong>statestore</strong> and module artifact must be separated.</p>
+<p>The <code>set_module_artifact</code> function must be called from a test case.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>data</code> <em>(dict)</em>: data</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_module_artifact</span><span class="p">():</span>
+    <span class="n">set_module_artifact</span><span class="p">({</span><span class="s2">&quot;data_str&quot;</span><span class="p">:</span> <span class="s2">&quot;456DATA&quot;</span><span class="p">})</span>
+</code></pre></div>
+<h4 id="set_run_artifact">set_run_artifact<a class="headerlink" href="#set_run_artifact" title="Permanent link">&para;</a></h4>
+<p>Writes a dictionary with a test run artifact.
+When called again, the data will be added to DB.</p>
+<p>Artifacts are saved only in the <strong>runstore</strong> database
+because the state in <strong>statestore</strong> and run artifact must be separated.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>data</code> <em>(dict)</em>: data</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_run_artifact</span><span class="p">():</span>
+    <span class="n">set_run_artifact</span><span class="p">({</span><span class="s2">&quot;data_str&quot;</span><span class="p">:</span> <span class="s2">&quot;789DATA&quot;</span><span class="p">})</span>
+</code></pre></div>
+<h4 id="set_message">set_message<a class="headerlink" href="#set_message" title="Permanent link">&para;</a></h4>
+<p>Writes a string with a message.
+If a message is sent without a key, the key will be generated
+automatically and the messages will be appended.
+If the message is sent with a known key, it will be updated.</p>
+<p>The <code>set_message</code> function must be called from a test case.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>msg</code> <em>(str)</em>: Message content.</li>
+<li><code>msg_key</code> <em>(Optional[str])</em>: Message ID. If not specified, a random ID will be generated.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_message</span><span class="p">():</span>
+    <span class="n">set_message</span><span class="p">(</span><span class="s2">&quot;Test message&quot;</span><span class="p">)</span>
+    <span class="n">set_message</span><span class="p">(</span><span class="s2">&quot;Update message 1&quot;</span><span class="p">,</span> <span class="s2">&quot;msg_upd&quot;</span><span class="p">)</span>
+    <span class="n">set_message</span><span class="p">(</span><span class="s2">&quot;Update message 2&quot;</span><span class="p">,</span> <span class="s2">&quot;msg_upd&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="set_operator_message">set_operator_message<a class="headerlink" href="#set_operator_message" title="Permanent link">&para;</a></h4>
+<p>Sets an operator message in the <strong>statestore</strong> database and updates the database.
+Does not provide user interaction unlike the <a href="#run_dialog_box">run_dialog_box</a> function.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>msg</code> <em>(str)</em>: The message to be displayed.</li>
+<li><code>title</code> <em>(str | None)</em>: The optional title for the message.</li>
+<li><code>block</code> <em>(bool=True)</em>: If True, the function will block until the message is closed.</li>
+<li><code>image</code> <em>(<a href="#imagecomponent">ImageComponent</a> | None)</em>: Image information.</li>
+<li><code>html</code> <em>(<a href="#htmlcomponent">HTMLComponent</a> | None)</em>: HTML information.</li>
+<li><code>font_size</code>: <em>(int=14)</em>: Text font size.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">hardpy</span> <span class="kn">import</span> <span class="n">set_operator_message</span>
+
+<span class="k">def</span> <span class="nf">test_set_operator_msg</span><span class="p">():</span>
+    <span class="n">set_operator_message</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s2">&quot;This is a sample operator message.&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Important Notice&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="clear_operator_message">clear_operator_message<a class="headerlink" href="#clear_operator_message" title="Permanent link">&para;</a></h4>
+<p>Clears the current message to the operator if it exists, otherwise does nothing.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="kn">from</span> <span class="nn">hardpy</span> <span class="kn">import</span> <span class="n">set_operator_message</span><span class="p">,</span> <span class="n">clear_operator_message</span>
+
+<span class="k">def</span> <span class="nf">test_clear_operator_msg</span><span class="p">():</span>
+    <span class="n">hardpy</span><span class="o">.</span><span class="n">set_operator_message</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s2">&quot;Clearing operator message.&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Operator message&quot;</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">clear_operator_message</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="run_dialog_box">run_dialog_box<a class="headerlink" href="#run_dialog_box" title="Permanent link">&para;</a></h4>
+<p>Displays a dialog box and updates the <code>dialog_box</code> field in the <strong>statestore</strong> database.</p>
+<p>The <code>run_dialog_box</code> function must be called from a test case.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>dialog_box_data</code> <em>(DialogBox)</em>: Data for the dialog box.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><em>(Any)</em>: An object containing the user's response.</li>
+</ul>
+<p>The type of the return value depends on the widget type:</p>
+<ul>
+<li>Without widget (BASE): bool.</li>
+<li>NUMERIC_INPUT: float.</li>
+<li>TEXT_INPUT: str.</li>
+<li>RADIOBUTTON: str.</li>
+<li>CHECKBOX: List(str).</li>
+<li>MULTISTEP: bool.</li>
+</ul>
+<p><strong>Raises</strong></p>
+<ul>
+<li><code>ValueError</code>: If the <code>message</code> argument is empty.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">hardpy</span> <span class="kn">import</span> <span class="n">dialog_box</span>
+<span class="k">def</span> <span class="nf">test_text_input</span><span class="p">():</span>
+    <span class="n">dbx</span> <span class="o">=</span> <span class="n">DialogBox</span><span class="p">(</span>
+        <span class="n">dialog_text</span><span class="o">=</span><span class="s2">&quot;Type &#39;ok&#39; and press the Confirm button&quot;</span><span class="p">,</span>
+        <span class="n">title_bar</span><span class="o">=</span><span class="s2">&quot;Example of text input&quot;</span><span class="p">,</span>
+        <span class="n">widget</span><span class="o">=</span><span class="n">TextInputWidget</span><span class="p">(),</span>
+        <span class="n">image</span><span class="o">=</span><span class="n">ImageComponent</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="s2">&quot;assets/test.png&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">50</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">run_dialog_box</span><span class="p">(</span><span class="n">dbx</span><span class="p">)</span>
+    <span class="n">set_message</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Entered text </span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">response</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span><span class="p">,</span> <span class="s2">&quot;The entered text is not correct&quot;</span>
+</code></pre></div>
+<h4 id="get_current_report">get_current_report<a class="headerlink" href="#get_current_report" title="Permanent link">&para;</a></h4>
+<p>Returns the current report from the database <strong>runstore</strong>.</p>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><em>(ResultRunStore | None)</em>: report, or None if not found or invalid</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_current_report</span><span class="p">():</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="n">get_current_report</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="get_current_attempt">get_current_attempt<a class="headerlink" href="#get_current_attempt" title="Permanent link">&para;</a></h4>
+<p>Returns the num of current attempt.</p>
+<p>The <code>get_current_attempt</code> function must be called from a test case.</p>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><em>(int)</em>: num of current attempt</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">attempt</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_attempt_message</span><span class="p">():</span>
+    <span class="n">attempt</span> <span class="o">=</span> <span class="n">hardpy</span><span class="o">.</span><span class="n">get_current_attempt</span><span class="p">()</span>
+    <span class="n">hardpy</span><span class="o">.</span><span class="n">set_message</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current attempt </span><span class="si">{</span><span class="n">attempt</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">attempt</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="kc">False</span>
+</code></pre></div>
+<h2 id="class">Class<a class="headerlink" href="#class" title="Permanent link">&para;</a></h2>
+<h4 id="dialogbox">DialogBox<a class="headerlink" href="#dialogbox" title="Permanent link">&para;</a></h4>
+<p>The class is used to configure the dialogue box and is used with
+the <a href="#run_dialog_box">run_dialog_box</a> function.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>dialog_text</code> <em>(str)</em>: The text of the dialog box.</li>
+<li><code>title_bar</code> <em>(str | None)</em>: The title bar of the dialog box.
+If the title_bar field is missing, it is the case name.</li>
+<li><code>widget</code> <em>(IWidget | None)</em>: Widget information.</li>
+<li><code>image</code> <em>(<a href="#imagecomponent">ImageComponent</a> | None)</em>: Image information.</li>
+<li><code>html</code> <em>(<a href="#htmlcomponent">HTMLComponent</a> | None)</em>: HTML information.</li>
+<li><code>font_size</code>: <em>(int=14)</em>: Text font size.</li>
+</ul>
+<p>Widget list:</p>
+<ul>
+<li>Base, only dialog text;</li>
+<li>Text input, <a href="#textinputwidget">TextInputWidget</a>;</li>
+<li>Numeric input, <a href="#numericinputwidget">NumericInputWidget</a>;</li>
+<li>Radiobutton, <a href="#radiobuttonwidget">RadiobuttonWidget</a>;</li>
+<li>Checkbox, <a href="#checkboxwidget">CheckboxWidget</a>;</li>
+<li>Multistep, <a href="#multistepwidget">MultistepWidget</a>.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code>    <span class="n">DialogBox</span><span class="p">(</span><span class="n">title_bar</span><span class="o">=</span><span class="s2">&quot;Example title&quot;</span><span class="p">,</span> <span class="n">dialog_text</span><span class="o">=</span><span class="s2">&quot;Example text&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="textinputwidget">TextInputWidget<a class="headerlink" href="#textinputwidget" title="Permanent link">&para;</a></h4>
+<p>The class is used to configure text input widget in <a href="#dialogbox">dialog box</a>.
+Further information can be found in section
+<a href="../hardpy_panel/#text-input-field">text input field</a>.
+Widget returns a string when using <a href="#run_dialog_box">run_dialog_box</a>.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code>    <span class="n">dbx</span> <span class="o">=</span> <span class="n">DialogBox</span><span class="p">(</span>
+        <span class="n">dialog_text</span><span class="o">=</span><span class="s2">&quot;Type &#39;ok&#39; and press the Confirm button&quot;</span><span class="p">,</span>
+        <span class="n">title_bar</span><span class="o">=</span><span class="s2">&quot;Example of text input&quot;</span><span class="p">,</span>
+        <span class="n">widget</span><span class="o">=</span><span class="n">TextInputWidget</span><span class="p">(),</span>
+    <span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">run_dialog_box</span><span class="p">(</span><span class="n">dbx</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="numericinputwidget">NumericInputWidget<a class="headerlink" href="#numericinputwidget" title="Permanent link">&para;</a></h4>
+<p>The class is used to configure numeric input widget in <a href="#dialogbox">dialog box</a>.
+Further information can be found in section
+<a href="../hardpy_panel/#number-input-field">numeric input field</a>.
+Widget returns a float when using <a href="#run_dialog_box">run_dialog_box</a>.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code>    <span class="n">dbx</span> <span class="o">=</span> <span class="n">DialogBox</span><span class="p">(</span>
+        <span class="n">dialog_text</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Enter the number </span><span class="si">{</span><span class="n">test_num</span><span class="si">}</span><span class="s2"> and press the Confirm button&quot;</span><span class="p">,</span>
+        <span class="n">title_bar</span><span class="o">=</span><span class="s2">&quot;Example of entering a number&quot;</span><span class="p">,</span>
+        <span class="n">widget</span><span class="o">=</span><span class="n">NumericInputWidget</span><span class="p">(),</span>
+    <span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">run_dialog_box</span><span class="p">(</span><span class="n">dbx</span><span class="p">))</span>
+</code></pre></div>
+<h4 id="radiobuttonwidget">RadiobuttonWidget<a class="headerlink" href="#radiobuttonwidget" title="Permanent link">&para;</a></h4>
+<p>The class is used to configure radiobutton widget in <a href="#dialogbox">dialog box</a>.
+Further information can be found in section
+<a href="../hardpy_panel/#radiobutton">radiobutton</a>.
+Widget returns a string with the selected radiobutton value
+<a href="#run_dialog_box">run_dialog_box</a>.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>fields</code> <em>(list[str])</em>: Radiobutton fields.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code>    <span class="n">dbx</span> <span class="o">=</span> <span class="n">DialogBox</span><span class="p">(</span>
+        <span class="n">dialog_text</span><span class="o">=</span><span class="s1">&#39;Select item &quot;one&quot; out of several and click Confirm.&#39;</span><span class="p">,</span>
+        <span class="n">title_bar</span><span class="o">=</span><span class="s2">&quot;Radiobutton example&quot;</span><span class="p">,</span>
+        <span class="n">widget</span><span class="o">=</span><span class="n">RadiobuttonWidget</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;one&quot;</span><span class="p">,</span> <span class="s2">&quot;two&quot;</span><span class="p">,</span> <span class="s2">&quot;three&quot;</span><span class="p">]),</span>
+    <span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">run_dialog_box</span><span class="p">(</span><span class="n">dbx</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="checkboxwidget">CheckboxWidget<a class="headerlink" href="#checkboxwidget" title="Permanent link">&para;</a></h4>
+<p>The class is used to configure checkbox widget in <a href="#dialogbox">dialog box</a>.
+Further information can be found in section
+<a href="../hardpy_panel/#checkbox">checkbox</a>.
+Widget returns a list of string with the selected checkbox value
+<a href="#run_dialog_box">run_dialog_box</a>.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>fields</code> <em>(list[str])</em>: Checkbox fields.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code>    <span class="n">dbx</span> <span class="o">=</span> <span class="n">DialogBox</span><span class="p">(</span>
+        <span class="n">dialog_text</span><span class="o">=</span><span class="s1">&#39;Select items &quot;one&quot; and &quot;two&quot; and click the Confirm button&#39;</span><span class="p">,</span>
+        <span class="n">title_bar</span><span class="o">=</span><span class="s2">&quot;Checkbox example&quot;</span><span class="p">,</span>
+        <span class="n">widget</span><span class="o">=</span><span class="n">CheckboxWidget</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;one&quot;</span><span class="p">,</span> <span class="s2">&quot;two&quot;</span><span class="p">,</span> <span class="s2">&quot;three&quot;</span><span class="p">]),</span>
+    <span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">run_dialog_box</span><span class="p">(</span><span class="n">dbx</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="stepwidget">StepWidget<a class="headerlink" href="#stepwidget" title="Permanent link">&para;</a></h4>
+<p>The class is used to configure the step for the
+<a href="#multistepwidget">multistep</a> widget in <a href="#dialogbox">dialog box</a>.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>title</code> <em>(str)</em>: Step title.</li>
+<li><code>text</code> <em>(str | None)</em>: Step text.</li>
+<li><code>image</code> <em>(<a href="#imagecomponent">ImageComponent</a> | None)</em>: Step image.</li>
+<li><code>html</code> <em>(<a href="#htmlcomponent">HTMLComponent</a> | None)</em>: Step HTML.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code>    <span class="n">StepWidget</span><span class="p">(</span><span class="s2">&quot;Step 1&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Content for step&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="multistepwidget">MultistepWidget<a class="headerlink" href="#multistepwidget" title="Permanent link">&para;</a></h4>
+<p>The class is used to configure multistep widget in <a href="#dialogbox">dialog box</a>.
+Further information can be found in section
+<a href="../hardpy_panel/#multiple-steps">multiple steps</a>.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>steps</code> <em>(list[<a href="#stepwidget">StepWidget</a>])</em>: A list with info about the steps.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code>    <span class="n">steps</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">StepWidget</span><span class="p">(</span><span class="s2">&quot;Step 1&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Content for step&quot;</span><span class="p">),</span>
+        <span class="n">StepWidget</span><span class="p">(</span><span class="s2">&quot;Step 2&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Content for step 2&quot;</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="n">ImageComponent</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="s2">&quot;assets/test.png&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">100</span><span class="p">)),</span>
+        <span class="n">StepWidget</span><span class="p">(</span><span class="s2">&quot;Step 3&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Content for step 3&quot;</span><span class="p">,</span> <span class="n">html</span><span class="o">=</span><span class="n">HTMLComponent</span><span class="p">(</span><span class="n">html</span><span class="o">=</span><span class="s2">&quot;https://everypinio.github.io/hardpy/&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">50</span><span class="p">)),</span>
+    <span class="p">]</span>
+    <span class="n">dbx</span> <span class="o">=</span> <span class="n">DialogBox</span><span class="p">(</span><span class="n">dialog_text</span><span class="o">=</span><span class="s2">&quot;Follow the steps and click Confirm&quot;</span><span class="p">,</span> <span class="n">widget</span><span class="o">=</span><span class="n">MultistepWidget</span><span class="p">(</span><span class="n">steps</span><span class="p">))</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">run_dialog_box</span><span class="p">(</span><span class="n">dbx</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="imagecomponent">ImageComponent<a class="headerlink" href="#imagecomponent" title="Permanent link">&para;</a></h4>
+<p>A class for configuring an image for a dialogue box or operator message box and is used with
+the <a href="#run_dialog_box">run_dialog_box</a> and <a href="#set_operator_message">set_operator_message</a> functions.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>address</code> <em>(str)</em>: Image address.</li>
+<li><code>width</code> <em>(int | None)</em>: Image width in %.</li>
+<li><code>border</code> <em>(int | None)</em>: Image border width.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code>    <span class="n">ImageComponent</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="s2">&quot;assets/test.png&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="htmlcomponent">HTMLComponent<a class="headerlink" href="#htmlcomponent" title="Permanent link">&para;</a></h4>
+<p>A class for configurating HTML for a dialogue box or operator message box and is used with
+the <a href="#run_dialog_box">run_dialog_box</a> and <a href="#set_operator_message">set_operator_message</a> functions.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>code_or_url</code> <em>(str)</em>: HTML code or link.</li>
+<li><code>width</code> <em>(int | None)</em>: HTML width in %.</li>
+<li><code>border</code> <em>(int | None)</em>: HTML border width.</li>
+<li><code>is_raw_html</code> <em>(bool)</em>: Is HTML code is raw.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code>    <span class="n">HTMLComponent</span><span class="p">(</span><span class="n">code_or_url</span><span class="o">=</span><span class="s2">&quot;https://everypinio.github.io/hardpy/&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">is_raw_html</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="couchdbloader">CouchdbLoader<a class="headerlink" href="#couchdbloader" title="Permanent link">&para;</a></h4>
+<p>Used to write reports to the database <strong>CouchDB</strong>.</p>
+<p>Report names (revision id) are automatically generated based on the test
+completion date and the device serial number.
+If the serial number dut is empty, a random identifier with
+prefix <code>no_serial</code> is used.
+The random identifier is a unique string generated using the <code>uuid4()</code>
+function from the <code>uuid</code> module in Python.
+This allows for easy identification and sorting of reports.</p>
+<ul>
+<li>Valid report name: <code>report_1726496218_1234567890</code></li>
+<li>Valid report name (no serial number): <code>report_1726496218_no_serial_808007</code></li>
+</ul>
+<p><strong>Functions:</strong></p>
+<ul>
+<li><code>load</code> <em>(ResultRunStore)</em>: Load report to the CouchDB <strong>report</strong> database.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># conftest</span>
+<span class="k">def</span> <span class="nf">finish_executing</span><span class="p">():</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="n">get_current_report</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">report</span><span class="p">:</span>
+        <span class="n">loader</span> <span class="o">=</span> <span class="n">CouchdbLoader</span><span class="p">(</span><span class="n">CouchdbConfig</span><span class="p">())</span>
+        <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">fill_actions_after_test</span><span class="p">(</span><span class="n">post_run_functions</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+    <span class="n">post_run_functions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">finish_executing</span><span class="p">)</span>
+    <span class="k">yield</span>
+</code></pre></div>
+<h4 id="standcloudloader">StandCloudLoader<a class="headerlink" href="#standcloudloader" title="Permanent link">&para;</a></h4>
+<p>Used to write reports to the <strong>StandCloud</strong>.
+A login to <strong>StandCloud</strong> is required to work.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>address</code> <em>(str | None)</em>: StandCloud address. Defaults to None
+  (the value is taken from <a href="../hardpy_config/">hardpy.toml</a>). Can be used outside of <strong>HardPy</strong> applications.</li>
+</ul>
+<p><strong>Functions:</strong></p>
+<ul>
+<li><code>healthcheck</code>: Healthcheck of StandCloud API.
+  Returns the <code>requests.Response</code> object.</li>
+<li><code>load</code> <em>(ResultRunStore)</em>: Load report to the StandCloud.
+  Returns the <code>requests.Response</code> object.
+  Status code 201 is considered a successful status.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># conftest</span>
+<span class="k">def</span> <span class="nf">finish_executing</span><span class="p">():</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="n">get_current_report</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">report</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">loader</span> <span class="o">=</span> <span class="n">StandCloudLoader</span><span class="p">()</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="n">HTTPStatus</span><span class="o">.</span><span class="n">CREATED</span><span class="p">:</span>
+                <span class="n">set_operator_message</span><span class="p">(</span>
+                    <span class="s2">&quot;Report not uploaded to StandCloud, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;status code: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, text: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="k">except</span> <span class="n">StandCloudError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">set_operator_message</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">fill_actions_after_test</span><span class="p">(</span><span class="n">post_run_functions</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+    <span class="n">post_run_functions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">finish_executing</span><span class="p">)</span>
+    <span class="k">yield</span>
+</code></pre></div>
+<h4 id="standcloudconnector">StandCloudConnector<a class="headerlink" href="#standcloudconnector" title="Permanent link">&para;</a></h4>
+<p>Used to create the <strong>StandCloud</strong> connection addresses.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>addr</code> <em>(str)</em>: StandCloud service name.
+  For example: <strong>demo.standcloud.io</strong></li>
+<li><code>api_mode</code> <em>(StandCloudAPIMode)</em>: StandCloud API mode:
+  <strong>hardpy</strong> for test stand, <strong>integration</strong> for third-party service.
+  Default: <code>StandCloudAPIMode.HARDPY</code></li>
+<li><code>api_version</code> <em>(int)</em>: StandCloud API version.
+  Default: 1.</li>
+</ul>
+<h4 id="standcloudreader">StandCloudReader<a class="headerlink" href="#standcloudreader" title="Permanent link">&para;</a></h4>
+<p>Used to read data from the <strong>StandCloud</strong>.
+A login to <strong>StandCloud</strong> is required to work.
+For more information, see the example <a href="../../examples/stand_cloud_reader/">StandCloud reader</a></p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>sc_connector</code> (<a href="#standcloudconnector">StandCloudConnector</a>): <strong>StandCloud</strong> connection data.</li>
+</ul>
+<p><strong>Functions:</strong></p>
+<ul>
+<li><code>test_run</code> <em>(run_id: str, params: dict[str, Any])</em> - get run data from <code>/test_run</code> endpoint.
+  All test run filters can view in REST documentation.
+  Return <code>requests.Response</code> class with test run data.</li>
+<li><code>tested_dut</code> <em>(params: dict[str, Any])</em> - get last tested DUT's data from <code>/tested_dut</code> endpoint.
+  All tested dut's filters can view in REST documentation.
+  Return <code>requests.Response</code> class with tested DUT's data.</li>
+</ul>
+<p>In terms of filters, the difference between <code>test_run</code> and <code>tested_dut</code> in terms of filters
+is that in test_run allows you to request a filter for the number of runs - <code>number_of_attempt</code>,
+while tested_dut allows you to request a filter for the number of runs - <code>attempt_count</code>.
+In other words, <code>tested_dut</code> will return the last run with the specified number of runs specified in <code>attempt_count</code>,
+and <code>test_run</code> will return the runs whose start number is equal to the <code>number_of_attempt</code> specified in the filter.</p>
+<p><strong>Examples:</strong></p>
+<div class="highlight"><pre><span></span><code>    <span class="n">reader</span> <span class="o">=</span> <span class="n">StandCloudReader</span><span class="p">(</span><span class="n">StandCloudConnector</span><span class="p">(</span><span class="n">addr</span><span class="o">=</span><span class="s2">&quot;demo.standcloud.io&quot;</span><span class="p">))</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">test_run</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="s2">&quot;0196434d-e8f7-7ce1-81f7-e16f20487494&quot;</span><span class="p">)</span>
+    <span class="n">status_code</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span>
+    <span class="n">response_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">response_data</span><span class="p">)</span>
+
+    <span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;part_number&quot;</span><span class="p">:</span> <span class="s2">&quot;part_number_1&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;pass&quot;</span><span class="p">,</span> <span class="s2">&quot;firmware_version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">}</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">test_run</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">param</span><span class="p">)</span>
+    <span class="n">status_code</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span>
+    <span class="n">response_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">response_data</span><span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">tested_dut</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+    <span class="n">status_code</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span>
+    <span class="n">response_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">response_data</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="instrument">Instrument<a class="headerlink" href="#instrument" title="Permanent link">&para;</a></h4>
+<p>The class is used to store information about test equipment that forms part of the test bench. 
+It is used with the <a href="#set_instrument">set_instrument</a> function.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>name</code> <em>(str | None)</em>: Instrument name  </li>
+<li><code>revision</code> <em>(str | None)</em>: Instrument revision  </li>
+<li><code>serial_number</code> <em>(str | None)</em>: Instrument serial number  </li>
+<li><code>part_number</code> <em>(str | None)</em>: Instrument part number  </li>
+<li><code>number</code> <em>(int | None)</em>: Instrument number  </li>
+<li><code>comment</code> <em>(str | None)</em>: Instrument comment  </li>
+<li><code>info</code> <em>(Mapping[str, str | int | float | None])</em>: Additional instrument info as key-value pairs  </li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><em>(int)</em>: instrument index</li>
+</ul>
+<p><strong>Validation Rules:</strong></p>
+<ul>
+<li><code>number</code> must be positive if specified (≥ 0)</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">oscilloscope</span> <span class="o">=</span> <span class="n">Instrument</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Oscilloscope&quot;</span><span class="p">,</span>
+    <span class="n">revision</span><span class="o">=</span><span class="s2">&quot;1.2.3&quot;</span><span class="p">,</span>
+    <span class="n">serial_number</span><span class="o">=</span><span class="s2">&quot;1325&quot;</span><span class="p">,</span>
+    <span class="n">part_number</span><span class="o">=</span><span class="s2">&quot;EOSC_23&quot;</span><span class="p">,</span>
+    <span class="n">number</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">info</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;DSO-X 2024A&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;bandwidth&quot;</span><span class="p">:</span> <span class="s2">&quot;200MHz&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">set_instrument</span><span class="p">(</span><span class="n">oscilloscope</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="subunit">SubUnit<a class="headerlink" href="#subunit" title="Permanent link">&para;</a></h4>
+<p>This class contains information about the sub-unit of the DUT. 
+It is used with the <a href="#set_dut_sub_unit">set_dut_sub_unit</a> function.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>serial_number</code> <em>(str | None)</em>: unit serial number</li>
+<li><code>part_number</code> <em>(str | None)</em>: unit part number</li>
+<li><code>name</code> <em>(str | None)</em>: unit name  </li>
+<li><code>type</code> <em>(str | None)</em>: unit type</li>
+<li><code>revision</code> <em>(str | None)</em>: unit revision  </li>
+<li><code>info</code> <em>(Mapping[str, str | int | float  | None] | None)</em>: additional unit info as key-value pairs  </li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_dut_sub_unit</span><span class="p">():</span>
+    <span class="n">sub_unit</span> <span class="o">=</span> <span class="n">SubUnit</span><span class="p">(</span>
+        <span class="n">serial_number</span><span class="o">=</span><span class="s2">&quot;12345&quot;</span><span class="p">,</span>
+        <span class="n">part_number</span><span class="o">=</span><span class="s2">&quot;part_number_1&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Test Device&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;PCBA&quot;</span><span class="p">,</span>
+        <span class="n">revision</span><span class="o">=</span><span class="s2">&quot;REV1.0&quot;</span><span class="p">,</span>
+        <span class="n">info</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;sw_version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">hardpy</span><span class="o">.</span><span class="n">set_dut_sub_unit</span><span class="p">(</span><span class="n">sub_unit</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="numericmeasurement">NumericMeasurement<a class="headerlink" href="#numericmeasurement" title="Permanent link">&para;</a></h3>
+<p>This class contains information about numeric measurement. 
+It is used with the <a href="#set_case_measurement">set_case_measurement</a> function.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>value</code> <em>(float | int)</em>: numeric measure value.</li>
+<li><code>name</code> <em>(str | None)</em>: numeric measure name.</li>
+<li><code>unit</code> <em>(str | None)</em>: unit of numeric measure.</li>
+<li><code>operation</code>: comparison operators of numeric measure.</li>
+<li><code>comparison_value</code> <em>(ComparisonOperation | None)</em>: value to compare against.</li>
+<li><code>lower_limit</code>: <em>(float | int)</em>: lower limit for range operations.</li>
+<li><code>upper_limit</code> <em>(float | int)</em>:upper limit for range operations.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><em>(int)</em>: measurement index</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_measurement</span><span class="p">():</span>
+    <span class="n">meas_1</span> <span class="o">=</span> <span class="n">NumericMeasurement</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="n">ComparisonOperation</span><span class="o">.</span><span class="n">EQ</span><span class="p">,</span> <span class="n">comparison_value</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">set_case_measurement</span><span class="p">(</span><span class="n">meas_1</span><span class="p">)</span>
+    <span class="n">meas_2</span> <span class="o">=</span> <span class="n">NumericMeasurement</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;V&quot;</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="n">ComparisonOperation</span><span class="o">.</span><span class="n">GTLT</span><span class="p">,</span> <span class="n">lower_limit</span><span class="o">=</span><span class="mf">2.9</span><span class="p">,</span> <span class="n">upper_limit</span><span class="o">=</span><span class="mf">3.5</span><span class="p">)</span>
+    <span class="n">set_case_measurement</span><span class="p">(</span><span class="n">meas_2</span><span class="p">)</span>
+    <span class="n">meas_3</span> <span class="o">=</span> <span class="n">NumericMeasurement</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">set_case_measurement</span><span class="p">(</span><span class="n">meas_3</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">meas_1</span><span class="o">.</span><span class="n">result</span>
+    <span class="k">assert</span> <span class="n">meas_2</span><span class="o">.</span><span class="n">result</span>
+</code></pre></div>
+<h3 id="stringmeasurement">StringMeasurement<a class="headerlink" href="#stringmeasurement" title="Permanent link">&para;</a></h3>
+<p>This class contains information about string measurement. 
+It is used with the <a href="#set_case_measurement">set_case_measurement</a> function.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>value</code> <em>(str)</em>: string measure value.</li>
+<li><code>name</code> <em>(str | None)</em>: string measure name.</li>
+<li><code>operation</code>: comparison operators of string measure (<strong>EQ</strong> and <strong>NE</strong>).</li>
+<li><code>comparison_value</code>: <em>(ComparisonOperation | None)</em>: value to compare against.</li>
+<li><code>casesensitive</code>: <em>bool=True</em>: case sensitivity.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_measurement</span><span class="p">():</span>
+    <span class="n">meas_1</span> <span class="o">=</span> <span class="n">StringMeasurement</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;1.2.0&quot;</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="n">ComparisonOperation</span><span class="o">.</span><span class="n">EQ</span><span class="p">,</span> <span class="n">comparison_value</span><span class="o">=</span><span class="s2">&quot;1.2.0&quot;</span><span class="p">)</span>
+    <span class="n">set_case_measurement</span><span class="p">(</span><span class="n">meas_1</span><span class="p">)</span>
+
+    <span class="n">meas_2</span> <span class="o">=</span> <span class="n">StringMeasurement</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;abc&quot;</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="n">ComparisonOperation</span><span class="o">.</span><span class="n">EQ</span><span class="p">,</span> <span class="n">casesensitive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">comparison_value</span><span class="o">=</span><span class="s2">&quot;ABC&quot;</span><span class="p">)</span>
+    <span class="n">set_case_measurement</span><span class="p">(</span><span class="n">meas_2</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">meas_1</span><span class="o">.</span><span class="n">result</span>
+    <span class="k">assert</span> <span class="n">meas_2</span><span class="o">.</span><span class="n">result</span>
+</code></pre></div>
+<h3 id="chart">Chart<a class="headerlink" href="#chart" title="Permanent link">&para;</a></h3>
+<p>This class contains information about chart (data series). 
+It is used with the <a href="#set_case_chart">set_case_chart</a> function.</p>
+<p>A <code>ValidationError</code> will result if the lengths of x_data, y_data, and marker_name differ.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>type</code> <em>(<a href="#charttype">ChartType</a>)</em>: chart type, LINE by default.</li>
+<li><code>title</code> <em>(str | None)</em>: chart title.</li>
+<li><code>x_label</code> <em>(str | None)</em>: x label name.</li>
+<li><code>y_label</code> <em>(str | None)</em>: y label name.</li>
+<li><code>marker_name</code> <em>(list[str | None])</em>: data series marker name.</li>
+<li><code>x_data</code> <em>(list[list[int | float]])</em>: x data series. Each data series is its own list.</li>
+<li><code>y_data</code> <em>(list[list[int | float]])</em>: y data series. Each data series is its own list.</li>
+</ul>
+<p><strong>Functions:</strong></p>
+<ul>
+<li><code>add_series</code> <em>(x_data: list[int | float], y_data:</em> 
+  <em>list[int | float], marker_name: str | None = None)</em>: add data series to current <code>Chart</code>. </li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_chart</span><span class="p">():</span>
+    <span class="n">chart</span> <span class="o">=</span> <span class="n">hardpy</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">hardpy</span><span class="o">.</span><span class="n">ChartType</span><span class="o">.</span><span class="n">LINE</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;title&quot;</span><span class="p">,</span>
+        <span class="n">x_label</span><span class="o">=</span><span class="s2">&quot;x_label&quot;</span><span class="p">,</span>
+        <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;y_label&quot;</span><span class="p">,</span>
+        <span class="n">marker_name</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;marker_name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+        <span class="n">x_data</span><span class="o">=</span><span class="p">[</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="p">],</span>
+        <span class="n">y_data</span><span class="o">=</span><span class="p">[</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">chart</span><span class="o">.</span><span class="n">add_series</span><span class="p">(</span><span class="n">x_data</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">y_data</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="n">marker_name</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
+    <span class="n">hardpy</span><span class="o">.</span><span class="n">set_case_chart</span><span class="p">(</span><span class="n">chart</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="errorcode">ErrorCode<a class="headerlink" href="#errorcode" title="Permanent link">&para;</a></h3>
+<p>This class saves the error code of the test plan to the database.
+Only the first error code from this class is saved.</p>
+<p>The <code>ErrorCode</code> class must be called from the <code>assert</code>. 
+Otherwise, an extra error code may be saved.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>error_code</code> <em>(int)</em>: error code (non-negative integer).</li>
+<li><code>message</code> <em>(str | None)</em>: error code message.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_error_code</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="n">hardpy</span><span class="o">.</span><span class="n">ErrorCode</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;error code message&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="enum">Enum<a class="headerlink" href="#enum" title="Permanent link">&para;</a></h2>
+<h3 id="comparisonoperation">ComparisonOperation<a class="headerlink" href="#comparisonoperation" title="Permanent link">&para;</a></h3>
+<p>A comparison operation for the measurements.</p>
+<p><strong>Values:</strong></p>
+<ul>
+<li><em>EQ</em>: equal.</li>
+<li><em>NE</em>: not equal.</li>
+<li><em>GT</em>: greater than.</li>
+<li><em>GE</em>: greater or equal.</li>
+<li><em>LT</em>: less than.</li>
+<li><em>LE</em>: less or equal.</li>
+<li><em>GTLT</em>: greater than lower limit, less than upper limit.</li>
+<li><em>GELE</em>: greater or equal than lower limit, less or equal than upper limit.</li>
+<li><em>GELT</em>: greater or equal than lower limit, less than upper limit.</li>
+<li><em>GTLE</em>: greater than lower limit, less or equal than upper limit.</li>
+<li><em>LTGT</em>: less than lower limit or greater than upper limit.</li>
+<li><em>LEGE</em>: less or equal than lower limit or greater or equal than upper limit.</li>
+<li><em>LEGT</em>: less or equal than lower limit or greater than upper limit.</li>
+<li><em>LTGE</em>: less than lower limit or greater or equal than upper limit.</li>
+</ul>
+<h3 id="charttype">ChartType<a class="headerlink" href="#charttype" title="Permanent link">&para;</a></h3>
+<p>This is a chart type for the <a href="#chart">Chart</a> class.</p>
+<p><strong>Values:</strong></p>
+<ul>
+<li><em>LINE</em>: line.</li>
+<li><em>LINE_LOG_X</em>: line_log_x.</li>
+<li><em>LINE_LOG_Y</em>: line_log_y.</li>
+<li><em>LOG_X_Y</em>: log_x_y.</li>
+</ul>
+<h2 id="fixture">Fixture<a class="headerlink" href="#fixture" title="Permanent link">&para;</a></h2>
+<h4 id="post_run_functions">post_run_functions<a class="headerlink" href="#post_run_functions" title="Permanent link">&para;</a></h4>
+<p>To execute actions at the end of testing, you can use the fixture <strong>post_run_functions</strong>.
+This fixture is a <code>list[Callable]</code> and you can write functions into it that must be executed at the end of testing.</p>
+<p>Fill this list in conftest.py and functions from this list will be called after tests run (at the end of pytest_sessionfinish).</p>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><em>(list[Callable])</em>: list of post run methods</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># conftest.py file</span>
+<span class="k">def</span> <span class="nf">finish_executing</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pytest finished&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">fill_actions_after_test</span><span class="p">(</span><span class="n">post_run_functions</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+    <span class="n">post_run_functions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">finish_executing</span><span class="p">)</span>
+    <span class="k">yield</span>
+</code></pre></div>
+<h4 id="hardpy_start_args">hardpy_start_args<a class="headerlink" href="#hardpy_start_args" title="Permanent link">&para;</a></h4>
+<p>To access <strong>HardPy</strong> start arguments passed via command line, you can use the <code>hardpy_start_args</code> fixture.
+This fixture returns a <code>dict</code> containing parsed key-value pairs from <code>--hardpy-start-arg</code> options.</p>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><em>(dict)</em>: dictionary of start arguments (key-value pairs)</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_with_start_args</span><span class="p">(</span><span class="n">hardpy_start_args</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">hardpy_start_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;test_mode&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;debug&quot;</span><span class="p">:</span>
+        <span class="n">hardpy</span><span class="o">.</span><span class="n">set_message</span><span class="p">(</span><span class="s2">&quot;Running in debug mode&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="marker">Marker<a class="headerlink" href="#marker" title="Permanent link">&para;</a></h2>
+<h4 id="case_name">case_name<a class="headerlink" href="#case_name" title="Permanent link">&para;</a></h4>
+<p>Sets a text name for the test case (default: function name)</p>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">case_name</span><span class="p">(</span><span class="s2">&quot;Simple case 1&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_one</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+</code></pre></div>
+<h4 id="module_name">module_name<a class="headerlink" href="#module_name" title="Permanent link">&para;</a></h4>
+<p>Sets a text name for the test module (file) (default: module name)</p>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">module_name</span><span class="p">(</span><span class="s2">&quot;Module 1&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="case_group">case_group<a class="headerlink" href="#case_group" title="Permanent link">&para;</a></h4>
+<p>Sets the group for a test case. Valid groups: <code>setup</code>, <code>main</code>, <code>teardown</code> (default: <code>main</code>)</p>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">hardpy</span> <span class="kn">import</span> <span class="n">Group</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">case_group</span><span class="p">(</span><span class="n">Group</span><span class="o">.</span><span class="n">SETUP</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_setup_case</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">case_group</span><span class="p">(</span><span class="s2">&quot;teardown&quot;</span><span class="p">)</span>  
+<span class="k">def</span> <span class="nf">test_teardown_case</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+</code></pre></div>
+<h4 id="module_group">module_group<a class="headerlink" href="#module_group" title="Permanent link">&para;</a></h4>
+<p>Sets the group for all test cases in a module. Valid groups: <code>setup</code>, <code>main</code>, <code>teardown</code> (default: <code>main</code>)</p>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">from</span> <span class="nn">hardpy</span> <span class="kn">import</span> <span class="n">Group</span>
+
+<span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">module_group</span><span class="p">(</span><span class="n">Group</span><span class="o">.</span><span class="n">TEARDOWN</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test_cleanup1</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+
+<span class="k">def</span> <span class="nf">test_cleanup2</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+</code></pre></div>
+<h4 id="dependency">dependency<a class="headerlink" href="#dependency" title="Permanent link">&para;</a></h4>
+<p>Skips the test case/module if the main test fails/skipped/errored.
+For more information, see the example <a href="../../examples/skip_test/">skip test</a>
+and <a href="../../features/features/#skipping-the-tests">skip feature description</a>.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">#test_1.py</span>
+<span class="k">def</span> <span class="nf">test_one</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">False</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">dependency</span><span class="p">(</span><span class="s2">&quot;test_1::test_one&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_two</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+</code></pre></div>
+<h4 id="attempt">attempt<a class="headerlink" href="#attempt" title="Permanent link">&para;</a></h4>
+<p>If a test is marked <code>attempt</code>, it will be repeated if it fails the number of
+attempts specified by the mark.
+The test will be repeated until it is passed.
+There is a 1 second pause between attempts.
+Each attempt clears the case data, including the message, 
+the assertion message, the chart, the measurements, and the artifact.
+For more information, see the example <a href="../../examples/attempts/">attempts</a>.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">attempt</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_attempts</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">False</span>
+</code></pre></div>
+<h4 id="critical">critical<a class="headerlink" href="#critical" title="Permanent link">&para;</a></h4>
+<p>Marks test or module as critical.
+Failing/skipped critical tests skip all subsequent tests.
+For implementation details see <a href="../../examples/critical_test/">critical tests example</a>.</p>
+<p><strong>Example (test level):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">critical</span>
+<span class="k">def</span> <span class="nf">test_core_feature</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">check_core_functionality</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Example (module level):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">critical</span>
+
+<span class="k">def</span> <span class="nf">test_db_connection</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">connect_to_database</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>Critical test passes - Continue normally</li>
+<li>Critical test fails/skips - Skip all remaining tests</li>
+<li>Any test fails in critical module - Skip all remaining tests</li>
+</ul>
+<h2 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h2>
+<p><strong>pytest-hardpy</strong> has several options to run:</p>
+<h4 id="hardpy-pt">hardpy-pt<a class="headerlink" href="#hardpy-pt" title="Permanent link">&para;</a></h4>
+<p>Option to enable the <strong>pytest-hardpy</strong> plugin.</p>
+<div class="highlight"><pre><span></span><code>--hardpy-pt
+</code></pre></div>
+<h4 id="hardpy-db-url">hardpy-db-url<a class="headerlink" href="#hardpy-db-url" title="Permanent link">&para;</a></h4>
+<p>The CouchDB instance url for the <strong>statestore</strong> and <strong>runstore</strong> databases.
+The default is <code>http://dev:dev@localhost:5984/</code>.</p>
+<div class="highlight"><pre><span></span><code>--hardpy-db-url
+</code></pre></div>
+<h4 id="hardpy-tests-name">hardpy-tests-name<a class="headerlink" href="#hardpy-tests-name" title="Permanent link">&para;</a></h4>
+<p>The <strong>HardPy</strong> tests name.
+The default value is <strong>Tests</strong>.</p>
+<div class="highlight"><pre><span></span><code>--hardpy-tests-name
+</code></pre></div>
+<h4 id="hardpy-clear-database">hardpy-clear-database<a class="headerlink" href="#hardpy-clear-database" title="Permanent link">&para;</a></h4>
+<p>Option to clean <strong>statestore</strong> and <strong>runstore</strong> databases before running pytest.</p>
+<div class="highlight"><pre><span></span><code>--hardpy-clear-database
+</code></pre></div>
+<h4 id="sc-address">sc-address<a class="headerlink" href="#sc-address" title="Permanent link">&para;</a></h4>
+<p><strong>StandCloud</strong> address.
+The default is empty string.</p>
+<div class="highlight"><pre><span></span><code>--sc-address
+</code></pre></div>
+<h4 id="sc-connection-only">sc-connection-only<a class="headerlink" href="#sc-connection-only" title="Permanent link">&para;</a></h4>
+<p>Check <strong>StandCloud</strong> service availability.
+The default is <em>False</em>.</p>
+<div class="highlight"><pre><span></span><code>--sc-connection-only
+</code></pre></div>
+<h4 id="sc-autosync">sc-autosync<a class="headerlink" href="#sc-autosync" title="Permanent link">&para;</a></h4>
+<p>Enable <strong>HardPy</strong> to <strong>StandCloud</strong> test report data auto synchroniztion.
+The default is <em>False</em>.</p>
+<div class="highlight"><pre><span></span><code>--sc-autosync
+</code></pre></div>
+<h4 id="hardpy-start-arg">hardpy-start-arg<a class="headerlink" href="#hardpy-start-arg" title="Permanent link">&para;</a></h4>
+<p>Dynamic arguments for test execution in key=value format. Can be specified multiple times.</p>
+<div class="highlight"><pre><span></span><code>--hardpy-start-arg<span class="w"> </span><span class="nv">key</span><span class="o">=</span>value
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../hardpy_panel/" class="md-footer__link md-footer__link--prev" aria-label="Previous: HardPy panel">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                HardPy panel
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../stand_cloud/" class="md-footer__link md-footer__link--next" aria-label="Next: StandCloud">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                StandCloud
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.path", "navigation.top", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.8fd75fb4.min.js"></script>
+      
+        <script src="../../js/print-site.js"></script>
+      
+    
+  <script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
+</html>

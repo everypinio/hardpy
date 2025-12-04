@@ -1,0 +1,2625 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Everypin">
+      
+      
+        <link rel="canonical" href="https://everypinio.github.io/hardpy/features/features/">
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+        <link rel="next" href="../../documentation/">
+      
+      
+      <link rel="icon" href="../../img/logo192.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.10">
+    
+    
+      
+        <title>Features - HardPy</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e359304.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings1.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings2.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings3.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings4.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings5.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings6.css">
+    
+      <link rel="stylesheet" href="../../css/print-site.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-material.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function n(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],n("js",new Date),n("config","G-6Z35DZJBP7"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){this.value&&n("event","search",{search_term:this.value})}),document$.subscribe(function(){var a=document.forms.feedback;if(void 0!==a)for(var e of a.querySelectorAll("[type=submit]"))e.addEventListener("click",function(e){e.preventDefault();var t=document.location.pathname,e=this.getAttribute("data-md-value");n("event","feedback",{page:t,data:e}),a.firstElementChild.disabled=!0;e=a.querySelector(".md-feedback__note [data-md-value='"+e+"']");e&&(e.hidden=!1)}),a.hidden=!1}),location$.subscribe(function(e){n("config","G-6Z35DZJBP7",{page_path:e.pathname})})});var e=document.createElement("script");e.async=!0,e.src="https://www.googletagmanager.com/gtag/js?id=G-6Z35DZJBP7",document.getElementById("__analytics").insertAdjacentElement("afterEnd",e)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#features" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="HardPy" class="md-header__button md-logo" aria-label="HardPy" data-md-component="logo">
+      
+  <img src="../../img/logo192.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            HardPy
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Features
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/everypinio/hardpy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    everypinio/hardpy
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  HardPy
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+    
+  
+  Features
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../documentation/" class="md-tabs__link">
+          
+  
+    
+  
+  Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/" class="md-tabs__link">
+          
+  
+    
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../about/development/" class="md-tabs__link">
+          
+  
+    
+  
+  About
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../changelog/" class="md-tabs__link">
+        
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="HardPy" class="md-nav__button md-logo" aria-label="HardPy" data-md-component="logo">
+      
+  <img src="../../img/logo192.png" alt="logo">
+
+    </a>
+    HardPy
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/everypinio/hardpy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    everypinio/hardpy
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HardPy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Features
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Features
+  </span>
+  
+
+      </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="Contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#operator-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operator panel
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operator panel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#viewing-tests-in-the-operator-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      Viewing tests in the operator panel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interacting-with-tests-in-the-operator-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interacting with tests in the operator panel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operator-panel-language" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operator panel language
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-size-startstop-button" class="md-nav__link">
+    <span class="md-ellipsis">
+      Full-size start/stop button
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-completion-modal-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Test completion modal results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sound-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sound notifications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-test-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manual test selection
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      CLI
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CLI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-template-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creating template project
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-hardpy-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running the HardPy server
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starting-the-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Starting the tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stopping-the-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stopping the tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-the-status-of-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Checking the status of tests
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storing-test-result-in-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Storing test result in database
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-databases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Other databases
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pytest-markers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pytest markers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pytest markers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#running-multiple-test-attempts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running multiple test attempts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skipping-the-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Skipping the tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#critical-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Critical tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-case-and-test-module-grouping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Test case and test module grouping
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logging-approaches-in-hardpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logging approaches in HardPy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Logging approaches in HardPy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#database-logging-with-set_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database logging with set_message
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactive-dialogs-with-run_dialog_box" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interactive dialogs with run_dialog_box
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operator-messages-with-set_operator_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operator messages with set_operator_message
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logging-recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logging recommendation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standcloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      StandCloud
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="StandCloud">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storing-test-result-to-standcloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      Storing test result to StandCloud
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading-test-result-from-standcloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading test result from StandCloud
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other" class="md-nav__link">
+    <span class="md-ellipsis">
+      Other
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Other">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Measurement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chart
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-hardpy-instances-in-a-single-stand" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple HardPy instances in a single stand
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-test-plan-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple test plan configurations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../documentation/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Documentation
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documentation/cli/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CLI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documentation/hardpy_config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documentation/database/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documentation/hardpy_panel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HardPy panel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documentation/pytest_hardpy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pytest-hardpy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documentation/stand_cloud/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Examples
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/attempts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Attempts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/chart/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chart
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/db_in_ram/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CouchDB in RAM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/couchdb_load/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CouchDB load
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/critical_test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Critical test
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/dialog_box/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dialog box
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/hardpy_launch/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HardPy launch
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/hello_hardpy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hello HardPy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/launch_arguments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Launch arguments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/logging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pytest logging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/measurement/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Measurement
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/minute_parity/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Minute parity
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/multiple_configs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multiple configs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/multiple_stands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multiple stands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/operator_msg/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Operator message
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/frontend_remote_access/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Remote access
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/skip_test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skip test
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/stand_cloud/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/stand_cloud_reader/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud read data
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/stand_cloud_thirdparty_auth/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud third party authorization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/stand_equipment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stand equipment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            About
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/development/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Development
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/frontend_sync/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frontend data synchronization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="Contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#operator-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operator panel
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operator panel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#viewing-tests-in-the-operator-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      Viewing tests in the operator panel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interacting-with-tests-in-the-operator-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interacting with tests in the operator panel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operator-panel-language" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operator panel language
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-size-startstop-button" class="md-nav__link">
+    <span class="md-ellipsis">
+      Full-size start/stop button
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-completion-modal-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Test completion modal results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sound-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sound notifications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-test-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manual test selection
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      CLI
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CLI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-template-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creating template project
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-hardpy-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running the HardPy server
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starting-the-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Starting the tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stopping-the-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stopping the tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-the-status-of-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Checking the status of tests
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storing-test-result-in-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Storing test result in database
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-databases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Other databases
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pytest-markers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pytest markers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pytest markers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#running-multiple-test-attempts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running multiple test attempts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skipping-the-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Skipping the tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#critical-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Critical tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-case-and-test-module-grouping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Test case and test module grouping
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logging-approaches-in-hardpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logging approaches in HardPy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Logging approaches in HardPy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#database-logging-with-set_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database logging with set_message
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactive-dialogs-with-run_dialog_box" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interactive dialogs with run_dialog_box
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operator-messages-with-set_operator_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operator messages with set_operator_message
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logging-recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logging recommendation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standcloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      StandCloud
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="StandCloud">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storing-test-result-to-standcloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      Storing test result to StandCloud
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading-test-result-from-standcloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading test result from StandCloud
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other" class="md-nav__link">
+    <span class="md-ellipsis">
+      Other
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Other">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Measurement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chart
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-hardpy-instances-in-a-single-stand" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple HardPy instances in a single stand
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-test-plan-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple test plan configurations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/everypinio/hardpy/edit/master/docs/features/features.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/everypinio/hardpy/raw/master/docs/features/features.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
+    </a>
+  
+
+
+<h1 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h1>
+<h2 id="operator-panel">Operator panel<a class="headerlink" href="#operator-panel" title="Permanent link">&para;</a></h2>
+<h3 id="viewing-tests-in-the-operator-panel">Viewing tests in the operator panel<a class="headerlink" href="#viewing-tests-in-the-operator-panel" title="Permanent link">&para;</a></h3>
+<p>The operator panel allows you to view the test hierarchy with <strong>test folder/test file/function</strong> levels.
+An example of its use can be found on page <a href="../../documentation/hardpy_panel/">HardPy panel</a>.
+User can launch operator panel using <a href="../../documentation/cli/#hardpy-run">hardpy run</a> command.</p>
+<h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/hardpy_panel.gif" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/hardpy_panel.gif" alt="hardpy panel" style="width:600;"></a>
+</h1>
+
+<h3 id="interacting-with-tests-in-the-operator-panel">Interacting with tests in the operator panel<a class="headerlink" href="#interacting-with-tests-in-the-operator-panel" title="Permanent link">&para;</a></h3>
+<p>The user can interact with the tests through dialog boxes in the operator panel.
+<strong>HardPy</strong> provides the ability to enter <a href="../../documentation/hardpy_panel/#text-input-field">text</a> or
+<a href="../../documentation/hardpy_panel/#number-input-field">numbers</a>, make selections using
+<a href="../../documentation/hardpy_panel/#checkbox">checkboxes</a> or
+<a href="../../documentation/hardpy_panel/#radiobutton">radio buttons</a>,
+guide the user through <a href="../../documentation/hardpy_panel/#multiple-steps">multiple steps</a>
+in a single window, display <a href="../../documentation/pytest_hardpy/#imagecomponent">images</a> to the user,
+and insert <a href="../../documentation/pytest_hardpy/#htmlcomponent">HTML components</a> into the dialog box using iframes.</p>
+<p>In dialog boxes, the user must confirm their action by clicking the <strong>Confirm</strong> button.
+Closing the dialog box prematurely will abort the test.</p>
+<p>If the user only needs to provide information, an
+<a href="../../documentation/hardpy_panel/#operator-message">operator message</a> can be used.
+Unlike dialog boxes, the user cannot enter any information, only close the window.
+User can also close the operator message from within the test code and run it in non-blocking mode,
+so that displaying the window does not stop the test.</p>
+<h3 id="operator-panel-language">Operator panel language<a class="headerlink" href="#operator-panel-language" title="Permanent link">&para;</a></h3>
+<p>The user can set one of the following operator panel languages ​​via the <em>hardpy.toml</em>.
+Available languages are <a href="../../documentation/hardpy_panel/#languages">there</a>.</p>
+<p>The example of file:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[frontend]</span>
+<span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;zh&quot;</span>
+</code></pre></div>
+<h3 id="full-size-startstop-button">Full-size start/stop button<a class="headerlink" href="#full-size-startstop-button" title="Permanent link">&para;</a></h3>
+<p><strong>HardPy</strong> provides a full-size start/stop button layout option for improved usability across different devices and use cases.</p>
+<p><strong>Configuration</strong>:
+Enable the full-size button in your <code>hardpy.toml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[frontend]</span>
+<span class="n">full_size_button</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</code></pre></div>
+<h3 id="test-completion-modal-results">Test completion modal results<a class="headerlink" href="#test-completion-modal-results" title="Permanent link">&para;</a></h3>
+<p><strong>HardPy</strong> provides configurable modal result windows that display test completion status with detailed information:</p>
+<ul>
+<li><strong>PASS results</strong>: Green modal with auto-dismiss functionality</li>
+<li><strong>FAIL results</strong>: Red modal showing detailed failed test cases list</li>
+<li><strong>STOP results</strong>: Yellow modal displaying stopped test case information</li>
+</ul>
+<p><strong>Configuration Options</strong> in <code>hardpy.toml</code>:
+<div class="highlight"><pre><span></span><code><span class="k">[frontend.modal_result]</span>
+<span class="n">enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">auto_dismiss_pass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">auto_dismiss_timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+</code></pre></div></p>
+<p><strong>Features</strong>:</p>
+<ul>
+<li><strong>Auto-dismiss</strong>: PASS results automatically close after configurable timeout.</li>
+<li><strong>Manual dismissal</strong>: Click anywhere or press any key to close modal.</li>
+<li><strong>Detailed reporting</strong>: Failed test cases show module names, case names, and assertion messages.</li>
+<li><strong>Keyboard integration</strong>: Space key handling respects modal visibility states.</li>
+<li><strong>Responsive design</strong>: Adapts to different screen sizes with optimal readability.</li>
+</ul>
+<h3 id="sound-notifications">Sound notifications<a class="headerlink" href="#sound-notifications" title="Permanent link">&para;</a></h3>
+<p><strong>HardPy</strong> provides configurable sound notifications for test completion events.
+Users can enable audio feedback when tests reach completion status (PASS/FAIL/STOP).</p>
+<p><strong>Configuration</strong>:
+Enable sound notifications in your <code>hardpy.toml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[frontend]</span>
+<span class="n">sound_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</code></pre></div>
+<h3 id="manual-test-selection">Manual test selection<a class="headerlink" href="#manual-test-selection" title="Permanent link">&para;</a></h3>
+<p><strong>HardPy</strong> supports manual test selection, allowing operators to choose specific test cases
+to run instead of executing the entire test plan.</p>
+<p><strong>Key capabilities</strong>:</p>
+<ul>
+<li><strong>Checkbox-based selection</strong>: Each test case and module displays checkboxes for selection</li>
+<li><strong>Bulk operations</strong>: Select or deselect all tests in a module with a single checkbox</li>
+<li><strong>Visual feedback</strong>: Selected tests are marked for execution, non-selected tests are skipped</li>
+</ul>
+<p><strong>Workflow</strong>:</p>
+<ol>
+<li>Enable manual collect mode in settings menu</li>
+<li>Select desired tests using checkboxes</li>
+<li>Disable manual collect mode</li>
+<li>Start test execution - only selected tests will run</li>
+</ol>
+<p><strong>Configuration</strong>:
+Enable manual test selection in your <code>hardpy.toml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[frontend]</span>
+<span class="n">manual_collect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</code></pre></div>
+<h2 id="cli">CLI<a class="headerlink" href="#cli" title="Permanent link">&para;</a></h2>
+<h3 id="creating-template-project">Creating template project<a class="headerlink" href="#creating-template-project" title="Permanent link">&para;</a></h3>
+<p>The <strong>HardPy</strong> can create template project using the <a href="../../documentation/cli/#hardpy-init">hardpy init</a>
+command. An example of usage can be found in the <strong>how to init</strong> section among the examples, e.g. in
+<a href="../../examples/minute_parity/#how-to-start">minute parity</a>.</p>
+<div class="highlight"><pre><span></span><code>hardpy<span class="w"> </span>init<span class="w"> </span>minute_parity
+</code></pre></div>
+<h3 id="running-the-hardpy-server">Running the HardPy server<a class="headerlink" href="#running-the-hardpy-server" title="Permanent link">&para;</a></h3>
+<p>Based on pytest <strong>HardPy</strong> allows you to run pytest tests in the browser or from the command line.
+To run the <strong>HardPy</strong> server and view tests in the browser, execute the 
+<a href="../../documentation/cli/#hardpy-run">hardpy run</a> command.</p>
+<div class="highlight"><pre><span></span><code>hardpy<span class="w"> </span>run<span class="w"> </span>&lt;project_path&gt;
+</code></pre></div>
+<p>For example:</p>
+<div class="highlight"><pre><span></span><code>hardpy<span class="w"> </span>run<span class="w"> </span>examples/minute_parity<span class="w"> </span>
+</code></pre></div>
+<h3 id="starting-the-tests">Starting the tests<a class="headerlink" href="#starting-the-tests" title="Permanent link">&para;</a></h3>
+<p>The user can start the operator panel with the <strong>Start</strong> button.
+As an alternative, the user can start the tests using the 
+<a href="../../documentation/cli/#hardpy-start">hardpy start</a> command.</p>
+<div class="highlight"><pre><span></span><code>hardpy<span class="w"> </span>start<span class="w"> </span>&lt;project_path&gt;
+</code></pre></div>
+<p>For example:</p>
+<div class="highlight"><pre><span></span><code>hardpy<span class="w"> </span>start<span class="w"> </span>examples/minute_parity<span class="w"> </span>
+</code></pre></div>
+<p>Through the CLI, the user can start <strong>HardPy</strong> 
+<a href="../../documentation/cli/#hardpy-start">with arguments</a> that will be used during testing.</p>
+<div class="highlight"><pre><span></span><code>hardpy<span class="w"> </span>start<span class="w"> </span>--arg<span class="w"> </span><span class="nv">device_id</span><span class="o">=</span><span class="m">123</span><span class="w"> </span>--arg<span class="w"> </span><span class="nv">operator_name</span><span class="o">=</span>user<span class="w"> </span>examples/minute_parity<span class="w"> </span>
+</code></pre></div>
+<p>The user can also start the tests using <strong>pytest</strong>.</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pytest
+</code></pre></div>
+<h3 id="stopping-the-tests">Stopping the tests<a class="headerlink" href="#stopping-the-tests" title="Permanent link">&para;</a></h3>
+<p>The user can stop the tests during execution from the operator panel by clicking on the <strong>Stop</strong> button
+or using the <a href="../../documentation/cli/#hardpy-stop">hardpy stop</a> command.
+It is possible to stop tests from the console by sending an interrupt, e.g. “Ctrl-C” in Linux.</p>
+<h3 id="checking-the-status-of-tests">Checking the status of tests<a class="headerlink" href="#checking-the-status-of-tests" title="Permanent link">&para;</a></h3>
+<p>The user can check the status of tests using the <a href="../../documentation/cli/#hardpy-status">hardpy status</a> command.</p>
+<h2 id="database">Database<a class="headerlink" href="#database" title="Permanent link">&para;</a></h2>
+<h3 id="storing-test-result-in-database">Storing test result in database<a class="headerlink" href="#storing-test-result-in-database" title="Permanent link">&para;</a></h3>
+<p><strong>HardPy</strong> does not allow you to run tests without a running <a href="https://couchdb.apache.org/">CouchDB</a> database.
+This is a NoSQL database that ensures that the results of the current test run are committed,
+even if the tests are aborted early.</p>
+<p>To save the report history, the user must configure the <strong>conftest.py</strong> file using the
+<a href="../../documentation/pytest_hardpy/#couchdbloader">CouchdbLoader</a> or another adapter to save the data.
+By default, only the current report in the <a href="../../documentation/database/#runstore-scheme">runstore</a>
+database is stored in <strong>CouchDB</strong>.</p>
+<p>The test report format (database scheme) is described in the
+<a href="../../documentation/database/#runstore-scheme">database runstore</a> section.</p>
+<p>An example of configuring <strong>conftest.py</strong> to store test run history can be found in several examples,
+including the <a href="../../examples/couchdb_load/">couchdb_load</a> and
+<a href="../../examples/minute_parity/">minute_parity</a>.</p>
+<h3 id="other-databases">Other databases<a class="headerlink" href="#other-databases" title="Permanent link">&para;</a></h3>
+<p>In order to save data to other databases, users will need to write their own adapter class to convert their 
+HardPy <a href="../../documentation/database/#runstore-scheme">runstore schema</a> data into a suitable format.
+Next, the user should call their adapter class in the same way that <a href="../../documentation/pytest_hardpy/#couchdbloader">CouchdbLoader</a> 
+is called in the <a href="../../examples/couchdb_load/">couchdb_load</a> and
+<a href="../../examples/minute_parity/">minute_parity</a> examples.</p>
+<h2 id="pytest-markers">Pytest markers<a class="headerlink" href="#pytest-markers" title="Permanent link">&para;</a></h2>
+<h3 id="running-multiple-test-attempts">Running multiple test attempts<a class="headerlink" href="#running-multiple-test-attempts" title="Permanent link">&para;</a></h3>
+<p>The <strong>HardPy</strong> allows the user to attach an <a href="../../documentation/pytest_hardpy/#attempt">attempt</a>
+marker to a test, which allows the test to be repeated as many times as specified in
+the marker's content in the event of failure.</p>
+<h3 id="skipping-the-tests">Skipping the tests<a class="headerlink" href="#skipping-the-tests" title="Permanent link">&para;</a></h3>
+<p>The <strong>HardPy</strong> allows the user to skip tests on <a href="../../documentation/pytest_hardpy/#dependency">dependency</a>
+markers.
+The user can specify that a test or an entire module depends on another test.
+In this way, tests can be defined whose failure will prevent the marked tests from running.
+The user can also create a dependency on several test cases or modules.
+If the name of the dependency does not exist, the test will be started.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">#test_1.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="k">def</span> <span class="nf">test_a</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">False</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">dependency</span><span class="p">(</span><span class="s2">&quot;test_1::test_a&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_b</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">#test_2.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">dependency</span><span class="p">(</span><span class="s2">&quot;test_1&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test_a</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">False</span>
+
+<span class="k">def</span> <span class="nf">test_b</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">dependency</span><span class="p">(</span><span class="s2">&quot;test_2::test_a&quot;</span><span class="p">)</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">dependency</span><span class="p">(</span><span class="s2">&quot;test_2::test_b&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_c</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+</code></pre></div>
+<p>An example of its use can be found on page <a href="../../examples/skip_test/">skip test</a>.</p>
+<h3 id="critical-tests">Critical tests<a class="headerlink" href="#critical-tests" title="Permanent link">&para;</a></h3>
+<p>The <strong>HardPy</strong> allows the user to skip subsequent tests marked as <a href="../../documentation/pytest_hardpy/#critical">critical</a>
+marker, if a critical test fails or is skipped.
+The user can designate individual tests or entire modules as critical.
+If a test case is marked as critical, its failure will skip all remaining tests in the current and subsequent modules.<br />
+If an entire module is marked as critical, the failure of any test within it will skip all remaining tests in that module and subsequent modules.  </p>
+<p><strong>Example (test level):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">critical</span>
+<span class="k">def</span> <span class="nf">test_a</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">False</span>
+
+<span class="k">def</span> <span class="nf">test_b</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+</code></pre></div>
+<p><strong>Example (module level):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">critical</span>
+
+<span class="k">def</span> <span class="nf">test_c</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+</code></pre></div>
+<p>An example of its use can be found on page <a href="../../examples/critical_test/">critical</a>.</p>
+<h3 id="test-case-and-test-module-grouping">Test case and test module grouping<a class="headerlink" href="#test-case-and-test-module-grouping" title="Permanent link">&para;</a></h3>
+<p>The <strong>HardPy</strong> allows users to organize tests into logical groups: <code>setup</code>, <code>main</code>, and <code>teardown</code>.
+This grouping helps structure test execution flow and reporting.</p>
+<p>Users can designate individual tests or entire modules with specific groups.
+By default, all tests are in the <code>main</code> group.</p>
+<p><strong>Example (test case level):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">from</span> <span class="nn">hardpy.pytest_hardpy.utils.const</span> <span class="kn">import</span> <span class="n">Group</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">case_group</span><span class="p">(</span><span class="n">Group</span><span class="o">.</span><span class="n">SETUP</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_setup_case</span><span class="p">():</span>
+    <span class="c1"># This test will be executed first as part of setup</span>
+    <span class="k">assert</span> <span class="n">initialize_system</span><span class="p">()</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">case_group</span><span class="p">(</span><span class="n">Group</span><span class="o">.</span><span class="n">MAIN</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_main_functionality</span><span class="p">():</span>
+    <span class="c1"># This is a main test case</span>
+    <span class="k">assert</span> <span class="n">check_system_operation</span><span class="p">()</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">case_group</span><span class="p">(</span><span class="n">Group</span><span class="o">.</span><span class="n">TEARDOWN</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_cleanup</span><span class="p">():</span>
+    <span class="c1"># This test will clean up after execution</span>
+    <span class="k">assert</span> <span class="n">cleanup_resources</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Example (module level):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">from</span> <span class="nn">hardpy.pytest_hardpy.utils.const</span> <span class="kn">import</span> <span class="n">Group</span>
+
+<span class="c1"># All tests in this module will be teardown tests</span>
+<span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">module_group</span><span class="p">(</span><span class="n">Group</span><span class="o">.</span><span class="n">TEARDOWN</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test_cleanup_database</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">clear_database_tables</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">test_release_resources</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">free_allocated_memory</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">test_generate_final_report</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">create_execution_summary</span><span class="p">()</span>
+</code></pre></div>
+<p>An example of its use can be found on page <a href="../../documentation/pytest_hardpy/#case_group">test grouping documentation</a>.</p>
+<h2 id="logging-approaches-in-hardpy">Logging approaches in HardPy<a class="headerlink" href="#logging-approaches-in-hardpy" title="Permanent link">&para;</a></h2>
+<p><strong>HardPy</strong> provides several methods for logging and user interaction during testing.
+Choose the appropriate method based on whether you need to store information in the
+database or just display messages to the operator.</p>
+<h3 id="database-logging-with-set_message">Database logging with set_message<a class="headerlink" href="#database-logging-with-set_message" title="Permanent link">&para;</a></h3>
+<p>The <a href="../../documentation/pytest_hardpy/#set_message">set_message</a> function stores the log message in the report.
+Messages without specified keys get auto-generated keys, while known keys update existing messages.
+Perfect for tracking test progress, recording measurements, system states, and verification results.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_temperature_sensor</span><span class="p">():</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">read_temperature</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">temp</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>
+        <span class="n">set_message</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: High temperature </span><span class="si">{</span><span class="n">temp</span><span class="si">}</span><span class="s2">°C&quot;</span><span class="p">,</span> <span class="s2">&quot;temp_warning&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">set_message</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Normal temperature </span><span class="si">{</span><span class="n">temp</span><span class="si">}</span><span class="s2">°C&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="interactive-dialogs-with-run_dialog_box">Interactive dialogs with run_dialog_box<a class="headerlink" href="#interactive-dialogs-with-run_dialog_box" title="Permanent link">&para;</a></h3>
+<p>The <a href="../../documentation/pytest_hardpy/#run_dialog_box">run_dialog_box</a>
+function creates dialog boxes for operator input with various widgets (text, numeric, checkboxes).
+Supports titles, images, and HTML content.
+Can be used to notify and interact with the user, but does not save the information in the report.
+The user can save the information separately using the
+<a href="../../documentation/pytest_hardpy/#set_case_artifact">set_case_artifact</a>,
+<a href="../../documentation/pytest_hardpy/#set_module_artifact">set_module_artifact</a> or
+<a href="../../documentation/pytest_hardpy/#set_run_artifact">set_run_artifact</a> functions.
+Essential for manual equipment verification, test configuration confirmation, and safety checks.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_manual_calibration</span><span class="p">():</span>
+    <span class="n">dialog</span> <span class="o">=</span> <span class="n">DialogBox</span><span class="p">(</span>
+        <span class="n">dialog_text</span><span class="o">=</span><span class="s2">&quot;Connect calibration device and press Confirm&quot;</span><span class="p">,</span>
+        <span class="n">title_bar</span><span class="o">=</span><span class="s2">&quot;Calibration Setup&quot;</span><span class="p">,</span>
+        <span class="n">widget</span><span class="o">=</span><span class="n">RadioButtonWidget</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Ready&quot;</span><span class="p">,</span> <span class="s2">&quot;Skip&quot;</span><span class="p">,</span> <span class="s2">&quot;Abort&quot;</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">run_dialog_box</span><span class="p">(</span><span class="n">dialog</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">response</span> <span class="o">==</span> <span class="s2">&quot;Ready&quot;</span><span class="p">,</span> <span class="s2">&quot;Calibration was not confirmed&quot;</span>
+</code></pre></div>
+<h3 id="operator-messages-with-set_operator_message">Operator messages with set_operator_message<a class="headerlink" href="#operator-messages-with-set_operator_message" title="Permanent link">&para;</a></h3>
+<p>The <a href="../../documentation/pytest_hardpy/#set_operator_message">set_operator_message</a>
+function displays non-interactive notifications without database storage.
+The user can save the information separately using the
+<a href="../../documentation/pytest_hardpy/#set_case_artifact">set_case_artifact</a>,
+<a href="../../documentation/pytest_hardpy/#set_module_artifact">set_module_artifact</a> or
+<a href="../../documentation/pytest_hardpy/#set_run_artifact">set_run_artifact</a> functions.
+Can be used to notify and interact with the user, but does not save the information in the report.
+Supports titles, images, and HTML content, with optional blocking until dismissed.
+Ideal for equipment setup instructions, test phase transitions, and important warnings.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_system_startup</span><span class="p">():</span>
+    <span class="n">set_operator_message</span><span class="p">(</span>
+        <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;Please power on all test equipment&quot;</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Initial Setup&quot;</span><span class="p">,</span>
+        <span class="n">image</span><span class="o">=</span><span class="n">ImageComponent</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="s2">&quot;assets/power_on.png&quot;</span><span class="p">),</span>
+        <span class="n">block</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+</code></pre></div>
+<h3 id="logging-recommendation">Logging recommendation<a class="headerlink" href="#logging-recommendation" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Database Storage</th>
+<th>User Interaction</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>set_message</code></td>
+<td>Yes</td>
+<td>No</td>
+<td>Permanent logs</td>
+</tr>
+<tr>
+<td><code>run_dialog_box</code></td>
+<td>No</td>
+<td>Yes</td>
+<td>Test steps requiring input</td>
+</tr>
+<tr>
+<td><code>set_operator_message</code></td>
+<td>No</td>
+<td>No</td>
+<td>Important notifications</td>
+</tr>
+</tbody>
+</table>
+<h2 id="standcloud">StandCloud<a class="headerlink" href="#standcloud" title="Permanent link">&para;</a></h2>
+<h3 id="storing-test-result-to-standcloud">Storing test result to StandCloud<a class="headerlink" href="#storing-test-result-to-standcloud" title="Permanent link">&para;</a></h3>
+<p><strong>HardPy</strong> allows user to send test results to <strong>StandCloud</strong>, a data storage and analysis platform.
+An example of its use can be found on pages <a href="../../documentation/stand_cloud/">StandCloud</a>
+and <a href="../../examples/stand_cloud/">StandCloud example</a>.</p>
+<h3 id="reading-test-result-from-standcloud">Reading test result from StandCloud<a class="headerlink" href="#reading-test-result-from-standcloud" title="Permanent link">&para;</a></h3>
+<p><strong>HardPy</strong> allows user to read test result from <strong>StandCloud</strong>.
+An example of its use can be found on page <a href="../../examples/stand_cloud_reader/">StandCloud reader</a>.</p>
+<h2 id="other">Other<a class="headerlink" href="#other" title="Permanent link">&para;</a></h2>
+<h3 id="measurement">Measurement<a class="headerlink" href="#measurement" title="Permanent link">&para;</a></h3>
+<p><strong>HardPy</strong> allows users to save their measurement data to a database and display it in the operator panel.
+The <a href="../../documentation/pytest_hardpy/#set_case_measurement">set_case_measurement</a>
+function allows each individual test case to store measurements as a list.</p>
+<p><strong>Display format in operator panel:</strong></p>
+<ul>
+<li><strong>Name Value Unit</strong> - for measurements with all components (e.g., "Voltage 12.3 V")</li>
+<li><strong>Value Unit</strong> - for measurements without names (e.g., "5°", "98.6%", "45″")  </li>
+<li><strong>Name Value</strong> - for measurements without units (e.g., "Banana 15")</li>
+</ul>
+<p><strong>Special formatting for units:</strong></p>
+<ul>
+<li>Symbols <code>%</code>, <code>°</code>, <code>′</code>, <code>″</code> are displayed without space (e.g., "23.5°C", "98.6%")</li>
+<li>Other units are displayed with space (e.g., "12.3 V", "3.14 rad")</li>
+</ul>
+<p><strong>Configuration:</strong>
+Enable measurement display in your <code>hardpy.toml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[frontend]</span>
+<span class="n">measurement_display</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</code></pre></div>
+<p><strong>Features:</strong></p>
+<ul>
+<li>Support for both numeric and string measurements</li>
+<li>Clean, minimal tag-based display</li>
+<li>Proper handling of special units (°, %, etc.)</li>
+</ul>
+<p>An example of its use can be found on page <a href="../../examples/measurement/">measurement</a>.</p>
+<h3 id="chart">Chart<a class="headerlink" href="#chart" title="Permanent link">&para;</a></h3>
+<p><strong>HardPy</strong> allows users to save their chart (data series) to a database.
+The <a href="../../documentation/pytest_hardpy/#set_case_chart">set_case_chart</a> 
+function allows each individual test case to store a single chart.
+An example of its use can be found on page <a href="../../examples/chart/">chart</a>.</p>
+<h3 id="multiple-hardpy-instances-in-a-single-stand">Multiple HardPy instances in a single stand<a class="headerlink" href="#multiple-hardpy-instances-in-a-single-stand" title="Permanent link">&para;</a></h3>
+<p>A user can run multiple <strong>HardPy</strong> instances on a single stand.
+To create a document in the database for storing test data, each stand that 
+runs on a single computer must have a unique combination of 
+<a href="../../documentation/hardpy_config/#frontend">frontend</a> host and port.
+The startup is described in the <a href="../../examples/multiple_stands/">Multiple Stand</a> example.</p>
+<h3 id="multiple-test-plan-configurations">Multiple test plan configurations<a class="headerlink" href="#multiple-test-plan-configurations" title="Permanent link">&para;</a></h3>
+<p><strong>HardPy</strong> allows the user to define and manage multiple test configurations within a single project. 
+This feature enables flexible test execution, allowing different sets of tests or 
+variations of the same tests to be run by simply selecting a configuration.
+This is achieved by defining different <code>pytest.ini</code> files for each configuration and referencing 
+them in the main <code>hardpy.toml</code> file. </p>
+<p>An example of its use can be found on page <a href="../../examples/multiple_configs/">Multiple configs</a>.</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../.." class="md-footer__link md-footer__link--prev" aria-label="Previous: HardPy">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                HardPy
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../documentation/" class="md-footer__link md-footer__link--next" aria-label="Next: Documentation">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Documentation
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.path", "navigation.top", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.8fd75fb4.min.js"></script>
+      
+        <script src="../../js/print-site.js"></script>
+      
+    
+  <script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
+</html>

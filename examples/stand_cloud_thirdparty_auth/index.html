@@ -1,0 +1,2472 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Everypin">
+      
+      
+        <link rel="canonical" href="https://everypinio.github.io/hardpy/examples/stand_cloud_thirdparty_auth/">
+      
+      
+        <link rel="prev" href="../stand_cloud_reader/">
+      
+      
+        <link rel="next" href="../stand_equipment/">
+      
+      
+      <link rel="icon" href="../../img/logo192.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.10">
+    
+    
+      
+        <title>StandCloud third party authorization - HardPy</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e359304.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings1.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings2.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings3.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings4.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings5.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings6.css">
+    
+      <link rel="stylesheet" href="../../css/print-site.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-material.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function n(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],n("js",new Date),n("config","G-6Z35DZJBP7"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){this.value&&n("event","search",{search_term:this.value})}),document$.subscribe(function(){var a=document.forms.feedback;if(void 0!==a)for(var e of a.querySelectorAll("[type=submit]"))e.addEventListener("click",function(e){e.preventDefault();var t=document.location.pathname,e=this.getAttribute("data-md-value");n("event","feedback",{page:t,data:e}),a.firstElementChild.disabled=!0;e=a.querySelector(".md-feedback__note [data-md-value='"+e+"']");e&&(e.hidden=!1)}),a.hidden=!1}),location$.subscribe(function(e){n("config","G-6Z35DZJBP7",{page_path:e.pathname})})});var e=document.createElement("script");e.async=!0,e.src="https://www.googletagmanager.com/gtag/js?id=G-6Z35DZJBP7",document.getElementById("__analytics").insertAdjacentElement("afterEnd",e)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#standcloud-third-party-authorization" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="HardPy" class="md-header__button md-logo" aria-label="HardPy" data-md-component="logo">
+      
+  <img src="../../img/logo192.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            HardPy
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              StandCloud third party authorization
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/everypinio/hardpy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    everypinio/hardpy
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  HardPy
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../features/features/" class="md-tabs__link">
+        
+  
+    
+  
+  Features
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../documentation/" class="md-tabs__link">
+          
+  
+    
+  
+  Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+    
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../about/development/" class="md-tabs__link">
+          
+  
+    
+  
+  About
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../changelog/" class="md-tabs__link">
+        
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="HardPy" class="md-nav__button md-logo" aria-label="HardPy" data-md-component="logo">
+      
+  <img src="../../img/logo192.png" alt="logo">
+
+    </a>
+    HardPy
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/everypinio/hardpy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    everypinio/hardpy
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HardPy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/features/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Features
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../documentation/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Documentation
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documentation/cli/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CLI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documentation/hardpy_config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documentation/database/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documentation/hardpy_panel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HardPy panel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documentation/pytest_hardpy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pytest-hardpy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documentation/stand_cloud/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Examples
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../attempts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Attempts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chart/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chart
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../db_in_ram/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CouchDB in RAM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../couchdb_load/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CouchDB load
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../critical_test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Critical test
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dialog_box/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dialog box
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardpy_launch/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HardPy launch
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hello_hardpy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hello HardPy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../launch_arguments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Launch arguments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pytest logging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../measurement/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Measurement
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../minute_parity/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Minute parity
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multiple_configs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multiple configs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multiple_stands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multiple stands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operator_msg/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Operator message
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frontend_remote_access/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Remote access
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skip_test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skip test
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stand_cloud/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stand_cloud_reader/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud read data
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    StandCloud third party authorization
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud third party authorization
+  </span>
+  
+
+      </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="Contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#authorization-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authorization process
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authorization-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authorization example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authorization example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Introduction
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-key-concepts-oauth-20-device-authorization-grant-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Key concepts: OAuth 2.0 device authorization grant flow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-script-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Script breakdown
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Script breakdown">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1. Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-api-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2. API endpoints
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-device-authorization-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3. Device authorization request
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-token-request-polling" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4. Token request (polling)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-test-api-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.5. Test API call
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-replicating-in-other-languages" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Replicating in other languages
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authorization-example-with-token-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authorization example with token update
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authorization example with token update">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-script-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Script breakdown
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Script breakdown">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-configuration-and-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1. Configuration and endpoints
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-authenticate-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2. authenticate() function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-refresh_tokens-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3. refresh_tokens() function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-healthcheck-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4. healthcheck() function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-save_token_info-and-load_token_info-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.5. save_token_info() and load_token_info() functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-main" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.6. main()
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-replicating-in-other-languages" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Replicating in other languages
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stand_equipment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stand equipment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            About
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/development/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Development
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/frontend_sync/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frontend data synchronization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="Contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#authorization-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authorization process
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authorization-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authorization example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authorization example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Introduction
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-key-concepts-oauth-20-device-authorization-grant-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Key concepts: OAuth 2.0 device authorization grant flow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-script-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Script breakdown
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Script breakdown">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1. Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-api-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2. API endpoints
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-device-authorization-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3. Device authorization request
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-token-request-polling" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4. Token request (polling)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-test-api-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.5. Test API call
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-replicating-in-other-languages" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Replicating in other languages
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authorization-example-with-token-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authorization example with token update
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authorization example with token update">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-script-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Script breakdown
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Script breakdown">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-configuration-and-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1. Configuration and endpoints
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-authenticate-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2. authenticate() function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-refresh_tokens-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3. refresh_tokens() function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-healthcheck-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4. healthcheck() function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-save_token_info-and-load_token_info-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.5. save_token_info() and load_token_info() functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-main" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.6. main()
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-replicating-in-other-languages" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Replicating in other languages
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/everypinio/hardpy/edit/master/docs/examples/stand_cloud_thirdparty_auth.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/everypinio/hardpy/raw/master/docs/examples/stand_cloud_thirdparty_auth.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
+    </a>
+  
+
+
+<h1 id="standcloud-third-party-authorization">StandCloud third party authorization<a class="headerlink" href="#standcloud-third-party-authorization" title="Permanent link">&para;</a></h1>
+<details class="warning" open="open">
+<summary>Warning</summary>
+<p>The information on this page is currently out of date!</p>
+</details>
+<p>This documentation describes how to authorize a <strong>HardPy</strong> application on a
+<strong>StandCloud</strong> system using the OAuth 2.0 Device Authorization Flow process.</p>
+<h2 id="authorization-process">Authorization process<a class="headerlink" href="#authorization-process" title="Permanent link">&para;</a></h2>
+<ol>
+<li>The application requests the device code from the authorization server.</li>
+<li>The server returns:<ul>
+<li><code>device_code</code></li>
+<li><code>user_code</code></li>
+<li><code>verification_uri</code> (authorization URL)</li>
+<li><code>verification_uri_complete</code> (the URL with the pre-filled code)</li>
+<li><code>expires_in</code> (code lifetime)</li>
+<li><code>interval</code> (status polling interval)</li>
+</ul>
+</li>
+<li>The user follows the link and confirms authorization.</li>
+<li>The application periodically polls the token server.</li>
+<li>After confirmation, the server returns an access token and a refresh token.</li>
+</ol>
+<h2 id="code-example">Code example<a class="headerlink" href="#code-example" title="Permanent link">&para;</a></h2>
+<p>The code samples are in Python, but they use simple constructs that are available in
+most programming languages.
+To implement the authorization process for a third-party
+application in a different language, use the general approach demonstrated in these scripts.
+Reading <a href="https://datatracker.ietf.org/doc/html/rfc8628">RFC6749</a>,
+which describes the OAuth 2.0 device flow, is also recommended.
+The above examples do not display the QR code to the user; rather, they display a link for authorization.</p>
+<h2 id="authorization-example">Authorization example<a class="headerlink" href="#authorization-example" title="Permanent link">&para;</a></h2>
+<p><strong>auth_flow.py</strong> is an example of a simple authorization script written in Python.
+The script requires the installation of the <code>requests</code> package.
+The only thing that needs to be changed to make it work is the
+<strong>StandCloud</strong> address in the <code>BASE_URL</code> variable.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># This script demonstrates the StandCloud authentication process.</span>
+<span class="c1"># Change the URL to your StandCloud address, nothing else needs to be changed.</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="c1">########################################</span>
+<span class="c1"># Change URL to your StandCloud address</span>
+<span class="n">BASE_URL</span> <span class="o">=</span> <span class="s2">&quot;https://demo.standcloud.io&quot;</span>
+<span class="c1">########################################</span>
+
+<span class="c1"># Confugirable parameters, False if the server is self-signed</span>
+<span class="n">SSL_VERIFY</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># OAuth client configuration</span>
+<span class="c1"># client_id must be &quot;hardpy-report-uploader&quot;</span>
+<span class="n">CLIENT_ID</span> <span class="o">=</span> <span class="s2">&quot;hardpy-report-uploader&quot;</span>
+
+<span class="c1"># API endpoints</span>
+<span class="n">API_URL</span> <span class="o">=</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="s2">&quot;/hardpy/api/v1&quot;</span>
+<span class="n">DEVICE_AUTHORIZATION_URL</span> <span class="o">=</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="s2">&quot;/auth/api/oidc/device-authorization&quot;</span>
+<span class="n">TOKEN_URL</span> <span class="o">=</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="s2">&quot;/auth/api/oidc/token&quot;</span>
+
+
+<span class="c1"># Device authorization aequest</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">CLIENT_ID</span><span class="p">,</span>
+    <span class="s2">&quot;scope&quot;</span><span class="p">:</span> <span class="s2">&quot;offline_access authelia.bearer.authz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;audience&quot;</span><span class="p">:</span> <span class="n">API_URL</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">DEVICE_AUTHORIZATION_URL</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">SSL_VERIFY</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<span class="n">verification_uri_complete</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;verification_uri_complete&quot;</span><span class="p">]</span>
+<span class="n">interval</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;interval&quot;</span><span class="p">]</span>
+
+<span class="c1"># Token request</span>
+<span class="k">if</span> <span class="s2">&quot;error&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">]</span>
+    <span class="n">error_description</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;error_description&quot;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">error_description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Verification URI: </span><span class="si">{</span><span class="n">verification_uri_complete</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">CLIENT_ID</span><span class="p">,</span>
+    <span class="s2">&quot;grant_type&quot;</span><span class="p">:</span> <span class="s2">&quot;urn:ietf:params:oauth:grant-type:device_code&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;device_code&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;device_code&quot;</span><span class="p">],</span>
+<span class="p">}</span>
+
+<span class="c1"># Token response</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">TOKEN_URL</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">SSL_VERIFY</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;access_token&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Token info:&quot;</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+        <span class="k">break</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">interval</span><span class="p">)</span>
+
+<span class="c1"># Test API call</span>
+<span class="n">header</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;access_token&quot;</span><span class="p">]),</span>
+    <span class="s2">&quot;Content-type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">header: &quot;</span><span class="p">,</span> <span class="n">header</span><span class="p">)</span>
+
+<span class="n">USER_INFO_URL</span> <span class="o">=</span> <span class="n">API_URL</span> <span class="o">+</span> <span class="s2">&quot;/healthcheck&quot;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">USER_INFO_URL</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">header</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">SSL_VERIFY</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">OAuth Authenticated and Authorized API access&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="1-introduction">1. Introduction<a class="headerlink" href="#1-introduction" title="Permanent link">&para;</a></h3>
+<p>The script facilitates a secure way for devices with limited input capabilities
+(like command-line applications) to authenticate with <strong>StandCloud</strong>.
+It leverages the OAuth 2.0 Device Flow, which allows a user to authorize a device
+by visiting a URL on a separate, input-rich device (e.g., a web browser on a computer or smartphone).</p>
+<h3 id="2-key-concepts-oauth-20-device-authorization-grant-flow">2. Key concepts: OAuth 2.0 device authorization grant flow<a class="headerlink" href="#2-key-concepts-oauth-20-device-authorization-grant-flow" title="Permanent link">&para;</a></h3>
+<p>The OAuth 2.0 Device Authorization Grant Flow is designed for devices that cannot easily
+display a browser or accept direct user input (like typing a username and password).
+The flow generally involves the following steps:</p>
+<ol>
+<li><strong>Device Authorization Request</strong>: The client (this script) requests a device code and a
+   verification URI from the authorization server.</li>
+<li><strong>User Interaction</strong>: The user takes the verification URI and a user code
+    (provided by the authorization server) and enters them into a browser on a
+    separate device to authorize the client.</li>
+<li><strong>Token Request Polling</strong>: The client repeatedly polls the authorization server's
+    token endpoint with the device code until the user completes the authorization.</li>
+<li><strong>Token Response</strong>: Once authorized, the client receives access tokens and (optionally) refresh tokens.</li>
+<li><strong>API Access</strong>: The client uses the obtained access token to make authenticated calls to the protected API resources.</li>
+</ol>
+<p>For a deeper understanding of the OAuth 2.0 Device Authorization Grant, refer to the official specification:
+<a href="https://datatracker.ietf.org/doc/html/rfc8628">RFC 8628 - OAuth 2.0 Device Authorization Grant</a>.</p>
+<h3 id="3-script-breakdown">3. Script breakdown<a class="headerlink" href="#3-script-breakdown" title="Permanent link">&para;</a></h3>
+<p>The script performs the following sequence of operations:</p>
+<h4 id="31-configuration">3.1. Configuration<a class="headerlink" href="#31-configuration" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong><code>BASE_URL</code></strong>: This variable must be changed to your specific <strong>StandCloud</strong> instance URL.<ul>
+<li><strong>Example</strong>: <code>https://company_name.standcloud.io</code></li>
+</ul>
+</li>
+<li><strong><code>SSL_VERIFY</code></strong>: A boolean flag (<code>True</code> by default) indicating whether SSL certificate verification should be performed.
+    Set to <code>False</code> if your server uses a self-signed certificate.</li>
+<li><strong><code>CLIENT_ID</code></strong>: The OAuth client identifier, which is fixed as <code>hardpy-report-uploader</code>.
+    This identifies the client application to the <strong>StandCloud</strong> authentication system.</li>
+</ul>
+<h4 id="32-api-endpoints">3.2. API endpoints<a class="headerlink" href="#32-api-endpoints" title="Permanent link">&para;</a></h4>
+<p>The script defines several critical API endpoints based on the <code>BASE_URL</code>:</p>
+<ul>
+<li><strong><code>API_URL</code></strong>: The base URL for the <strong>StandCloud</strong> API (<code>/hardpy/api/v1</code>).</li>
+<li><strong><code>DEVICE_AUTHORIZATION_URL</code></strong>: The endpoint for initiating the device authorization flow (<code>/auth/api/oidc/device-authorization</code>).</li>
+<li><strong><code>TOKEN_URL</code></strong>: The endpoint for requesting tokens after device authorization (<code>/auth/api/oidc/token</code>).</li>
+</ul>
+<h4 id="33-device-authorization-request">3.3. Device authorization request<a class="headerlink" href="#33-device-authorization-request" title="Permanent link">&para;</a></h4>
+<p>The script first makes a <code>POST</code> request to the <code>DEVICE_AUTHORIZATION_URL</code> with the following parameters:</p>
+<ul>
+<li><strong><code>client_id</code></strong>: The <code>CLIENT_ID</code> defined above.</li>
+<li><strong><code>scope</code></strong>: Defines the permissions requested.<ul>
+<li><code>offline_access</code>: Allows the client to request refresh tokens,
+    enabling long-term access without re-authorization.</li>
+<li><code>authelia.bearer.authz</code>: A specific scope related to Authelia
+    (an open-source authentication and authorization server often used with OpenID Connect)
+    for bearer token authorization.</li>
+</ul>
+</li>
+<li><strong><code>audience</code></strong>: Specifies the intended recipient of the access token, which is the <code>API_URL</code>.</li>
+</ul>
+<p>Upon a successful response, the script extracts:</p>
+<ul>
+<li><strong><code>verification_uri_complete</code></strong>: The full URL the user needs to visit in their browser to authorize the device.</li>
+<li><strong><code>interval</code></strong>: The recommended polling interval (in seconds) for subsequent token requests.</li>
+<li><strong><code>device_code</code></strong>: A code representing the authorization request, used in subsequent token polling.</li>
+</ul>
+<p>The script then prints the <code>verification_uri_complete</code> for the user to access.
+It includes basic error handling for the device authorization request.</p>
+<h4 id="34-token-request-polling">3.4. Token request (polling)<a class="headerlink" href="#34-token-request-polling" title="Permanent link">&para;</a></h4>
+<p>After initiating the device authorization, the script enters a loop to poll
+the <code>TOKEN_URL</code> until authorization is granted by the user.
+Each <code>POST</code> request to the <code>TOKEN_URL</code> includes:</p>
+<ul>
+<li><strong><code>client_id</code></strong>: The <code>CLIENT_ID</code>.</li>
+<li><strong><code>grant_type</code></strong>: Set to <code>"urn:ietf:params:oauth:grant-type:device_code"</code>, indicating the Device Flow grant type.</li>
+<li><strong><code>device_code</code></strong>: The <code>device_code</code> obtained from the initial device authorization request.</li>
+</ul>
+<p>The script pauses for the <code>interval</code> period between each poll.
+Once the <code>access_token</code> is present in the response, the polling loop breaks, and the script proceeds.</p>
+<h4 id="35-test-api-call">3.5. Test API call<a class="headerlink" href="#35-test-api-call" title="Permanent link">&para;</a></h4>
+<p>Finally, the script demonstrates how to use the obtained <code>access_token</code> to make an authenticated API call.</p>
+<ul>
+<li>An <code>Authorization</code> header is constructed with the format <code>"Bearer &lt;access_token&gt;"</code>.</li>
+<li>A <code>GET</code> request is made to the <code>API_URL</code> + <code>/healthcheck</code> endpoint.
+    This is a simple endpoint to verify successful authentication and authorization.</li>
+</ul>
+<p>If the API call returns a <code>200 OK</code> status, it confirms that the OAuth authentication and
+authorization process was successful, and the client can now access protected resources.
+Any other status code indicates an issue, and the response text is printed for debugging.</p>
+<h3 id="4-replicating-in-other-languages">4. Replicating in other languages<a class="headerlink" href="#4-replicating-in-other-languages" title="Permanent link">&para;</a></h3>
+<p>To implement this authentication flow in a different programming language, you will need to:</p>
+<ol>
+<li><strong>HTTP Client Library</strong>: Use an HTTP client library available in your chosen language
+    (e.g., <code>requests</code> for Python, <code>HttpClient</code> for C#, <code>fetch</code> for JavaScript, <code>OkHttp</code> for Java, <code>net/http</code> for Go).</li>
+<li><strong>JSON Parsing</strong>: Implement JSON parsing to handle the responses from the authorization and token endpoints.</li>
+<li><strong>URL Construction</strong>: Construct the <code>DEVICE_AUTHORIZATION_URL</code>, <code>TOKEN_URL</code>, and <code>API_URL</code>
+    correctly based on your <strong>StandCloud</strong> instance.</li>
+<li><strong>Request Parameters</strong>: Ensure that the <code>client_id</code>, <code>scope</code>, <code>audience</code>, <code>grant_type</code>,
+    and <code>device_code</code> parameters are correctly included in your <code>POST</code> request bodies, typically as form-urlencoded data.</li>
+<li><strong>Polling Logic</strong>: Implement a polling mechanism with appropriate delays to wait for user authorization.</li>
+<li><strong>Bearer Token</strong>: Correctly format the <code>Authorization: Bearer &lt;access_token&gt;</code> header for protected API calls.</li>
+</ol>
+<h2 id="authorization-example-with-token-update">Authorization example with token update<a class="headerlink" href="#authorization-example-with-token-update" title="Permanent link">&para;</a></h2>
+<p><strong>token_update.py</strong> is a more complex version of the <strong>auth_flow.py</strong> script,
+which rotates access and refresh tokens.
+This script stores these tokens in a file.
+However, this simplified token storage model should not be used in a production
+environment for security reasons.
+The only thing that needs to be changed to make it work is the
+<strong>StandCloud</strong> address in the <code>BASE_URL</code> variable.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># This script demonstrates the StandCloud authentication process with</span>
+<span class="c1"># token updating. Don&#39;t use the save as file option, it&#39;s insecure.</span>
+<span class="c1"># Change the URL to your StandCloud address, nothing else needs to be changed.</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="c1">########################################</span>
+<span class="c1"># Change URL to your StandCloud address</span>
+<span class="n">BASE_URL</span> <span class="o">=</span> <span class="s2">&quot;https://demo.standcloud.io&quot;</span>
+<span class="c1">########################################</span>
+
+<span class="c1"># Configurable parameters, False if the server is self-signed</span>
+<span class="n">SSL_VERIFY</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># OAuth client configuration</span>
+<span class="c1"># client_id must be &quot;hardpy-report-uploader&quot;</span>
+<span class="n">CLIENT_ID</span> <span class="o">=</span> <span class="s2">&quot;hardpy-report-uploader&quot;</span>
+
+<span class="c1"># API endpoints</span>
+<span class="n">API_URL</span> <span class="o">=</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="s2">&quot;/hardpy/api/v1&quot;</span>
+<span class="n">DEVICE_AUTHORIZATION_URL</span> <span class="o">=</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="s2">&quot;/auth/api/oidc/device-authorization&quot;</span>
+<span class="n">TOKEN_URL</span> <span class="o">=</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="s2">&quot;/auth/api/oidc/token&quot;</span>
+<span class="n">HEALTHCHECK_URL</span> <span class="o">=</span> <span class="n">API_URL</span> <span class="o">+</span> <span class="s2">&quot;/healthcheck&quot;</span>
+<span class="n">TOKEN_FILE</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;token_info.json&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">authenticate</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">CLIENT_ID</span><span class="p">,</span>
+        <span class="s2">&quot;scope&quot;</span><span class="p">:</span> <span class="s2">&quot;offline_access authelia.bearer.authz&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;audience&quot;</span><span class="p">:</span> <span class="n">API_URL</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+        <span class="n">DEVICE_AUTHORIZATION_URL</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">SSL_VERIFY</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span>
+    <span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="s2">&quot;error&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">]</span>
+        <span class="n">error_description</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;error_description&quot;</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">error_description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">verification_uri_complete</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;verification_uri_complete&quot;</span><span class="p">]</span>
+    <span class="n">interval</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;interval&quot;</span><span class="p">]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Verification URI: </span><span class="si">{</span><span class="n">verification_uri_complete</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">CLIENT_ID</span><span class="p">,</span>
+        <span class="s2">&quot;grant_type&quot;</span><span class="p">:</span> <span class="s2">&quot;urn:ietf:params:oauth:grant-type:device_code&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;device_code&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;device_code&quot;</span><span class="p">],</span>
+    <span class="p">}</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">TOKEN_URL</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">SSL_VERIFY</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s2">&quot;access_token&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Authentication successful&quot;</span><span class="p">)</span>
+            <span class="k">break</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">interval</span><span class="p">)</span>
+
+    <span class="c1"># Calculate expiration time</span>
+    <span class="n">expires_at</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;expires_in&quot;</span><span class="p">]</span>
+    <span class="n">token_info</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;access_token&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;access_token&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;refresh_token&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;refresh_token&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;expires_at&quot;</span><span class="p">:</span> <span class="n">expires_at</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">token_info</span>
+
+
+<span class="k">def</span> <span class="nf">refresh_tokens</span><span class="p">(</span><span class="n">refresh_token_value</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">CLIENT_ID</span><span class="p">,</span>
+        <span class="s2">&quot;grant_type&quot;</span><span class="p">:</span> <span class="s2">&quot;refresh_token&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;refresh_token&quot;</span><span class="p">:</span> <span class="n">refresh_token_value</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">TOKEN_URL</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">SSL_VERIFY</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s2">&quot;access_token&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Token refresh failed. Error:&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;unknown error&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">expires_at</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;expires_in&quot;</span><span class="p">]</span>
+        <span class="n">token_info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;access_token&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;access_token&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;expires_at&quot;</span><span class="p">:</span> <span class="n">expires_at</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Update refresh token if new one is provided</span>
+        <span class="k">if</span> <span class="s2">&quot;refresh_token&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+            <span class="n">token_info</span><span class="p">[</span><span class="s2">&quot;refresh_token&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;refresh_token&quot;</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Access and refresh tokens updated&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Access token updated&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">token_info</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Token refresh failed:&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">healthcheck</span><span class="p">(</span><span class="n">access_token</span><span class="p">):</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">access_token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Content-type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">HEALTHCHECK_URL</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">SSL_VERIFY</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Healthcheck successful&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Healthcheck failed: HTTP </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Healthcheck error:&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="k">def</span> <span class="nf">save_token_info</span><span class="p">(</span><span class="n">token_info</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">Path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">TOKEN_FILE</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">token_info</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">load_token_info</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">Path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">TOKEN_FILE</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">token_info</span> <span class="o">=</span> <span class="n">load_token_info</span><span class="p">()</span>
+
+    <span class="c1"># If no tokens exist or file is corrupted</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="ow">not</span> <span class="n">token_info</span>
+        <span class="ow">or</span> <span class="s2">&quot;access_token&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">token_info</span>
+        <span class="ow">or</span> <span class="s2">&quot;refresh_token&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">token_info</span>
+    <span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No valid tokens found. Starting authentication...&quot;</span><span class="p">)</span>
+        <span class="n">token_info</span> <span class="o">=</span> <span class="n">authenticate</span><span class="p">()</span>
+        <span class="n">save_token_info</span><span class="p">(</span><span class="n">token_info</span><span class="p">)</span>
+        <span class="n">healthcheck</span><span class="p">(</span><span class="n">token_info</span><span class="p">[</span><span class="s2">&quot;access_token&quot;</span><span class="p">])</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Check access token expiration with 10-second buffer</span>
+    <span class="n">current_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">current_time</span> <span class="o">&lt;</span> <span class="n">token_info</span><span class="p">[</span><span class="s2">&quot;expires_at&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Access token is valid&quot;</span><span class="p">)</span>
+        <span class="n">healthcheck</span><span class="p">(</span><span class="n">token_info</span><span class="p">[</span><span class="s2">&quot;access_token&quot;</span><span class="p">])</span>
+        <span class="k">return</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Access token expired. Refreshing tokens...&quot;</span><span class="p">)</span>
+    <span class="n">new_token_info</span> <span class="o">=</span> <span class="n">refresh_tokens</span><span class="p">(</span><span class="n">token_info</span><span class="p">[</span><span class="s2">&quot;refresh_token&quot;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">new_token_info</span><span class="p">:</span>
+        <span class="c1"># Preserve existing refresh token if not updated</span>
+        <span class="k">if</span> <span class="s2">&quot;refresh_token&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_token_info</span><span class="p">:</span>
+            <span class="n">new_token_info</span><span class="p">[</span><span class="s2">&quot;refresh_token&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">token_info</span><span class="p">[</span><span class="s2">&quot;refresh_token&quot;</span><span class="p">]</span>
+
+        <span class="n">save_token_info</span><span class="p">(</span><span class="n">new_token_info</span><span class="p">)</span>
+        <span class="n">healthcheck</span><span class="p">(</span><span class="n">new_token_info</span><span class="p">[</span><span class="s2">&quot;access_token&quot;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Refresh token invalid. Starting re-authentication...&quot;</span><span class="p">)</span>
+        <span class="n">token_info</span> <span class="o">=</span> <span class="n">authenticate</span><span class="p">()</span>
+        <span class="n">save_token_info</span><span class="p">(</span><span class="n">token_info</span><span class="p">)</span>
+        <span class="n">healthcheck</span><span class="p">(</span><span class="n">token_info</span><span class="p">[</span><span class="s2">&quot;access_token&quot;</span><span class="p">])</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="1-script-breakdown">1. Script breakdown<a class="headerlink" href="#1-script-breakdown" title="Permanent link">&para;</a></h3>
+<p>This script extends the previous basic authentication by adding functions for token management.</p>
+<h4 id="11-configuration-and-endpoints">1.1. Configuration and endpoints<a class="headerlink" href="#11-configuration-and-endpoints" title="Permanent link">&para;</a></h4>
+<p>Most configurations are similar to the previous script:</p>
+<ul>
+<li><strong><code>BASE_URL</code></strong>: <strong>StandCloud</strong> instance URL.</li>
+<li><strong><code>SSL_VERIFY</code></strong>: For SSL certificate validation.</li>
+<li><strong><code>CLIENT_ID</code></strong>: Fixed as <code>"hardpy-report-uploader"</code>.</li>
+<li><strong><code>API_URL</code></strong>: Base URL for API calls.</li>
+<li><strong><code>DEVICE_AUTHORIZATION_URL</code></strong>: Endpoint for initiating device flow.</li>
+<li><strong><code>TOKEN_URL</code></strong>: Endpoint for token requests (both initial and refresh).</li>
+<li><strong><code>HEALTHCHECK_URL</code></strong>: A specific endpoint used to test API access.</li>
+<li><strong><code>TOKEN_FILE</code></strong>: A <code>Path</code> object pointing to <code>token_info.json</code> in the same
+    directory as the script. This file is used to store token information for persistence.
+    <strong>(Remember the security warning regarding file storage)</strong>.</li>
+</ul>
+<h4 id="12-authenticate-function">1.2. <code>authenticate()</code> function<a class="headerlink" href="#12-authenticate-function" title="Permanent link">&para;</a></h4>
+<p>This function encapsulates the <strong>initial OAuth 2.0 Device Authorization Grant Flow</strong>,
+identical to the previous script's main logic.</p>
+<ol>
+<li>It initiates a <code>POST</code> request to <code>DEVICE_AUTHORIZATION_URL</code> with <code>client_id</code>,
+    <code>scope</code> (<code>offline_access</code> is crucial here for getting a refresh token), and <code>audience</code>.</li>
+<li>It handles the user interaction step, printing the <code>verification_uri_complete</code>.</li>
+<li>It polls the <code>TOKEN_URL</code> using the <code>device_code</code> until an <code>access_token</code>
+    (and importantly, a <code>refresh_token</code>) is received.</li>
+<li>It calculates the <code>expires_at</code> timestamp based on <code>expires_in</code> and the current time,
+    then returns a dictionary (<code>token_info</code>) containing <code>access_token</code>, <code>refresh_token</code>, and <code>expires_at</code>.</li>
+</ol>
+<h4 id="13-refresh_tokens-function">1.3. <code>refresh_tokens()</code> function<a class="headerlink" href="#13-refresh_tokens-function" title="Permanent link">&para;</a></h4>
+<p>This new function handles the <strong>refresh token grant type</strong>.</p>
+<ol>
+<li>It constructs a <code>POST</code> request to the <code>TOKEN_URL</code> with:<ul>
+<li><strong><code>client_id</code></strong>: Your client identifier.</li>
+<li><strong><code>grant_type</code></strong>: Set to <code>"refresh_token"</code>.</li>
+<li><strong><code>refresh_token</code></strong>: The <code>refresh_token_value</code> obtained from a previous authentication or refresh.</li>
+</ul>
+</li>
+<li>Upon a successful response, it extracts the <code>access_token</code> and its new <code>expires_at</code> timestamp.</li>
+<li>Crucially, it checks if a <em>new</em> <code>refresh_token</code> is provided in the response.
+    If so, it updates the stored refresh token. Some authorization servers issue new
+    refresh tokens with each refresh; others do not.
+    Best practice is to use the newest one if provided.</li>
+<li>It returns the <code>token_info</code> dictionary.
+    If the refresh fails, it prints an error and returns <code>None</code>.</li>
+</ol>
+<h4 id="14-healthcheck-function">1.4. <code>healthcheck()</code> function<a class="headerlink" href="#14-healthcheck-function" title="Permanent link">&para;</a></h4>
+<p>This helper function tests the validity of an <code>access_token</code> by making a <code>GET</code> request to the <code>HEALTHCHECK_URL</code>.</p>
+<ol>
+<li>It sets the <code>Authorization</code> header with the <code>Bearer</code> token.</li>
+<li>It returns <code>True</code> if the response status is <code>200 OK</code>,
+    indicating successful API access, and <code>False</code> otherwise.</li>
+</ol>
+<h4 id="15-save_token_info-and-load_token_info-functions">1.5. <code>save_token_info()</code> and <code>load_token_info()</code> functions<a class="headerlink" href="#15-save_token_info-and-load_token_info-functions" title="Permanent link">&para;</a></h4>
+<p>These functions handle the <strong>persistence of token information</strong> to and from a local JSON file (<code>token_info.json</code>).</p>
+<ul>
+<li><strong><code>save_token_info</code></strong>: Writes the <code>token_info</code> dictionary to the <code>TOKEN_FILE</code>.</li>
+<li><strong><code>load_token_info</code></strong>: Reads the <code>token_info</code> from the <code>TOKEN_FILE</code>.
+    It includes error handling for <code>FileNotFoundError</code> or <code>json.JSONDecodeError</code>
+    if the file doesn't exist or is corrupted, returning <code>None</code> in such cases.</li>
+</ul>
+<h4 id="16-main">1.6. <code>main()</code><a class="headerlink" href="#16-main" title="Permanent link">&para;</a></h4>
+<p>This function orchestrates the script's logic.</p>
+<ol>
+<li><strong>Load Existing Tokens</strong>: It first attempts to <code>load_token_info()</code> from the file.</li>
+<li><strong>Initial Authentication</strong>: If no valid tokens are found (file doesn't exist,
+    is corrupted, or essential keys are missing), it calls <code>authenticate()</code>
+    to start a new device flow, then <code>save_token_info()</code> and performs a <code>healthcheck</code>.</li>
+<li><strong>Check Token Expiration</strong>: If tokens are loaded, it checks if the <code>access_token</code>
+    is still valid (with a 10-second buffer before actual expiration).<ul>
+<li>If valid, it performs a <code>healthcheck</code> directly.</li>
+</ul>
+</li>
+<li><strong>Token Refresh</strong>: If the <code>access_token</code> has expired or is about to expire,
+    it calls <code>refresh_tokens()</code> using the stored <code>refresh_token</code>.<ul>
+<li>If the refresh is successful, it updates the <code>token_info</code>
+   (preserving the refresh token if a new one wasn't issued), <code>save_token_info()</code>, and performs a <code>healthcheck</code>.</li>
+<li>If the refresh fails (e.g., refresh token is revoked or expired),
+   it falls back to starting a new full <code>authenticate()</code> flow.</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-replicating-in-other-languages">2. Replicating in other languages<a class="headerlink" href="#2-replicating-in-other-languages" title="Permanent link">&para;</a></h3>
+<p>To implement this robust authentication and token refresh logic in another programming language, you'll need to:</p>
+<ol>
+<li><strong>HTTP Client</strong>: Utilize your language's HTTP client for making <code>POST</code> and <code>GET</code> requests.</li>
+<li><strong>JSON Handling</strong>: Parse JSON responses for token information and API results.</li>
+<li><strong>Time Management</strong>: Accurately calculate token expiration times using timestamps.</li>
+<li><strong>Token Storage</strong>: Implement a <strong>secure</strong> method to store <code>access_token</code> and especially
+    <code>refresh_token</code> between application runs. Avoid plain text files in production. Consider:<ul>
+<li>Environment variables (for secrets, typically during deployment).</li>
+<li>Operating system's credential manager (e.g., macOS Keychain, Windows Credential Manager).</li>
+<li>Encrypted database or file storage.</li>
+<li>Secure vaults (e.g., HashiCorp Vault, AWS Secrets Manager).</li>
+</ul>
+</li>
+<li><strong>Flow Logic</strong>:<ul>
+<li><strong>Initial Authentication</strong>: Implement the Device Flow as described in the previous documentation.</li>
+<li><strong>Token Expiration Check</strong>: Before making an API call, always check if the access token is near expiration.</li>
+<li><strong>Token Refresh Logic</strong>: If expired, make a <code>POST</code> request to the <code>TOKEN_URL</code> with <code>grant_type=refresh_token</code> and the <code>refresh_token</code>.</li>
+<li><strong>Fallback to Re-authentication</strong>: If the refresh token fails, initiate the full Device Flow again.</li>
+</ul>
+</li>
+<li><strong>Error Handling</strong>: Implement robust error handling for network issues,
+    invalid responses, and authentication failures at each step.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../stand_cloud_reader/" class="md-footer__link md-footer__link--prev" aria-label="Previous: StandCloud read data">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                StandCloud read data
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../stand_equipment/" class="md-footer__link md-footer__link--next" aria-label="Next: Stand equipment">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Stand equipment
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.path", "navigation.top", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.8fd75fb4.min.js"></script>
+      
+        <script src="../../js/print-site.js"></script>
+      
+    
+  <script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
+</html>

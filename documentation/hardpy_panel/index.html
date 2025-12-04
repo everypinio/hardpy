@@ -1,0 +1,2592 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Everypin">
+      
+      
+        <link rel="canonical" href="https://everypinio.github.io/hardpy/documentation/hardpy_panel/">
+      
+      
+        <link rel="prev" href="../database/">
+      
+      
+        <link rel="next" href="../pytest_hardpy/">
+      
+      
+      <link rel="icon" href="../../img/logo192.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.10">
+    
+    
+      
+        <title>HardPy panel - HardPy</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e359304.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings1.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings2.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings3.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings4.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings5.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings6.css">
+    
+      <link rel="stylesheet" href="../../css/print-site.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-material.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function n(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],n("js",new Date),n("config","G-6Z35DZJBP7"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){this.value&&n("event","search",{search_term:this.value})}),document$.subscribe(function(){var a=document.forms.feedback;if(void 0!==a)for(var e of a.querySelectorAll("[type=submit]"))e.addEventListener("click",function(e){e.preventDefault();var t=document.location.pathname,e=this.getAttribute("data-md-value");n("event","feedback",{page:t,data:e}),a.firstElementChild.disabled=!0;e=a.querySelector(".md-feedback__note [data-md-value='"+e+"']");e&&(e.hidden=!1)}),a.hidden=!1}),location$.subscribe(function(e){n("config","G-6Z35DZJBP7",{page_path:e.pathname})})});var e=document.createElement("script");e.async=!0,e.src="https://www.googletagmanager.com/gtag/js?id=G-6Z35DZJBP7",document.getElementById("__analytics").insertAdjacentElement("afterEnd",e)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#hardpy-panel" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="HardPy" class="md-header__button md-logo" aria-label="HardPy" data-md-component="logo">
+      
+  <img src="../../img/logo192.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            HardPy
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              HardPy panel
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/everypinio/hardpy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    everypinio/hardpy
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  HardPy
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../features/features/" class="md-tabs__link">
+        
+  
+    
+  
+  Features
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+    
+  
+  Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/" class="md-tabs__link">
+          
+  
+    
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../about/development/" class="md-tabs__link">
+          
+  
+    
+  
+  About
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../changelog/" class="md-tabs__link">
+        
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="HardPy" class="md-nav__button md-logo" aria-label="HardPy" data-md-component="logo">
+      
+  <img src="../../img/logo192.png" alt="logo">
+
+    </a>
+    HardPy
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/everypinio/hardpy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    everypinio/hardpy
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HardPy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/features/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Features
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Documentation
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CLI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardpy_config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../database/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    HardPy panel
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    HardPy panel
+  </span>
+  
+
+      </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="Contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#capability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Capability
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Capability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#languages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Languages
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#launch-operator-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      Launch operator panel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#start-and-stop-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Start and stop tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operator-panel-bar" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operator panel bar
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#debug-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      debug mode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sound" class="md-nav__link">
+    <span class="md-ellipsis">
+      sound
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-size-startstop-button" class="md-nav__link">
+    <span class="md-ellipsis">
+      Full-size start/stop button
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-test-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manual test selection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dialog-box" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dialog box
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dialog box">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-dialog-box" class="md-nav__link">
+    <span class="md-ellipsis">
+      basic dialog box
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#text-input-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      text input field
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#number-input-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      number input field
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#radiobutton" class="md-nav__link">
+    <span class="md-ellipsis">
+      radiobutton
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checkbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      checkbox
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      multiple steps
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operator-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operator message
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operator message">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#warning-window" class="md-nav__link">
+    <span class="md-ellipsis">
+      warning window
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-notification" class="md-nav__link">
+    <span class="md-ellipsis">
+      error notification
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#charts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Charts
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Charts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-line-chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic line chart
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple datasets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collapsed-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      Collapsed view
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expanded-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      Expanded view
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logarithmic-x-axis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logarithmic X-axis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logarithmic-y-axis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logarithmic Y-axis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logarithmic-x-and-y-axes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logarithmic X and Y axes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chart-interaction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chart interaction
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-completion-modal-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Test completion modal results
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pytest_hardpy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pytest-hardpy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stand_cloud/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Examples
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/attempts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Attempts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/chart/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chart
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/db_in_ram/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CouchDB in RAM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/couchdb_load/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CouchDB load
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/critical_test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Critical test
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/dialog_box/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dialog box
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/hardpy_launch/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HardPy launch
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/hello_hardpy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hello HardPy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/launch_arguments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Launch arguments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/logging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pytest logging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/measurement/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Measurement
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/minute_parity/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Minute parity
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/multiple_configs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multiple configs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/multiple_stands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multiple stands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/operator_msg/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Operator message
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/frontend_remote_access/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Remote access
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/skip_test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skip test
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/stand_cloud/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/stand_cloud_reader/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud read data
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/stand_cloud_thirdparty_auth/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StandCloud third party authorization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/stand_equipment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stand equipment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            About
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/development/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Development
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/frontend_sync/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frontend data synchronization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="Contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#capability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Capability
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Capability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#languages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Languages
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#launch-operator-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      Launch operator panel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#start-and-stop-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Start and stop tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operator-panel-bar" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operator panel bar
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#debug-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      debug mode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sound" class="md-nav__link">
+    <span class="md-ellipsis">
+      sound
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-size-startstop-button" class="md-nav__link">
+    <span class="md-ellipsis">
+      Full-size start/stop button
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-test-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manual test selection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dialog-box" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dialog box
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dialog box">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-dialog-box" class="md-nav__link">
+    <span class="md-ellipsis">
+      basic dialog box
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#text-input-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      text input field
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#number-input-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      number input field
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#radiobutton" class="md-nav__link">
+    <span class="md-ellipsis">
+      radiobutton
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checkbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      checkbox
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      multiple steps
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operator-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operator message
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operator message">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#warning-window" class="md-nav__link">
+    <span class="md-ellipsis">
+      warning window
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-notification" class="md-nav__link">
+    <span class="md-ellipsis">
+      error notification
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#charts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Charts
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Charts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-line-chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic line chart
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple datasets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collapsed-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      Collapsed view
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expanded-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      Expanded view
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logarithmic-x-axis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logarithmic X-axis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logarithmic-y-axis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logarithmic Y-axis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logarithmic-x-and-y-axes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logarithmic X and Y axes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chart-interaction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chart interaction
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-completion-modal-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Test completion modal results
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/everypinio/hardpy/edit/master/docs/documentation/hardpy_panel.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/everypinio/hardpy/raw/master/docs/documentation/hardpy_panel.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
+    </a>
+  
+
+
+<h1 id="hardpy-panel">HardPy panel<a class="headerlink" href="#hardpy-panel" title="Permanent link">&para;</a></h1>
+<p>The <strong>hardpy panel</strong> or operator panel is a web interface that displays and controls the testing process in <strong>HardPy</strong>.</p>
+<h2 id="capability">Capability<a class="headerlink" href="#capability" title="Permanent link">&para;</a></h2>
+<p><strong>HardPy panel</strong> allows you to:</p>
+<ul>
+<li>Start and stop testing;</li>
+<li>Interact with <a href="./#dialog-box">dialog box</a> during testing;</li>
+<li>Browse:<ul>
+<li>Test suite name.</li>
+<li>Last test run status.</li>
+<li>Test module name.</li>
+<li>Duration of test modules execution.</li>
+<li>Test module status.</li>
+<li>Test case name.</li>
+<li>Test case message.</li>
+<li>Test case status.</li>
+</ul>
+</li>
+<li>Browse current <a href="../database/#statestore-scheme">statestore</a> state in debug mode.</li>
+</ul>
+<h3 id="languages">Languages<a class="headerlink" href="#languages" title="Permanent link">&para;</a></h3>
+<p>You can set one of the following operator panel languages ​​via the <a href="../hardpy_config/#language">configuration file</a>:</p>
+<ul>
+<li>English ("en")</li>
+<li>German ("de")</li>
+<li>French ("fr")</li>
+<li>Spanish ("es")</li>
+<li>Chinese ("zh")</li>
+<li>Japanese ("ja")</li>
+<li>Russian ("ru")</li>
+</ul>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<h3 id="launch-operator-panel">Launch operator panel<a class="headerlink" href="#launch-operator-panel" title="Permanent link">&para;</a></h3>
+<p>Use the <a href="../cli/#hardpy-run">hardpy run</a> command to start the web server.
+After this open page <a href="http://localhost:8000/">http://localhost:8000/</a> in the browser.</p>
+<p>When the operator panel is running, you can run tests through the web interface or through
+the pytest launcher (in a terminal or from another application).</p>
+<h3 id="start-and-stop-tests">Start and stop tests<a class="headerlink" href="#start-and-stop-tests" title="Permanent link">&para;</a></h3>
+<p>The operator panel contains a test start/stop button in the lower right corner of the screen.
+The user can start/stop tests using the space key.</p>
+<h3 id="operator-panel-bar">Operator panel bar<a class="headerlink" href="#operator-panel-bar" title="Permanent link">&para;</a></h3>
+<p>Operator panel bar displays key system status information in a compact tag-based format.</p>
+<p><strong>Fields:</strong></p>
+<ul>
+<li><strong>Stand name</strong> - name of the test stand;</li>
+<li><strong>Status</strong> - current system status;</li>
+<li><strong>Start time</strong> - test/operation start timestamp with timezone;</li>
+<li><strong>Finish time</strong> - completion timestamp with timezone;</li>
+<li><strong>Alert</strong> - active warning or error message;</li>
+<li><strong>Test stand info</strong> - additional test stand parameters
+  from <a href="../pytest_hardpy/#set_dut_info">set_dut_info</a> info;</li>
+</ul>
+<p>All fields appear as minimal tags and only display when data is available.</p>
+<h3 id="settings">Settings<a class="headerlink" href="#settings" title="Permanent link">&para;</a></h3>
+<p>The operator panel contains a setting button in the top right corner.</p>
+<h4 id="debug-mode">debug mode<a class="headerlink" href="#debug-mode" title="Permanent link">&para;</a></h4>
+<p>The user can view the <strong>statestore</strong> database online by clicking on
+the <strong>Turn on the debug mode</strong> button.</p>
+<p>Debug mode is disabled by default.</p>
+<h4 id="sound">sound<a class="headerlink" href="#sound" title="Permanent link">&para;</a></h4>
+<p>The user can turn on the sound of the end of the test by clicking on
+the <strong>Turn on the sound</strong> button.</p>
+<p>Sound can also be enabled by setting <code>sound_on = true</code> in the frontend configuration section.
+Sound is disabled by default.</p>
+<h3 id="full-size-startstop-button">Full-size start/stop button<a class="headerlink" href="#full-size-startstop-button" title="Permanent link">&para;</a></h3>
+<p>The operator panel supports a full-size start/stop button layout for improved usability in various scenarios. 
+This feature is particularly useful for:</p>
+<ul>
+<li>Touchscreen interfaces</li>
+<li>Mobile devices</li>
+<li>Situations requiring prominent control elements</li>
+</ul>
+<p><strong>Configuration:</strong>
+Enable the full-size button in your <code>hardpy.toml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[frontend]</span>
+<span class="n">full_size_button</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</code></pre></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Desktop layout</label><label for="__tabbed_1_2">Mobile horizontal</label><label for="__tabbed_1_3">Mobile vertical</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/full_screen_button_big.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/full_screen_button_big.png" alt="Full-size button desktop layout" style="width:600px;"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/full_screen_button_phone_gorizontal.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/full_screen_button_phone_gorizontal.png" alt="Full-size button mobile horizontal" style="width:400px;"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/ful_screen_button_phone_vertical.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/ful_screen_button_phone_vertical.png" alt="Full-size button mobile vertical" style="width:200px;"></a>
+</h1></p>
+</div>
+</div>
+</div>
+<h3 id="manual-test-selection">Manual test selection<a class="headerlink" href="#manual-test-selection" title="Permanent link">&para;</a></h3>
+<p>The operator panel supports manual test selection, allowing operators to choose specific test cases 
+to run instead of executing the entire test plan.</p>
+<p><strong>Features</strong>:</p>
+<ul>
+<li><strong>Checkbox Interface</strong>: Each test case displays a checkbox for selection in the test suite view.</li>
+<li><strong>Bulk Selection</strong>: Checkboxes at the module level allow selecting/deselecting all tests in a module. </li>
+<li><strong>Visual Indicators</strong>: Selected tests are displayed normally, while non-selected tests are visually muted and marked as <code>Skipped</code>.</li>
+</ul>
+<p><strong>Usage</strong>:</p>
+<ol>
+<li>Enable manual collect mode in your <code>hardpy.toml</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="k">[frontend]</span>
+<span class="n">manual_collect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</code></pre></div>
+<ol>
+<li>When the operator panel loads, enable <strong>Manual collect on</strong> in the settings
+menu - checkboxes will appear next to each test case and module</li>
+<li>Select the desired tests by checking the corresponding checkboxes</li>
+<li>Disable manual collect mode by selecting <strong>Manual collect off</strong> in the settings menu</li>
+<li>Click the start button to run only the selected tests (non-selected tests will be skipped)</li>
+</ol>
+<p><strong>Note</strong>: When manual collect mode is disabled (default), all tests are selected and the checkboxes are hidden.</p>
+<h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/manual_collect_enabled.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/manual_collect_enabled.png" alt="Manual collect mode enabled" style="width:600px;"></a>
+</h1>
+
+<h3 id="dialog-box">Dialog box<a class="headerlink" href="#dialog-box" title="Permanent link">&para;</a></h3>
+<p>For user interaction with the test, it is possible to use dialog boxes.
+An example of usage can be seen in the example <a href="../../examples/dialog_box/">dialog box</a> and in <a href="../pytest_hardpy/#run_dialog_box">dialog box documentation</a>.
+Currently, there are some types of dialog boxes.</p>
+<p>Each dialog box can contain an image, HTML page or pass/fail buttons.</p>
+<ul>
+<li>Allows the width to be changed using the <code>width</code> parameter.</li>
+<li>Allows changing the border thickness with the <code>border</code> parameter.</li>
+<li>Allow the following image types: gif, jpeg, pjpeg, png, svg+xml, tiff, vnd.microsoft.icon, vnd.wap.wbmp, webp.</li>
+</ul>
+<h4 id="basic-dialog-box">basic dialog box<a class="headerlink" href="#basic-dialog-box" title="Permanent link">&para;</a></h4>
+<p>Contains an instruction or question and a <code>confirm</code> button for confirmation.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:5"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><input id="__tabbed_2_4" name="__tabbed_2" type="radio" /><input id="__tabbed_2_5" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Widget</label><label for="__tabbed_2_2">Widget with image</label><label for="__tabbed_2_3">Widget with HTML with link</label><label for="__tabbed_2_4">Widget with HTML with raw code</label><label for="__tabbed_2_5">Widget with pass/fail buttons</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/base_dialog_box.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/base_dialog_box.png" alt="base_dialog_box"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/base_dbx_with_image.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/base_dbx_with_image.png" alt="base_dialog_box_with_image"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_html_link.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_html_link.png" alt="base_dialog_box_with_html_link"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_html_raw_code.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_html_raw_code.png" alt="base_dialog_box_with_html_raw_code"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/base_dbx_with_pass_fail.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/base_dbx_with_pass_fail.png" alt="base_dialog_box_with_pass_fail"></a>
+</h1></p>
+</div>
+</div>
+</div>
+<h4 id="text-input-field">text input field<a class="headerlink" href="#text-input-field" title="Permanent link">&para;</a></h4>
+<p>Contains an instruction or question, a text input field, and a <code>confirm</code> button for confirmation.
+The text is transmitted in UTF-8 encoding.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:4"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><input id="__tabbed_3_4" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Widget</label><label for="__tabbed_3_2">Widget with image</label><label for="__tabbed_3_3">Widget with HTML</label><label for="__tabbed_3_4">Widget with pass/fail buttons</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/text_input_dialog_box.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/text_input_dialog_box.png" alt="text_input_dialog_box"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_text_input_and_image.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_text_input_and_image.png" alt="text_input_dialog_box_with_image"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_text_input_and_html.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_text_input_and_html.png" alt="text_input_dialog_box_with_html"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_text_input_and_pass_fail.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_text_input_and_pass_fail.png" alt="text_input_dialog_box_with_pass_fail"></a>
+</h1></p>
+</div>
+</div>
+</div>
+<h4 id="number-input-field">number input field<a class="headerlink" href="#number-input-field" title="Permanent link">&para;</a></h4>
+<p>Contains an instruction or question, a number input field, and a <code>confirm</code> button for confirmation.</p>
+<ul>
+<li>Allows float numbers with a dot separator.</li>
+<li>Allows negative numbers.</li>
+<li>Allows numbers to be entered using <strong>E notation</strong> with <code>e</code>, e.g. <code>2e3</code>.</li>
+<li>The entered numbers will be converted to float.</li>
+</ul>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:4"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><input id="__tabbed_4_4" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Widget</label><label for="__tabbed_4_2">Widget with image</label><label for="__tabbed_4_3">Widget with html</label><label for="__tabbed_4_4">Widget with pass/fail buttons</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/num_input_dialog_box.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/num_input_dialog_box.png" alt="num_input_dialog_box"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_num_input_and_image.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_num_input_and_image.png" alt="num_input_dialog_box_with_image"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_num_input_and_html.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_num_input_and_html.png" alt="num_input_dialog_box_with_html"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_num_input_and_pass_fail.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_num_input_and_pass_fail.png" alt="num_input_dialog_box_with_pass_fail"></a>
+</h1></p>
+</div>
+</div>
+</div>
+<h4 id="radiobutton">radiobutton<a class="headerlink" href="#radiobutton" title="Permanent link">&para;</a></h4>
+<p>Contains radiobutton widget.</p>
+<ul>
+<li>The user selects one option from several possible ones.</li>
+<li>Returns the contents of the selected item as a string.</li>
+</ul>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:4"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><input id="__tabbed_5_3" name="__tabbed_5" type="radio" /><input id="__tabbed_5_4" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Widget</label><label for="__tabbed_5_2">Widget with image</label><label for="__tabbed_5_3">Widget with html</label><label for="__tabbed_5_4">Widget with pass/fail buttons</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/radiobutton_dialog_box.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/radiobutton_dialog_box.png" alt="radiobutton_dialog_box"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_radio_and_image.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_radio_and_image.png" alt="radiobutton_dialog_box_with_image"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_radio_and_html.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_radio_and_html.png" alt="radiobutton_dialog_box_with_html"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_radio_and_pass_fail.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_radio_and_pass_fail.png" alt="radiobutton_dialog_box_with_pass_fail"></a>
+</h1></p>
+</div>
+</div>
+</div>
+<h4 id="checkbox">checkbox<a class="headerlink" href="#checkbox" title="Permanent link">&para;</a></h4>
+<p>Contains checkbox widget.</p>
+<ul>
+<li>The user selects several options from several possible ones.</li>
+<li>Returns a list with the contents of the selected items.</li>
+</ul>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:4"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><input id="__tabbed_6_3" name="__tabbed_6" type="radio" /><input id="__tabbed_6_4" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Widget</label><label for="__tabbed_6_2">Widget with image</label><label for="__tabbed_6_3">Widget with html</label><label for="__tabbed_6_4">Widget with pass/fail buttons</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/checkbox_dialog_box.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/checkbox_dialog_box.png" alt="checkbox_dialog_box"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_checkbox_and_image.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_checkbox_and_image.png" alt="checkbox_dialog_box_with_image"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_checkbox_and_html.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_checkbox_and_html.png" alt="checkbox_dialog_box_with_html"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_checkbox_and_pass_fail.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dbx_with_checkbox_and_pass_fail.png" alt="checkbox_dialog_box_with_pass_fail"></a>
+</h1></p>
+</div>
+</div>
+</div>
+<h4 id="multiple-steps">multiple steps<a class="headerlink" href="#multiple-steps" title="Permanent link">&para;</a></h4>
+<p>Contains an instruction with multiple steps and <code>confirm</code> button for confirmation.
+Allows steps with text and image.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:4"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><input id="__tabbed_7_3" name="__tabbed_7" type="radio" /><input id="__tabbed_7_4" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">Step 1</label><label for="__tabbed_7_2">Step 2</label><label for="__tabbed_7_3">Step 3</label><label for="__tabbed_7_4">Step with pass/fail buttons</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_steps.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_steps.png" alt="dialog_box_with_steps"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_step_with_image.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_step_with_image.png" alt="dialog_box_with_step_with_image"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_step_with_html.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_step_with_html.png" alt="dialog_box_with_step_with_html"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_step_with_pass_fail.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_with_step_with_pass_fail.png" alt="dialog_box_with_step_with_pass_fail"></a>
+</h1></p>
+</div>
+</div>
+</div>
+<h3 id="operator-message">Operator message<a class="headerlink" href="#operator-message" title="Permanent link">&para;</a></h3>
+<p>The messages to the operator are similar to <a href="#dialog-box">dialog boxes</a>,
+but do not contain a <strong>Confirm</strong> button and can be called outside
+the execution of the test plan, for example in case of exception
+catching in the <code>conftest.py</code> file.
+For more information, see the example <a href="../../examples/operator_msg/">operator message</a>
+or in the function description <a href="../pytest_hardpy/#set_operator_message">set_operator_message</a>.</p>
+<h4 id="warning-window">warning window<a class="headerlink" href="#warning-window" title="Permanent link">&para;</a></h4>
+<p>If the user clicks <code>confirm</code> without entering anything, a warning window will be displayed.</p>
+<h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_alert.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_alert.png" alt="alert"></a>
+</h1>
+
+<h4 id="error-notification">error notification<a class="headerlink" href="#error-notification" title="Permanent link">&para;</a></h4>
+<p>If the user closes the dialog box (using the cross in the upper right corner),
+the tests will be stopped, an error message will be displayed.</p>
+<h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_notification.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/dialog_box_notification.png" alt="notification"></a>
+</h1>
+
+<h3 id="charts">Charts<a class="headerlink" href="#charts" title="Permanent link">&para;</a></h3>
+<p>For visualizing test data, it is possible to use interactive charts.
+Charts provide a graphical representation of measurement results and allow operators to analyze data trends in real-time.</p>
+<p>Charts support the following features:</p>
+<ul>
+<li>Multiple datasets on a single chart</li>
+<li>Zooming capabilities</li>
+<li>Logarithmic scales for both X and Y axes</li>
+<li>Collapsible/expandable view</li>
+</ul>
+<h4 id="basic-line-chart">Basic line chart<a class="headerlink" href="#basic-line-chart" title="Permanent link">&para;</a></h4>
+<p>Displays a single dataset as a line chart with customizable styling.</p>
+<h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/basic_line_chart.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/basic_line_chart.png" alt="basic_line_chart"></a>
+</h1>
+
+<h4 id="multiple-datasets">Multiple datasets<a class="headerlink" href="#multiple-datasets" title="Permanent link">&para;</a></h4>
+<p>Shows multiple datasets on the same chart for comparative analysis. 
+Each dataset can have different colors and styles.</p>
+<h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/mult_dataset_chart.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/mult_dataset_chart.png" alt="multiple_datasets_chart"></a>
+</h1>
+
+<h4 id="collapsed-view">Collapsed view<a class="headerlink" href="#collapsed-view" title="Permanent link">&para;</a></h4>
+<p>Charts can be collapsed to save screen space when not actively being analyzed.</p>
+<h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/collapsed_chart.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/collapsed_chart.png" alt="collapsed_chart"></a>
+</h1>
+
+<h4 id="expanded-view">Expanded view<a class="headerlink" href="#expanded-view" title="Permanent link">&para;</a></h4>
+<p>Charts can be expanded to full view for detailed analysis.</p>
+<h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/expanded_chart.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/expanded_chart.png" alt="expanded_chart"></a>
+</h1>
+
+<h4 id="logarithmic-x-axis">Logarithmic X-axis<a class="headerlink" href="#logarithmic-x-axis" title="Permanent link">&para;</a></h4>
+<p>When dealing with data that spans multiple orders of magnitude, the X-axis can be set to logarithmic scale.</p>
+<h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/chart_log_x.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/chart_log_x.png" alt="logarithmic_x_chart"></a>
+</h1>
+
+<h4 id="logarithmic-y-axis">Logarithmic Y-axis<a class="headerlink" href="#logarithmic-y-axis" title="Permanent link">&para;</a></h4>
+<p>The Y-axis can be set to logarithmic scale for better visualization of exponential data trends.</p>
+<h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/chart_log_y.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/chart_log_y.png" alt="logarithmic_y_chart"></a>
+</h1>
+
+<h4 id="logarithmic-x-and-y-axes">Logarithmic X and Y axes<a class="headerlink" href="#logarithmic-x-and-y-axes" title="Permanent link">&para;</a></h4>
+<p>Both axes can be set to logarithmic scale for data that requires logarithmic representation in both dimensions.</p>
+<h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/chart_log_x_log_y.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/charts/chart_log_x_log_y.png" alt="logarithmic_xy_chart"></a>
+</h1>
+
+<h4 id="chart-interaction">Chart interaction<a class="headerlink" href="#chart-interaction" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Zoom</strong>: Click and drag to select an area to zoom into</li>
+<li><strong>Pan</strong>: Click and drag to move around the chart when zoomed in</li>
+<li><strong>Reset zoom</strong>: Double-click to reset to the original view</li>
+<li><strong>Data points</strong>: Hover over data points to see exact values</li>
+<li><strong>Legend</strong>: Click on legend items to show/hide specific datasets</li>
+<li><strong>Download</strong>: Downloading plot as a PNG.</li>
+</ul>
+<h3 id="test-completion-modal-results">Test completion modal results<a class="headerlink" href="#test-completion-modal-results" title="Permanent link">&para;</a></h3>
+<p>The operator panel now displays comprehensive test completion results through modal windows that provide immediate visual feedback about test outcomes.</p>
+<p><strong>Modal types</strong>:</p>
+<ul>
+<li><strong>PASS Modal</strong>: Green background with auto-dismiss countdown timer</li>
+<li><strong>FAIL Modal</strong>: Red background with scrollable list of failed test cases including module names, test case names, and assertion messages</li>
+<li><strong>STOP Modal</strong>: Yellow background showing the stopped test case details</li>
+</ul>
+<p><strong>User interaction</strong>:</p>
+<ul>
+<li><strong>Auto-dismiss</strong>: PASS modals automatically close after a configurable timeout (default: 5 seconds)</li>
+<li><strong>Manual dismissal</strong>: Click anywhere on the modal or press any key to close</li>
+<li><strong>Space key protection</strong>: Prevents accidental test start/stop during modal display</li>
+<li><strong>Cooldown period</strong>: Brief delay after modal dismissal before space key actions are enabled</li>
+</ul>
+<p><strong>Configuration</strong>:
+Enable and customize modal results in your <code>hardpy.toml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[frontend.modal_result]</span>
+<span class="n">enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w">    </span>
+<span class="n">auto_dismiss_pass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">auto_dismiss_timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span>
+</code></pre></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:3"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><input id="__tabbed_8_3" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">PASS modal result</label><label for="__tabbed_8_2">FAIL modal result</label><label for="__tabbed_8_3">STOP modal result</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/modal_result_pass.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/modal_result_pass.png" alt="PASS modal result" style="width:400px;"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/modal_result_fail.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/modal_result_fail.png" alt="FAIL modal result" style="width:400px;"></a>
+</h1></p>
+</div>
+<div class="tabbed-block">
+<p><h1 align="center">
+    <a class="glightbox" href="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/modal_result_stop.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/modal_result_stop.png" alt="STOP modal result" style="width:400px;"></a>
+</h1></p>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../database/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Database">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Database
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../pytest_hardpy/" class="md-footer__link md-footer__link--next" aria-label="Next: Pytest-hardpy">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Pytest-hardpy
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.path", "navigation.top", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.8fd75fb4.min.js"></script>
+      
+        <script src="../../js/print-site.js"></script>
+      
+    
+  <script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
+</html>
