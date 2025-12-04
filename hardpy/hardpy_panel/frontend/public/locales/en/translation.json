@@ -15,6 +15,9 @@
     "failedTestCases": "Failed Test Cases",
     "modalResultDismissHint": "Click anywhere or press any key to dismiss",
     "modalResultAutoDismissHint": "Auto-dismissing in {{seconds}} seconds...",
+    "manualCollectOn": "Manual collect on",
+    "manualCollectOff": "Manual collect off",
+    "testConfigurationSelector": "Select test configuration",
     "status": {
       "ready": "Ready",
       "run": "Run",
@@ -70,6 +73,13 @@
     "nameColumn": "Name",
     "dataColumn": "Data",
     "loading": "Loading...",
-    "stubName": "Test Suite"
+    "stubName": "Test Suite",
+    "runSelectedTests": "Run {{count}} selected tests",
+    "noTestsSelected": "No tests selected",
+    "testsStarted": "Started {{count}} tests",
+    "startError": "Error starting tests",
+    "connectionError": "Connection error",
+    "selectionColumn": "Select",
+    "skipped": "Skipped"
   }
 }

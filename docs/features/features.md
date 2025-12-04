@@ -93,6 +93,32 @@ Enable sound notifications in your `hardpy.toml`:
 sound_on = true
 ```
 
+### Manual test selection
+
+**HardPy** supports manual test selection, allowing operators to choose specific test cases
+to run instead of executing the entire test plan.
+
+**Key capabilities**:
+
+- **Checkbox-based selection**: Each test case and module displays checkboxes for selection
+- **Bulk operations**: Select or deselect all tests in a module with a single checkbox
+- **Visual feedback**: Selected tests are marked for execution, non-selected tests are skipped
+
+**Workflow**:
+
+1. Enable manual collect mode in settings menu
+2. Select desired tests using checkboxes
+3. Disable manual collect mode
+4. Start test execution - only selected tests will run
+
+**Configuration**:
+Enable manual test selection in your `hardpy.toml`:
+
+```toml
+[frontend]
+manual_collect = true
+```
+
 ## CLI
 
 ### Creating template project
@@ -448,10 +474,20 @@ The [set_case_chart](./../documentation/pytest_hardpy.md#set_case_chart)
 function allows each individual test case to store a single chart.
 An example of its use can be found on page [chart](./../examples/chart.md).
 
-### Running some instance in single stand
+### Multiple HardPy instances in a single stand
 
 A user can run multiple **HardPy** instances on a single stand.
 To create a document in the database for storing test data, each stand that 
 runs on a single computer must have a unique combination of 
 [frontend](./../documentation/hardpy_config.md#frontend) host and port.
 The startup is described in the [Multiple Stand](./../examples/multiple_stands.md) example.
+
+### Multiple test plan configurations
+
+**HardPy** allows the user to define and manage multiple test configurations within a single project. 
+This feature enables flexible test execution, allowing different sets of tests or 
+variations of the same tests to be run by simply selecting a configuration.
+This is achieved by defining different `pytest.ini` files for each configuration and referencing 
+them in the main `hardpy.toml` file. 
+
+An example of its use can be found on page [Multiple configs](./../examples/multiple_configs.md).

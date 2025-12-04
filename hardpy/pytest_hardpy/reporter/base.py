@@ -116,3 +116,8 @@ class BaseReporter:
             DF.ATTEMPT,
         )
         return self._statestore.get_field(key)
+
+    def clear_database(self) -> None:
+        """Clear both statestore and runstore databases directly."""
+        self._statestore.clear()
+        self._runstore.clear()

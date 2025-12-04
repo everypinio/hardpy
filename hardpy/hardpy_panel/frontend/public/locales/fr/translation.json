@@ -15,6 +15,9 @@
       "failedTestCases": "Cas de test échoués",
       "modalResultDismissHint": "Cliquez n'importe où ou appuyez sur n'importe quelle touche pour fermer",
       "modalResultAutoDismissHint": "Fermeture automatique dans {{seconds}} secondes...",
+      "manualCollectOn": "Collecte manuelle activée",
+      "manualCollectOff": "Collecte manuelle désactivée",
+      "testConfigurationSelector": "Sélectionner la configuration de test",
       "status": {
         "ready": "Prêt",
         "run": "En cours",
@@ -70,6 +73,13 @@
     "nameColumn": "Nom",
     "dataColumn": "Données",
     "loading": "Chargement...",
-    "stubName": "Suite de tests"
+    "stubName": "Suite de tests",
+    "runSelectedTests": "Exécuter {{count}} tests sélectionnés",
+    "noTestsSelected": "Aucun test sélectionné",
+    "testsStarted": "{{count}} tests démarrés",
+    "startError": "Erreur de démarrage des tests",
+    "connectionError": "Erreur de connexion",
+    "selectionColumn": "Sélectionner",
+    "skipped": "Ignoré"
   }
 }

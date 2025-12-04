@@ -15,6 +15,9 @@
       "failedTestCases": "失敗したテストケース",
       "modalResultDismissHint": "どこかをクリックするか、任意のキーを押して閉じます",
       "modalResultAutoDismissHint": "{{seconds}}秒後に自動的に閉じます...",
+      "manualCollectOn": "手動収集オン",
+      "manualCollectOff": "手動収集オフ",
+      "testConfigurationSelector": "テスト構成を選択する",
       "status": {
         "ready": "準備完了",
         "run": "実行中",
@@ -70,6 +73,13 @@
     "nameColumn": "名前",
     "dataColumn": "データ",
     "loading": "読み込み中...",
-    "stubName": "テストスイート"
+    "stubName": "テストスイート",
+    "runSelectedTests": "選択した{{count}}個のテストを実行",
+    "noTestsSelected": "テストが選択されていません",
+    "testsStarted": "{{count}}個のテストを開始しました",
+    "startError": "テストの開始エラー",
+    "connectionError": "接続エラー",
+    "selectionColumn": "選択",
+    "skipped": "スキップ済み"
   }
 }

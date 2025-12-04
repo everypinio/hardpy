@@ -8,6 +8,8 @@ import { withTranslation, WithTranslation } from "react-i18next";
 type Props = {
   testing_status: string;
   useBigButton?: boolean;
+  manualCollectMode?: boolean;
+  onTestRunStart?: () => void;
 } & WithTranslation;
 
 type State = {
@@ -32,6 +34,7 @@ class StartStopButton extends React.Component<Props, State> {
     this.state = {
       isStopButtonDisabled: false,
     };
+
     this.hardpy_start = this.hardpy_start.bind(this);
     this.hardpy_stop = this.hardpy_stop.bind(this);
   }
@@ -42,19 +45,11 @@ class StartStopButton extends React.Component<Props, State> {
    * @private
    */
   private hardpy_call(uri: string): void {
-    fetch(uri)
-      .then((response) => {
-        if (response.ok) {
-          return response.text();
-        } else {
-          console.log(
-            this.props.t("error.requestFailed", { status: response.status })
-          );
-        }
-      })
-      .catch((error) => {
-        console.log(this.props.t("error.requestError", { error }));
-      });
+    fetch(uri).then((response) => {
+      if (response.ok) {
+        return response.text();
+      }
+    });
   }
 
   /**
@@ -62,7 +57,14 @@ class StartStopButton extends React.Component<Props, State> {
    * @private
    */
   private hardpy_start(): void {
-    console.log("StartStopButton: Starting test execution");
+    if (this.props.manualCollectMode) {
+      return;
+    }
+
+    if (this.props.onTestRunStart) {
+      this.props.onTestRunStart();
+    }
+
     this.hardpy_call("api/start");
   }
 
@@ -72,10 +74,13 @@ class StartStopButton extends React.Component<Props, State> {
    * @private
    */
   private hardpy_stop(): void {
+    if (this.props.manualCollectMode) {
+      return;
+    }
+
     if (this.state.isStopButtonDisabled) {
       return;
     }
-    console.log("StartStopButton: Stopping test execution");
     this.hardpy_call("api/stop");
 
     // Disable the stop button for some time to prevent multiple rapid clicks
@@ -84,7 +89,6 @@ class StartStopButton extends React.Component<Props, State> {
       this.setState({ isStopButtonDisabled: false });
     }, 500);
   }
-
   /**
    * Checks if any dialog is currently open in the application.
    * Searches for both Blueprint.js dialogs and standard ARIA dialogs.
@@ -165,6 +169,12 @@ class StartStopButton extends React.Component<Props, State> {
       return;
     }
 
+    if (this.props.manualCollectMode) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
     // Check if completion ModalResult is visible
     if (this.isCompletionModalResultVisible()) {
       event.preventDefault();
@@ -185,7 +195,9 @@ class StartStopButton extends React.Component<Props, State> {
     }
 
     const target = event.target as HTMLElement;
-    if (!target) return;
+    if (!target) {
+      return;
+    }
 
     // Don't handle space if focused on interactive elements
     const interactiveElements = ["INPUT", "TEXTAREA", "SELECT", "BUTTON"];
@@ -207,6 +219,10 @@ class StartStopButton extends React.Component<Props, State> {
    * @private
    */
   private readonly handleButtonClick = (): void => {
+    if (this.props.manualCollectMode) {
+      return;
+    }
+
     // Check if completion ModalResult is visible
     if (this.isCompletionModalResultVisible()) {
       return;
@@ -245,7 +261,12 @@ class StartStopButton extends React.Component<Props, State> {
    * @returns {React.ReactNode} The Start/Stop button component.
    */
   render(): React.ReactNode {
-    const { t, testing_status, useBigButton = false } = this.props;
+    const {
+      t,
+      testing_status,
+      useBigButton = false,
+      manualCollectMode = false,
+    } = this.props;
     const is_testing: boolean = testing_status == "run";
     const button_id: string = "start-stop-button";
 
@@ -255,6 +276,7 @@ class StartStopButton extends React.Component<Props, State> {
         height: "96px",
         fontSize: "24px",
         fontWeight: "bold",
+        opacity: manualCollectMode ? 0.5 : 1,
       };
 
       const iconStyle = {
@@ -271,6 +293,7 @@ class StartStopButton extends React.Component<Props, State> {
         id: button_id,
         fill: true,
         style: bigButtonStyle,
+        disabled: manualCollectMode || this.state.isStopButtonDisabled,
       };
 
       const start_button: AnchorButtonProps = {
@@ -280,7 +303,7 @@ class StartStopButton extends React.Component<Props, State> {
         rightIcon: <span style={iconStyle}>&#9658;</span>,
         onClick: this.handleButtonClick,
         id: button_id,
-        disabled: this.state.isStopButtonDisabled,
+        disabled: manualCollectMode || this.state.isStopButtonDisabled,
         fill: true,
         style: bigButtonStyle,
       };
@@ -294,6 +317,7 @@ class StartStopButton extends React.Component<Props, State> {
         rightIcon: "stop",
         onClick: this.hardpy_stop,
         id: button_id,
+        disabled: manualCollectMode || this.state.isStopButtonDisabled,
       };
 
       const start_button: AnchorButtonProps = {
@@ -303,7 +327,7 @@ class StartStopButton extends React.Component<Props, State> {
         rightIcon: "play",
         onClick: this.handleButtonClick,
         id: button_id,
-        disabled: this.state.isStopButtonDisabled,
+        disabled: manualCollectMode || this.state.isStopButtonDisabled,
       };
 
       return <AnchorButton {...(is_testing ? stop_button : start_button)} />;

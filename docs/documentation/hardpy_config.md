@@ -27,6 +27,7 @@ port = 8000
 ```toml
 title = "HardPy TOML config"
 tests_name = "My tests"
+current_test_config = ""
 
 [database]
 user = "dev"
@@ -41,6 +42,7 @@ language = "en"
 full_size_button = false
 sound_on = false
 measurement_display = true
+manual_collect = false
 
 [frontend.modal_result]
 enable = false
@@ -69,6 +71,11 @@ The value is always `HardPy TOML config`.
 #### tests_name
 
 Tests name. The user can change this value with the `hardpy init --tests-name` argument.
+
+#### current_test_config
+
+Tests file configuration name. 
+An example of its use can be found on page [Multiple configs](./../examples/multiple_configs.md).
 
 ### database
 
@@ -131,6 +138,14 @@ Enable or disable measurement display in the operator panel.
 When set to `true`, measurements created using `set_case_measurement` will be displayed as tags 
 showing name, value, and unit information.
 Default is `true`.
+
+#### manual_collect
+
+Enable or disable manual test collection mode in the [operator panel](./hardpy_panel.md#manual-test-selection).
+When set to `true`, users can selectively choose which tests to run by checking individual test cases,
+and only the selected tests will be executed when starting the test run.
+When set to `false`, all discovered tests will run automatically as before.
+Default is `false`.
 
 #### modal_result
 
@@ -205,3 +220,19 @@ The default value is `30`.
 #### api-key
 
 **StandCloud** API key.
+
+### test_configs
+
+Test configurations describes using the `[[test_configs]]` table array. 
+
+#### name
+
+A user-friendly name for the configuration.
+
+#### file
+
+The path to the `pytest.ini` file that defines the specific pytest arguments and test selection for this configuration.
+
+#### description
+
+An optional field to provide a more detailed explanation of the configuration.

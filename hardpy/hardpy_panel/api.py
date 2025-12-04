@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Annotated, Any, Final
 from urllib.parse import unquote
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Request
 from fastapi.staticfiles import StaticFiles
 
 from hardpy.common.config import ConfigManager
@@ -35,6 +35,7 @@ logger = logging.getLogger(__name__)
 @contextlib.asynccontextmanager
 async def lifespan_sync_scheduler(app: FastAPI) -> AsyncGenerator[Any, Any]:
     """Manages the lifecycle events (startup and shutdown) for background tasks."""
+    # Start StandCloud synchronization if enabled
     config_manager = ConfigManager()
     sc_autosync = config_manager.config.stand_cloud.autosync
     if sc_autosync:
@@ -43,22 +44,24 @@ async def lifespan_sync_scheduler(app: FastAPI) -> AsyncGenerator[Any, Any]:
 
     yield
 
-    if sc_autosync:
-        if hasattr(app.state, "sync_task"):
-            app.state.sync_task.cancel()
-            # Wait for the task to be cancelled/finish its current cycle
-            await asyncio.gather(app.state.sync_task, return_exceptions=True)
-            logger.info("Cancelled StandCloud synchronization task.")
+    # Cleanup on shutdown
+    if sc_autosync and hasattr(app.state, "sync_task"):
+        app.state.sync_task.cancel()
+        await asyncio.gather(app.state.sync_task, return_exceptions=True)
+        logger.info("Cancelled StandCloud synchronization task.")
 
-        if hasattr(app.state, "executor"):
-            app.state.executor.shutdown(wait=False)
-            logger.info("Shut down ThreadPoolExecutor.")
+    if hasattr(app.state, "executor"):
+        app.state.executor.shutdown(wait=False)
+        logger.info("Shut down ThreadPoolExecutor.")
 
 
+# Initialize application state
 app = FastAPI(lifespan=lifespan_sync_scheduler)
 app.state.pytest_wrp = PyTestWrapper()
 app.state.sc_synchronizer = StandCloudSynchronizer()
 app.state.executor = ThreadPoolExecutor(max_workers=1)
+app.state.manual_collect_mode = False
+app.state.selected_tests = []
 
 
 class Status(str, Enum):
@@ -108,6 +111,25 @@ def hardpy_config() -> dict:
     return app.state.pytest_wrp.get_config()
 
 
+@app.post("/api/set_test_config/{config_name}")
+def set_test_config(config_name: str) -> dict:
+    """Set the current test configuration.
+
+    Args:
+        config_name (str): Name of the test configuration to set
+    Returns:
+        dict: Status of the operation.
+    """
+    config_manager = ConfigManager()
+    config_manager.set_current_test_config(config_name)
+    try:
+        app.state.pytest_wrp.collect(is_clear_database=True)
+    except (ValueError, RuntimeError) as e:
+        return {"status": "error", "message": str(e)}
+    else:
+        return {"status": "success", "current_config": config_name}
+
+
 @app.get("/api/start")
 def start_pytest(args: Annotated[list[str] | None, Query()] = None) -> dict:
     """Start pytest subprocess.
@@ -118,12 +140,18 @@ def start_pytest(args: Annotated[list[str] | None, Query()] = None) -> dict:
     Returns:
         dict[str, RunStatus]: run status
     """
+    if app.state.manual_collect_mode:
+        return {"status": Status.BUSY, "message": "Manual collect mode is active"}
+
     if args is None:
         args_dict = []
     else:
         args_dict = dict(arg.split("=", 1) for arg in args if "=" in arg)
 
-    if app.state.pytest_wrp.start(start_args=args_dict):
+    if app.state.pytest_wrp.start(
+        start_args=args_dict,
+        selected_tests=app.state.selected_tests,
+    ):
         logger.info("Start testing process.")
         return {"status": Status.STARTED}
     logger.info("Testing process is already running.")
@@ -137,6 +165,9 @@ def stop_pytest() -> dict:
     Returns:
         dict[str, RunStatus]: run status
     """
+    if app.state.manual_collect_mode:
+        return {"status": Status.BUSY, "message": "Manual collect mode is active"}
+
     if app.state.pytest_wrp.stop():
         logger.info("Stop testing process.")
         return {"status": Status.STOPPED}
@@ -270,6 +301,64 @@ def confirm_operator_msg(is_msg_visible: str) -> dict:
     if app.state.pytest_wrp.send_data(str(is_msg_visible)):
         return {"status": Status.BUSY}
     return {"status": Status.ERROR}
+
+
+@app.post("/api/selected_tests")
+async def set_selected_tests(request: Request) -> dict:
+    """Set the selected tests in the application state.
+
+    Args:
+        request (Request): The incoming request object.
+
+    Returns:
+        dict[str, str]: A dictionary containing the
+                        status and message of the operation.
+            - status (str): The status of the operation.
+                            Possible values are "success" or "error".
+            - message (str): A message describing the
+                             result of the operation.
+
+    Raises:
+        TypeError: If the `selected_tests` is not a list.
+    """
+    selected_tests = await request.json()
+
+    if not isinstance(selected_tests, list):
+        msg = "Expected list."
+        raise TypeError(msg)
+
+    app.state.selected_tests = selected_tests
+    app.state.pytest_wrp.collect(is_clear_database=True, selected_tests=selected_tests)
+    return {"status": "success", "message": f"Selected {len(selected_tests)} tests"}
+
+
+@app.get("/api/manual_collect_mode")
+def get_manual_collect_mode() -> dict:
+    """Get manual collect mode status.
+
+    Returns:
+        dict[str, bool]: manual collect mode status
+    """
+    return {"manual_collect_mode": app.state.manual_collect_mode}
+
+
+@app.post("/api/manual_collect_mode")
+def set_manual_collect_mode(mode_data: dict) -> dict:
+    """Set manual collect mode.
+
+    Args:
+        mode_data: dict with 'enabled' key
+
+    Returns:
+        dict[str, str]: operation status
+    """
+    enabled = mode_data.get("enabled", False)
+    app.state.manual_collect_mode = enabled
+
+    if enabled:
+        app.state.pytest_wrp.collect()
+
+    return {"status": "success", "manual_collect_mode": enabled}
 
 
 if "DEBUG_FRONTEND" not in os.environ:

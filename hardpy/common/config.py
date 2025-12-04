@@ -51,6 +51,7 @@ class FrontendConfig(BaseModel):
     language: str = "en"
     full_size_button: bool = False
     sound_on: bool = False
+    manual_collect: bool = False
     measurement_display: bool = True
     modal_result: ModalResultConfig = Field(default_factory=lambda: ModalResultConfig())
 
@@ -77,6 +78,24 @@ class StandCloudConfig(BaseModel):
     api_key: str = ""
 
 
+class TestConfig(BaseModel):
+    """Test configuration entry."""
+
+    model_config = ConfigDict(extra="allow")
+
+    name: str
+    description: str = ""
+    file: str | None = None
+
+
+class TestConfigs(BaseModel):
+    """Test configurations container."""
+
+    model_config = ConfigDict(extra="allow")
+
+    available: list[str] = []
+
+
 class HardpyConfig(BaseModel, extra="allow"):
     """HardPy configuration."""
 
@@ -87,6 +106,8 @@ class HardpyConfig(BaseModel, extra="allow"):
     database: DatabaseConfig = DatabaseConfig()
     frontend: FrontendConfig = FrontendConfig()
     stand_cloud: StandCloudConfig = StandCloudConfig()
+    current_test_config: str = ""
+    test_configs: list[TestConfig] = []
 
     def model_post_init(self, __context) -> None:  # noqa: ANN001,PYI063
         """Get database document name."""
@@ -102,7 +123,7 @@ class ConfigManager(metaclass=SingletonMeta):
 
     def __init__(self) -> None:
         self._config = HardpyConfig()
-        self._test_path = Path.cwd()
+        self._tests_path = Path.cwd()
 
     @property
     def config(self) -> HardpyConfig:
@@ -176,7 +197,8 @@ class ConfigManager(metaclass=SingletonMeta):
         Args:
             parent_dir (Path): Configuration file parent directory.
         """
-        config_str = tomli_w.dumps(self._config.model_dump())
+        # test_config is filled in by the user as an array
+        config_str = tomli_w.dumps(self._config.model_dump(exclude="test_configs"))
         with Path.open(parent_dir / "hardpy.toml", "w") as file:
             file.write(config_str)
 
@@ -192,6 +214,7 @@ class ConfigManager(metaclass=SingletonMeta):
         self._tests_path = toml_path
         toml_file = toml_path / "hardpy.toml"
         if not toml_file.exists():
+            # TODO (xorialexandrov): Add a log that cannot cause tests to fail
             return None
         try:
             with Path.open(toml_path / "hardpy.toml", "rb") as f:
@@ -207,3 +230,23 @@ class ConfigManager(metaclass=SingletonMeta):
             logger.exception("Error parsing TOML")
             return None
         return self._config
+
+    def set_current_test_config(self, config_name: str) -> None:
+        """Set current test configuration.
+
+        Args:
+            config_name (str): Test configuration name
+        """
+        if self._config.test_configs == []:
+            logger.warning("No test configurations available.")
+            return
+
+        available_configs = [config.name for config in self._config.test_configs]
+        if config_name in available_configs:
+            self._config.current_test_config = config_name
+        else:
+            msg = (
+                f"Test configuration {config_name} not ",
+                "found among available configurations.",
+            )
+            logger.warning(msg)

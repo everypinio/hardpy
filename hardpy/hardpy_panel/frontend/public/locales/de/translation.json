@@ -15,6 +15,9 @@
       "failedTestCases": "Fehlgeschlagene Testfälle",
       "modalResultDismissHint": "Klicken Sie irgendwo oder drücken Sie eine Taste, um zu schließen",
       "modalResultAutoDismissHint": "Automatisches Schließen in {{seconds}} Sekunden...",
+      "manualCollectOn": "Manuelle Sammlung ein",
+      "manualCollectOff": "Manuelle Sammlung aus",
+      "testConfigurationSelector": "Testkonfiguration auswählen",
       "status": {
         "ready": "Bereit",
         "run": "Läuft",
@@ -70,6 +73,13 @@
     "nameColumn": "Name",
     "dataColumn": "Daten",
     "loading": "Wird geladen...",
-    "stubName": "Testgruppe"
+    "stubName": "Testgruppe",
+    "runSelectedTests": "{{count}} ausgewählte Tests ausführen",
+    "noTestsSelected": "Keine Tests ausgewählt",
+    "testsStarted": "{{count}} Tests gestartet",
+    "startError": "Fehler beim Starten der Tests",
+    "connectionError": "Verbindungsfehler",
+    "selectionColumn": "Auswählen",
+    "skipped": "Übersprungen"
   }
 }

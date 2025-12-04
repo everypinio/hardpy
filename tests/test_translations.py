@@ -135,6 +135,7 @@ class App(BaseModel):
     dbError: str
     noEntries: str
     status: AppStatus
+    testConfigurationSelector: str
 
 
 class SuiteList(BaseModel):
@@ -173,6 +174,14 @@ class _TestSuite(BaseModel):
     dataColumn: str
     loading: str
     stubName: str
+    stubName: str
+    runSelectedTests: str
+    noTestsSelected: str
+    testsStarted: str
+    startError: str
+    connectionError: str
+    selectionColumn: str
+    skipped: str
 
 
 class TranslationModel(BaseModel):

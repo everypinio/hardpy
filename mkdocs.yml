@@ -74,6 +74,7 @@ nav:
       - Pytest logging: examples/logging.md
       - Measurement: examples/measurement.md
       - Minute parity: examples/minute_parity.md
+      - Multiple configs: examples/multiple_configs.md
       - Multiple stands: examples/multiple_stands.md
       - Operator message: examples/operator_msg.md
       - Remote access: examples/frontend_remote_access.md

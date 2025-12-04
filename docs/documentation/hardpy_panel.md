@@ -113,6 +113,38 @@ full_size_button = true
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/ful_screen_button_phone_vertical.png" alt="Full-size button mobile vertical" style="width:200px;">
     </h1>
 
+### Manual test selection
+
+The operator panel supports manual test selection, allowing operators to choose specific test cases 
+to run instead of executing the entire test plan.
+
+**Features**:
+
+- **Checkbox Interface**: Each test case displays a checkbox for selection in the test suite view.
+- **Bulk Selection**: Checkboxes at the module level allow selecting/deselecting all tests in a module. 
+- **Visual Indicators**: Selected tests are displayed normally, while non-selected tests are visually muted and marked as `Skipped`.
+
+**Usage**:
+
+1. Enable manual collect mode in your `hardpy.toml`:
+
+```toml
+[frontend]
+manual_collect = true
+```
+
+2. When the operator panel loads, enable **Manual collect on** in the settings
+menu - checkboxes will appear next to each test case and module
+3. Select the desired tests by checking the corresponding checkboxes
+4. Disable manual collect mode by selecting **Manual collect off** in the settings menu
+5. Click the start button to run only the selected tests (non-selected tests will be skipped)
+
+**Note**: When manual collect mode is disabled (default), all tests are selected and the checkboxes are hidden.
+
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/manual_collect_enabled.png" alt="Manual collect mode enabled" style="width:600px;">
+</h1>
+
 ### Dialog box
 
 For user interaction with the test, it is possible to use dialog boxes.
