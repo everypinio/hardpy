@@ -31,8 +31,8 @@
     "start": "Začít",
     "stop": "Zastavit",
     "confirm": "Potvrdit",
-    "pass": "Uspěl",
-    "fail": "Neuspěl"
+    "pass": "OK",
+    "fail": "Zrušit"
   },
   "error": {
     "dbConnectionTitle": "Chyba připojení k databázi",
