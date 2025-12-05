@@ -5,6 +5,8 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 * Add a "Manual mode" string to the tests name if the `manual_collect` 
   setting in the **hardpy.toml** file is set to `true`. 
   [[PR-237](https://github.com/everypinio/hardpy/pull/237)]
+* Add a Czech translation of the operator panel.
+  [[PR-236](https://github.com/everypinio/hardpy/pull/236)]
 
 ## 0.19.0
 
