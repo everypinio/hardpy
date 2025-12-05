@@ -208,11 +208,16 @@ class PyTestWrapper:
         return config_manager.config.model_dump()
 
     def _tests_name(self) -> str:
-        return (
+        manual_str = ""
+        if self.config.frontend.manual_collect:
+            manual_str = " Manual mode"
+
+        tests_name = (
             self.config.tests_name + f" {self.config.current_test_config}"
             if self.config.current_test_config
             else self.config.tests_name
         )
+        return tests_name + manual_str
 
     def _add_config_file(self, cmd: list) -> None:
         """Add test configuration file if specified."""
