@@ -30,6 +30,7 @@ You can set one of the following operator panel languages ​​via the [configu
 - Chinese ("zh")
 - Japanese ("ja")
 - Russian ("ru")
+- Czech ("cs")
 
 ## Usage
 
