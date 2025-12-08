@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 from logging import getLogger
+from typing import TYPE_CHECKING
 
 from hardpy.common.config import ConfigManager
-from hardpy.pytest_hardpy.db.storage_interface import IStorage
+
+if TYPE_CHECKING:
+    from hardpy.pytest_hardpy.db.storage_interface import IStorage
 
 logger = getLogger(__name__)
 
@@ -46,12 +49,16 @@ class StorageFactory:
             except ImportError as exc:
                 msg = (
                     "CouchDB storage requires pycouchdb. "
-                    'Install with: pip install hardpy[couchdb] or pip install "pycouchdb>=1.14.2"'
+                    "Install with: pip install hardpy[couchdb] or "
+                    'pip install "pycouchdb>=1.14.2"'
                 )
                 raise ImportError(msg) from exc
 
             logger.debug(f"Creating CouchDB storage for {store_name}")
             return CouchDBStore(store_name)
 
-        msg = f"Unknown storage type: {storage_type}. Supported types: 'json', 'couchdb'"
+        msg = (
+            f"Unknown storage type: {storage_type}. "
+            "Supported types: 'json', 'couchdb'"
+        )
         raise ValueError(msg)
