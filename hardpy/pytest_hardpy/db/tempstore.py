@@ -54,11 +54,12 @@ class TempStore(metaclass=SingletonMeta):
         try:
             with report_file.open("w") as f:
                 json.dump(report_dict, f, indent=2, default=str)
-            self._log.debug(f"Report saved with id: {report_id}")
-            return True
         except Exception as exc:  # noqa: BLE001
             self._log.error(f"Error while saving report {report_id}: {exc}")
             return False
+        else:
+            self._log.debug(f"Report saved with id: {report_id}")
+            return True
 
     def reports(self) -> Generator[ResultRunStore]:
         """Get all reports from the temporary storage.
@@ -71,7 +72,7 @@ class TempStore(metaclass=SingletonMeta):
                 with report_file.open("r") as f:
                     report_dict = json.load(f)
                 yield self._schema(**report_dict)
-            except Exception as exc:  # noqa: BLE001
+            except Exception as exc:  # noqa: BLE001, PERF203
                 self._log.error(f"Error loading report from {report_file}: {exc}")
                 continue
 
@@ -87,13 +88,14 @@ class TempStore(metaclass=SingletonMeta):
         report_file = self._storage_dir / f"{report_id}.json"
         try:
             report_file.unlink()
-            return True
         except FileNotFoundError:
             self._log.warning(f"Report {report_id} not found in temporary storage")
             return False
         except Exception as exc:  # noqa: BLE001
             self._log.error(f"Error deleting report {report_id}: {exc}")
             return False
+        else:
+            return True
 
     def dict_to_schema(self, report: dict) -> ResultRunStore:
         """Convert report dict to report schema.
