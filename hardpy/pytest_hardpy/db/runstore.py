@@ -37,7 +37,7 @@ class RunStore(metaclass=SingletonMeta):
             except Exception:  # noqa: BLE001
                 self._log.debug("Runstore storage will be created for the first time")
 
-        self._storage._schema = ResultRunStore  # type: ignore
+        self._storage._schema = ResultRunStore  # type: ignore  # noqa: SLF001
 
     def get_field(self, key: str) -> Any:  # noqa: ANN401
         """Get field from the run store.
