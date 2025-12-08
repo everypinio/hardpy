@@ -5,7 +5,7 @@ title = "HardPy JSON Storage Demo"
 tests_name = "Device Test Suite"
 
 [database]
-# Storage type: "json" (default, no external database) or "couchdb"
+# Storage type: "json"
 storage_type = "json"
 
 # CouchDB settings (only needed if storage_type = "couchdb")
@@ -27,8 +27,3 @@ measurement_display = true
 enable = true
 auto_dismiss_pass = true
 auto_dismiss_timeout = 5
-
-[stand_cloud]
-address = "standcloud.io"
-connection_only = false
-autosync = false
