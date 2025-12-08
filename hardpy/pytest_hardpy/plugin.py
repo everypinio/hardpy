@@ -205,6 +205,7 @@ class HardpyPlugin:
         status = self._get_run_status(exitstatus)
         if status == TestStatus.STOPPED:
             self._stop_tests()
+        self._validate_stop_time()
         self._reporter.finish(status)
         self._reporter.update_db_by_doc()
         self._reporter.compact_all()
@@ -482,6 +483,29 @@ class HardpyPlugin:
                 return TestStatus.STOPPED
             case _:
                 return TestStatus.FAILED
+
+    def _validate_stop_time(self) -> None:
+        """Update module and case stop times if they are not set.
+
+        If module start time is set but module stop time is not set,
+        set module stop time to module start time.
+        If case start time is set but case stop time is not set, set
+        case stop time to case start time.
+        """
+        for module_id, module_data in self._results.items():
+            module_start_time = self._reporter.get_module_start_time(module_id)
+            module_stop_time = self._reporter.get_module_stop_time(module_id)
+            if module_start_time and not module_stop_time:
+                self._reporter.set_module_stop_time(module_start_time)
+            for module_data_key in module_data:
+                # skip module status
+                if module_data_key == "module_status":
+                    continue
+                case_id = module_data_key
+                case_start_time = self._reporter.get_case_start_time(module_id, case_id)
+                case_stop_time = self._reporter.get_case_stop_time(module_id, case_id)
+                if case_start_time and not case_stop_time:
+                    self._reporter.set_case_stop_time(case_start_time)
 
     def _stop_tests(self) -> None:
         """Update module and case statuses to stopped and skipped."""
