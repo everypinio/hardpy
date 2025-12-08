@@ -14,10 +14,15 @@ from requests.exceptions import ConnectionError  # noqa: A004
 
 from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db.const import DatabaseField as DF  # noqa: N817
+from hardpy.pytest_hardpy.db.storage_interface import IStorage
 
 
-class BaseStore:
-    """HardPy base storage interface for CouchDB."""
+class CouchDBStore(IStorage):
+    """CouchDB-based storage implementation.
+
+    This class provides storage using CouchDB as the backend.
+    Handles database connections, document revisions, and conflict resolution.
+    """
 
     def __init__(self, db_name: str) -> None:
         config_manager = ConfigManager()
@@ -177,3 +182,7 @@ class BaseStore:
         }
 
         return doc
+
+
+# Backward compatibility alias
+BaseStore = CouchDBStore

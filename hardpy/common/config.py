@@ -19,6 +19,7 @@ class DatabaseConfig(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
+    storage_type: str = "couchdb"  # "json" or "couchdb"
     user: str = "dev"
     password: str = "dev"
     host: str = "localhost"
