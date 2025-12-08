@@ -361,6 +361,57 @@ def set_manual_collect_mode(mode_data: dict) -> dict:
     return {"status": "success", "manual_collect_mode": enabled}
 
 
+@app.get("/api/storage_type")
+def get_storage_type() -> dict:
+    """Get the configured storage type.
+
+    Returns:
+        dict[str, str]: storage type ("json" or "couchdb")
+    """
+    config_manager = ConfigManager()
+    return {"storage_type": config_manager.config.database.storage_type}
+
+
+@app.get("/api/json_data")
+def get_json_data() -> dict:
+    """Get test run data from JSON storage.
+
+    Returns:
+        dict: Test run data from JSON files
+    """
+    config_manager = ConfigManager()
+    storage_type = config_manager.config.database.storage_type
+
+    if storage_type != "json":
+        return {"error": "JSON storage not configured"}
+
+    try:
+        storage_dir = Path(config_manager.tests_path) / ".hardpy" / "storage"
+        runstore_file = storage_dir / "runstore.json"
+
+        if not runstore_file.exists():
+            return {"rows": [], "total_rows": 0}
+
+        with runstore_file.open("r") as f:
+            data = json.load(f)
+
+        # Format data to match CouchDB's _all_docs format
+        return {
+            "rows": [
+                {
+                    "id": data.get("_id", ""),
+                    "key": data.get("_id", ""),
+                    "value": {"rev": data.get("_rev", "1-0")},
+                    "doc": data,
+                }
+            ],
+            "total_rows": 1,
+        }
+    except Exception as exc:  # noqa: BLE001
+        logger.error(f"Error reading JSON storage: {exc}")
+        return {"error": str(exc), "rows": [], "total_rows": 0}
+
+
 if "DEBUG_FRONTEND" not in os.environ:
     app.mount(
         "/",
