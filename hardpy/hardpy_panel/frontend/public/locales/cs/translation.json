@@ -1,0 +1,85 @@
+{
+  "app": {
+    "title": "HardPy Panel operátora",
+    "lastLaunch": "Poslední běh:",
+    "duration": "Doba trvání",
+    "seconds": "s",
+    "soundOn": "Zapnout zvuk",
+    "soundOff": "Vypnout zvuk",
+    "debugOn": "Zapnout režim ladění",
+    "debugOff": "Vypnout režim ladění",
+    "connection": "Navazuji spojení... 🧐🔎",
+    "dbError": "Chyba připojení k databázi. 🙅🏽‍♀️🚫",
+    "noEntries": "Žádné záznamy v databázi 🙅🏽‍♀️🚫",
+    "stoppedTestCase": "Zastavený test",
+    "failedTestCases": "Testy selhaly",
+    "modalResultDismissHint": "Klikněte kamkoliv nebo stiskněte libovolnou klávesu pro zavření",
+    "modalResultAutoDismissHint": "Automaticky zmizí za {{seconds}} sekund...",
+    "manualCollectOn": "Zapnout manuální výběr testů",
+    "manualCollectOff": "Vypnout manuální výběr testů",
+    "testConfigurationSelector": "Vyberte testovací konfiguraci",
+    "status": {
+      "ready": "Připraveno",
+      "run": "Běží",
+      "passed": "Uspěl",
+      "failed": "Neuspěl",
+      "stopped": "Zastaveno",
+      "unknown": "Neznámý"
+    }
+  },
+  "button": {
+    "start": "Začít",
+    "stop": "Zastavit",
+    "confirm": "Potvrdit",
+    "pass": "OK",
+    "fail": "Zrušit"
+  },
+  "error": {
+    "dbConnectionTitle": "Chyba připojení k databázi",
+    "dbConnectionMessage": "Nepodařilo se navázat spojení s databází"
+  },
+  "chart": {
+    "dataChart": "Grafy",
+    "xAxis": "Osa X",
+    "yAxis": "Osa Y",
+    "chart": "Graf",
+    "showChart": "Zobrazit graf {{title}}",
+    "fullscreenButton": "Otevřít graf na celé obrazovce",
+    "series": "Řada {{number}}"
+  },
+  "operatorDialog": {
+    "defaultTitle": "Zpráva",
+    "imageAlt": "Obrázek pro operátora",
+    "htmlCodeTitle": "HTML kód",
+    "htmlLinkTitle": "HTML odkaz",
+    "enterAnswer": "Zadejte odpověď",
+    "fieldNotEmpty": "Pole nesmí být prázdné",
+    "notificationTitle": "Oznámení",
+    "notificationDesc": "Okno bylo uzavřeno. Testy byly zastaveny.",
+    "numericInputError": "Zadejte prosím číslo",
+    "radioButtonError": "Vyberte prosím jednu možnost",
+    "checkboxError": "Vyberte prosím alespoň jednu možnost"
+  },
+  "suiteList": {
+    "loadingTests": "Načítání testů... 🤔",
+    "refreshHint": "Zkuste aktualizovat stránku.",
+    "standName": "Název stanoviště",
+    "status": "Stav",
+    "startTime": "Čas zahájení",
+    "finishTime": "Čas dokončení",
+    "alert": "Upozornění"
+  },
+  "testSuite": {
+    "nameColumn": "Název",
+    "dataColumn": "Údaje",
+    "loading": "Načítám...",
+    "stubName": "Sada testů",
+    "runSelectedTests": "Spustit {{count}} vybrané testy",
+    "noTestsSelected": "Nebyly vybrány žádné testy",
+    "testsStarted": "Zahájené testy {{count}}",
+    "startError": "Chyba při spouštění testů",
+    "connectionError": "Chyba připojení",
+    "selectionColumn": "Vybrat",
+    "skipped": "Přeskočeno"
+  }
+}
