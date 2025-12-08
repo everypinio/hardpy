@@ -1,6 +1,3 @@
-# Copyright (c) 2025 Demo
-# Test module for voltage measurements
-
 import hardpy
 import pytest
 from time import sleep

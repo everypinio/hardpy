@@ -1,6 +1,3 @@
-# Copyright (c) 2025 Demo
-# Test module demonstrating chart functionality
-
 import hardpy
 import pytest
 import math
