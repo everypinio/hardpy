@@ -21,7 +21,8 @@ class IStorage(ABC):
         """Get field value from document using dot notation.
 
         Args:
-            key (str): Field key, supports nested access with dots (e.g., "modules.test1.status")
+            key (str): Field key, supports nested access with dots
+                (e.g., "modules.test1.status")
 
         Returns:
             Any: Field value
