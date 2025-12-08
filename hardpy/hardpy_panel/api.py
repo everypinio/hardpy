@@ -403,12 +403,12 @@ def get_json_data() -> dict:
                     "key": data.get("_id", ""),
                     "value": {"rev": data.get("_rev", "1-0")},
                     "doc": data,
-                }
+                },
             ],
             "total_rows": 1,
         }
-    except Exception as exc:  # noqa: BLE001
-        logger.error(f"Error reading JSON storage: {exc}")
+    except Exception as exc:
+        logger.exception("Error reading JSON storage")
         return {"error": str(exc), "rows": [], "total_rows": 0}
 
 
