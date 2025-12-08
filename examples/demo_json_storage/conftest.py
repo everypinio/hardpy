@@ -1,6 +1,3 @@
-# Copyright (c) 2025 Demo
-# Pytest configuration and fixtures for HardPy tests
-
 import pytest
 
 
