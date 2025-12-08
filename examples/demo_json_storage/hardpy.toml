@@ -1,0 +1,34 @@
+# HardPy Configuration File
+# This demo uses JSON file storage (no CouchDB required!)
+
+title = "HardPy JSON Storage Demo"
+tests_name = "Device Test Suite"
+
+[database]
+# Storage type: "json" (default, no external database) or "couchdb"
+storage_type = "json"
+
+# CouchDB settings (only needed if storage_type = "couchdb")
+# user = "dev"
+# password = "dev"
+# host = "localhost"
+# port = 5984
+
+[frontend]
+host = "localhost"
+port = 8000
+language = "en"
+sound_on = false
+full_size_button = false
+manual_collect = false
+measurement_display = true
+
+[frontend.modal_result]
+enable = true
+auto_dismiss_pass = true
+auto_dismiss_timeout = 5
+
+[stand_cloud]
+address = "standcloud.io"
+connection_only = false
+autosync = false
