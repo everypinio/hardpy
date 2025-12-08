@@ -4,6 +4,9 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 
 ## 0.19.1
 
+* Add a `stop_time` validator function. If a case or module has a start time,
+  it must also have a stop time.
+  [[PR-237](https://github.com/everypinio/hardpy/pull/237)]
 * Add a "Manual mode" string to the tests name if the `manual_collect` 
   setting in the **hardpy.toml** file is set to `true`. 
   [[PR-237](https://github.com/everypinio/hardpy/pull/237)]
