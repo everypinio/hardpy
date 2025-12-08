@@ -206,8 +206,10 @@ class JsonFileStore(IStorage):
 
                     return doc
             except json.JSONDecodeError:
-                self._log.warning(f"Corrupted storage file {self._file_path}, creating new")
-            except Exception as exc:
+                self._log.warning(
+                    f"Corrupted storage file {self._file_path}, creating new",
+                )
+            except Exception as exc:  # noqa: BLE001
                 self._log.warning(f"Error loading storage file: {exc}, creating new")
 
         # Return default document structure
