@@ -87,6 +87,7 @@ class JsonTempStore(TempStoreInterface):
         """
         report_dict = report.model_dump()
         report_id = report_dict.get("id", str(uuid4()))
+        report_dict["id"] = report_id  # Ensure ID is in the document
         report_file = self._storage_dir / f"{report_id}.json"
 
         try:
