@@ -147,19 +147,19 @@ class ConfigManager(metaclass=SingletonMeta):
         return self._tests_path
 
     def init_config(  # noqa: PLR0913
-            self,
-            tests_name: str,
-            database_user: str,
-            database_password: str,
-            database_host: str,
-            database_port: int,
-            frontend_host: str,
-            frontend_port: int,
-            frontend_language: str,
-            sc_address: str,
-            sc_connection_only: bool,
-            sc_autosync: bool,
-            sc_api_key: str,
+        self,
+        tests_name: str,
+        database_user: str,
+        database_password: str,
+        database_host: str,
+        database_port: int,
+        frontend_host: str,
+        frontend_port: int,
+        frontend_language: str,
+        sc_address: str,
+        sc_connection_only: bool,
+        sc_autosync: bool,
+        sc_api_key: str,
     ) -> None:
         """Initialize the HardPy configuration.
 
