@@ -26,7 +26,7 @@ class DatabaseConfig(BaseModel):
     port: int = 5984
     doc_id: str = Field(exclude=True, default="")
     url: str = Field(exclude=True, default="")
-    # have any function when storage_type is JSON
+    # This field is relevant only when storage_type is "json"
     storage_path: str = Field(exclude=True, default=".hardpy")
 
     def model_post_init(self, __context) -> None:  # noqa: ANN001,PYI063

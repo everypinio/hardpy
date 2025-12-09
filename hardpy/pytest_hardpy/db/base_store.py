@@ -3,18 +3,20 @@
 
 from json import dumps
 from logging import getLogger
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 from glom import assign, glom
 from pycouchdb import Server as DbServer
 from pycouchdb.client import Database
 from pycouchdb.exceptions import Conflict, GenericError, NotFound
-from pydantic._internal._model_construction import ModelMetaclass
 from requests.exceptions import ConnectionError  # noqa: A004
 
 from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db.const import DatabaseField as DF  # noqa: N817
 from hardpy.pytest_hardpy.db.storage_interface import IStorage
+
+if TYPE_CHECKING:
+    from pydantic import BaseModel
 
 
 class CouchDBStore(IStorage):
@@ -33,7 +35,7 @@ class CouchDBStore(IStorage):
         self._doc_id = config.database.doc_id
         self._log = getLogger(__name__)
         self._doc: dict = self._init_doc()
-        self._schema: ModelMetaclass
+        self._schema: BaseModel
 
     def compact(self) -> None:
         """Compact database."""
@@ -84,11 +86,11 @@ class CouchDBStore(IStorage):
         self._doc["_rev"] = self._db.get(self._doc_id)["_rev"]
         self._doc = self._db.get(self._doc_id)
 
-    def get_document(self) -> ModelMetaclass:
+    def get_document(self) -> BaseModel:
         """Get document by schema.
 
         Returns:
-            ModelMetaclass: document by schema
+            BaseModel: document by schema
         """
         self._doc = self._db.get(self._doc_id)
         return self._schema(**self._doc)

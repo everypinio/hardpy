@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from pydantic._internal._model_construction import ModelMetaclass
+    from pydantic import BaseModel
 
 
 class IStorage(ABC):
@@ -46,11 +46,11 @@ class IStorage(ABC):
         """Reload document from storage backend to memory."""
 
     @abstractmethod
-    def get_document(self) -> ModelMetaclass:
+    def get_document(self) -> BaseModel:
         """Get full document with schema validation.
 
         Returns:
-            ModelMetaclass: Validated document model
+            BaseModel: Validated document model
         """
 
     @abstractmethod

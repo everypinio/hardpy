@@ -9,13 +9,11 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from glom import assign, glom
+from pydantic import BaseModel
 
 from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db.const import DatabaseField as DF  # noqa: N817
 from hardpy.pytest_hardpy.db.storage_interface import IStorage
-
-if TYPE_CHECKING:
-    from pydantic._internal._model_construction import ModelMetaclass
 
 
 class JsonFileStore(IStorage):
@@ -40,7 +38,7 @@ class JsonFileStore(IStorage):
         self._doc_id = config_manager.config.database.doc_id
         self._log = getLogger(__name__)
         self._doc: dict = self._init_doc()
-        self._schema: ModelMetaclass
+        self._schema: BaseModel
 
     def get_field(self, key: str) -> Any:  # noqa: ANN401
         """Get field value from document using dot notation.
@@ -110,11 +108,11 @@ class JsonFileStore(IStorage):
                 self._log.error(f"Error reading storage file: {exc}")
                 raise
 
-    def get_document(self) -> ModelMetaclass:
+    def get_document(self) -> BaseModel:
         """Get full document with schema validation.
 
         Returns:
-            ModelMetaclass: Validated document model
+            BaseModel: Validated document model
         """
         self.update_doc()
         return self._schema(**self._doc)
