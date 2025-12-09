@@ -17,7 +17,7 @@ from urllib.parse import unquote
 from fastapi import FastAPI, Query, Request
 from fastapi.staticfiles import StaticFiles
 
-from hardpy.common.config import ConfigManager
+from hardpy.common.config import ConfigManager, StorageType
 from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
 from hardpy.pytest_hardpy.result.report_synchronizer import StandCloudSynchronizer
 
@@ -382,7 +382,7 @@ def get_json_data() -> dict:
     config_manager = ConfigManager()
     storage_type = config_manager.config.database.storage_type
 
-    if storage_type != "json":
+    if storage_type != StorageType.JSON:
         return {"error": "JSON storage not configured"}
 
     try:

@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 from logging import getLogger
 from typing import TYPE_CHECKING, Any
 
-from hardpy.common.config import ConfigManager
+from hardpy.common.config import ConfigManager, StorageType
 from hardpy.common.singleton import SingletonMeta
 from hardpy.pytest_hardpy.db.schema import ResultRunStore
 
@@ -202,9 +202,9 @@ class RunStore(metaclass=SingletonMeta):
         storage_type = config.config.database.storage_type
 
         self._impl: RunStoreInterface
-        if storage_type == "json":
+        if storage_type == StorageType.JSON:
             self._impl = JsonRunStore()
-        elif storage_type == "couchdb":
+        elif storage_type == StorageType.COUCHDB:
             self._impl = CouchDBRunStore()
         else:
             msg = f"Unknown storage type: {storage_type}"

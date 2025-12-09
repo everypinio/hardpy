@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+from enum import Enum
 from logging import getLogger
 from pathlib import Path
 
@@ -14,12 +15,24 @@ from hardpy.common.singleton import SingletonMeta
 logger = getLogger(__name__)
 
 
+class StorageType(str, Enum):
+    """Storage backend types for HardPy data persistence.
+
+    Attributes:
+        JSON: JSON file-based storage on local filesystem
+        COUCHDB: CouchDB database storage
+    """
+
+    JSON = "json"
+    COUCHDB = "couchdb"
+
+
 class DatabaseConfig(BaseModel):
     """Database configuration."""
 
     model_config = ConfigDict(extra="forbid")
 
-    storage_type: str = "couchdb"  # "json" or "couchdb"
+    storage_type: StorageType = StorageType.COUCHDB
     user: str = "dev"
     password: str = "dev"
     host: str = "localhost"

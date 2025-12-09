@@ -5,7 +5,7 @@ from __future__ import annotations
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from hardpy.common.config import ConfigManager
+from hardpy.common.config import ConfigManager, StorageType
 
 if TYPE_CHECKING:
     from hardpy.pytest_hardpy.db.storage_interface import Storage
@@ -35,15 +35,15 @@ class StorageFactory:
             ImportError: If required dependencies for storage type are not installed
         """
         config = ConfigManager().config
-        storage_type = getattr(config.database, "storage_type", "json")
+        storage_type = config.database.storage_type
 
-        if storage_type == "json":
+        if storage_type == StorageType.JSON:
             from hardpy.pytest_hardpy.db.json_file_store import JsonFileStore
 
             logger.debug(f"Creating JSON file storage for {store_name}")
             return JsonFileStore(store_name)
 
-        if storage_type == "couchdb":
+        if storage_type == StorageType.COUCHDB:
             try:
                 from hardpy.pytest_hardpy.db.couchdb_store import CouchDBStore
             except ImportError as exc:

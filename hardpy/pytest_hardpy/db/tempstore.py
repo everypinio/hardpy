@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 from uuid import uuid4
 
-from hardpy.common.config import ConfigManager
+from hardpy.common.config import ConfigManager, StorageType
 from hardpy.common.singleton import SingletonMeta
 from hardpy.pytest_hardpy.db.schema import ResultRunStore
 
@@ -197,7 +197,10 @@ class CouchDBTempStore(TempStoreInterface):
         Returns:
             bool: True if successful, False otherwise
         """
-        from pycouchdb.exceptions import Conflict, NotFound  # type: ignore[import-untyped]
+        from pycouchdb.exceptions import (  # type: ignore[import-untyped]
+            Conflict,
+            NotFound,
+        )
 
         try:
             self._db.delete(report_id)
@@ -222,9 +225,9 @@ class TempStore(metaclass=SingletonMeta):
         storage_type = config.config.database.storage_type
 
         self._impl: TempStoreInterface
-        if storage_type == "json":
+        if storage_type == StorageType.JSON:
             self._impl = JsonTempStore()
-        elif storage_type == "couchdb":
+        elif storage_type == StorageType.COUCHDB:
             self._impl = CouchDBTempStore()
         else:
             msg = f"Unknown storage type: {storage_type}"
