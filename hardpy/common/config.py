@@ -26,6 +26,8 @@ class DatabaseConfig(BaseModel):
     port: int = 5984
     doc_id: str = Field(exclude=True, default="")
     url: str = Field(exclude=True, default="")
+    # have any function when storage_type is JSON
+    storage_path: str = Field(exclude=True, default=".hardpy")
 
     def model_post_init(self, __context) -> None:  # noqa: ANN001,PYI063
         """Get database connection url."""
@@ -145,19 +147,19 @@ class ConfigManager(metaclass=SingletonMeta):
         return self._tests_path
 
     def init_config(  # noqa: PLR0913
-        self,
-        tests_name: str,
-        database_user: str,
-        database_password: str,
-        database_host: str,
-        database_port: int,
-        frontend_host: str,
-        frontend_port: int,
-        frontend_language: str,
-        sc_address: str,
-        sc_connection_only: bool,
-        sc_autosync: bool,
-        sc_api_key: str,
+            self,
+            tests_name: str,
+            database_user: str,
+            database_password: str,
+            database_host: str,
+            database_port: int,
+            frontend_host: str,
+            frontend_port: int,
+            frontend_language: str,
+            sc_address: str,
+            sc_connection_only: bool,
+            sc_autosync: bool,
+            sc_api_key: str,
     ) -> None:
         """Initialize the HardPy configuration.
 
