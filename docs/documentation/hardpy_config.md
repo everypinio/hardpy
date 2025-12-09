@@ -93,7 +93,7 @@ The user can change this value with the `hardpy init --storage-type` option.
 
 #### storage_path
 
-Path to the storage directory. The default is `.hardpy` int the root of the project.
+Path to the storage directory. The default is `.hardpy` in the root of the project.
 The user can change this value with the `hardpy init --storage-path` option. Relative and absolute paths are supported.
 
 #### user
