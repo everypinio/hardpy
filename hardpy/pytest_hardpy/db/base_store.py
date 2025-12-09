@@ -9,14 +9,12 @@ from glom import assign, glom
 from pycouchdb import Server as DbServer
 from pycouchdb.client import Database
 from pycouchdb.exceptions import Conflict, GenericError, NotFound
+from pydantic import BaseModel
 from requests.exceptions import ConnectionError  # noqa: A004
 
 from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db.const import DatabaseField as DF  # noqa: N817
 from hardpy.pytest_hardpy.db.storage_interface import IStorage
-
-if TYPE_CHECKING:
-    from pydantic import BaseModel
 
 
 class CouchDBStore(IStorage):
