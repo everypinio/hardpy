@@ -21,8 +21,8 @@ if TYPE_CHECKING:
 class JsonFileStore(IStorage):
     """JSON file-based storage implementation.
 
-    Stores data in JSON files within the .hardpy/storage directory of the test project.
-    Provides atomic writes and file locking for concurrent access safety.
+    Stores data in JSON files within the 'storage_path' directory of the test project.
+    Provides atomic writes for safer file operations.
     """
 
     def __init__(self, store_name: str) -> None:
