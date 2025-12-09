@@ -182,7 +182,3 @@ class CouchDBStore(IStorage):
         }
 
         return doc
-
-
-# Backward compatibility alias
-BaseStore = CouchDBStore

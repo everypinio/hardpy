@@ -45,7 +45,7 @@ class StorageFactory:
 
         if storage_type == "couchdb":
             try:
-                from hardpy.pytest_hardpy.db.base_store import CouchDBStore
+                from hardpy.pytest_hardpy.db.couchdb_store import CouchDBStore
             except ImportError as exc:
                 msg = (
                     "CouchDB storage requires pycouchdb. "

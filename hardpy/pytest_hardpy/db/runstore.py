@@ -30,7 +30,7 @@ class RunStore(metaclass=SingletonMeta):
         # For CouchDB: Clear the runstore on initialization
         # For JSON: The JsonFileStore __init__ already loads existing data
         # Only clear if explicitly requested via clear() method
-        from hardpy.pytest_hardpy.db.base_store import CouchDBStore
+        from hardpy.pytest_hardpy.db.couchdb_store import CouchDBStore
         if isinstance(self._storage, CouchDBStore):
             try:
                 self._storage.clear()
