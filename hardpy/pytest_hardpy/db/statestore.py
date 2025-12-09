@@ -11,7 +11,7 @@ from hardpy.pytest_hardpy.db.schema import ResultStateStore
 from hardpy.pytest_hardpy.db.storage_factory import StorageFactory
 
 if TYPE_CHECKING:
-    from pydantic._internal._model_construction import ModelMetaclass
+    from pydantic import BaseModel
 
     from hardpy.pytest_hardpy.db.storage_interface import Storage
 
@@ -56,11 +56,11 @@ class StateStore(metaclass=SingletonMeta):
         """Update current document by database."""
         self._storage.update_doc()
 
-    def get_document(self) -> ModelMetaclass:
+    def get_document(self) -> BaseModel:
         """Get document by schema.
 
         Returns:
-            ModelMetaclass: document by schema
+            BaseModel: document by schema
         """
         return self._storage.get_document()
 
