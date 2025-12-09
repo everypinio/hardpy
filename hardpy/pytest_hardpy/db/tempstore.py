@@ -28,7 +28,7 @@ class TempStore(metaclass=SingletonMeta):
     def __init__(self) -> None:
         self._log = getLogger(__name__)
         config = ConfigManager()
-        self._storage_dir = Path(config.tests_path) / ".hardpy" / "tempstore"
+        self._storage_dir = Path(config.config.database.storage_path) / "tempstore"
 
         # Only create directory for JSON storage
         # CouchDB stores data directly in the database, no local .hardpy needed

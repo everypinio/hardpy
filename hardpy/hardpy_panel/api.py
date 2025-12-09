@@ -386,7 +386,7 @@ def get_json_data() -> dict:
         return {"error": "JSON storage not configured"}
 
     try:
-        storage_dir = Path(config_manager.tests_path) / ".hardpy" / "storage"
+        storage_dir = Path(config_manager.config.database.storage_path) / "storage"
         runstore_file = storage_dir / "runstore.json"
 
         if not runstore_file.exists():

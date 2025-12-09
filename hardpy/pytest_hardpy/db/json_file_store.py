@@ -33,7 +33,7 @@ class JsonFileStore(IStorage):
         """
         config_manager = ConfigManager()
         self._store_name = store_name
-        self._storage_dir = Path(config_manager.tests_path) / ".hardpy" / "storage"
+        self._storage_dir = Path(config_manager.config.database.storage_path) / "storage"
         self._storage_dir.mkdir(parents=True, exist_ok=True)
         self._file_path = self._storage_dir / f"{store_name}.json"
         self._doc_id = config_manager.config.database.doc_id
