@@ -171,7 +171,10 @@ class CouchDBTempStore(TempStoreInterface):
         from pycouchdb.exceptions import Conflict  # type: ignore[import-untyped]
 
         report_dict = report.model_dump()
-        report_id = report_dict.pop("id")
+        report_id = report_dict.pop("id", None)
+        if not report_id:
+            self._log.error("Report missing required 'id' field")
+            return False
         try:
             self._db.save(report_dict)
         except Conflict as exc:
