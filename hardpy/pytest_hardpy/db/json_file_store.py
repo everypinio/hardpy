@@ -9,11 +9,13 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from glom import assign, glom
-from pydantic import BaseModel
 
 from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db.const import DatabaseField as DF  # noqa: N817
 from hardpy.pytest_hardpy.db.storage_interface import Storage
+
+if TYPE_CHECKING:
+    from pydantic import BaseModel
 
 
 class JsonFileStore(Storage):

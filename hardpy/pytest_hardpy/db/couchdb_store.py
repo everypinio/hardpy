@@ -3,7 +3,7 @@
 
 from json import dumps
 from logging import getLogger
-from typing import Any, TYPE_CHECKING
+from typing import Any
 
 from glom import assign, glom
 from pycouchdb import Server as DbServer
