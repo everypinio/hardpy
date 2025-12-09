@@ -13,10 +13,10 @@ from pydantic import BaseModel
 
 from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db.const import DatabaseField as DF  # noqa: N817
-from hardpy.pytest_hardpy.db.storage_interface import IStorage
+from hardpy.pytest_hardpy.db.storage_interface import Storage
 
 
-class JsonFileStore(IStorage):
+class JsonFileStore(Storage):
     """JSON file-based storage implementation.
 
     Stores data in JSON files within the 'storage_path' directory of the test project.

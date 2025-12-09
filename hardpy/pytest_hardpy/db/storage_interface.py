@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from pydantic import BaseModel
 
 
-class IStorage(ABC):
+class Storage(ABC):
     """Abstract storage interface for HardPy data persistence.
 
     This interface defines the contract for storage implementations,

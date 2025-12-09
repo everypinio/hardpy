@@ -13,7 +13,7 @@ from hardpy.pytest_hardpy.db.storage_factory import StorageFactory
 if TYPE_CHECKING:
     from pydantic import BaseModel
 
-    from hardpy.pytest_hardpy.db.storage_interface import IStorage
+    from hardpy.pytest_hardpy.db.storage_interface import Storage
 
 
 class RunStore(metaclass=SingletonMeta):
@@ -25,7 +25,7 @@ class RunStore(metaclass=SingletonMeta):
 
     def __init__(self) -> None:
         self._log = getLogger(__name__)
-        self._storage: IStorage = StorageFactory.create_storage("runstore")
+        self._storage: Storage = StorageFactory.create_storage("runstore")
 
         # For CouchDB: Clear the runstore on initialization
         # For JSON: The JsonFileStore __init__ already loads existing data

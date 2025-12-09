@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from hardpy.common.config import ConfigManager
 
 if TYPE_CHECKING:
-    from hardpy.pytest_hardpy.db.storage_interface import IStorage
+    from hardpy.pytest_hardpy.db.storage_interface import Storage
 
 logger = getLogger(__name__)
 
@@ -21,14 +21,14 @@ class StorageFactory:
     """
 
     @staticmethod
-    def create_storage(store_name: str) -> IStorage:
+    def create_storage(store_name: str) -> Storage:
         """Create storage instance based on configuration.
 
         Args:
             store_name (str): Name of the storage (e.g., "runstore", "statestore")
 
         Returns:
-            IStorage: Storage instance
+            Storage: Storage instance
 
         Raises:
             ValueError: If storage type is unknown or unsupported

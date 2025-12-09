@@ -13,7 +13,7 @@ from hardpy.pytest_hardpy.db.storage_factory import StorageFactory
 if TYPE_CHECKING:
     from pydantic._internal._model_construction import ModelMetaclass
 
-    from hardpy.pytest_hardpy.db.storage_interface import IStorage
+    from hardpy.pytest_hardpy.db.storage_interface import Storage
 
 
 class StateStore(metaclass=SingletonMeta):
@@ -25,7 +25,7 @@ class StateStore(metaclass=SingletonMeta):
 
     def __init__(self) -> None:
         self._log = getLogger(__name__)
-        self._storage: IStorage = StorageFactory.create_storage("statestore")
+        self._storage: Storage = StorageFactory.create_storage("statestore")
         self._storage._schema = ResultStateStore  # type: ignore  # noqa: SLF001
 
     def get_field(self, key: str) -> Any:  # noqa: ANN401
