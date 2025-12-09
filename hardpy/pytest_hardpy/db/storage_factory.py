@@ -8,6 +8,8 @@ from typing import TYPE_CHECKING
 from hardpy.common.config import ConfigManager, StorageType
 
 if TYPE_CHECKING:
+    from pydantic import BaseModel
+
     from hardpy.pytest_hardpy.db.storage_interface import Storage
 
 logger = getLogger(__name__)
@@ -21,11 +23,12 @@ class StorageFactory:
     """
 
     @staticmethod
-    def create_storage(store_name: str) -> Storage:
+    def create_storage(store_name: str, schema: type[BaseModel]) -> Storage:
         """Create storage instance based on configuration.
 
         Args:
             store_name (str): Name of the storage (e.g., "runstore", "statestore")
+            schema (type[BaseModel]): Pydantic model class for document validation
 
         Returns:
             Storage: Storage instance
@@ -41,7 +44,7 @@ class StorageFactory:
             from hardpy.pytest_hardpy.db.json_file_store import JsonFileStore
 
             logger.debug(f"Creating JSON file storage for {store_name}")
-            return JsonFileStore(store_name)
+            return JsonFileStore(store_name, schema)
 
         if storage_type == StorageType.COUCHDB:
             try:
@@ -55,7 +58,7 @@ class StorageFactory:
                 raise ImportError(msg) from exc
 
             logger.debug(f"Creating CouchDB storage for {store_name}")
-            return CouchDBStore(store_name)
+            return CouchDBStore(store_name, schema)
 
         msg = (
             f"Unknown storage type: {storage_type}. "

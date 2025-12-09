@@ -24,7 +24,7 @@ class CouchDBStore(Storage):
     Handles database connections, document revisions, and conflict resolution.
     """
 
-    def __init__(self, db_name: str) -> None:
+    def __init__(self, db_name: str, schema: type[BaseModel]) -> None:
         config_manager = ConfigManager()
         config = config_manager.config
         self._db_srv = DbServer(config.database.url)
@@ -33,7 +33,7 @@ class CouchDBStore(Storage):
         self._doc_id = config.database.doc_id
         self._log = getLogger(__name__)
         self._doc: dict = self._init_doc()
-        self._schema: BaseModel
+        self._schema: type[BaseModel] = schema
 
     def compact(self) -> None:
         """Compact database."""

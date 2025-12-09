@@ -25,8 +25,9 @@ class StateStore(metaclass=SingletonMeta):
 
     def __init__(self) -> None:
         self._log = getLogger(__name__)
-        self._storage: Storage = StorageFactory.create_storage("statestore")
-        self._storage._schema = ResultStateStore  # type: ignore  # noqa: SLF001
+        self._storage: Storage = StorageFactory.create_storage(
+            "statestore", ResultStateStore,
+        )
 
     def get_field(self, key: str) -> Any:  # noqa: ANN401
         """Get field from the state store.

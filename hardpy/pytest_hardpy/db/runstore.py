@@ -73,8 +73,7 @@ class JsonRunStore(RunStoreInterface):
         from hardpy.pytest_hardpy.db.json_file_store import JsonFileStore
 
         self._log = getLogger(__name__)
-        self._storage = JsonFileStore("runstore")
-        self._storage._schema = ResultRunStore  # type: ignore  # noqa: SLF001
+        self._storage = JsonFileStore("runstore", ResultRunStore)
 
     def get_field(self, key: str) -> Any:  # noqa: ANN401
         """Get field from the run store.
@@ -131,15 +130,13 @@ class CouchDBRunStore(RunStoreInterface):
         from hardpy.pytest_hardpy.db.couchdb_store import CouchDBStore
 
         self._log = getLogger(__name__)
-        self._storage = CouchDBStore("runstore")
+        self._storage = CouchDBStore("runstore", ResultRunStore)
 
         # Clear the runstore on initialization for CouchDB
         try:
             self._storage.clear()
         except Exception:  # noqa: BLE001
             self._log.debug("Runstore storage will be created for the first time")
-
-        self._storage._schema = ResultRunStore  # type: ignore  # noqa: SLF001
 
     def get_field(self, key: str) -> Any:  # noqa: ANN401
         """Get field from the run store.

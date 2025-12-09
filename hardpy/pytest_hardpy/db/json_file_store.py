@@ -25,11 +25,12 @@ class JsonFileStore(Storage):
     Provides atomic writes for safer file operations.
     """
 
-    def __init__(self, store_name: str) -> None:
+    def __init__(self, store_name: str, schema: type[BaseModel]) -> None:
         """Initialize JSON file storage.
 
         Args:
             store_name (str): Name of the storage (e.g., "runstore", "statestore")
+            schema (type[BaseModel]): Pydantic model class for document validation
         """
         config_manager = ConfigManager()
         self._store_name = store_name
@@ -40,7 +41,7 @@ class JsonFileStore(Storage):
         self._doc_id = config_manager.config.database.doc_id
         self._log = getLogger(__name__)
         self._doc: dict = self._init_doc()
-        self._schema: BaseModel
+        self._schema: type[BaseModel] = schema
 
     def get_field(self, key: str) -> Any:  # noqa: ANN401
         """Get field value from document using dot notation.
