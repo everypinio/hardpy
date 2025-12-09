@@ -5,6 +5,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Any
 
+from hardpy.pytest_hardpy.db.const import DatabaseField as DF  # noqa: N817
+
 if TYPE_CHECKING:
     from pydantic import BaseModel
 
@@ -60,3 +62,42 @@ class Storage(ABC):
     @abstractmethod
     def compact(self) -> None:
         """Optimize storage (implementation-specific, may be no-op)."""
+
+    def _create_default_doc_structure(self, doc_id: str) -> dict:
+        """Create default document structure with standard fields.
+
+        Args:
+            doc_id (str): Document ID to use
+
+        Returns:
+            dict: Default document structure with DUT, TEST_STAND, and PROCESS fields
+        """
+        return {
+            "_id": doc_id,
+            DF.MODULES: {},
+            DF.DUT: {
+                DF.TYPE: None,
+                DF.NAME: None,
+                DF.REVISION: None,
+                DF.SERIAL_NUMBER: None,
+                DF.PART_NUMBER: None,
+                DF.SUB_UNITS: [],
+                DF.INFO: {},
+            },
+            DF.TEST_STAND: {
+                DF.HW_ID: None,
+                DF.NAME: None,
+                DF.REVISION: None,
+                DF.TIMEZONE: None,
+                DF.LOCATION: None,
+                DF.NUMBER: None,
+                DF.INSTRUMENTS: [],
+                DF.DRIVERS: {},
+                DF.INFO: {},
+            },
+            DF.PROCESS: {
+                DF.NAME: None,
+                DF.NUMBER: None,
+                DF.INFO: {},
+            },
+        }

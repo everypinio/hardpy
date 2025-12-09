@@ -128,35 +128,7 @@ class JsonFileStore(Storage):
         This differs from CouchDB where clear() immediately affects the database.
         """
         # Reset document to initial state (in-memory only)
-        self._doc = {
-            "_id": self._doc_id,
-            DF.MODULES: {},
-            DF.DUT: {
-                DF.TYPE: None,
-                DF.NAME: None,
-                DF.REVISION: None,
-                DF.SERIAL_NUMBER: None,
-                DF.PART_NUMBER: None,
-                DF.SUB_UNITS: [],
-                DF.INFO: {},
-            },
-            DF.TEST_STAND: {
-                DF.HW_ID: None,
-                DF.NAME: None,
-                DF.REVISION: None,
-                DF.TIMEZONE: None,
-                DF.LOCATION: None,
-                DF.NUMBER: None,
-                DF.INSTRUMENTS: [],
-                DF.DRIVERS: {},
-                DF.INFO: {},
-            },
-            DF.PROCESS: {
-                DF.NAME: None,
-                DF.NUMBER: None,
-                DF.INFO: {},
-            },
-        }
+        self._doc = self._create_default_doc_structure(self._doc_id)
         # NOTE: We do NOT call update_db() here to avoid persisting cleared state
         # The caller should call update_db() when they want to persist changes
 
@@ -180,31 +152,10 @@ class JsonFileStore(Storage):
 
                     # Reset volatile fields for state-like stores
                     if self._store_name == "statestore":
-                        doc[DF.DUT] = {
-                            DF.TYPE: None,
-                            DF.NAME: None,
-                            DF.REVISION: None,
-                            DF.SERIAL_NUMBER: None,
-                            DF.PART_NUMBER: None,
-                            DF.SUB_UNITS: [],
-                            DF.INFO: {},
-                        }
-                        doc[DF.TEST_STAND] = {
-                            DF.HW_ID: None,
-                            DF.NAME: None,
-                            DF.REVISION: None,
-                            DF.TIMEZONE: None,
-                            DF.LOCATION: None,
-                            DF.NUMBER: None,
-                            DF.INSTRUMENTS: [],
-                            DF.DRIVERS: {},
-                            DF.INFO: {},
-                        }
-                        doc[DF.PROCESS] = {
-                            DF.NAME: None,
-                            DF.NUMBER: None,
-                            DF.INFO: {},
-                        }
+                        default_doc = self._create_default_doc_structure(doc["_id"])
+                        doc[DF.DUT] = default_doc[DF.DUT]
+                        doc[DF.TEST_STAND] = default_doc[DF.TEST_STAND]
+                        doc[DF.PROCESS] = default_doc[DF.PROCESS]
 
                     return doc
             except json.JSONDecodeError:
@@ -215,32 +166,4 @@ class JsonFileStore(Storage):
                 self._log.warning(f"Error loading storage file: {exc}, creating new")
 
         # Return default document structure
-        return {
-            "_id": self._doc_id,
-            DF.MODULES: {},
-            DF.DUT: {
-                DF.TYPE: None,
-                DF.NAME: None,
-                DF.REVISION: None,
-                DF.SERIAL_NUMBER: None,
-                DF.PART_NUMBER: None,
-                DF.SUB_UNITS: [],
-                DF.INFO: {},
-            },
-            DF.TEST_STAND: {
-                DF.HW_ID: None,
-                DF.NAME: None,
-                DF.REVISION: None,
-                DF.TIMEZONE: None,
-                DF.LOCATION: None,
-                DF.NUMBER: None,
-                DF.INSTRUMENTS: [],
-                DF.DRIVERS: {},
-                DF.INFO: {},
-            },
-            DF.PROCESS: {
-                DF.NAME: None,
-                DF.NUMBER: None,
-                DF.INFO: {},
-            },
-        }
+        return self._create_default_doc_structure(self._doc_id)
