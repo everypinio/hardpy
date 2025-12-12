@@ -1,0 +1,41 @@
+title = "HardPy TOML config - Container Database Routing"
+tests_name = "Frontend Database Routing Example"
+current_test_config = ""
+
+# Backend database - used for test execution and result storage
+# In containerized environments, this typically uses Docker internal networking
+[database]
+user = "dev"
+password = "dev"
+host = "couchdb"  # Docker service name or internal hostname
+port = 5984
+
+# Frontend database - used by the web UI (browser) for read-only access
+# Browsers need to connect via the host's exposed ports or external URLs
+# since they can't access Docker's internal network
+[database_frontend]
+user = "dev"
+password = "dev"
+host = "localhost"  # Or external hostname/IP accessible from browser
+port = 5984
+
+[frontend]
+host = "0.0.0.0"  # Bind to all interfaces in container
+port = 8000
+language = "en"
+full_size_button = false
+sound_on = false
+measurement_display = true
+manual_collect = false
+
+[frontend.modal_result]
+enable = false
+auto_dismiss_pass = true
+auto_dismiss_timeout = 5
+
+[stand_cloud]
+address = "standcloud.io"
+connection_only = false
+autosync = false
+autosync_timeout = 30
+api_key = ""
