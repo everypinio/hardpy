@@ -323,7 +323,10 @@ class CouchDBRunStore(RunStoreInterface):
 
     def clear(self) -> None:
         """Clear storage and reset to initial state."""
-        from pycouchdb.exceptions import Conflict, NotFound  # type: ignore[import-untyped]
+        from pycouchdb.exceptions import (  # type: ignore[import-untyped]
+            Conflict,
+            NotFound,
+        )
 
         try:
             self._db.delete(self._doc_id)
@@ -378,8 +381,7 @@ class RunStore(metaclass=SingletonMeta):
 
         if storage_type == StorageType.JSON:
             return JsonRunStore()
-        elif storage_type == StorageType.COUCHDB:
+        if storage_type == StorageType.COUCHDB:
             return CouchDBRunStore()
-        else:
-            msg = f"Unknown storage type: {storage_type}"
-            raise ValueError(msg)
+        msg = f"Unknown storage type: {storage_type}"
+        raise ValueError(msg)
