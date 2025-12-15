@@ -5,7 +5,7 @@ from json import dumps
 from logging import getLogger
 from typing import Any
 
-from glom import assign, glom
+from glom import PathAccessError, assign, glom
 from pycouchdb import Server as DbServer
 from pycouchdb.client import Database
 from pycouchdb.exceptions import Conflict, GenericError, NotFound
@@ -46,9 +46,13 @@ class CouchDBStore(Storage):
             key (str): field name
 
         Returns:
-            Any: field value
+            Any: field value, or None if path does not exist
         """
-        return glom(self._doc, key)
+        try:
+            return glom(self._doc, key)
+        except PathAccessError:
+            # Return None for missing paths
+            return None
 
     def update_doc_value(self, key: str, value: Any) -> None:  # noqa: ANN401
         """Update document value.
@@ -67,7 +71,8 @@ class CouchDBStore(Storage):
             # serialize non-serializable objects as string
             value = dumps(value, default=str)
         if "." in key:
-            assign(self._doc, key, value)
+            # Use glom's Assign with missing=dict to create intermediate paths
+            assign(self._doc, key, value, missing=dict)
         else:
             self._doc[key] = value
 
