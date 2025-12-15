@@ -227,7 +227,7 @@ class TempStore(metaclass=SingletonMeta):
     the appropriate concrete implementation (JsonTempStore or CouchDBTempStore).
     """
 
-    def __new__(cls):  # type: ignore[misc]
+    def __new__(cls) -> TempStoreInterface:  # type: ignore[misc]
         """Create and return the appropriate storage implementation.
 
         Returns:

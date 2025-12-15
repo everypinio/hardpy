@@ -18,6 +18,7 @@ from hardpy.pytest_hardpy.db.const import DatabaseField as DF  # noqa: N817
 from hardpy.pytest_hardpy.db.schema import ResultStateStore
 
 if TYPE_CHECKING:
+    from pycouchdb.client import Database  # type: ignore[import-untyped]
     from pydantic import BaseModel
 
 
@@ -222,7 +223,9 @@ class JsonStateStore(StateStoreInterface):
 
                     return doc
             except json.JSONDecodeError:
-                self._log.warning(f"Corrupted storage file {self._file_path}, creating new")
+                self._log.warning(
+                    f"Corrupted storage file {self._file_path}, creating new",
+                )
             except Exception as exc:  # noqa: BLE001
                 self._log.warning(f"Error loading storage file: {exc}, creating new")
 
@@ -237,7 +240,6 @@ class CouchDBStateStore(StateStoreInterface):
 
     def __init__(self) -> None:
         from pycouchdb import Server as DbServer  # type: ignore[import-untyped]
-        from pycouchdb.client import Database  # type: ignore[import-untyped]
         from pycouchdb.exceptions import (  # type: ignore[import-untyped]
             Conflict,
             GenericError,
@@ -254,7 +256,7 @@ class CouchDBStateStore(StateStoreInterface):
 
         # Initialize database
         try:
-            self._db: Database = self._db_srv.create(self._db_name)
+            self._db: Database = self._db_srv.create(self._db_name)  # type: ignore[name-defined]
         except Conflict:
             self._db = self._db_srv.database(self._db_name)
         except GenericError as exc:
@@ -375,7 +377,7 @@ class StateStore(metaclass=SingletonMeta):
     the appropriate concrete implementation (JsonStateStore or CouchDBStateStore).
     """
 
-    def __new__(cls):  # type: ignore[misc]
+    def __new__(cls) -> StateStoreInterface:  # type: ignore[misc]
         """Create and return the appropriate storage implementation.
 
         Returns:
