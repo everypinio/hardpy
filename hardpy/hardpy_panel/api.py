@@ -387,12 +387,12 @@ def get_json_data() -> dict:
 
     try:
         storage_dir = Path(config_manager.config.database.storage_path) / "storage"
-        runstore_file = storage_dir / "runstore.json"
+        statestore_file = storage_dir / "statestore.json"
 
-        if not runstore_file.exists():
+        if not statestore_file.exists():
             return {"rows": [], "total_rows": 0}
 
-        with runstore_file.open("r") as f:
+        with statestore_file.open("r") as f:
             data = json.load(f)
 
         # Format data to match CouchDB's _all_docs format
