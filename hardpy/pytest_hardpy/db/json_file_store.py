@@ -168,3 +168,9 @@ class JsonFileStore(Storage):
 
         # Return default document structure
         return self._create_default_doc_structure(self._doc_id)
+
+    def _create_default_doc_structure(self, doc_id: str) -> dict:
+        # CouchDB compatibility
+        doc = super()._create_default_doc_structure(doc_id)
+        doc["_rev"] = self._doc_id
+        return doc
