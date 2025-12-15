@@ -509,7 +509,8 @@ class HardpyPlugin:
                 case_stop_time = self._reporter.get_case_stop_time(module_id, case_id)
                 if case_start_time and not case_stop_time:
                     # Set stop time equal to start time
-                    key = self._reporter.generate_key(DF.MODULES, module_id, DF.CASES, case_id, DF.STOP_TIME)
+                    key = self._reporter.generate_key(DF.MODULES, module_id, DF.CASES,
+                                                      case_id, DF.STOP_TIME)
                     self._reporter.set_doc_value(key, case_start_time)
 
     def _stop_tests(self) -> None:
