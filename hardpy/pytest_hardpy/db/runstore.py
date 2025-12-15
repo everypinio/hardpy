@@ -21,6 +21,48 @@ if TYPE_CHECKING:
     from pydantic import BaseModel
 
 
+def _create_default_doc_structure(doc_id: str, doc_id_for_rev: str) -> dict:
+    """Create default document structure with standard fields.
+
+    Args:
+        doc_id (str): Document ID to use
+        doc_id_for_rev (str): Document ID for _rev field (for JSON compatibility)
+
+    Returns:
+        dict: Default document structure
+    """
+    return {
+        "_id": doc_id,
+        "_rev": doc_id_for_rev,
+        DF.MODULES: {},
+        DF.DUT: {
+            DF.TYPE: None,
+            DF.NAME: None,
+            DF.REVISION: None,
+            DF.SERIAL_NUMBER: None,
+            DF.PART_NUMBER: None,
+            DF.SUB_UNITS: [],
+            DF.INFO: {},
+        },
+        DF.TEST_STAND: {
+            DF.HW_ID: None,
+            DF.NAME: None,
+            DF.REVISION: None,
+            DF.TIMEZONE: None,
+            DF.LOCATION: None,
+            DF.NUMBER: None,
+            DF.INSTRUMENTS: [],
+            DF.DRIVERS: {},
+            DF.INFO: {},
+        },
+        DF.PROCESS: {
+            DF.NAME: None,
+            DF.NUMBER: None,
+            DF.INFO: {},
+        },
+    }
+
+
 class RunStoreInterface(ABC):
     """Interface for run storage implementations."""
 
@@ -156,7 +198,7 @@ class JsonRunStore(RunStoreInterface):
 
     def clear(self) -> None:
         """Clear storage by resetting to initial state (in-memory only)."""
-        self._doc = self._create_default_doc_structure(self._doc_id)
+        self._doc = _create_default_doc_structure(self._doc_id, self._doc_id)
 
     def compact(self) -> None:
         """Optimize storage (no-op for JSON file storage)."""
@@ -177,40 +219,7 @@ class JsonRunStore(RunStoreInterface):
             except Exception as exc:  # noqa: BLE001
                 self._log.warning(f"Error loading storage file: {exc}, creating new")
 
-        return self._create_default_doc_structure(self._doc_id)
-
-    def _create_default_doc_structure(self, doc_id: str) -> dict:
-        """Create default document structure with standard fields."""
-        return {
-            "_id": doc_id,
-            "_rev": self._doc_id,
-            DF.MODULES: {},
-            DF.DUT: {
-                DF.TYPE: None,
-                DF.NAME: None,
-                DF.REVISION: None,
-                DF.SERIAL_NUMBER: None,
-                DF.PART_NUMBER: None,
-                DF.SUB_UNITS: [],
-                DF.INFO: {},
-            },
-            DF.TEST_STAND: {
-                DF.HW_ID: None,
-                DF.NAME: None,
-                DF.REVISION: None,
-                DF.TIMEZONE: None,
-                DF.LOCATION: None,
-                DF.NUMBER: None,
-                DF.INSTRUMENTS: [],
-                DF.DRIVERS: {},
-                DF.INFO: {},
-            },
-            DF.PROCESS: {
-                DF.NAME: None,
-                DF.NUMBER: None,
-                DF.INFO: {},
-            },
-        }
+        return _create_default_doc_structure(self._doc_id, self._doc_id)
 
 
 class CouchDBRunStore(RunStoreInterface):
@@ -333,44 +342,15 @@ class CouchDBRunStore(RunStoreInterface):
         try:
             doc = self._db.get(self._doc_id)
         except NotFound:
-            return self._create_default_doc_structure(self._doc_id)
+            # CouchDB doesn't need _rev field in the default structure
+            default = _create_default_doc_structure(self._doc_id, self._doc_id)
+            del default["_rev"]  # CouchDB manages _rev automatically
+            return default
 
         if DF.MODULES not in doc:
             doc[DF.MODULES] = {}
 
         return doc
-
-    def _create_default_doc_structure(self, doc_id: str) -> dict:
-        """Create default document structure with standard fields."""
-        return {
-            "_id": doc_id,
-            DF.MODULES: {},
-            DF.DUT: {
-                DF.TYPE: None,
-                DF.NAME: None,
-                DF.REVISION: None,
-                DF.SERIAL_NUMBER: None,
-                DF.PART_NUMBER: None,
-                DF.SUB_UNITS: [],
-                DF.INFO: {},
-            },
-            DF.TEST_STAND: {
-                DF.HW_ID: None,
-                DF.NAME: None,
-                DF.REVISION: None,
-                DF.TIMEZONE: None,
-                DF.LOCATION: None,
-                DF.NUMBER: None,
-                DF.INSTRUMENTS: [],
-                DF.DRIVERS: {},
-                DF.INFO: {},
-            },
-            DF.PROCESS: {
-                DF.NAME: None,
-                DF.NUMBER: None,
-                DF.INFO: {},
-            },
-        }
 
 
 class RunStore(metaclass=SingletonMeta):
