@@ -238,8 +238,7 @@ class TempStore(metaclass=SingletonMeta):
 
         if storage_type == StorageType.JSON:
             return JsonTempStore()
-        elif storage_type == StorageType.COUCHDB:
+        if storage_type == StorageType.COUCHDB:
             return CouchDBTempStore()
-        else:
-            msg = f"Unknown storage type: {storage_type}"
-            raise ValueError(msg)
+        msg = f"Unknown storage type: {storage_type}"
+        raise ValueError(msg)
