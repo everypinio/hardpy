@@ -188,61 +188,24 @@ class StateStore(metaclass=SingletonMeta):
     - CouchDB storage when storage_type is "couchdb"
 
     This ensures state data is stored in the same backend as the main data.
+
+    Note: This class acts as a factory. When instantiated, it returns
+    the appropriate concrete implementation (JsonStateStore or CouchDBStateStore).
     """
 
-    def __init__(self) -> None:
+    def __new__(cls):  # type: ignore[misc]
+        """Create and return the appropriate storage implementation.
+
+        Returns:
+            StateStoreInterface: Concrete storage implementation based on config
+        """
         config = ConfigManager()
         storage_type = config.config.database.storage_type
 
-        self._impl: StateStoreInterface
         if storage_type == StorageType.JSON:
-            self._impl = JsonStateStore()
+            return JsonStateStore()
         elif storage_type == StorageType.COUCHDB:
-            self._impl = CouchDBStateStore()
+            return CouchDBStateStore()
         else:
             msg = f"Unknown storage type: {storage_type}"
             raise ValueError(msg)
-
-    def get_field(self, key: str) -> Any:  # noqa: ANN401
-        """Get field from the state store.
-
-        Args:
-            key (str): Field key, supports nested access with dots
-
-        Returns:
-            Any: Field value
-        """
-        return self._impl.get_field(key)
-
-    def update_doc_value(self, key: str, value: Any) -> None:  # noqa: ANN401
-        """Update document value in memory (does not persist).
-
-        Args:
-            key (str): Field key, supports nested access with dots
-            value (Any): Value to set
-        """
-        self._impl.update_doc_value(key, value)
-
-    def update_db(self) -> None:
-        """Persist in-memory document to storage backend."""
-        self._impl.update_db()
-
-    def update_doc(self) -> None:
-        """Reload document from storage backend to memory."""
-        self._impl.update_doc()
-
-    def get_document(self) -> BaseModel:
-        """Get full document with schema validation.
-
-        Returns:
-            BaseModel: Validated document model
-        """
-        return self._impl.get_document()
-
-    def clear(self) -> None:
-        """Clear storage and reset to initial state."""
-        self._impl.clear()
-
-    def compact(self) -> None:
-        """Optimize storage (implementation-specific, may be no-op)."""
-        self._impl.compact()
