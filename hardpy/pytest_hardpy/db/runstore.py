@@ -215,7 +215,8 @@ class JsonRunStore(RunStoreInterface):
 
                     return doc
             except json.JSONDecodeError:
-                self._log.warning(f"Corrupted storage file {self._file_path}, creating new")
+                self._log.warning(f"Corrupted storage file {self._file_path},"
+                                  f" creating new")
             except Exception as exc:  # noqa: BLE001
                 self._log.warning(f"Error loading storage file: {exc}, creating new")
 

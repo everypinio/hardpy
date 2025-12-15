@@ -214,7 +214,8 @@ class JsonStateStore(StateStoreInterface):
                         doc[DF.MODULES] = {}
 
                     # Reset volatile fields for statestore
-                    default_doc = _create_default_doc_structure(doc["_id"], self._doc_id)
+                    default_doc = _create_default_doc_structure(doc["_id"],
+                                                                self._doc_id)
                     doc[DF.DUT] = default_doc[DF.DUT]
                     doc[DF.TEST_STAND] = default_doc[DF.TEST_STAND]
                     doc[DF.PROCESS] = default_doc[DF.PROCESS]
