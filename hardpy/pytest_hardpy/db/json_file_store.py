@@ -82,6 +82,9 @@ class JsonFileStore(Storage):
 
     def update_db(self) -> None:
         """Persist in-memory document to JSON file with atomic write."""
+        # Ensure storage directory exists
+        self._storage_dir.mkdir(parents=True, exist_ok=True)
+
         temp_file = self._file_path.with_suffix(".tmp")
 
         try:
