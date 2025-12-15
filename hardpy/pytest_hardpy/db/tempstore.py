@@ -222,58 +222,24 @@ class TempStore(metaclass=SingletonMeta):
     - CouchDB storage when storage_type is "couchdb"
 
     This ensures temporary reports are stored in the same backend as the main data.
+
+    Note: This class acts as a factory. When instantiated, it returns
+    the appropriate concrete implementation (JsonTempStore or CouchDBTempStore).
     """
 
-    def __init__(self) -> None:
+    def __new__(cls):  # type: ignore[misc]
+        """Create and return the appropriate storage implementation.
+
+        Returns:
+            TempStoreInterface: Concrete storage implementation based on config
+        """
         config = ConfigManager()
         storage_type = config.config.database.storage_type
 
-        self._impl: TempStoreInterface
         if storage_type == StorageType.JSON:
-            self._impl = JsonTempStore()
+            return JsonTempStore()
         elif storage_type == StorageType.COUCHDB:
-            self._impl = CouchDBTempStore()
+            return CouchDBTempStore()
         else:
             msg = f"Unknown storage type: {storage_type}"
             raise ValueError(msg)
-
-    def push_report(self, report: ResultRunStore) -> bool:
-        """Push report to the temporary storage.
-
-        Args:
-            report (ResultRunStore): report to store
-
-        Returns:
-            bool: True if successful, False otherwise
-        """
-        return self._impl.push_report(report)
-
-    def reports(self) -> Generator[dict]:
-        """Get all reports from the temporary storage.
-
-        Yields:
-            dict: report from temporary storage
-        """
-        yield from self._impl.reports()
-
-    def delete(self, report_id: str) -> bool:
-        """Delete report from the temporary storage.
-
-        Args:
-            report_id (str): report ID to delete
-
-        Returns:
-            bool: True if successful, False otherwise
-        """
-        return self._impl.delete(report_id)
-
-    def dict_to_schema(self, report: dict) -> ResultRunStore:
-        """Convert report dict to report schema.
-
-        Args:
-            report (dict): report dictionary
-
-        Returns:
-            ResultRunStore: validated report schema
-        """
-        return self._impl.dict_to_schema(report)
