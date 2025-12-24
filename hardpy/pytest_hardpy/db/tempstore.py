@@ -72,7 +72,15 @@ class JsonTempStore(TempStoreInterface):
     def __init__(self) -> None:
         self._log = getLogger(__name__)
         config = ConfigManager()
-        self._storage_dir = Path(config.config.database.storage_path) / "tempstore"
+        config_storage_path = Path(config.config.database.storage_path)
+        if config_storage_path.is_absolute():
+            self._storage_dir = config_storage_path / "tempstore"
+        else:
+            self._storage_dir = Path(
+                config.tests_path
+                / config.config.database.storage_path
+                / "tempstore",
+            )
         self._storage_dir.mkdir(parents=True, exist_ok=True)
         self._schema = ResultRunStore
 

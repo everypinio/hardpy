@@ -121,8 +121,15 @@ class JsonRunStore(RunStoreInterface):
     def __init__(self) -> None:
         config_manager = ConfigManager()
         self._store_name = "runstore"
-        storage_path = config_manager.config.database.storage_path
-        self._storage_dir = Path(storage_path) / "storage"
+        config_storage_path = Path(config_manager.config.database.storage_path)
+        if config_storage_path.is_absolute():
+            self._storage_dir = config_storage_path / "storage"
+        else:
+            self._storage_dir = Path(
+                config_manager.tests_path
+                / config_manager.config.database.storage_path
+                / "storage",
+            )
         self._storage_dir.mkdir(parents=True, exist_ok=True)
         self._file_path = self._storage_dir / f"{self._store_name}.json"
         self._doc_id = config_manager.config.database.doc_id

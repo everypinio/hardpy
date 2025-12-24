@@ -386,7 +386,15 @@ def get_json_data() -> dict:
         return {"error": "JSON storage not configured"}
 
     try:
-        storage_dir = Path(config_manager.config.database.storage_path) / "storage"
+        config_storage_path = Path(config_manager.config.database.storage_path)
+        if config_storage_path.is_absolute():
+            storage_dir = config_storage_path / "storage"
+        else:
+            storage_dir = Path(
+                config_manager.tests_path
+                / config_manager.config.database.storage_path
+                / "storage",
+            )
         statestore_file = storage_dir / "statestore.json"
 
         if not statestore_file.exists():
