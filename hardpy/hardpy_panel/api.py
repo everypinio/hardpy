@@ -388,14 +388,16 @@ def get_json_data() -> dict:
     try:
         config_storage_path = Path(config_manager.config.database.storage_path)
         if config_storage_path.is_absolute():
-            storage_dir = config_storage_path / "storage"
+            storage_dir = config_storage_path / "storage" / "statestore"
         else:
             storage_dir = Path(
                 config_manager.tests_path
                 / config_manager.config.database.storage_path
-                / "storage",
+                / "storage"
+                / "statestore",
             )
-        statestore_file = storage_dir / "statestore.json"
+        _doc_id = config_manager.config.database.doc_id
+        statestore_file = storage_dir / f"{_doc_id}.json"
 
         if not statestore_file.exists():
             return {"rows": [], "total_rows": 0}

@@ -123,16 +123,17 @@ class JsonStateStore(StateStoreInterface):
         self._store_name = "statestore"
         config_storage_path = Path(config_manager.config.database.storage_path)
         if config_storage_path.is_absolute():
-            self._storage_dir = config_storage_path / "storage"
+            self._storage_dir = config_storage_path / "storage" / self._store_name
         else:
             self._storage_dir = Path(
                 config_manager.tests_path
                 / config_manager.config.database.storage_path
-                / "storage",
+                / "storage"
+                / self._store_name,
             )
         self._storage_dir.mkdir(parents=True, exist_ok=True)
-        self._file_path = self._storage_dir / f"{self._store_name}.json"
         self._doc_id = config_manager.config.database.doc_id
+        self._file_path = self._storage_dir / f"{self._doc_id}.json"
         self._log = getLogger(__name__)
         self._schema: type[BaseModel] = ResultStateStore
         self._doc: dict = self._init_doc()
