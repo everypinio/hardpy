@@ -41,6 +41,8 @@ pip install hardpy
 
 ## Getting Started
 
+### With CouchDB
+
 1. Create your first test bench.
 ```bash
 hardpy init
@@ -58,6 +60,18 @@ hardpy run
 5. View the latest test report: http://localhost:5984/_utils
 
     Login and password: **dev**, database - **runstore**.
+
+### Without a database
+
+1. Create your first test bench.
+```bash
+hardpy init --no-create-database --storage-type json
+```
+2. Launch HardPy operator panel.
+```bash
+hardpy run
+```
+3. View operator panel in browser: http://localhost:8000/
 
 ## Examples
 

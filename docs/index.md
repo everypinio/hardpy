@@ -29,6 +29,8 @@ pip install hardpy
 
 ## Getting Started
 
+### With CouchDB
+
 1. Create your first test bench.
 
 ```bash
@@ -61,6 +63,18 @@ hardpy run
       <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/runstore_hello_hardpy.png"
       alt="hardpy runstore" style="width:500px;">
   </h1>
+
+### Without a database
+
+1. Create your first test bench.
+```bash
+hardpy init --no-create-database --storage-type json
+```
+2. Launch HardPy operator panel.
+```bash
+hardpy run
+```
+3. View operator panel in browser: http://localhost:8000/
 
 ## Measurement instruments
 
