@@ -190,7 +190,7 @@ The user can check the status of tests using the [hardpy status](./../documentat
 
 ### Storing test result in database
 
-**HardPy** does not allow you to run tests without a running [CouchDB](https://couchdb.apache.org/) database.
+**HardPy** allows you to run tests with a running [CouchDB](https://couchdb.apache.org/) database.
 This is a NoSQL database that ensures that the results of the current test run are committed,
 even if the tests are aborted early.
 
@@ -205,6 +205,15 @@ The test report format (database scheme) is described in the
 An example of configuring **conftest.py** to store test run history can be found in several examples,
 including the [couchdb_load](./../examples/couchdb_load.md) and
 [minute_parity](./../examples/minute_parity.md).
+
+### JSON
+
+With **HardPy**, you can run tests without a database and save the test data to local JSON documents. 
+These documents have a structure similar to that of databases and documents in **CouchDB**. 
+A .hardpy/storage folder is created by default in the project folder, 
+where test reports can be found in the **runstore** folder.
+
+An example of its use can be found on page [JSON storage](./../examples/json_storage.md).
 
 ### Other databases
 
