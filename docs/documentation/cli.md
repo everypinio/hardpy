@@ -53,6 +53,7 @@ More info in [hardpy config](./hardpy_config.md).
 |                                                         [default: no-sc-autosync]                          │
 |                                                         [default: check-stand-cloud]                       │
 │ --sc-api-key                                  TEXT      Specify a StandCloud API key.                      │
+│ --storage-type                                TEXT      Specify a storage type. [default: couchdb]         |
 │ --help                                                  Show this message and exit.                        │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
