@@ -34,7 +34,6 @@ from pytest import (
 
 from hardpy.common.config import ConfigManager, HardpyConfig
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
-from hardpy.pytest_hardpy.db.const import DatabaseField as DF  # noqa: N817
 from hardpy.pytest_hardpy.reporter import HookReporter
 from hardpy.pytest_hardpy.result.report_synchronizer.synchronizer import (
     StandCloudSynchronizer,
