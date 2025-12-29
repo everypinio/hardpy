@@ -1,4 +1,7 @@
+from pathlib import Path
 import pytest
+
+from hardpy import JsonLoader, get_current_report
 
 
 @pytest.fixture(scope="session")
@@ -14,6 +17,7 @@ def setup_test_environment():
 @pytest.fixture(scope="function")
 def test_device():
     """Fixture providing simulated test device."""
+
     class TestDevice:
         def __init__(self):
             self.connected = False
@@ -39,3 +43,16 @@ def test_device():
     yield device
 
     device.disconnect()
+
+
+def save_report_to_dir():
+    report = get_current_report()
+    if report:
+        loader = JsonLoader(Path.cwd() / "reports")
+        loader.load(report)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def fill_actions_after_test(post_run_functions: list):
+    post_run_functions.append(save_report_to_dir)
+    yield
