@@ -3,7 +3,7 @@
 
 [project]
     name = "hardpy"
-    version = "0.19.1"
+    version = "0.20.0"
     description = "HardPy library for device testing"
     license = "GPL-3.0-or-later"
     authors = [{ name = "Everypin", email = "info@everypin.io" }]
@@ -36,6 +36,7 @@
         "tomli>=2.0.1, <3",
         "py-machineid~=0.6.0",
         "tzlocal~=5.2",
+        "uuid6",
 
         # Frontend
         "fastapi>=0.100.1",

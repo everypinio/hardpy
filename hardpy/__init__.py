@@ -45,6 +45,7 @@ from hardpy.pytest_hardpy.pytest_call import (
 )
 from hardpy.pytest_hardpy.result import (
     CouchdbLoader,
+    JsonLoader,
     StandCloudLoader,
     StandCloudReader,
 )
@@ -82,6 +83,7 @@ __all__ = [
     "HTMLComponent",
     "ImageComponent",
     "Instrument",
+    "JsonLoader",
     "MultistepWidget",
     "NumericInputWidget",
     "NumericMeasurement",

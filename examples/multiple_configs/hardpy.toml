@@ -9,6 +9,7 @@ host = "localhost"
 port = 5984
 
 [frontend]
+storage_type = "couchdb"
 host = "localhost"
 port = 8000
 language = "en"

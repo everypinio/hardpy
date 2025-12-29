@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from pydantic import ValidationError
 
 from hardpy.common.stand_cloud.exception import StandCloudError
-from hardpy.pytest_hardpy.db.tempstore import TempStore
+from hardpy.pytest_hardpy.db.tempstore import CouchDBTempStore, TempStore
 from hardpy.pytest_hardpy.result.report_loader.stand_cloud_loader import (
     StandCloudLoader,
 )
@@ -40,6 +40,7 @@ class StandCloudSynchronizer:
         Returns:
             str: Synchronization message
         """
+        _tempstore = self._get_tempstore
         if not self._get_tempstore.reports():
             return "All reports are synchronized with StandCloud"
         loader = self._create_sc_loader()
@@ -48,8 +49,12 @@ class StandCloudSynchronizer:
         success_report_counter = 0
         for _report in self._get_tempstore.reports():
             try:
-                report_id: str = _report.get("id")  # type: ignore[assignment]
-                document: dict = _report.get("doc")  # type: ignore[assignment]
+                if isinstance(_tempstore, CouchDBTempStore):
+                    document: dict = _report.get("doc")  # type: ignore[assignment]
+                    report_id: str = _report.get("id")  # type: ignore[assignment]
+                else:
+                    document: dict = _report
+                    report_id: str = _report.get("_id")
                 document.pop("rev")
             except KeyError:
                 try:

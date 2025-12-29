@@ -1,6 +1,7 @@
 title = "HardPy TOML config"
 
 [database]
+storage_type = "couchdb"
 user = "dev"
 password = "dev"
 host = "localhost"

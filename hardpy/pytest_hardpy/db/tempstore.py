@@ -8,7 +8,8 @@ from abc import ABC, abstractmethod
 from logging import getLogger
 from pathlib import Path
 from typing import TYPE_CHECKING
-from uuid import uuid4
+
+from uuid6 import uuid7
 
 from hardpy.common.config import ConfigManager, StorageType
 from hardpy.common.singleton import SingletonMeta
@@ -74,11 +75,12 @@ class JsonTempStore(TempStoreInterface):
         config = ConfigManager()
         config_storage_path = Path(config.config.database.storage_path)
         if config_storage_path.is_absolute():
-            self._storage_dir = config_storage_path / "tempstore"
+            self._storage_dir = config_storage_path / "storage" / "tempstore"
         else:
             self._storage_dir = Path(
                 config.tests_path
                 / config.config.database.storage_path
+                / "storage"
                 / "tempstore",
             )
         self._storage_dir.mkdir(parents=True, exist_ok=True)
@@ -94,8 +96,10 @@ class JsonTempStore(TempStoreInterface):
             bool: True if successful, False otherwise
         """
         report_dict = report.model_dump()
-        report_id = report_dict.get("id", str(uuid4()))
-        report_dict["id"] = report_id  # Ensure ID is in the document
+        report_dict.pop("id", None)
+        report_id = str(uuid7())
+        report_dict["_id"] = report_id
+        report_dict["_rev"] = report_id
         report_file = self._storage_dir / f"{report_id}.json"
 
         try:
