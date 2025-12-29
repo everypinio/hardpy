@@ -44,18 +44,19 @@ pip install hardpy
 ### With CouchDB
 
 1. Create your first test bench.
-```bash
-hardpy init
-```
-2. Launch [CouchDB](https://couchdb.apache.org/) database via [docker compose](https://docs.docker.com/compose/) in the background.
-```bash
-cd tests
-docker compose up -d
-```
+  ```bash
+  hardpy init
+  ```
+2. Launch [CouchDB](https://couchdb.apache.org/) database via [docker compose](https://docs.docker.com/compose/) 
+  in the background.
+  ```bash
+  cd tests
+  docker compose up -d
+  ```
 3. Launch HardPy operator panel.
-```bash
-hardpy run
-```
+  ```bash
+  hardpy run
+  ```
 4. View operator panel in browser: http://localhost:8000/
 5. View the latest test report: http://localhost:5984/_utils
 
@@ -64,13 +65,13 @@ hardpy run
 ### Without a database
 
 1. Create your first test bench.
-```bash
-hardpy init --no-create-database --storage-type json
-```
+  ```bash
+  hardpy init --no-create-database --storage-type json
+  ```
 2. Launch HardPy operator panel.
-```bash
-hardpy run
-```
+  ```bash
+  hardpy run
+  ```
 3. View operator panel in browser: http://localhost:8000/
 
 ## Examples
