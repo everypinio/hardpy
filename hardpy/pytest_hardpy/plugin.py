@@ -497,9 +497,7 @@ class HardpyPlugin:
             module_start_time = self._reporter.get_module_start_time(module_id)
             module_stop_time = self._reporter.get_module_stop_time(module_id)
             if module_start_time and not module_stop_time:
-                # Set stop time equal to start time
-                key = self._reporter.generate_key(DF.MODULES, module_id, DF.STOP_TIME)
-                self._reporter.set_doc_value(key, module_start_time)
+                self._reporter.set_module_stop_time(module_id)
             for module_data_key in module_data:
                 # skip module status
                 if module_data_key == "module_status":
@@ -508,10 +506,7 @@ class HardpyPlugin:
                 case_start_time = self._reporter.get_case_start_time(module_id, case_id)
                 case_stop_time = self._reporter.get_case_stop_time(module_id, case_id)
                 if case_start_time and not case_stop_time:
-                    # Set stop time equal to start time
-                    key = self._reporter.generate_key(DF.MODULES, module_id, DF.CASES,
-                                                      case_id, DF.STOP_TIME)
-                    self._reporter.set_doc_value(key, case_start_time)
+                    self._reporter.set_case_stop_time(module_id, case_id)
 
     def _stop_tests(self) -> None:
         """Update module and case statuses to stopped and skipped."""
