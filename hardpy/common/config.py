@@ -192,12 +192,8 @@ class ConfigManager(metaclass=SingletonMeta):
             sc_connection_only (bool): StandCloud check availability.
             sc_autosync (bool): StandCloud auto syncronization.
             sc_api_key (str): StandCloud API key.
+            storage_type (str): Database storage type.
         """
-        # try:
-        #     _storage_type = 
-        # except ValueError:
-        #     msg = f"Invalid storage type {storage_type}"
-        #     raise ValueError(msg)
         self._config.tests_name = tests_name
         self._config.frontend.host = frontend_host
         self._config.frontend.port = frontend_port
