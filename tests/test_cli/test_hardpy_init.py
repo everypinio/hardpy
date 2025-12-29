@@ -11,11 +11,13 @@ db_no_default_port = "5985"
 frontend_no_default_host = "localhost1"
 frontend_no_default_port = "8001"
 stand_cloud_no_default_addr = "everypin1.standcloud.localhost"
+storage_type_no_default = "json"
 
 db_default_port = "5984"
 frontend_default_host = "localhost"
 frontend_default_port = "8000"
 frontend_default_language = "en"
+storage_type_default = "couchdb"
 
 
 def test_cli_init(tmp_path: Path):
@@ -112,6 +114,31 @@ def test_cli_init_db_port(tmp_path: Path):
             ";port = 5985" in content
         ), "couchdb.ini does not contain the expected port."
 
+def test_cli_init_storage_type_default(tmp_path: Path):
+    subprocess.run(
+        [*HARDPY_COMMAND, tmp_path],
+        check=True,
+    )
+    hardpy_toml_path = tmp_path / "hardpy.toml"
+    with Path.open(hardpy_toml_path) as f:
+        content = f.read()
+        storage_type_info = f"""storage_type = "{storage_type_default}"
+"""
+        assert_msg = "hardpy.toml does not contain the default storage type."
+        assert storage_type_info in content, assert_msg
+
+def test_cli_init_storage_type_no_default(tmp_path: Path):
+    subprocess.run(
+        [*HARDPY_COMMAND, tmp_path, "--storage-type", storage_type_no_default],
+        check=True,
+    )
+    hardpy_toml_path = tmp_path / "hardpy.toml"
+    with Path.open(hardpy_toml_path) as f:
+        content = f.read()
+        storage_type_info = f"""storage_type = "{storage_type_no_default}"
+"""
+        assert_msg = "hardpy.toml does not contain the valid storage type."
+        assert storage_type_info in content, assert_msg
 
 def test_cli_init_frontend_host(tmp_path: Path):
     subprocess.run(
