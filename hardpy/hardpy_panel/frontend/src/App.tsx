@@ -27,7 +27,7 @@ import PlaySound from "./hardpy_test_view/PlaySound";
 import TestConfigOverlay from "./hardpy_test_view/TestConfigOverlay";
 import TestCompletionModalResult from "./hardpy_test_view/TestCompletionModalResult";
 
-import { useAllDocs } from "use-pouchdb";
+import { useStorageData } from "./hooks/useStorageData";
 
 import "./App.css";
 
@@ -479,9 +479,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     return -1;
   }
 
-  const { rows, state, loading, error } = useAllDocs({
-    include_docs: true,
-  });
+  const { rows, state, loading, error } = useStorageData();
 
   /**
    * Monitors database changes and updates application state accordingly

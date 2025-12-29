@@ -30,6 +30,7 @@ tests_name = "My tests"
 current_test_config = ""
 
 [database]
+storage_type = "json"
 user = "dev"
 password = "dev"
 host = "localhost"
@@ -80,6 +81,20 @@ An example of its use can be found on page [Multiple configs](./../examples/mult
 ### database
 
 Database settings.
+
+#### storage_type
+
+Storage type. The default is `couchdb`.
+
+- `couchdb`: Stores test results and measurements in a CouchDB database. Requires a running CouchDB instance.
+- `json`: Stores test results and measurements in local JSON files. No external database required. 
+Files are stored in the `.hardpy` directory in the root of the project.
+The user can change this value with the `hardpy init --storage-type` option.
+
+#### storage_path
+
+Path to the storage directory. The default is `.hardpy` in the root of the project.
+The user can change this value with the `hardpy init --storage-path` option. Relative and absolute paths are supported.
 
 #### user
 

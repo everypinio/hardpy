@@ -27,6 +27,21 @@ function ErrorMessage() {
 }
 
 /**
+ * Gets the storage type from the backend API.
+ * @returns {Promise<string>} A promise that resolves to the storage type ("json" or "couchdb").
+ */
+async function getStorageType(): Promise<string> {
+  try {
+    const response = await fetch("/api/storage_type");
+    const data = await response.json();
+    return data.storage_type || "couchdb";
+  } catch (error) {
+    console.error(error);
+    return "couchdb";
+  }
+}
+
+/**
  * Fetches the synchronization URL for PouchDB from the backend API.
  *
  * @returns {Promise<string | undefined>} A promise that resolves to the sync URL as a string if successful,
@@ -63,33 +78,49 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
-const syncURL = await getSyncURL();
-if (syncURL !== undefined) {
-  const db = new PouchDB(syncURL);
+const storageType = await getStorageType();
+const syncDocumentId = await getDatabaseDocumentId();
 
-  const syncDocumentId = await getDatabaseDocumentId();
+if (storageType === "json") {
+  // For JSON storage, create a dummy local PouchDB instance (not used but required by Provider)
+  // This creates an IndexedDB database that won't try to sync anywhere
+  const dummyDb = new PouchDB("hardpy-local-dummy");
 
-  /**
-   * Renders the main application wrapped in a PouchDB Provider and React StrictMode.
-   *
-   * @param {PouchDB.Database} db - The PouchDB database instance to be provided to the application.
-   */
   root.render(
     <StrictMode>
-      <Provider pouchdb={db}>
+      <Provider pouchdb={dummyDb}>
         <App syncDocumentId={syncDocumentId} />
       </Provider>
     </StrictMode>
   );
 } else {
-  /**
-   * Renders an error message if the PouchDB sync URL could not be retrieved.
-   */
-  root.render(
-    <StrictMode>
-      <ErrorMessage />
-    </StrictMode>
-  );
+  // For CouchDB storage, connect to the actual database
+  const syncURL = await getSyncURL();
+  if (syncURL !== undefined) {
+    const db = new PouchDB(syncURL);
+
+    /**
+     * Renders the main application wrapped in a PouchDB Provider and React StrictMode.
+     *
+     * @param {PouchDB.Database} db - The PouchDB database instance to be provided to the application.
+     */
+    root.render(
+      <StrictMode>
+        <Provider pouchdb={db}>
+          <App syncDocumentId={syncDocumentId} />
+        </Provider>
+      </StrictMode>
+    );
+  } else {
+    /**
+     * Renders an error message if the PouchDB sync URL could not be retrieved.
+     */
+    root.render(
+      <StrictMode>
+        <ErrorMessage />
+      </StrictMode>
+    );
+  }
 }
 
 if (process.env.NODE_ENV !== "development") {

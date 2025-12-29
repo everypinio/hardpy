@@ -17,7 +17,7 @@ from urllib.parse import unquote
 from fastapi import FastAPI, Query, Request
 from fastapi.staticfiles import StaticFiles
 
-from hardpy.common.config import ConfigManager
+from hardpy.common.config import ConfigManager, StorageType
 from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
 from hardpy.pytest_hardpy.result.report_synchronizer import StandCloudSynchronizer
 
@@ -359,6 +359,67 @@ def set_manual_collect_mode(mode_data: dict) -> dict:
         app.state.pytest_wrp.collect()
 
     return {"status": "success", "manual_collect_mode": enabled}
+
+
+@app.get("/api/storage_type")
+def get_storage_type() -> dict:
+    """Get the configured storage type.
+
+    Returns:
+        dict[str, str]: storage type ("json" or "couchdb")
+    """
+    config_manager = ConfigManager()
+    return {"storage_type": config_manager.config.database.storage_type}
+
+
+@app.get("/api/json_data")
+def get_json_data() -> dict:
+    """Get test run data from JSON storage.
+
+    Returns:
+        dict: Test run data from JSON files
+    """
+    config_manager = ConfigManager()
+    storage_type = config_manager.config.database.storage_type
+
+    if storage_type != StorageType.JSON:
+        return {"error": "JSON storage not configured"}
+
+    try:
+        config_storage_path = Path(config_manager.config.database.storage_path)
+        if config_storage_path.is_absolute():
+            storage_dir = config_storage_path / "storage" / "statestore"
+        else:
+            storage_dir = Path(
+                config_manager.tests_path
+                / config_manager.config.database.storage_path
+                / "storage"
+                / "statestore",
+            )
+        _doc_id = config_manager.config.database.doc_id
+        statestore_file = storage_dir / f"{_doc_id}.json"
+
+        if not statestore_file.exists():
+            return {"rows": [], "total_rows": 0}
+
+        with statestore_file.open("r") as f:
+            data = json.load(f)
+
+        # Format data to match CouchDB's _all_docs format
+        return {
+            "rows": [
+                {
+                    "id": data.get("_id", ""),
+                    "key": data.get("_id", ""),
+                    "value": {"rev": data.get("_rev", "1-0")},
+                    "doc": data,
+                },
+            ],
+            "total_rows": 1,
+        }
+    except Exception as exc:
+        logger.exception("Error reading JSON storage")
+        return {"error": str(exc), "rows": [], "total_rows": 0}
 
 
 if "DEBUG_FRONTEND" not in os.environ:
