@@ -173,6 +173,7 @@ class ConfigManager(metaclass=SingletonMeta):
         sc_connection_only: bool,
         sc_autosync: bool,
         sc_api_key: str,
+        storage_type: str,
     ) -> None:
         """Initialize the HardPy configuration.
 
@@ -192,11 +193,17 @@ class ConfigManager(metaclass=SingletonMeta):
             sc_autosync (bool): StandCloud auto syncronization.
             sc_api_key (str): StandCloud API key.
         """
+        # try:
+        #     _storage_type = 
+        # except ValueError:
+        #     msg = f"Invalid storage type {storage_type}"
+        #     raise ValueError(msg)
         self._config.tests_name = tests_name
         self._config.frontend.host = frontend_host
         self._config.frontend.port = frontend_port
         self._config.frontend.language = frontend_language
         self._config.database.user = database_user
+        self._config.database.storage_type = StorageType(storage_type)
         self._config.database.password = database_password
         self._config.database.host = database_host
         self._config.database.port = database_port
