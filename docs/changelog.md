@@ -2,6 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## 0.20.0
+
+* Add JSON file storage support as alternative to CouchDB.
+  [[PR-239](https://github.com/everypinio/hardpy/pull/239)]
+
 ## 0.19.1
 
 * Add a `stop_time` validator function. If a case or module has a start time,
@@ -19,7 +24,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
   tests to run via UI checkboxes.
   [[PR-224](https://github.com/everypinio/hardpy/pull/224)]
 * Add multiple test plan configurations.
-  [[PR-225]](https://github.com/everypinio/hardpy/pull/225)
+  [[PR-225](https://github.com/everypinio/hardpy/pull/225)]
 
 ## 0.18.3
 

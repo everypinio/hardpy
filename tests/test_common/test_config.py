@@ -64,10 +64,12 @@ def test_config_manager_init():
         sc_connection_only=stand_cloud_no_default_connection_only,
         sc_autosync=stand_cloud_no_default_autosync,
         sc_api_key=stand_cloud_no_default_api_key,
+        storage_type="json",
     )
     config = config_manager.config
     assert isinstance(config, HardpyConfig)
     assert config.tests_name == tests_no_default_name
+    assert config.database.storage_type == "json"
     assert config.database.user == db_no_default_user
     assert config.database.password == db_no_default_password
     assert config.database.host == db_no_default_host
@@ -157,6 +159,7 @@ def test_config_manager_create_config(tmp_path: Path):
         sc_connection_only=stand_cloud_dafault_connection_only,
         sc_autosync=stand_cloud_default_autosync,
         sc_api_key=stand_cloud_default_api_key,
+        storage_type="json",
     )
 
     config_manager.create_config(tests_dir)

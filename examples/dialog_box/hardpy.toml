@@ -3,6 +3,7 @@ tests_name = "Dialog Box"
 current_test_config = ""
 
 [database]
+storage_type = "couchdb"
 user = "dev"
 password = "dev"
 host = "localhost"

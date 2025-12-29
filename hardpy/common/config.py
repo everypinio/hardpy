@@ -2,6 +2,7 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
+from enum import Enum
 from logging import getLogger
 from pathlib import Path
 
@@ -14,17 +15,32 @@ from hardpy.common.singleton import SingletonMeta
 logger = getLogger(__name__)
 
 
+class StorageType(str, Enum):
+    """Storage backend types for HardPy data persistence.
+
+    Attributes:
+        JSON: JSON file-based storage on local filesystem
+        COUCHDB: CouchDB database storage
+    """
+
+    JSON = "json"
+    COUCHDB = "couchdb"
+
+
 class DatabaseConfig(BaseModel):
     """Database configuration."""
 
     model_config = ConfigDict(extra="forbid")
 
+    storage_type: StorageType = StorageType.COUCHDB
     user: str = "dev"
     password: str = "dev"
     host: str = "localhost"
     port: int = 5984
     doc_id: str = Field(exclude=True, default="")
     url: str = Field(exclude=True, default="")
+    # This field is relevant only when storage_type is "json"
+    storage_path: str = Field(exclude=True, default=".hardpy")
 
     def model_post_init(self, __context) -> None:  # noqa: ANN001,PYI063
         """Get database connection url."""
@@ -157,6 +173,7 @@ class ConfigManager(metaclass=SingletonMeta):
         sc_connection_only: bool,
         sc_autosync: bool,
         sc_api_key: str,
+        storage_type: str,
     ) -> None:
         """Initialize the HardPy configuration.
 
@@ -175,12 +192,14 @@ class ConfigManager(metaclass=SingletonMeta):
             sc_connection_only (bool): StandCloud check availability.
             sc_autosync (bool): StandCloud auto syncronization.
             sc_api_key (str): StandCloud API key.
+            storage_type (str): Database storage type.
         """
         self._config.tests_name = tests_name
         self._config.frontend.host = frontend_host
         self._config.frontend.port = frontend_port
         self._config.frontend.language = frontend_language
         self._config.database.user = database_user
+        self._config.database.storage_type = StorageType(storage_type)
         self._config.database.password = database_password
         self._config.database.host = database_host
         self._config.database.port = database_port

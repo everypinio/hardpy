@@ -139,6 +139,17 @@
             ]
         },
         {
+            "name": "Python: Example JSON storage",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "run",
+                "examples/json_storage"
+            ]
+        },
+        {
             "name": "Python: Example Multiple configs",
             "type": "debugpy",
             "request": "launch",

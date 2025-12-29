@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from pydantic import ValidationError
 
 from hardpy.common.stand_cloud.exception import StandCloudError
-from hardpy.pytest_hardpy.db.tempstore import TempStore
+from hardpy.pytest_hardpy.db.tempstore import CouchDBTempStore, TempStore
 from hardpy.pytest_hardpy.result.report_loader.stand_cloud_loader import (
     StandCloudLoader,
 )
@@ -21,7 +21,18 @@ class StandCloudSynchronizer:
     """Synchronize reports with StandCloud."""
 
     def __init__(self) -> None:
-        self._tempstore = TempStore()
+        self._tempstore: TempStore | None = None
+
+    @property
+    def _get_tempstore(self) -> TempStore:
+        """Get TempStore instance lazily.
+
+        Returns:
+            TempStore: TempStore singleton instance
+        """
+        if self._tempstore is None:
+            self._tempstore = TempStore()
+        return self._tempstore
 
     def sync(self) -> str:
         """Sync reports with StandCloud.
@@ -29,16 +40,21 @@ class StandCloudSynchronizer:
         Returns:
             str: Synchronization message
         """
-        if not self._tempstore.reports():
+        _tempstore = self._get_tempstore
+        if not self._get_tempstore.reports():
             return "All reports are synchronized with StandCloud"
         loader = self._create_sc_loader()
 
         invalid_reports = []
         success_report_counter = 0
-        for _report in self._tempstore.reports():
+        for _report in self._get_tempstore.reports():
             try:
-                report_id = _report.get("id")
-                document: dict = _report.get("doc")
+                if isinstance(_tempstore, CouchDBTempStore):
+                    document: dict = _report.get("doc")  # type: ignore[assignment]
+                    report_id: str = _report.get("id")  # type: ignore[assignment]
+                else:
+                    document: dict = _report
+                    report_id: str = _report.get("_id")
                 document.pop("rev")
             except KeyError:
                 try:
@@ -50,7 +66,7 @@ class StandCloudSynchronizer:
                     invalid_reports.append({report_id: reason})
                     continue
             try:
-                schema_report = self._tempstore.dict_to_schema(document)
+                schema_report = self._get_tempstore.dict_to_schema(document)
             except ValidationError as exc:
                 reason = f"Report has invalid format: {exc}"
                 invalid_reports.append({report_id: reason})
@@ -65,7 +81,7 @@ class StandCloudSynchronizer:
                 reason = f"Staus code: {response.status_code}, text: {response.text}"
                 invalid_reports.append({report_id: reason})
                 continue
-            if not self._tempstore.delete(report_id):
+            if not self._get_tempstore.delete(report_id):
                 reason = f"Report {report_id} not deleted from the temporary storage"
                 invalid_reports.append({report_id: reason})
             success_report_counter += 1
@@ -80,7 +96,7 @@ class StandCloudSynchronizer:
         Returns:
             bool: True if success, else False
         """
-        return self._tempstore.push_report(report)
+        return self._get_tempstore.push_report(report)
 
     def push_to_sc(self, report: ResultRunStore) -> bool:
         """Push report to the StandCloud.

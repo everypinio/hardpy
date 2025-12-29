@@ -911,6 +911,35 @@ def fill_actions_after_test(post_run_functions: list):
     yield
 ```
 
+#### JsonLoader
+
+Used to write reports to the JSON.
+
+**Arguments:**
+
+- `storage_dir` *(Path | None)*: JSON file directory.
+
+**Functions:**
+
+- `load` *(ResultRunStore, new_report_id)*: Load report to the JSON file.
+
+**Example:**
+
+```python
+# conftest
+def save_report_to_dir():
+    report = get_current_report()
+    if report:
+        loader = JsonLoader(Path.cwd() / "reports")
+        loader.load(report)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def fill_actions_after_test(post_run_functions: list):
+    post_run_functions.append(save_report_to_dir)
+    yield
+```
+
 #### StandCloudLoader
 
 Used to write reports to the **StandCloud**.
