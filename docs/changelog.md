@@ -24,7 +24,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
   tests to run via UI checkboxes.
   [[PR-224](https://github.com/everypinio/hardpy/pull/224)]
 * Add multiple test plan configurations.
-  [[PR-225]](https://github.com/everypinio/hardpy/pull/225)
+  [[PR-225](https://github.com/everypinio/hardpy/pull/225)]
 
 ## 0.18.3
 
