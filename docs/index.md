@@ -12,7 +12,7 @@ hide:
   <div class="hero-grid">
     <div class="hero-copy">
       <h1>Hardware testing that simply works</h1>
-      <p>Write your tests for hardware in Python (pytest) and run them through a guided operator UI. Collect data locally or in StandCloud. Works on Windows, Linux, and SBCs.</p>
+      <p>Write your tests for hardware in Python (pytest) and run them through a guided operator UI. Collect data locally or in StandCloud. Compatible with Windows, Linux, macOS, and single‑board computers.</p>
       <p><a href="getting_started/" class="md-button">Get started</a></p>
     </div>
     <div class="hero-media">
@@ -29,16 +29,15 @@ hide:
   
     ---
 
-    Write test plans in plain Python. No DSL - easy to review, version, and maintain.
+    Write test plans in plain Python. Easy to review, version, and maintain.
 
     ---
 
-
-- **:material-clipboard-check-outline: Operator-friendly steps**
-
+- **:material-factory: Production-ready**
+  
     ---
 
-    Inline instructions, images, confirmations, and data entry. Operators see exactly what to do.
+    Runs on PCs and SBCs (e.g., Raspberry Pi), works offline, and fits CI.
 
     ---
 
@@ -50,11 +49,27 @@ hide:
 
     ---
 
-- **:material-factory: Production-ready**
-  
+- **:material-clipboard-check-outline: Operator-friendly steps**
+
     ---
 
-    Runs on PCs and SBCs (e.g., Raspberry Pi), works offline, and fits CI.
+    Inline instructions, images, confirmations, and data entry. Operators see exactly what to do.
+
+    ---
+
+- **:material-wifi: Client-server operator UI**
+
+    ---
+
+    Open the operator panel anywhere there is a browser (tablet, phone) while tests execute on the host PC.
+
+    ---
+
+- **:material-translate: Multilingual operator panel**
+
+    ---
+
+    Localize the operator UI with built-in language switching for global teams.
 
     ---
 
@@ -70,7 +85,7 @@ hide:
   
     ---
 
-    Save results in CouchDB or JSON, and optionally push to StandCloud.
+    Store results and logs in CouchDB, JSON, or your own backend, and optionally push to StandCloud.
 
     ---
 
