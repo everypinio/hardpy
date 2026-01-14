@@ -1,85 +1,122 @@
-<h1 align="center">
-    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/logo256.png" alt="HardPy" style="width:150px;">
-</h1>
-
-<p align="center">
-HardPy is a python library for creating a test bench for devices.
-</p>
-
+---
+hide:
+  - toc
+  - navigation
 ---
 
-## Overview
+# Hardware testing that simply works { .hp-home-title }
 
-HardPy allows you to:
+<div class="hp-home" markdown>
 
-* Create test benches for devices using [pytest](https://docs.pytest.org/);
-* Use a browser to view, start, stop, and interact with tests;
-* Store test results in the [CouchDB](https://couchdb.apache.org/) database or to simple JSON files;
-* Store test results on the [StandCloud](https://standcloud.io/) analytics platform.
+<div class="hero">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <h1>Hardware testing that simply works</h1>
+      <p>Write your tests for hardware in Python (pytest) and run them through a guided operator UI. Collect data locally or in StandCloud. Works on Windows, Linux, and SBCs.</p>
+      <p><a href="getting_started/" class="md-button">Get started</a></p>
+    </div>
+    <div class="hero-media">
+      <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/hardpy_panel.gif" alt="HardPy panel">
+    </div>
+  </div>
+</div>
 
-<h1 align="center">
-    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/hardpy_panel.gif" alt="hardpy panel" style="width:600;">
-</h1>
+## Everything you need for testing
 
-## To Install
+<div class="grid cards" markdown>
 
-```bash
-pip install hardpy
-```
+- **:material-language-python: Plain Python**
+  
+    ---
 
-## Getting Started
+    Write test plans in plain Python. No DSL - easy to review, version, and maintain.
 
-### With CouchDB
+    ---
 
-1. Create your first test bench.
-  ```bash
-  hardpy init
-  ```
-2. Launch [CouchDB](https://couchdb.apache.org/) database via [docker compose](https://docs.docker.com/compose/) 
-  in the   background.
-  ```bash
-  cd tests
-  docker compose up -d
-  ```
-3. Launch HardPy operator panel.
-  ```bash
-  hardpy run
-  ```
-4. View operator panel in browser: http://localhost:8000/
-  <h1 align="center">
-      <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/hardpy_operator_panel_hello_hardpy.png"
-      alt="hardpy operator panel" style="width:600px;">
-  </h1>
-5. View the latest test report: http://localhost:5984/_utils
 
-    Login and password: **dev**, database - **runstore**.
+- **:material-clipboard-check-outline: Operator-friendly steps**
 
-  <h1 align="center">
-      <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/runstore_hello_hardpy.png"
-      alt="hardpy runstore" style="width:500px;">
-  </h1>
+    ---
 
-### Without a database
+    Inline instructions, images, confirmations, and data entry. Operators see exactly what to do.
 
-1. Create your first test bench.
-  ```bash
-  hardpy init --no-create-database --storage-type json
-  ```
-2. Launch HardPy operator panel.
-  ```bash
-  hardpy run
-  ```
-3. View operator panel in browser: http://localhost:8000/
+    ---
 
-## Measurement instruments
+- **:material-toy-brick-outline: Reusable drivers and building blocks**
+  
+    ---
 
-**HardPy** does not contain any drivers for interacting with measuring equipment. 
-However, **HardPy** allows you to work with any Python code, meaning you can use 
-open libraries to interact with measuring equipment.
+    Connect instruments through drivers/adapters and reuse steps across products.
 
-* [InstrumentKit](https://github.com/instrumentkit/InstrumentKit)
-* [Instrumental](https://github.com/mabuchilab/Instrumental)
-* [PyMeasure](https://github.com/pymeasure/pymeasure)
-* [PyTango](https://gitlab.com/tango-controls/pytango)
-* [QCoDeS](https://github.com/microsoft/Qcodes)
-* [QCoDeS contrib drivers](https://github.com/QCoDeS/Qcodes_contrib_drivers) 
+    ---
+
+- **:material-factory: Production-ready**
+  
+    ---
+
+    Runs on PCs and SBCs (e.g., Raspberry Pi), works offline, and fits CI.
+
+    ---
+
+- **:material-tag-outline: Traceability by serial number**
+  
+    ---
+
+    Store results and measurements in a structured way: serial, run, steps, metrics.
+
+    ---
+
+- **:material-database-outline: Flexible storage**
+  
+    ---
+
+    Save results in CouchDB or JSON, and optionally push to StandCloud.
+
+    ---
+
+- **:material-chart-line: StandCloud analytics (optional)**
+
+    ---
+
+    Track yield, failures, and reruns with production-ready dashboards and serial-level traceability.
+    [Go to StandCloud](https://standcloud.io){ .md-button }
+    ---
+
+</div>
+
+
+## Trusted by teams shipping hardware
+
+HardPy is used by engineers building production test rigs and end-of-line stations. Pair it with StandCloud to store results by serial number, track yield, and catch failure trends early.
+
+<div class="grid cards" markdown>
+
+- **:material-account-hard-hat: Manufacturing test engineer**
+  
+    ---
+
+    *"HardPy made our test flow consistent across operators - fewer mistakes, cleaner logs."*
+
+    ---
+
+- **:material-account-tie: Hardware lead**
+
+    ---
+
+    *"Serial-level traceability in StandCloud helped us spot a failing step in the first day."*
+
+    ---
+
+- **:material-account-cog: Production engineer**
+  
+    ---
+
+    *"We reused the same test plan from the lab to EOL with minimal changes."*
+
+    ---
+
+</div>
+
+[Get started](getting_started.md){ .md-button }
+
+</div>
