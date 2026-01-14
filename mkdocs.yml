@@ -140,4 +140,15 @@ plugins:
 extra:
   analytics:
     provider: google
-    property: G-6Z35DZJBP7
+    property: !ENV GOOGLE_ANALYTICS_KEY
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/everypinio/hardpy
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/hardpy/
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/98bWadmG8J
+    - icon: fontawesome/brands/reddit
+      link: https://www.reddit.com/r/HardPy
+    - icon: fontawesome/brands/telegram
+      link: https://t.me/everypin
