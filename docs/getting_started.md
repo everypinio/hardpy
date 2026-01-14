@@ -27,7 +27,7 @@ HardPy allows you to:
 pip install hardpy
 ```
 
-## Getting Started
+## Launch
 
 ### With CouchDB
 
