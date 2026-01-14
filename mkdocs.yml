@@ -50,7 +50,8 @@ theme:
     position: top
 
 nav:
-  - HardPy: index.md
+  - Home: index.md
+  - Getting started: getting_started.md
   - Features: features/features.md
   - Documentation:
       - documentation/index.md
@@ -96,8 +97,11 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.details
   - pymdownx.magiclink
+  - pymdownx.snippets
   - pymdownx.tasklist
-  - pymdownx.emoji
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.tilde
   - admonition
   - footnotes
