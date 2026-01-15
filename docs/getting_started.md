@@ -74,4 +74,5 @@ open libraries to interact with measuring equipment.
 * [PyMeasure](https://github.com/pymeasure/pymeasure)
 * [PyTango](https://gitlab.com/tango-controls/pytango)
 * [QCoDeS](https://github.com/microsoft/Qcodes)
-* [QCoDeS contrib drivers](https://github.com/QCoDeS/Qcodes_contrib_drivers) 
+* [QCoDeS contrib drivers](https://github.com/QCoDeS/Qcodes_contrib_drivers)
+* [Labgrid](https://github.com/labgrid-project/labgrid)
