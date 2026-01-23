@@ -2,6 +2,13 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## 0.20.1
+
+* Add the `--version` option to hardpy call.
+  [[PR-251](https://github.com/everypinio/hardpy/pull/251)]
+* Update some dependencies to their latest versions to improve overall system security.
+  [[PR-251](https://github.com/everypinio/hardpy/pull/251)]
+
 ## 0.20.0
 
 * Add JSON file storage support as alternative to CouchDB.
