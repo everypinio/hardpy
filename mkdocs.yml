@@ -11,6 +11,7 @@ repo_url: https://github.com/everypinio/hardpy
 
 theme:
   name: material
+  custom_dir: docs/overrides
   logo: img/logo192.png
   favicon: img/logo192.png
   palette:
@@ -25,7 +26,6 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
   features:
-    - announce.dismiss
     - content.action.edit
     - content.action.view
     - content.code.annotate
@@ -50,7 +50,8 @@ theme:
     position: top
 
 nav:
-  - HardPy: index.md
+  - Home: index.md
+  - Getting started: getting_started.md
   - Features: features/features.md
   - Documentation:
       - documentation/index.md
@@ -96,8 +97,11 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.details
   - pymdownx.magiclink
+  - pymdownx.snippets
   - pymdownx.tasklist
-  - pymdownx.emoji
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.tilde
   - admonition
   - footnotes
@@ -136,4 +140,15 @@ plugins:
 extra:
   analytics:
     provider: google
-    property: G-6Z35DZJBP7
+    property: !ENV GOOGLE_ANALYTICS_KEY
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/everypinio/hardpy
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/hardpy/
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/98bWadmG8J
+    - icon: fontawesome/brands/reddit
+      link: https://www.reddit.com/r/HardPy
+    - icon: fontawesome/brands/telegram
+      link: https://t.me/everypin
