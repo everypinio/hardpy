@@ -12,6 +12,7 @@ import requests
 import typer
 from uvicorn import run as uvicorn_run
 
+from hardpy import __version__ as hardpy_version
 from hardpy.cli.template import TemplateGenerator
 from hardpy.common.config import ConfigManager, HardpyConfig
 from hardpy.common.stand_cloud import (
@@ -29,6 +30,27 @@ if __debug__:
 
 cli = typer.Typer(add_completion=False)
 default_config = HardpyConfig()
+
+
+def version_callback(value: bool) -> None:
+    """Show the HardPy version and exit."""
+    if value:
+        print(hardpy_version)
+        raise typer.Exit(0)
+
+
+@cli.callback()
+def main(  # noqa: D103
+    version_flag: Optional[bool] = typer.Option(
+        None,
+        "--version",
+        "-v",
+        callback=version_callback,
+        is_eager=True,
+        help="Show the HardPy version and exit.",
+    ),
+) -> None:
+    pass
 
 
 @cli.command()
@@ -334,6 +356,7 @@ def _validate_running_config(config: HardpyConfig, tests_dir: str) -> None:
     if config.model_dump() != running_config:
         print(error_msg)
         sys.exit()
+
 
 def _validate_config(config: HardpyConfig) -> None:
     if config.stand_cloud.autosync:
