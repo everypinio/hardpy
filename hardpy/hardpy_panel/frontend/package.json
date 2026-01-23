@@ -50,6 +50,13 @@
     "use-pouchdb": "^2.0.2",
     "web-vitals": "^3.5.0"
   },
+  "resolutions": {
+    "tar": "^7.5.4",
+    "vite": "^7.1.11",
+    "glob": "^10.5.0",
+    "lodash": "^4.17.23",
+    "js-yaml": "^4.1.1"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
