@@ -52,6 +52,7 @@ interface Props {
   html_border?: number;
   language?: string;
   pass_fail?: boolean;
+  button_text?: string[];
 }
 
 export enum WidgetType {
@@ -1149,7 +1150,10 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
             <Button
               ref={passButtonRef}
               intent="success"
-              text={t("button.pass")}
+              text={props.button_text && props.button_text.length > 0 
+                ? props.button_text[0] 
+                : t("button.pass")
+              }
               onClick={() => handlePassFail(true)}
               autoFocus={!hasInputField}
               style={{
@@ -1159,7 +1163,10 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
             />
             <Button
               intent="danger"
-              text={t("button.fail")}
+              text={props.button_text && props.button_text.length > 0 
+                ? props.button_text[1] 
+                : t("button.fail")
+              }
               onClick={() => handlePassFail(false)}
               style={{
                 minWidth: "65px",
@@ -1179,7 +1186,10 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
               minWidth: "65px",
             }}
           >
-            {t("button.confirm")}
+            {props.button_text && props.button_text.length > 0 
+              ? props.button_text[0] 
+              : t("button.confirm")
+            }
           </Button>
         )}
       </div>
