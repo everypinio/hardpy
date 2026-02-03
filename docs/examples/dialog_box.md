@@ -39,9 +39,39 @@ def test_base_dialog_box_with_image():
     assert response.result
     assert response.data
 
-@pytest.mark.case_name("Empty test after")
-def test_after():
-    assert True
+@pytest.mark.case_name("Base dialog box custom button text")
+def test_base_dialog_box_custom_button_text():
+    dbx = DialogBox(
+        title_bar="Custom button text",
+        dialog_text="Press the 'Some text' button",
+        button_text=["Some text"],
+    )
+    response = run_dialog_box(dbx)
+    assert response
+
+@pytest.mark.case_name("Base dialog box with pass_fail")
+def test_base_dialog_box_with_pass_fail():
+    dbx = DialogBox(
+        title_bar="Operator check",
+        dialog_text="Press Pass or Fail button",
+        pass_fail=True,
+    )
+    response = run_dialog_box(dbx)
+    assert response.result
+    assert response.data
+
+
+@pytest.mark.case_name("Base dialog box with pass_fail custom buttons text")
+def test_base_dialog_box_with_pass_fail_custom_button_text():
+    dbx = DialogBox(
+        title_bar="Custom buttons text",
+        dialog_text="Press 'Some text' or 'Some other text' button",
+        pass_fail=True,
+        button_text=["Some text", "Some other text"],
+    )
+    response = run_dialog_box(dbx)
+    assert response.result
+    assert response.data
 ```
 
 ### test_2_input_field.py

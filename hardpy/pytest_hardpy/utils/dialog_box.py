@@ -367,6 +367,7 @@ class DialogBox:
         image (ImageComponent | None): image
         font_size (int): font size
         pass_fail (bool): enable pass/fail buttons instead of confirm button
+        button_text (list | None): user text for buttons
     """
 
     def __init__(  # noqa: PLR0913
@@ -378,6 +379,7 @@ class DialogBox:
         html: HTMLComponent | None = None,
         font_size: int = 14,
         pass_fail: bool = False,
+        button_text: list | None = None,
     ) -> None:
         self.widget: IWidget = BaseWidget() if widget is None else widget
         self.image: ImageComponent | None = image
@@ -388,6 +390,7 @@ class DialogBox:
         self.id = str(uuid4())
         self.font_size = font_size
         self.pass_fail: bool = pass_fail
+        self.button_text: list = button_text
 
         if font_size < 1:
             msg = "The 'font_size' argument cannot be less than 1"

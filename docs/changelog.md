@@ -2,6 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## 0.21.0
+
+* Add the ability to change the text for buttons in dialog boxes.
+  [[PR-253](https://github.com/everypinio/hardpy/pull/253)]
+
 ## 0.20.1
 
 * Add the `--version` option to hardpy call.
