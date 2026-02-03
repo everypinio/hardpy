@@ -616,7 +616,7 @@ The `run_dialog_box` function must be called from a test case.
 
 **Arguments:**
 
-- `dialog_box_data` *(DialogBox)*: Data for the dialog box.
+- `dialog_box_data` ([DialogBox](#dialogbox)): Data for the dialog box.
 
 **Returns:**
 
@@ -698,11 +698,13 @@ the [run_dialog_box](#run_dialog_box) function.
 
 - `dialog_text` *(str)*: The text of the dialog box.
 - `title_bar` *(str | None)*: The title bar of the dialog box.
-If the title_bar field is missing, it is the case name.
+If the `title_bar` field is missing, it is the case name.
 - `widget` *(IWidget | None)*: Widget information.
 - `image` *([ImageComponent](#imagecomponent) | None)*: Image information.
 - `html` *([HTMLComponent](#htmlcomponent) | None)*: HTML information.
 - `font_size`: *(int=14)*: Text font size.
+- `pass_fail`: *(bool)*: enable pass/fail buttons instead of confirm button.
+- `button_text`: *(list | None)*: user text for buttons.
 
 Widget list:
 

@@ -148,7 +148,7 @@ menu - checkboxes will appear next to each test case and module
 
 ### Dialog box
 
-For user interaction with the test, it is possible to use dialog boxes.
+For user interaction with the test, it is possible to use [dialog boxes](./pytest_hardpy.md#dialogbox).
 An example of usage can be seen in the example [dialog box](../examples/dialog_box.md) and in [dialog box documentation](pytest_hardpy.md#run_dialog_box).
 Currently, there are some types of dialog boxes.
 
@@ -156,7 +156,9 @@ Each dialog box can contain an image, HTML page or pass/fail buttons.
 
 * Allows the width to be changed using the `width` parameter.
 * Allows changing the border thickness with the `border` parameter.
-* Allow the following image types: gif, jpeg, pjpeg, png, svg+xml, tiff, vnd.microsoft.icon, vnd.wap.wbmp, webp.
+* Allows the following image types: gif, jpeg, pjpeg, png, svg+xml, tiff, vnd.microsoft.icon, vnd.wap.wbmp, webp.
+* Allows to use one or two buttons (`pass/fail` button).
+* Allows to set custom button names via the `button_text` parameter.
 
 #### basic dialog box
 
@@ -187,6 +189,10 @@ Contains an instruction or question and a `confirm` button for confirmation.
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/base_dbx_with_pass_fail.png" alt="base_dialog_box_with_pass_fail">
     </h1>
 
+=== "Widget with custom pass/fail buttons"
+    <h1 align="center">
+        <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/dialog_box/base_dbx_pass_fail_custom.png" alt="base_dialog_box_with_custom_pass_fail">
+    </h1>
 
 #### text input field
 
