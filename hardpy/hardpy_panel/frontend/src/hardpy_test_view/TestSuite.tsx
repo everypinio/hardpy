@@ -78,6 +78,8 @@ interface HTMLInfo {
  * @property {string} id - Unique identifier for the dialog
  * @property {number} [font_size] - Font size for dialog text
  * @property {HTMLInfo} [html] - Optional HTML content configuration
+ * @property {boolean} pass_fail - Whether the dialog is a pass/fail dialog
+ * @property {string[]} [button_text] - Optional array of button text
  */
 interface DialogBoxProps {
   title_bar?: string;
@@ -88,6 +90,8 @@ interface DialogBoxProps {
   id: string;
   font_size?: number;
   html?: HTMLInfo;
+  pass_fail: boolean;
+  button_text?: string[];
 }
 
 interface Measurement {
@@ -1009,6 +1013,7 @@ export class TestSuite extends React.Component<Props, State> {
               html_width={test.dialog_box.html?.width}
               html_border={test.dialog_box.html?.border}
               pass_fail={test.dialog_box.pass_fail}
+              button_text={test.dialog_box.button_text}
             />
           )}
         <TestStatus
