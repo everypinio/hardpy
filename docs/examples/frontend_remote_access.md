@@ -22,11 +22,11 @@ Edit the file to include your computer's network address:
 [database]
 user = "dev"
 password = "dev"
-host = "{YOUR_COMPUTER_NETWORK_ADDRESS}"  # Replace with address from step 2
+host = "{YOUR_COMPUTER_NETWORK_ADDRESS}"  # Replace with address from step 1
 port = 5984
 
 [frontend]
-host = "{YOUR_COMPUTER_NETWORK_ADDRESS}"  # Replace with the address from step 2 or insert "0.0.0.0"
+host = "{YOUR_COMPUTER_NETWORK_ADDRESS}"  # Replace with the address from step 1 or insert "0.0.0.0"
 port = 8000
 language = "en"
 ```
