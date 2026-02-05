@@ -267,7 +267,7 @@ def confirm_dialog_box(dbx_data: dict) -> dict:
     result = dbx_data.get(RESULT_KEY, EMPTY_STRING)
     widget_data = dbx_data.get(DATA_KEY, EMPTY_STRING)
 
-    unquoted_string = unquote(widget_data)
+    unquoted_string = unquote(unquote(widget_data))
     decoded_string = re.sub(
         HEX_PATTERN,
         lambda match: chr(int(match.group(1), HEX_BASE)),
