@@ -2,6 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## 0.21.1
+
+* Fix double encoding in the dialog boxes.
+  [[PR-255](https://github.com/everypinio/hardpy/pull/255)]
+
 ## 0.21.0
 
 * Add the ability to change the text for buttons in dialog boxes.
