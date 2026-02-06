@@ -1526,6 +1526,15 @@ The default is *False*.
 --sc-autosync
 ```
 
+#### hardpy-config-file
+
+The HardPy configuration file path ([hardpy.toml](./hardpy_config.md)).
+The default is the tests path.
+
+```bash
+--hardpy-config-file path/to/file/
+```
+
 #### hardpy-start-arg
 
 Dynamic arguments for test execution in key=value format. Can be specified multiple times.

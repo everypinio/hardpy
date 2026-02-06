@@ -76,6 +76,8 @@ class PyTestWrapper:
             self._tests_name(),
             "--sc-address",
             self.config.stand_cloud.address,
+            "--hardpy-config-file",
+            str(self._config_manager.tests_path),
         ]
 
         if selected_tests:
@@ -153,6 +155,8 @@ class PyTestWrapper:
             self.config.database.url,
             "--hardpy-tests-name",
             self._tests_name(),
+            "--hardpy-config-file",
+            str(self._config_manager.tests_path),
             "--hardpy-pt",
         ]
 
