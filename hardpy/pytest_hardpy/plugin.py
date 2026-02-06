@@ -105,6 +105,11 @@ def pytest_addoption(parser: Parser) -> None:
         help="StandCloud auto syncronization",
     )
     parser.addoption(
+        "--hardpy-config-file",
+        action="store",
+        help="HardPy configuration file path",
+    )
+    parser.addoption(
         "--hardpy-start-arg",
         action="append",
         default=[],
@@ -151,7 +156,12 @@ class HardpyPlugin:
     def pytest_configure(self, config: Config) -> None:
         """Configure pytest."""
         config_manager = ConfigManager()
-        hardpy_config = config_manager.read_config(Path(config.rootpath))
+
+        hardpy_config_path = config.getoption("--hardpy-config-file")
+        if hardpy_config_path:
+            hardpy_config = config_manager.read_config(Path(hardpy_config_path))
+        else:
+            hardpy_config = config_manager.read_config(Path(config.rootpath))
 
         if not hardpy_config:
             hardpy_config = HardpyConfig()
