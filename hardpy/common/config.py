@@ -120,14 +120,23 @@ class HardpyConfig(BaseModel, extra="allow"):
     title: str = "HardPy TOML config"
     tests_name: str = ""
     database: DatabaseConfig = DatabaseConfig()
+    database_frontend: DatabaseConfig | None = Field(default=None)
     frontend: FrontendConfig = FrontendConfig()
     stand_cloud: StandCloudConfig = StandCloudConfig()
     current_test_config: str = ""
     test_configs: list[TestConfig] = []
 
     def model_post_init(self, __context) -> None:  # noqa: ANN001,PYI063
-        """Get database document name."""
+        """Get database document name and set database_frontend fallback."""
         self.database.doc_id = self.get_doc_id()
+        # Fall back to database config if database_frontend not specified
+        if self.database_frontend is None:
+            self.database_frontend = DatabaseConfig(
+                user=self.database.user,
+                password=self.database.password,
+                host=self.database.host,
+                port=self.database.port,
+            )
 
     def get_doc_id(self) -> str:
         """Update database document name."""

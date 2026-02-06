@@ -202,7 +202,7 @@ def status() -> dict:
 
 @app.get("/api/couch")
 def couch_connection() -> dict:
-    """Get couchdb connection string.
+    """Get couchdb connection string for frontend.
 
     Returns:
         dict[str, str]: couchdb connection string
@@ -210,7 +210,7 @@ def couch_connection() -> dict:
     config_manager = ConfigManager()
 
     return {
-        "connection_str": config_manager.config.database.url,
+        "connection_str": config_manager.config.database_frontend.url,
     }
 
 
