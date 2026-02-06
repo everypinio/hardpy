@@ -20,3 +20,7 @@ manual_collect = false
 enable = false
 auto_dismiss_pass = true
 auto_dismiss_timeout = 5
+
+[extra_info]
+extra_arg_1 = "extra_arg_1"
+extra_arg_2 = 2

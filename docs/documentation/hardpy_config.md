@@ -259,3 +259,34 @@ The path to the `pytest.ini` file that defines the specific pytest arguments and
 #### description
 
 An optional field to provide a more detailed explanation of the configuration.
+
+### extra args
+
+Users can add their own fields to the hardpy.toml file and use them in test plans. 
+Here is an example of how to use them:
+
+```toml
+title = "HardPy TOML config"
+
+[database]
+user = "dev"
+password = "dev"
+host = "localhost"
+port = 5984
+
+[frontend]
+host = "localhost"
+port = 8000
+
+[extra_args]
+extra_arg_1 = "extra_arg_1"
+extra_arg_2 = 2
+```
+
+```python
+import hardpy
+
+config = get_hardpy_config()
+print(config.extra_args.["extra_arg_1"])
+print(config.extra_args.["extra_arg_2"])
+```

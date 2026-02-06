@@ -1,4 +1,4 @@
-# Copyright (c) 2025 Everypin
+# Copyright (c) 2026 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ from time import sleep
 from typing import TYPE_CHECKING, Any
 from uuid import uuid4
 
+from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db import (
     Chart,
     DatabaseField as DF,  # noqa: N817
@@ -30,6 +31,8 @@ from hardpy.pytest_hardpy.utils import (
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
+
+    from hardpy.common.config import HardpyConfig
 
 
 @dataclass
@@ -738,6 +741,16 @@ def get_current_attempt() -> int:
     reporter = RunnerReporter()
     module_id, case_id = _get_current_test().module_id, _get_current_test().case_id
     return reporter.get_current_attempt(module_id, case_id)
+
+
+def get_hardpy_config() -> HardpyConfig:
+    """Get HardPy project configuration from the hardpy.toml file.
+
+    Returns:
+        HardpyConfig: HardPy configuration
+    """
+    config_manager = ConfigManager()
+    return config_manager.config
 
 
 def _get_current_test() -> CurrentTestInfo:
