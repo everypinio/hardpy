@@ -1,8 +1,9 @@
-# Copyright (c) 2024 Everypin
+# Copyright (c) 2026 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from importlib.metadata import PackageNotFoundError, version
 
+from hardpy.common.config import HardpyConfig
 from hardpy.common.stand_cloud import StandCloudConnector, StandCloudError
 from hardpy.pytest_hardpy.db import (
     Chart,
@@ -17,6 +18,7 @@ from hardpy.pytest_hardpy.pytest_call import (
     clear_operator_message,
     get_current_attempt,
     get_current_report,
+    get_hardpy_config,
     run_dialog_box,
     set_batch_serial_number,
     set_case_artifact,
@@ -88,6 +90,7 @@ __all__ = [
     "ErrorCode",
     "Group",
     "HTMLComponent",
+    "HardpyConfig",
     "ImageComponent",
     "Instrument",
     "JsonLoader",
@@ -108,6 +111,7 @@ __all__ = [
     "clear_operator_message",
     "get_current_attempt",
     "get_current_report",
+    "get_hardpy_config",
     "run_dialog_box",
     "set_batch_serial_number",
     "set_case_artifact",

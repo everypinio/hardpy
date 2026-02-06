@@ -2,6 +2,13 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## 0.22.0
+
+* Add the `get_hardpy_function` to retrieve the current configuration from the **hardpy.toml**.
+  [[PR-257](https://github.com/everypinio/hardpy/pull/257)]
+* Add support for custom fields to the hardpy.toml file.
+  [[PR-257](https://github.com/everypinio/hardpy/pull/257)]
+
 ## 0.21.1
 
 * Fix double encoding in the dialog boxes.

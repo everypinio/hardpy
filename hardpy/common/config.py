@@ -115,7 +115,7 @@ class TestConfigs(BaseModel):
 class HardpyConfig(BaseModel, extra="allow"):
     """HardPy configuration."""
 
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="allow")
 
     title: str = "HardPy TOML config"
     tests_name: str = ""

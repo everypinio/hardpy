@@ -1295,3 +1295,17 @@ def test_get_current_attempt(pytester: Pytester, hardpy_opts: list):
     )
     result = pytester.runpytest(*hardpy_opts)
     result.assert_outcomes(passed=2)
+
+
+def test_get_hardpy_config(pytester: Pytester, hardpy_opts: list):
+    pytester.makepyfile(
+        f"""{func_test_header}
+
+        def test_a():
+            config = hardpy.get_hardpy_config()
+            assert config.extra_info["extra_arg_1"] == "extra_arg_1"
+            assert config.extra_info["extra_arg_2"] == 2
+    """,
+    )
+    result = pytester.runpytest(*hardpy_opts)
+    result.assert_outcomes(passed=1)

@@ -687,7 +687,28 @@ def test_attempt_message():
         assert False
 ```
 
+#### get_hardpy_config
+
+Returns the actual HardPy project configuration from the [hardpy.toml](./hardpy_config.md) file.
+
+**Returns:**
+
+- *[HardpyConfig](#hardpyconfig)*: HardPy project configuration.
+  
+**Example:**
+
+```python
+config = hardpy.get_hardpy_config()
+print(config.database.storage_type)
+```
+
 ## Class
+
+#### HardpyConfig
+
+This class defines the configuration of the HardPy project for the [hardpy.toml](./hardpy_config.md) file.
+Users can obtain an instance of **HardpyConfig** with the current values from the 
+hardpy.toml file using the [get_hardpy_config()](#get_hardpy_config) function.
 
 #### DialogBox
 
