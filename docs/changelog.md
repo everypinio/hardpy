@@ -2,6 +2,13 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## 0.22.1
+
+* Add the `--hardpy-config-file` to the pytest plugin. 
+  This feature enables tests to be run in a folder that is different 
+  to the one containing the hardpy.toml file.
+  [[PR-259](https://github.com/everypinio/hardpy/pull/259)]
+
 ## 0.22.0
 
 * Add the `get_hardpy_function` to retrieve the current configuration from the **hardpy.toml**.

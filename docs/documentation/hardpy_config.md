@@ -286,7 +286,7 @@ extra_arg_2 = 2
 ```python
 import hardpy
 
-config = get_hardpy_config()
+config = hardpy.get_hardpy_config()
 print(config.extra_args.["extra_arg_1"])
 print(config.extra_args.["extra_arg_2"])
 ```

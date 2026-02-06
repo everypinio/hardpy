@@ -3,13 +3,13 @@ tests_name = "Multiple configs"
 current_test_config = ""
 
 [database]
+storage_type = "couchdb"
 user = "dev"
 password = "dev"
 host = "localhost"
 port = 5984
 
 [frontend]
-storage_type = "couchdb"
 host = "localhost"
 port = 8000
 language = "en"
