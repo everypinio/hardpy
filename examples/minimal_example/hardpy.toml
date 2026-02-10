@@ -1,0 +1,10 @@
+[database]
+storage_type = "json"
+
+[frontend]
+host = "localhost"
+port = 8000
+
+
+
+
