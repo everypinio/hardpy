@@ -125,7 +125,7 @@ hide:
 
 HardPy is used by engineers building production test rigs and end-of-line stations. Pair it with StandCloud to store results by serial number, track yield, and catch failure trends early.
 
-<div class="grid cards" markdown>
+<div class="grid cards grid-testimonials" markdown>
 
 - **:material-account-hard-hat: Manufacturing test engineer**
   
