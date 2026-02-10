@@ -8,18 +8,7 @@ hide:
 
 <div class="hp-home" markdown>
 
-<div class="hero">
-  <div class="hero-grid">
-    <div class="hero-copy">
-      <h1>Hardware testing that simply works</h1>
-      <p>Write your tests for hardware in Python (pytest) and run them through a guided operator UI. Collect data locally or in StandCloud. Compatible with Windows, Linux, macOS, and single‑board computers.</p>
-      <p><a href="getting_started/" class="md-button">Get started</a></p>
-    </div>
-    <div class="hero-media">
-      <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/hardpy_panel.gif" alt="HardPy panel">
-    </div>
-  </div>
-</div>
+--8<-- "docs/_includes/hero.html"
 
 ## Everything you need for testing
 
