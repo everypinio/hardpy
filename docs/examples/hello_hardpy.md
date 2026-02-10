@@ -1,6 +1,6 @@
 # Hello hardpy
 
-This is the simplest example of using **HardPy**.
+This is the simplest example of using **HardPy** with **CouchDB**.
 The code for this example can be seen inside the hardpy package [Hello Hardpy](https://github.com/everypinio/hardpy/tree/main/examples/hello_hardpy).
 
 ### how to start
