@@ -40,6 +40,8 @@ hide:
 
 </div>
 
+--8<-- "docs/_includes/standcloud_cta.html"
+
 ## Everything you need for testing
 
 <div class="grid cards" markdown>
