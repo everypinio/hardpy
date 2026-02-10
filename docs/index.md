@@ -10,6 +10,36 @@ hide:
 
 --8<-- "docs/_includes/hero.html"
 
+## Benefits
+
+<div class="grid cards" markdown>
+
+- **:material-rocket-launch: Ship tests faster**
+  
+    ---
+
+    Spend time on measurements and tooling, not on building a custom test runner and UI from scratch.
+
+    ---
+
+- **:material-shield-check: More reliable test stands**
+  
+    ---
+
+    Consistent execution and clearer failures mean fewer “random” line issues and fewer escalations back to engineering.
+
+    ---
+
+- **:material-chart-timeline-variant: No rewrites as requirements grow**
+  
+    ---
+
+    Start with a simple bench flow, then add serial tracking, richer prompts, more instruments, data exports, and fleet/analytics integrations without throwing your test code away.
+
+    ---
+
+</div>
+
 ## Everything you need for testing
 
 <div class="grid cards" markdown>
