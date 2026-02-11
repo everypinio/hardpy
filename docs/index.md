@@ -115,43 +115,20 @@ hide:
     ---
 
     Track yield, failures, and reruns with production-ready dashboards and serial-level traceability.
-    [Go to StandCloud](https://standcloud.io){ .md-button }
-    ---
+    [Go to StandCloud](https://standcloud.io){ .md-button .hp-center-button }
 
 </div>
 
 
 ## Trusted by teams shipping hardware
 
+<div class="hp-testimonials" markdown>
+
 HardPy is used by engineers building production test rigs and end-of-line stations. Pair it with StandCloud to store results by serial number, track yield, and catch failure trends early.
 
-<div class="grid cards grid-testimonials" markdown>
-
-- **:material-account-hard-hat: Manufacturing test engineer**
-  
-    ---
-
-    *"HardPy made our test flow consistent across operators - fewer mistakes, cleaner logs."*
-
-    ---
-
-- **:material-account-tie: Hardware lead**
-
-    ---
-
-    *"Serial-level traceability in StandCloud helped us spot a failing step in the first day."*
-
-    ---
-
-- **:material-account-cog: Production engineer**
-  
-    ---
-
-    *"We reused the same test plan from the lab to EOL with minimal changes."*
-
-    ---
-
-</div>
+- :material-account-hard-hat: **Manufacturing test engineer** — *"HardPy made our test flow consistent across operators - fewer mistakes, cleaner logs."*
+- :material-account-tie: **Hardware lead** — *"Serial-level traceability in StandCloud helped us spot a failing step in the first day."*
+- :material-account-cog: **Production engineer** — *"We reused the same test plan from the lab to EOL with minimal changes."*
 
 [Get started](getting_started.md){ .md-button }
 
