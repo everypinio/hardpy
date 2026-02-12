@@ -2,8 +2,6 @@ name: Merge Checks
 
 on:
   pull_request:
-    paths-ignore:
-      - 'docs/**'
 
 jobs:
   lint:
