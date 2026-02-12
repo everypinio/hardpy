@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+  {{ super() }}
+  {% if page.url == '' or page.url == 'index/' %}
+    <link rel="stylesheet" href="{{ '_includes/landing.css' | url }}">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    >
+  {% endif %}
+{% endblock %}
+
+{% block announce %}
+<style>
+  .announce-banner {
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .announce-banner a {
+    text-decoration: underline;
+  }
+</style>
+<div class="announce-banner">
+  <span>Connect HardPy to </span>
+  <a href="https://standcloud.io">StandCloud</a>
+  <span> and start tracking production test data! </span>
+</div>
+{% endblock %}
