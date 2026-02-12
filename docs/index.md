@@ -8,18 +8,39 @@ hide:
 
 <div class="hp-home" markdown>
 
-<div class="hero">
-  <div class="hero-grid">
-    <div class="hero-copy">
-      <h1>Hardware testing that simply works</h1>
-      <p>Write your tests for hardware in Python (pytest) and run them through a guided operator UI. Collect data locally or in StandCloud. Compatible with Windows, Linux, macOS, and single‑board computers.</p>
-      <p><a href="getting_started/" class="md-button">Get started</a></p>
-    </div>
-    <div class="hero-media">
-      <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/hardpy_panel.gif" alt="HardPy panel">
-    </div>
-  </div>
+--8<-- "docs/_includes/hero.html"
+
+## Benefits
+
+<div class="grid cards" markdown>
+
+- **:material-rocket-launch: Ship tests faster**
+  
+    ---
+
+    Spend time on measurements and tooling, not on building a custom test runner and UI from scratch.
+
+    ---
+
+- **:material-shield-check: More reliable test stands**
+  
+    ---
+
+    Consistent execution and clearer failures mean fewer “random” line issues and fewer escalations back to engineering.
+
+    ---
+
+- **:material-chart-timeline-variant: No rewrites as requirements grow**
+  
+    ---
+
+    Start with a simple bench flow, then add serial tracking, richer prompts, more instruments, data exports, and fleet/analytics integrations without throwing your test code away.
+
+    ---
+
 </div>
+
+--8<-- "docs/_includes/standcloud_cta.html"
 
 ## Everything you need for testing
 
@@ -94,43 +115,20 @@ hide:
     ---
 
     Track yield, failures, and reruns with production-ready dashboards and serial-level traceability.
-    [Go to StandCloud](https://standcloud.io){ .md-button }
-    ---
+    [Go to StandCloud](https://standcloud.io){ .md-button .hp-center-button }
 
 </div>
 
 
 ## Trusted by teams shipping hardware
 
+<div class="hp-testimonials" markdown>
+
 HardPy is used by engineers building production test rigs and end-of-line stations. Pair it with StandCloud to store results by serial number, track yield, and catch failure trends early.
 
-<div class="grid cards" markdown>
-
-- **:material-account-hard-hat: Manufacturing test engineer**
-  
-    ---
-
-    *"HardPy made our test flow consistent across operators - fewer mistakes, cleaner logs."*
-
-    ---
-
-- **:material-account-tie: Hardware lead**
-
-    ---
-
-    *"Serial-level traceability in StandCloud helped us spot a failing step in the first day."*
-
-    ---
-
-- **:material-account-cog: Production engineer**
-  
-    ---
-
-    *"We reused the same test plan from the lab to EOL with minimal changes."*
-
-    ---
-
-</div>
+- :material-account-hard-hat: **Manufacturing test engineer** — *"HardPy made our test flow consistent across operators - fewer mistakes, cleaner logs."*
+- :material-account-tie: **Hardware lead** — *"Serial-level traceability in StandCloud helped us spot a failing step in the first day."*
+- :material-account-cog: **Production engineer** — *"We reused the same test plan from the lab to EOL with minimal changes."*
 
 [Get started](getting_started.md){ .md-button }
 
