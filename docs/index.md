@@ -58,7 +58,7 @@ hide:
   
     ---
 
-    Runs on PCs and SBCs (e.g., Raspberry Pi), works offline, and fits CI.
+    Runs on PCs and single-board computers (SBCs), works offline, and supports continuous integration (CI).
 
     ---
 
@@ -114,7 +114,7 @@ hide:
 
     ---
 
-    Track yield, failures, and reruns with production-ready dashboards and serial-level traceability.
+    Track pass rate (yield), failures, and retests with dashboards and serial-number history.
     [Go to StandCloud](https://standcloud.io){ .md-button .hp-center-button }
 
 </div>
@@ -124,7 +124,7 @@ hide:
 
 <div class="hp-testimonials" markdown>
 
-HardPy is used by engineers building production test rigs and end-of-line stations. Pair it with StandCloud to store results by serial number, track yield, and catch failure trends early.
+HardPy is used by engineers building production test rigs and end-of-line stations. Pair it with StandCloud to store results by serial number, track pass rate (yield), and catch failure trends early.
 
 - :material-account-hard-hat: **Manufacturing test engineer** — *"HardPy made our test flow consistent across operators - fewer mistakes, cleaner logs."*
 - :material-account-tie: **Hardware lead** — *"Serial-level traceability in StandCloud helped us spot a failing step in the first day."*
