@@ -115,8 +115,8 @@ class HookReporter(BaseReporter):
         item_statestore = self._statestore.get_field(key)
         item_runstore = self._runstore.get_field(key)
 
-        self._init_case(item_statestore, node_info, is_only_statestore=True)
-        self._init_case(item_runstore, node_info, is_only_runstore=True)
+        self._init_case(item_statestore, node_info)
+        self._init_case(item_runstore, node_info)
 
         self.set_doc_value(key, item_statestore, statestore_only=True)
         self.set_doc_value(key, item_runstore, runstore_only=True)
@@ -331,8 +331,6 @@ class HookReporter(BaseReporter):
         self,
         item: dict,
         node_info: NodeInfo,
-        is_only_runstore: bool = False,
-        is_only_statestore: bool = False,
     ) -> None:
         module_default = {
             DF.STATUS: TestStatus.READY,
@@ -348,16 +346,10 @@ class HookReporter(BaseReporter):
             DF.GROUP: self._get_case_group(node_info),
             DF.START_TIME: None,
             DF.STOP_TIME: None,
-            DF.ASSERTION_MSG: None,
-            DF.MSG: None,
             DF.ATTEMPT: 0,
-            DF.MEASUREMENTS: [],
-            DF.CHART: None,
         }
 
         if item.get(node_info.module_id) is None:
-            if is_only_runstore:
-                module_default[DF.ARTIFACT] = {}
             item[node_info.module_id] = module_default
         else:
             item[node_info.module_id][DF.STATUS] = TestStatus.READY
@@ -367,11 +359,6 @@ class HookReporter(BaseReporter):
             item[node_info.module_id][DF.STOP_TIME] = None
         item[node_info.module_id][DF.NAME] = self._get_module_name(node_info)
 
-        if is_only_runstore:
-            case_default[DF.ARTIFACT] = {}
-
-        if is_only_statestore:
-            case_default[DF.DIALOG_BOX] = {}
         item[node_info.module_id][DF.CASES][node_info.case_id] = case_default
 
     def _remove_outdate_node(

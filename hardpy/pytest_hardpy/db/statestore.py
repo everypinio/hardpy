@@ -36,31 +36,9 @@ def _create_default_doc_structure(doc_id: str, doc_id_for_rev: str) -> dict:
         "_id": doc_id,
         "_rev": doc_id_for_rev,
         DF.MODULES: {},
-        DF.DUT: {
-            DF.TYPE: None,
-            DF.NAME: None,
-            DF.REVISION: None,
-            DF.SERIAL_NUMBER: None,
-            DF.PART_NUMBER: None,
-            DF.SUB_UNITS: [],
-            DF.INFO: {},
-        },
-        DF.TEST_STAND: {
-            DF.HW_ID: None,
-            DF.NAME: None,
-            DF.REVISION: None,
-            DF.TIMEZONE: None,
-            DF.LOCATION: None,
-            DF.NUMBER: None,
-            DF.INSTRUMENTS: [],
-            DF.DRIVERS: {},
-            DF.INFO: {},
-        },
-        DF.PROCESS: {
-            DF.NAME: None,
-            DF.NUMBER: None,
-            DF.INFO: {},
-        },
+        DF.DUT: {},
+        DF.TEST_STAND: {},
+        DF.PROCESS: {},
     }
 
 
