@@ -14,32 +14,13 @@ from glom import PathAccessError, assign, glom
 
 from hardpy.common.config import ConfigManager, StorageType
 from hardpy.common.singleton import SingletonMeta
+from hardpy.pytest_hardpy.db.common import create_default_doc_structure
 from hardpy.pytest_hardpy.db.const import DatabaseField as DF  # noqa: N817
 from hardpy.pytest_hardpy.db.schema import ResultRunStore
 
 if TYPE_CHECKING:
     from pycouchdb.client import Database  # type: ignore[import-untyped]
     from pydantic import BaseModel
-
-
-def _create_default_doc_structure(doc_id: str, doc_id_for_rev: str) -> dict:
-    """Create default document structure with standard fields.
-
-    Args:
-        doc_id (str): Document ID to use
-        doc_id_for_rev (str): Document ID for _rev field (for JSON compatibility)
-
-    Returns:
-        dict: Default document structure
-    """
-    return {
-        "_id": doc_id,
-        "_rev": doc_id_for_rev,
-        DF.MODULES: {},
-        DF.DUT: {},
-        DF.TEST_STAND: {},
-        DF.PROCESS: {},
-    }
 
 
 class RunStoreInterface(ABC):
@@ -185,7 +166,7 @@ class JsonRunStore(RunStoreInterface):
 
     def clear(self) -> None:
         """Clear storage by resetting to initial state (in-memory only)."""
-        self._doc = _create_default_doc_structure(self._doc_id, self._doc_id)
+        self._doc = create_default_doc_structure(self._doc_id, self._doc_id)
 
     def compact(self) -> None:
         """Optimize storage (no-op for JSON file storage)."""
@@ -202,12 +183,13 @@ class JsonRunStore(RunStoreInterface):
 
                     return doc
             except json.JSONDecodeError:
-                self._log.warning(f"Corrupted storage file {self._file_path},"
-                                  f" creating new")
+                self._log.warning(
+                    f"Corrupted storage file {self._file_path}, creating new",
+                )
             except Exception as exc:  # noqa: BLE001
                 self._log.warning(f"Error loading storage file: {exc}, creating new")
 
-        return _create_default_doc_structure(self._doc_id, self._doc_id)
+        return create_default_doc_structure(self._doc_id, self._doc_id)
 
 
 class CouchDBRunStore(RunStoreInterface):
@@ -333,7 +315,7 @@ class CouchDBRunStore(RunStoreInterface):
             doc = self._db.get(self._doc_id)
         except NotFound:
             # CouchDB doesn't need _rev field in the default structure
-            default = _create_default_doc_structure(self._doc_id, self._doc_id)
+            default = create_default_doc_structure(self._doc_id, self._doc_id)
             del default["_rev"]  # CouchDB manages _rev automatically
             return default
 
