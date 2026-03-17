@@ -92,8 +92,7 @@
     [tool.hatch.build.targets.wheel]
         packages = ["hardpy"]
 
-    # Custom build hook for sdist source package.
-    # It additionally runs `yarn` and `yarn build`
-    # in React app folder to bundle prod build
-    [tool.hatch.build.targets.sdist.hooks.custom]
-        path = "scripts/hatch_build.py"
+    [tool.hatch.build.targets.sdist.hooks.static-build]
+        dependencies = ["hatch-static-build"]
+        build-command = "yarn && yarn build"
+        work-dir = "hardpy/hardpy_panel/frontend"
