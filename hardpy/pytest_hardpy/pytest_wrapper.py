@@ -77,7 +77,14 @@ class PyTestWrapper:
         if self.is_running():
             return False
 
-        cmd = [self.python_executable, "-m", "pytest"] if self._is_win_sys else []
+        cmd = (
+            [self.python_executable, "-m", "pytest"]
+            if self._is_win_sys
+            else [
+                "-W",
+                "ignore:Module already imported so cannot be rewritten; anyio:pytest.PytestAssertRewriteWarning",  # noqa: E501
+            ]
+        )
 
         cmd.extend(
             [
@@ -162,18 +169,27 @@ class PyTestWrapper:
         if self.is_running():
             return False
 
-        args = ["-m", "pytest"] if self._is_win_sys else []
+        args = (
+            ["-m", "pytest"]
+            if self._is_win_sys
+            else [
+                "-W",
+                "ignore:Module already imported so cannot be rewritten; anyio:pytest.PytestAssertRewriteWarning",  # noqa: E501
+            ]
+        )
 
-        args.extend([
-            "--collect-only",
-            "--hardpy-db-url",
-            self.config.database.url,
-            "--hardpy-tests-name",
-            self._tests_name(),
-            "--hardpy-config-file",
-            str(self._config_manager.tests_path),
-            "--hardpy-pt",
-        ])
+        args.extend(
+            [
+                "--collect-only",
+                "--hardpy-db-url",
+                self.config.database.url,
+                "--hardpy-tests-name",
+                self._tests_name(),
+                "--hardpy-config-file",
+                str(self._config_manager.tests_path),
+                "--hardpy-pt",
+            ],
+        )
 
         if is_clear_database:
             args.append("--hardpy-clear-database")
