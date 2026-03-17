@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import logging
+import multiprocessing
 import signal
-import subprocess
 import sys
+from os import chdir
 from platform import system
+
+import pytest
 
 from hardpy.common.config import ConfigManager
 from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
@@ -14,6 +17,12 @@ from hardpy.pytest_hardpy.reporter import RunnerReporter
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+def run_pytest(args: list, cwd: str) -> None:
+    """Run pytest."""
+    chdir(cwd)
+    sys.exit(pytest.main(args))
 
 
 class PyTestWrapper:
@@ -67,9 +76,6 @@ class PyTestWrapper:
             return False
 
         cmd = [
-            self.python_executable,
-            "-m",
-            "pytest",
             "--hardpy-db-url",
             self.config.database.url,
             "--hardpy-tests-name",
@@ -97,17 +103,12 @@ class PyTestWrapper:
                 arg_str = f"{key}={value}"
                 cmd.extend(["--hardpy-start-arg", arg_str])
 
-        if system() == "Windows":
-            self._proc = subprocess.Popen(  # noqa: S603
-                cmd,
-                cwd=self._config_manager.tests_path,
-                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
-            )
-        else:
-            self._proc = subprocess.Popen(  # noqa: S603
-                cmd,
-                cwd=self._config_manager.tests_path,
-            )
+        self._proc = multiprocessing.Process(
+            target=run_pytest,
+            args=(cmd, str(self._config_manager.tests_path)),
+            name="hardpy-pytest",
+        )
+        self._proc.start()
 
         return True
 
@@ -122,6 +123,7 @@ class PyTestWrapper:
                 self._proc.send_signal(signal.CTRL_BREAK_EVENT)  # type: ignore
             else:
                 self._proc.terminate()
+            self._proc.join()
             return True
         return False
 
@@ -141,15 +143,10 @@ class PyTestWrapper:
         Returns:
             bool: True if collection was started
         """
-        if self.python_executable is None:
-            return False
-
         if self.is_running():
             return False
 
         args = [
-            "-m",
-            "pytest",
             "--collect-only",
             "--hardpy-db-url",
             self.config.database.url,
@@ -169,10 +166,11 @@ class PyTestWrapper:
             selected_test_cases = self._select_test_cases(selected_tests)
             args.extend(selected_test_cases)
 
-        subprocess.Popen(  # noqa: S603
-            [self.python_executable, *args],
-            cwd=self._config_manager.tests_path,
+        self._proc = multiprocessing.Process(
+            target=run_pytest,
+            args=(args, str(self._config_manager.tests_path)),
         )
+        self._proc.start()
         return True
 
     def send_data(self, data: str) -> bool:
@@ -200,7 +198,7 @@ class PyTestWrapper:
         Returns:
             bool | None: True if self._proc is not None
         """
-        return self._proc and self._proc.poll() is None
+        return self._proc and self._proc.is_alive()
 
     def get_config(self) -> dict:
         """Get HardPy configuration.
