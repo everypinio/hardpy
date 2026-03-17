@@ -1,10 +1,11 @@
-# Copyright (c) 2024 Everypin
+# Copyright (c) 2026 Everypin
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import annotations
 
 import logging
 import multiprocessing
 import signal
+import subprocess
 import sys
 from os import chdir
 from platform import system
@@ -31,6 +32,7 @@ class PyTestWrapper:
     def __init__(self) -> None:
         self._proc = None
         self._reporter = RunnerReporter()
+        self._is_win_sys = system() == "Windows"
         self.python_executable = sys.executable
 
         # Make sure test structure is stored in DB
@@ -75,16 +77,20 @@ class PyTestWrapper:
         if self.is_running():
             return False
 
-        cmd = [
-            "--hardpy-db-url",
-            self.config.database.url,
-            "--hardpy-tests-name",
-            self._tests_name(),
-            "--sc-address",
-            self.config.stand_cloud.address,
-            "--hardpy-config-file",
-            str(self._config_manager.tests_path),
-        ]
+        cmd = [self.python_executable, "-m", "pytest"] if self._is_win_sys else []
+
+        cmd.extend(
+            [
+                "--hardpy-db-url",
+                self.config.database.url,
+                "--hardpy-tests-name",
+                self._tests_name(),
+                "--sc-address",
+                self.config.stand_cloud.address,
+                "--hardpy-config-file",
+                str(self._config_manager.tests_path),
+            ],
+        )
 
         if selected_tests:
             selected_test_cases = self._select_test_cases(selected_tests)
@@ -103,12 +109,19 @@ class PyTestWrapper:
                 arg_str = f"{key}={value}"
                 cmd.extend(["--hardpy-start-arg", arg_str])
 
-        self._proc = multiprocessing.Process(
-            target=run_pytest,
-            args=(cmd, str(self._config_manager.tests_path)),
-            name="hardpy-pytest",
-        )
-        self._proc.start()
+        if self._is_win_sys:
+            self._proc = subprocess.Popen(  # noqa: S603
+                cmd,
+                cwd=self._config_manager.tests_path,
+                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+            )
+        else:
+            self._proc = multiprocessing.Process(
+                target=run_pytest,
+                args=(cmd, str(self._config_manager.tests_path)),
+                name="hardpy-pytest",
+            )
+            self._proc.start()
 
         return True
 
@@ -119,11 +132,11 @@ class PyTestWrapper:
             bool: True if pytest was running and stopped
         """
         if self.is_running() and self._proc:
-            if system() == "Windows":
+            if self._is_win_sys:
                 self._proc.send_signal(signal.CTRL_BREAK_EVENT)  # type: ignore
             else:
                 self._proc.terminate()
-            self._proc.join()
+                self._proc.join()
             return True
         return False
 
@@ -143,10 +156,15 @@ class PyTestWrapper:
         Returns:
             bool: True if collection was started
         """
+        if self._is_win_sys and self.python_executable is None:
+            return False
+
         if self.is_running():
             return False
 
-        args = [
+        args = ["-m", "pytest"] if self._is_win_sys else []
+
+        args.extend([
             "--collect-only",
             "--hardpy-db-url",
             self.config.database.url,
@@ -155,7 +173,7 @@ class PyTestWrapper:
             "--hardpy-config-file",
             str(self._config_manager.tests_path),
             "--hardpy-pt",
-        ]
+        ])
 
         if is_clear_database:
             args.append("--hardpy-clear-database")
@@ -166,11 +184,17 @@ class PyTestWrapper:
             selected_test_cases = self._select_test_cases(selected_tests)
             args.extend(selected_test_cases)
 
-        self._proc = multiprocessing.Process(
-            target=run_pytest,
-            args=(args, str(self._config_manager.tests_path)),
-        )
-        self._proc.start()
+        if self._is_win_sys:
+            subprocess.Popen(  # noqa: S603
+                [self.python_executable, *args],
+                cwd=self._config_manager.tests_path,
+            )
+        else:
+            p = multiprocessing.Process(
+                target=run_pytest,
+                args=(args, str(self._config_manager.tests_path)),
+            )
+            p.start()
         return True
 
     def send_data(self, data: str) -> bool:
@@ -198,6 +222,8 @@ class PyTestWrapper:
         Returns:
             bool | None: True if self._proc is not None
         """
+        if self._is_win_sys:
+            return self._proc and self._proc.poll() is None
         return self._proc and self._proc.is_alive()
 
     def get_config(self) -> dict:
