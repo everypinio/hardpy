@@ -2,10 +2,13 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
-## 0.23.0
-
 * Reduce the time taken to start Pytest on a Linux system.
   [[PR-269](https://github.com/everypinio/hardpy/pull/269)]
+
+## 0.23.0
+
+* Fix the `current_test_config` using.
+  [[PR-271](https://github.com/everypinio/hardpy/pull/271)]
 * Fix the reuse of the dialog box in a single test.
   [[PR-268](https://github.com/everypinio/hardpy/pull/268)],
   [[ISSUE-266](https://github.com/everypinio/hardpy/issues/266)]

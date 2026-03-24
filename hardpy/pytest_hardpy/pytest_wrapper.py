@@ -96,6 +96,8 @@ class PyTestWrapper:
                 self.config.stand_cloud.address,
                 "--hardpy-config-file",
                 str(self._config_manager.tests_path),
+                "--hardpy-current-test-config",
+                self.config.current_test_config,
             ],
         )
 
@@ -187,6 +189,8 @@ class PyTestWrapper:
                 self._tests_name(),
                 "--hardpy-config-file",
                 str(self._config_manager.tests_path),
+                "--hardpy-current-test-config",
+                self.config.current_test_config,
                 "--hardpy-pt",
             ],
         )

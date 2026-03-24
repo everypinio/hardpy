@@ -110,6 +110,11 @@ def pytest_addoption(parser: Parser) -> None:
         help="HardPy configuration file path",
     )
     parser.addoption(
+        "--hardpy-current-test-config",
+        action="store",
+        help="HardPy configuration file path",
+    )
+    parser.addoption(
         "--hardpy-start-arg",
         action="append",
         default=[],
@@ -175,6 +180,10 @@ class HardpyPlugin:
             self._tests_name = str(tests_name)
         else:
             self._tests_name = str(PurePath(config.rootpath).name)
+
+        current_test_config = config.getoption("--hardpy-current-test-config")
+        if current_test_config:
+            hardpy_config.current_test_config = current_test_config
 
         is_clear_database = config.getoption("--hardpy-clear-database")
 

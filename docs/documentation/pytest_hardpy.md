@@ -1491,6 +1491,14 @@ The default value is **Tests**.
 --hardpy-tests-name
 ```
 
+#### hardpy-current-test-config
+
+The **HardPy** tests config name.
+
+```bash
+--hardpy-current-test-config
+```
+
 #### hardpy-clear-database
 
 Option to clean **statestore** and **runstore** databases before running pytest.

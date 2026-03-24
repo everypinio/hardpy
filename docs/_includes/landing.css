@@ -1,0 +1,238 @@
+.md-typeset .hp-home-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.hp-home {
+  /* Brand */
+  --hp-primary: #7C3AED;
+  /* purple */
+  --hp-accent: #06B6D4;
+  /* teal/cyan */
+
+  /* Surfaces */
+  --hp-hero-bg: #FAFAFF;
+  --hp-hero-grad: rgba(124, 58, 237, 0.16);
+
+  /* Text */
+  --hp-text: #0F172A;
+  --hp-muted: #475569;
+
+  /* Lines */
+  --hp-border: rgba(17, 24, 39, 0.10);
+}
+
+[data-md-color-scheme="slate"] .hp-home {
+  --hp-hero-bg: #1b1f26;
+  --hp-hero-grad: rgba(124, 58, 237, 0.18);
+  --hp-text: #e2e8f0;
+  --hp-muted: #94a3b8;
+  --hp-border: rgba(148, 163, 184, 0.22);
+}
+
+/* Hero container on Home. */
+.hp-home .hero {
+  background:
+    linear-gradient(180deg, var(--hp-hero-grad), transparent 70%),
+    var(--hp-hero-bg);
+  border: 1px solid var(--hp-border);
+  border-radius: 16px;
+  margin: 0.9rem 0 1.2rem;
+  padding: 1.5rem 2rem;
+}
+
+.hp-home .hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 2rem;
+  align-items: center;
+}
+
+.hp-home .hero-copy {
+  min-width: 0;
+}
+
+.hp-home .hero-media {
+  width: 100%;
+  max-width: 560px;
+  justify-self: center;
+}
+
+.hp-home .hero-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--hp-border);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+}
+
+[data-md-color-scheme="slate"] .hp-home .hero-media img {
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+.hp-home .hero h1 {
+  font-size: 2.8rem;
+  line-height: 1.1;
+  text-align: center;
+  margin-bottom: 0.9rem;
+}
+
+.hp-home .hero .hero-copy h1 {
+  text-align: left;
+}
+
+.hp-home .hero p {
+  font-size: 1.15rem;
+  margin-top: 0;
+}
+
+.hp-home .hero .md-button {
+  display: table;
+  margin: 0.6rem auto 0;
+}
+
+@media (max-width: 600px) {
+  .hp-home .hero {
+    padding: 1.2rem;
+  }
+
+  .hp-home .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .hp-home .hero-media {
+    order: 2;
+  }
+
+  .hp-home .hero h1 {
+    font-size: 2.2rem;
+  }
+}
+
+/* Links only on Home. */
+.md-typeset .hp-home a {
+  color: var(--hp-primary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.md-typeset .hp-home a:hover {
+  color: var(--hp-accent);
+}
+
+/* Material buttons (Home only). */
+.md-typeset .hp-home .md-button--primary {
+  background-color: var(--hp-primary);
+  border-color: var(--hp-primary);
+  color: #fff;
+}
+
+.md-typeset .hp-home .md-button--primary:hover {
+  background-color: #6D28D9;
+  /* slightly darker purple */
+  border-color: #6D28D9;
+}
+
+.md-typeset .hp-home .md-button {
+  border-color: rgba(124, 58, 237, 0.35);
+  color: var(--hp-primary);
+}
+
+.md-typeset .hp-home .md-button:hover {
+  border-color: var(--hp-primary);
+  color: var(--hp-primary);
+}
+
+.md-typeset .hp-home .os-logos {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 12px;
+  white-space: nowrap;
+  opacity: 0.85;
+}
+
+.md-typeset .hp-home .os-logos i {
+  height: 20px;
+  width: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.md-typeset .hp-home .hp-center-button {
+  display: table;
+  margin: 0.6rem auto 0;
+}
+
+.md-typeset .hp-home .hp-testimonials {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Cards (Material: grid cards) on Home only. */
+.md-typeset .hp-home .grid.cards>ul>li {
+  border: 1px solid var(--hp-border);
+  border-radius: 16px;
+  background: rgba(124, 58, 237, 0.04);
+}
+
+.md-typeset .hp-home .grid.cards>ul>li:hover {
+  border-color: rgba(124, 58, 237, 0.30);
+  background: rgba(124, 58, 237, 0.07);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .hp-home .grid.cards>ul>li {
+  background: rgba(124, 58, 237, 0.08);
+}
+
+/* Material icons (if you use :material-* in cards). */
+.md-typeset .hp-home .twemoji,
+.md-typeset .hp-home .twemoji svg {
+  fill: var(--hp-primary);
+}
+
+/* Headings and accents (optional). */
+.md-typeset .hp-home h1,
+.md-typeset .hp-home h2 {
+  color: var(--hp-text);
+}
+
+.md-typeset .hp-home h1 {
+  font-size: 2.4rem;
+  line-height: 1.15;
+}
+
+.md-typeset .hp-home h2 {
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+.md-typeset .hp-home h3 {
+  font-size: 1.45rem;
+}
+
+.md-typeset .hp-home p {
+  color: var(--hp-muted);
+}
+
+@media (max-width: 600px) {
+  .md-typeset .hp-home h1 {
+    font-size: 1.9rem;
+  }
+
+  .md-typeset .hp-home h2 {
+    font-size: 1.5rem;
+  }
+}
