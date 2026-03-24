@@ -271,7 +271,7 @@ const CheckboxComponent = ({
           onChange={() => {
             if (selectedCheckboxes.includes(option)) {
               setSelectedCheckboxes(
-                selectedCheckboxes.filter((item) => item !== option)
+                selectedCheckboxes.filter((item) => item !== option),
               );
             } else {
               setSelectedCheckboxes([...selectedCheckboxes, option]);
@@ -297,7 +297,7 @@ const renderTextInput = (
   setInputText: (value: string) => void,
   handleKeyDown: (event: React.KeyboardEvent) => void,
   t: (key: string) => string,
-  onEnterPress?: () => void
+  onEnterPress?: () => void,
 ): JSX.Element => (
   <TextInputComponent
     inputText={inputText}
@@ -324,7 +324,7 @@ const renderNumericInput = (
   setInputText: (value: string) => void,
   handleKeyDown: (event: React.KeyboardEvent) => void,
   t: (key: string) => string,
-  onEnterPress?: () => void
+  onEnterPress?: () => void,
 ): JSX.Element => (
   <TextInputComponent
     inputText={inputText}
@@ -350,7 +350,7 @@ const renderRadioButton = (
   selectedRadioButton: string,
   setSelectedRadioButton: (value: string) => void,
   handleKeyDown: (event: React.KeyboardEvent) => void,
-  onEnterPress?: () => void
+  onEnterPress?: () => void,
 ): JSX.Element => (
   <RadioButtonComponent
     fields={props.widget_info?.fields ?? []}
@@ -376,7 +376,7 @@ const renderCheckbox = (
   selectedCheckboxes: string[],
   setSelectedCheckboxes: (value: string[]) => void,
   handleKeyDown: (event: React.KeyboardEvent) => void,
-  onEnterPress?: () => void
+  onEnterPress?: () => void,
 ): JSX.Element => (
   <CheckboxComponent
     fields={props.widget_info?.fields ?? []}
@@ -402,7 +402,7 @@ const renderHTMLCode = (
   height: number,
   width: number,
   border: number,
-  t: (key: string) => string
+  t: (key: string) => string,
 ): JSX.Element => (
   <iframe
     srcDoc={htmlCode}
@@ -428,7 +428,7 @@ const renderHTMLLink = (
   height: number,
   width: number,
   border: number,
-  t: (key: string) => string
+  t: (key: string) => string,
 ): JSX.Element => (
   <iframe
     src={htmlUrl}
@@ -459,7 +459,7 @@ const renderMultistep = (
   htmlWidthIndex: number,
   imageStyle: React.CSSProperties,
   maxSizeFactor: number,
-  t: (key: string) => string
+  t: (key: string) => string,
 ): JSX.Element => (
   <Tabs id={props.title_bar}>
     {props.widget_info?.steps?.map((step: Step) => (
@@ -483,11 +483,11 @@ const renderMultistep = (
                   style={{
                     maxWidth: `${Math.min(
                       imageStepDimensions.width + baseDialogDimensions.width,
-                      screenWidth * maxSizeFactor
+                      screenWidth * maxSizeFactor,
                     )}px`,
                     maxHeight: `${Math.min(
                       imageStepDimensions.height + baseDialogDimensions.height,
-                      screenHeight * maxSizeFactor
+                      screenHeight * maxSizeFactor,
                     )}px`,
                     transform: `scale(${(step.info.image?.width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR})`,
                     transformOrigin: `top center`,
@@ -504,17 +504,17 @@ const renderMultistep = (
                       htmlHeightIndex *
                       ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) /
                         IMAGE_SCALE_FACTOR),
-                    screenHeight * maxSizeFactor
+                    screenHeight * maxSizeFactor,
                   ),
                   Math.min(
                     (imageStepDimensions.width + baseDialogDimensions.width) *
                       htmlWidthIndex *
                       ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) /
                         IMAGE_SCALE_FACTOR),
-                    screenWidth * maxSizeFactor
+                    screenWidth * maxSizeFactor,
                   ),
                   step.info.html?.border ?? 0,
-                  t
+                  t,
                 )}
               {step.info.html?.code_or_url &&
                 !step.info.html?.is_raw_html &&
@@ -525,17 +525,17 @@ const renderMultistep = (
                       htmlHeightIndex *
                       ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) /
                         IMAGE_SCALE_FACTOR),
-                    screenHeight * maxSizeFactor
+                    screenHeight * maxSizeFactor,
                   ),
                   Math.min(
                     (imageStepDimensions.width + baseDialogDimensions.width) *
                       htmlWidthIndex *
                       ((step.info.html?.width ?? IMAGE_SCALE_FACTOR) /
                         IMAGE_SCALE_FACTOR),
-                    screenWidth * maxSizeFactor
+                    screenWidth * maxSizeFactor,
                   ),
                   step.info.html?.border ?? 0,
-                  t
+                  t,
                 )}
             </div>
           </div>
@@ -563,10 +563,10 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
   const [selectedRadioButton, setSelectedRadioButton] = useState("");
   const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
   const [imageDimensions, setImageDimensions] = useState(
-    BASE_DIALOG_DIMENSIONS
+    BASE_DIALOG_DIMENSIONS,
   );
   const [imageStepDimensions, setStepImageDimensions] = useState(
-    BASE_DIALOG_DIMENSIONS
+    BASE_DIALOG_DIMENSIONS,
   );
   const [hasHTML, setHasHTML] = useState(false);
   const maxDimensions = useRef(BASE_DIALOG_DIMENSIONS);
@@ -610,7 +610,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
       /[!-'()*+,/:;<=>?@[\]^`{|}~]/g,
       function (c) {
         return "%" + c.charCodeAt(0).toString(HEX_BASE);
-      }
+      },
     );
   };
 
@@ -635,8 +635,8 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
       case WidgetType.Checkbox:
         widgetData = JSON.stringify(
           selectedCheckboxes.map((checkboxValue) =>
-            processEncodeURLComponent(checkboxValue)
-          )
+            processEncodeURLComponent(checkboxValue),
+          ),
         );
         break;
       default:
@@ -811,7 +811,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
   const findFieldIndexByKey = (key: string): number => {
     return (
       props.widget_info?.fields?.findIndex((option) =>
-        option.startsWith(key)
+        option.startsWith(key),
       ) ?? -1
     );
   };
@@ -837,7 +837,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
       const option = props.widget_info.fields[index];
       if (selectedCheckboxes.includes(option)) {
         setSelectedCheckboxes(
-          selectedCheckboxes.filter((item) => item !== option)
+          selectedCheckboxes.filter((item) => item !== option),
         );
       } else {
         setSelectedCheckboxes([...selectedCheckboxes, option]);
@@ -856,7 +856,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
   const calculateDimensions = (
     naturalWidth: number,
     naturalHeight: number,
-    widthFactor: number
+    widthFactor: number,
   ): { width: number; height: number } => ({
     width:
       (naturalWidth * (widthFactor || IMAGE_SCALE_FACTOR)) / IMAGE_SCALE_FACTOR,
@@ -876,8 +876,8 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
       calculateDimensions(
         naturalWidth,
         naturalHeight,
-        props.image_width ?? IMAGE_SCALE_FACTOR
-      )
+        props.image_width ?? IMAGE_SCALE_FACTOR,
+      ),
     );
   };
 
@@ -890,13 +890,13 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
    */
   const calculateTextLines = (
     text: string,
-    width: number
+    width: number,
   ): number | undefined => {
     const context = document.createElement("canvas").getContext("2d");
     if (context) {
       context.font = "10px sans-serif";
       const linesCount = Math.ceil(
-        (text.length * context.measureText("M").width) / width
+        (text.length * context.measureText("M").width) / width,
       );
       return linesCount;
     }
@@ -907,7 +907,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
       ? maxDimensions.current
       : imageDimensions
     ).width + BASE_DIALOG_DIMENSIONS.width,
-    screenWidth * MAX_SIZE_FACTOR
+    screenWidth * MAX_SIZE_FACTOR,
   );
 
   const textHeight =
@@ -930,7 +930,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
       MIN_SIZE_FACTOR,
       textHeight,
       textStepHeight,
-      hasHTML
+      hasHTML,
     );
 
   const imageStyle = {
@@ -938,6 +938,13 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
     display: "block",
     margin: "0 auto",
   };
+
+  /*Reset state when dialog is closed*/
+  useEffect(() => {
+    setInputText("");
+    setSelectedRadioButton("");
+    setSelectedCheckboxes([]);
+  }, [props.id]);
 
   useEffect(() => {
     if (props.language) {
@@ -949,7 +956,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
     console.log("Current language:", i18n.language);
     console.log(
       "All translations:",
-      i18n.getResourceBundle(i18n.language, "translation")
+      i18n.getResourceBundle(i18n.language, "translation"),
     );
   }, [i18n]);
 
@@ -965,17 +972,17 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
 
       const handleStepImageLoad = (
         image: HTMLImageElement,
-        widthFactor: number
+        widthFactor: number,
       ) => {
         const { naturalWidth, naturalHeight } = image;
 
         maxDimensions.current.width = Math.max(
           maxDimensions.current.width,
-          naturalWidth * (widthFactor / IMAGE_SCALE_FACTOR)
+          naturalWidth * (widthFactor / IMAGE_SCALE_FACTOR),
         );
         maxDimensions.current.height = Math.max(
           maxDimensions.current.height,
-          naturalHeight * (widthFactor / IMAGE_SCALE_FACTOR)
+          naturalHeight * (widthFactor / IMAGE_SCALE_FACTOR),
         );
         setStepImageDimensions(maxDimensions.current);
       };
@@ -989,7 +996,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
           image.onload = () =>
             handleStepImageLoad(
               image,
-              step.info.image?.width ?? IMAGE_SCALE_FACTOR
+              step.info.image?.width ?? IMAGE_SCALE_FACTOR,
             );
         }
         if (step.info.html?.code_or_url) {
@@ -1043,7 +1050,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
             setInputText,
             handleKeyDown,
             t,
-            focusPassButton
+            focusPassButton,
           )}
         {widgetType === WidgetType.NumericInput &&
           renderNumericInput(
@@ -1052,7 +1059,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
             setInputText,
             handleKeyDown,
             t,
-            focusPassButton
+            focusPassButton,
           )}
         {widgetType === WidgetType.RadioButton &&
           renderRadioButton(
@@ -1060,7 +1067,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
             selectedRadioButton,
             setSelectedRadioButton,
             handleKeyDown,
-            focusPassButton
+            focusPassButton,
           )}
         {widgetType === WidgetType.Checkbox &&
           renderCheckbox(
@@ -1068,7 +1075,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
             selectedCheckboxes,
             setSelectedCheckboxes,
             handleKeyDown,
-            focusPassButton
+            focusPassButton,
           )}
         {widgetType === WidgetType.Multistep &&
           renderMultistep(
@@ -1079,7 +1086,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
             HTML_IFRAME_WIDTH_FACTOR,
             imageStyle,
             maxSizeFactor,
-            t
+            t,
           )}
         <p> </p>
         {props.image_base64 && (
@@ -1117,7 +1124,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
               HTML_IFRAME_WIDTH_FACTOR *
               ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
             props.html_border ?? 0,
-            t
+            t,
           )}
         {props.html_url &&
           renderHTMLLink(
@@ -1135,7 +1142,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
               HTML_IFRAME_WIDTH_FACTOR *
               ((props.html_width ?? IMAGE_SCALE_FACTOR) / IMAGE_SCALE_FACTOR),
             props.html_border ?? 0,
-            t
+            t,
           )}
       </div>
       <div className={Classes.DIALOG_FOOTER}>
@@ -1150,9 +1157,10 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
             <Button
               ref={passButtonRef}
               intent="success"
-              text={props.button_text && props.button_text.length > 0 
-                ? props.button_text[0] 
-                : t("button.pass")
+              text={
+                props.button_text && props.button_text.length > 0
+                  ? props.button_text[0]
+                  : t("button.pass")
               }
               onClick={() => handlePassFail(true)}
               autoFocus={!hasInputField}
@@ -1163,9 +1171,10 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
             />
             <Button
               intent="danger"
-              text={props.button_text && props.button_text.length > 0 
-                ? props.button_text[1] 
-                : t("button.fail")
+              text={
+                props.button_text && props.button_text.length > 0
+                  ? props.button_text[1]
+                  : t("button.fail")
               }
               onClick={() => handlePassFail(false)}
               style={{
@@ -1186,10 +1195,9 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
               minWidth: "65px",
             }}
           >
-            {props.button_text && props.button_text.length > 0 
-              ? props.button_text[0] 
-              : t("button.confirm")
-            }
+            {props.button_text && props.button_text.length > 0
+              ? props.button_text[0]
+              : t("button.confirm")}
           </Button>
         )}
       </div>
