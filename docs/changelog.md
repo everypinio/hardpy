@@ -2,6 +2,9 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Reduce the time taken to start Pytest on a Linux system.
+  [[PR-269](https://github.com/everypinio/hardpy/pull/269)]
+
 ## 0.23.0
 
 * Fix the `current_test_config` using.
