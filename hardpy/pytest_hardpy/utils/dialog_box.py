@@ -295,7 +295,12 @@ class ImageComponent:
         self.address = address
         self.width = width
         self.border = border
-        self.base64 = base64.b64encode(file_data).decode("utf-8")
+        self.base64 = (
+            base64.b64encode(file_data)
+            .decode("utf-8")
+            .replace("\n", "")
+            .replace("\r", "")
+        )
 
     def to_dict(self) -> dict:
         """Convert ImageComponent to dictionary.
