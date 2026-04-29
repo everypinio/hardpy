@@ -58,11 +58,48 @@ async def lifespan_sync_scheduler(app: FastAPI) -> AsyncGenerator[Any, Any]:
 
 # Initialize application state
 app = FastAPI(lifespan=lifespan_sync_scheduler)
-app.state.pytest_wrp = PyTestWrapper()
+app.state.pytest_wrp = None
+app.state.pytest_wrp_error = ""
 app.state.sc_synchronizer = StandCloudSynchronizer()
 app.state.executor = ThreadPoolExecutor(max_workers=1)
 app.state.manual_collect_mode = False
 app.state.selected_tests = []
+
+
+def current_storage_status() -> dict[str, Any]:
+    """Get storage diagnostics for the current configuration."""
+    config_manager = ConfigManager()
+    return build_storage_status(
+        config_manager.config,
+        config_manager.tests_path,
+        check_connections=True,
+    )
+
+
+def get_pytest_wrapper() -> PyTestWrapper | None:
+    """Return a PyTestWrapper, keeping the API alive if storage is unavailable."""
+    if app.state.pytest_wrp is not None:
+        return app.state.pytest_wrp
+
+    try:
+        app.state.pytest_wrp = PyTestWrapper()
+    except RuntimeError as exc:
+        app.state.pytest_wrp_error = str(exc)
+        logger.info("PyTestWrapper initialization failed: %s", exc)
+        return None
+
+    app.state.pytest_wrp_error = ""
+    return app.state.pytest_wrp
+
+
+def storage_unavailable_response() -> dict[str, Any]:
+    """Return a consistent API response when report storage is unavailable."""
+    storage_status = current_storage_status()
+    reason = storage_status.get("blocking_reason") or app.state.pytest_wrp_error
+    return {"status": Status.ERROR, "message": reason}
+
+
+get_pytest_wrapper()
 
 
 class Status(str, Enum):
@@ -109,7 +146,8 @@ def hardpy_config() -> dict:
     Returns:
         dict: HardPy config
     """
-    return app.state.pytest_wrp.get_config()
+    config_manager = ConfigManager()
+    return config_manager.config.model_dump()
 
 
 @app.post("/api/set_test_config/{config_name}")
@@ -123,8 +161,11 @@ def set_test_config(config_name: str) -> dict:
     """
     config_manager = ConfigManager()
     config_manager.set_current_test_config(config_name)
+    pytest_wrp = get_pytest_wrapper()
+    if pytest_wrp is None:
+        return storage_unavailable_response()
     try:
-        app.state.pytest_wrp.collect(is_clear_database=True)
+        pytest_wrp.collect(is_clear_database=True)
     except (ValueError, RuntimeError) as e:
         return {"status": "error", "message": str(e)}
     else:
@@ -144,12 +185,23 @@ def start_pytest(args: Annotated[list[str] | None, Query()] = None) -> dict:
     if app.state.manual_collect_mode:
         return {"status": Status.BUSY, "message": "Manual collect mode is active"}
 
+    storage_status = current_storage_status()
+    if not storage_status["can_start_tests"]:
+        return {
+            "status": Status.ERROR,
+            "message": storage_status["blocking_reason"],
+        }
+
+    pytest_wrp = get_pytest_wrapper()
+    if pytest_wrp is None:
+        return storage_unavailable_response()
+
     if args is None:
         args_dict = []
     else:
         args_dict = dict(arg.split("=", 1) for arg in args if "=" in arg)
 
-    if app.state.pytest_wrp.start(
+    if pytest_wrp.start(
         start_args=args_dict,
         selected_tests=app.state.selected_tests,
     ):
@@ -169,7 +221,11 @@ def stop_pytest() -> dict:
     if app.state.manual_collect_mode:
         return {"status": Status.BUSY, "message": "Manual collect mode is active"}
 
-    if app.state.pytest_wrp.stop():
+    pytest_wrp = get_pytest_wrapper()
+    if pytest_wrp is None:
+        return {"status": Status.READY}
+
+    if pytest_wrp.stop():
         logger.info("Stop testing process.")
         return {"status": Status.STOPPED}
     logger.info("Testing process is not running.")
@@ -184,7 +240,11 @@ def collect_pytest() -> dict:
         dict[str, RunStatus]: run status
 
     """
-    if app.state.pytest_wrp.collect():
+    pytest_wrp = get_pytest_wrapper()
+    if pytest_wrp is None:
+        return storage_unavailable_response()
+
+    if pytest_wrp.collect():
         return {"status": Status.COLLECTED}
     return {"status": Status.BUSY}
 
@@ -196,7 +256,11 @@ def status() -> dict:
     Returns:
         dict[str, RunStatus]: run status
     """
-    is_running = app.state.pytest_wrp.is_running()
+    pytest_wrp = get_pytest_wrapper()
+    if pytest_wrp is None:
+        return {"status": Status.ERROR, "message": app.state.pytest_wrp_error}
+
+    is_running = pytest_wrp.is_running()
     status = Status.BUSY if is_running else Status.READY
     return {"status": status}
 
@@ -284,7 +348,11 @@ def confirm_dialog_box(dbx_data: dict) -> dict:
     # Convert to JSON string for transmission
     combined_data = json.dumps(dialog_result)
 
-    if app.state.pytest_wrp.send_data(combined_data):
+    pytest_wrp = get_pytest_wrapper()
+    if pytest_wrp is None:
+        return {STATUS_KEY: Status.ERROR}
+
+    if pytest_wrp.send_data(combined_data):
         return {STATUS_KEY: Status.BUSY}
     return {STATUS_KEY: Status.ERROR}
 
@@ -299,7 +367,11 @@ def confirm_operator_msg(is_msg_visible: str) -> dict:
     Returns:
         dict[str, RunStatus]: run status
     """
-    if app.state.pytest_wrp.send_data(str(is_msg_visible)):
+    pytest_wrp = get_pytest_wrapper()
+    if pytest_wrp is None:
+        return {"status": Status.ERROR}
+
+    if pytest_wrp.send_data(str(is_msg_visible)):
         return {"status": Status.BUSY}
     return {"status": Status.ERROR}
 
@@ -329,7 +401,11 @@ async def set_selected_tests(request: Request) -> dict:
         raise TypeError(msg)
 
     app.state.selected_tests = selected_tests
-    app.state.pytest_wrp.collect(is_clear_database=True, selected_tests=selected_tests)
+    pytest_wrp = get_pytest_wrapper()
+    if pytest_wrp is None:
+        return storage_unavailable_response()
+
+    pytest_wrp.collect(is_clear_database=True, selected_tests=selected_tests)
     return {"status": "success", "message": f"Selected {len(selected_tests)} tests"}
 
 
@@ -357,7 +433,10 @@ def set_manual_collect_mode(mode_data: dict) -> dict:
     app.state.manual_collect_mode = enabled
 
     if enabled:
-        app.state.pytest_wrp.collect()
+        pytest_wrp = get_pytest_wrapper()
+        if pytest_wrp is None:
+            return storage_unavailable_response()
+        pytest_wrp.collect()
 
     return {"status": "success", "manual_collect_mode": enabled}
 
@@ -376,8 +455,7 @@ def get_storage_type() -> dict:
 @app.get("/api/storage_status")
 def get_storage_status() -> dict:
     """Get read-only diagnostics for report storage."""
-    config_manager = ConfigManager()
-    return build_storage_status(config_manager.config, config_manager.tests_path)
+    return current_storage_status()
 
 
 @app.get("/api/json_data")

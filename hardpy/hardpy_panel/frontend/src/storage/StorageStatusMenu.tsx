@@ -11,25 +11,32 @@ import {
   Divider,
   Icon,
   Popover,
+  Position,
+  Toaster,
+  Tooltip,
 } from "@blueprintjs/core";
 
 import {
   OverallStorageStatus,
   StorageStatus,
-  useStorageStatus,
 } from "../hooks/useStorageStatus";
 
 const STATUS_COLORS: Record<OverallStorageStatus | "loading" | "error", string> =
   {
     standcloud_ready: Colors.GREEN3,
-    standcloud_needs_attention: Colors.ORANGE3,
-    local_database_only: Colors.GRAY2,
-    files_only: Colors.GRAY2,
+    standcloud_needs_attention: Colors.RED3,
+    local_database_only: Colors.GREEN3,
+    files_only: Colors.GREEN3,
+    storage_error: Colors.RED3,
     loading: Colors.GRAY3,
     error: Colors.RED3,
   };
 
 const POPOVER_WIDTH = 340;
+
+const storageToaster = Toaster.create({
+  position: Position.TOP,
+});
 
 const getStatusColor = (
   data: StorageStatus | null,
@@ -45,6 +52,35 @@ const getStatusColor = (
   return STATUS_COLORS[data.overall_status];
 };
 
+const hasStorageProblem = (data: StorageStatus): boolean => {
+  const standcloudProblem =
+    data.standcloud.visible &&
+    data.standcloud.check_enabled &&
+    !data.standcloud.configured;
+  const localDatabaseProblem =
+    data.local_database.configured &&
+    data.local_database.status === "connection_failed";
+
+  return !data.can_start_tests || standcloudProblem || localDatabaseProblem;
+};
+
+const getMenuIconColor = (
+  data: StorageStatus | null,
+  loading: boolean,
+  error: string | null
+): string => {
+  if (error) {
+    return STATUS_COLORS.error;
+  }
+  if (loading || data === null) {
+    return STATUS_COLORS.loading;
+  }
+  if (hasStorageProblem(data)) {
+    return Colors.RED3;
+  }
+  return Colors.GREEN3;
+};
+
 const sectionStyle: React.CSSProperties = {
   display: "grid",
   gridTemplateColumns: "24px 1fr",
@@ -58,6 +94,15 @@ const statusTextStyle: React.CSSProperties = {
   fontWeight: 600,
 };
 
+const STATUS_TEXT_COLORS: Record<string, string> = {
+  configured: Colors.GREEN3,
+  not_configured: Colors.RED3,
+  needs_api_key: Colors.RED3,
+  connection_failed: Colors.RED3,
+  autosync_disabled: Colors.ORANGE3,
+  check_disabled: Colors.GRAY2,
+};
+
 const helpTextStyle: React.CSSProperties = {
   color: Colors.GRAY2,
   fontSize: "12px",
@@ -65,6 +110,41 @@ const helpTextStyle: React.CSSProperties = {
   marginTop: "2px",
   wordBreak: "break-word",
 };
+
+const headingStyle: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: "4px",
+};
+
+const groupHeadingStyle: React.CSSProperties = {
+  color: Colors.GRAY2,
+  fontSize: "12px",
+  fontWeight: 700,
+  marginTop: "10px",
+  textTransform: "uppercase",
+};
+
+const InfoTooltip = ({
+  content,
+}: {
+  content: string;
+}): JSX.Element => (
+  <Tooltip content={content} position={Position.TOP}>
+    <span
+      aria-label={content}
+      role="img"
+      style={{
+        color: Colors.GRAY2,
+        cursor: "help",
+        display: "inline-flex",
+        lineHeight: 1,
+      }}
+    >
+      <Icon icon="info-sign" size={14} />
+    </span>
+  </Tooltip>
+);
 
 const StorageLinkButton = ({
   href,
@@ -85,6 +165,11 @@ const StorageLinkButton = ({
   />
 );
 
+const getStatusTextStyle = (status: string): React.CSSProperties => ({
+  ...statusTextStyle,
+  color: STATUS_TEXT_COLORS[status] ?? statusTextStyle.color,
+});
+
 const StorageStatusContent = ({
   data,
   loading,
@@ -95,6 +180,17 @@ const StorageStatusContent = ({
   error: string | null;
 }): JSX.Element => {
   const { t } = useTranslation();
+
+  const copyFileStoragePath = async (): Promise<void> => {
+    if (data?.files.folder_path) {
+      await navigator.clipboard.writeText(data.files.folder_path);
+      storageToaster.show({
+        message: t("storageStatus.pathCopied"),
+        intent: "success",
+        timeout: 2000,
+      });
+    }
+  };
 
   if (loading && data === null) {
     return (
@@ -115,116 +211,154 @@ const StorageStatusContent = ({
     );
   }
 
+  const isFilesBackend = data.local_storage.type === "json";
+  const localBackendIcon = isFilesBackend ? "document" : "database";
+  const localBackendIconColor = isFilesBackend
+    ? Colors.GRAY2
+    : data.local_database.status === "connection_failed"
+      ? Colors.RED3
+      : Colors.GREEN3;
+  const localBackendTitle = isFilesBackend
+    ? t("storageStatus.files.title")
+    : t("storageStatus.localDatabase.title");
+  const localBackendTooltip = isFilesBackend
+    ? t("storageStatus.tooltips.files")
+    : t("storageStatus.tooltips.localDatabase");
+  const standcloudIconColor = !data.standcloud.check_enabled
+    ? Colors.GRAY2
+    : data.standcloud.configured
+      ? Colors.GREEN3
+      : Colors.RED3;
+
   return (
     <div style={{ width: POPOVER_WIDTH, padding: "14px" }}>
-      <strong>{t("storageStatus.title")}</strong>
-      <div style={helpTextStyle}>
-        {t("storageStatus.configuredIn", {
-          file: data.configured_in,
-        })}
+      <div style={headingStyle}>
+        <strong>{t("storageStatus.title")}</strong>
+        <InfoTooltip content={t("storageStatus.tooltips.reportsStorage")} />
       </div>
 
       <Divider />
 
-      <div style={sectionStyle}>
-        <Icon icon="cloud" color={Colors.BLUE3} />
-        <div>
-          <div>
-            <strong>{t("storageStatus.standcloud.title")}</strong>
-          </div>
-          <div style={statusTextStyle}>
-            {t(`storageStatus.standcloud.statuses.${data.standcloud.status}`)}
-          </div>
-          <div style={helpTextStyle}>
-            {t("storageStatus.standcloud.description")}
-          </div>
-          <div style={helpTextStyle}>
-            {t("storageStatus.standcloud.address", {
-              address: data.standcloud.address,
-            })}
-          </div>
-          {data.standcloud.api_key_configured ? (
-            <div style={helpTextStyle}>
-              {t("storageStatus.standcloud.apiKey", {
-                apiKey: data.standcloud.api_key_display,
-              })}
-            </div>
-          ) : (
-            <StorageLinkButton
-              href={data.standcloud.api_key_url}
-              text={t("storageStatus.standcloud.apiKeyLink")}
-            />
-          )}
-        </div>
-      </div>
-
-      <Divider />
-
-      <div style={sectionStyle}>
-        <Icon icon="database" color={Colors.GREEN3} />
-        <div>
-          <div>
-            <strong>{t("storageStatus.localDatabase.title")}</strong>
-          </div>
-          <div style={statusTextStyle}>
-            {t(
-              `storageStatus.localDatabase.statuses.${data.local_database.status}`
-            )}
-          </div>
-          <div style={helpTextStyle}>
-            {t("storageStatus.localDatabase.description")}
-          </div>
-          <StorageLinkButton
-            href={
-              data.local_database.configured
-                ? data.local_database.management_url
-                : data.local_database.docs_url
-            }
-            text={
-              data.local_database.configured
-                ? t("storageStatus.localDatabase.openPanel")
-                : t("storageStatus.localDatabase.docs")
-            }
-          />
-        </div>
-      </div>
-
-      {data.files.visible && (
+      {data.standcloud.visible && (
         <>
-          <Divider />
+          <div style={groupHeadingStyle}>{t("storageStatus.cloudStorage")}</div>
+
           <div style={sectionStyle}>
-            <Icon icon="document" color={Colors.GRAY2} />
+            <Icon icon="cloud" color={standcloudIconColor} />
             <div>
-              <div>
-                <strong>{t("storageStatus.files.title")}</strong>
+              <div style={headingStyle}>
+                <strong>{t("storageStatus.standcloud.title")}</strong>
+                <InfoTooltip content={t("storageStatus.tooltips.standcloud")} />
               </div>
-              <div style={statusTextStyle}>
+              <div style={getStatusTextStyle(data.standcloud.status)}>
+                {t(
+                  `storageStatus.standcloud.statuses.${data.standcloud.status}`
+                )}
+              </div>
+              {!data.standcloud.api_key_configured &&
+                data.standcloud.check_enabled && (
+                  <StorageLinkButton
+                    href={data.standcloud.api_key_url}
+                    text={t("storageStatus.standcloud.apiKeyLink")}
+                  />
+                )}
+            </div>
+          </div>
+
+          <Divider />
+        </>
+      )}
+
+      <div style={groupHeadingStyle}>{t("storageStatus.localStorage")}</div>
+
+      <div style={sectionStyle}>
+        <Icon icon={localBackendIcon} color={localBackendIconColor} />
+        <div>
+          <div style={headingStyle}>
+            <strong>{localBackendTitle}</strong>
+            <InfoTooltip content={localBackendTooltip} />
+          </div>
+          {isFilesBackend ? (
+            <>
+              <div style={getStatusTextStyle(data.files.status)}>
                 {t(`storageStatus.files.statuses.${data.files.status}`)}
               </div>
-              <div style={helpTextStyle}>
-                {t("storageStatus.files.description")}
-              </div>
-              <div style={helpTextStyle}>
-                {t("storageStatus.files.folderPath", {
-                  path: data.files.folder_path,
-                })}
+              <div
+                style={{
+                  ...helpTextStyle,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                }}
+              >
+                <span>
+                  {t("storageStatus.files.folderPath", {
+                    path: data.files.folder_path,
+                  })}
+                </span>
+                <Tooltip
+                  content={t("storageStatus.copyPath")}
+                  position={Position.TOP}
+                >
+                  <Button
+                    aria-label={t("storageStatus.copyPath")}
+                    icon="duplicate"
+                    minimal={true}
+                    small={true}
+                    onClick={copyFileStoragePath}
+                    style={{ flex: "0 0 auto", minWidth: "20px" }}
+                  />
+                </Tooltip>
               </div>
               <StorageLinkButton
                 href={data.files.folder_url}
                 text={t("storageStatus.files.openFolder")}
               />
-            </div>
-          </div>
-        </>
-      )}
+            </>
+          ) : (
+            <>
+              <div style={getStatusTextStyle(data.local_database.status)}>
+                {t(
+                  `storageStatus.localDatabase.statuses.${data.local_database.status}`
+                )}
+              </div>
+              {data.local_database.status === "connection_failed" &&
+                data.blocking_reason && (
+                  <div style={{ ...helpTextStyle, color: Colors.RED3 }}>
+                    {data.blocking_reason}
+                  </div>
+                )}
+              <StorageLinkButton
+                href={
+                  data.local_database.configured
+                    ? data.local_database.management_url
+                    : data.local_database.docs_url
+                }
+                text={
+                  data.local_database.configured
+                    ? t("storageStatus.localDatabase.openPanel")
+                    : t("storageStatus.localDatabase.docs")
+                }
+              />
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
 
-const StorageStatusMenu = (): JSX.Element => {
+const StorageStatusMenu = ({
+  data,
+  loading,
+  error,
+}: {
+  data: StorageStatus | null;
+  loading: boolean;
+  error: string | null;
+}): JSX.Element => {
   const { t } = useTranslation();
-  const { data, loading, error } = useStorageStatus();
-  const statusColor = getStatusColor(data, loading, error);
+  const statusColor = getMenuIconColor(data, loading, error);
 
   return (
     <Popover
@@ -234,25 +368,10 @@ const StorageStatusMenu = (): JSX.Element => {
     >
       <Button
         className="bp3-minimal"
-        icon="database"
+        icon={<Icon icon="database" color={statusColor} />}
         title={t("storageStatus.iconLabel")}
         aria-label={t("storageStatus.iconLabel")}
-        style={{ color: statusColor, position: "relative" }}
-      >
-        <span
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            right: "6px",
-            bottom: "5px",
-            width: "7px",
-            height: "7px",
-            borderRadius: "50%",
-            background: statusColor,
-            border: `1px solid ${Colors.LIGHT_GRAY5}`,
-          }}
-        />
-      </Button>
+      />
     </Popover>
   );
 };

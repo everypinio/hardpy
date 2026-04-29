@@ -32,34 +32,40 @@
     "iconLabel": "Reports storage status",
     "loading": "Loading storage status...",
     "unavailable": "Storage status is unavailable.",
-    "configuredIn": "Configured in {{file}}.",
+    "cloudStorage": "Cloud storage",
+    "localStorage": "Local storage backend",
+    "copyPath": "Copy storage path",
+    "pathCopied": "Storage path copied",
+    "tooltips": {
+      "reportsStorage": "Configured in hardpy.toml.",
+      "standcloud": "Primary cloud storage for test reports. standcloud.everypin.io",
+      "localDatabase": "Recommended buffer for unstable internet.",
+      "files": "Local JSON file storage for test reports."
+    },
     "standcloud": {
       "title": "StandCloud",
-      "description": "Primary cloud storage for test reports.",
-      "address": "Address: {{address}}",
-      "apiKey": "API key: {{apiKey}}",
       "docs": "StandCloud setup guide",
       "apiKeyLink": "Get stand API key",
       "statuses": {
         "configured": "Configured",
         "needs_api_key": "API key required",
         "autosync_disabled": "Autosync disabled",
-        "not_configured": "Not configured"
+        "not_configured": "Not configured",
+        "check_disabled": "Check disabled"
       }
     },
     "localDatabase": {
       "title": "Local database",
-      "description": "Recommended buffer for unstable internet.",
       "docs": "Local database guide",
       "openPanel": "Open CouchDB panel",
       "statuses": {
         "configured": "Configured",
-        "not_configured": "Not configured"
+        "not_configured": "Not configured",
+        "connection_failed": "Connection failed"
       }
     },
     "files": {
       "title": "Files",
-      "description": "JSON file storage is enabled.",
       "openFolder": "Open storage folder",
       "folderPath": "{{path}}",
       "statuses": {

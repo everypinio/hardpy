@@ -26,6 +26,6 @@ auto_dismiss_timeout = 5
 [stand_cloud]
 address = "standcloud.everypin.io"
 connection_only = false
-autosync = false
+autosync = true
 autosync_timeout = 30
-api_key = ""
+api_key = "ak_R98D8FR21Q4D41KWVV8JR0E8MJG424WM"

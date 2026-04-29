@@ -57,6 +57,15 @@ class DatabaseConfig(BaseModel):
         return f"http://{credentials}@{uri}/"
 
 
+class ReportsStorageMenuConfig(BaseModel):
+    """Reports storage menu configuration."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    show_standcloud: bool = True
+    check_standcloud: bool = True
+
+
 class FrontendConfig(BaseModel):
     """Frontend configuration."""
 
@@ -70,6 +79,9 @@ class FrontendConfig(BaseModel):
     manual_collect: bool = False
     measurement_display: bool = True
     modal_result: ModalResultConfig = Field(default_factory=lambda: ModalResultConfig())
+    reports_storage_menu: ReportsStorageMenuConfig = Field(
+        default_factory=lambda: ReportsStorageMenuConfig(),
+    )
 
 
 class ModalResultConfig(BaseModel):
