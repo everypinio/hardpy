@@ -18,6 +18,7 @@ from fastapi import FastAPI, Query, Request
 from fastapi.staticfiles import StaticFiles
 
 from hardpy.common.config import ConfigManager, StorageType
+from hardpy.hardpy_panel.storage_status import build_storage_status
 from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
 from hardpy.pytest_hardpy.result.report_synchronizer import StandCloudSynchronizer
 
@@ -370,6 +371,13 @@ def get_storage_type() -> dict:
     """
     config_manager = ConfigManager()
     return {"storage_type": config_manager.config.database.storage_type}
+
+
+@app.get("/api/storage_status")
+def get_storage_status() -> dict:
+    """Get read-only diagnostics for report storage."""
+    config_manager = ConfigManager()
+    return build_storage_status(config_manager.config, config_manager.tests_path)
 
 
 @app.get("/api/json_data")

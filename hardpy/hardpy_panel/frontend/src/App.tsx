@@ -26,6 +26,7 @@ import ReloadAlert from "./restart_alert/RestartAlert";
 import PlaySound from "./hardpy_test_view/PlaySound";
 import TestConfigOverlay from "./hardpy_test_view/TestConfigOverlay";
 import TestCompletionModalResult from "./hardpy_test_view/TestCompletionModalResult";
+import StorageStatusMenu from "./storage/StorageStatusMenu";
 
 import { useStorageData } from "./hooks/useStorageData";
 
@@ -892,6 +893,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
               }}
             />
           )}
+          <StorageStatusMenu />
           <Popover content={renderSettingsMenu()}>
             <Button className="bp3-minimal" icon="cog" />
           </Popover>
