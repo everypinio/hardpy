@@ -6,8 +6,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 
 * Add the reports storage status menu to the operator panel.
   The menu shows **StandCloud** and the active local storage backend,
-  provides storage diagnostic links, and can block UI test start when
-  the configured **CouchDB** instance is unavailable.
+  provides storage diagnostic links, and highlights unavailable storage.
 * Add `frontend.reports_storage_menu` settings to show or disable
   **StandCloud** checks in the reports storage menu.
 

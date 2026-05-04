@@ -486,12 +486,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     data: storageStatus,
     loading: storageStatusLoading,
     error: storageStatusError,
-    refresh: refreshStorageStatus,
   } = useStorageStatus();
-  const storageBlockingReason =
-    storageStatus && !storageStatus.can_start_tests
-      ? storageStatus.blocking_reason
-      : "";
 
   /**
    * Monitors database changes and updates application state accordingly
@@ -665,10 +660,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const handleTestRunStart = React.useCallback(() => {
     filterSelectedTests(allTests);
   }, [allTests, filterSelectedTests]);
-
-  const handleTestStartRejected = React.useCallback(() => {
-    refreshStorageStatus();
-  }, [refreshStorageStatus]);
 
   /**
    * Renders the database content including test suites and debug information
@@ -970,9 +961,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                     testing_status={lastRunStatus}
                     useBigButton={true}
                     manualCollectMode={manualCollectMode}
-                    disabledReason={storageBlockingReason}
                     onTestRunStart={handleTestRunStart}
-                    onStartRejected={handleTestStartRejected}
                   />
                 </div>
               </div>
@@ -1005,9 +994,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                   testing_status={lastRunStatus}
                   useBigButton={false}
                   manualCollectMode={manualCollectMode}
-                  disabledReason={storageBlockingReason}
                   onTestRunStart={handleTestRunStart}
-                  onStartRejected={handleTestStartRejected}
                 />
               </div>
             </div>

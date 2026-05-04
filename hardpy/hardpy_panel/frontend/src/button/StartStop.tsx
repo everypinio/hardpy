@@ -9,9 +9,7 @@ type Props = {
   testing_status: string;
   useBigButton?: boolean;
   manualCollectMode?: boolean;
-  disabledReason?: string;
   onTestRunStart?: () => void;
-  onStartRejected?: (message?: string) => void;
 } & WithTranslation;
 
 type State = {
@@ -46,12 +44,11 @@ class StartStopButton extends React.Component<Props, State> {
    * @param {string} uri - The URI to which the fetch request is made.
    * @private
    */
-  private hardpy_call(uri: string): Promise<string | undefined> {
-    return fetch(uri).then((response) => {
+  private hardpy_call(uri: string): void {
+    fetch(uri).then((response) => {
       if (response.ok) {
         return response.text();
       }
-      return undefined;
     });
   }
 
@@ -60,7 +57,7 @@ class StartStopButton extends React.Component<Props, State> {
    * @private
    */
   private hardpy_start(): void {
-    if (this.props.manualCollectMode || this.props.disabledReason) {
+    if (this.props.manualCollectMode) {
       return;
     }
 
@@ -68,34 +65,7 @@ class StartStopButton extends React.Component<Props, State> {
       this.props.onTestRunStart();
     }
 
-    this.hardpy_call("api/start")
-      .then((responseText) => {
-        if (!responseText) {
-          this.props.onStartRejected?.();
-          return;
-        }
-
-        let responseData: {
-          status?: string;
-          message?: string;
-        };
-        try {
-          responseData = JSON.parse(responseText) as {
-            status?: string;
-            message?: string;
-          };
-        } catch {
-          return;
-        }
-        if (responseData.status === "error") {
-          this.props.onStartRejected?.(responseData.message);
-        }
-      })
-      .catch((error) => {
-        this.props.onStartRejected?.(
-          error instanceof Error ? error.message : String(error)
-        );
-      });
+    this.hardpy_call("api/start");
   }
 
   /**
@@ -240,9 +210,6 @@ class StartStopButton extends React.Component<Props, State> {
 
     event.preventDefault();
     const is_testing_in_progress = this.props.testing_status == "run";
-    if (!is_testing_in_progress && this.props.disabledReason) {
-      return;
-    }
     is_testing_in_progress ? this.hardpy_stop() : this.hardpy_start();
   };
 
@@ -252,7 +219,7 @@ class StartStopButton extends React.Component<Props, State> {
    * @private
    */
   private readonly handleButtonClick = (): void => {
-    if (this.props.manualCollectMode || this.props.disabledReason) {
+    if (this.props.manualCollectMode) {
       return;
     }
 
@@ -299,13 +266,9 @@ class StartStopButton extends React.Component<Props, State> {
       testing_status,
       useBigButton = false,
       manualCollectMode = false,
-      disabledReason = "",
     } = this.props;
     const is_testing: boolean = testing_status == "run";
     const button_id: string = "start-stop-button";
-    const startDisabled = Boolean(
-      manualCollectMode || disabledReason || this.state.isStopButtonDisabled
-    );
 
     if (useBigButton) {
       const bigButtonStyle = {
@@ -313,7 +276,7 @@ class StartStopButton extends React.Component<Props, State> {
         height: "96px",
         fontSize: "24px",
         fontWeight: "bold",
-        opacity: manualCollectMode || disabledReason ? 0.5 : 1,
+        opacity: manualCollectMode ? 0.5 : 1,
       };
 
       const iconStyle = {
@@ -340,10 +303,9 @@ class StartStopButton extends React.Component<Props, State> {
         rightIcon: <span style={iconStyle}>&#9658;</span>,
         onClick: this.handleButtonClick,
         id: button_id,
-        disabled: startDisabled,
+        disabled: manualCollectMode || this.state.isStopButtonDisabled,
         fill: true,
         style: bigButtonStyle,
-        title: disabledReason || undefined,
       };
 
       return <AnchorButton {...(is_testing ? stop_button : start_button)} />;
@@ -365,8 +327,7 @@ class StartStopButton extends React.Component<Props, State> {
         rightIcon: "play",
         onClick: this.handleButtonClick,
         id: button_id,
-        disabled: startDisabled,
-        title: disabledReason || undefined,
+        disabled: manualCollectMode || this.state.isStopButtonDisabled,
       };
 
       return <AnchorButton {...(is_testing ? stop_button : start_button)} />;

@@ -35,6 +35,7 @@ interface LocalDatabaseStatus {
   status: "configured" | "not_configured" | "connection_failed";
   management_url: string;
   docs_url: string;
+  message: string;
 }
 
 interface FileStorageStatus {
@@ -55,8 +56,6 @@ export interface StorageStatus {
   primary: "standcloud";
   overall_status: OverallStorageStatus;
   configured_in: string;
-  can_start_tests: boolean;
-  blocking_reason: string;
   local_storage: LocalStorageBackend;
   standcloud: StandCloudStatus;
   local_database: LocalDatabaseStatus;
@@ -67,7 +66,6 @@ interface UseStorageStatusResult {
   data: StorageStatus | null;
   loading: boolean;
   error: string | null;
-  refresh: () => Promise<void>;
 }
 
 export const useStorageStatus = (
@@ -105,5 +103,5 @@ export const useStorageStatus = (
     };
   }, [loadStorageStatus, refreshIntervalMs]);
 
-  return { data, loading, error, refresh: loadStorageStatus };
+  return { data, loading, error };
 };

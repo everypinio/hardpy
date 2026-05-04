@@ -95,7 +95,7 @@ The menu shows:
   - **Files** when `storage_type = "json"`.
 
 When **CouchDB** is configured but not available, the operator panel marks the local database
-as unavailable and prevents starting tests from the UI.
+as unavailable.
 The **Open CouchDB panel** link stays available for diagnostics.
 
 The menu can be configured in `hardpy.toml`:

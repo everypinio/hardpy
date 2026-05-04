@@ -15,7 +15,7 @@ STANDCLOUD_API_KEYS_URL: Final[str] = (
     "https://standcloud.everypin.io/dashboard/organization-profile/"
     "organization-api-keys?utm_source=hardpy_UI"
 )
-COUCHDB_UNAVAILABLE_REASON: Final[str] = (
+COUCHDB_UNAVAILABLE_MESSAGE: Final[str] = (
     "CouchDB is not available. Reports cannot be stored."
 )
 
@@ -111,12 +111,10 @@ def build_storage_status(
     if is_couchdb and check_connections:
         couchdb_available = _is_couchdb_available(database.url)
 
-    can_start_tests = True
-    blocking_reason = ""
+    local_database_message = ""
     if is_couchdb and not couchdb_available:
         overall_status = "storage_error"
-        can_start_tests = False
-        blocking_reason = COUCHDB_UNAVAILABLE_REASON
+        local_database_message = COUCHDB_UNAVAILABLE_MESSAGE
 
     local_database_status = _local_database_status(
         is_couchdb=is_couchdb,
@@ -130,8 +128,6 @@ def build_storage_status(
         "primary": "standcloud",
         "overall_status": overall_status,
         "configured_in": "hardpy.toml",
-        "can_start_tests": can_start_tests,
-        "blocking_reason": blocking_reason,
         "local_storage": {
             "type": local_storage_type,
         },
@@ -154,6 +150,7 @@ def build_storage_status(
                 f"http://{database.host}:{database.port}/_utils/" if is_couchdb else ""
             ),
             "docs_url": f"{DOCS_BASE_URL}/database/#couchdb-instance",
+            "message": local_database_message,
         },
         "files": {
             "visible": is_json,

@@ -23,7 +23,6 @@ def test_storage_status_standcloud_ready() -> None:
     status = build_storage_status(config)
 
     assert status["overall_status"] == "standcloud_ready"
-    assert status["can_start_tests"] is True
     assert status["standcloud"]["visible"] is True
     assert status["standcloud"]["check_enabled"] is True
     assert status["standcloud"]["configured"] is True
@@ -59,7 +58,6 @@ def test_storage_status_json_backend_shows_file_storage() -> None:
     status = build_storage_status(config, tests_path)
 
     assert status["overall_status"] == "standcloud_needs_attention"
-    assert status["can_start_tests"] is True
     assert status["standcloud"]["status"] == "not_configured"
     assert status["local_storage"]["type"] == "json"
     assert status["local_database"]["configured"] is False
@@ -103,7 +101,7 @@ def test_storage_status_can_disable_standcloud_check() -> None:
     assert status["standcloud"]["status"] == "check_disabled"
 
 
-def test_storage_status_blocks_start_when_couchdb_is_unavailable(
+def test_storage_status_reports_couchdb_connection_failure(
     monkeypatch: MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(storage_status_module, "_is_couchdb_available", lambda _: False)
@@ -115,8 +113,7 @@ def test_storage_status_blocks_start_when_couchdb_is_unavailable(
     status = build_storage_status(config, check_connections=True)
 
     assert status["overall_status"] == "storage_error"
-    assert status["can_start_tests"] is False
-    assert status["blocking_reason"] == (
+    assert status["local_database"]["message"] == (
         "CouchDB is not available. Reports cannot be stored."
     )
     assert status["local_database"]["status"] == "connection_failed"

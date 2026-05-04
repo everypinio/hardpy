@@ -61,7 +61,7 @@ const hasStorageProblem = (data: StorageStatus): boolean => {
     data.local_database.configured &&
     data.local_database.status === "connection_failed";
 
-  return !data.can_start_tests || standcloudProblem || localDatabaseProblem;
+  return standcloudProblem || localDatabaseProblem;
 };
 
 const getMenuIconColor = (
@@ -323,9 +323,9 @@ const StorageStatusContent = ({
                 )}
               </div>
               {data.local_database.status === "connection_failed" &&
-                data.blocking_reason && (
+                data.local_database.message && (
                   <div style={{ ...helpTextStyle, color: Colors.RED3 }}>
-                    {data.blocking_reason}
+                    {data.local_database.message}
                   </div>
                 )}
               <StorageLinkButton
