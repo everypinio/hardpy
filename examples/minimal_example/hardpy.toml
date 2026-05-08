@@ -4,3 +4,7 @@ storage_type = "json"
 [frontend]
 host = "localhost"
 port = 8000
+
+[frontend.reports_storage_menu]
+show_standcloud = true
+check_standcloud = true

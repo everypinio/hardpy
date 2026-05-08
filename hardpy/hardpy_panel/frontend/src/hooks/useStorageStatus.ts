@@ -22,30 +22,21 @@ interface StandCloudStatus {
   check_enabled: boolean;
   configured: boolean;
   autosync: boolean;
-  address: string;
   api_key_configured: boolean;
-  api_key_url: string;
   status: StandCloudStorageStatus;
-  docs_url: string;
 }
 
 interface LocalDatabaseStatus {
   configured: boolean;
-  type: "couchdb";
   status: "configured" | "not_configured" | "connection_failed";
-  management_url: string;
-  docs_url: string;
-  message: string;
 }
 
 interface FileStorageStatus {
   visible: boolean;
   configured: boolean;
-  type: "json";
   status: "configured" | "hidden";
   folder_path: string;
   folder_url: string;
-  docs_url: string;
 }
 
 interface LocalStorageBackend {
@@ -53,9 +44,7 @@ interface LocalStorageBackend {
 }
 
 export interface StorageStatus {
-  primary: "standcloud";
   overall_status: OverallStorageStatus;
-  configured_in: string;
   local_storage: LocalStorageBackend;
   standcloud: StandCloudStatus;
   local_database: LocalDatabaseStatus;

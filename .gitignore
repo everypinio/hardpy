@@ -3,17 +3,9 @@ env/
 venv/
 .venv/
 dist
-public/
 *.pyc
 *.couch
 .pytest_cache
-.pytest_tmp/
-pytest_basetemp_*/
-pytest_full_*/
-pytest_targeted_*/
-pytest_tmp_env*/
-build_tmp_*/
-tests/pytest-cache-files-*/
 .mypy_cache
 __pycache__/
 node_modules/

@@ -33,6 +33,17 @@ const STATUS_COLORS: Record<OverallStorageStatus | "loading" | "error", string> 
   };
 
 const POPOVER_WIDTH = 340;
+const STANDCLOUD_API_KEYS_URL =
+  "https://standcloud.everypin.io/dashboard/organization-profile/organization-api-keys?utm_source=hardpy_UI";
+const COUCHDB_DOCS_URL =
+  "https://everypinio.github.io/hardpy/documentation/database/#couchdb-instance";
+
+interface HardpyStorageMenuConfig {
+  database?: {
+    host?: string;
+    port?: number;
+  };
+}
 
 const storageToaster = Toaster.create({
   position: Position.TOP,
@@ -174,10 +185,12 @@ const StorageStatusContent = ({
   data,
   loading,
   error,
+  hardpyConfig,
 }: {
   data: StorageStatus | null;
   loading: boolean;
   error: string | null;
+  hardpyConfig: HardpyStorageMenuConfig | null;
 }): JSX.Element => {
   const { t } = useTranslation();
 
@@ -229,6 +242,9 @@ const StorageStatusContent = ({
     : data.standcloud.configured
       ? Colors.GREEN3
       : Colors.RED3;
+  const couchDbPanelUrl = `http://${hardpyConfig?.database?.host ?? "localhost"}:${
+    hardpyConfig?.database?.port ?? 5984
+  }/_utils/`;
 
   return (
     <div style={{ width: POPOVER_WIDTH, padding: "14px" }}>
@@ -258,7 +274,7 @@ const StorageStatusContent = ({
               {!data.standcloud.api_key_configured &&
                 data.standcloud.check_enabled && (
                   <StorageLinkButton
-                    href={data.standcloud.api_key_url}
+                    href={STANDCLOUD_API_KEYS_URL}
                     text={t("storageStatus.standcloud.apiKeyLink")}
                   />
                 )}
@@ -323,16 +339,16 @@ const StorageStatusContent = ({
                 )}
               </div>
               {data.local_database.status === "connection_failed" &&
-                data.local_database.message && (
+                data.local_database.configured && (
                   <div style={{ ...helpTextStyle, color: Colors.RED3 }}>
-                    {data.local_database.message}
+                    {t("storageStatus.localDatabase.connectionFailedMessage")}
                   </div>
                 )}
               <StorageLinkButton
                 href={
                   data.local_database.configured
-                    ? data.local_database.management_url
-                    : data.local_database.docs_url
+                    ? couchDbPanelUrl
+                    : COUCHDB_DOCS_URL
                 }
                 text={
                   data.local_database.configured
@@ -352,10 +368,12 @@ const StorageStatusMenu = ({
   data,
   loading,
   error,
+  hardpyConfig,
 }: {
   data: StorageStatus | null;
   loading: boolean;
   error: string | null;
+  hardpyConfig: HardpyStorageMenuConfig | null;
 }): JSX.Element => {
   const { t } = useTranslation();
   const statusColor = getMenuIconColor(data, loading, error);
@@ -363,7 +381,12 @@ const StorageStatusMenu = ({
   return (
     <Popover
       content={
-        <StorageStatusContent data={data} loading={loading} error={error} />
+        <StorageStatusContent
+          data={data}
+          loading={loading}
+          error={error}
+          hardpyConfig={hardpyConfig}
+        />
       }
     >
       <Button

@@ -28,9 +28,10 @@ def test_storage_status_standcloud_ready() -> None:
     assert status["standcloud"]["configured"] is True
     assert status["standcloud"]["api_key_configured"] is True
     assert "api_key_display" not in status["standcloud"]
+    assert "api_key_url" not in status["standcloud"]
     assert status["local_storage"]["type"] == "couchdb"
     assert status["local_database"]["configured"] is True
-    assert status["local_database"]["management_url"] == "http://localhost:5984/_utils/"
+    assert "management_url" not in status["local_database"]
     assert status["files"]["visible"] is False
 
 
@@ -113,7 +114,4 @@ def test_storage_status_reports_couchdb_connection_failure(
     status = build_storage_status(config, check_connections=True)
 
     assert status["overall_status"] == "storage_error"
-    assert status["local_database"]["message"] == (
-        "CouchDB is not available. Reports cannot be stored."
-    )
     assert status["local_database"]["status"] == "connection_failed"

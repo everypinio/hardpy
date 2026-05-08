@@ -2,14 +2,6 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
-## Unreleased
-
-* Add the reports storage status menu to the operator panel.
-  The menu shows **StandCloud** and the active local storage backend,
-  provides storage diagnostic links, and highlights unavailable storage.
-* Add `frontend.reports_storage_menu` settings to show or disable
-  **StandCloud** checks in the reports storage menu.
-
 ## 0.23.1
 
 * Update the **StandCloud** default address.

@@ -58,6 +58,7 @@
       "title": "Local database",
       "docs": "Local database guide",
       "openPanel": "Open CouchDB panel",
+      "connectionFailedMessage": "CouchDB is not available. Reports cannot be stored.",
       "statuses": {
         "configured": "Configured",
         "not_configured": "Not configured",
@@ -93,7 +94,7 @@
     "showChart": "Show chart {{title}}",
     "fullscreenButton": "Open chart in full screen",
     "series": "Series {{number}}"
-  },  
+  },
   "operatorDialog": {
     "defaultTitle": "Message",
     "imageAlt": "Operator message image",

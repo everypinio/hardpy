@@ -49,6 +49,10 @@ const STATUS_MAP = {
 type StatusKey = keyof typeof STATUS_MAP;
 
 interface AppConfig {
+  database?: {
+    host?: string;
+    port?: number;
+  };
   frontend?: {
     full_size_button?: boolean;
     sound_on?: boolean;
@@ -903,6 +907,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
             data={storageStatus}
             loading={storageStatusLoading}
             error={storageStatusError}
+            hardpyConfig={appConfig}
           />
           <Popover content={renderSettingsMenu()}>
             <Button className="bp3-minimal" icon="cog" />
