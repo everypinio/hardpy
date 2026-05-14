@@ -27,17 +27,8 @@ def build_storage_status(
     standcloud_check_enabled = storage_menu.check_standcloud
     standcloud_autosync = stand_cloud.autosync
     standcloud_api_key_configured = bool(stand_cloud.api_key.strip())
-    standcloud_status = _standcloud_status(
-        autosync=standcloud_autosync,
-        api_key_configured=standcloud_api_key_configured,
-        check_enabled=standcloud_check_enabled,
-    )
-    overall_status = _overall_storage_status(
-        standcloud_visible=standcloud_visible,
-        standcloud_check_enabled=standcloud_check_enabled,
-        standcloud_status=standcloud_status,
-        storage_type=database.storage_type,
-    )
+    standcloud_status = _standcloud_status(config)
+    overall_status = _overall_storage_status(config, standcloud_status)
 
     is_couchdb = database.storage_type == StorageType.COUCHDB
     is_json = database.storage_type == StorageType.JSON
@@ -49,10 +40,7 @@ def build_storage_status(
     if is_couchdb and not couchdb_available:
         overall_status = "storage_error"
 
-    local_database_status = _local_database_status(
-        is_couchdb=is_couchdb,
-        couchdb_available=couchdb_available,
-    )
+    local_database_status = _local_database_status(config, couchdb_available)
     local_storage_type = (
         StorageType.COUCHDB.value if is_couchdb else StorageType.JSON.value
     )
@@ -99,40 +87,35 @@ def _is_couchdb_available(url: str) -> bool:
     return response.ok
 
 
-def _standcloud_status(
-    *,
-    autosync: bool,
-    api_key_configured: bool,
-    check_enabled: bool,
-) -> str:
-    if not check_enabled:
+def _standcloud_status(config: HardpyConfig) -> str:
+    stand_cloud = config.stand_cloud
+    storage_menu = config.frontend.reports_storage_menu
+    api_key_configured = bool(stand_cloud.api_key.strip())
+
+    if not storage_menu.check_standcloud:
         return "check_disabled"
-    if autosync and api_key_configured:
+    if stand_cloud.autosync and api_key_configured:
         return "configured"
-    if autosync:
+    if stand_cloud.autosync:
         return "needs_api_key"
     if api_key_configured:
         return "autosync_disabled"
     return "not_configured"
 
 
-def _overall_storage_status(
-    *,
-    standcloud_visible: bool,
-    standcloud_check_enabled: bool,
-    standcloud_status: str,
-    storage_type: StorageType,
-) -> str:
-    if standcloud_visible and standcloud_check_enabled:
+def _overall_storage_status(config: HardpyConfig, standcloud_status: str) -> str:
+    storage_menu = config.frontend.reports_storage_menu
+    if storage_menu.show_standcloud and storage_menu.check_standcloud:
         if standcloud_status == "configured":
             return "standcloud_ready"
         return "standcloud_needs_attention"
-    if storage_type == StorageType.COUCHDB:
+    if config.database.storage_type == StorageType.COUCHDB:
         return "local_database_only"
     return "files_only"
 
 
-def _local_database_status(*, is_couchdb: bool, couchdb_available: bool) -> str:
+def _local_database_status(config: HardpyConfig, couchdb_available: bool) -> str:
+    is_couchdb = config.database.storage_type == StorageType.COUCHDB
     if is_couchdb and couchdb_available:
         return "configured"
     if is_couchdb:
