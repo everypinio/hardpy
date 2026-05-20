@@ -18,34 +18,20 @@ export type StandCloudStorageStatus =
   | "check_disabled";
 
 interface StandCloudStatus {
-  visible: boolean;
-  check_enabled: boolean;
-  configured: boolean;
-  autosync: boolean;
-  api_key_configured: boolean;
   status: StandCloudStorageStatus;
 }
 
 interface LocalDatabaseStatus {
-  configured: boolean;
   status: "configured" | "not_configured" | "connection_failed";
 }
 
 interface FileStorageStatus {
-  visible: boolean;
-  configured: boolean;
-  status: "configured" | "hidden";
   folder_path: string;
   folder_url: string;
 }
 
-interface LocalStorageBackend {
-  type: "couchdb" | "json";
-}
-
 export interface StorageStatus {
   overall_status: OverallStorageStatus;
-  local_storage: LocalStorageBackend;
   standcloud: StandCloudStatus;
   local_database: LocalDatabaseStatus;
   files: FileStorageStatus;

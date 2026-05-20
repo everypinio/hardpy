@@ -42,6 +42,13 @@ interface HardpyStorageMenuConfig {
   database?: {
     host?: string;
     port?: number;
+    storage_type?: "couchdb" | "json";
+  };
+  frontend?: {
+    reports_storage_menu?: {
+      show_standcloud?: boolean;
+      check_standcloud?: boolean;
+    };
   };
 }
 
@@ -49,27 +56,30 @@ const storageToaster = Toaster.create({
   position: Position.TOP,
 });
 
-const getStatusColor = (
-  data: StorageStatus | null,
-  loading: boolean,
-  error: string | null
-): string => {
-  if (error) {
-    return STATUS_COLORS.error;
-  }
-  if (loading || data === null) {
-    return STATUS_COLORS.loading;
-  }
-  return STATUS_COLORS[data.overall_status];
-};
+const isStandCloudVisible = (
+  hardpyConfig: HardpyStorageMenuConfig | null
+): boolean =>
+  hardpyConfig?.frontend?.reports_storage_menu?.show_standcloud ?? true;
 
-const hasStorageProblem = (data: StorageStatus): boolean => {
+const isStandCloudCheckEnabled = (
+  hardpyConfig: HardpyStorageMenuConfig | null
+): boolean =>
+  hardpyConfig?.frontend?.reports_storage_menu?.check_standcloud ?? true;
+
+const getStorageType = (
+  hardpyConfig: HardpyStorageMenuConfig | null
+): "couchdb" | "json" => hardpyConfig?.database?.storage_type ?? "couchdb";
+
+const hasStorageProblem = (
+  data: StorageStatus,
+  hardpyConfig: HardpyStorageMenuConfig | null
+): boolean => {
   const standcloudProblem =
-    data.standcloud.visible &&
-    data.standcloud.check_enabled &&
-    !data.standcloud.configured;
+    isStandCloudVisible(hardpyConfig) &&
+    isStandCloudCheckEnabled(hardpyConfig) &&
+    data.standcloud.status !== "configured";
   const localDatabaseProblem =
-    data.local_database.configured &&
+    getStorageType(hardpyConfig) === "couchdb" &&
     data.local_database.status === "connection_failed";
 
   return standcloudProblem || localDatabaseProblem;
@@ -78,7 +88,8 @@ const hasStorageProblem = (data: StorageStatus): boolean => {
 const getMenuIconColor = (
   data: StorageStatus | null,
   loading: boolean,
-  error: string | null
+  error: string | null,
+  hardpyConfig: HardpyStorageMenuConfig | null
 ): string => {
   if (error) {
     return STATUS_COLORS.error;
@@ -86,7 +97,7 @@ const getMenuIconColor = (
   if (loading || data === null) {
     return STATUS_COLORS.loading;
   }
-  if (hasStorageProblem(data)) {
+  if (hasStorageProblem(data, hardpyConfig)) {
     return Colors.RED3;
   }
   return Colors.GREEN3;
@@ -224,7 +235,10 @@ const StorageStatusContent = ({
     );
   }
 
-  const isFilesBackend = data.local_storage.type === "json";
+  const isFilesBackend = getStorageType(hardpyConfig) === "json";
+  const standcloudVisible = isStandCloudVisible(hardpyConfig);
+  const standcloudCheckEnabled = isStandCloudCheckEnabled(hardpyConfig);
+  const localDatabaseConfigured = getStorageType(hardpyConfig) === "couchdb";
   const localBackendIcon = isFilesBackend ? "document" : "database";
   const localBackendIconColor = isFilesBackend
     ? Colors.GRAY2
@@ -237,9 +251,9 @@ const StorageStatusContent = ({
   const localBackendTooltip = isFilesBackend
     ? t("storageStatus.tooltips.files")
     : t("storageStatus.tooltips.localDatabase");
-  const standcloudIconColor = !data.standcloud.check_enabled
+  const standcloudIconColor = !standcloudCheckEnabled
     ? Colors.GRAY2
-    : data.standcloud.configured
+    : data.standcloud.status === "configured"
       ? Colors.GREEN3
       : Colors.RED3;
   const couchDbPanelUrl = `http://${hardpyConfig?.database?.host ?? "localhost"}:${
@@ -255,7 +269,7 @@ const StorageStatusContent = ({
 
       <Divider />
 
-      {data.standcloud.visible && (
+      {standcloudVisible && (
         <>
           <div style={groupHeadingStyle}>{t("storageStatus.cloudStorage")}</div>
 
@@ -271,8 +285,8 @@ const StorageStatusContent = ({
                   `storageStatus.standcloud.statuses.${data.standcloud.status}`
                 )}
               </div>
-              {!data.standcloud.api_key_configured &&
-                data.standcloud.check_enabled && (
+              {data.standcloud.status === "needs_api_key" &&
+                standcloudCheckEnabled && (
                   <StorageLinkButton
                     href={STANDCLOUD_API_KEYS_URL}
                     text={t("storageStatus.standcloud.apiKeyLink")}
@@ -296,8 +310,8 @@ const StorageStatusContent = ({
           </div>
           {isFilesBackend ? (
             <>
-              <div style={getStatusTextStyle(data.files.status)}>
-                {t(`storageStatus.files.statuses.${data.files.status}`)}
+              <div style={getStatusTextStyle("configured")}>
+                {t("storageStatus.files.statuses.configured")}
               </div>
               <div
                 style={{
@@ -339,19 +353,19 @@ const StorageStatusContent = ({
                 )}
               </div>
               {data.local_database.status === "connection_failed" &&
-                data.local_database.configured && (
+                localDatabaseConfigured && (
                   <div style={{ ...helpTextStyle, color: Colors.RED3 }}>
                     {t("storageStatus.localDatabase.connectionFailedMessage")}
                   </div>
                 )}
               <StorageLinkButton
                 href={
-                  data.local_database.configured
+                  localDatabaseConfigured
                     ? couchDbPanelUrl
                     : COUCHDB_DOCS_URL
                 }
                 text={
-                  data.local_database.configured
+                  localDatabaseConfigured
                     ? t("storageStatus.localDatabase.openPanel")
                     : t("storageStatus.localDatabase.docs")
                 }
@@ -376,7 +390,7 @@ const StorageStatusMenu = ({
   hardpyConfig: HardpyStorageMenuConfig | null;
 }): JSX.Element => {
   const { t } = useTranslation();
-  const statusColor = getMenuIconColor(data, loading, error);
+  const statusColor = getMenuIconColor(data, loading, error, hardpyConfig);
 
   return (
     <Popover

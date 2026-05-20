@@ -18,20 +18,13 @@ def build_storage_status(
     check_connections: bool = False,
 ) -> dict[str, Any]:
     """Build read-only storage diagnostics for the operator panel."""
-    stand_cloud = config.stand_cloud
     database = config.database
-    storage_menu = config.frontend.reports_storage_menu
     resolved_tests_path = tests_path or Path.cwd()
 
-    standcloud_visible = storage_menu.show_standcloud
-    standcloud_check_enabled = storage_menu.check_standcloud
-    standcloud_autosync = stand_cloud.autosync
-    standcloud_api_key_configured = bool(stand_cloud.api_key.strip())
     standcloud_status = _standcloud_status(config)
     overall_status = _overall_storage_status(config, standcloud_status)
 
     is_couchdb = database.storage_type == StorageType.COUCHDB
-    is_json = database.storage_type == StorageType.JSON
     file_storage_dir = _json_storage_dir(config, resolved_tests_path).resolve()
     couchdb_available = True
     if is_couchdb and check_connections:
@@ -41,31 +34,16 @@ def build_storage_status(
         overall_status = "storage_error"
 
     local_database_status = _local_database_status(config, couchdb_available)
-    local_storage_type = (
-        StorageType.COUCHDB.value if is_couchdb else StorageType.JSON.value
-    )
 
     return {
         "overall_status": overall_status,
-        "local_storage": {
-            "type": local_storage_type,
-        },
         "standcloud": {
-            "visible": standcloud_visible,
-            "check_enabled": standcloud_check_enabled,
-            "configured": standcloud_status == "configured",
-            "autosync": standcloud_autosync,
-            "api_key_configured": standcloud_api_key_configured,
             "status": standcloud_status,
         },
         "local_database": {
-            "configured": is_couchdb,
             "status": local_database_status,
         },
         "files": {
-            "visible": is_json,
-            "configured": is_json,
-            "status": "configured" if is_json else "hidden",
             "folder_path": str(file_storage_dir),
             "folder_url": file_storage_dir.as_uri(),
         },

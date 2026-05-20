@@ -52,6 +52,7 @@ interface AppConfig {
   database?: {
     host?: string;
     port?: number;
+    storage_type?: "couchdb" | "json";
   };
   frontend?: {
     full_size_button?: boolean;
@@ -62,6 +63,10 @@ interface AppConfig {
       enable?: boolean;
       auto_dismiss_pass?: boolean;
       auto_dismiss_timeout?: number;
+    };
+    reports_storage_menu?: {
+      show_standcloud?: boolean;
+      check_standcloud?: boolean;
     };
   };
   current_test_config?: string;

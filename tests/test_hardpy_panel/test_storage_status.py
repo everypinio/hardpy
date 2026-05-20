@@ -23,16 +23,18 @@ def test_storage_status_standcloud_ready() -> None:
     status = build_storage_status(config)
 
     assert status["overall_status"] == "standcloud_ready"
-    assert status["standcloud"]["visible"] is True
-    assert status["standcloud"]["check_enabled"] is True
-    assert status["standcloud"]["configured"] is True
-    assert status["standcloud"]["api_key_configured"] is True
+    assert status["standcloud"]["status"] == "configured"
+    assert "visible" not in status["standcloud"]
+    assert "check_enabled" not in status["standcloud"]
+    assert "configured" not in status["standcloud"]
+    assert "api_key_configured" not in status["standcloud"]
     assert "api_key_display" not in status["standcloud"]
     assert "api_key_url" not in status["standcloud"]
-    assert status["local_storage"]["type"] == "couchdb"
-    assert status["local_database"]["configured"] is True
+    assert "local_storage" not in status
+    assert "configured" not in status["local_database"]
     assert "management_url" not in status["local_database"]
-    assert status["files"]["visible"] is False
+    assert "visible" not in status["files"]
+    assert "configured" not in status["files"]
 
 
 def test_storage_status_standcloud_needs_api_key() -> None:
@@ -45,8 +47,7 @@ def test_storage_status_standcloud_needs_api_key() -> None:
 
     assert status["overall_status"] == "standcloud_needs_attention"
     assert status["standcloud"]["status"] == "needs_api_key"
-    assert status["standcloud"]["configured"] is False
-    assert status["local_database"]["configured"] is True
+    assert status["local_database"]["status"] == "configured"
 
 
 def test_storage_status_json_backend_shows_file_storage() -> None:
@@ -60,10 +61,7 @@ def test_storage_status_json_backend_shows_file_storage() -> None:
 
     assert status["overall_status"] == "standcloud_needs_attention"
     assert status["standcloud"]["status"] == "not_configured"
-    assert status["local_storage"]["type"] == "json"
-    assert status["local_database"]["configured"] is False
-    assert status["files"]["visible"] is True
-    assert status["files"]["configured"] is True
+    assert status["local_database"]["status"] == "not_configured"
     storage_dir = tests_path / ".hardpy" / "storage"
     assert status["files"]["folder_path"] == str(storage_dir)
     assert status["files"]["folder_url"] == storage_dir.as_uri()
@@ -81,7 +79,6 @@ def test_storage_status_can_hide_standcloud_menu() -> None:
     status = build_storage_status(config)
 
     assert status["overall_status"] == "local_database_only"
-    assert status["standcloud"]["visible"] is False
     assert status["standcloud"]["status"] == "not_configured"
 
 
@@ -97,8 +94,6 @@ def test_storage_status_can_disable_standcloud_check() -> None:
     status = build_storage_status(config)
 
     assert status["overall_status"] == "local_database_only"
-    assert status["standcloud"]["visible"] is True
-    assert status["standcloud"]["check_enabled"] is False
     assert status["standcloud"]["status"] == "check_disabled"
 
 
