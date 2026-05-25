@@ -23,6 +23,10 @@ enable = false
 auto_dismiss_pass = true
 auto_dismiss_timeout = 5
 
+[frontend.reports_storage_menu]
+show_standcloud = true
+check_standcloud = true
+
 [stand_cloud]
 address = "standcloud.everypin.io"
 connection_only = false

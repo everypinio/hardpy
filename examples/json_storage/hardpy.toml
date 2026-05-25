@@ -28,3 +28,7 @@ measurement_display = true
 enable = true
 auto_dismiss_pass = true
 auto_dismiss_timeout = 5
+
+[frontend.reports_storage_menu]
+show_standcloud = true
+check_standcloud = true

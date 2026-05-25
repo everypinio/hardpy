@@ -26,8 +26,10 @@ import ReloadAlert from "./restart_alert/RestartAlert";
 import PlaySound from "./hardpy_test_view/PlaySound";
 import TestConfigOverlay from "./hardpy_test_view/TestConfigOverlay";
 import TestCompletionModalResult from "./hardpy_test_view/TestCompletionModalResult";
+import StorageStatusMenu from "./storage/StorageStatusMenu";
 
 import { useStorageData } from "./hooks/useStorageData";
+import { useStorageStatus } from "./hooks/useStorageStatus";
 
 import "./App.css";
 
@@ -47,6 +49,11 @@ const STATUS_MAP = {
 type StatusKey = keyof typeof STATUS_MAP;
 
 interface AppConfig {
+  database?: {
+    host?: string;
+    port?: number;
+    storage_type?: "couchdb" | "json";
+  };
   frontend?: {
     full_size_button?: boolean;
     sound_on?: boolean;
@@ -56,6 +63,10 @@ interface AppConfig {
       enable?: boolean;
       auto_dismiss_pass?: boolean;
       auto_dismiss_timeout?: number;
+    };
+    reports_storage_menu?: {
+      show_standcloud?: boolean;
+      check_standcloud?: boolean;
     };
   };
   current_test_config?: string;
@@ -480,6 +491,11 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   }
 
   const { rows, state, loading, error } = useStorageData();
+  const {
+    data: storageStatus,
+    loading: storageStatusLoading,
+    error: storageStatusError,
+  } = useStorageStatus();
 
   /**
    * Monitors database changes and updates application state accordingly
@@ -892,6 +908,12 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
               }}
             />
           )}
+          <StorageStatusMenu
+            data={storageStatus}
+            loading={storageStatusLoading}
+            error={storageStatusError}
+            hardpyConfig={appConfig}
+          />
           <Popover content={renderSettingsMenu()}>
             <Button className="bp3-minimal" icon="cog" />
           </Popover>

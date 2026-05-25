@@ -1,31 +1,79 @@
 {
   "app": {
-      "title": "HardPy 操作面板",
-      "lastLaunch": "上次启动:",
-      "duration": "持续时间",
-      "seconds": "秒",
-      "soundOn": "开启声音",
-      "soundOff": "关闭声音",
-      "debugOn": "开启调试模式",
-      "debugOff": "关闭调试模式",
-      "connection": "正在建立连接... 🧐🔎",
-      "dbError": "数据库连接错误. 🙅🏽‍♀️🚫",
-      "noEntries": "数据库中没有条目 🙅🏽‍♀️🚫",
-      "stoppedTestCase": "已停止的测试用例",
-      "failedTestCases": "失败的测试用例",
-      "modalResultDismissHint": "点击任意位置或按任意键关闭",
-      "modalResultAutoDismissHint": "{{seconds}}秒后自动关闭...",
-      "manualCollectOn": "手动收集开启",
-      "manualCollectOff": "手动收集关闭",
-      "testConfigurationSelector": "选择测试配置",
-      "status": {
-        "ready": "就绪",
-        "run": "运行中",
-        "passed": "通过",
-        "failed": "失败",
-        "stopped": "已停止",
-        "unknown": "未知"
+    "title": "HardPy 操作面板",
+    "lastLaunch": "上次启动:",
+    "duration": "持续时间",
+    "seconds": "秒",
+    "soundOn": "开启声音",
+    "soundOff": "关闭声音",
+    "debugOn": "开启调试模式",
+    "debugOff": "关闭调试模式",
+    "connection": "正在建立连接... 🧐🔎",
+    "dbError": "数据库连接错误. 🙅🏽‍♀️🚫",
+    "noEntries": "数据库中没有条目 🙅🏽‍♀️🚫",
+    "stoppedTestCase": "已停止的测试用例",
+    "failedTestCases": "失败的测试用例",
+    "modalResultDismissHint": "点击任意位置或按任意键关闭",
+    "modalResultAutoDismissHint": "{{seconds}}秒后自动关闭...",
+    "manualCollectOn": "手动收集开启",
+    "manualCollectOff": "手动收集关闭",
+    "testConfigurationSelector": "选择测试配置",
+    "status": {
+      "ready": "就绪",
+      "run": "运行中",
+      "passed": "通过",
+      "failed": "失败",
+      "stopped": "已停止",
+      "unknown": "未知"
+    }
+  },
+  "storageStatus": {
+    "title": "报告存储",
+    "iconLabel": "报告存储状态",
+    "loading": "正在加载存储状态...",
+    "unavailable": "存储状态不可用。",
+    "cloudStorage": "云存储",
+    "localStorage": "本地存储后端",
+    "copyPath": "复制存储路径",
+    "pathCopied": "已复制存储路径",
+    "tooltips": {
+      "reportsStorage": "在 hardpy.toml 中配置。",
+      "standcloud": "测试报告的主要云存储。standcloud.everypin.io",
+      "localDatabase": "网络不稳定时推荐使用的缓冲存储。",
+      "files": "测试报告的本地 JSON 文件存储。"
+    },
+    "standcloud": {
+      "title": "StandCloud",
+      "docs": "StandCloud 配置指南",
+      "apiKeyLink": "获取测试台 API key",
+      "statuses": {
+        "configured": "已配置",
+        "needs_api_key": "需要 API key",
+        "autosync_disabled": "自动同步已禁用",
+        "not_configured": "未配置",
+        "check_disabled": "检查已禁用"
       }
+    },
+    "localDatabase": {
+      "title": "本地数据库",
+      "docs": "本地数据库指南",
+      "openPanel": "打开 CouchDB 面板",
+      "connectionFailedMessage": "CouchDB 不可用。无法保存报告。",
+      "statuses": {
+        "configured": "已配置",
+        "not_configured": "未配置",
+        "connection_failed": "连接失败"
+      }
+    },
+    "files": {
+      "title": "文件",
+      "openFolder": "打开存储文件夹",
+      "folderPath": "{{path}}",
+      "statuses": {
+        "configured": "已配置",
+        "hidden": "未配置"
+      }
+    }
   },
   "button": {
     "start": "开始",
