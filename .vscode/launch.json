@@ -183,6 +183,17 @@
             ]
         },
         {
+            "name": "Python: Example Auto Scroll Demo",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "hardpy.cli.cli",
+            "console": "integratedTerminal",
+            "args": [
+                "run",
+                "examples/auto_scroll_demo"
+            ]
+        },
+        {
             "name": "Python: Example Measurement",
             "type": "debugpy",
             "request": "launch",
