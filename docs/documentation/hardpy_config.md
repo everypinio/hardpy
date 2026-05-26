@@ -179,7 +179,7 @@ Default is `false`.
 
 Enable or disable the test history view in the operator panel.
 When set to `true`, the operator can view the history of previous test runs.
-Default is `true`.
+Default is `false`.
 
 #### modal_result
 
