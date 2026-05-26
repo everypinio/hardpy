@@ -24,6 +24,7 @@ full_size_button = false
 manual_collect = false
 measurement_display = true
 test_history = false
+auto_scroll = false
 
 [frontend.modal_result]
 enable = true
