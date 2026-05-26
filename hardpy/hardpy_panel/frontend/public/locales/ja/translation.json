@@ -1,31 +1,79 @@
 {
   "app": {
-      "title": "HardPy オペレーターパネル",
-      "lastLaunch": "最終起動:",
-      "duration": "期間",
-      "seconds": "秒",
-      "soundOn": "音をオンにする",
-      "soundOff": "音をオフにする",
-      "debugOn": "デバッグモードをオンにする",
-      "debugOff": "デバッグモードをオフにする",
-      "connection": "接続を確立しています... 🧐🔎",
-      "dbError": "データベース接続エラー. 🙅🏽‍♀️🚫",
-      "noEntries": "データベースにエントリがありません 🙅🏽‍♀️🚫",
-      "stoppedTestCase": "停止されたテストケース",
-      "failedTestCases": "失敗したテストケース",
-      "modalResultDismissHint": "どこかをクリックするか、任意のキーを押して閉じます",
-      "modalResultAutoDismissHint": "{{seconds}}秒後に自動的に閉じます...",
-      "manualCollectOn": "手動収集オン",
-      "manualCollectOff": "手動収集オフ",
-      "testConfigurationSelector": "テスト構成を選択する",
-      "status": {
-        "ready": "準備完了",
-        "run": "実行中",
-        "passed": "合格",
-        "failed": "不合格",
-        "stopped": "停止",
-        "unknown": "不明"
+    "title": "HardPy オペレーターパネル",
+    "lastLaunch": "最終起動:",
+    "duration": "期間",
+    "seconds": "秒",
+    "soundOn": "音をオンにする",
+    "soundOff": "音をオフにする",
+    "debugOn": "デバッグモードをオンにする",
+    "debugOff": "デバッグモードをオフにする",
+    "connection": "接続を確立しています... 🧐🔎",
+    "dbError": "データベース接続エラー. 🙅🏽‍♀️🚫",
+    "noEntries": "データベースにエントリがありません 🙅🏽‍♀️🚫",
+    "stoppedTestCase": "停止されたテストケース",
+    "failedTestCases": "失敗したテストケース",
+    "modalResultDismissHint": "どこかをクリックするか、任意のキーを押して閉じます",
+    "modalResultAutoDismissHint": "{{seconds}}秒後に自動的に閉じます...",
+    "manualCollectOn": "手動収集オン",
+    "manualCollectOff": "手動収集オフ",
+    "testConfigurationSelector": "テスト構成を選択する",
+    "status": {
+      "ready": "準備完了",
+      "run": "実行中",
+      "passed": "合格",
+      "failed": "不合格",
+      "stopped": "停止",
+      "unknown": "不明"
+    }
+  },
+  "storageStatus": {
+    "title": "レポート保存先",
+    "iconLabel": "レポート保存先の状態",
+    "loading": "保存先の状態を読み込み中...",
+    "unavailable": "保存先の状態を取得できません。",
+    "cloudStorage": "クラウド保存先",
+    "localStorage": "ローカル保存バックエンド",
+    "copyPath": "保存先パスをコピー",
+    "pathCopied": "保存先パスをコピーしました",
+    "tooltips": {
+      "reportsStorage": "hardpy.toml で設定します。",
+      "standcloud": "テストレポート用の主要なクラウド保存先です。standcloud.everypin.io",
+      "localDatabase": "不安定なインターネット接続向けの推奨バッファです。",
+      "files": "テストレポート用のローカル JSON ファイル保存先です。"
+    },
+    "standcloud": {
+      "title": "StandCloud",
+      "docs": "StandCloud 設定ガイド",
+      "apiKeyLink": "スタンド API key を取得",
+      "statuses": {
+        "configured": "設定済み",
+        "needs_api_key": "API key が必要です",
+        "autosync_disabled": "自動同期は無効です",
+        "not_configured": "未設定",
+        "check_disabled": "チェック無効"
       }
+    },
+    "localDatabase": {
+      "title": "ローカルデータベース",
+      "docs": "ローカルデータベースガイド",
+      "openPanel": "CouchDB パネルを開く",
+      "connectionFailedMessage": "CouchDB を利用できません。レポートを保存できません。",
+      "statuses": {
+        "configured": "設定済み",
+        "not_configured": "未設定",
+        "connection_failed": "接続失敗"
+      }
+    },
+    "files": {
+      "title": "ファイル",
+      "openFolder": "保存先フォルダを開く",
+      "folderPath": "{{path}}",
+      "statuses": {
+        "configured": "設定済み",
+        "hidden": "未設定"
+      }
+    }
   },
   "button": {
     "start": "開始",
@@ -68,6 +116,21 @@
     "startTime": "開始時間",
     "finishTime": "終了時間",
     "alert": "警告"
+  },
+  "history": {
+    "title": "テスト履歴",
+    "detailTitle": "テスト実行の詳細",
+    "columns": {
+      "runName": "実行名",
+      "startTime": "開始時刻",
+      "result": "結果",
+      "serialNumber": "シリアル番号",
+      "details": "詳細"
+    },
+    "viewDetails": "詳細を見る",
+    "selected": "選択済み",
+    "unknownRun": "名前なし実行",
+    "showMore": "さらに表示"
   },
   "testSuite": {
     "nameColumn": "名前",

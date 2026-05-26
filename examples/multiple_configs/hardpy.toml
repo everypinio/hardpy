@@ -17,11 +17,16 @@ full_size_button = false
 manual_collect = false
 sound_on = false
 measurement_display = false
+test_history = false
 
 [frontend.modal_result]
 enable = false
 auto_dismiss_pass = true
 auto_dismiss_timeout = 5
+
+[frontend.reports_storage_menu]
+show_standcloud = true
+check_standcloud = true
 
 [[test_configs]]
 name = "Config 1"

@@ -123,6 +123,16 @@ class CouchDBStateStore(StorageInterface):
         """Optimize storage (implementation-specific, may be no-op)."""
         self._db.compact()
 
+    def save_history(self, timestamp_id: str) -> None:
+        """Save current document as a history entry."""
+        doc = self._doc.copy()
+        doc["_id"] = timestamp_id
+        doc.pop("_rev", None)
+        try:
+            self._db.save(doc)
+        except (Conflict, GenericError, ConnectionError) as e:
+            self._log.warning(f"Failed to save history: {e}")
+
     def _init_doc(self) -> dict:
         """Initialize or load document structure."""
         try:

@@ -108,6 +108,18 @@ class JsonStateStore(StorageInterface):
     def compact(self) -> None:
         """Optimize storage (no-op for JSON file storage)."""
 
+    def save_history(self, timestamp_id: str) -> None:
+        """Save current document as a history entry."""
+        doc = self._doc.copy()
+        doc["_id"] = timestamp_id
+        doc.pop("_rev", None)
+        history_file = self._storage_dir / f"{timestamp_id}.json"
+        try:
+            with history_file.open("w") as f:
+                json.dump(doc, f)
+        except OSError as e:
+            self._log.warning(f"Failed to save history: {e}")
+
     def _init_doc(self) -> dict:
         """Initialize or load document structure."""
         if self._file_path.exists():

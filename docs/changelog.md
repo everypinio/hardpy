@@ -2,6 +2,25 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## 0.24.0
+
+* Add test history view to the operator panel.
+  Operators can browse previous test run results, including status, start time,
+  serial number, and per-test details. The feature is disabled by default and can
+  be enabled via `test_history = true` in `[frontend]` of `hardpy.toml`.
+  Both CouchDB and JSON storage backends are supported.
+  [[PR-281](https://github.com/everypinio/hardpy/pull/281)],
+  [[PR-284](https://github.com/everypinio/hardpy/pull/284)]
+* Add the reports storage status menu to the operator panel.
+  The menu shows **StandCloud** and the active local storage backend,
+  provides storage diagnostic links, and can block UI test start when
+  the configured **CouchDB** instance is unavailable.
+  [[PR-276](https://github.com/everypinio/hardpy/pull/276)]
+* Add `frontend.reports_storage_menu` settings to show or disable
+  **StandCloud** checks in the reports storage menu.
+  [[PR-276](https://github.com/everypinio/hardpy/pull/276)]
+
+
 ## 0.23.1
 
 * Update the **StandCloud** default address.

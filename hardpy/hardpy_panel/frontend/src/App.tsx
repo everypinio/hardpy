@@ -20,14 +20,17 @@ import {
 import StartStopButton from "./button/StartStop";
 import { TestRunI } from "./hardpy_test_view/SuiteList";
 import SuiteList from "./hardpy_test_view/SuiteList";
+import TestHistory from "./hardpy_test_view/TestHistory";
 import ProgressView from "./progress/ProgressView";
 import TestStatus from "./hardpy_test_view/TestStatus";
 import ReloadAlert from "./restart_alert/RestartAlert";
 import PlaySound from "./hardpy_test_view/PlaySound";
 import TestConfigOverlay from "./hardpy_test_view/TestConfigOverlay";
 import TestCompletionModalResult from "./hardpy_test_view/TestCompletionModalResult";
+import StorageStatusMenu from "./storage/StorageStatusMenu";
 
 import { useStorageData } from "./hooks/useStorageData";
+import { useStorageStatus } from "./hooks/useStorageStatus";
 
 import "./App.css";
 
@@ -47,15 +50,25 @@ const STATUS_MAP = {
 type StatusKey = keyof typeof STATUS_MAP;
 
 interface AppConfig {
+  database?: {
+    host?: string;
+    port?: number;
+    storage_type?: "couchdb" | "json";
+  };
   frontend?: {
     full_size_button?: boolean;
     sound_on?: boolean;
     manual_collect?: boolean;
     measurement_display?: boolean;
+    test_history?: boolean;
     modal_result?: {
       enable?: boolean;
       auto_dismiss_pass?: boolean;
       auto_dismiss_timeout?: number;
+    };
+    reports_storage_menu?: {
+      show_standcloud?: boolean;
+      check_standcloud?: boolean;
     };
   };
   current_test_config?: string;
@@ -212,6 +225,12 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const [previousTestStructure, setPreviousTestStructure] =
     React.useState<string>("");
   let [selectedTests, setSelectedTests] = React.useState<string[]>([]);
+  const [selectedHistoryRunId, setSelectedHistoryRunId] =
+    React.useState<string | null>(null);
+  const [showHistoryDetails, setShowHistoryDetails] =
+    React.useState<boolean>(false);
+  const [historyDisplayCount, setHistoryDisplayCount] =
+    React.useState<number>(5);
 
   /**
    * Loads HardPy configuration from the backend API on component mount
@@ -480,6 +499,11 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   }
 
   const { rows, state, loading, error } = useStorageData();
+  const {
+    data: storageStatus,
+    loading: storageStatusLoading,
+    error: storageStatusError,
+  } = useStorageStatus();
 
   /**
    * Monitors database changes and updates application state accordingly
@@ -695,6 +719,30 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     }
 
     const document_row = rows[index];
+    const filteredRows = rows
+      .map((row) => {
+        const doc = row.doc as TestRunI | undefined;
+        if (!doc || !doc.name || !doc.status) {
+          return null;
+        }
+
+        return {
+          id: row.id,
+          name: doc.name,
+          status: doc.status,
+          start_time: doc.start_time,
+          serial_number: doc.dut?.serial_number,
+        };
+      })
+      .filter((entry) => entry && entry.id !== syncDocumentId)
+      .filter((entry): entry is { id: string; name: string; status: string; start_time?: number; serial_number?: string | number } => entry !== null)
+      .sort((a, b) => (b.start_time ?? 0) - (a.start_time ?? 0));
+
+    const historyEntries = filteredRows.slice(0, historyDisplayCount);
+
+    const selectedHistoryRow = selectedHistoryRunId
+      ? (rows.find((row) => row.id === selectedHistoryRunId)?.doc as TestRunI | undefined)
+      : undefined;
 
     if (!document_row) {
       return (
@@ -714,30 +762,105 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           style={{ display: "flex", flexDirection: "row" }}
         >
           {(ultrawide || !use_debug_info) && (
-            <Card
+            <div
               style={{
-                flexDirection: "column",
-                padding: "20px",
+                display: "flex",
+                flexDirection: ultrawide ? "row" : "column",
                 flexGrow: 1,
                 flexShrink: 1,
-                marginTop: "20px",
-                marginBottom: "20px",
+                gap: "20px",
               }}
             >
-              <SuiteList
-                db_state={testRunData}
-                defaultClose={!ultrawide}
-                onTestsSelectionChange={handleTestsSelectionChange}
-                selectedTests={selectedTests}
-                selectionSupported={
-                  (appConfig?.frontend?.manual_collect || false) &&
-                  manualCollectMode
-                }
-                currentTestConfig={appConfig?.current_test_config}
-                measurementDisplay={appConfig?.frontend?.measurement_display}
-                manualCollectMode={manualCollectMode}
-              />
-            </Card>
+              <Card
+                style={{
+                  flexDirection: "column",
+                  padding: "20px",
+                  flexGrow: 3,
+                  flexShrink: 1,
+                  marginTop: "20px",
+                  marginBottom: "20px",
+                }}
+              >
+                <SuiteList
+                  db_state={testRunData}
+                  defaultClose={!ultrawide}
+                  onTestsSelectionChange={handleTestsSelectionChange}
+                  selectedTests={selectedTests}
+                  selectionSupported={
+                    (appConfig?.frontend?.manual_collect || false) &&
+                    manualCollectMode
+                  }
+                  currentTestConfig={appConfig?.current_test_config}
+                  measurementDisplay={appConfig?.frontend?.measurement_display}
+                  manualCollectMode={manualCollectMode}
+                />
+              </Card>
+
+              <div style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+                {appConfig?.frontend?.test_history !== false && (
+                  <>
+                    <TestHistory
+                      history={historyEntries}
+                      selectedHistoryId={selectedHistoryRunId}
+                      onSelectHistoryRun={(id) => {
+                        setSelectedHistoryRunId(id);
+                        setShowHistoryDetails(true);
+                      }}
+                    />
+                    {filteredRows.length > historyDisplayCount && (
+                      <Button
+                        minimal
+                        fill
+                        onClick={() =>
+                          setHistoryDisplayCount(historyDisplayCount + 5)
+                        }
+                        style={{ marginTop: "10px" }}
+                      >
+                        {t("history.showMore")}
+                      </Button>
+                    )}
+                    {selectedHistoryRow && (
+                      <Card style={{ padding: "20px", marginTop: "20px" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <H2>{t("history.detailTitle")}</H2>
+                          <Button
+                            minimal
+                            icon={
+                              showHistoryDetails ? "chevron-up" : "chevron-down"
+                            }
+                            onClick={() =>
+                              setShowHistoryDetails(!showHistoryDetails)
+                            }
+                            title={
+                              showHistoryDetails ? "Hide details" : "Show details"
+                            }
+                          />
+                        </div>
+                        {showHistoryDetails && (
+                          <SuiteList
+                            db_state={selectedHistoryRow}
+                            defaultClose={!ultrawide}
+                            selectionSupported={false}
+                            selectedTests={[]}
+                            currentTestConfig={appConfig?.current_test_config}
+                            measurementDisplay={
+                              appConfig?.frontend?.measurement_display
+                            }
+                            manualCollectMode={manualCollectMode}
+                          />
+                        )}
+                      </Card>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
           )}
           {use_debug_info && (
             <Card
@@ -892,6 +1015,12 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
               }}
             />
           )}
+          <StorageStatusMenu
+            data={storageStatus}
+            loading={storageStatusLoading}
+            error={storageStatusError}
+            hardpyConfig={appConfig}
+          />
           <Popover content={renderSettingsMenu()}>
             <Button className="bp3-minimal" icon="cog" />
           </Popover>

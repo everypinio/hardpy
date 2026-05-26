@@ -82,6 +82,32 @@ the **Turn on the sound** button.
 Sound can also be enabled by setting `sound_on = true` in the frontend configuration section.
 Sound is disabled by default.
 
+### Reports storage menu
+
+The operator panel has a reports storage status menu in the top right corner.
+It helps developers check where test reports are stored and whether the storage backend is ready.
+
+The menu shows:
+
+- **StandCloud** cloud storage status, if enabled in the configuration;
+- the active local storage backend:
+  - **Local database** when `storage_type = "couchdb"`;
+  - **Files** when `storage_type = "json"`.
+
+When **CouchDB** is configured but not available, the operator panel marks the local database
+as unavailable.
+The **Open CouchDB panel** link stays available for diagnostics.
+
+The menu can be configured in `hardpy.toml`:
+
+```toml
+[frontend.reports_storage_menu]
+show_standcloud = true
+check_standcloud = true
+```
+
+See the [configuration documentation](hardpy_config.md#reports_storage_menu) for details.
+
 ### Full-size start/stop button
 
 The operator panel supports a full-size start/stop button layout for improved usability in various scenarios. 

@@ -18,6 +18,7 @@ from fastapi import FastAPI, Query, Request
 from fastapi.staticfiles import StaticFiles
 
 from hardpy.common.config import ConfigManager, StorageType
+from hardpy.hardpy_panel.storage_status import build_storage_status
 from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
 from hardpy.pytest_hardpy.result.report_synchronizer import StandCloudSynchronizer
 
@@ -62,6 +63,16 @@ app.state.sc_synchronizer = StandCloudSynchronizer()
 app.state.executor = ThreadPoolExecutor(max_workers=1)
 app.state.manual_collect_mode = False
 app.state.selected_tests = []
+
+
+def current_storage_status() -> dict[str, Any]:
+    """Get storage diagnostics for the current configuration."""
+    config_manager = ConfigManager()
+    return build_storage_status(
+        config_manager.config,
+        config_manager.tests_path,
+        check_connections=True,
+    )
 
 
 class Status(str, Enum):
@@ -372,6 +383,12 @@ def get_storage_type() -> dict:
     return {"storage_type": config_manager.config.database.storage_type}
 
 
+@app.get("/api/storage_status")
+def get_storage_status() -> dict:
+    """Get read-only diagnostics for report storage."""
+    return current_storage_status()
+
+
 @app.get("/api/json_data")
 def get_json_data() -> dict:
     """Get test run data from JSON storage.
@@ -396,31 +413,35 @@ def get_json_data() -> dict:
                 / "storage"
                 / "statestore",
             )
-        _doc_id = config_manager.config.database.doc_id
-        statestore_file = storage_dir / f"{_doc_id}.json"
 
-        if not statestore_file.exists():
+        if not storage_dir.exists():
             return {"rows": [], "total_rows": 0}
 
-        with statestore_file.open("r") as f:
-            data = json.load(f)
+        rows = []
+        for json_file in storage_dir.glob("*.json"):
+            data = _read_json_history_file(json_file)
+            if data is None:
+                continue
+            doc_id = data.get("_id", json_file.stem)
+            rows.append({
+                "id": doc_id,
+                "key": doc_id,
+                "value": {"rev": data.get("_rev", "1-0")},
+                "doc": data,
+            })
 
-        # Format data to match CouchDB's _all_docs format
-        return {
-            "rows": [
-                {
-                    "id": data.get("_id", ""),
-                    "key": data.get("_id", ""),
-                    "value": {"rev": data.get("_rev", "1-0")},
-                    "doc": data,
-                },
-            ],
-            "total_rows": 1,
-        }
+        return {"rows": rows, "total_rows": len(rows)}
     except Exception as exc:
         logger.exception("Error reading JSON storage")
         return {"error": str(exc), "rows": [], "total_rows": 0}
 
+def _read_json_history_file(json_file: Path) -> dict | None:
+    try:
+        with json_file.open("r") as f:
+            return json.load(f)
+    except (OSError, json.JSONDecodeError) as exc:
+        logger.warning(f"Error reading {json_file}: {exc}")
+        return None
 
 if "DEBUG_FRONTEND" not in os.environ:
     app.mount(
