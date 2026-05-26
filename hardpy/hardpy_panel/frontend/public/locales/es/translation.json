@@ -1,31 +1,79 @@
 {
   "app": {
-      "title": "Panel de operador HardPy",
-      "lastLaunch": "Última lanzamiento:",
-      "duration": "Duración",
-      "seconds": "s",
-      "soundOn": "Activar sonido",
-      "soundOff": "Desactivar sonido",
-      "debugOn": "Activar modo de depuración",
-      "debugOff": "Desactivar modo de depuración",
-      "connection": "Estableciendo conexión... 🧐🔎",
-      "dbError": "Error de conexión a la base de datos. 🙅🏽‍♀️🚫",
-      "noEntries": "No hay entradas en la base de datos 🙅🏽‍♀️🚫",
-      "stoppedTestCase": "Caso de prueba detenido",
-      "failedTestCases": "Casos de prueba fallidos",
-      "modalResultDismissHint": "Haga clic en cualquier lugar o presione cualquier tecla para cerrar",
-      "modalResultAutoDismissHint": "Cierre automático en {{seconds}} segundos...",
-      "manualCollectOn": "Recolección manual activada",
-      "manualCollectOff": "Recolección manual desactivada",
-      "testConfigurationSelector": "Seleccionar configuración de prueba",
-      "status": {
-        "ready": "Listo",
-        "run": "Ejecutando",
-        "passed": "Aprobado",
-        "failed": "Fallado",
-        "stopped": "Detenido",
-        "unknown": "Desconocido"
+    "title": "Panel de operador HardPy",
+    "lastLaunch": "Última lanzamiento:",
+    "duration": "Duración",
+    "seconds": "s",
+    "soundOn": "Activar sonido",
+    "soundOff": "Desactivar sonido",
+    "debugOn": "Activar modo de depuración",
+    "debugOff": "Desactivar modo de depuración",
+    "connection": "Estableciendo conexión... 🧐🔎",
+    "dbError": "Error de conexión a la base de datos. 🙅🏽‍♀️🚫",
+    "noEntries": "No hay entradas en la base de datos 🙅🏽‍♀️🚫",
+    "stoppedTestCase": "Caso de prueba detenido",
+    "failedTestCases": "Casos de prueba fallidos",
+    "modalResultDismissHint": "Haga clic en cualquier lugar o presione cualquier tecla para cerrar",
+    "modalResultAutoDismissHint": "Cierre automático en {{seconds}} segundos...",
+    "manualCollectOn": "Recolección manual activada",
+    "manualCollectOff": "Recolección manual desactivada",
+    "testConfigurationSelector": "Seleccionar configuración de prueba",
+    "status": {
+      "ready": "Listo",
+      "run": "Ejecutando",
+      "passed": "Aprobado",
+      "failed": "Fallado",
+      "stopped": "Detenido",
+      "unknown": "Desconocido"
+    }
+  },
+  "storageStatus": {
+    "title": "Almacenamiento de informes",
+    "iconLabel": "Estado del almacenamiento de informes",
+    "loading": "Cargando estado del almacenamiento...",
+    "unavailable": "El estado del almacenamiento no está disponible.",
+    "cloudStorage": "Almacenamiento en la nube",
+    "localStorage": "Backend de almacenamiento local",
+    "copyPath": "Copiar ruta de almacenamiento",
+    "pathCopied": "Ruta de almacenamiento copiada",
+    "tooltips": {
+      "reportsStorage": "Se configura en hardpy.toml.",
+      "standcloud": "Almacenamiento principal en la nube para informes de prueba. standcloud.everypin.io",
+      "localDatabase": "Búfer recomendado para conexiones de internet inestables.",
+      "files": "Almacenamiento local JSON para informes de prueba."
+    },
+    "standcloud": {
+      "title": "StandCloud",
+      "docs": "Guía de configuración de StandCloud",
+      "apiKeyLink": "Obtener API key del banco",
+      "statuses": {
+        "configured": "Configurado",
+        "needs_api_key": "Se requiere API key",
+        "autosync_disabled": "Autosync desactivado",
+        "not_configured": "No configurado",
+        "check_disabled": "Comprobación desactivada"
       }
+    },
+    "localDatabase": {
+      "title": "Base de datos local",
+      "docs": "Guía de base de datos local",
+      "openPanel": "Abrir panel de CouchDB",
+      "connectionFailedMessage": "CouchDB no está disponible. Los informes no se pueden guardar.",
+      "statuses": {
+        "configured": "Configurado",
+        "not_configured": "No configurado",
+        "connection_failed": "Falló la conexión"
+      }
+    },
+    "files": {
+      "title": "Archivos",
+      "openFolder": "Abrir carpeta de almacenamiento",
+      "folderPath": "{{path}}",
+      "statuses": {
+        "configured": "Configurado",
+        "hidden": "No configurado"
+      }
+    }
   },
   "button": {
     "start": "Iniciar",

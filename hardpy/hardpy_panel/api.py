@@ -18,6 +18,7 @@ from fastapi import FastAPI, Query, Request
 from fastapi.staticfiles import StaticFiles
 
 from hardpy.common.config import ConfigManager, StorageType
+from hardpy.hardpy_panel.storage_status import build_storage_status
 from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
 from hardpy.pytest_hardpy.result.report_synchronizer import StandCloudSynchronizer
 
@@ -62,6 +63,16 @@ app.state.sc_synchronizer = StandCloudSynchronizer()
 app.state.executor = ThreadPoolExecutor(max_workers=1)
 app.state.manual_collect_mode = False
 app.state.selected_tests = []
+
+
+def current_storage_status() -> dict[str, Any]:
+    """Get storage diagnostics for the current configuration."""
+    config_manager = ConfigManager()
+    return build_storage_status(
+        config_manager.config,
+        config_manager.tests_path,
+        check_connections=True,
+    )
 
 
 class Status(str, Enum):
@@ -372,13 +383,10 @@ def get_storage_type() -> dict:
     return {"storage_type": config_manager.config.database.storage_type}
 
 
-def _read_json_history_file(json_file: Path) -> dict | None:
-    try:
-        with json_file.open("r") as f:
-            return json.load(f)
-    except (OSError, json.JSONDecodeError) as exc:
-        logger.warning(f"Error reading {json_file}: {exc}")
-        return None
+@app.get("/api/storage_status")
+def get_storage_status() -> dict:
+    """Get read-only diagnostics for report storage."""
+    return current_storage_status()
 
 
 @app.get("/api/json_data")
@@ -427,6 +435,13 @@ def get_json_data() -> dict:
         logger.exception("Error reading JSON storage")
         return {"error": str(exc), "rows": [], "total_rows": 0}
 
+  def _read_json_history_file(json_file: Path) -> dict | None:
+    try:
+        with json_file.open("r") as f:
+            return json.load(f)
+    except (OSError, json.JSONDecodeError) as exc:
+        logger.warning(f"Error reading {json_file}: {exc}")
+        return None
 
 if "DEBUG_FRONTEND" not in os.environ:
     app.mount(

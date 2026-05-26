@@ -51,6 +51,10 @@ enable = false
 auto_dismiss_pass = true
 auto_dismiss_timeout = 5
 
+[frontend.reports_storage_menu]
+show_standcloud = true
+check_standcloud = true
+
 [stand_cloud]
 address = "standcloud.everypin.io"
 connection_only = true
@@ -206,6 +210,30 @@ Default is `true`.
 Timeout in seconds for auto-dismissing PASS result modals.
 Applies only when `auto_dismiss_pass = true`.
 Default is `5` seconds.
+
+#### reports_storage_menu
+
+Reports storage status menu settings for the operator panel.
+The menu shows the configured cloud storage status and the active local storage backend.
+
+```toml
+[frontend.reports_storage_menu]
+show_standcloud = true
+check_standcloud = true
+```
+
+##### show_standcloud
+
+Show or hide the **StandCloud** section in the reports storage menu.
+When set to `false`, the operator panel does not display the **StandCloud** block.
+Default is `true`.
+
+##### check_standcloud
+
+Enable or disable **StandCloud** status checks in the reports storage menu.
+When set to `false`, the menu keeps the **StandCloud** block visible but does not mark
+missing **StandCloud** configuration as a storage problem.
+Default is `true`.
 
 ### stand_cloud
 
