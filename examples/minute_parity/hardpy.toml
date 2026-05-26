@@ -17,11 +17,16 @@ full_size_button = false
 sound_on = true
 manual_collect = true
 measurement_display = true
+test_history = false
 
 [frontend.modal_result]
 enable = true
 auto_dismiss_pass = true
 auto_dismiss_timeout = 5
+
+[frontend.reports_storage_menu]
+show_standcloud = true
+check_standcloud = true
 
 [stand_cloud]
 address = "standcloud.everypin.io"

@@ -8,10 +8,12 @@ from pycouchdb.exceptions import Conflict
 def update_db(doc: dict, doc_id: str, db: DbServer) -> None:
     """Persist in-memory document to storage backend."""
     try:
-        doc = db.save(doc)
+        saved = db.save(doc)
+        doc["_rev"] = saved["_rev"]
     except Conflict:
         doc["_rev"] = db.get(doc_id)["_rev"]
-        doc = db.save(doc)
+        saved = db.save(doc)
+        doc["_rev"] = saved["_rev"]
 
 def update_doc(doc: dict, doc_id: str, db: DbServer) -> dict:
     """Reload document from storage backend to memory."""

@@ -8,6 +8,7 @@ from hardpy.common.config import (
     DatabaseConfig,
     FrontendConfig,
     HardpyConfig,
+    ReportsStorageMenuConfig,
     StandCloudConfig,
 )
 
@@ -23,6 +24,8 @@ frontend_no_default_full_size_button = True
 frontend_no_default_sound_on = True
 frontend_no_default_manual_collect = True
 frontend_no_default_measurement_display = False
+frontend_default_storage_menu_show_standcloud = True
+frontend_default_storage_menu_check_standcloud = True
 stand_cloud_no_default_addr = "everypin1.standcloud.localhost"
 stand_cloud_no_default_connection_only = True
 stand_cloud_no_default_autosync = True
@@ -42,6 +45,7 @@ frontend_default_sound_on = False
 frontend_default_manual_collect = False
 frontend_default_measurement_display = True
 frontend_default_auto_scroll = False
+frontend_default_test_history = False
 stand_cloud_default_addr = "standcloud.everypin.io"
 stand_cloud_dafault_connection_only = False
 stand_cloud_default_api_key = ""
@@ -106,6 +110,20 @@ def test_frontend_config():
     assert config.manual_collect == frontend_default_manual_collect
     assert config.measurement_display == frontend_default_measurement_display
     assert config.auto_scroll == frontend_default_auto_scroll
+    assert (
+        config.reports_storage_menu.show_standcloud
+        == frontend_default_storage_menu_show_standcloud
+    )
+    assert (
+        config.reports_storage_menu.check_standcloud
+        == frontend_default_storage_menu_check_standcloud
+    )
+
+
+def test_reports_storage_menu_config():
+    config = ReportsStorageMenuConfig()
+    assert config.show_standcloud == frontend_default_storage_menu_show_standcloud
+    assert config.check_standcloud == frontend_default_storage_menu_check_standcloud
 
 
 def test_stand_cloud_config():
@@ -137,6 +155,15 @@ def test_hardpy_config():
     assert config.frontend.manual_collect == frontend_default_manual_collect
     assert config.frontend.measurement_display == frontend_default_measurement_display
     assert config.frontend.auto_scroll == frontend_default_auto_scroll
+    assert config.frontend.test_history == frontend_default_test_history
+    assert (
+        config.frontend.reports_storage_menu.show_standcloud
+        == frontend_default_storage_menu_show_standcloud
+    )
+    assert (
+        config.frontend.reports_storage_menu.check_standcloud
+        == frontend_default_storage_menu_check_standcloud
+    )
     assert config.stand_cloud.address == stand_cloud_default_addr
     assert config.stand_cloud.connection_only == stand_cloud_dafault_connection_only
     assert config.stand_cloud.api_key == stand_cloud_default_api_key
@@ -193,6 +220,10 @@ def test_read_config_success(tmp_path: Path):
             "manual_collect": True,
             "measurement_display": frontend_default_measurement_display,
             "auto_scroll": frontend_default_auto_scroll,
+            "reports_storage_menu": {
+                "show_standcloud": False,
+                "check_standcloud": False,
+            },
         },
         "stand_cloud": {
             "address": stand_cloud_default_addr,
@@ -236,6 +267,12 @@ def test_read_config_success(tmp_path: Path):
     assert (
         config.frontend.auto_scroll
         == test_config_data["frontend"]["auto_scroll"]
+        config.frontend.reports_storage_menu.show_standcloud
+        == test_config_data["frontend"]["reports_storage_menu"]["show_standcloud"]
+    )
+    assert (
+        config.frontend.reports_storage_menu.check_standcloud
+        == test_config_data["frontend"]["reports_storage_menu"]["check_standcloud"]
     )
     assert config.stand_cloud.address == test_config_data["stand_cloud"]["address"]
     assert (

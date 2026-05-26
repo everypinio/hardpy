@@ -44,12 +44,17 @@ full_size_button = false
 sound_on = false
 measurement_display = true
 manual_collect = false
+test_history = true
 auto_scroll = false
 
 [frontend.modal_result]
 enable = false
 auto_dismiss_pass = true
 auto_dismiss_timeout = 5
+
+[frontend.reports_storage_menu]
+show_standcloud = true
+check_standcloud = true
 
 [stand_cloud]
 address = "standcloud.everypin.io"
@@ -171,6 +176,12 @@ and only the selected tests will be executed when starting the test run.
 When set to `false`, all discovered tests will run automatically as before.
 Default is `false`.
 
+#### test_history
+
+Enable or disable the test history view in the operator panel.
+When set to `true`, the operator can view the history of previous test runs.
+Default is `false`.
+
 #### auto_scroll
 
 Enable optional auto-scroll and auto-expand behavior in the operator panel.
@@ -211,6 +222,30 @@ Default is `true`.
 Timeout in seconds for auto-dismissing PASS result modals.
 Applies only when `auto_dismiss_pass = true`.
 Default is `5` seconds.
+
+#### reports_storage_menu
+
+Reports storage status menu settings for the operator panel.
+The menu shows the configured cloud storage status and the active local storage backend.
+
+```toml
+[frontend.reports_storage_menu]
+show_standcloud = true
+check_standcloud = true
+```
+
+##### show_standcloud
+
+Show or hide the **StandCloud** section in the reports storage menu.
+When set to `false`, the operator panel does not display the **StandCloud** block.
+Default is `true`.
+
+##### check_standcloud
+
+Enable or disable **StandCloud** status checks in the reports storage menu.
+When set to `false`, the menu keeps the **StandCloud** block visible but does not mark
+missing **StandCloud** configuration as a storage problem.
+Default is `true`.
 
 ### stand_cloud
 
