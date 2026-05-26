@@ -272,6 +272,21 @@ To add or modify translations for the HardPy operator panel:
       "finishTime": "Finish time",
       "alert": "Alert"
     },
+    "history": {
+      "title": "Test history",
+      "detailTitle": "Test run details",
+      "columns": {
+        "runName": "Run name",
+        "startTime": "Start time",
+        "result": "Result",
+        "serialNumber": "Serial number",
+        "details": "Details"
+      },
+      "viewDetails": "View details",
+      "selected": "Selected",
+      "unknownRun": "Unnamed run",
+      "showMore": "Show more"
+    },
     "testSuite": {
       "nameColumn": "Name",
       "dataColumn": "Data",

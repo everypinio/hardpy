@@ -17,6 +17,7 @@ full_size_button = false
 manual_collect = false
 sound_on = false
 measurement_display = false
+test_history = false
 
 [frontend.modal_result]
 enable = false

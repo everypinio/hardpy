@@ -117,6 +117,21 @@
     "finishTime": "Время завершения",
     "alert": "Предупреждение"
   },
+  "history": {
+    "title": "История тестов",
+    "detailTitle": "Детали запуска",
+    "columns": {
+      "runName": "Имя запуска",
+      "startTime": "Время запуска",
+      "result": "Результат",
+      "serialNumber": "Серийный номер",
+      "details": "Детали"
+    },
+    "viewDetails": "Подробнее",
+    "selected": "Выбрано",
+    "unknownRun": "Безымянный запуск",
+    "showMore": "Показать ещё"
+  },
   "testSuite": {
     "nameColumn": "Название",
     "dataColumn": "Данные",

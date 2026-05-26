@@ -117,6 +117,21 @@
     "finishTime": "終了時間",
     "alert": "警告"
   },
+  "history": {
+    "title": "テスト履歴",
+    "detailTitle": "テスト実行の詳細",
+    "columns": {
+      "runName": "実行名",
+      "startTime": "開始時刻",
+      "result": "結果",
+      "serialNumber": "シリアル番号",
+      "details": "詳細"
+    },
+    "viewDetails": "詳細を見る",
+    "selected": "選択済み",
+    "unknownRun": "名前なし実行",
+    "showMore": "さらに表示"
+  },
   "testSuite": {
     "nameColumn": "名前",
     "dataColumn": "データ",

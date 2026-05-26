@@ -117,6 +117,21 @@
     "finishTime": "Čas dokončení",
     "alert": "Upozornění"
   },
+  "history": {
+    "title": "Historie testů",
+    "detailTitle": "Detail spuštění testu",
+    "columns": {
+      "runName": "Název spuštění",
+      "startTime": "Čas spuštění",
+      "result": "Výsledek",
+      "serialNumber": "Sériové číslo",
+      "details": "Detail"
+    },
+    "viewDetails": "Zobrazit detail",
+    "selected": "Vybráno",
+    "unknownRun": "Nepojmenované spuštění",
+    "showMore": "Zobrazit více"
+  },
   "testSuite": {
     "nameColumn": "Název",
     "dataColumn": "Údaje",

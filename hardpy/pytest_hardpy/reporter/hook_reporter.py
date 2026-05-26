@@ -10,6 +10,10 @@ from natsort import natsorted
 from tzlocal import get_localzone
 
 from hardpy.pytest_hardpy.db import DatabaseField as DF  # noqa: N817
+from hardpy.pytest_hardpy.db.couchdb.runstore import CouchDBRunStore
+from hardpy.pytest_hardpy.db.couchdb.statestore import CouchDBStateStore
+from hardpy.pytest_hardpy.db.json.runstore import JsonRunStore
+from hardpy.pytest_hardpy.db.json.statestore import JsonStateStore
 from hardpy.pytest_hardpy.reporter.base import BaseReporter
 from hardpy.pytest_hardpy.utils import NodeInfo, TestStatus, machine_id
 
@@ -86,6 +90,13 @@ class HookReporter(BaseReporter):
         stop_time = int(time())
         self.set_doc_value(DF.STOP_TIME, stop_time)
         self.set_doc_value(DF.STATUS, status)
+
+        # Save to history
+        timestamp_id = str(int(time() * 1000))
+        if isinstance(self._statestore, (CouchDBStateStore, JsonStateStore)):
+            self._statestore.save_history(timestamp_id)
+        if isinstance(self._runstore, (CouchDBRunStore, JsonRunStore)):
+            self._runstore.save_history(timestamp_id)
 
     def compact_all(self) -> None:
         """Compact all databases."""
