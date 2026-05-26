@@ -140,6 +140,22 @@ full_size_button = true
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/ful_screen_button_phone_vertical.png" alt="Full-size button mobile vertical" style="width:200px;">
     </h1>
 
+### Auto scroll
+
+The operator panel can automatically scroll to the current test by 
+expanding the module with tests.
+When set to `true`, suites auto-expand when one of their cases starts running,
+auto-close when no case in the suite is active or failed, and the viewport
+scrolls the currently running case into view.
+
+**Configuration:**
+Enable the auto scroll in your `hardpy.toml`:
+
+```toml
+[frontend]
+auto_scroll = true
+```
+
 ### Manual test selection
 
 The operator panel supports manual test selection, allowing operators to choose specific test cases 

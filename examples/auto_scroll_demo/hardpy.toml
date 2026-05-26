@@ -17,7 +17,7 @@ full_size_button = false
 sound_on = false
 measurement_display = true
 manual_collect = false
-# Demoing the optional auto-scroll/auto-expand behavior introduced by this PR.
+test_history = false
 auto_scroll = true
 
 [frontend.modal_result]
