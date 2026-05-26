@@ -500,3 +500,21 @@ auto_dismiss_timeout = 15
     <h1 align="center">
         <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/modal_result_stop.png" alt="STOP modal result" style="width:400px;">
     </h1>
+
+### Test history
+
+The operator panel provides a test history view that allows operators to browse results of previous test runs.
+
+**Features**:
+
+- **History List**: View a chronological list of past test executions.
+- **Detailed Results**: Click on a history entry to see the specific test results, including status and measurements for each test case.
+
+**Configuration**:
+
+The test history feature is enabled by default. You can disable it in your `hardpy.toml`:
+
+```toml
+[frontend]
+test_history = false
+```

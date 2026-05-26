@@ -44,6 +44,7 @@ full_size_button = false
 sound_on = false
 measurement_display = true
 manual_collect = false
+test_history = true
 
 [frontend.modal_result]
 enable = false
@@ -173,6 +174,12 @@ When set to `true`, users can selectively choose which tests to run by checking 
 and only the selected tests will be executed when starting the test run.
 When set to `false`, all discovered tests will run automatically as before.
 Default is `false`.
+
+#### test_history
+
+Enable or disable the test history view in the operator panel.
+When set to `true`, the operator can view the history of previous test runs.
+Default is `true`.
 
 #### modal_result
 

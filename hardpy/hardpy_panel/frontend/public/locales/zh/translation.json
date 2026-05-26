@@ -117,6 +117,21 @@
     "finishTime": "完成时间",
     "alert": "警报"
   },
+  "history": {
+    "title": "测试历史",
+    "detailTitle": "测试运行详情",
+    "columns": {
+      "runName": "运行名称",
+      "startTime": "开始时间",
+      "result": "结果",
+      "serialNumber": "序列号",
+      "details": "详情"
+    },
+    "viewDetails": "查看详情",
+    "selected": "已选择",
+    "unknownRun": "未命名运行",
+    "showMore": "显示更多"
+  },
   "testSuite": {
     "nameColumn": "名称",
     "dataColumn": "数据",

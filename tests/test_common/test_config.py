@@ -44,6 +44,7 @@ frontend_default_full_size_button = False
 frontend_default_sound_on = False
 frontend_default_manual_collect = False
 frontend_default_measurement_display = True
+frontend_default_test_history = True
 stand_cloud_default_addr = "standcloud.everypin.io"
 stand_cloud_dafault_connection_only = False
 stand_cloud_default_api_key = ""
@@ -151,6 +152,7 @@ def test_hardpy_config():
     assert config.frontend.sound_on == frontend_default_sound_on
     assert config.frontend.manual_collect == frontend_default_manual_collect
     assert config.frontend.measurement_display == frontend_default_measurement_display
+    assert config.frontend.test_history == frontend_default_test_history
     assert (
         config.frontend.reports_storage_menu.show_standcloud
         == frontend_default_storage_menu_show_standcloud

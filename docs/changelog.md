@@ -2,6 +2,14 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## 0.24.0
+
+* Add test history view to the operator panel.
+  Operators can browse previous test run results, including status, start time,
+  serial number, and per-test details. The feature is enabled by default and can
+  be disabled via `test_history = false` in `[frontend]` of `hardpy.toml`.
+  Both CouchDB and JSON storage backends are supported.
+
 ## 0.23.1
 
 * Update the **StandCloud** default address.

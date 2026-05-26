@@ -117,6 +117,21 @@
     "finishTime": "Hora de finalización",
     "alert": "Alerta"
   },
+  "history": {
+    "title": "Historial de pruebas",
+    "detailTitle": "Detalles de la ejecución",
+    "columns": {
+      "runName": "Nombre de ejecución",
+      "startTime": "Hora de inicio",
+      "result": "Resultado",
+      "serialNumber": "Número de serie",
+      "details": "Detalles"
+    },
+    "viewDetails": "Ver detalles",
+    "selected": "Seleccionado",
+    "unknownRun": "Ejecución sin nombre",
+    "showMore": "Mostrar más"
+  },
   "testSuite": {
     "nameColumn": "Nombre",
     "dataColumn": "Datos",

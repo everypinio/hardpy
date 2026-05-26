@@ -117,6 +117,21 @@
     "finishTime": "Endzeit",
     "alert": "Warnung"
   },
+  "history": {
+    "title": "Testverlauf",
+    "detailTitle": "Testlauf-Details",
+    "columns": {
+      "runName": "Laufname",
+      "startTime": "Startzeit",
+      "result": "Ergebnis",
+      "serialNumber": "Seriennummer",
+      "details": "Details"
+    },
+    "viewDetails": "Details anzeigen",
+    "selected": "Ausgewählt",
+    "unknownRun": "Unbenannter Lauf",
+    "showMore": "Mehr anzeigen"
+  },
   "testSuite": {
     "nameColumn": "Name",
     "dataColumn": "Daten",
