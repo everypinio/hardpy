@@ -435,7 +435,7 @@ def get_json_data() -> dict:
         logger.exception("Error reading JSON storage")
         return {"error": str(exc), "rows": [], "total_rows": 0}
 
-  def _read_json_history_file(json_file: Path) -> dict | None:
+def _read_json_history_file(json_file: Path) -> dict | None:
     try:
         with json_file.open("r") as f:
             return json.load(f)
