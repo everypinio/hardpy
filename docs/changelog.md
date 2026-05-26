@@ -5,6 +5,7 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 * Add the optional `auto_scroll` flag under `[frontend]` for operator-panel
   auto-scroll and auto-expand of the currently running case. Default is `false`,
   so existing fixtures see no behavior change.
+  [[PR-282](https://github.com/everypinio/hardpy/pull/282)],
 
 ## 0.24.0
 
