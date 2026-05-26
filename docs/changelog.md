@@ -9,7 +9,8 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
   serial number, and per-test details. The feature is disabled by default and can
   be enabled via `test_history = true` in `[frontend]` of `hardpy.toml`.
   Both CouchDB and JSON storage backends are supported.
-  [[PR-281](https://github.com/everypinio/hardpy/pull/281)]
+  [[PR-281](https://github.com/everypinio/hardpy/pull/281)],
+  [[PR-284](https://github.com/everypinio/hardpy/pull/284)]
 * Add the reports storage status menu to the operator panel.
   The menu shows **StandCloud** and the active local storage backend,
   provides storage diagnostic links, and can block UI test start when
