@@ -267,6 +267,8 @@ def test_read_config_success(tmp_path: Path):
     assert (
         config.frontend.auto_scroll
         == test_config_data["frontend"]["auto_scroll"]
+    )
+    assert (
         config.frontend.reports_storage_menu.show_standcloud
         == test_config_data["frontend"]["reports_storage_menu"]["show_standcloud"]
     )
