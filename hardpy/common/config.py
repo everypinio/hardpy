@@ -78,7 +78,7 @@ class FrontendConfig(BaseModel):
     sound_on: bool = False
     manual_collect: bool = False
     measurement_display: bool = True
-    test_history: bool = True
+    test_history: bool = False
     modal_result: ModalResultConfig = Field(default_factory=lambda: ModalResultConfig())
     reports_storage_menu: ReportsStorageMenuConfig = Field(
         default_factory=lambda: ReportsStorageMenuConfig(),
