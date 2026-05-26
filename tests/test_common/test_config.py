@@ -44,6 +44,7 @@ frontend_default_full_size_button = False
 frontend_default_sound_on = False
 frontend_default_manual_collect = False
 frontend_default_measurement_display = True
+frontend_default_auto_scroll = False
 frontend_default_test_history = False
 stand_cloud_default_addr = "standcloud.everypin.io"
 stand_cloud_dafault_connection_only = False
@@ -108,6 +109,7 @@ def test_frontend_config():
     assert config.sound_on == frontend_default_sound_on
     assert config.manual_collect == frontend_default_manual_collect
     assert config.measurement_display == frontend_default_measurement_display
+    assert config.auto_scroll == frontend_default_auto_scroll
     assert (
         config.reports_storage_menu.show_standcloud
         == frontend_default_storage_menu_show_standcloud
@@ -152,6 +154,7 @@ def test_hardpy_config():
     assert config.frontend.sound_on == frontend_default_sound_on
     assert config.frontend.manual_collect == frontend_default_manual_collect
     assert config.frontend.measurement_display == frontend_default_measurement_display
+    assert config.frontend.auto_scroll == frontend_default_auto_scroll
     assert config.frontend.test_history == frontend_default_test_history
     assert (
         config.frontend.reports_storage_menu.show_standcloud
@@ -216,6 +219,7 @@ def test_read_config_success(tmp_path: Path):
             "sound_on": frontend_default_sound_on,
             "manual_collect": True,
             "measurement_display": frontend_default_measurement_display,
+            "auto_scroll": frontend_default_auto_scroll,
             "reports_storage_menu": {
                 "show_standcloud": False,
                 "check_standcloud": False,
@@ -259,6 +263,10 @@ def test_read_config_success(tmp_path: Path):
     assert (
         config.frontend.measurement_display
         == test_config_data["frontend"]["measurement_display"]
+    )
+    assert (
+        config.frontend.auto_scroll
+        == test_config_data["frontend"]["auto_scroll"]
     )
     assert (
         config.frontend.reports_storage_menu.show_standcloud

@@ -45,6 +45,7 @@ sound_on = false
 measurement_display = true
 manual_collect = false
 test_history = true
+auto_scroll = false
 
 [frontend.modal_result]
 enable = false
@@ -180,6 +181,17 @@ Default is `false`.
 Enable or disable the test history view in the operator panel.
 When set to `true`, the operator can view the history of previous test runs.
 Default is `false`.
+
+#### auto_scroll
+
+Enable optional auto-scroll and auto-expand behavior in the operator panel.
+When set to `true`, suites auto-expand when one of their cases starts running,
+auto-close when no case in the suite is active or failed, and the viewport
+scrolls the currently running case into view. Scroll is debounced and is
+suppressed for three seconds after any operator-driven scroll
+(`wheel` / `touchmove` / Page / Home / End / Arrow keys), so a manual
+scroll won't get yanked back by the next state update.
+Default is `false`. See [auto-scroll demo](./../examples/auto_scroll_demo.md).
 
 #### modal_result
 

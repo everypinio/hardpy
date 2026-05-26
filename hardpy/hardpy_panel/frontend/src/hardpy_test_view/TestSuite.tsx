@@ -198,16 +198,19 @@ type Props = {
   selectedTests?: string[];
   measurementDisplay?: boolean;
   manualCollectMode?: boolean;
+  autoScroll?: boolean;
 } & WithTranslation;
 
 /**
  * State interface for TestSuite component
  * @interface State
  * @property {boolean} isOpen - Whether the test suite is expanded
+ * @property {boolean} automaticallyOpened - Whether the suite was opened by auto-expand (not by operator)
  * @property {number} dataColumnWidth - Current width of the data column
  */
 type State = {
   isOpen: boolean;
+  automaticallyOpened: boolean;
   dataColumnWidth: number;
 };
 
@@ -216,6 +219,34 @@ type State = {
  * @constant
  */
 const LOADING_ICON_MARGIN = 30;
+
+// Module-level tracker for the most recent user-driven scroll event.
+// Auto-scroll suppresses itself for a short window after any user scroll input
+// so it doesn't yank the operator away from content they're inspecting.
+let lastUserScrollTime = 0;
+let userScrollListenersInstalled = false;
+
+const SCROLL_KEYS = new Set([
+  "PageUp",
+  "PageDown",
+  "Home",
+  "End",
+  "ArrowUp",
+  "ArrowDown",
+]);
+
+function installUserScrollListeners(): void {
+  if (userScrollListenersInstalled) return;
+  userScrollListenersInstalled = true;
+  const mark = () => {
+    lastUserScrollTime = Date.now();
+  };
+  window.addEventListener("wheel", mark, { passive: true });
+  window.addEventListener("touchmove", mark, { passive: true });
+  window.addEventListener("keydown", (e) => {
+    if (SCROLL_KEYS.has(e.key)) mark();
+  });
+}
 
 /**
  * TestSuite component displays a collapsible test suite with test cases.
@@ -261,11 +292,32 @@ export class TestSuite extends React.Component<Props, State> {
   private readonly dataColumnRef: React.RefObject<HTMLDivElement>;
 
   /**
+   * Reference to the suite container for auto-scroll row lookup
+   * @private
+   * @type {React.RefObject<HTMLDivElement>}
+   */
+  private readonly containerRef: React.RefObject<HTMLDivElement>;
+
+  /**
    * Resize observer for tracking data column width changes
    * @private
    * @type {ResizeObserver | null}
    */
   private resizeObserver: ResizeObserver | null = null;
+
+  /**
+   * Auto-scroll tuning constants.
+   * @private
+   */
+  private static readonly USER_SCROLL_SUPPRESS_MS = 3000;
+  private static readonly COLLAPSE_ANIMATION_MS = 300;
+  private static readonly SCROLL_DELAY_MS = 100;
+
+  /**
+   * Pending scroll timer so we can debounce / cancel when new updates arrive.
+   * @private
+   */
+  private scrollTimeout: ReturnType<typeof setTimeout> | null = null;
 
   /**
    * Constructs the TestSuite component.
@@ -276,6 +328,7 @@ export class TestSuite extends React.Component<Props, State> {
 
     this.state = {
       isOpen: props.defaultOpen ?? false,
+      automaticallyOpened: false,
       dataColumnWidth: 0,
     };
 
@@ -283,6 +336,53 @@ export class TestSuite extends React.Component<Props, State> {
     this.handleTestSelection = this.handleTestSelection.bind(this);
     this.handleSelectAll = this.handleSelectAll.bind(this);
     this.dataColumnRef = React.createRef();
+    this.containerRef = React.createRef();
+  }
+
+  /**
+   * Schedule a smooth scroll to the currently-running case within this suite.
+   * Debounces pending scrolls, respects the user-scroll suppression window,
+   * and extends the delay when the Collapse animation needs to finish first.
+   * No-op when {@link Props.autoScroll} is not enabled.
+   * @private
+   */
+  private scheduleScrollToRunning(
+    block: ScrollLogicalPosition,
+    waitForCollapse: boolean,
+  ): void {
+    if (!this.props.autoScroll) return;
+    if (!this.containerRef.current) return;
+
+    const runningIdx = Object.values(this.props.test.cases).findIndex(
+      (c) => c.status === "run"
+    );
+    if (runningIdx === -1) return;
+
+    if (this.scrollTimeout) {
+      clearTimeout(this.scrollTimeout);
+      this.scrollTimeout = null;
+    }
+
+    if (Date.now() - lastUserScrollTime < TestSuite.USER_SCROLL_SUPPRESS_MS) {
+      return;
+    }
+
+    const delay = waitForCollapse
+      ? TestSuite.COLLAPSE_ANIMATION_MS + 100
+      : TestSuite.SCROLL_DELAY_MS;
+
+    this.scrollTimeout = setTimeout(() => {
+      const allRows = this.containerRef.current?.querySelectorAll(
+        ".rdt_TableRow"
+      );
+      if (allRows && allRows[runningIdx]) {
+        allRows[runningIdx].scrollIntoView({
+          behavior: "smooth",
+          block,
+        });
+      }
+      this.scrollTimeout = null;
+    }, delay);
   }
 
   /**
@@ -296,6 +396,7 @@ export class TestSuite extends React.Component<Props, State> {
       return <div>{t("testSuite.loading")}</div>;
     }
     return (
+      <div ref={this.containerRef}>
       <Callout style={{ padding: 0, borderRadius: 0 }} className="test-suite">
         <div style={{ display: "flex" }}>
           <div style={{ flex: "1 1 0%" }}>
@@ -359,6 +460,7 @@ export class TestSuite extends React.Component<Props, State> {
           )}
         </Collapse>
       </Callout>
+      </div>
     );
   }
 
@@ -406,16 +508,20 @@ export class TestSuite extends React.Component<Props, State> {
 
   /**
    * Lifecycle method called after component mounts
-   * Sets up resize observer and initial data column width
+   * Sets up resize observer, initial data column width, and the
+   * one-time user-scroll listeners that gate auto-scroll suppression.
    */
   componentDidMount() {
     this.setupResizeObserver();
     this.updateDataColumnWidth();
+    installUserScrollListeners();
   }
 
   /**
-   * Lifecycle method called after component updates
-   * Handles responsive width updates when test status changes or panel opens
+   * Lifecycle method called after component updates.
+   * Handles responsive width updates, suite auto-expand / auto-close, and
+   * auto-scroll of the currently-running case when {@link Props.autoScroll}
+   * is enabled.
    * @param {Props} prevProps - Previous props
    * @param {State} prevState - Previous state
    */
@@ -427,14 +533,124 @@ export class TestSuite extends React.Component<Props, State> {
     if (statusBecameReady || panelJustOpened) {
       this.updateDataColumnWidth();
     }
+
+    // Below this point all behavior is opt-in via `auto_scroll = true` in
+    // hardpy.toml. With the flag off, TestSuite behaves exactly as it did
+    // before this feature was added.
+    if (!this.props.autoScroll) return;
+    if (this.props.test === prevProps.test) return;
+
+    // Detect a new run starting: all cases have just reset to "ready" (or empty)
+    // while the previous render had at least one active/completed case. Reset
+    // expand state so a suite kept open by the last run's failure doesn't carry
+    // that state into the new run.
+    const allCurrentReady = Object.values(this.props.test.cases).every(
+      (c) => !c.status || c.status === "ready"
+    );
+    const prevHadActivity =
+      !!prevProps.test?.cases &&
+      Object.values(prevProps.test.cases).some(
+        (c) => c.status && c.status !== "ready"
+      );
+    if (allCurrentReady && prevHadActivity) {
+      this.setState({ isOpen: false, automaticallyOpened: false });
+      return;
+    }
+
+    const anyRunningOrFailed = Object.values(this.props.test.cases).some(
+      (test_case) => test_case.status === "run" || test_case.status === "failed"
+    );
+    // "Active" includes "ready" so we don't auto-close in the gap between one
+    // case finishing and the next starting within the same suite.
+    const anyActiveOrFailed = Object.values(this.props.test.cases).some(
+      (test_case) =>
+        test_case.status === "run" ||
+        test_case.status === "failed" ||
+        test_case.status === "ready"
+    );
+
+    if (
+      anyRunningOrFailed &&
+      !this.state.isOpen &&
+      !this.state.automaticallyOpened
+    ) {
+      this.setState({ isOpen: true, automaticallyOpened: true });
+      // Schedule scroll to the running case once the Collapse animation finishes.
+      // The normal scroll block below won't catch this because state.isOpen is
+      // still false synchronously, and on the next prop update justOpened will
+      // be false and runningIndex unchanged.
+      this.scheduleScrollToRunning("center", true);
+      return;
+    }
+
+    // Only auto-close when the suite is genuinely done (no run/failed/ready left).
+    if (
+      !anyActiveOrFailed &&
+      this.state.isOpen &&
+      this.state.automaticallyOpened
+    ) {
+      this.setState({ isOpen: false, automaticallyOpened: false });
+      return;
+    }
+
+    if (!this.state.isOpen || !this.containerRef.current) return;
+
+    const caseEntries = Object.entries(this.props.test.cases);
+    const runningIndex = caseEntries.findIndex(
+      ([, test_case]) => test_case.status === "run"
+    );
+    const prevCaseEntries = prevProps.test.cases
+      ? Object.entries(prevProps.test.cases)
+      : [];
+    const prevRunningIndex = prevCaseEntries.findIndex(
+      ([, test_case]) => test_case.status === "run"
+    );
+
+    const justOpened = !prevState.isOpen && this.state.isOpen;
+
+    // Detect when the currently running case appended new measurements / messages
+    // (e.g. a long-running test that streams data). The row grows downward and the
+    // newest content can fall off the bottom of the viewport unless we re-scroll.
+    const runningCase =
+      runningIndex !== -1 ? caseEntries[runningIndex][1] : null;
+    const prevRunningCase =
+      prevRunningIndex !== -1 ? prevCaseEntries[prevRunningIndex][1] : null;
+    const sameRunningCase =
+      runningIndex !== -1 &&
+      runningIndex === prevRunningIndex &&
+      prevRunningCase != null;
+    const runningCaseGrew =
+      sameRunningCase &&
+      !!runningCase &&
+      ((runningCase.measurements?.length ?? 0) >
+        (prevRunningCase!.measurements?.length ?? 0) ||
+        (runningCase.msg?.length ?? 0) >
+          (prevRunningCase!.msg?.length ?? 0));
+
+    if (
+      runningIndex !== -1 &&
+      (runningIndex !== prevRunningIndex || justOpened || runningCaseGrew)
+    ) {
+      // 'end' for row-growth (keep newest measurement visible);
+      // 'center' for new running case / just-opened.
+      const scrollBlock: ScrollLogicalPosition =
+        runningCaseGrew && !justOpened && runningIndex === prevRunningIndex
+          ? "end"
+          : "center";
+      this.scheduleScrollToRunning(scrollBlock, justOpened);
+    }
   }
 
   /**
    * Lifecycle method called before component unmounts
-   * Cleans up resize observer to prevent memory leaks
+   * Cleans up resize observer and pending auto-scroll timer.
    */
   componentWillUnmount() {
     this.destroyResizeObserver();
+    if (this.scrollTimeout) {
+      clearTimeout(this.scrollTimeout);
+      this.scrollTimeout = null;
+    }
   }
 
   /**

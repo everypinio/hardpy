@@ -2,6 +2,10 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+* Add the optional `auto_scroll` flag under `[frontend]` for operator-panel
+  auto-scroll and auto-expand of the currently running case. Default is `false`,
+  so existing fixtures see no behavior change.
+
 ## 0.24.0
 
 * Add test history view to the operator panel.

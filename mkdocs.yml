@@ -86,6 +86,7 @@ nav:
       - Remote access: examples/frontend_remote_access.md
       - CouchDB in RAM: examples/db_in_ram.md
       - Pytest logging: examples/logging.md
+      - Auto-scroll demo: examples/auto_scroll_demo.md
   - About:
       - Development: about/development.md
       - Frontend data synchronization: about/frontend_sync.md

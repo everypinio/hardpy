@@ -61,6 +61,7 @@ interface AppConfig {
     manual_collect?: boolean;
     measurement_display?: boolean;
     test_history?: boolean;
+    auto_scroll?: boolean;
     modal_result?: {
       enable?: boolean;
       auto_dismiss_pass?: boolean;
@@ -793,6 +794,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                   currentTestConfig={appConfig?.current_test_config}
                   measurementDisplay={appConfig?.frontend?.measurement_display}
                   manualCollectMode={manualCollectMode}
+                  autoScroll={appConfig?.frontend?.auto_scroll || false}
                 />
               </Card>
 

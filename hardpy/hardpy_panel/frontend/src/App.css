@@ -24,6 +24,16 @@ html {
   height: inherit;
 }
 
+/* scroll-padding accounts for the fixed Navbar at top and the fixed footer
+ * at bottom so any programmatic scrollIntoView() (notably the optional
+ * auto-scroll feature) doesn't park a row behind either of them.
+ */
+html,
+.bp5-drawer-body {
+  scroll-padding-top: 60px;
+  scroll-padding-bottom: 160px;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
