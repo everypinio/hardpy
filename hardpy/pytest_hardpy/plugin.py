@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import signal
 from logging import getLogger
+from os import getenv
 from pathlib import Path, PurePath
 from platform import system
 from re import compile as re_compile
@@ -18,6 +19,7 @@ from _pytest._code.code import (
     ReprFileLocation,
     TerminalRepr,
 )
+from dotenv import load_dotenv
 from natsort import natsorted
 from pytest import (
     CallInfo,
@@ -161,6 +163,7 @@ class HardpyPlugin:
     def pytest_configure(self, config: Config) -> None:
         """Configure pytest."""
         config_manager = ConfigManager()
+        load_dotenv()
 
         hardpy_config_path = config.getoption("--hardpy-config-file")
         if hardpy_config_path:
@@ -198,6 +201,11 @@ class HardpyPlugin:
         sc_autosync = config.getoption("--sc-autosync")
         if sc_autosync:
             hardpy_config.stand_cloud.autosync = bool(sc_autosync)  # type: ignore
+
+        sc_api_key = getenv("HARDPY_SC_API_KEY")
+        hardpy_config.stand_cloud.api_key = (
+            sc_api_key if sc_api_key is not None else hardpy_config.stand_cloud.api_key
+        )
 
         _args = config.getoption("--hardpy-start-arg") or []
         if _args:
