@@ -61,6 +61,7 @@ interface AppConfig {
     manual_collect?: boolean;
     measurement_display?: boolean;
     test_history?: boolean;
+    auto_scroll?: boolean;
     modal_result?: {
       enable?: boolean;
       auto_dismiss_pass?: boolean;
@@ -793,73 +794,72 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                   currentTestConfig={appConfig?.current_test_config}
                   measurementDisplay={appConfig?.frontend?.measurement_display}
                   manualCollectMode={manualCollectMode}
+                  autoScroll={appConfig?.frontend?.auto_scroll || false}
                 />
               </Card>
 
-              <div style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
-                {appConfig?.frontend?.test_history !== false && (
-                  <>
-                    <TestHistory
-                      history={historyEntries}
-                      selectedHistoryId={selectedHistoryRunId}
-                      onSelectHistoryRun={(id) => {
-                        setSelectedHistoryRunId(id);
-                        setShowHistoryDetails(true);
-                      }}
-                    />
-                    {filteredRows.length > historyDisplayCount && (
-                      <Button
-                        minimal
-                        fill
-                        onClick={() =>
-                          setHistoryDisplayCount(historyDisplayCount + 5)
-                        }
-                        style={{ marginTop: "10px" }}
+              {appConfig?.frontend?.test_history !== false && (
+                <div style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+                  <TestHistory
+                    history={historyEntries}
+                    selectedHistoryId={selectedHistoryRunId}
+                    onSelectHistoryRun={(id) => {
+                      setSelectedHistoryRunId(id);
+                      setShowHistoryDetails(true);
+                    }}
+                  />
+                  {filteredRows.length > historyDisplayCount && (
+                    <Button
+                      minimal
+                      fill
+                      onClick={() =>
+                        setHistoryDisplayCount(historyDisplayCount + 5)
+                      }
+                      style={{ marginTop: "10px" }}
+                    >
+                      {t("history.showMore")}
+                    </Button>
+                  )}
+                  {selectedHistoryRow && (
+                    <Card style={{ padding: "20px", marginTop: "20px" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
                       >
-                        {t("history.showMore")}
-                      </Button>
-                    )}
-                    {selectedHistoryRow && (
-                      <Card style={{ padding: "20px", marginTop: "20px" }}>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                        >
-                          <H2>{t("history.detailTitle")}</H2>
-                          <Button
-                            minimal
-                            icon={
-                              showHistoryDetails ? "chevron-up" : "chevron-down"
-                            }
-                            onClick={() =>
-                              setShowHistoryDetails(!showHistoryDetails)
-                            }
-                            title={
-                              showHistoryDetails ? "Hide details" : "Show details"
-                            }
-                          />
-                        </div>
-                        {showHistoryDetails && (
-                          <SuiteList
-                            db_state={selectedHistoryRow}
-                            defaultClose={!ultrawide}
-                            selectionSupported={false}
-                            selectedTests={[]}
-                            currentTestConfig={appConfig?.current_test_config}
-                            measurementDisplay={
-                              appConfig?.frontend?.measurement_display
-                            }
-                            manualCollectMode={manualCollectMode}
-                          />
-                        )}
-                      </Card>
-                    )}
-                  </>
-                )}
-              </div>
+                        <H2>{t("history.detailTitle")}</H2>
+                        <Button
+                          minimal
+                          icon={
+                            showHistoryDetails ? "chevron-up" : "chevron-down"
+                          }
+                          onClick={() =>
+                            setShowHistoryDetails(!showHistoryDetails)
+                          }
+                          title={
+                            showHistoryDetails ? "Hide details" : "Show details"
+                          }
+                        />
+                      </div>
+                      {showHistoryDetails && (
+                        <SuiteList
+                          db_state={selectedHistoryRow}
+                          defaultClose={!ultrawide}
+                          selectionSupported={false}
+                          selectedTests={[]}
+                          currentTestConfig={appConfig?.current_test_config}
+                          measurementDisplay={
+                            appConfig?.frontend?.measurement_display
+                          }
+                          manualCollectMode={manualCollectMode}
+                        />
+                      )}
+                    </Card>
+                  )}
+                </div>
+              )}
             </div>
           )}
           {use_debug_info && (

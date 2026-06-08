@@ -76,6 +76,7 @@ nav:
       - Dialog box: examples/dialog_box.md
       - Measurement: examples/measurement.md
       - Chart: examples/chart.md
+      - Auto-scroll demo: examples/auto_scroll_demo.md
       - Stand equipment: examples/stand_equipment.md
       - StandCloud: examples/stand_cloud.md
       - StandCloud read data: examples/stand_cloud_reader.md

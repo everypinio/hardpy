@@ -18,6 +18,7 @@ sound_on = false
 measurement_display = true
 manual_collect = false
 test_history = false
+auto_scroll = false
 
 [frontend.modal_result]
 enable = false

@@ -1,5 +1,5 @@
 title = "HardPy TOML config"
-tests_name = "Dialog Box"
+tests_name = "Auto-scroll demo"
 current_test_config = ""
 
 [database]
@@ -18,16 +18,12 @@ sound_on = false
 measurement_display = true
 manual_collect = false
 test_history = false
-auto_scroll = false
+auto_scroll = true
 
 [frontend.modal_result]
 enable = false
 auto_dismiss_pass = true
 auto_dismiss_timeout = 5
-
-[frontend.reports_storage_menu]
-show_standcloud = true
-check_standcloud = true
 
 [stand_cloud]
 address = "standcloud.everypin.io"
