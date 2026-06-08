@@ -2,6 +2,10 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## 0.25.0
+
+* Add an .env file with the option to specify the StandCloud API key.
+  [[PR-288](https://github.com/everypinio/hardpy/pull/288)]
 * Fix the width of the operator panel if there is no test history.
   [[PR-287](https://github.com/everypinio/hardpy/pull/287)]
 * Add the optional `auto_scroll` flag under `[frontend]` for operator-panel
