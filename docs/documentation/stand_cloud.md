@@ -18,6 +18,24 @@ For an example of StandCloud and HardPy integration,
 see [StandCloud example](../examples/stand_cloud.md) and
 [StandCloud readed example](../examples/stand_cloud_reader.md).
 
+## API key via .env file
+
+The **StandCloud** API key can be provided through a `.env` file
+instead of being stored in the `hardpy.toml` configuration file.
+The `.env` file must be located in the root of the working project.
+The variable name is `HARDPY_SC_API_KEY`.
+An example file is available in the root of the **HardPy** repository
+under the name `.env.example`.
+If the `HARDPY_SC_API_KEY` environment variable is defined,
+its value takes priority over the `api_key` value
+specified in the `hardpy.toml` file.
+
+Example of the `.env` file content:
+
+```bash
+HARDPY_SC_API_KEY=your_api_key_here
+```
+
 ## HardPy rules
 
 ### General guidelines
