@@ -264,7 +264,8 @@ class ConfigManager(metaclass=SingletonMeta):
         except ValidationError:
             logger.exception("Error parsing TOML")
             return None
-        load_dotenv()
+        if not load_dotenv(Path(self._tests_path / ".env")):
+            load_dotenv()
 
         sc_api_key = getenv("HARDPY_SC_API_KEY")
         self._config.stand_cloud.api_key = (
