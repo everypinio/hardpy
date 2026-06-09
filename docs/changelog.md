@@ -2,10 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
-## 0.25.1
+## 0.25.2
 
 * Fix StandCloud api key reading from .env
-  [[PR-290](https://github.com/everypinio/hardpy/pull/290)]
+  [[PR-290](https://github.com/everypinio/hardpy/pull/290)],
+  [[PR-292](https://github.com/everypinio/hardpy/pull/290)]
 
 ## 0.25.0
 
