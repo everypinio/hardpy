@@ -4,10 +4,12 @@ from __future__ import annotations
 
 from enum import Enum
 from logging import getLogger
+from os import getenv
 from pathlib import Path
 
 import tomli
 import tomli_w
+from dotenv import load_dotenv
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from hardpy.common.singleton import SingletonMeta
@@ -262,6 +264,12 @@ class ConfigManager(metaclass=SingletonMeta):
         except ValidationError:
             logger.exception("Error parsing TOML")
             return None
+        load_dotenv()
+
+        sc_api_key = getenv("HARDPY_SC_API_KEY")
+        self._config.stand_cloud.api_key = (
+            sc_api_key if sc_api_key is not None else self._config.stand_cloud.api_key
+        )
         return self._config
 
     def set_current_test_config(self, config_name: str) -> None:
