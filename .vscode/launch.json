@@ -84,28 +84,6 @@
             ]
         },
         {
-            "name": "StandCloud login",
-            "type": "debugpy",
-            "request": "launch",
-            "module": "hardpy.cli.cli",
-            "console": "integratedTerminal",
-            "args": [
-                "sc-login",
-                "demo.standcloud.localhost"
-            ]
-        },
-        {
-            "name": "StandCloud logout",
-            "type": "debugpy",
-            "request": "launch",
-            "module": "hardpy.cli.cli",
-            "console": "integratedTerminal",
-            "args": [
-                "sc-logout",
-                "demo.standcloud.localhost"
-            ]
-        },
-        {
             "name": "Python: Example Hello HardPy",
             "type": "debugpy",
             "request": "launch",
@@ -114,7 +92,8 @@
             "args": [
                 "run",
                 "examples/hello_hardpy"
-            ]
+            ],
+            "justMyCode": false,
         },
         {
             "name": "Python: Example CouchDB load",

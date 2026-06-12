@@ -3,12 +3,5 @@
 
 from hardpy.common.stand_cloud.connector import StandCloudAPIMode, StandCloudConnector
 from hardpy.common.stand_cloud.exception import StandCloudError
-from hardpy.common.stand_cloud.registration import login, logout
 
-__all__ = [
-    "StandCloudAPIMode",
-    "StandCloudConnector",
-    "StandCloudError",
-    "login",
-    "logout",
-]
+__all__ = ["StandCloudAPIMode", "StandCloudConnector", "StandCloudError"]

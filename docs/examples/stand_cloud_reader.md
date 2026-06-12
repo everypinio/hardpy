@@ -6,8 +6,6 @@
 **HardPy** allows you to read test data from the **StandCloud**.
 For this purpose, the [StandCloudReader](./../documentation/pytest_hardpy.md#standcloudreader)
 class is available in **HardPy**, which provides access to the REST API of the **StandCloud** service.
-To read data from the **StandCloud**, the user must log in to the **StandCloud**
-using the [hardpy sc-login](./../documentation/cli.md#sc-login).
 
 To view the REST API documentation, the user can navigate to the format page
 https://service_name/integration/api/v1/docs,

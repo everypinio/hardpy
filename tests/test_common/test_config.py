@@ -281,7 +281,6 @@ def test_read_config_success(tmp_path: Path):
         config.stand_cloud.connection_only
         == test_config_data["stand_cloud"]["connection_only"]
     )
-    assert config.stand_cloud.api_key == test_config_data["stand_cloud"]["api_key"]
     assert config.stand_cloud.autosync == test_config_data["stand_cloud"]["autosync"]
     assert (
         config.stand_cloud.autosync_timeout

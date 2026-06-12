@@ -5,7 +5,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from urllib.parse import urlencode
 
-from oauthlib.oauth2.rfc6749.errors import OAuth2Error
 from requests.exceptions import RequestException
 
 from hardpy.common.stand_cloud.connector import StandCloudConnector, StandCloudError
@@ -94,10 +93,10 @@ class StandCloudReader:
             resp = api.get(verify=self._verify_ssl)
         except RuntimeError as exc:
             raise StandCloudError(str(exc)) from exc
-        except OAuth2Error as exc:
-            raise StandCloudError(exc.description) from exc
         except RequestException as exc:
             return exc.response  # type: ignore
+        except Exception as exc:
+            raise StandCloudError(exc) from exc
 
         return resp
 

@@ -15,12 +15,6 @@ from uvicorn import run as uvicorn_run
 from hardpy import __version__ as hardpy_version
 from hardpy.cli.template import TemplateGenerator
 from hardpy.common.config import ConfigManager, HardpyConfig
-from hardpy.common.stand_cloud import (
-    StandCloudConnector,
-    StandCloudError,
-    login as auth_login,
-    logout as auth_logout,
-)
 
 if __debug__:
     from urllib3 import disable_warnings
@@ -254,54 +248,6 @@ def status(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None
     config = _get_config(tests_dir, validate=True)
     url = f"http://{config.frontend.host}:{config.frontend.port}/api/status"
     _request_hardpy(url)
-
-
-@cli.command()
-def sc_login(
-    address: Annotated[str, typer.Argument()],
-    check: bool = typer.Option(
-        False,
-        help="Check StandCloud connection.",
-    ),
-) -> None:
-    """Login HardPy in StandCloud.
-
-    The command opens an authentication and authorization portal of StandCloud
-    where you will be requested for your credentials and consents to authorize
-    HardPy to upload test reports from your identity.
-
-    Args:
-        address (str): StandCloud address
-        check (bool): Check StandCloud connection
-    """
-    try:
-        sc_connector = StandCloudConnector(address)
-    except StandCloudError as exc:
-        print(str(exc))
-        sys.exit()
-
-    if check:
-        try:
-            sc_connector.healthcheck()
-        except StandCloudError:
-            print("StandCloud connection failed")
-            sys.exit()
-        print("StandCloud connection success")
-    else:
-        auth_login(sc_connector)
-
-
-@cli.command()
-def sc_logout(address: Annotated[str, typer.Argument()]) -> None:
-    """Logout HardPy from StandCloud account.
-
-    Args:
-        address (str): StandCloud address
-    """
-    if auth_logout(address):
-        print(f"HardPy logout success from {address}")
-    else:
-        print(f"HardPy logout failed from {address}")
 
 
 @cli.command()

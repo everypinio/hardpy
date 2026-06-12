@@ -966,7 +966,6 @@ def fill_actions_after_test(post_run_functions: list):
 #### StandCloudLoader
 
 Used to write reports to the **StandCloud**.
-A login to **StandCloud** is required to work.
 
 **Arguments:**
 
@@ -1022,7 +1021,6 @@ Used to create the **StandCloud** connection addresses.
 #### StandCloudReader
 
 Used to read data from the **StandCloud**.
-A login to **StandCloud** is required to work.
 For more information, see the example [StandCloud reader](./../examples/stand_cloud_reader.md)
 
 **Arguments:**

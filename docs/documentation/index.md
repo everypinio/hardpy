@@ -15,7 +15,6 @@
 * Entry point for **HardPy**.
 * **HardPy** test bench creator.
 * Launcher for [operator panel](#hardpy-operator-panel).
-* **StandCloud** [authorization](./cli.md#sc-login) tool.
 
 For more info, read [CLI](./cli.md).
 

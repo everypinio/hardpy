@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from oauthlib.oauth2.rfc6749.errors import OAuth2Error
 from requests.exceptions import ConnectionError, HTTPError  # noqa: A004
 
 from hardpy.common.config import ConfigManager
@@ -61,10 +60,10 @@ class StandCloudLoader:
             )
         except (RuntimeError, ConnectionError) as exc:
             raise StandCloudError(str(exc)) from exc
-        except OAuth2Error as exc:
-            raise StandCloudError(exc.description) from exc
         except HTTPError as exc:
             return exc.response  # type: ignore
+        except Exception as exc:
+            raise StandCloudError(exc) from exc
 
         return resp
 
