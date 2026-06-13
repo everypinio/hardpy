@@ -1,0 +1,35 @@
+services:
+  # CouchDB database service
+  couchdb:
+    image: couchdb:3.4
+    ports:
+      - "5984:5984"  # Exposed to host for frontend browser access
+    environment:
+      COUCHDB_USER: dev
+      COUCHDB_PASSWORD: dev
+    volumes:
+      - couchdb_data:/opt/couchdb/data
+    networks:
+      - hardpy_network
+
+  # HardPy backend running tests
+  # This would be your test runner container (example only)
+  hardpy:
+    image: hardpy:latest  # Your HardPy image
+    depends_on:
+      - couchdb
+    environment:
+      # Backend connects using Docker service name
+      - DATABASE_HOST=couchdb
+    networks:
+      - hardpy_network
+    # In this setup:
+    # - Backend connects to "couchdb:5984" (internal Docker network)
+    # - Frontend (browser) connects to "localhost:5984" (host machine)
+
+networks:
+  hardpy_network:
+    driver: bridge
+
+volumes:
+  couchdb_data:
