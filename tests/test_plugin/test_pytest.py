@@ -10,5 +10,5 @@ def test_correct_db_url(pytester: Pytester):
             assert True
     """,
     )
-    result = pytester.runpytest("--hardpy-pt")
+    result = pytester.runpytest("--jig-pt")
     result.assert_outcomes(passed=1)

@@ -1,19 +1,19 @@
 {
     "dictionaryDefinitions": [
         {
-            "name": "hardpy-terms",
+            "name": "jig-terms",
             "path": ".dictionaries/terms.txt",
             "addWords": true
         }
     ],
     "dictionaries": [
-        "hardpy-terms"
+        "jig-terms"
     ],
     "language": "en",
     "words": [
-        "HardPy",
-        "Hardpy",
-        "hardpy",
+        "Jig",
+        "Jig",
+        "jig",
         "pydantic",
         "tomli_w",
         "tomli",

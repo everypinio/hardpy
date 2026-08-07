@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from pytest import Pytester
 
 
-def test_case_dependency_incorrect_format(pytester: Pytester, hardpy_opts: list):
+def test_case_dependency_incorrect_format(pytester: Pytester, jig_opts: list):
     # incorrect case dependency format
     test_1 = """
         import pytest
@@ -19,7 +19,7 @@ def test_case_dependency_incorrect_format(pytester: Pytester, hardpy_opts: list)
             assert True
     """
     pytester.makepyfile(test_1)
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     assert result.ret == ExitCode.NO_TESTS_COLLECTED
 
     # incorrect module dependency format
@@ -32,11 +32,11 @@ def test_case_dependency_incorrect_format(pytester: Pytester, hardpy_opts: list)
             assert True
     """
     pytester.makepyfile(test_2)
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     assert result.ret == ExitCode.NO_TESTS_COLLECTED
 
 
-def test_not_exist_case(pytester: Pytester, hardpy_opts: list):
+def test_not_exist_case(pytester: Pytester, jig_opts: list):
     test_1="""
         import pytest
 
@@ -46,7 +46,7 @@ def test_not_exist_case(pytester: Pytester, hardpy_opts: list):
             assert True
     """
     pytester.makepyfile(test_1)
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1)
 
     test_2="""
@@ -57,11 +57,11 @@ def test_not_exist_case(pytester: Pytester, hardpy_opts: list):
             assert True
     """
     pytester.makepyfile(test_2)
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_not_exist_module(pytester: Pytester, hardpy_opts: list):
+def test_not_exist_module(pytester: Pytester, jig_opts: list):
     test_1="""
         import pytest
 
@@ -71,7 +71,7 @@ def test_not_exist_module(pytester: Pytester, hardpy_opts: list):
             assert True
     """
     pytester.makepyfile(test_1)
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1)
 
     test_2="""
@@ -88,10 +88,10 @@ def test_not_exist_module(pytester: Pytester, hardpy_opts: list):
             assert True
     """
     pytester.makepyfile(test_2)
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=2, failed=1)
 
-def test_not_exist_module_and_case(pytester: Pytester, hardpy_opts: list):
+def test_not_exist_module_and_case(pytester: Pytester, jig_opts: list):
     test_1="""
         import pytest
 
@@ -101,7 +101,7 @@ def test_not_exist_module_and_case(pytester: Pytester, hardpy_opts: list):
             assert True
     """
     pytester.makepyfile(test_1)
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1)
 
     test_2="""
@@ -118,5 +118,5 @@ def test_not_exist_module_and_case(pytester: Pytester, hardpy_opts: list):
             assert True
     """
     pytester.makepyfile(test_2)
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=2, failed=1)

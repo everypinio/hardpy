@@ -3,15 +3,15 @@
 This is an example of storing the test result in CouchDB.
 Test reports are written to the **report** database at the end of 
 the testing process via **CouchdbLoader**.
-The code for this example can be seen inside the hardpy package 
-[CouchDB Load](https://github.com/everypinio/hardpy/tree/main/examples/couchdb_load).
+The code for this example can be seen inside the jig package 
+[CouchDB Load](https://github.com/everypinio/jig/tree/main/examples/couchdb_load).
 
 ### how to start
 
-1. Launch `hardpy init couchdb_load`.
+1. Launch `jig init couchdb_load`.
 2. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
-4. Launch `hardpy run couchdb_load`.
+4. Launch `jig run couchdb_load`.
 
 ### conftest.py
 
@@ -22,7 +22,7 @@ Contains settings and fixtures for all tests:
 
 ```python
 import pytest
-from hardpy import (
+from jig import (
     CouchdbLoader,
     CouchdbConfig,
     get_current_report,

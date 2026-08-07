@@ -1,3 +1,3 @@
 # Auto-scroll demo
 
-Example documentation: https://everypinio.github.io/hardpy/examples/auto_scroll_demo/
+Example documentation: https://everypinio.github.io/jig/examples/auto_scroll_demo/

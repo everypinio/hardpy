@@ -3,11 +3,11 @@
 ???+ warning
     The information on this page is currently out of date!
 
-**HardPy** allows you to read test data from the **StandCloud**.
-For this purpose, the [StandCloudReader](./../documentation/pytest_hardpy.md#standcloudreader)
-class is available in **HardPy**, which provides access to the REST API of the **StandCloud** service.
+**Jig** allows you to read test data from the **StandCloud**.
+For this purpose, the [StandCloudReader](./../documentation/pytest_jig.md#standcloudreader)
+class is available in **Jig**, which provides access to the REST API of the **StandCloud** service.
 To read data from the **StandCloud**, the user must log in to the **StandCloud**
-using the [hardpy sc-login](./../documentation/cli.md#sc-login).
+using the [jig sc-login](./../documentation/cli.md#sc-login).
 
 To view the REST API documentation, the user can navigate to the format page
 https://service_name/integration/api/v1/docs,
@@ -28,16 +28,16 @@ The argument must be either `run_id` or the filter `params`.
 **run_id**
 
 Allows the user to retrieve data about a specific test run by its id from `/test_run` URL.
-User can get id from [StandCloudLoader.load()](./../documentation/pytest_hardpy.md#standcloudloader)
+User can get id from [StandCloudLoader.load()](./../documentation/pytest_jig.md#standcloudloader)
 function.
 
 **Example:**
 
 ```python
-import hardpy
+import jig
 
-sc_connector = hardpy.StandCloudConnector(api_key="your_api_key")
-reader = hardpy.StandCloudReader(sc_connector)
+sc_connector = jig.StandCloudConnector(api_key="your_api_key")
+reader = jig.StandCloudReader(sc_connector)
 
 response = reader.test_run(run_id="0196434d-e8f7-7ce1-81f7-e16f20487494")
 print(response.json())
@@ -46,7 +46,7 @@ print(response.json())
 Request URL of this example:
 
 ```bash
-https://standcloud.everypin.io/hardpy/api/v1/test_run/0196434d-e8f7-7ce1-81f7-e16f20487494
+https://standcloud.everypin.io/jig/api/v1/test_run/0196434d-e8f7-7ce1-81f7-e16f20487494
 ```
 
 REST API documentation page of this example:
@@ -90,15 +90,15 @@ Filters are specified as parameters. A special place is occupied by the filter b
 which allows to add fields `dut.info` as keys for the filter in the parameters.
 
 The difference between the test run with filters and the tested DUT is described in the
-[StandCloudReader](./../documentation/pytest_hardpy.md#standcloudreader) documentation.
+[StandCloudReader](./../documentation/pytest_jig.md#standcloudreader) documentation.
 
 **Example:**
 
 ```python
-import hardpy
+import jig
 
-sc_connector = hardpy.StandCloudConnector(addr="standcloud.everypin.io")
-reader = hardpy.StandCloudReader(sc_connector)
+sc_connector = jig.StandCloudConnector(addr="standcloud.everypin.io")
+reader = jig.StandCloudReader(sc_connector)
 
 param = {
     "part_number": "PN-54321AB",
@@ -113,7 +113,7 @@ print(response.json())
 Request URL of this example:
 
 ```bash
-https://standcloud.everypin.io/hardpy/api/v1/test_run?part_number=PN-54321AB&status=pass&manufacturer=ABC_Corp&number_of_attempt=2
+https://standcloud.everypin.io/jig/api/v1/test_run?part_number=PN-54321AB&status=pass&manufacturer=ABC_Corp&number_of_attempt=2
 ```
 
 REST API documentation page of this example:
@@ -161,15 +161,15 @@ Filters are specified as parameters. A special place is occupied by the filter b
 which allows to add fields `dut.info` as keys for the filter in the parameters.
 
 The difference between the test run with filters and the tested DUT is described in the
-[StandCloudReader](./../documentation/pytest_hardpy.md#standcloudreader) documentation.
+[StandCloudReader](./../documentation/pytest_jig.md#standcloudreader) documentation.
 
 **Example:**
 
 ```python
-import hardpy
+import jig
 
-sc_connector = hardpy.StandCloudConnector(addr="standcloud.everypin.io")
-reader = hardpy.StandCloudReader(sc_connector)
+sc_connector = jig.StandCloudConnector(addr="standcloud.everypin.io")
+reader = jig.StandCloudReader(sc_connector)
 
 param = {
     "part_number": "PN-54321AB",
@@ -184,7 +184,7 @@ print(response.json())
 Request URL of this example:
 
 ```bash
-https://standcloud.everypin.io/hardpy/api/v1/tested_dut?part_number=PN-54321AB&status=pass&manufacturer=ABC_Corp&attempt_count=3
+https://standcloud.everypin.io/jig/api/v1/tested_dut?part_number=PN-54321AB&status=pass&manufacturer=ABC_Corp&attempt_count=3
 ```
 
 REST API documentation page of this example:

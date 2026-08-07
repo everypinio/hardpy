@@ -8,24 +8,24 @@ if TYPE_CHECKING:
 func_test_header = """
         import pytest
 
-        import hardpy
-        from hardpy.pytest_hardpy.utils import NodeInfo
+        import jig
+        from jig.pytest_jig.utils import NodeInfo
         """
 
 
-def test_fill_error_code(pytester: Pytester, hardpy_opts: list[str]):
+def test_fill_error_code(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
         def test_fill_error_code():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
             error_code = report.error_code
             assert error_code == None, "The error_code is not empty."
 
-            assert False, hardpy.ErrorCode(1, "a")
+            assert False, jig.ErrorCode(1, "a")
 
         def test_error_code_exist(request):
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
             error_code = report.error_code
             assert error_code == 1, "The error_code must be 1."
 
@@ -37,38 +37,38 @@ def test_fill_error_code(pytester: Pytester, hardpy_opts: list[str]):
             assert "AssertionError: a" in assertion_msg_1
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1, failed=1)
 
 
-def test_duplicate_error_code(pytester: Pytester, hardpy_opts: list[str]):
+def test_duplicate_error_code(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
         def test_error_code(request):
-            assert False, hardpy.ErrorCode(1)
+            assert False, jig.ErrorCode(1)
 
         def test_duplicate_error_code():
-            assert False, hardpy.ErrorCode(2)
+            assert False, jig.ErrorCode(2)
 
         def test_check_error_code():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
             error_code = report.error_code
             assert error_code == 1, "The error_code must be 1."
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1, failed=2)
 
 
-def test_negative_error_code(pytester: Pytester, hardpy_opts: list[str]):
+def test_negative_error_code(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
         def test_negative_error_code():
             with pytest.raises(ValueError):
-                hardpy.ErrorCode(-1)
+                jig.ErrorCode(-1)
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1)

@@ -1,34 +1,34 @@
 # Launch arguments
 
-**HardPy** launches pytest tests.
-HardPy supports two methods for passing parameters to tests. 
-The recommended method is the [start arguments](./../documentation/cli.md#hardpy-start) functionality.
+**Jig** launches pytest tests.
+Jig supports two methods for passing parameters to tests. 
+The recommended method is the [start arguments](./../documentation/cli.md#jig-start) functionality.
 The other method is writing your own [addoption](#addoption) pytest approach.
 
 ## Start arguments
 
-The [hardpy_start_args](../documentation/pytest_hardpy.md#hardpy_start_args) 
+The [jig_start_args](../documentation/pytest_jig.md#jig_start_args) 
 fixture allows you to pass dynamic parameters to your test runs using the `--arg` 
-option (CLI) or [--hardpy-start-arg](./../documentation/pytest_hardpy.md#hardpy-start-arg) option (pytest).
+option (CLI) or [--jig-start-arg](./../documentation/pytest_jig.md#jig-start-arg) option (pytest).
 This is particularly useful for configuring tests at runtime without changing the code.
 
 Contains examples of how to use dynamic start arguments in tests.
 
 ### how to start
 
-1. Launch `hardpy init start_arguments`.
+1. Launch `jig init start_arguments`.
 2. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
 4. Launch tests with dynamic arguments:
 
     ```bash
-    hardpy run start_arguments
+    jig run start_arguments
 
-    # Using hardpy command
-    hardpy start start_arguments --arg test_mode=debug --arg device_id=DUT-007 --arg retry_count=3
+    # Using jig command
+    jig start start_arguments --arg test_mode=debug --arg device_id=DUT-007 --arg retry_count=3
 
     # Or using pytest directly
-    pytest --hardpy-start-arg test_mode=debug --hardpy-start-arg device_id=DUT-007 --hardpy-start-arg retry_count=3
+    pytest --jig-start-arg test_mode=debug --jig-start-arg device_id=DUT-007 --jig-start-arg retry_count=3
     ```
 
     Alternatively, you can specify start arguments in the `pytest.ini` file.
@@ -36,29 +36,29 @@ Contains examples of how to use dynamic start arguments in tests.
 
     ```pytest
     [pytest]
-    addopts = --hardpy-pt
-            --hardpy-db-url http://dev:dev@localhost:5984/
-            --hardpy-start-arg test_mode=debug
-            --hardpy-start-arg device_id=DUT-007
+    addopts = --jig-pt
+            --jig-db-url http://dev:dev@localhost:5984/
+            --jig-start-arg test_mode=debug
+            --jig-start-arg device_id=DUT-007
     ```
 
 ### test_1.py
 
 ```python
 import pytest
-import hardpy
+import jig
 
-def test_with_start_args(hardpy_start_args):
+def test_with_start_args(jig_start_args):
    
-    if hardpy_start_args.get("test_mode") == "debug":
-        hardpy.set_message("Running in debug mode")
+    if jig_start_args.get("test_mode") == "debug":
+        jig.set_message("Running in debug mode")
     
-    device_id = hardpy_start_args.get("device_id")
+    device_id = jig_start_args.get("device_id")
     if device_id:
-        hardpy.set_message(f"Testing device: {device_id}")
-        hardpy.set_case_artifact({"device_id": device_id})
+        jig.set_message(f"Testing device: {device_id}")
+        jig.set_case_artifact({"device_id": device_id})
     else:
-        hardpy.set_message("No device ID provided")
+        jig.set_message("No device ID provided")
 ```
 
 ## Addoption
@@ -69,10 +69,10 @@ You can read more about it in the
 
 ### how to start
 
-1. Launch `hardpy init launch_arg`.
+1. Launch `jig init launch_arg`.
 2. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
-4. Launch `hardpy run launch_arg`.
+4. Launch `jig run launch_arg`.
 
 ### conftest.py
 

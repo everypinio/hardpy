@@ -125,9 +125,9 @@ hide:
 
 <div class="hp-testimonials" markdown>
 
-HardPy is used by engineers building production test rigs and end-of-line stations. Pair it with StandCloud to store results by serial number, track pass rate (yield), and catch failure trends early.
+Jig is used by engineers building production test rigs and end-of-line stations. Pair it with StandCloud to store results by serial number, track pass rate (yield), and catch failure trends early.
 
-- :material-account-hard-hat: **Manufacturing test engineer** — *"HardPy made our test flow consistent across operators - fewer mistakes, cleaner logs."*
+- :material-account-hard-hat: **Manufacturing test engineer** — *"Jig made our test flow consistent across operators - fewer mistakes, cleaner logs."*
 - :material-account-tie: **Hardware lead** — *"Serial-level traceability in StandCloud helped us spot a failing step in the first day."*
 - :material-account-cog: **Production engineer** — *"We reused the same test plan from the lab to EOL with minimal changes."*
 

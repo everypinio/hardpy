@@ -1,4 +1,4 @@
-name: hardpy
+name: jig
 channels:
   - defaults
   - conda-forge

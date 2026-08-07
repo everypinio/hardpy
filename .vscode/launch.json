@@ -22,17 +22,17 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "HardPy: Build",
+            "name": "Jig: Build",
             "type": "debugpy",
             "request": "launch",
             "module": "build",
             "console": "integratedTerminal",
         },
         {
-            "name": "HardPy: Init template",
+            "name": "Jig: Init template",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.cli.cli",
+            "module": "jig.cli.cli",
             "console": "integratedTerminal",
             "args": [
                 "init",
@@ -40,10 +40,10 @@
             ]
         },
         {
-            "name": "HardPy: Run template",
+            "name": "Jig: Run template",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.cli.cli",
+            "module": "jig.cli.cli",
             "console": "integratedTerminal",
             "args": [
                 "run",
@@ -51,10 +51,10 @@
             ]
         },
         {
-            "name": "HardPy: Start template",
+            "name": "Jig: Start template",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.cli.cli",
+            "module": "jig.cli.cli",
             "console": "integratedTerminal",
             "args": [
                 "start",
@@ -62,10 +62,10 @@
             ]
         },
         {
-            "name": "HardPy: Stop template",
+            "name": "Jig: Stop template",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.cli.cli",
+            "module": "jig.cli.cli",
             "console": "integratedTerminal",
             "args": [
                 "stop",
@@ -73,10 +73,10 @@
             ]
         },
         {
-            "name": "HardPy: Status template",
+            "name": "Jig: Status template",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.cli.cli",
+            "module": "jig.cli.cli",
             "console": "integratedTerminal",
             "args": [
                 "status",
@@ -87,7 +87,7 @@
             "name": "StandCloud login",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.cli.cli",
+            "module": "jig.cli.cli",
             "console": "integratedTerminal",
             "args": [
                 "sc-login",
@@ -98,7 +98,7 @@
             "name": "StandCloud logout",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.cli.cli",
+            "module": "jig.cli.cli",
             "console": "integratedTerminal",
             "args": [
                 "sc-logout",
@@ -106,21 +106,21 @@
             ]
         },
         {
-            "name": "Python: Example Hello HardPy",
+            "name": "Python: Example Hello Jig",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.cli.cli",
+            "module": "jig.cli.cli",
             "console": "integratedTerminal",
             "args": [
                 "run",
-                "examples/hello_hardpy"
+                "examples/hello_jig"
             ]
         },
         {
             "name": "Python: Example CouchDB load",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.cli.cli",
+            "module": "jig.cli.cli",
             "console": "integratedTerminal",
             "args": [
                 "run",
@@ -131,7 +131,7 @@
             "name": "Python: Example Minute parity",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.cli.cli",
+            "module": "jig.cli.cli",
             "console": "integratedTerminal",
             "args": [
                 "run",
@@ -142,7 +142,7 @@
             "name": "Python: Example JSON storage",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.cli.cli",
+            "module": "jig.cli.cli",
             "console": "integratedTerminal",
             "args": [
                 "run",
@@ -153,7 +153,7 @@
             "name": "Python: Example Multiple configs",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.cli.cli",
+            "module": "jig.cli.cli",
             "console": "integratedTerminal",
             "args": [
                 "run",
@@ -164,7 +164,7 @@
             "name": "Python: Example StandCloud",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.cli.cli",
+            "module": "jig.cli.cli",
             "console": "integratedTerminal",
             "args": [
                 "run",
@@ -175,7 +175,7 @@
             "name": "Python: Example Dialog box",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.cli.cli",
+            "module": "jig.cli.cli",
             "console": "integratedTerminal",
             "args": [
                 "run",
@@ -186,7 +186,7 @@
             "name": "Python: Example Auto Scroll Demo",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.cli.cli",
+            "module": "jig.cli.cli",
             "console": "integratedTerminal",
             "args": [
                 "run",
@@ -197,7 +197,7 @@
             "name": "Python: Example Measurement",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.cli.cli",
+            "module": "jig.cli.cli",
             "console": "integratedTerminal",
             "args": [
                 "run",
@@ -208,7 +208,7 @@
             "name": "Python: Example Attempts",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.cli.cli",
+            "module": "jig.cli.cli",
             "console": "integratedTerminal",
             "args": [
                 "run",
@@ -219,7 +219,7 @@
             "name": "Python: Example Operator Message",
             "type": "debugpy",
             "request": "launch",
-            "module": "hardpy.cli.cli",
+            "module": "jig.cli.cli",
             "console": "integratedTerminal",
             "args": [
                 "run",
@@ -230,7 +230,7 @@
             "name": "Run Frontend",
             "type": "node",
             "request": "launch",
-            "cwd": "${workspaceFolder}/hardpy/hardpy_panel/frontend",
+            "cwd": "${workspaceFolder}/jig/jig_panel/frontend",
             "runtimeExecutable": "yarn",
             "runtimeArgs": [
                 "vite"
@@ -238,7 +238,7 @@
             "console": "integratedTerminal",
             "env": {
                 // Add path to yarn and node to PATH
-                "PATH": "${env:HOME}/miniconda3/envs/hardpy/bin:${env:PATH}"
+                "PATH": "${env:HOME}/miniconda3/envs/jig/bin:${env:PATH}"
             },
             "preLaunchTask": "yarn install"
         },
@@ -247,7 +247,7 @@
             "type": "chrome",
             "request": "launch",
             "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}/hardpy/hardpy_panel/frontend",
+            "webRoot": "${workspaceFolder}/jig/jig_panel/frontend",
             "sourceMaps": true,
             "timeout": 30000
         }

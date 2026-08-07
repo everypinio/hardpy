@@ -1,6 +1,6 @@
 import pytest
 
-from hardpy import (
+from jig import (
     DialogBox,
     HTMLComponent,
     ImageComponent,

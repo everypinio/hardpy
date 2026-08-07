@@ -1,14 +1,14 @@
 # Skip test
 
-This is an example of using the **pytest-hardpy** functions with a test dependency
+This is an example of using the **pytest-jig** functions with a test dependency
 on another test and skipping tests.
 
 ### how to start
 
-1. Launch `hardpy init skip_test`.
+1. Launch `jig init skip_test`.
 2. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
-4. Launch `hardpy run skip_test`.
+4. Launch `jig run skip_test`.
 
 ### description
 

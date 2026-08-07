@@ -1,7 +1,7 @@
 from pathlib import Path
 import pytest
 
-from hardpy import JsonLoader, get_current_report
+from jig import JsonLoader, get_current_report
 
 
 @pytest.fixture(scope="session")

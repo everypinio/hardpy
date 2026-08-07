@@ -8,13 +8,13 @@ if TYPE_CHECKING:
 status_test_header = """
         import pytest
 
-        from hardpy import get_current_report
-        from hardpy.pytest_hardpy.utils.const import TestStatus as Status
-        from hardpy.pytest_hardpy.utils import NodeInfo
+        from jig import get_current_report
+        from jig.pytest_jig.utils.const import TestStatus as Status
+        from jig.pytest_jig.utils import NodeInfo
         """
 
 
-def test_ready_status(pytester: Pytester, hardpy_opts: list[str]):
+def test_ready_status(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         f"""
         {status_test_header}
@@ -37,11 +37,11 @@ def test_ready_status(pytester: Pytester, hardpy_opts: list[str]):
             assert Status.PASSED == read_status
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=3)
 
 
-def test_fail_status(pytester: Pytester, hardpy_opts: list[str]):
+def test_fail_status(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         f"""
         {status_test_header}
@@ -56,11 +56,11 @@ def test_fail_status(pytester: Pytester, hardpy_opts: list[str]):
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(failed=1, passed=1)
 
 
-def test_run_status(pytester: Pytester, hardpy_opts: list[str]):
+def test_run_status(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         f"""
         {status_test_header}
@@ -70,5 +70,5 @@ def test_run_status(pytester: Pytester, hardpy_opts: list[str]):
             assert Status.RUN == read_status
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1)

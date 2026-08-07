@@ -1,6 +1,6 @@
 from time import sleep
 
-from hardpy import (
+from jig import (
     ImageComponent,
     clear_operator_message,
     set_message,

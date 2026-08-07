@@ -3,7 +3,7 @@
 import time
 import pytest
 
-from hardpy import (
+from jig import (
     ComparisonOperation as CompOp,
     NumericMeasurement,
     set_case_measurement,

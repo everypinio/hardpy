@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 from simulated_device import SimulatedDevice  # type: ignore[import-not-found]
 
-from hardpy import JsonLoader, get_current_report, set_operator_message
+from jig import JsonLoader, get_current_report, set_operator_message
 
 DUT_SERIAL_NUMBER = "SN-2026-000123"
 REPORTS_DIR = Path.cwd() / "reports"

@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 import_header = """
         import pytest
-        import hardpy
+        import jig
 """
 
 conftest_actions_after = """
@@ -19,17 +19,17 @@ conftest_actions_after = """
 """
 
 
-def test_module_stop_time_first_case_skip(pytester: Pytester, hardpy_opts: list):
+def test_module_stop_time_first_case_skip(pytester: Pytester, jig_opts: list):
     """Check module stop time.
 
-    PR-129: https://github.com/everypinio/hardpy/pull/129
+    PR-129: https://github.com/everypinio/jig/pull/129
     """
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module_stop_time = report.modules["test_1"].stop_time
             module_start_time = report.modules["test_1"].start_time
@@ -58,21 +58,21 @@ def test_module_stop_time_first_case_skip(pytester: Pytester, hardpy_opts: list)
     """,
     )
 
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=0, failed=1, skipped=1)
 
 
-def test_first_case_skip_third_case_pass(pytester: Pytester, hardpy_opts: list):
+def test_first_case_skip_third_case_pass(pytester: Pytester, jig_opts: list):
     """Check module stop time.
 
-    PR-129: https://github.com/everypinio/hardpy/pull/129
+    PR-129: https://github.com/everypinio/jig/pull/129
     """
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module_stop_time = report.modules["test_1"].stop_time
             module_start_time = report.modules["test_1"].start_time
@@ -109,21 +109,21 @@ def test_first_case_skip_third_case_pass(pytester: Pytester, hardpy_opts: list):
     """,
     )
 
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1, failed=1, skipped=1)
 
 
-def test_last_case_skip_from_2_file(pytester: Pytester, hardpy_opts: list):
+def test_last_case_skip_from_2_file(pytester: Pytester, jig_opts: list):
     """Check module stop time.
 
-    PR-129: https://github.com/everypinio/hardpy/pull/129
+    PR-129: https://github.com/everypinio/jig/pull/129
     """
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module_1_stop_time = report.modules["test_1"].stop_time
             module_1_start_time = report.modules["test_1"].start_time
@@ -162,24 +162,24 @@ def test_last_case_skip_from_2_file(pytester: Pytester, hardpy_opts: list):
     """,
     )
 
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=0, failed=1, skipped=1)
 
 
 def test_penultimate_case_skip_from_second_file(
     pytester: Pytester,
-    hardpy_opts: list,
+    jig_opts: list,
 ):
     """Check module stop time.
 
-    PR-129: https://github.com/everypinio/hardpy/pull/129
+    PR-129: https://github.com/everypinio/jig/pull/129
     """
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module_1_stop_time = report.modules["test_1"].stop_time
             module_1_start_time = report.modules["test_1"].start_time
@@ -226,21 +226,21 @@ def test_penultimate_case_skip_from_second_file(
     """,
     )
 
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1, failed=1, skipped=1)
 
 
-def test_first_case_user_skip(pytester: Pytester, hardpy_opts: list):
+def test_first_case_user_skip(pytester: Pytester, jig_opts: list):
     """Check stop_time in test skipped by user.
 
-    PR-129: https://github.com/everypinio/hardpy/pull/129
+    PR-129: https://github.com/everypinio/jig/pull/129
     """
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module_stop_time = report.modules["test_1"].stop_time
             module_start_time = report.modules["test_1"].start_time
@@ -274,5 +274,5 @@ def test_first_case_user_skip(pytester: Pytester, hardpy_opts: list):
     """,
     )
 
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=0, failed=0, skipped=2)

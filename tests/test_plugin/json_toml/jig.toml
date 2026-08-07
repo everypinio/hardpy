@@ -1,0 +1,22 @@
+title = "Jig TOML config"
+
+[database]
+storage_type = "json"
+
+[frontend]
+host = "localhost"
+port = 8000
+language = "en"
+full_size_button = false
+sound_on = false
+measurement_display = true
+manual_collect = false
+
+[frontend.modal_result]
+enable = false
+auto_dismiss_pass = true
+auto_dismiss_timeout = 5
+
+[extra_info]
+extra_arg_1 = "extra_arg_1"
+extra_arg_2 = 2

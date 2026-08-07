@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from hardpy.cli.template import TemplateGenerator
-from hardpy.common.config import (
-    HardpyConfig,
+from jig.cli.template import TemplateGenerator
+from jig.common.config import (
+    JigConfig,
 )
 
 db_no_default_host = "localhost1"
@@ -25,13 +25,13 @@ def test_create_file_method(tmp_path: Path):
 
 
 def test_docker_compose_yaml_default_content():
-    template_generator = TemplateGenerator(HardpyConfig())
+    template_generator = TemplateGenerator(JigConfig())
     docker_compose_yaml = template_generator.docker_compose_yaml
     assert f"{db_default_port}:5984" in docker_compose_yaml
 
 
 def test_docker_compose_yaml_no_default_content():
-    config = HardpyConfig()
+    config = JigConfig()
     config.database.port = db_no_default_port
     template_generator = TemplateGenerator(config)
     docker_compose_yaml = template_generator.docker_compose_yaml
@@ -39,7 +39,7 @@ def test_docker_compose_yaml_no_default_content():
 
 
 def test_couchdb_ini_default_content():
-    template_generator = TemplateGenerator(HardpyConfig())
+    template_generator = TemplateGenerator(JigConfig())
     couchdb_ini = template_generator.couchdb_ini
     expected_lines = f""";port = {db_default_port}
 ;bind_address = {db_default_host}"""
@@ -48,7 +48,7 @@ def test_couchdb_ini_default_content():
 
 
 def test_couchdb_ini_no_default_content():
-    config = HardpyConfig()
+    config = JigConfig()
     config.database.port = db_no_default_port
     config.database.host = db_no_default_host
     template_generator = TemplateGenerator(config)

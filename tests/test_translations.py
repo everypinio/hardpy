@@ -232,7 +232,7 @@ class TranslationError(Exception):
 
 def test_translation_files():
     """Test that all translation files have the correct structure."""
-    locales_dir = Path("hardpy/hardpy_panel/frontend/public/locales")
+    locales_dir = Path("jig/jig_panel/frontend/public/locales")
     errors = []
 
     # Find all translation.json files

@@ -1,32 +1,32 @@
 # Operator message
 
-The [set_operator_message](./../documentation/pytest_hardpy.md/#set_operator_message)
+The [set_operator_message](./../documentation/pytest_jig.md/#set_operator_message)
 function is intended for sending messages to the operator.
 Operator messages can be used before, after, and during tests.
 
 **set_operator_message** can be used in conjunction with images and html pages.
 To do this, the user can set the argument `image` with the
-[ImageComponent](./../documentation/pytest_hardpy.md/#imagecomponent) class 
-and the argument `html` with the [HTMLComponent](./../documentation/pytest_hardpy.md/#htmlcomponent) class.
+[ImageComponent](./../documentation/pytest_jig.md/#imagecomponent) class 
+and the argument `html` with the [HTMLComponent](./../documentation/pytest_jig.md/#htmlcomponent) class.
 
 The default message to the operator blocks further execution of the code,
 but the user can set the argument `block=False` and the function will display the message
 and continue execution of the test.
 In this case, the user can clear the operator message with the
-[clear_operator_message](./../documentation/pytest_hardpy.md/#clear_operator_message) function.
+[clear_operator_message](./../documentation/pytest_jig.md/#clear_operator_message) function.
 
-The [clear_operator_message](./../documentation/pytest_hardpy.md/#clear_operator_message)
+The [clear_operator_message](./../documentation/pytest_jig.md/#clear_operator_message)
 is intended for clearing current operator message.
 
 <h1 align="center">
-    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/operator_msg.png" alt="operator_msg">
+    <img src="https://raw.githubusercontent.com/everypinio/jig/main/docs/img/operator_msg.png" alt="operator_msg">
 </h1>
 
 ### how to start
 
 1. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
 2. Create a directory `<dir_name>` with the files described below.
-3. Launch `hardpy run <dir_name>`.
+3. Launch `jig run <dir_name>`.
 
 ### conftest.py
 
@@ -40,7 +40,7 @@ If the report database doesn't exist, the report won't be saved, and an error me
 
 ```python
 import pytest
-from hardpy import CouchdbConfig, CouchdbLoader, get_current_report, set_operator_message
+from jig import CouchdbConfig, CouchdbLoader, get_current_report, set_operator_message
 
 def finish_executing():
     report = get_current_report()
@@ -68,7 +68,7 @@ Contains examples of how to use operator messages.
 
 ```python
 from time import sleep
-from hardpy import clear_operator_message, set_message, set_operator_message
+from jig import clear_operator_message, set_message, set_operator_message
 
 def test_block_operator_message():
     set_operator_message(msg="Test blocking operator message", title="Operator message")
@@ -102,7 +102,7 @@ def test_clear_operator_message():
 
 ```python
 from time import sleep
-from hardpy import ImageComponent, clear_operator_message, set_message, set_operator_message
+from jig import ImageComponent, clear_operator_message, set_message, set_operator_message
 
 def test_block_operator_message():
     set_operator_message(
@@ -150,7 +150,7 @@ def test_clear_operator_message():
 
 ```python
 from time import sleep
-from hardpy import HTMLComponent, set_message, set_operator_message
+from jig import HTMLComponent, set_message, set_operator_message
 
 test_html = """
 <!DOCTYPE html>

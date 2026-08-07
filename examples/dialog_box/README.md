@@ -1,3 +1,3 @@
 # Dialog box
 
-Example documentation https://everypinio.github.io/hardpy/examples/dialog_box/
+Example documentation https://everypinio.github.io/jig/examples/dialog_box/

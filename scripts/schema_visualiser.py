@@ -5,7 +5,7 @@
 
 import erdantic as erd
 
-from hardpy.pytest_hardpy.db.schema import ResultRunStore, ResultStateStore
+from jig.pytest_jig.db.schema import ResultRunStore, ResultStateStore
 
 erd.draw(ResultRunStore, out="runstore.png")
 erd.draw(ResultStateStore, out="statestore.png")

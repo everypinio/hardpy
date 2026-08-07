@@ -2,7 +2,7 @@
 
 ## Overview
 
-HardPy allows you to:
+Jig allows you to:
 
 * Create test benches for devices using [pytest](https://docs.pytest.org/);
 * Use a browser to view, start, stop, and interact with tests;
@@ -10,13 +10,13 @@ HardPy allows you to:
 * Store test results on the [StandCloud](https://standcloud.everypin.io/) analytics platform.
 
 <h1 align="center">
-    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/hardpy_panel.gif" alt="hardpy panel" style="width:600;">
+    <img src="https://raw.githubusercontent.com/everypinio/jig/main/docs/img/jig_panel.gif" alt="jig panel" style="width:600;">
 </h1>
 
 ## To Install
 
 ```bash
-pip install hardpy
+pip install jig
 ```
 
 ## Launch
@@ -25,7 +25,7 @@ pip install hardpy
 
 1. Create your first test bench.
   ```bash
-  hardpy init
+  jig init
   ```
 2. Launch [CouchDB](https://couchdb.apache.org/) database via [docker compose](https://docs.docker.com/compose/) 
   in the   background.
@@ -33,40 +33,40 @@ pip install hardpy
   cd tests
   docker compose up -d
   ```
-3. Launch HardPy operator panel.
+3. Launch Jig operator panel.
   ```bash
-  hardpy run
+  jig run
   ```
 4. View operator panel in browser: http://localhost:8000/
   <h1 align="center">
-      <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/hardpy_operator_panel_hello_hardpy.png"
-      alt="hardpy operator panel" style="width:600px;">
+      <img src="https://raw.githubusercontent.com/everypinio/jig/main/docs/img/jig_operator_panel_hello_jig.png"
+      alt="jig operator panel" style="width:600px;">
   </h1>
 5. View the latest test report: http://localhost:5984/_utils
 
     Login and password: **dev**, database - **runstore**.
 
   <h1 align="center">
-      <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/runstore_hello_hardpy.png"
-      alt="hardpy runstore" style="width:500px;">
+      <img src="https://raw.githubusercontent.com/everypinio/jig/main/docs/img/runstore_hello_jig.png"
+      alt="jig runstore" style="width:500px;">
   </h1>
 
 ### Without a database
 
 1. Create your first test bench.
   ```bash
-  hardpy init --no-create-database --storage-type json
+  jig init --no-create-database --storage-type json
   ```
-2. Launch HardPy operator panel.
+2. Launch Jig operator panel.
   ```bash
-  hardpy run
+  jig run
   ```
 3. View operator panel in browser: http://localhost:8000/
 
 ## Measurement instruments
 
-**HardPy** does not contain any drivers for interacting with measuring equipment. 
-However, **HardPy** allows you to work with any Python code, meaning you can use 
+**Jig** does not contain any drivers for interacting with measuring equipment. 
+However, **Jig** allows you to work with any Python code, meaning you can use 
 open libraries to interact with measuring equipment.
 
 * [InstrumentKit](https://github.com/instrumentkit/InstrumentKit)

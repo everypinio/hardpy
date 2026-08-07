@@ -1,8 +1,8 @@
 import pytest
 
-import hardpy
+import jig
 
-pytestmark = pytest.mark.module_name("HardPy template")
+pytestmark = pytest.mark.module_name("Jig template")
 
 
 @pytest.mark.case_name("Test 1")

@@ -3,11 +3,11 @@ from pathlib import Path
 import tomli
 import tomli_w
 
-from hardpy.common.config import (
+from jig.common.config import (
     ConfigManager,
     DatabaseConfig,
     FrontendConfig,
-    HardpyConfig,
+    JigConfig,
     ReportsStorageMenuConfig,
     StandCloudConfig,
 )
@@ -72,7 +72,7 @@ def test_config_manager_init():
         storage_type="json",
     )
     config = config_manager.config
-    assert isinstance(config, HardpyConfig)
+    assert isinstance(config, JigConfig)
     assert config.tests_name == tests_no_default_name
     assert config.database.storage_type == "json"
     assert config.database.user == db_no_default_user
@@ -96,7 +96,7 @@ def test_database_config():
     assert config.password == db_default_password
     assert config.host == db_default_host
     assert config.port == db_default_port
-    assert config.doc_id == ""  # default before HardPyConfig init
+    assert config.doc_id == ""  # default before JigConfig init
     assert config.url == db_default_url
 
 
@@ -131,15 +131,15 @@ def test_stand_cloud_config():
     assert config.address == stand_cloud_default_addr
 
 
-def test_hardpy_config():
-    config = HardpyConfig(
-        title="HardPy TOML config",
+def test_jig_config():
+    config = JigConfig(
+        title="Jig TOML config",
         tests_name="tests",
         database=DatabaseConfig(),
         frontend=FrontendConfig(),
         stand_cloud=StandCloudConfig(),
     )
-    assert config.title == "HardPy TOML config"
+    assert config.title == "Jig TOML config"
     assert config.tests_name == "tests"
     assert config.database.user == db_default_user
     assert config.database.password == db_default_password
@@ -194,7 +194,7 @@ def test_config_manager_create_config(tmp_path: Path):
 
     config_manager.create_config(tests_dir)
 
-    config_file: Path = tests_dir / "hardpy.toml"
+    config_file: Path = tests_dir / "jig.toml"
     config_data = tomli.loads(config_file.read_text())
     expected_data = config_manager.config.model_dump(exclude="test_configs")
 
@@ -203,7 +203,7 @@ def test_config_manager_create_config(tmp_path: Path):
 
 def test_read_config_success(tmp_path: Path):
     test_config_data = {
-        "title": "Test HardPy Config",
+        "title": "Test Jig Config",
         "tests_name": "My tests",
         "database": {
             "user": db_default_user,
@@ -235,12 +235,12 @@ def test_read_config_success(tmp_path: Path):
     }
     tests_dir = tmp_path / "tests"
     Path.mkdir(tests_dir, exist_ok=True, parents=True)
-    with Path.open(tests_dir / "hardpy.toml", "w") as file:
+    with Path.open(tests_dir / "jig.toml", "w") as file:
         file.write(tomli_w.dumps(test_config_data))
 
     config_manager = ConfigManager()
     config = config_manager.read_config(tests_dir)
-    assert isinstance(config, HardpyConfig)
+    assert isinstance(config, JigConfig)
     assert config.title == test_config_data["title"]
     assert config.tests_name == test_config_data["tests_name"]
     assert config.database.user == test_config_data["database"]["user"]

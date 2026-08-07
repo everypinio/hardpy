@@ -2,13 +2,13 @@ from pathlib import Path
 
 import pytest
 
-from hardpy.cli.example import EXAMPLES_DIR, ExampleCatalog, ExampleNotFoundError
+from jig.cli.example import EXAMPLES_DIR, ExampleCatalog, ExampleNotFoundError
 
 
 def create_example(examples_dir: Path, name: str) -> Path:
     example_dir = examples_dir / name
     example_dir.mkdir(parents=True)
-    (example_dir / "hardpy.toml").touch()
+    (example_dir / "jig.toml").touch()
     return example_dir
 
 

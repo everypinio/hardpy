@@ -3,7 +3,7 @@
 import time
 import pytest
 
-from hardpy import set_message
+from jig import set_message
 
 pytestmark = pytest.mark.module_name("Setup")
 

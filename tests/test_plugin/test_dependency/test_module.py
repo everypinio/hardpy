@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from pytest import Pytester
 
 
-def test_module_dependency_from_passed_case(pytester: Pytester, hardpy_opts: list):
+def test_module_dependency_from_passed_case(pytester: Pytester, jig_opts: list):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -25,11 +25,11 @@ def test_module_dependency_from_passed_case(pytester: Pytester, hardpy_opts: lis
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=2)
 
 
-def test_module_dependency_from_failed_case(pytester: Pytester, hardpy_opts: list):
+def test_module_dependency_from_failed_case(pytester: Pytester, jig_opts: list):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -48,11 +48,11 @@ def test_module_dependency_from_failed_case(pytester: Pytester, hardpy_opts: lis
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(failed=1, skipped=1)
 
 
-def test_module_dependency_from_skipped_case(pytester: Pytester, hardpy_opts: list):
+def test_module_dependency_from_skipped_case(pytester: Pytester, jig_opts: list):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -81,11 +81,11 @@ def test_module_dependency_from_skipped_case(pytester: Pytester, hardpy_opts: li
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(failed=1, skipped=2)
 
 
-def test_module_dependency_chained(pytester: Pytester, hardpy_opts: list):
+def test_module_dependency_chained(pytester: Pytester, jig_opts: list):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -114,11 +114,11 @@ def test_module_dependency_chained(pytester: Pytester, hardpy_opts: list):
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1, failed=1, skipped=1)
 
 
-def test_module_dependency_from_module(pytester: Pytester, hardpy_opts: list):
+def test_module_dependency_from_module(pytester: Pytester, jig_opts: list):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -140,5 +140,5 @@ def test_module_dependency_from_module(pytester: Pytester, hardpy_opts: list):
             assert False
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(failed=1, skipped=2)

@@ -40,7 +40,7 @@ Jig allows you to:
 * Store test results on the [StandCloud](https://standcloud.everypin.io/) analytics platform.
 
 <h1 align="center">
-    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/hardpy_panel.gif" alt="hardpy panel" style="width:550px;">
+    <img src="https://raw.githubusercontent.com/samuelint/jig/main/docs/img/jig_panel.gif" alt="jig panel" style="width:550px;">
 </h1>
 
 ## To Install
@@ -51,15 +51,13 @@ The fork is not published on PyPI yet, install it from source:
 pip install git+https://github.com/samuelint/jig.git
 ```
 
-The package, CLI, and imports are still named `hardpy`, so upstream code and examples work unchanged.
-
 ## Getting Started
 
 ### With CouchDB
 
 1. Create your first test bench.
   ```bash
-  hardpy init
+  jig init
   ```
 2. Launch [CouchDB](https://couchdb.apache.org/) database via [docker compose](https://docs.docker.com/compose/) 
   in the background.
@@ -67,9 +65,9 @@ The package, CLI, and imports are still named `hardpy`, so upstream code and exa
   cd tests
   docker compose up -d
   ```
-3. Launch HardPy operator panel.
+3. Launch Jig operator panel.
   ```bash
-  hardpy run
+  jig run
   ```
 4. View operator panel in browser: http://localhost:8000/
 5. View the latest test report: http://localhost:5984/_utils
@@ -80,11 +78,11 @@ The package, CLI, and imports are still named `hardpy`, so upstream code and exa
 
 1. Create your first test bench.
   ```bash
-  hardpy init --no-create-database --storage-type json
+  jig init --no-create-database --storage-type json
   ```
-2. Launch HardPy operator panel.
+2. Launch Jig operator panel.
   ```bash
-  hardpy run
+  jig run
   ```
 3. View operator panel in browser: http://localhost:8000/
 
@@ -104,12 +102,12 @@ without a name lists what is available.
 [full_capabilities](examples/full_capabilities) exercises every feature the panel can
 display and needs no database, which makes it the place to try out new ones.
 
-For more examples of using **HardPy**, see the [documentation](https://everypinio.github.io/hardpy/examples/).
+For more examples of using **Jig**, see the [documentation](https://everypinio.github.io/jig/examples/).
 
 ## Measurement instruments
 
-**HardPy** does not contain any drivers for interacting with measuring equipment. 
-However, **HardPy** allows you to work with any Python code, meaning you can use 
+**Jig** does not contain any drivers for interacting with measuring equipment. 
+However, **Jig** allows you to work with any Python code, meaning you can use 
 open libraries to interact with measuring equipment.
 
 * [InstrumentKit](https://github.com/instrumentkit/InstrumentKit)

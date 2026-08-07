@@ -6,13 +6,13 @@ if TYPE_CHECKING:
     from pytest import Pytester
 
 
-def test_enum_groups(pytester: Pytester, hardpy_opts: list[str]):
+def test_enum_groups(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         """
         import pytest
-        from hardpy import get_current_report
-        from hardpy.pytest_hardpy.utils import NodeInfo
-        from hardpy.pytest_hardpy.utils.const import Group
+        from jig import get_current_report
+        from jig.pytest_jig.utils import NodeInfo
+        from jig.pytest_jig.utils.const import Group
 
         pytestmark = pytest.mark.module_group(Group.SETUP)
 
@@ -28,16 +28,16 @@ def test_enum_groups(pytester: Pytester, hardpy_opts: list[str]):
             assert case_group == Group.TEARDOWN.value
         """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_string_groups(pytester: Pytester, hardpy_opts: list[str]):
+def test_string_groups(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         """
         import pytest
-        from hardpy import get_current_report
-        from hardpy.pytest_hardpy.utils import NodeInfo
+        from jig import get_current_report
+        from jig.pytest_jig.utils import NodeInfo
 
         pytestmark = pytest.mark.module_group("setup")
 
@@ -53,17 +53,17 @@ def test_string_groups(pytester: Pytester, hardpy_opts: list[str]):
             assert case_group == "teardown"
         """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_default_groups(pytester: Pytester, hardpy_opts: list[str]):
+def test_default_groups(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         """
         import pytest
-        from hardpy import get_current_report
-        from hardpy.pytest_hardpy.utils import NodeInfo
-        from hardpy.pytest_hardpy.utils.const import Group
+        from jig import get_current_report
+        from jig.pytest_jig.utils import NodeInfo
+        from jig.pytest_jig.utils.const import Group
 
         def test_case(request):
             node = NodeInfo(request.node)
@@ -76,11 +76,11 @@ def test_default_groups(pytester: Pytester, hardpy_opts: list[str]):
             assert case_group == Group.MAIN.value
         """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_invalid_groups(pytester: Pytester, hardpy_opts: list[str]):
+def test_invalid_groups(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         """
         import pytest
@@ -92,14 +92,14 @@ def test_invalid_groups(pytester: Pytester, hardpy_opts: list[str]):
             pass
         """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     output = result.stdout.str()
     assert "invalid_group" in output
     assert "Invalid group" in output or "Error creating NodeInfo" in output
     assert result.ret != 0
 
 
-def test_empty_groups(pytester: Pytester, hardpy_opts: list[str]):
+def test_empty_groups(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         """
         import pytest
@@ -111,7 +111,7 @@ def test_empty_groups(pytester: Pytester, hardpy_opts: list[str]):
             pass
         """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     output = result.stdout.str()
     assert "empty" in output or "''" in output
     assert "Invalid group" in output or "Error creating NodeInfo" in output

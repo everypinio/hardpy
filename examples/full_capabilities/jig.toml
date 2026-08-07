@@ -1,0 +1,28 @@
+title = "Jig TOML config"
+tests_name = "Full capabilities"
+current_test_config = ""
+
+# JSON storage keeps the example runnable without CouchDB or docker.
+[database]
+storage_type = "json"
+storage_path = ".jig"
+
+[frontend]
+host = "localhost"
+port = 8000
+language = "en"
+full_size_button = false
+sound_on = false
+manual_collect = false
+measurement_display = true
+test_history = true
+auto_scroll = true
+
+[frontend.modal_result]
+enable = true
+auto_dismiss_pass = true
+auto_dismiss_timeout = 5
+
+[frontend.reports_storage_menu]
+show_standcloud = false
+check_standcloud = false

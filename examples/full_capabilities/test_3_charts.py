@@ -3,7 +3,7 @@
 import pytest
 from simulated_device import SimulatedDevice  # type: ignore[import-not-found]
 
-from hardpy import (
+from jig import (
     Chart,
     ChartType,
     ComparisonOperation as CompOp,

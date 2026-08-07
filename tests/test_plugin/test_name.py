@@ -8,8 +8,8 @@ if TYPE_CHECKING:
 mark_test_header = """
         import pytest
 
-        from hardpy import get_current_report
-        from hardpy.pytest_hardpy.utils import NodeInfo
+        from jig import get_current_report
+        from jig.pytest_jig.utils import NodeInfo
 
         module_name = "Markers"
         case_name = "Case name"
@@ -19,15 +19,15 @@ mark_test_header = """
 test_default_header = """
         import pytest
 
-        from hardpy import get_current_report
-        from hardpy.pytest_hardpy.utils import NodeInfo
+        from jig import get_current_report
+        from jig.pytest_jig.utils import NodeInfo
         """
 
 mark_test_header_with_incorrect_data = """
         import pytest
 
-        from hardpy import get_current_report
-        from hardpy.pytest_hardpy.utils import NodeInfo
+        from jig import get_current_report
+        from jig.pytest_jig.utils import NodeInfo
 
         module_name = "%$#&^^@&*@"
         case_name = "%^&*@(()@)"
@@ -37,8 +37,8 @@ mark_test_header_with_incorrect_data = """
 mark_test_header_with_empty_data = """
         import pytest
 
-        from hardpy import get_current_report
-        from hardpy.pytest_hardpy.utils import NodeInfo
+        from jig import get_current_report
+        from jig.pytest_jig.utils import NodeInfo
 
         module_name = ""
         case_name = ""
@@ -46,7 +46,7 @@ mark_test_header_with_empty_data = """
         """
 
 
-def test_module_name(pytester: Pytester, hardpy_opts: list[str]):
+def test_module_name(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         f"""
         {mark_test_header}
@@ -58,11 +58,11 @@ def test_module_name(pytester: Pytester, hardpy_opts: list[str]):
             assert module_name == read_module_name
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_case_name(pytester: Pytester, hardpy_opts: list[str]):
+def test_case_name(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         f"""
         {mark_test_header}
@@ -74,11 +74,11 @@ def test_case_name(pytester: Pytester, hardpy_opts: list[str]):
             assert case_name == name
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_default_case_name(pytester: Pytester, hardpy_opts: list[str]):
+def test_default_case_name(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         f"""
         {test_default_header}
@@ -89,11 +89,11 @@ def test_default_case_name(pytester: Pytester, hardpy_opts: list[str]):
             assert name == "test_check_default_case_name"
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_default_module_name(pytester: Pytester, hardpy_opts: list[str]):
+def test_default_module_name(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         f"""
         {test_default_header}
@@ -104,11 +104,11 @@ def test_default_module_name(pytester: Pytester, hardpy_opts: list[str]):
             assert read_module_name == "test_default_module_name"
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1)
 
 
-def test_incorrect_markers(pytester: Pytester, hardpy_opts: list[str]):
+def test_incorrect_markers(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         f"""
         {mark_test_header_with_incorrect_data}
@@ -120,11 +120,11 @@ def test_incorrect_markers(pytester: Pytester, hardpy_opts: list[str]):
             assert case_name == name
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(failed=1)
 
 
-def test_empty_case_marker(pytester: Pytester, hardpy_opts: list[str]):
+def test_empty_case_marker(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         f"""
         {mark_test_header_with_empty_data}
@@ -136,5 +136,5 @@ def test_empty_case_marker(pytester: Pytester, hardpy_opts: list[str]):
             assert case_name == name
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(failed=1)

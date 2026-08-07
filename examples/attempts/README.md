@@ -1,3 +1,3 @@
 # Attempts
 
-Example documentation: https://everypinio.github.io/hardpy/examples/attempts/
+Example documentation: https://everypinio.github.io/jig/examples/attempts/

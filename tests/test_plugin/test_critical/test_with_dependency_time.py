@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 import_header = """
         import pytest
-        import hardpy
+        import jig
 """
 
 conftest_actions_after = """
@@ -19,14 +19,14 @@ conftest_actions_after = """
 """
 
 
-def test_critical_case_with_skip(pytester: Pytester, hardpy_opts: list):
+def test_critical_case_with_skip(pytester: Pytester, jig_opts: list):
     """Critical test case with skip - check timing."""
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module = report.modules["test_1"]
             assert module.stop_time >= module.start_time
@@ -46,18 +46,18 @@ def test_critical_case_with_skip(pytester: Pytester, hardpy_opts: list):
             pytest.skip()
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(skipped=1)
 
 
-def test_first_of_two_cases_critical_passed(pytester: Pytester, hardpy_opts: list):
+def test_first_of_two_cases_critical_passed(pytester: Pytester, jig_opts: list):
     """First of two test cases is critical and passed - check timing."""
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module = report.modules["test_1"]
             assert module.stop_time >= module.start_time
@@ -83,18 +83,18 @@ def test_first_of_two_cases_critical_passed(pytester: Pytester, hardpy_opts: lis
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=2)
 
 
-def test_first_of_two_cases_critical_failed(pytester: Pytester, hardpy_opts: list):
+def test_first_of_two_cases_critical_failed(pytester: Pytester, jig_opts: list):
     """First of two test cases is critical and failed - check timing."""
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module = report.modules["test_1"]
             assert module.stop_time >= module.start_time
@@ -121,18 +121,18 @@ def test_first_of_two_cases_critical_failed(pytester: Pytester, hardpy_opts: lis
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(failed=1, skipped=1)
 
 
-def test_second_of_two_cases_critical_passed(pytester: Pytester, hardpy_opts: list):
+def test_second_of_two_cases_critical_passed(pytester: Pytester, jig_opts: list):
     """Second of two test cases is critical and passed - check timing."""
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module = report.modules["test_1"]
             assert module.stop_time >= module.start_time
@@ -158,18 +158,18 @@ def test_second_of_two_cases_critical_passed(pytester: Pytester, hardpy_opts: li
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=2)
 
 
-def test_second_of_two_cases_critical_failed(pytester: Pytester, hardpy_opts: list):
+def test_second_of_two_cases_critical_failed(pytester: Pytester, jig_opts: list):
     """Second of two test cases is critical and failed - check timing."""
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module = report.modules["test_1"]
             assert module.stop_time >= module.start_time
@@ -195,18 +195,18 @@ def test_second_of_two_cases_critical_failed(pytester: Pytester, hardpy_opts: li
             assert False
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1, failed=1)
 
 
-def test_second_of_three_cases_critical_passed(pytester: Pytester, hardpy_opts: list):
+def test_second_of_three_cases_critical_passed(pytester: Pytester, jig_opts: list):
     """Second of three test cases is critical and passed - check timing."""
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module = report.modules["test_1"]
             assert module.stop_time >= module.start_time
@@ -238,18 +238,18 @@ def test_second_of_three_cases_critical_passed(pytester: Pytester, hardpy_opts: 
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=3)
 
 
-def test_second_of_three_cases_critical_failed(pytester: Pytester, hardpy_opts: list):
+def test_second_of_three_cases_critical_failed(pytester: Pytester, jig_opts: list):
     """Second of three test cases is critical and failed - check timing."""
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module = report.modules["test_1"]
             assert module.stop_time >= module.start_time
@@ -282,18 +282,18 @@ def test_second_of_three_cases_critical_failed(pytester: Pytester, hardpy_opts: 
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1, failed=1, skipped=1)
 
 
-def test_critical_module_with_skip(pytester: Pytester, hardpy_opts: list):
+def test_critical_module_with_skip(pytester: Pytester, jig_opts: list):
     """Critical module with skip - check timing."""
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module = report.modules["test_1"]
             assert module.stop_time >= module.start_time
@@ -322,18 +322,18 @@ def test_critical_module_with_skip(pytester: Pytester, hardpy_opts: list):
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(skipped=2)
 
 
-def test_first_of_two_modules_critical_passed(pytester: Pytester, hardpy_opts: list):
+def test_first_of_two_modules_critical_passed(pytester: Pytester, jig_opts: list):
     """First of two modules is critical and passed - check timing."""
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module1 = report.modules["test_1"]
             assert module1.stop_time >= module1.start_time
@@ -362,18 +362,18 @@ def test_first_of_two_modules_critical_passed(pytester: Pytester, hardpy_opts: l
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=2)
 
 
-def test_first_of_two_modules_critical_failed(pytester: Pytester, hardpy_opts: list):
+def test_first_of_two_modules_critical_failed(pytester: Pytester, jig_opts: list):
     """First of two modules is critical and failed - check timing."""
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module1 = report.modules["test_1"]
             assert module1.stop_time >= module1.start_time
@@ -402,18 +402,18 @@ def test_first_of_two_modules_critical_failed(pytester: Pytester, hardpy_opts: l
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(failed=1, skipped=1)
 
 
-def test_second_of_two_modules_critical_passed(pytester: Pytester, hardpy_opts: list):
+def test_second_of_two_modules_critical_passed(pytester: Pytester, jig_opts: list):
     """Second of two modules is critical and passed - check timing."""
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module1 = report.modules["test_1"]
             assert module1.stop_time >= module1.start_time
@@ -442,18 +442,18 @@ def test_second_of_two_modules_critical_passed(pytester: Pytester, hardpy_opts: 
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=2)
 
 
-def test_second_of_two_modules_critical_failed(pytester: Pytester, hardpy_opts: list):
+def test_second_of_two_modules_critical_failed(pytester: Pytester, jig_opts: list):
     """Second of two modules is critical and failed - check timing."""
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module1 = report.modules["test_1"]
             assert module1.stop_time >= module1.start_time
@@ -482,18 +482,18 @@ def test_second_of_two_modules_critical_failed(pytester: Pytester, hardpy_opts: 
             assert False
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1, failed=1)
 
 
-def test_second_of_three_modules_critical_passed(pytester: Pytester, hardpy_opts: list):
+def test_second_of_three_modules_critical_passed(pytester: Pytester, jig_opts: list):
     """Second of three modules is critical and passed - check timing."""
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module1 = report.modules["test_1"]
             assert module1.stop_time >= module1.start_time
@@ -533,18 +533,18 @@ def test_second_of_three_modules_critical_passed(pytester: Pytester, hardpy_opts
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=3)
 
 
-def test_second_of_four_modules_critical_failed(pytester: Pytester, hardpy_opts: list):
+def test_second_of_four_modules_critical_failed(pytester: Pytester, jig_opts: list):
     """Second of three modules is critical and failed - check timing."""
     pytester.makeconftest(
         f"""
         {import_header}
 
         def finish_executing():
-            report = hardpy.get_current_report()
+            report = jig.get_current_report()
 
             module1 = report.modules["test_1"]
             assert module1.stop_time >= module1.start_time
@@ -588,5 +588,5 @@ def test_second_of_four_modules_critical_failed(pytester: Pytester, hardpy_opts:
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1, failed=1, skipped=2)

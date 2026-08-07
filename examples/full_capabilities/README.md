@@ -12,7 +12,7 @@ poetry run example full_capabilities
 
 Then open [http://localhost:8000](http://localhost:8000) and press **Start**.
 
-No database is needed. The run state is stored as JSON files in `.hardpy`, and the
+No database is needed. The run state is stored as JSON files in `.jig`, and the
 report of each finished run is written to `reports`.
 
 ## What it covers

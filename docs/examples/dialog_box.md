@@ -1,24 +1,24 @@
 # Dialog box
 
-This is an example of testing dialog boxes using the **HardPy** library.
-The code for this example can be seen inside the hardpy package
-[Dialog Box](https://github.com/everypinio/hardpy/tree/main/examples/dialog_box).
+This is an example of testing dialog boxes using the **Jig** library.
+The code for this example can be seen inside the jig package
+[Dialog Box](https://github.com/everypinio/jig/tree/main/examples/dialog_box).
 
 Contains some examples of valid tests for dialog boxes.
 To test images, create an `assets` folder in the `dialog_box` folder with the image `test.png`.
 
 ### how to start
 
-1. Launch `hardpy init dialog_box`.
+1. Launch `jig init dialog_box`.
 2. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
-4. Launch `hardpy run dialog_box`.
+4. Launch `jig run dialog_box`.
 
 ### test_1_base_box.py
 
 ```python
 import pytest
-from hardpy import DialogBox, HTMLComponent, ImageComponent, run_dialog_box
+from jig import DialogBox, HTMLComponent, ImageComponent, run_dialog_box
 
 pytestmark = pytest.mark.module_name("Base dialog box")
 
@@ -32,7 +32,7 @@ def test_base_dialog_box_with_image():
         title_bar="Operator check",
         dialog_text="Press the Confirm button",
         image=ImageComponent(address="assets/test.png", width=100, border=1),
-        html=HTMLComponent(html="https://everypinio.github.io/hardpy/", width=50, is_raw_html=False),
+        html=HTMLComponent(html="https://everypinio.github.io/jig/", width=50, is_raw_html=False),
         pass_fail=True,
     )
     response = run_dialog_box(dbx)
@@ -78,7 +78,7 @@ def test_base_dialog_box_with_pass_fail_custom_button_text():
 
 ```python
 import pytest
-from hardpy import (
+from jig import (
     DialogBox,
     ImageComponent,
     NumericInputWidget,
@@ -119,7 +119,7 @@ def test_num_input():
 
 ```python
 import pytest
-from hardpy import (
+from jig import (
     CheckboxWidget,
     DialogBox,
     RadiobuttonWidget,
@@ -157,7 +157,7 @@ def test_checkbox():
 
 ```python
 import pytest
-from hardpy import DialogBox, HTMLComponent, ImageComponent, MultistepWidget, StepWidget, run_dialog_box
+from jig import DialogBox, HTMLComponent, ImageComponent, MultistepWidget, StepWidget, run_dialog_box
 
 pytestmark = pytest.mark.module_name("Multiple steps dialog box")
 
@@ -173,7 +173,7 @@ def test_multiple_steps():
         StepWidget(
             "Step 3",
             text=None,
-            html=HTMLComponent(html="https://everypinio.github.io/hardpy/", width=50, is_raw_html=False),
+            html=HTMLComponent(html="https://everypinio.github.io/jig/", width=50, is_raw_html=False),
         ),
     ]
     dbx = DialogBox(
@@ -189,7 +189,7 @@ def test_multiple_steps():
 ```python
 import pytest
 
-from hardpy import DialogBox, HTMLComponent, run_dialog_box
+from jig import DialogBox, HTMLComponent, run_dialog_box
 
 pytestmark = pytest.mark.module_name("Dialog box with HTML")
 
@@ -222,7 +222,7 @@ def test_base_dialog_box_with_html_link():
         title_bar="Operator check",
         dialog_text="Press the Confirm button",
         html=HTMLComponent(
-            html="https://everypinio.github.io/hardpy/",
+            html="https://everypinio.github.io/jig/",
             is_raw_html=False,
             border=2,
         ),

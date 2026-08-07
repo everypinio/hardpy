@@ -14,7 +14,7 @@
 Create a conda.yaml file if you prefer to work through **Anaconda** or **Miniconda**:
 
 ```yaml
-name: hardpy
+name: jig
 channels:
   - defaults
   - conda-forge
@@ -37,7 +37,7 @@ conda env create -f conda.yaml
 Activate:
 
 ```bash
-conda activate hardpy
+conda activate jig
 ```
 
 ### Poetry
@@ -48,7 +48,7 @@ If you prefer to work through **Poetry**:
 poetry install
 ```
 
-The environment then holds the project in editable mode, together with the `hardpy`
+The environment then holds the project in editable mode, together with the `jig`
 and `example` commands:
 
 ```bash
@@ -89,7 +89,7 @@ Below are the steps to run, debug, and build the frontend application.
 
 **node.js** and **yarn** are required to build the frontend.
 
-### 1. Running the frontend for Hardpy debugging
+### 1. Running the frontend for Jig debugging
 
 To run the frontend application for debugging purposes, you can use the **Run Frontend** configuration in VSCode or execute commands manually.
 
@@ -142,9 +142,9 @@ This will:
 2. Open Chrome and navigate to `http://localhost:3000`.
 3. Use Chrome DevTools (`F12`) to debug the application.
 
-### 3. Building the frontend for Hardpy package
+### 3. Building the frontend for Jig package
 
-To build the frontend and include it in the Hardpy package, you can use the provided scripts or run the commands manually.
+To build the frontend and include it in the Jig package, you can use the provided scripts or run the commands manually.
 
 Use the `compile_front.sh` script from `scripts` folder
 or run the scripts manually:
@@ -160,8 +160,8 @@ or run the scripts manually:
 ```bash
 pip uninstall $PRJ -y
 
-rm -rf hardpy/hardpy_panel/frontend/dist
-rm -rf hardpy/hardpy_panel/frontend/node_modules
+rm -rf jig/jig_panel/frontend/dist
+rm -rf jig/jig_panel/frontend/node_modules
 rm -rf *.egg-info
 rm -rf dist
 rm -rf __pycache__
@@ -185,7 +185,7 @@ Here's an example of how to include it in a test configuration:
     "name": "Python: Example Dialog box",
     "type": "debugpy",
     "request": "launch",
-    "module": "hardpy.cli.cli",
+    "module": "jig.cli.cli",
     "console": "integratedTerminal",
     "env": {
         "DEBUG_FRONTEND": "1"
@@ -214,11 +214,11 @@ DEBUG_FRONTEND=1
 
 ## Adding Translations
 
-To add or modify translations for the HardPy operator panel:
+To add or modify translations for the Jig operator panel:
 
 1. Navigate to the translations directory:
    ```bash
-   cd hardpy/hardpy_panel/frontend/public/locales/
+   cd jig/jig_panel/frontend/public/locales/
    ```
 
 2. Create a new folder for your language using its ISO 639 code (e.g., `en` for English, `ru` for Russian, `fr` for French).
@@ -227,7 +227,7 @@ To add or modify translations for the HardPy operator panel:
    ```json
   {
     "app": {
-      "title": "HardPy Operator Panel",
+      "title": "Jig Operator Panel",
       "lastLaunch": "Last launch:",
       "duration": "Duration",
       "seconds": "s",
@@ -334,13 +334,13 @@ def test_of_manual():
 
 1. Install dependencies or create environment.
 2. Compile frontend if it's the first launch.
-3. Launch `hardpy init` with path to tests folder.
+3. Launch `jig init` with path to tests folder.
 4. Launch **CouchDB** instance.
-5. Launch `hardpy run` with path to tests folder.
+5. Launch `jig run` with path to tests folder.
 
 Addresses:
 
-- HardPy panel: http://localhost:8000/
+- Jig panel: http://localhost:8000/
 - CouchDB: http://localhost:5984/_utils/
 
 ## Documentation

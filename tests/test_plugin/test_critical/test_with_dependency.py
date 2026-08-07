@@ -8,11 +8,11 @@ if TYPE_CHECKING:
 
 import_header = """
         import pytest
-        import hardpy
+        import jig
 """
 
 
-def test_critical_with_dependency(pytester: Pytester, hardpy_opts: list[str]):
+def test_critical_with_dependency(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         test_file1="""
         import pytest
@@ -41,11 +41,11 @@ def test_critical_with_dependency(pytester: Pytester, hardpy_opts: list[str]):
             assert True
         """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(failed=1, skipped=5)
 
 
-def test_critical_case_with_dependency_passed(pytester: Pytester, hardpy_opts: list):
+def test_critical_case_with_dependency_passed(pytester: Pytester, jig_opts: list):
     """Critical test with dependency that passed."""
     pytester.makepyfile(
         test_1="""
@@ -60,11 +60,11 @@ def test_critical_case_with_dependency_passed(pytester: Pytester, hardpy_opts: l
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=2)
 
 
-def test_critical_case_with_dependency_failed(pytester: Pytester, hardpy_opts: list):
+def test_critical_case_with_dependency_failed(pytester: Pytester, jig_opts: list):
     """Critical test with dependency that failed."""
     pytester.makepyfile(
         test_1="""
@@ -82,11 +82,11 @@ def test_critical_case_with_dependency_failed(pytester: Pytester, hardpy_opts: l
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(failed=1, skipped=2)
 
 
-def test_critical_case_with_skipped_dependency(pytester: Pytester, hardpy_opts: list):
+def test_critical_case_with_skipped_dependency(pytester: Pytester, jig_opts: list):
     """Critical test with dependency that was skipped."""
     pytester.makepyfile(
         test_1="""
@@ -101,11 +101,11 @@ def test_critical_case_with_skipped_dependency(pytester: Pytester, hardpy_opts: 
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(skipped=2)
 
 
-def test_critical_module_with_dependency_passed(pytester: Pytester, hardpy_opts: list):
+def test_critical_module_with_dependency_passed(pytester: Pytester, jig_opts: list):
     """Critical module with dependency that passed."""
     pytester.makepyfile(
         test_1="""
@@ -128,11 +128,11 @@ def test_critical_module_with_dependency_passed(pytester: Pytester, hardpy_opts:
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=2)
 
 
-def test_critical_module_with_dependency_failed(pytester: Pytester, hardpy_opts: list):
+def test_critical_module_with_dependency_failed(pytester: Pytester, jig_opts: list):
     """Critical module with dependency that failed."""
     pytester.makepyfile(
         test_1="""
@@ -163,11 +163,11 @@ def test_critical_module_with_dependency_failed(pytester: Pytester, hardpy_opts:
             assert False
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(failed=1, skipped=2)
 
 
-def test_first_module_critical_failed(pytester: Pytester, hardpy_opts: list):
+def test_first_module_critical_failed(pytester: Pytester, jig_opts: list):
     """First module is critical and failed - check timing."""
     pytester.makepyfile(
         test_1="""
@@ -187,11 +187,11 @@ def test_first_module_critical_failed(pytester: Pytester, hardpy_opts: list):
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(failed=1, skipped=1)
 
 
-def test_middle_module_critical_failed(pytester: Pytester, hardpy_opts: list):
+def test_middle_module_critical_failed(pytester: Pytester, jig_opts: list):
     """Middle module is critical and failed - check timing."""
     pytester.makepyfile(
         test_1="""
@@ -219,5 +219,5 @@ def test_middle_module_critical_failed(pytester: Pytester, hardpy_opts: list):
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1, failed=1, skipped=1)

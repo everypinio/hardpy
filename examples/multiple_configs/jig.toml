@@ -1,0 +1,43 @@
+title = "Jig TOML config"
+tests_name = "Multiple configs"
+current_test_config = ""
+
+[database]
+storage_type = "couchdb"
+user = "dev"
+password = "dev"
+host = "localhost"
+port = 5984
+
+[frontend]
+host = "localhost"
+port = 8000
+language = "en"
+full_size_button = false
+manual_collect = false
+sound_on = false
+measurement_display = false
+test_history = false
+auto_scroll = false
+
+[frontend.modal_result]
+enable = false
+auto_dismiss_pass = true
+auto_dismiss_timeout = 5
+
+[frontend.reports_storage_menu]
+show_standcloud = true
+check_standcloud = true
+
+[[test_configs]]
+name = "Config 1"
+file = "config1_pytest.ini"
+
+[[test_configs]]
+name = "Config 2"
+file = "config2_pytest.ini"
+
+[[test_configs]]
+name = "Config 3"
+description = "Example description"
+file = "config3_pytest.ini"

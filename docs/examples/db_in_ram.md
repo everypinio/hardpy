@@ -16,7 +16,7 @@ methods of launching the database:
 ### binary packages
 
 Start the database according to the 
-[instructions](https://everypinio.github.io/hardpy/documentation/database/#running-couchdb-with-binary-packages-in-linux)
+[instructions](https://everypinio.github.io/jig/documentation/database/#running-couchdb-with-binary-packages-in-linux)
 
 - Create a CouchDB folder in the temporary file storage:
 
@@ -47,7 +47,7 @@ sudo service couchdb restart
 ### docker
 
 Start the database according to the 
-[instructions](https://everypinio.github.io/hardpy/documentation/database/#running-couchdb-with-docker-compose) (steps 1-3)
+[instructions](https://everypinio.github.io/jig/documentation/database/#running-couchdb-with-docker-compose) (steps 1-3)
 
 Example of `docker-compose.yaml` file with saving files in RAM:
 
@@ -96,7 +96,7 @@ letter (e.g., `K`), click Next twice, then Finish.
 ### binary packages
 
 Start the database according to the 
-[instructions](https://everypinio.github.io/hardpy/documentation/database/#running-couchdb-with-binary-packages-in-windows)
+[instructions](https://everypinio.github.io/jig/documentation/database/#running-couchdb-with-binary-packages-in-windows)
 
 - Open the file located at `C:/CouchDB/etc/default.ini` as administrator.
 - Set the value of the database_dir parameter to `K:/couchdb`.
@@ -107,7 +107,7 @@ Start the database according to the
 ### docker
 
 Start the database according to the 
-[instructions](https://everypinio.github.io/hardpy/documentation/database/#running-couchdb-with-docker-compose) (steps 1-3)
+[instructions](https://everypinio.github.io/jig/documentation/database/#running-couchdb-with-docker-compose) (steps 1-3)
 
 In `docker-compose.yaml` file in `volumes` find the string:
 

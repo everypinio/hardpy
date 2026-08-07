@@ -6,10 +6,10 @@ if TYPE_CHECKING:
     from pytest import Pytester
 
 
-def test_multiple_module_dependencies_passed(pytester: Pytester, hardpy_opts: list):
+def test_multiple_module_dependencies_passed(pytester: Pytester, jig_opts: list):
     """Verify handling of multiple dependencies with mixed results.
 
-    PR-130: https://github.com/everypinio/hardpy/pull/130
+    PR-130: https://github.com/everypinio/jig/pull/130
     """
     pytester.makepyfile(
         test_1="""
@@ -40,14 +40,14 @@ def test_multiple_module_dependencies_passed(pytester: Pytester, hardpy_opts: li
             assert True
         """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=3)
 
 
-def test_multiple_module_dependencies_skipped(pytester: Pytester, hardpy_opts: list):
+def test_multiple_module_dependencies_skipped(pytester: Pytester, jig_opts: list):
     """Verify handling of multiple dependencies with mixed results.
 
-    PR-130: https://github.com/everypinio/hardpy/pull/130
+    PR-130: https://github.com/everypinio/jig/pull/130
     """
     pytester.makepyfile(
         test_1="""
@@ -78,11 +78,11 @@ def test_multiple_module_dependencies_skipped(pytester: Pytester, hardpy_opts: l
             assert True
         """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1, failed=1, skipped=1)
 
 
-def test_module_by_module_skipped(pytester: Pytester, hardpy_opts: list):
+def test_module_by_module_skipped(pytester: Pytester, jig_opts: list):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -124,11 +124,11 @@ def test_module_by_module_skipped(pytester: Pytester, hardpy_opts: list):
             assert True
         """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=1, failed=1, skipped=2)
 
 
-def test_module_by_module_passed(pytester: Pytester, hardpy_opts: list):
+def test_module_by_module_passed(pytester: Pytester, jig_opts: list):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -170,11 +170,11 @@ def test_module_by_module_passed(pytester: Pytester, hardpy_opts: list):
             assert True
         """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=4)
 
 
-def test_module_by_module_failed(pytester: Pytester, hardpy_opts: list):
+def test_module_by_module_failed(pytester: Pytester, jig_opts: list):
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -216,14 +216,14 @@ def test_module_by_module_failed(pytester: Pytester, hardpy_opts: list):
             assert True
         """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(failed=1, skipped=3)
 
 
-def test_multiple_case_dependencies(pytester: Pytester, hardpy_opts: list):
+def test_multiple_case_dependencies(pytester: Pytester, jig_opts: list):
     """Verify multiple dependencies within a single test case.
 
-    PR-130: https://github.com/everypinio/hardpy/pull/130
+    PR-130: https://github.com/everypinio/jig/pull/130
     """
     pytester.makepyfile(
         test_1="""
@@ -248,11 +248,11 @@ def test_multiple_case_dependencies(pytester: Pytester, hardpy_opts: list):
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=3, failed=1, skipped=1)
 
-def test_module_failed_case_dependencies_passed(pytester: Pytester, hardpy_opts: list):
-    """Added by https://github.com/everypinio/hardpy/pull/143 PR-143."""
+def test_module_failed_case_dependencies_passed(pytester: Pytester, jig_opts: list):
+    """Added by https://github.com/everypinio/jig/pull/143 PR-143."""
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -283,12 +283,12 @@ def test_module_failed_case_dependencies_passed(pytester: Pytester, hardpy_opts:
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(failed=1, passed=5)
 
 
-def test_module_failed_case_dependencies_skipped(pytester: Pytester, hardpy_opts: list):
-    """Added by https://github.com/everypinio/hardpy/pull/143 PR-143."""
+def test_module_failed_case_dependencies_skipped(pytester: Pytester, jig_opts: list):
+    """Added by https://github.com/everypinio/jig/pull/143 PR-143."""
     pytester.makepyfile(
         test_1="""
         import pytest
@@ -319,5 +319,5 @@ def test_module_failed_case_dependencies_skipped(pytester: Pytester, hardpy_opts
             assert True
     """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(failed=2, passed=2, skipped=2)

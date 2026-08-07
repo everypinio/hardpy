@@ -1,22 +1,22 @@
 # Minimal example 
 
-This is the simplest example of using **HardPy**.
-This code shows how to convert any **pytest** tests into a **HardPy** project. 
-To achieve this, a `hardpy.toml` file containing the minimum required information must be added. 
-Data from this project will be saved in a JSON document in the **.hardpy/runstore** directory.
+This is the simplest example of using **Jig**.
+This code shows how to convert any **pytest** tests into a **Jig** project. 
+To achieve this, a `jig.toml` file containing the minimum required information must be added. 
+Data from this project will be saved in a JSON document in the **.jig/runstore** directory.
 
-The code for this example can be seen inside the hardpy package [Minimal example](https://github.com/everypinio/hardpy/tree/main/examples/minimal_example).
+The code for this example can be seen inside the jig package [Minimal example](https://github.com/everypinio/jig/tree/main/examples/minimal_example).
 
 ### how to start
 
-1. Install the hardpy from pypi: 
+1. Install the jig from pypi: 
   ```
-  pip install hardpy
+  pip install jig
   ```
-2. Copy the hardpy.toml file to the tests directory.
-3. Launch **HardPy**:
+2. Copy the jig.toml file to the tests directory.
+3. Launch **Jig**:
    ```bash
-   hardpy run <tests_directory>
+   jig run <tests_directory>
    ```
 4. Open `http://localhost:8000/` 
 
@@ -27,7 +27,7 @@ def test_one():
     assert True
 ```
 
-### hardpy.toml
+### jig.toml
 
 ```toml
 [database]

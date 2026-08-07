@@ -1,4 +1,4 @@
-import hardpy
+import jig
 import pytest
 from time import sleep
 
@@ -8,13 +8,13 @@ from time import sleep
 def test_power_supply_voltage():
     """Test that power supply outputs correct voltage."""
     # Set test stand information
-    hardpy.set_stand_name("Test Bench #1")
-    hardpy.set_stand_location("Lab A")
+    jig.set_stand_name("Test Bench #1")
+    jig.set_stand_location("Lab A")
 
     # Set device under test information
-    hardpy.set_dut_serial_number("PSU-12345")
-    hardpy.set_dut_name("Power Supply Unit")
-    hardpy.set_dut_type("DC Power Supply")
+    jig.set_dut_serial_number("PSU-12345")
+    jig.set_dut_name("Power Supply Unit")
+    jig.set_dut_type("DC Power Supply")
 
     # Simulate voltage measurement
     expected_voltage = 5.0
@@ -22,8 +22,8 @@ def test_power_supply_voltage():
     tolerance = 0.1
 
     # Record measurement
-    hardpy.set_case_measurement(
-        hardpy.NumericMeasurement(
+    jig.set_case_measurement(
+        jig.NumericMeasurement(
             name="Output Voltage",
             value=measured_voltage,
             unit="V",
@@ -33,7 +33,7 @@ def test_power_supply_voltage():
     )
 
     # Add message
-    hardpy.set_message(f"Measured voltage: {measured_voltage}V (expected: {expected_voltage}V)")
+    jig.set_message(f"Measured voltage: {measured_voltage}V (expected: {expected_voltage}V)")
 
     # Verify voltage is within tolerance
     assert abs(measured_voltage - expected_voltage) <= tolerance, \
@@ -50,8 +50,8 @@ def test_current_limit():
     tolerance = 0.2
 
     # Record measurement
-    hardpy.set_case_measurement(
-        hardpy.NumericMeasurement(
+    jig.set_case_measurement(
+        jig.NumericMeasurement(
             name="Current Limit",
             value=measured_limit,
             unit="A",
@@ -60,7 +60,7 @@ def test_current_limit():
         )
     )
 
-    hardpy.set_message(f"Current limit: {measured_limit}A")
+    jig.set_message(f"Current limit: {measured_limit}A")
 
     assert abs(measured_limit - expected_limit) <= tolerance
 
@@ -70,7 +70,7 @@ def test_current_limit():
 @pytest.mark.attempt(2)  # Retry once if fails
 def test_voltage_stability():
     """Test voltage stability over time."""
-    hardpy.set_message("Testing voltage stability over 5 seconds...")
+    jig.set_message("Testing voltage stability over 5 seconds...")
 
     voltage_readings = []
     for i in range(5):
@@ -82,8 +82,8 @@ def test_voltage_stability():
     max_variation = max(voltage_readings) - min(voltage_readings)
 
     # Record measurement
-    hardpy.set_case_measurement(
-        hardpy.NumericMeasurement(
+    jig.set_case_measurement(
+        jig.NumericMeasurement(
             name="Voltage Variation",
             value=max_variation,
             unit="V",
@@ -91,6 +91,6 @@ def test_voltage_stability():
         )
     )
 
-    hardpy.set_message(f"Max voltage variation: {max_variation:.3f}V")
+    jig.set_message(f"Max voltage variation: {max_variation:.3f}V")
 
     assert max_variation < 0.1, f"Voltage not stable: {max_variation}V variation"

@@ -1,7 +1,7 @@
 import pytest
 from driver_example import DriverExample  # type: ignore
 
-from hardpy import (
+from jig import (
     CouchdbConfig,
     CouchdbLoader,
     get_current_report,

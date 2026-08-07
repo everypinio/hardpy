@@ -1,0 +1,72 @@
+# Jig launch
+
+**Jig** can be started from either the operator panel or the terminal.
+Below we will look at all the launch options.
+
+### how to start
+
+Initialize the **Jig** project:
+
+1. Launch `jig init test_project`.
+2. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
+
+### launch options
+
+#### 1. Operator panel
+
+1. Launch operator panel:
+   ```bash
+   jig run test_project
+   ```
+
+2. Open the operator panel in your browser at: [http://localhost:8000/](http://localhost:8000/).
+3. Click the **Start** button.
+
+#### 2. Start command
+
+1. Launch operator panel:
+   ```bash
+   jig run test_project
+   ```
+2. Run the tests by executing the following command in the terminal:
+    ```bash
+    jig start test_project
+    ```
+
+#### 3. Pytest in console
+
+Run the tests by executing the following command in the terminal:
+
+```bash
+pytest test_project
+```
+
+##### 3.1. Pytest in console with launching operator panel
+
+If the operator panel is running, the tests will start after the command in the terminal in the same way as by clicking on the `Start` button.
+
+##### 3.2. Pytest in console without launching operator panel
+
+If the operator panel has not been started, the tests will also run, but without visualization.
+
+???+ warning
+    This method is only appropriate if you are not using any operator panel features such as operator messages and dialog boxes.
+
+#### 4. IDE
+
+An example of starting in vscode is as follows.
+If you use other IDEs, explore the possibility of running tests in your environment.
+
+1. Open the [Testing](https://code.visualstudio.com/docs/editor/testing) extension in VS Code.
+2. Run the tests through the extension interface.
+
+##### 4.1. Pytest in Testing with launching operator panel
+
+If the operator panel is running, the tests will start after launching in Testing in the same way as by clicking on the `Start` button.
+
+##### 4.2. Pytest in Testing without launching operator panel
+
+If the operator panel has not been started, the tests will also run, but without visualization.
+
+???+ warning
+    This method is only appropriate if you are not using any operator panel features such as operator messages and dialog boxes.

@@ -1,9 +1,9 @@
 # Minute parity
 
-This is an example of using **pytest-hardpy** functions, storing
+This is an example of using **pytest-jig** functions, storing
 the result to CouchDB and writing a simple driver.
-The code for this example can be seen inside the hardpy package
-[Minute parity](https://github.com/everypinio/hardpy/tree/main/examples/minute_parity).
+The code for this example can be seen inside the jig package
+[Minute parity](https://github.com/everypinio/jig/tree/main/examples/minute_parity).
 
 This example includes the results of the [test completion modal](./../features/features.md#test-completion-modal-results), 
 [sound notifications](./../features/features.md#sound-notifications) and 
@@ -11,18 +11,18 @@ This example includes the results of the [test completion modal](./../features/f
 
 ### how to start
 
-1. Launch `hardpy init minute_parity`.
+1. Launch `jig init minute_parity`.
 2. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
-4. Launch `hardpy run minute_parity`.
+4. Launch `jig run minute_parity`.
 
-### hardpy.toml
+### jig.toml
 
 Replace the settings in the `[frontend]` and `[frontend.modal_result]` sections 
-with those shown in the **hardpy.toml** example file below.
+with those shown in the **jig.toml** example file below.
 
 ```toml
-title = "HardPy TOML config"
+title = "Jig TOML config"
 tests_name = "Minute Parity"
 
 [database]
@@ -57,7 +57,7 @@ Contains settings and fixtures for all tests:
 ```python
 import pytest
 from driver_example import DriverExample
-from hardpy import (
+from jig import (
     CouchdbConfig,
     CouchdbLoader,
     get_current_report,
@@ -88,7 +88,7 @@ The driver returns the current minute in the OS.
 
 ```python
 import datetime
-from hardpy import set_operator_message
+from jig import set_operator_message
 
 class DriverExample:
     @property
@@ -112,41 +112,41 @@ Contains tests related to preparation for the testing process:
 ```python
 from uuid import uuid4
 import pytest
-import hardpy
+import jig
 
 pytestmark = pytest.mark.module_name("Testing preparation")
 
 @pytest.mark.case_name("Process info")
 def test_process_info():
-    hardpy.set_process_name("Acceptance Test")
-    hardpy.set_process_number(1)
+    jig.set_process_name("Acceptance Test")
+    jig.set_process_number(1)
 
     process_info = {"stage": "production", "version": "1.0"}
-    hardpy.set_process_info(process_info)
+    jig.set_process_info(process_info)
 
 
 @pytest.mark.case_name("Batch info")
 def test_batch_info():
-    hardpy.set_batch_serial_number("batch_1")
+    jig.set_batch_serial_number("batch_1")
 
 
 @pytest.mark.case_name("DUT info")
 def test_dut_info():
     serial_number = str(uuid4())[:6]
-    hardpy.set_dut_serial_number(serial_number)
-    hardpy.set_message(f"Serial number: {serial_number}")
-    hardpy.set_dut_part_number("part_number_1")
-    hardpy.set_dut_name("Test Device")
-    hardpy.set_dut_type("PCBA")
-    hardpy.set_dut_revision("REV1.0")
+    jig.set_dut_serial_number(serial_number)
+    jig.set_message(f"Serial number: {serial_number}")
+    jig.set_dut_part_number("part_number_1")
+    jig.set_dut_name("Test Device")
+    jig.set_dut_type("PCBA")
+    jig.set_dut_revision("REV1.0")
 
     info = {"sw_version": "1.0.0"}
-    hardpy.set_dut_info(info)
+    jig.set_dut_info(info)
 
 @pytest.mark.case_name("Sub unit info")
 def test_sub_unit_info():
-    hardpy.set_dut_sub_unit(
-        hardpy.SubUnit(
+    jig.set_dut_sub_unit(
+        jig.SubUnit(
             serial_number=str(uuid4())[:6],
             part_number="part_number_1",
             type="PCBA",
@@ -157,14 +157,14 @@ def test_sub_unit_info():
 @pytest.mark.case_name("Test stand info")
 def test_stand_info():
     test_stand_name = "Stand 1"
-    hardpy.set_stand_name(test_stand_name)
-    hardpy.set_stand_location("Moon")
-    hardpy.set_stand_number(2)
-    hardpy.set_stand_revision("HW1.0")
+    jig.set_stand_name(test_stand_name)
+    jig.set_stand_location("Moon")
+    jig.set_stand_number(2)
+    jig.set_stand_revision("HW1.0")
 
     stand_info = {"some_info": "123", "release": "1.0.0", "calibration_due": "2023-12-31"}
-    hardpy.set_stand_info(stand_info)
-    hardpy.set_message(f"Stand name: {test_stand_name}")
+    jig.set_stand_info(stand_info)
+    jig.set_message(f"Stand name: {test_stand_name}")
     assert True
 ```
 
@@ -183,7 +183,7 @@ Contains basic tests:
 import pytest
 from driver_example import DriverExample
 
-import hardpy
+import jig
 
 pytestmark = pytest.mark.module_name("Main tests")
 
@@ -191,10 +191,10 @@ pytestmark = pytest.mark.module_name("Main tests")
 def test_minute_parity(driver_example: DriverExample):
     minute = driver_example.current_minute
     result = minute % 2
-    hardpy.set_case_measurement(hardpy.NumericMeasurement(value=minute, name="Current minute"))
+    jig.set_case_measurement(jig.NumericMeasurement(value=minute, name="Current minute"))
     error_code = 1
     error_msg = f"The test failed because {minute} is odd! Try again!"
-    assert result == 0, hardpy.ErrorCode(error_code, error_msg)
+    assert result == 0, jig.ErrorCode(error_code, error_msg)
 ```
 
 ### test_3.py
@@ -211,7 +211,7 @@ If `test_2::test_minute_parity` fails, `test_3` will be skipped
 ```python
 from time import sleep
 import pytest
-import hardpy
+import jig
 
 pytestmark = [
     pytest.mark.module_name("End of testing"),
@@ -221,8 +221,8 @@ pytestmark = [
 @pytest.mark.case_name("Final case")
 def test_one():
     for i in range(5, 0, -1):
-        hardpy.set_message(f"Time left until testing ends {i} s", "updated_status")
+        jig.set_message(f"Time left until testing ends {i} s", "updated_status")
         sleep(1)
-    hardpy.set_message("Testing ended", "updated_status")
+    jig.set_message("Testing ended", "updated_status")
     assert True
 ```

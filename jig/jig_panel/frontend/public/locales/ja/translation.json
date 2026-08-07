@@ -1,0 +1,149 @@
+{
+  "app": {
+    "title": "Jig オペレーターパネル",
+    "lastLaunch": "最終起動:",
+    "duration": "期間",
+    "seconds": "秒",
+    "soundOn": "音をオンにする",
+    "soundOff": "音をオフにする",
+    "debugOn": "デバッグモードをオンにする",
+    "debugOff": "デバッグモードをオフにする",
+    "connection": "接続を確立しています... 🧐🔎",
+    "dbError": "データベース接続エラー. 🙅🏽‍♀️🚫",
+    "noEntries": "データベースにエントリがありません 🙅🏽‍♀️🚫",
+    "stoppedTestCase": "停止されたテストケース",
+    "failedTestCases": "失敗したテストケース",
+    "modalResultDismissHint": "どこかをクリックするか、任意のキーを押して閉じます",
+    "modalResultAutoDismissHint": "{{seconds}}秒後に自動的に閉じます...",
+    "manualCollectOn": "手動収集オン",
+    "manualCollectOff": "手動収集オフ",
+    "testConfigurationSelector": "テスト構成を選択する",
+    "settings": "設定",
+    "status": {
+      "ready": "準備完了",
+      "run": "実行中",
+      "passed": "合格",
+      "failed": "不合格",
+      "stopped": "停止",
+      "unknown": "不明"
+    }
+  },
+  "storageStatus": {
+    "title": "レポート保存先",
+    "iconLabel": "レポート保存先の状態",
+    "loading": "保存先の状態を読み込み中...",
+    "unavailable": "保存先の状態を取得できません。",
+    "cloudStorage": "クラウド保存先",
+    "localStorage": "ローカル保存バックエンド",
+    "copyPath": "保存先パスをコピー",
+    "pathCopied": "保存先パスをコピーしました",
+    "tooltips": {
+      "reportsStorage": "jig.toml で設定します。",
+      "standcloud": "テストレポート用の主要なクラウド保存先です。standcloud.everypin.io",
+      "localDatabase": "不安定なインターネット接続向けの推奨バッファです。",
+      "files": "テストレポート用のローカル JSON ファイル保存先です。"
+    },
+    "standcloud": {
+      "title": "StandCloud",
+      "docs": "StandCloud 設定ガイド",
+      "apiKeyLink": "スタンド API key を取得",
+      "statuses": {
+        "configured": "設定済み",
+        "needs_api_key": "API key が必要です",
+        "autosync_disabled": "自動同期は無効です",
+        "not_configured": "未設定",
+        "check_disabled": "チェック無効"
+      }
+    },
+    "localDatabase": {
+      "title": "ローカルデータベース",
+      "docs": "ローカルデータベースガイド",
+      "openPanel": "CouchDB パネルを開く",
+      "connectionFailedMessage": "CouchDB を利用できません。レポートを保存できません。",
+      "statuses": {
+        "configured": "設定済み",
+        "not_configured": "未設定",
+        "connection_failed": "接続失敗"
+      }
+    },
+    "files": {
+      "title": "ファイル",
+      "openFolder": "保存先フォルダを開く",
+      "folderPath": "{{path}}",
+      "statuses": {
+        "configured": "設定済み",
+        "hidden": "未設定"
+      }
+    }
+  },
+  "button": {
+    "start": "開始",
+    "stop": "停止",
+    "confirm": "確認",
+    "pass": "合格",
+    "fail": "不合格"
+  },
+  "error": {
+    "dbConnectionTitle": "データベース接続エラー",
+    "dbConnectionMessage": "データベースへの接続に失敗しました"
+  },
+  "chart": {
+    "dataChart": "チャートデータ",
+    "xAxis": "X軸",
+    "yAxis": "Y軸",
+    "chart": "グラフ",
+    "showChart": "グラフを表示 {{title}}",
+    "fullscreenButton": "グラフを全画面表示で開く",
+    "series": "シリーズ{{number}}"
+  },
+  "operatorDialog": {
+    "defaultTitle": "メッセージ",
+    "imageAlt": "オペレーターメッセージ画像",
+    "htmlCodeTitle": "HTMLコード",
+    "htmlLinkTitle": "HTMLリンク",
+    "enterAnswer": "回答を入力",
+    "fieldNotEmpty": "フィールドは空にできません",
+    "notificationTitle": "通知",
+    "notificationDesc": "ウィンドウが閉じられました。テストを停止しました。",
+    "numericInputError": "数字を入力してください",
+    "radioButtonError": "いずれかのオプションを選択してください",
+    "checkboxError": "少なくとも1つのオプションを選択してください"
+  },
+  "suiteList": {
+    "loadingTests": "テストを読み込み中... 🤔",
+    "refreshHint": "ページを更新してみてください。",
+    "standName": "スタンド名",
+    "status": "ステータス",
+    "startTime": "開始時間",
+    "finishTime": "終了時間",
+    "alert": "警告"
+  },
+  "history": {
+    "title": "テスト履歴",
+    "detailTitle": "テスト実行の詳細",
+    "columns": {
+      "runName": "実行名",
+      "startTime": "開始時刻",
+      "result": "結果",
+      "serialNumber": "シリアル番号",
+      "details": "詳細"
+    },
+    "viewDetails": "詳細を見る",
+    "selected": "選択済み",
+    "unknownRun": "名前なし実行",
+    "showMore": "さらに表示"
+  },
+  "testSuite": {
+    "nameColumn": "名前",
+    "dataColumn": "データ",
+    "loading": "読み込み中...",
+    "stubName": "テストスイート",
+    "runSelectedTests": "選択した{{count}}個のテストを実行",
+    "noTestsSelected": "テストが選択されていません",
+    "testsStarted": "{{count}}個のテストを開始しました",
+    "startError": "テストの開始エラー",
+    "connectionError": "接続エラー",
+    "selectionColumn": "選択",
+    "skipped": "スキップ済み"
+  }
+}

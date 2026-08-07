@@ -56,20 +56,20 @@ indent-width = 4
             "S106",    # Possible hardcoded password
             "S603",    # Subprocess without shell
             "ANN201",  # To prevent tests from being returned None, it is mandatory
-            "INP001",  # Imports of pytest and hardpy
+            "INP001",  # Imports of pytest and jig
             "PT022",   # Using yield
             "PLR2004", # Magic value used in comparison
         ]
-        "tests/test_cli/test_hardpy_run/*" = [
+        "tests/test_cli/test_jig_run/*" = [
             "ARG001",  # Unused function argument (fixture in pytest)
         ]
         "tests/test_translations.py" = [
             "N815",    # Variable in class scope should not be mixedCase
         ]
-        "tests/test_pytest_hardpy/test_measurement/test_numeric_meas.py" = [
+        "tests/test_pytest_jig/test_measurement/test_numeric_meas.py" = [
             "E501",    # enable long lines
         ]
-        "tests/test_pytest_hardpy/test_measurement/test_string_meas.py" = [
+        "tests/test_pytest_jig/test_measurement/test_string_meas.py" = [
             "E501",    # enable long lines
         ]
         "examples/*" = [
@@ -78,19 +78,19 @@ indent-width = 4
             "S101",   # use of `assert` detected
             "S106",   # Possible hardcoded password
             "ANN201", # To prevent tests from being returned None
-            "INP001", # Imports of pytest and hardpy
+            "INP001", # Imports of pytest and jig
             "PT022",  # Using yield
         ]
-        "hardpy/cli/cli.py" = [
+        "jig/cli/cli.py" = [
             "T201",   # using print
             "UP007",  # Non PEP 604 annotation
             "BLE001"  # bare except
         ]
-        "hardpy/cli/example.py" = [
+        "jig/cli/example.py" = [
             "T201",   # using print
         ]
-        "hardpy/cli/template.py" = ["D102"]
-        "hardpy/common/stand_cloud/registration.py" = [
+        "jig/cli/template.py" = ["D102"]
+        "jig/common/stand_cloud/registration.py" = [
             "T201",     # using print
             "E501"      # enable long lines
         ]

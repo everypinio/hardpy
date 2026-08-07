@@ -2,22 +2,22 @@
 
 This is an example of how charts can be saved in tests.
 
-The [set_case_chart](./../documentation/pytest_hardpy.md#set_case_chart) function allows 
+The [set_case_chart](./../documentation/pytest_jig.md#set_case_chart) function allows 
 to save chart (data series) result to database.
 
 ### how to start
 
-1. Launch `hardpy init charts`.
+1. Launch `jig init charts`.
 2. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
-4. Launch `hardpy run charts`.
+4. Launch `jig run charts`.
 
 ### test_1.py
 
 ```python
 import pytest
 
-from hardpy import Chart, ChartType, set_case_chart
+from jig import Chart, ChartType, set_case_chart
 
 pytestmark = pytest.mark.module_name("Charts")
 

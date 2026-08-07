@@ -14,7 +14,7 @@ Look for an address in the format `192.168.x.x` or `10.x.x.x` (this is your loca
 
 ## 2. Configure ports in project files
 
-### `hardpy.toml` configuration
+### `jig.toml` configuration
 
 Edit the file to include your computer's network address:
 
@@ -33,7 +33,7 @@ language = "en"
 
 ## 3. Launch the frontend
 
-You can start the frontend using `hardpy run`.
+You can start the frontend using `jig run`.
 
 ## Verification steps
 

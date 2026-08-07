@@ -10,7 +10,7 @@ The database has two main purposes:
 
 The CouchDB version must be equal to or greater than the 3.2 version.
 
-## Database in pytest-hardpy
+## Database in pytest-jig
 
 ### Description of databases
 
@@ -43,7 +43,7 @@ def fill_actions_after_test(post_run_functions: list):
     yield
 ```
 
-**HardPy** users have the flexibility to choose their preferred database.
+**Jig** users have the flexibility to choose their preferred database.
 They can write custom classes to record reports at the end of testing.
 
 ### Runstore scheme
@@ -52,7 +52,7 @@ The **runstore** and **report** databases have the same schema, as **runstore**
 stores the current report and **report** stores reports.
 
 <h1 align="center">
-    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/database/runstore.png" alt="runstore_scheme">
+    <img src="https://raw.githubusercontent.com/everypinio/jig/main/docs/img/database/runstore.png" alt="runstore_scheme">
 </h1>
 
 The document of **runstore** database contains some section.
@@ -68,49 +68,49 @@ The document of **runstore** database contains some section.
 - **status**: test execution status from **pytest**: **passed**, **failed**, **skipped**, **stopped**.
   The variable is assigned automatically.
 - **name**: the name of the test suite. It is displayed in the header of the operator panel.
-  The user can specify the name using the `tests_name` variable in the **hardpy.toml** file.
+  The user can specify the name using the `tests_name` variable in the **jig.toml** file.
   If this variable is not set, the name will be taken from the directory name containing the tests.
 - **test_stand**: test stand information. See the [test_stand](#test_stand) section for more information.
 - **dut**: DUT information. See the [dut](#dut) section for more information.
 - **process** information about the testing process. See the [process](#process) section for more information.
 - **modules**: module (pytest files) information. See the [modules](#modules) section for more information.
-- **user**: **HardPy** operator panel user name.
-  The variable is assigned by [set_user_name](./pytest_hardpy.md#set_user_name) function.
+- **user**: **Jig** operator panel user name.
+  The variable is assigned by [set_user_name](./pytest_jig.md#set_user_name) function.
   It can only be set once per test run.
 - **batch_serial_number**: the serial number of the device batch.
-  The variable is assigned by [set_batch_serial_number](./pytest_hardpy.md#set_batch_serial_number) function.
+  The variable is assigned by [set_batch_serial_number](./pytest_jig.md#set_batch_serial_number) function.
   It can only be set once per test run.
 - **caused_dut_failure_id**: the ID of the first failed test that caused the test failure.
   Format id: `module_name::case_name`. The variable is assigned automatically.
 - **error_code** the error code (non-negative integer) of the caused DUT failure test.
-  The variable is assigned by [ErrorCode](./pytest_hardpy.md#errorcode) class.
+  The variable is assigned by [ErrorCode](./pytest_jig.md#errorcode) class.
 - **artifact**: an object that contains information about the artifacts created during the test run.
-  The user can specify the run artifact by using [set_run_artifact](./pytest_hardpy.md#set_run_artifact) function.
+  The user can specify the run artifact by using [set_run_artifact](./pytest_jig.md#set_run_artifact) function.
   The artifact contains a dictionary where the user can store any data at the test run level.
   The artifacts are not displayed on the operator panel.
 
 #### test_stand
 
 The **test_stand** section contains information about the test stand.
-It is a computer on which **HardPy** is running and to which the DUT test equipment is connected.
+It is a computer on which **Jig** is running and to which the DUT test equipment is connected.
 
 - **name**: test stand name. It can only be set once per test run.
-  The user can specify the stand name by using [set_stand_name](./pytest_hardpy.md#set_stand_name) function.
+  The user can specify the stand name by using [set_stand_name](./pytest_jig.md#set_stand_name) function.
 - **revision** test stand revision. It can only be set once per test run.
-  The user can specify the stand revision by using [set_stand_revision](./pytest_hardpy.md#set_stand_revision) function.
+  The user can specify the stand revision by using [set_stand_revision](./pytest_jig.md#set_stand_revision) function.
 - **drivers**: **DEPRECATED, DO NOT USE IT**.
   Information about drivers in the form of a dictionary, including test equipment and test equipment software.
 - **instruments**: list of information about the instruments (i.e. equipment) that form part of the test bench.
   See the [instrument](#instrument) section for more information.
 - **info**: dictionary containing additional information about the test stand.
-  The user can specify the additional info by using [set_stand_info](./pytest_hardpy.md#set_stand_info) function.
+  The user can specify the additional info by using [set_stand_info](./pytest_jig.md#set_stand_info) function.
 - **timezone**: timezone of test stand as a string. The variable is assigned automatically.
 - **location**: the location of the test stand, e.g., the country, city, or laboratory number.
   It can only be set once per test run. The user can specify the location by using
-  [set_stand_location](./pytest_hardpy.md#set_stand_location) function.
+  [set_stand_location](./pytest_jig.md#set_stand_location) function.
 - **number**: test stand number. Some stands may have the same name and
   run on the same computer but have different numbers. It can only be set once per test run.
-  The user can specify the stand number by using [set_stand_number](./pytest_hardpy.md#set_stand_number) function.
+  The user can specify the stand number by using [set_stand_number](./pytest_jig.md#set_stand_number) function.
 - **hw_id**: test stand machine id (GUID) or host name. The variable is assigned automatically by
   the [py-machineid](https://pypi.org/project/py-machineid/) package.
 
@@ -118,7 +118,7 @@ It is a computer on which **HardPy** is running and to which the DUT test equipm
 
 Information about the instrument (i.e equipment) that form part of the test bench.
 Information about equipment such as power supplies and voltmeters, which may be used in the test stand, should be stored.
-The user can specify the instrument information by using [set_instrument](./pytest_hardpy.md#set_instrument) function.
+The user can specify the instrument information by using [set_instrument](./pytest_jig.md#set_instrument) function.
 
 - **name**: instrument name.
 - **revision** instrument revision.
@@ -244,35 +244,35 @@ testing of the board both with and without the case.
 Each stage may have its own name, number and other attributes.
 
 - **name**: process name. It can only be set once per test run.
-  The user can specify the process name by using [set_process_name](./pytest_hardpy.md#set_process_name) function.
+  The user can specify the process name by using [set_process_name](./pytest_jig.md#set_process_name) function.
 - **number**: process number. It can only be set once per test run.
-  The user can specify the process number by using [set_process_number](./pytest_hardpy.md#set_process_number) function.
+  The user can specify the process number by using [set_process_number](./pytest_jig.md#set_process_number) function.
 - **info**: dictionary containing additional information about the process.
-  The user can specify the additional info by using [set_process_info](./pytest_hardpy.md#set_process_info) function.
+  The user can specify the additional info by using [set_process_info](./pytest_jig.md#set_process_info) function.
 
 #### dut
 
 The device under test section contains information about the DUT.
 
 - **name**: human-readable name of the DUT.
-  The user can specify the DUT name by using [set_dut_name](./pytest_hardpy.md#set_dut_name) function.
+  The user can specify the DUT name by using [set_dut_name](./pytest_jig.md#set_dut_name) function.
   It can only be set once per test run.
 - **type**: type of DUT, f.e "PCBA", "Casing", etc.
-  The user can specify the DUT type by using [set_dut_type](./pytest_hardpy.md#set_dut_type) function.
+  The user can specify the DUT type by using [set_dut_type](./pytest_jig.md#set_dut_type) function.
   It can only be set once per test run.
 - **serial_number**: DUT serial number. This identifier is unique to the testing device or board.
   It can only be set once per test run.
-  The user can specify the DUT serial number by using [set_dut_serial_number](./pytest_hardpy.md#set_dut_serial_number) function.
+  The user can specify the DUT serial number by using [set_dut_serial_number](./pytest_jig.md#set_dut_serial_number) function.
 - **part_number**: DUT part number. This identifier of a particular part design, board or device.
   It can only be set once per test run.
-  The user can specify the DUT part number by using [set_dut_part_number](./pytest_hardpy.md#set_dut_part_number) function.
+  The user can specify the DUT part number by using [set_dut_part_number](./pytest_jig.md#set_dut_part_number) function.
 - **revision**: DUT revision. The user can specify the DUT revision by using
-  [set_dut_revision](./pytest_hardpy.md#set_dut_revision) function.
+  [set_dut_revision](./pytest_jig.md#set_dut_revision) function.
   It can only be set once per test run.
 - **sub_units**: list of sub units of main DUT. Each sub-unit has a similar structure to the DUT itself, but does not contain any other sub units.
-  The user can add the sub unit by using [set_dut_sub_unit](./pytest_hardpy.md#set_dut_sub_unit) function.
+  The user can add the sub unit by using [set_dut_sub_unit](./pytest_jig.md#set_dut_sub_unit) function.
 - **info**: dictionary containing additional information about the the DUT, such as batch, board revision, etc.
-  The user can specify the additional info by using [set_dut_info](./pytest_hardpy.md#set_dut_info) function.
+  The user can specify the additional info by using [set_dut_info](./pytest_jig.md#set_dut_info) function.
 
 ##### dut examples
 
@@ -319,13 +319,13 @@ The module's name is the same as the file's name.
   Contains the following fields:
   - **status**: module test execution status. The variable is assigned automatically.
   - **name**: module name, by default the same as module_id.
-    The user can specify the module name by using [module_name](./pytest_hardpy.md#module_name) marker.
+    The user can specify the module name by using [module_name](./pytest_jig.md#module_name) marker.
   - **start_time**: start time of module testing in Unix seconds. The variable is assigned automatically.
   - **stop_time**: end time of module testing in Unix seconds. The variable is assigned automatically.
   - **group**: the group of module: *Setup*, *Main* or *Teardown* (*Main* by default).
-    The user can specify the module group by using [module_group](./pytest_hardpy.md#module_group) marker.
+    The user can specify the module group by using [module_group](./pytest_jig.md#module_group) marker.
   - **artifact**: an object that contains information about the artifacts created during the test module.
-    The user can specify the module artifact by using [set_module_artifact](./pytest_hardpy.md#set_module_artifact) function.
+    The user can specify the module artifact by using [set_module_artifact](./pytest_jig.md#set_module_artifact) function.
     The artifact contains a dictionary where the user can store any data at the test module level.
     The artifacts are not displayed on the operator panel.
   - **cases**: an object that contains information about each test case within the module.
@@ -334,7 +334,7 @@ The module's name is the same as the file's name.
       Contains the following fields:
       - **status**: test case execution status. The variable is assigned automatically.
       - **name**: case name, by default the same as case_id.
-        The user can specify the case name by using [case_name](./pytest_hardpy.md#case_name) marker.
+        The user can specify the case name by using [case_name](./pytest_jig.md#case_name) marker.
       - **start_time**: start time of case testing in Unix seconds. The variable is assigned automatically.
       - **stop_time**: end time of case testing in Unix seconds. The variable is assigned automatically.
       - **assertion_msg**: assert or error message if the test case fails. The variable is assigned automatically.
@@ -345,13 +345,13 @@ The module's name is the same as the file's name.
         ```
         The **assertion_msg** is displayed in the operator panel next to the test case in which it was called.
       - **msg**: the log message is displayed in the operator panel next to the test case in which it was called.
-        The user can specify and update current message by using [set_message](./pytest_hardpy.md#set_message) function.
+        The user can specify and update current message by using [set_message](./pytest_jig.md#set_message) function.
       - **group**: the group of case: *Setup*, *Main* or *Teardown* (*Main* by default).
-        The user can specify the case group by using [case_group](./pytest_hardpy.md#case_group) marker.
+        The user can specify the case group by using [case_group](./pytest_jig.md#case_group) marker.
       - **measurements**: list of measurements.
         See the [measurements](#measurements) section for more information.
       - **artifact**: an object that contains information about the artifacts created during the test case.
-        The user can specify the case artifact by using [set_case_artifact](./pytest_hardpy.md#set_case_artifact) function.
+        The user can specify the case artifact by using [set_case_artifact](./pytest_jig.md#set_case_artifact) function.
         The artifact contains a dictionary where the user can store any data at the test case level.
         The artifacts are not displayed on the operator panel.
 
@@ -359,7 +359,7 @@ The module's name is the same as the file's name.
 
 The **measurements** section contains the information about measurements.
 The user fills in the list of measurements for each case by 
-[set_case_measurement](./pytest_hardpy.md#set_case_measurement) function.
+[set_case_measurement](./pytest_jig.md#set_case_measurement) function.
 
 ###### Numeric measurement
 
@@ -434,7 +434,7 @@ Example of a document:
       "stop_time": 1695817266,
       "start_time": 1695817263,
       "status": "failed",
-      "name": "hardpy-stand",
+      "name": "jig-stand",
       "user": null,
       "batch_serial_number": "0613",
       "caused_dut_failure": "test_1_a::test_minute_parity",

@@ -10,7 +10,7 @@ status_test_header = """
         """
 
 
-def test_critical_marker_on_passed_test(pytester: Pytester, hardpy_opts: list[str]):
+def test_critical_marker_on_passed_test(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         test_file1="""
         import pytest
@@ -26,11 +26,11 @@ def test_critical_marker_on_passed_test(pytester: Pytester, hardpy_opts: list[st
             assert True
         """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=3)
 
 
-def test_critical_marker_on_failed_test(pytester: Pytester, hardpy_opts: list[str]):
+def test_critical_marker_on_failed_test(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         test_file1="""
         import pytest
@@ -46,11 +46,11 @@ def test_critical_marker_on_failed_test(pytester: Pytester, hardpy_opts: list[st
             assert True
         """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(failed=1, skipped=2)
 
 
-def test_critical_module_marker_on_passed(pytester: Pytester, hardpy_opts: list[str]):
+def test_critical_module_marker_on_passed(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         test_file1="""
         import pytest
@@ -79,11 +79,11 @@ def test_critical_module_marker_on_passed(pytester: Pytester, hardpy_opts: list[
             assert True
         """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(passed=6)
 
 
-def test_critical_module_marker_on_failed(pytester: Pytester, hardpy_opts: list[str]):
+def test_critical_module_marker_on_failed(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         test_file1="""
         import pytest
@@ -112,5 +112,5 @@ def test_critical_module_marker_on_failed(pytester: Pytester, hardpy_opts: list[
             assert True
         """,
     )
-    result = pytester.runpytest(*hardpy_opts)
+    result = pytester.runpytest(*jig_opts)
     result.assert_outcomes(failed=1, skipped=5)

@@ -1,6 +1,6 @@
 from time import sleep
 
-from hardpy import (
+from jig import (
     HTMLComponent,
     set_message,
     set_operator_message,

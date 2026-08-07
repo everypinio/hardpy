@@ -15,7 +15,7 @@ class CustomHook(BuildHookInterface):
             return
 
         build_dir = Path.cwd()
-        os.chdir("hardpy/hardpy_panel/frontend")
+        os.chdir("jig/jig_panel/frontend")
 
         exit_code = os.system("yarn")  # noqa: S605, S607
         if exit_code:

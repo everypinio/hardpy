@@ -1,13 +1,13 @@
 # Project information
-site_name: HardPy
-site_url: https://everypinio.github.io/hardpy/
+site_name: Jig
+site_url: https://github.com/samuelint/jig/
 site_author: Everypin
 site_dir: public
 docs_dir: ./docs
 
 # Repository
-repo_name: everypinio/hardpy
-repo_url: https://github.com/everypinio/hardpy
+repo_name: samuelint/jig
+repo_url: https://github.com/samuelint/jig
 
 theme:
   name: material
@@ -56,16 +56,16 @@ nav:
   - Documentation:
       - documentation/index.md
       - CLI: documentation/cli.md
-      - Configuration: documentation/hardpy_config.md
+      - Configuration: documentation/jig_config.md
       - Database: documentation/database.md
-      - HardPy panel: documentation/hardpy_panel.md
-      - Pytest-hardpy: documentation/pytest_hardpy.md
+      - Jig panel: documentation/jig_panel.md
+      - Pytest-jig: documentation/pytest_jig.md
       - StandCloud: documentation/stand_cloud.md
   - Examples:
       - examples/index.md
       - Minimal example: examples/minimal_example.md
-      - Hello HardPy: examples/hello_hardpy.md
-      - HardPy launch: examples/hardpy_launch.md
+      - Hello Jig: examples/hello_jig.md
+      - Jig launch: examples/jig_launch.md
       - Launch arguments: examples/launch_arguments.md
       - Attempts: examples/attempts.md
       - Critical test: examples/critical_test.md
@@ -148,12 +148,12 @@ extra:
     - icon: everypin/logo
       link: https://everypin.io/   
     - icon: fontawesome/brands/github
-      link: https://github.com/everypinio/hardpy
+      link: https://github.com/everypinio/jig
     - icon: fontawesome/brands/python
-      link: https://pypi.org/project/hardpy/
+      link: https://pypi.org/project/jig/
     - icon: fontawesome/brands/discord
       link: https://discord.gg/98bWadmG8J
     - icon: fontawesome/brands/reddit
-      link: https://www.reddit.com/r/HardPy
+      link: https://www.reddit.com/r/Jig
     - icon: fontawesome/brands/telegram
       link: https://t.me/everypin

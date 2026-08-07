@@ -1,6 +1,6 @@
 import pytest
 
-from hardpy import (
+from jig import (
     ComparisonOperation as CompOp,
     StringMeasurement,
     set_case_measurement,

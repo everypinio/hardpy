@@ -1,16 +1,16 @@
 # StandCloud
 
-This is an example of using **pytest-hardpy** functions, storing
+This is an example of using **pytest-jig** functions, storing
 the result to [StandCloud](./../documentation/stand_cloud.md).
 This example is similar to [Minute parity](./minute_parity.md),
 but the test results are stored in StandCloud instead of CouchDB.
-The code for this example can be seen inside the hardpy package
-[StandCloud](https://github.com/everypinio/hardpy/tree/main/examples/stand_cloud).
+The code for this example can be seen inside the jig package
+[StandCloud](https://github.com/everypinio/jig/tree/main/examples/stand_cloud).
 
 After testing is complete, data is sent to **StandCloud** by setting the 
-`autosync` to `true` in the **[stand_cloud]** section of the **hardpy.toml** file, 
+`autosync` to `true` in the **[stand_cloud]** section of the **jig.toml** file, 
 and by setting the value of the `api_key` variable.
-If there is no connection to **StandCloud**, **HardPy** will attempt to send data 
+If there is no connection to **StandCloud**, **Jig** will attempt to send data 
 to **StandCloud** at the specified `autosync_timeout` interval (in minutes).
 
 ### how to start
@@ -18,18 +18,18 @@ to **StandCloud** at the specified `autosync_timeout` interval (in minutes).
 1. Login to [standcloud.everypin.io](https://standcloud.everypin.io).
 2. Create a company or login to an existing one.
 3. Create and copy the API key.
-4. Launch `hardpy init stand_cloud --sc-api-key <your_api_key> --sc-autosync` 
-   or `hardpy init stand_cloud` and manually modify the 
-   **[stand_cloud]** section in **hardpy.toml**.
+4. Launch `jig init stand_cloud --sc-api-key <your_api_key> --sc-autosync` 
+   or `jig init stand_cloud` and manually modify the 
+   **[stand_cloud]** section in **jig.toml**.
 5. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
-6. Modify the files described below. Copying the **hardpy.toml** file will 
+6. Modify the files described below. Copying the **jig.toml** file will 
    suffice for sending data to **StandCloud** after testing.
-7. Launch `hardpy run stand_cloud`.
+7. Launch `jig run stand_cloud`.
 
-### hardpy.toml
+### jig.toml
 
 ```toml
-title = "HardPy TOML config"
+title = "Jig TOML config"
 tests_name = "StandCloud"
 
 [database]
@@ -103,41 +103,41 @@ Contains tests related to preparation for the testing process:
 ```python
 from uuid import uuid4
 import pytest
-import hardpy
+import jig
 
 pytestmark = pytest.mark.module_name("Testing preparation")
 
 @pytest.mark.case_name("Process info")
 def test_process_info():
-    hardpy.set_process_name("Acceptance Test")
-    hardpy.set_process_number(1)
+    jig.set_process_name("Acceptance Test")
+    jig.set_process_number(1)
 
     process_info = {"stage": "production", "version": "1.0"}
-    hardpy.set_process_info(process_info)
+    jig.set_process_info(process_info)
 
 
 @pytest.mark.case_name("Batch info")
 def test_batch_info():
-    hardpy.set_batch_serial_number("batch_1")
+    jig.set_batch_serial_number("batch_1")
 
 
 @pytest.mark.case_name("DUT info")
 def test_dut_info():
     serial_number = str(uuid4())[:6]
-    hardpy.set_dut_serial_number(serial_number)
-    hardpy.set_message(f"Serial number: {serial_number}")
-    hardpy.set_dut_part_number("part_number_1")
-    hardpy.set_dut_name("Test Device")
-    hardpy.set_dut_type("PCBA")
-    hardpy.set_dut_revision("REV1.0")
+    jig.set_dut_serial_number(serial_number)
+    jig.set_message(f"Serial number: {serial_number}")
+    jig.set_dut_part_number("part_number_1")
+    jig.set_dut_name("Test Device")
+    jig.set_dut_type("PCBA")
+    jig.set_dut_revision("REV1.0")
 
     info = {"sw_version": "1.0.0"}
-    hardpy.set_dut_info(info)
+    jig.set_dut_info(info)
 
 @pytest.mark.case_name("Sub unit info")
 def test_sub_unit_info():
-    hardpy.set_dut_sub_unit(
-        hardpy.SubUnit(
+    jig.set_dut_sub_unit(
+        jig.SubUnit(
             serial_number=str(uuid4())[:6],
             part_number="part_number_1",
             type="PCBA",
@@ -148,14 +148,14 @@ def test_sub_unit_info():
 @pytest.mark.case_name("Test stand info")
 def test_stand_info():
     test_stand_name = "Stand 1"
-    hardpy.set_stand_name(test_stand_name)
-    hardpy.set_stand_location("Moon")
-    hardpy.set_stand_number(2)
-    hardpy.set_stand_revision("HW1.0")
+    jig.set_stand_name(test_stand_name)
+    jig.set_stand_location("Moon")
+    jig.set_stand_number(2)
+    jig.set_stand_revision("HW1.0")
 
     stand_info = {"some_info": "123", "release": "1.0.0", "calibration_due": "2023-12-31"}
-    hardpy.set_stand_info(stand_info)
-    hardpy.set_message(f"Stand name: {test_stand_name}")
+    jig.set_stand_info(stand_info)
+    jig.set_message(f"Stand name: {test_stand_name}")
     assert True
 ```
 
@@ -174,7 +174,7 @@ Contains basic tests:
 import pytest
 from driver_example import DriverExample
 
-import hardpy
+import jig
 
 pytestmark = pytest.mark.module_name("Main tests")
 
@@ -182,10 +182,10 @@ pytestmark = pytest.mark.module_name("Main tests")
 def test_minute_parity(driver_example: DriverExample):
     minute = driver_example.current_minute
     result = minute % 2
-    hardpy.set_case_measurement(hardpy.NumericMeasurement(value=minute, name="Current minute"))
+    jig.set_case_measurement(jig.NumericMeasurement(value=minute, name="Current minute"))
     error_code = 1
     error_msg = f"The test failed because {minute} is odd! Try again!"
-    assert result == 0, hardpy.ErrorCode(error_code, error_msg)
+    assert result == 0, jig.ErrorCode(error_code, error_msg)
 ```
 
 ### test_3.py
@@ -202,7 +202,7 @@ If `test_2::test_minute_parity` fails, `test_3` will be skipped
 ```python
 from time import sleep
 import pytest
-import hardpy
+import jig
 
 pytestmark = [
     pytest.mark.module_name("End of testing"),
@@ -212,9 +212,9 @@ pytestmark = [
 @pytest.mark.case_name("Final case")
 def test_one():
     for i in range(5, 0, -1):
-        hardpy.set_message(f"Time left until testing ends {i} s", "updated_status")
+        jig.set_message(f"Time left until testing ends {i} s", "updated_status")
         sleep(1)
-    hardpy.set_message("Testing ended", "updated_status")
+    jig.set_message("Testing ended", "updated_status")
     assert True
 ```
 
@@ -224,7 +224,7 @@ If you want to control the sending of reports to **StandCloud** yourself,
 the following code, which you can add to `conftest.py`, will allow you to do so.
 
 Remember to also set `autosync=false` in the stand_cloud section of 
-the **hardpy.toml** file.
+the **jig.toml** file.
 
 
 ```python
@@ -234,7 +234,7 @@ from http import HTTPStatus
 import pytest
 from driver_example import DriverExample
 
-from hardpy import (
+from jig import (
     StandCloudError,
     StandCloudLoader,
     get_current_report,

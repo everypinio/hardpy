@@ -2,7 +2,7 @@
 
 import pytest
 
-from hardpy import (
+from jig import (
     ComparisonOperation as CompOp,
     NumericMeasurement,
     get_current_attempt,

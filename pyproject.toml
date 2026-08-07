@@ -2,9 +2,9 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 [project]
-    name = "hardpy"
+    name = "jig"
     version = "0.25.2"
-    description = "HardPy library for device testing"
+    description = "Jig library for device testing"
     license = "GPL-3.0-or-later"
     authors = [{ name = "Everypin", email = "info@everypin.io" }]
     readme = "README.md"
@@ -64,19 +64,17 @@
         ]
 
     [project.urls]
-        Homepage = "https://github.com/everypinio/hardpy/"
-        Documentation = "https://everypinio.github.io/hardpy/"
-        Repository = "https://github.com/everypinio/hardpy/"
-        Changelog = "https://everypinio.github.io/hardpy/changelog/"
+        Homepage = "https://github.com/samuelint/jig/"
+        Repository = "https://github.com/samuelint/jig/"
 
     [project.scripts]
-        # Provide `hardpy` executable
-        hardpy = "hardpy.cli.cli:cli"
-        # Provide `example` executable, i.e. `poetry run example hello_hardpy`
-        example = "hardpy.cli.example:cli"
+        # Provide `jig` executable
+        jig = "jig.cli.cli:cli"
+        # Provide `example` executable, i.e. `poetry run example hello_jig`
+        example = "jig.cli.example:cli"
 
     [project.entry-points.pytest11]
-        pytest_hardpy = "hardpy.pytest_hardpy.plugin"
+        pytest_jig = "jig.pytest_jig.plugin"
 
 [build-system]
     requires = ["hatchling==1.27.0"]
@@ -95,7 +93,7 @@
     artifacts = ["**/frontend/dist"]
 
     [tool.hatch.build.targets.wheel]
-        packages = ["hardpy"]
+        packages = ["jig"]
 
     # Custom build hook for sdist source package.
     # It additionally runs `yarn` and `yarn build`

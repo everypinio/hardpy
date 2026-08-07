@@ -5,9 +5,9 @@ from typing import TYPE_CHECKING
 
 import pytest
 import requests
-from hardpy_server import HardPyServer
+from jig_server import JigServer
 
-from hardpy.pytest_hardpy.utils.const import TestStatus as Status
+from jig.pytest_jig.utils.const import TestStatus as Status
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -16,14 +16,14 @@ API_START_URL = "http://localhost:8000/api/start"
 
 
 @pytest.mark.manual
-def test_hardpy_run_and_hardpy_start(project_dir: Path):
-    """Test that hardpy run and hardpy start can be used together."""
-    server = HardPyServer(project_dir)
+def test_jig_run_and_jig_start(project_dir: Path):
+    """Test that jig run and jig start can be used together."""
+    server = JigServer(project_dir)
     server_process = server.start_server()
     try:
         server.wait_until_ready()
 
-        result = server.run_command(["hardpy", "start"], cwd=str(project_dir))
+        result = server.run_command(["jig", "start"], cwd=str(project_dir))
         assert result.returncode == 0, f"Command failed: {result.stderr.decode()}"
         assert server.check_status().get("status") == "busy"
         server.wait_until_test_complete()
@@ -34,19 +34,19 @@ def test_hardpy_run_and_hardpy_start(project_dir: Path):
 
 
 @pytest.mark.manual
-def test_hardpy_run_and_hardpy_start_stop(project_dir: Path):
-    """Test that hardpy run and hardpy start can be used together."""
-    server = HardPyServer(project_dir)
+def test_jig_run_and_jig_start_stop(project_dir: Path):
+    """Test that jig run and jig start can be used together."""
+    server = JigServer(project_dir)
     server_process = server.start_server()
     try:
         server.wait_until_ready()
 
-        result = server.run_command(["hardpy", "start"], cwd=str(project_dir))
+        result = server.run_command(["jig", "start"], cwd=str(project_dir))
         assert result.returncode == 0, f"Command failed: {result.stderr.decode()}"
         assert server.check_status().get("status") == "busy"
         time.sleep(3)
 
-        result = server.run_command(["hardpy", "stop"], cwd=str(project_dir))
+        result = server.run_command(["jig", "stop"], cwd=str(project_dir))
         assert result.returncode == 0, f"Command failed: {result.stderr.decode()}"
         time.sleep(1)
         assert server.get_test_result() == Status.STOPPED
@@ -56,14 +56,14 @@ def test_hardpy_run_and_hardpy_start_stop(project_dir: Path):
 
 
 @pytest.mark.manual
-def test_hardpy_run_and_hardpy_start_ini_args(project_dir_with_ini: Path):
-    """Test that hardpy run and hardpy start can be used together."""
-    server = HardPyServer(project_dir_with_ini)
+def test_jig_run_and_jig_start_ini_args(project_dir_with_ini: Path):
+    """Test that jig run and jig start can be used together."""
+    server = JigServer(project_dir_with_ini)
     server_process = server.start_server()
     try:
         server.wait_until_ready()
 
-        result = server.run_command(["hardpy", "start"], cwd=str(project_dir_with_ini))
+        result = server.run_command(["jig", "start"], cwd=str(project_dir_with_ini))
         assert result.returncode == 0, f"Command failed: {result.stderr.decode()}"
 
         server.wait_until_test_complete()
@@ -75,17 +75,17 @@ def test_hardpy_run_and_hardpy_start_ini_args(project_dir_with_ini: Path):
 
 
 @pytest.mark.manual
-def test_hardpy_run_and_hardpy_start_ini_args_incorrect(
+def test_jig_run_and_jig_start_ini_args_incorrect(
     project_dir_with_ini_incorrect: Path,
 ):
-    """Test that hardpy run and hardpy start can be used together."""
-    server = HardPyServer(project_dir_with_ini_incorrect)
+    """Test that jig run and jig start can be used together."""
+    server = JigServer(project_dir_with_ini_incorrect)
     server_process = server.start_server()
     try:
         server.wait_until_ready()
 
         result = server.run_command(
-            ["hardpy", "start"],
+            ["jig", "start"],
             cwd=str(project_dir_with_ini_incorrect),
         )
         assert result.returncode == 0, f"Command failed: {result.stderr.decode()}"
@@ -98,16 +98,16 @@ def test_hardpy_run_and_hardpy_start_ini_args_incorrect(
 
 
 @pytest.mark.manual
-def test_hardpy_run_and_hardpy_start_args(project_dir_with_args: Path):
-    """Test that hardpy run and hardpy start can be used together."""
-    server = HardPyServer(project_dir_with_args)
+def test_jig_run_and_jig_start_args(project_dir_with_args: Path):
+    """Test that jig run and jig start can be used together."""
+    server = JigServer(project_dir_with_args)
     server_process = server.start_server()
     try:
         server.wait_until_ready()
 
         result = server.run_command(
             [
-                "hardpy",
+                "jig",
                 "start",
                 "--arg",
                 "test_mode=debug",
@@ -128,16 +128,16 @@ def test_hardpy_run_and_hardpy_start_args(project_dir_with_args: Path):
 
 
 @pytest.mark.manual
-def test_hardpy_run_and_hardpy_start_args_incorrect(project_dir_with_args: Path):
-    """Test that hardpy run and hardpy start can be used together."""
-    server = HardPyServer(project_dir_with_args)
+def test_jig_run_and_jig_start_args_incorrect(project_dir_with_args: Path):
+    """Test that jig run and jig start can be used together."""
+    server = JigServer(project_dir_with_args)
     server_process = server.start_server()
     try:
         server.wait_until_ready()
 
         result = server.run_command(
             [
-                "hardpy",
+                "jig",
                 "start",
                 "--arg",
                 "test_mode=debug",
@@ -158,9 +158,9 @@ def test_hardpy_run_and_hardpy_start_args_incorrect(project_dir_with_args: Path)
 
 
 @pytest.mark.manual
-def test_hardpy_run_and_pytest_args(project_dir_with_args: Path):
-    """Test that hardpy run and hardpy start can be used together."""
-    server = HardPyServer(project_dir_with_args)
+def test_jig_run_and_pytest_args(project_dir_with_args: Path):
+    """Test that jig run and jig start can be used together."""
+    server = JigServer(project_dir_with_args)
     server_process = server.start_server()
     try:
         server.wait_until_ready()
@@ -168,11 +168,11 @@ def test_hardpy_run_and_pytest_args(project_dir_with_args: Path):
         result = server.run_command(
             [
                 "pytest",
-                "--hardpy-start-arg",
+                "--jig-start-arg",
                 "test_mode=debug",
-                "--hardpy-start-arg",
+                "--jig-start-arg",
                 "device_id=DUT-007",
-                "--hardpy-start-arg",
+                "--jig-start-arg",
                 "retry_count=3",
             ],
             cwd=str(project_dir_with_args),
@@ -187,9 +187,9 @@ def test_hardpy_run_and_pytest_args(project_dir_with_args: Path):
 
 
 @pytest.mark.manual
-def test_hardpy_run_and_api_start_args(project_dir_with_args: Path):
-    """Test that hardpy run and hardpy start can be used together."""
-    server = HardPyServer(project_dir_with_args)
+def test_jig_run_and_api_start_args(project_dir_with_args: Path):
+    """Test that jig run and jig start can be used together."""
+    server = JigServer(project_dir_with_args)
     server_process = server.start_server()
     try:
         server.wait_until_ready()
@@ -208,9 +208,9 @@ def test_hardpy_run_and_api_start_args(project_dir_with_args: Path):
 
 
 @pytest.mark.manual
-def test_hardpy_run_and_api_start_args_incorrect(project_dir_with_args: Path):
-    """Test that hardpy run and hardpy start can be used together."""
-    server = HardPyServer(project_dir_with_args)
+def test_jig_run_and_api_start_args_incorrect(project_dir_with_args: Path):
+    """Test that jig run and jig start can be used together."""
+    server = JigServer(project_dir_with_args)
     server_process = server.start_server()
     try:
         server.wait_until_ready()

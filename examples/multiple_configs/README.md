@@ -1,3 +1,3 @@
 # Multiple configs
 
-Example documentation: https://everypinio.github.io/hardpy/examples/multiple_configs/
+Example documentation: https://everypinio.github.io/jig/examples/multiple_configs/

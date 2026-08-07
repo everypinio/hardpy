@@ -1,0 +1,37 @@
+title = "Jig TOML config"
+tests_name = "StandCloud"
+current_test_config = ""
+
+[database]
+storage_type = "couchdb"
+user = "dev"
+password = "dev"
+host = "localhost"
+port = 5984
+
+[frontend]
+host = "localhost"
+port = 8000
+language = "en"
+full_size_button = false
+sound_on = true
+measurement_display = true
+manual_collect = false
+test_history = false
+auto_scroll = false
+
+[frontend.modal_result]
+enable = true
+auto_dismiss_pass = true
+auto_dismiss_timeout = 5
+
+[frontend.reports_storage_menu]
+show_standcloud = true
+check_standcloud = true
+
+[stand_cloud]
+address = "standcloud.everypin.io"
+connection_only = false
+autosync = false
+autosync_timeout = 30
+api_key = ""

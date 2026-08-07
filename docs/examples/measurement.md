@@ -2,24 +2,24 @@
 
 This is an example of how measurements can be saved in tests.
 
-The [set_case_measurement](./../documentation/pytest_hardpy.md#set_case_measurement) function allows 
+The [set_case_measurement](./../documentation/pytest_jig.md#set_case_measurement) function allows 
 to save measurement result to database.
-The code for this example can be seen inside the hardpy package
-[Measurement](https://github.com/everypinio/hardpy/tree/main/examples/measurement).
+The code for this example can be seen inside the jig package
+[Measurement](https://github.com/everypinio/jig/tree/main/examples/measurement).
 
 ### how to start
 
-1. Launch `hardpy init measurement`.
+1. Launch `jig init measurement`.
 2. Launch [CouchDB instance](../documentation/database.md#couchdb-instance).
 3. Modify the files described below.
-4. Launch `hardpy run measurement`.
+4. Launch `jig run measurement`.
 
 ### test_1.py
 
 ```python
 import pytest
 
-from hardpy import ComparisonOperation as CompOp, NumericMeasurement, set_case_measurement
+from jig import ComparisonOperation as CompOp, NumericMeasurement, set_case_measurement
 
 pytestmark = pytest.mark.module_name("Numeric measurement")
 
@@ -132,7 +132,7 @@ def test_failed_numeric_measurements():
 ```python
 import pytest
 
-from hardpy import (
+from jig import (
     ComparisonOperation as CompOp,
     StringMeasurement,
     set_case_measurement,
@@ -203,7 +203,7 @@ def test_advanced_string_measurements():
 ```python
 import pytest
 
-from hardpy import (
+from jig import (
     ComparisonOperation as CompOp,
     NumericMeasurement,
     set_case_measurement,

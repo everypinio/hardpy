@@ -1,6 +1,6 @@
 import pytest
 
-from hardpy import DialogBox, HTMLComponent, run_dialog_box
+from jig import DialogBox, HTMLComponent, run_dialog_box
 
 pytestmark = pytest.mark.module_name("Dialog box with HTML")
 
@@ -35,7 +35,7 @@ def test_base_dialog_box_with_html_link():
         title_bar="Operator check",
         dialog_text="Press the Confirm button",
         html=HTMLComponent(
-            html="https://everypinio.github.io/hardpy/",
+            html="https://everypinio.github.io/jig/",
             is_raw_html=False,
             width=50,
         ),
@@ -50,7 +50,7 @@ def test_base_dialog_box_with_html_link_and_border():
         title_bar="Operator check",
         dialog_text="Press the Confirm button",
         html=HTMLComponent(
-            html="https://everypinio.github.io/hardpy/",
+            html="https://everypinio.github.io/jig/",
             is_raw_html=False,
             border=3,
         ),

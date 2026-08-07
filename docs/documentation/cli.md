@@ -1,16 +1,16 @@
 # Command line interface
 
-**HardPy** uses the CLI (command line interface) as an entry point.
+**Jig** uses the CLI (command line interface) as an entry point.
 
 For more information use:
 
 ```bash
-hardpy --help
+jig --help
 ```
 
-## hardpy init
+## jig init
 
-The `hardpy init` command is used to create a test bench.
+The `jig init` command is used to create a test bench.
 By default, it creates the `tests` directory.
 
 It consists of:
@@ -18,20 +18,20 @@ It consists of:
 * `test_1.py` - a pytest file with a simple test;
 * `conftest.py` - the pytest conftest file;
 * `pytest.ini` - pytest configuration .ini file for pytest;
-* `hardpy.toml` - **HardPy** configuration file;
+* `jig.toml` - **Jig** configuration file;
 * `docker-compose.yaml` - docker-compose file for running the database;
 * `database` - CouchDB database directory;
 * `couchdb.ini` - the couchdb configuration .ini file in the database directory;
 
-You can run `hardpy init <test_bench_name>`, where `<test_bench_name>` is the name of your test bench.
+You can run `jig init <test_bench_name>`, where `<test_bench_name>` is the name of your test bench.
 
-The `hardpy init` command allows you to change the initial **HardPy** settings.
-More info in [hardpy config](./hardpy_config.md).
+The `jig init` command allows you to change the initial **Jig** settings.
+More info in [jig config](./jig_config.md).
 
 ```bash
- Usage: hardpy init [OPTIONS] [TESTS_DIR]
+ Usage: jig init [OPTIONS] [TESTS_DIR]
 
- Initialize HardPy tests directory.
+ Initialize Jig tests directory.
 
 ╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
 │   tests_dir      [TESTS_DIR]  [default: None]                                                              │
@@ -61,21 +61,21 @@ More info in [hardpy config](./hardpy_config.md).
 To obtain this information, use:
 
 ```bash
-hardpy init --help
+jig init --help
 ```
 
-## hardpy run
+## jig run
 
-The `hardpy run` command is used to start the operator panel server.
-By default, it starts **HardPy** in the current directory.
+The `jig run` command is used to start the operator panel server.
+By default, it starts **Jig** in the current directory.
 
-You can run the `hardpy run <tests_directory>` command, where `<tests_directory>`
+You can run the `jig run <tests_directory>` command, where `<tests_directory>`
 is the path to the directory with your tests.
 
 ```bash
- Usage: hardpy run [OPTIONS] [TESTS_DIR]
+ Usage: jig run [OPTIONS] [TESTS_DIR]
 
- Run HardPy server.
+ Run Jig server.
 
 ╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
 │   tests_dir      [TESTS_DIR]  [default: None]                                                              │
@@ -88,20 +88,20 @@ is the path to the directory with your tests.
 To obtain this information, use:
 
 ```bash
-hardpy run --help
+jig run --help
 ```
 
-## hardpy start
+## jig start
 
-The `hardpy start` command is used to launch **HardPy** tests while the **HardPy** opener panel is running.
+The `jig start` command is used to launch **Jig** tests while the **Jig** opener panel is running.
 By default, it starts tests in the current directory.
 
 ```bash
- Usage: hardpy start [OPTIONS] [TESTS_DIR]
+ Usage: jig start [OPTIONS] [TESTS_DIR]
 
- Usage with arguments: hardpy start --arg test_mode=debug --arg device_id=DUT-007
+ Usage with arguments: jig start --arg test_mode=debug --arg device_id=DUT-007
 
- Start HardPy tests.
+ Start Jig tests.
 
 ╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
 │   tests_dir      [TESTS_DIR]  [default: None]                                                              │
@@ -112,15 +112,15 @@ By default, it starts tests in the current directory.
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-## hardpy stop
+## jig stop
 
-The `hardpy stop` command is used to stop **HardPy** tests while the **HardPy** opener panel is running.
+The `jig stop` command is used to stop **Jig** tests while the **Jig** opener panel is running.
 By default, it stops tests in the current directory.
 
 ```bash
- Usage: hardpy stop [OPTIONS] [TESTS_DIR]
+ Usage: jig stop [OPTIONS] [TESTS_DIR]
 
- Stop HardPy tests.
+ Stop Jig tests.
 
 ╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
 │   tests_dir      [TESTS_DIR]  [default: None]                                                              │
@@ -130,14 +130,14 @@ By default, it stops tests in the current directory.
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-## hardpy status
+## jig status
 
-The `hardpy status` command is used to get **HardPy** tests launch status.
+The `jig status` command is used to get **Jig** tests launch status.
 
 ```bash
- Usage: hardpy status [OPTIONS] [TESTS_DIR]
+ Usage: jig status [OPTIONS] [TESTS_DIR]
 
- Get HardPy test launch status.
+ Get Jig test launch status.
 
 ╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
 │   tests_dir      [TESTS_DIR]  [default: None]                                                              │
@@ -149,15 +149,15 @@ The `hardpy status` command is used to get **HardPy** tests launch status.
 
 ## sc-login
 
-The `hardpy sc-login` command is used to login in **StandCloud**.
+The `jig sc-login` command is used to login in **StandCloud**.
 
-You can run the `hardpy sc-login <stand_cloud_address>` command, where `<stand_cloud_address>`
+You can run the `jig sc-login <stand_cloud_address>` command, where `<stand_cloud_address>`
 is the **StandCloud** service address.
 
 ```bash
- Usage: hardpy sc-login [OPTIONS] [TESTS_DIR]
+ Usage: jig sc-login [OPTIONS] [TESTS_DIR]
 
- Login HardPy in StandCloud.
+ Login Jig in StandCloud.
 
 ╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
 │   address   TEXT  [default: None] [required]                                                               │
@@ -171,17 +171,17 @@ is the **StandCloud** service address.
 To obtain this information, use:
 
 ```bash
-hardpy sc-login --help
+jig sc-login --help
 ```
 
 ## sc-logout
 
-The `hardpy sc-logout` command is used to logout from **StandCloud**.
+The `jig sc-logout` command is used to logout from **StandCloud**.
 
 ```bash
- Usage: hardpy sc-logout [OPTIONS]
+ Usage: jig sc-logout [OPTIONS]
 
- Logout HardPy from StandCloud.
+ Logout Jig from StandCloud.
 ╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────────╮
 │   address   TEXT  [default: None] [required]                                                               │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
@@ -191,5 +191,5 @@ The `hardpy sc-logout` command is used to logout from **StandCloud**.
 ```
 
 ```bash
-hardpy sc-logout --help
+jig sc-logout --help
 ```

@@ -17,7 +17,7 @@ The logs will be written to:
 - Console output
 - CI/CD system logs if running in a pipeline
 
-While Python's `logging` package is versatile, **HardPy** offers additional specialized logging methods:
+While Python's `logging` package is versatile, **Jig** offers additional specialized logging methods:
 
 - [Database Logging with set_message](./../features/features.md/#database-logging-with-set_message)
 - [Interactive Dialogs with run_dialog_box](./../features/features.md/#interactive-dialogs-with-run_dialog_box) 
