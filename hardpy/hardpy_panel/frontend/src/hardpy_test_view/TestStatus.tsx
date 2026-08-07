@@ -2,84 +2,34 @@
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import * as React from "react";
-import { Icon, Spinner } from "@blueprintjs/core";
+
+import { cn } from "@/lib/utils";
+import { statusPresentation, toDisplayStatus } from "@/lib/testStatus";
 
 interface Props {
   status: string;
+  className?: string;
 }
 
 /**
- * Renders a status icon or spinner based on the provided status.
+ * Renders the icon standing for a test run or test case status.
  *
  * @param {Object} props - The component props.
- * @param {string} props.status - The status to display. Possible values: "ready", "run", "passed", "failed", "", or any other value.
- * @returns {React.ReactElement} - A React element representing the status icon or spinner.
+ * @param {string} props.status - The raw status reported by the backend.
+ * @param {string} [props.className] - Extra classes for the icon.
+ * @returns {React.ReactElement} A React element representing the status icon.
  */
 export function TestStatus(props: Readonly<Props>): React.ReactElement {
-  switch (props.status) {
-    case "ready":
-      return (
-        <Icon
-          icon="time"
-          intent="success"
-          className="status-icon status-icon-wait"
-        />
-      );
-    case "run":
-      return (
-        <div
-          style={{ marginTop: "4px" }}
-          className="status-icon status-icon-run"
-        >
-          {" "}
-          <Spinner size={15} />
-        </div>
-      );
-    case "passed":
-      return (
-        <Icon
-          icon="tick-circle"
-          intent="success"
-          className="status-icon status-icon-success"
-        />
-      );
-    case "failed":
-      return (
-        <Icon
-          icon="cross"
-          intent="danger"
-          className="status-icon status-icon-fail"
-        />
-      );
-    case "skipped":
-      return (
-        <Icon
-          icon="disable"
-          intent="warning"
-          className="status-icon status-icon-skipped"
-        />
-      );
-    case "":
-      return (
-        <Icon
-          icon="time"
-          intent="none"
-          className="status-icon status-icon-wait"
-        />
-      );
-    default:
-      return (
-        <Icon
-          icon="circle"
-          intent="none"
-          className="status-icon status-icon-empty"
-        />
-      );
-  }
-}
+  const status = toDisplayStatus(props.status);
+  const { icon: Icon, iconClassName } = statusPresentation(status);
 
-TestStatus.defaultProps = {
-  defaultOpen: true,
-};
+  return (
+    <Icon
+      data-status={status}
+      aria-hidden="true"
+      className={cn("size-4 shrink-0", iconClassName, props.className)}
+    />
+  );
+}
 
 export default TestStatus;

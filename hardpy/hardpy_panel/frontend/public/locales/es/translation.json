@@ -18,6 +18,7 @@
     "manualCollectOn": "Recolección manual activada",
     "manualCollectOff": "Recolección manual desactivada",
     "testConfigurationSelector": "Seleccionar configuración de prueba",
+    "settings": "Configuración",
     "status": {
       "ready": "Listo",
       "run": "Ejecutando",

@@ -18,6 +18,7 @@
     "manualCollectOn": "手動収集オン",
     "manualCollectOff": "手動収集オフ",
     "testConfigurationSelector": "テスト構成を選択する",
+    "settings": "設定",
     "status": {
       "ready": "準備完了",
       "run": "実行中",

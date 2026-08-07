@@ -1,10 +1,17 @@
+import path from "path";
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import type { UserConfig } from "vite";
 import glsl from "vite-plugin-glsl";
+import { defineConfig } from "vitest/config";
 
-export default {
-  plugins: [react(), glsl()],
+export default defineConfig({
+  plugins: [react(), tailwindcss(), glsl()],
   publicDir: 'public',
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
   server: {
     host: '0.0.0.0',
     port: 3000,
@@ -46,4 +53,9 @@ export default {
   build: {
     target: 'esnext'
   },
-} satisfies UserConfig;
+  test: {
+    environment: "jsdom",
+    setupFiles: ["./src/setupTests.ts"],
+    include: ["src/**/*.{test,spec}.{ts,tsx}"],
+  },
+});

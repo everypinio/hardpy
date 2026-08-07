@@ -1,7 +1,7 @@
 // Copyright (c) 2024 Everypin
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-import React, { StrictMode } from "react";
+import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { useTranslation } from "react-i18next";
 
@@ -11,6 +11,8 @@ import { Provider } from "use-pouchdb";
 import "normalize.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
+// Loaded last so its unlayered utilities win specificity ties against Blueprint.
+import "./index.css";
 import "./i18n";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";

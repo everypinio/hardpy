@@ -1,9 +1,3 @@
-#main-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 #main-heading .logo-smol {
   margin-right: 10px;
   width: 30px;
@@ -12,26 +6,18 @@
   background-size: cover;
 }
 
-#last-exec-heading {
-  margin-right: 10px;
-}
-
-#glob-test-status {
-  margin-top: 2px; /* Justify status icon to text. */
-}
-
 html {
   height: inherit;
 }
 
-/* scroll-padding accounts for the fixed Navbar at top and the fixed footer
+/* scroll-padding accounts for the fixed header at top and the fixed footer
  * at bottom so any programmatic scrollIntoView() (notably the optional
  * auto-scroll feature) doesn't park a row behind either of them.
  */
 html,
-.bp5-drawer-body {
+#panel-content {
   scroll-padding-top: 60px;
-  scroll-padding-bottom: 160px;
+  scroll-padding-bottom: 200px;
 }
 
 ::-webkit-scrollbar {

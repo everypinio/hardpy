@@ -24,7 +24,9 @@
         "Topic :: Software Development :: Testing :: Acceptance",
         "Topic :: Utilities",
     ]
-    requires-python = ">=3.10"
+    # The upper bound is required by dependency resolvers, several dependencies
+    # (qrcode, wemake-python-styleguide) declare `python <4.0` themselves.
+    requires-python = ">=3.10,<4"
     dependencies = [
         "pycouchdb>=1.14.2, <2",
         "glom>=23.3.0",
@@ -70,6 +72,8 @@
     [project.scripts]
         # Provide `hardpy` executable
         hardpy = "hardpy.cli.cli:cli"
+        # Provide `example` executable, i.e. `poetry run example hello_hardpy`
+        example = "hardpy.cli.example:cli"
 
     [project.entry-points.pytest11]
         pytest_hardpy = "hardpy.pytest_hardpy.plugin"

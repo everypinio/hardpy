@@ -18,6 +18,7 @@
     "manualCollectOn": "Zapnout manuální výběr testů",
     "manualCollectOff": "Vypnout manuální výběr testů",
     "testConfigurationSelector": "Vyberte testovací konfiguraci",
+    "settings": "Nastavení",
     "status": {
       "ready": "Připraveno",
       "run": "Běží",

@@ -90,7 +90,21 @@ The package, CLI, and imports are still named `hardpy`, so upstream code and exa
 
 ## Examples
 
-For more examples of using **HardPy**, see the [examples](https://github.com/everypinio/hardpy/tree/main/examples) folder and the [documentation](https://everypinio.github.io/hardpy/examples/).
+From a clone of this repository, any example in the [examples](examples) folder can be
+started by name:
+
+```bash
+poetry install
+poetry run example full_capabilities
+```
+
+The operator panel then runs on http://localhost:8000/. Running `poetry run example`
+without a name lists what is available.
+
+[full_capabilities](examples/full_capabilities) exercises every feature the panel can
+display and needs no database, which makes it the place to try out new ones.
+
+For more examples of using **HardPy**, see the [documentation](https://everypinio.github.io/hardpy/examples/).
 
 ## Measurement instruments
 

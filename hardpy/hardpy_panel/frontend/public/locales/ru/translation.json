@@ -18,6 +18,7 @@
     "manualCollectOn": "Ручной сбор включен",
     "manualCollectOff": "Ручной сбор выключен",
     "testConfigurationSelector": "Выберите конфигурацию теста",
+    "settings": "Настройки",
     "status": {
       "ready": "Готов",
       "run": "Выполнение",

@@ -2,7 +2,16 @@
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import * as React from "react";
-import { Alert } from "@blueprintjs/core";
+import { TriangleAlert } from "lucide-react";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface Props {
   reload_timeout_s: number;
@@ -37,6 +46,8 @@ function reducer(_state: States, action: Action): States {
 const RELOAD_MSG = (time_ms: number) =>
   `The application will be updated in ${time_ms} seconds!`;
 
+const RELOAD_TITLE = "Application update";
+
 /**
  * ReloadAlert component that renders an alert about app restart and handles the page reload.
  * @param {Props} props - The component props.
@@ -66,14 +77,26 @@ export function ReloadAlert(props: Props): React.ReactElement {
 
   /** Render */
   return (
-    <Alert
-      isOpen={state == "WAIT_RELOAD"}
-      confirmButtonText={"Reboot now"}
-      onClose={() => dispatch("RELOAD")}
-      icon={"warning-sign"}
-    >
-      <p>{RELOAD_MSG(props.reload_timeout_s)}</p>
-    </Alert>
+    <AlertDialog open={state == "WAIT_RELOAD"}>
+      <AlertDialogContent className="max-w-sm">
+        <div className="flex items-start gap-3">
+          <TriangleAlert aria-hidden="true" className="mt-0.5 size-5 text-warning" />
+          <div>
+            <AlertDialogTitle className="sr-only">
+              {RELOAD_TITLE}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-foreground">
+              {RELOAD_MSG(props.reload_timeout_s)}
+            </AlertDialogDescription>
+          </div>
+        </div>
+        <AlertDialogFooter>
+          <AlertDialogAction onClick={() => dispatch("RELOAD")}>
+            Reboot now
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 

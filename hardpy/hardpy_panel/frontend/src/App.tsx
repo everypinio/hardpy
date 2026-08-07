@@ -2,20 +2,42 @@
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import * as React from "react";
+import {
+  Ban,
+  Bug,
+  ChevronDown,
+  ChevronUp,
+  FolderKanban,
+  MousePointerClick,
+  Settings,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { Button } from "@/components/ui/button";
 import {
-  Button,
-  Navbar,
-  Alignment,
-  Classes,
-  Colors,
-  Menu,
-  MenuItem,
-  H2,
-  Popover,
   Card,
-} from "@blueprintjs/core";
+  CardAction,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import {
+  DisplayStatus,
+  statusLabel,
+  toDisplayStatus,
+} from "@/lib/testStatus";
+import { cn } from "@/lib/utils";
 
 import StartStopButton from "./button/StartStop";
 import { TestRunI } from "./hardpy_test_view/SuiteList";
@@ -39,15 +61,8 @@ const WINDOW_WIDTH_THRESHOLDS = {
   WIDE: 400,
 };
 
-const STATUS_MAP = {
-  ready: "app.status.ready",
-  run: "app.status.run",
-  passed: "app.status.passed",
-  failed: "app.status.failed",
-  stopped: "app.status.stopped",
-} as const;
-
-type StatusKey = keyof typeof STATUS_MAP;
+/** How many more history runs are revealed each time "show more" is clicked. */
+const HISTORY_PAGE_SIZE = 5;
 
 interface AppConfig {
   database?: {
@@ -81,13 +96,28 @@ interface AppConfig {
 }
 
 /**
- * Checks if the provided status is a valid status key.
- * @param {string} status - The status string to validate
- * @returns {boolean} True if the status is a valid StatusKey, false otherwise
+ * Renders a standalone card carrying a connection or database message.
+ * @param {Object} props - The component properties
+ * @param {string} props.title - The headline shown to the operator
+ * @param {string} [props.detail] - An optional technical detail below the headline
+ * @returns {JSX.Element} The rendered message card
  */
-const isValidStatus = (status: string): status is StatusKey => {
-  return status in STATUS_MAP;
-};
+function PanelMessage({
+  title,
+  detail,
+}: {
+  title: string;
+  detail?: string;
+}): JSX.Element {
+  return (
+    <Card className="mx-auto mt-8 max-w-xl">
+      <CardContent className="space-y-2">
+        <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
+        {detail && <p className="text-sm text-muted-foreground">{detail}</p>}
+      </CardContent>
+    </Card>
+  );
+}
 
 // Global variable to track ModalResult visibility with timestamp
 let isCompletionModalResultVisible = false;
@@ -191,9 +221,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const [isConfigLoaded, setIsConfigLoaded] = React.useState(false);
   const [manualCollectMode, setManualCollectMode] = React.useState(false);
 
-  const [lastRunStatus, setLastRunStatus] = React.useState<
-    StatusKey | "unknown"
-  >("ready");
+  const [lastRunStatus, setLastRunStatus] =
+    React.useState<DisplayStatus>("ready");
   const [lastProgress, setProgress] = React.useState(0);
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
   const [lastRunDuration, setLastRunDuration] = React.useState<number>(0);
@@ -231,7 +260,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const [showHistoryDetails, setShowHistoryDetails] =
     React.useState<boolean>(false);
   const [historyDisplayCount, setHistoryDisplayCount] =
-    React.useState<number>(5);
+    React.useState<number>(HISTORY_PAGE_SIZE);
 
   /**
    * Loads HardPy configuration from the backend API on component mount
@@ -525,7 +554,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
 
     // Update run status if changed
     if (status !== lastRunStatus) {
-      setLastRunStatus(isValidStatus(status) ? status : "unknown");
+      setLastRunStatus(toDisplayStatus(status));
     }
 
     // Update progress if changed
@@ -684,39 +713,23 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
    * @returns {JSX.Element} The rendered database content component
    */
   const renderDbContent = (): JSX.Element => {
+    const dbErrorMessage = <PanelMessage title={t("app.dbError")} detail={error?.message} />;
+
     if (loading && rows.length === 0) {
-      return (
-        <Card style={{ marginTop: "60px" }}>
-          <H2>{t("app.connection")}</H2>
-        </Card>
-      );
+      return <PanelMessage title={t("app.connection")} />;
     }
 
     if (state === "error") {
-      return (
-        <Card style={{ marginTop: "60px" }}>
-          <H2>{t("app.dbError")}</H2>
-          {error && <p>{error.message}</p>}
-        </Card>
-      );
+      return dbErrorMessage;
     }
 
     if (rows.length === 0) {
-      return (
-        <Card style={{ marginTop: "60px" }}>
-          <H2>{t("app.noEntries")}</H2>
-        </Card>
-      );
+      return <PanelMessage title={t("app.noEntries")} />;
     }
 
     const index = findRowIndex(rows, syncDocumentId);
     if (index === -1) {
-      return (
-        <Card style={{ marginTop: "60px" }}>
-          <H2>{t("app.dbError")}</H2>
-          {error && <p>{error.message}</p>}
-        </Card>
-      );
+      return dbErrorMessage;
     }
 
     const document_row = rows[index];
@@ -746,60 +759,44 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       : undefined;
 
     if (!document_row) {
-      return (
-        <Card style={{ marginTop: "60px" }}>
-          <H2>{t("app.dbError")}</H2>
-          {error && <p>{error.message}</p>}
-        </Card>
-      );
+      return dbErrorMessage;
     }
 
     const testRunData: TestRunI = document_row.doc as TestRunI;
 
     return (
-      <div style={{ marginTop: "40px" }}>
-        <div
-          key={document_row.id}
-          style={{ display: "flex", flexDirection: "row" }}
-        >
+      <div className="px-4 py-6">
+        <div key={document_row.id} className="flex flex-row gap-5">
           {(ultrawide || !use_debug_info) && (
             <div
-              style={{
-                display: "flex",
-                flexDirection: ultrawide ? "row" : "column",
-                flexGrow: 1,
-                flexShrink: 1,
-                gap: "20px",
-              }}
+              className={cn(
+                "flex min-w-0 flex-1 gap-5",
+                ultrawide ? "flex-row" : "flex-col"
+              )}
             >
-              <Card
-                style={{
-                  flexDirection: "column",
-                  padding: "20px",
-                  flexGrow: 3,
-                  flexShrink: 1,
-                  marginTop: "20px",
-                  marginBottom: "20px",
-                }}
-              >
-                <SuiteList
-                  db_state={testRunData}
-                  defaultClose={!ultrawide}
-                  onTestsSelectionChange={handleTestsSelectionChange}
-                  selectedTests={selectedTests}
-                  selectionSupported={
-                    (appConfig?.frontend?.manual_collect || false) &&
-                    manualCollectMode
-                  }
-                  currentTestConfig={appConfig?.current_test_config}
-                  measurementDisplay={appConfig?.frontend?.measurement_display}
-                  manualCollectMode={manualCollectMode}
-                  autoScroll={appConfig?.frontend?.auto_scroll || false}
-                />
+              <Card className="min-w-0 flex-[3_1_0%] py-5">
+                <CardContent className="px-5">
+                  <SuiteList
+                    db_state={testRunData}
+                    defaultClose={!ultrawide}
+                    onTestsSelectionChange={handleTestsSelectionChange}
+                    selectedTests={selectedTests}
+                    selectionSupported={
+                      (appConfig?.frontend?.manual_collect || false) &&
+                      manualCollectMode
+                    }
+                    currentTestConfig={appConfig?.current_test_config}
+                    measurementDisplay={
+                      appConfig?.frontend?.measurement_display
+                    }
+                    manualCollectMode={manualCollectMode}
+                    autoScroll={appConfig?.frontend?.auto_scroll || false}
+                  />
+                </CardContent>
               </Card>
 
               {appConfig?.frontend?.test_history !== false && (
-                <div style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+                <div className="flex min-w-0 flex-[1_1_22rem] flex-col gap-3">
                   <TestHistory
                     history={historyEntries}
                     selectedHistoryId={selectedHistoryRunId}
@@ -810,51 +807,51 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                   />
                   {filteredRows.length > historyDisplayCount && (
                     <Button
-                      minimal
-                      fill
+                      variant="ghost"
+                      className="w-full"
                       onClick={() =>
-                        setHistoryDisplayCount(historyDisplayCount + 5)
+                        setHistoryDisplayCount(
+                          historyDisplayCount + HISTORY_PAGE_SIZE
+                        )
                       }
-                      style={{ marginTop: "10px" }}
                     >
                       {t("history.showMore")}
                     </Button>
                   )}
                   {selectedHistoryRow && (
-                    <Card style={{ padding: "20px", marginTop: "20px" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                        }}
-                      >
-                        <H2>{t("history.detailTitle")}</H2>
-                        <Button
-                          minimal
-                          icon={
-                            showHistoryDetails ? "chevron-up" : "chevron-down"
-                          }
-                          onClick={() =>
-                            setShowHistoryDetails(!showHistoryDetails)
-                          }
-                          title={
-                            showHistoryDetails ? "Hide details" : "Show details"
-                          }
-                        />
-                      </div>
+                    <Card className="gap-4 py-4">
+                      <CardHeader className="flex-row items-center justify-between px-4">
+                        <CardTitle className="text-base">
+                          {t("history.detailTitle")}
+                        </CardTitle>
+                        <CardAction>
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            aria-expanded={showHistoryDetails}
+                            onClick={() =>
+                              setShowHistoryDetails(!showHistoryDetails)
+                            }
+                            title={t("history.detailTitle")}
+                          >
+                            {showHistoryDetails ? <ChevronUp /> : <ChevronDown />}
+                          </Button>
+                        </CardAction>
+                      </CardHeader>
                       {showHistoryDetails && (
-                        <SuiteList
-                          db_state={selectedHistoryRow}
-                          defaultClose={!ultrawide}
-                          selectionSupported={false}
-                          selectedTests={[]}
-                          currentTestConfig={appConfig?.current_test_config}
-                          measurementDisplay={
-                            appConfig?.frontend?.measurement_display
-                          }
-                          manualCollectMode={manualCollectMode}
-                        />
+                        <CardContent className="px-4">
+                          <SuiteList
+                            db_state={selectedHistoryRow}
+                            defaultClose={!ultrawide}
+                            selectionSupported={false}
+                            selectedTests={[]}
+                            currentTestConfig={appConfig?.current_test_config}
+                            measurementDisplay={
+                              appConfig?.frontend?.measurement_display
+                            }
+                            manualCollectMode={manualCollectMode}
+                          />
+                        </CardContent>
                       )}
                     </Card>
                   )}
@@ -863,15 +860,12 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
             </div>
           )}
           {use_debug_info && (
-            <Card
-              style={{
-                flexDirection: "column",
-                padding: "20px",
-                marginTop: "20px",
-                marginBottom: "20px",
-              }}
-            >
-              <pre>{JSON.stringify(testRunData, null, 2)}</pre>
+            <Card className="min-w-0 flex-1 py-5">
+              <CardContent className="px-5">
+                <pre className="overflow-x-auto text-xs">
+                  {JSON.stringify(testRunData, null, 2)}
+                </pre>
+              </CardContent>
             </Card>
           )}
         </div>
@@ -881,54 +875,50 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
 
   /**
    * Renders the settings menu with sound and debug options
-   * @returns {JSX.Element} The settings menu component
+   * @returns {JSX.Element} The settings menu items
    */
   const renderSettingsMenu = (): JSX.Element => {
     return (
-      <Menu>
-        <MenuItem
-          shouldDismissPopover={false}
-          text={use_end_test_sound ? t("app.soundOff") : t("app.soundOn")}
-          icon={use_end_test_sound ? "volume-up" : "volume-off"}
+      <>
+        <DropdownMenuItem
           id="use_end_test_sound"
-          onClick={() => setUseEndTestSound(!use_end_test_sound)}
-        />
-        <MenuItem
-          shouldDismissPopover={false}
-          text={use_debug_info ? t("app.debugOff") : t("app.debugOn")}
-          icon={"bug"}
+          onSelect={(event) => {
+            event.preventDefault();
+            setUseEndTestSound(!use_end_test_sound);
+          }}
+        >
+          {use_end_test_sound ? <Volume2 /> : <VolumeX />}
+          {use_end_test_sound ? t("app.soundOff") : t("app.soundOn")}
+        </DropdownMenuItem>
+        <DropdownMenuItem
           id="use_debug_info"
-          onClick={() => setUseDebugInfo(!use_debug_info)}
-        />
+          onSelect={(event) => {
+            event.preventDefault();
+            setUseDebugInfo(!use_debug_info);
+          }}
+        >
+          <Bug />
+          {use_debug_info ? t("app.debugOff") : t("app.debugOn")}
+        </DropdownMenuItem>
         {appConfig?.frontend?.manual_collect && (
-          <MenuItem
-            shouldDismissPopover={false}
-            text={
-              manualCollectMode
-                ? t("app.manualCollectOff")
-                : t("app.manualCollectOn")
-            }
-            icon={manualCollectMode ? "disable" : "selection"}
-            onClick={toggleManualCollectMode}
-          />
+          <DropdownMenuItem
+            onSelect={(event) => {
+              event.preventDefault();
+              toggleManualCollectMode();
+            }}
+          >
+            {manualCollectMode ? <Ban /> : <MousePointerClick />}
+            {manualCollectMode
+              ? t("app.manualCollectOff")
+              : t("app.manualCollectOn")}
+          </DropdownMenuItem>
         )}
-      </Menu>
+      </>
     );
   };
 
-  /**
-   * Renders the status text of the test run based on the current status
-   * @param {StatusKey | "unknown"} status - The status to render
-   * @returns {string} The translated status text
-   */
-  const getStatusText = (status: StatusKey | "unknown"): string => {
-    if (status === "unknown") {
-      return t("app.status.unknown") || "Unknown status";
-    }
-    return t(STATUS_MAP[status]);
-  };
-
   const useBigButton = appConfig?.frontend?.full_size_button !== false;
+  const isTestRunning = lastRunStatus === "run";
 
   /**
    * Handles ModalResult dismissal by hiding it and clearing completion data
@@ -939,174 +929,122 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   };
 
   return (
-    <div className="App">
-      <ReloadAlert reload_timeout_s={3} />
+    <TooltipProvider>
+      <div className="App">
+        <ReloadAlert reload_timeout_s={3} />
+        <Toaster position="top-center" />
 
-      {/* Header with navigation and status information */}
-      <Navbar
-        fixedToTop={true}
-        style={{ background: Colors.LIGHT_GRAY4, margin: "auto" }}
-      >
-        <Navbar.Group align={Alignment.LEFT}>
-          <Navbar.Heading id={"main-heading"}>
-            <div className={"logo-smol"}></div>
+        {/* Header with navigation and status information */}
+        <header
+          id="panel-header"
+          className="fixed inset-x-0 top-0 z-20 flex h-[50px] items-center gap-2 border-b bg-card px-4 shadow-sm"
+        >
+          <div id="main-heading" className="flex items-center">
+            <div className="logo-smol" />
             {wide && (
-              <div>
-                <b>{ultrawide ? t("app.title") : "HardPy"}</b>
-              </div>
+              <span className="font-semibold">
+                {ultrawide ? t("app.title") : "HardPy"}
+              </span>
             )}
-          </Navbar.Heading>
+          </div>
 
-          {wide && <Navbar.Divider />}
+          {wide && <Separator orientation="vertical" className="mx-1 h-6" />}
 
           <div
-            style={{
-              display: "flex",
-              flexDirection: wide ? "row" : "column",
-              alignItems: "center",
-              gap: wide ? "10px" : "2px",
-              fontSize: wide ? "inherit" : "12px",
-            }}
+            className={cn(
+              "flex items-center",
+              wide ? "flex-row gap-2.5 text-sm" : "flex-col gap-0.5 text-xs"
+            )}
           >
-            <Navbar.Heading
-              id={"last-exec-heading"}
-              style={{
-                margin: 0,
-                display: "flex",
-                alignItems: "center",
-                gap: "5px",
-                whiteSpace: "nowrap",
-                flexWrap: wide ? "nowrap" : "wrap",
-              }}
-            >
-              <div>{t("app.lastLaunch")}</div>
-              <div>{getStatusText(lastRunStatus)}</div>
-              <TestStatus
-                status={lastRunStatus === "unknown" ? "" : lastRunStatus}
-              />
-            </Navbar.Heading>
+            <div className="flex flex-wrap items-center gap-1.5 whitespace-nowrap">
+              <span className="text-muted-foreground">
+                {t("app.lastLaunch")}
+              </span>
+              <span className="font-medium">
+                {statusLabel(lastRunStatus, t)}
+              </span>
+              <TestStatus status={lastRunStatus} />
+            </div>
 
             {use_end_test_sound && (
               <PlaySound key="sound" status={lastRunStatus} />
             )}
 
-            {wide && <Navbar.Divider />}
+            {wide && <Separator orientation="vertical" className="h-6" />}
 
-            <Navbar.Heading style={{ whiteSpace: "nowrap" }}>
-              {t("app.duration")}: {lastRunDuration}s
-            </Navbar.Heading>
+            <span className="whitespace-nowrap text-muted-foreground">
+              {t("app.duration")}: {lastRunDuration}
+              {t("app.seconds")}
+            </span>
           </div>
 
-          <Navbar.Divider />
-        </Navbar.Group>
-
-        <Navbar.Group align={Alignment.RIGHT}>
-          {appConfig && appConfig.current_test_config && (
-            <Button
-              className="bp3-minimal"
-              text={appConfig.current_test_config}
-              icon="projects"
-              disabled={lastRunStatus === "run"}
-              onClick={() => setShowConfigOverlay(true)}
-              style={{
-                marginRight: "8px",
-                fontWeight: "bold",
-                color: lastRunStatus === "run" ? Colors.GRAY3 : Colors.BLUE3,
-              }}
-            />
-          )}
-          <StorageStatusMenu
-            data={storageStatus}
-            loading={storageStatusLoading}
-            error={storageStatusError}
-            hardpyConfig={appConfig}
-          />
-          <Popover content={renderSettingsMenu()}>
-            <Button className="bp3-minimal" icon="cog" />
-          </Popover>
-        </Navbar.Group>
-      </Navbar>
-
-      {/* Main content area with test suites and results */}
-      <div
-        className={Classes.DRAWER_BODY}
-        style={{
-          marginBottom: "60px",
-          paddingBottom: useBigButton ? "120px" : "80px",
-        }}
-      >
-        {renderDbContent()}
-      </div>
-
-      {/* Footer with progress bar and control buttons */}
-      {isConfigLoaded && (
-        <div
-          className={Classes.DRAWER_FOOTER}
-          style={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            position: "fixed",
-            bottom: 0,
-            background: Colors.LIGHT_GRAY5,
-            margin: "auto",
-          }}
-        >
-          {useBigButton ? (
-            <>
-              <div
-                style={{
-                  width: "100%",
-                  padding: "10px 20px 0px 20px",
-                }}
+          <div className="ml-auto flex items-center gap-1">
+            {appConfig && appConfig.current_test_config && (
+              <Button
+                variant="ghost"
+                className="font-semibold text-primary"
+                disabled={isTestRunning}
+                onClick={() => setShowConfigOverlay(true)}
               >
+                <FolderKanban aria-hidden="true" />
+                {appConfig.current_test_config}
+              </Button>
+            )}
+            <StorageStatusMenu
+              data={storageStatus}
+              loading={storageStatusLoading}
+              error={storageStatusError}
+              hardpyConfig={appConfig}
+            />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label={t("app.settings")}
+                >
+                  <Settings aria-hidden="true" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                {renderSettingsMenu()}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </header>
+
+        {/* Main content area with test suites and results */}
+        <main
+          id="panel-content"
+          className={cn("pt-[50px]", useBigButton ? "pb-[180px]" : "pb-[140px]")}
+        >
+          {renderDbContent()}
+        </main>
+
+        {/* Footer with progress bar and control buttons */}
+        {isConfigLoaded && (
+          <div className="fixed inset-x-0 bottom-0 z-20 flex flex-col border-t bg-card">
+            {useBigButton ? (
+              <div className="flex flex-col gap-2.5 p-4">
                 <ProgressView
                   percentage={lastProgress}
                   status={lastRunStatus}
                 />
+                <StartStopButton
+                  testing_status={lastRunStatus}
+                  useBigButton={true}
+                  manualCollectMode={manualCollectMode}
+                  onTestRunStart={handleTestRunStart}
+                />
               </div>
-              <div
-                style={{
-                  width: "100%",
-                  padding: "10px 20px",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <div style={{ width: "100%" }}>
-                  <StartStopButton
-                    testing_status={lastRunStatus}
-                    useBigButton={true}
-                    manualCollectMode={manualCollectMode}
-                    onTestRunStart={handleTestRunStart}
+            ) : (
+              <div className="flex flex-row items-center gap-5 p-4">
+                <div className="min-w-0 flex-1">
+                  <ProgressView
+                    percentage={lastProgress}
+                    status={lastRunStatus}
                   />
                 </div>
-              </div>
-            </>
-          ) : (
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-              }}
-            >
-              <div
-                style={{
-                  flexDirection: "column",
-                  flexGrow: 1,
-                  flexShrink: 1,
-                  marginTop: "auto",
-                  marginBottom: "auto",
-                  padding: "20px",
-                }}
-              >
-                <ProgressView
-                  percentage={lastProgress}
-                  status={lastRunStatus}
-                />
-              </div>
-              <div style={{ flexDirection: "column" }}>
                 <StartStopButton
                   testing_status={lastRunStatus}
                   useBigButton={false}
@@ -1114,40 +1052,40 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                   onTestRunStart={handleTestRunStart}
                 />
               </div>
-            </div>
-          )}
-        </div>
-      )}
+            )}
+          </div>
+        )}
 
-      {/* Test Config Selection Overlay */}
-      {appConfig && (
-        <TestConfigOverlay
-          isOpen={showConfigOverlay}
-          testConfigs={appConfig.test_configs || []}
-          currentConfig={appConfig.current_test_config}
-          isTestRunning={lastRunStatus === "run"}
-          onSelect={handleConfigSelection}
-          onClose={() => setShowConfigOverlay(false)}
+        {/* Test Config Selection Overlay */}
+        {appConfig && (
+          <TestConfigOverlay
+            isOpen={showConfigOverlay}
+            testConfigs={appConfig.test_configs || []}
+            currentConfig={appConfig.current_test_config}
+            isTestRunning={isTestRunning}
+            onSelect={handleConfigSelection}
+            onClose={() => setShowConfigOverlay(false)}
+          />
+        )}
+
+        {/* Test Completion ModalResult */}
+        <TestCompletionModalResult
+          isVisible={showCompletionModalResult}
+          testPassed={testCompletionData?.testPassed || false}
+          testStopped={testCompletionData?.testStopped || false}
+          failedTestCases={testCompletionData?.failedTestCases || []}
+          stoppedTestCase={testCompletionData?.stoppedTestCase}
+          onDismiss={handleModalResultDismiss}
+          onVisibilityChange={handleModalResultVisibilityChange}
+          autoDismissPass={
+            appConfig?.frontend?.modal_result?.auto_dismiss_pass ?? true
+          }
+          autoDismissTimeout={
+            appConfig?.frontend?.modal_result?.auto_dismiss_timeout ?? 5
+          }
         />
-      )}
-
-      {/* Test Completion ModalResult */}
-      <TestCompletionModalResult
-        isVisible={showCompletionModalResult}
-        testPassed={testCompletionData?.testPassed || false}
-        testStopped={testCompletionData?.testStopped || false}
-        failedTestCases={testCompletionData?.failedTestCases || []}
-        stoppedTestCase={testCompletionData?.stoppedTestCase}
-        onDismiss={handleModalResultDismiss}
-        onVisibilityChange={handleModalResultVisibilityChange}
-        autoDismissPass={
-          appConfig?.frontend?.modal_result?.auto_dismiss_pass ?? true
-        }
-        autoDismissTimeout={
-          appConfig?.frontend?.modal_result?.auto_dismiss_timeout ?? 5
-        }
-      />
-    </div>
+      </div>
+    </TooltipProvider>
   );
 }
 

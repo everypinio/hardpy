@@ -3,9 +3,10 @@
 
 import * as React from "react";
 import _, { Dictionary } from "lodash";
-import { H1, H2, H4, Tag, Divider } from "@blueprintjs/core";
 import { withTranslation, WithTranslation } from "react-i18next";
 
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { TestItem, TestSuiteComponent } from "./TestSuite";
 import { StartOperatorMsgDialog, CLOSED_MESSAGES_KEY } from "./OperatorMsg";
 
@@ -147,9 +148,13 @@ export class SuiteList extends React.Component<
 
     if (this.props.db_state.name == undefined) {
       return (
-        <div>
-          <H2>{t("suiteList.loadingTests")}</H2>
-          {<H4>{t("suiteList.refreshHint")}</H4>}
+        <div className="space-y-1">
+          <h2 className="text-xl font-semibold tracking-tight">
+            {t("suiteList.loadingTests")}
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            {t("suiteList.refreshHint")}
+          </p>
         </div>
       );
     }
@@ -172,48 +177,42 @@ export class SuiteList extends React.Component<
       this.elements_count = module_names.length;
     }
 
-    const TAG_ELEMENT_STYLE = { margin: 1 };
-
     return (
       <>
         <div>
-          <H1>{db_state.name}</H1>
-          {db_state.test_stand && (
-            <Tag minimal style={TAG_ELEMENT_STYLE}>
-              {t("suiteList.standName")}: {db_state.test_stand?.name}
-            </Tag>
-          )}
-          {start && (
-            <Tag minimal style={TAG_ELEMENT_STYLE}>
-              {t("suiteList.startTime")}: {start + start_tz}
-            </Tag>
-          )}
-          {stop && (
-            <Tag minimal style={TAG_ELEMENT_STYLE}>
-              {t("suiteList.finishTime")}: {stop + start_tz}
-            </Tag>
-          )}
-          {alert && (
-            <Tag minimal style={TAG_ELEMENT_STYLE}>
-              {t("suiteList.alert")}: {alert}
-            </Tag>
-          )}
-          {db_state.test_stand?.info &&
-            Object.keys(db_state.test_stand.info).length > 0 && (
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
-                {Object.entries(db_state.test_stand.info).map(
-                  ([key, value]) => (
-                    <Tag key={key} minimal style={TAG_ELEMENT_STYLE}>
-                      {db_state.test_stand?.name} {key}:{" "}
-                      {typeof value === "string"
-                        ? value
-                        : JSON.stringify(value)}
-                    </Tag>
-                  )
-                )}
-              </div>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {db_state.name}
+          </h1>
+          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            {db_state.test_stand && (
+              <Badge variant="secondary">
+                {t("suiteList.standName")}: {db_state.test_stand?.name}
+              </Badge>
             )}
-          <Divider />
+            {start && (
+              <Badge variant="secondary">
+                {t("suiteList.startTime")}: {start + start_tz}
+              </Badge>
+            )}
+            {stop && (
+              <Badge variant="secondary">
+                {t("suiteList.finishTime")}: {stop + start_tz}
+              </Badge>
+            )}
+            {alert && (
+              <Badge variant="destructive">
+                {t("suiteList.alert")}: {alert}
+              </Badge>
+            )}
+            {db_state.test_stand?.info &&
+              Object.entries(db_state.test_stand.info).map(([key, value]) => (
+                <Badge key={key} variant="secondary">
+                  {db_state.test_stand?.name} {key}:{" "}
+                  {typeof value === "string" ? value : JSON.stringify(value)}
+                </Badge>
+              ))}
+          </div>
+          <Separator className="my-4" />
           {_.map([...module_names], (name: string, index: number) =>
             this.suiteRender(index, { name: name, test: modules[name] })
           )}

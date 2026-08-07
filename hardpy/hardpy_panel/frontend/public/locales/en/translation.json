@@ -18,6 +18,7 @@
     "manualCollectOn": "Manual collect on",
     "manualCollectOff": "Manual collect off",
     "testConfigurationSelector": "Select test configuration",
+    "settings": "Settings",
     "status": {
       "ready": "Ready",
       "run": "Run",

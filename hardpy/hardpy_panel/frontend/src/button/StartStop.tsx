@@ -2,8 +2,11 @@
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import * as React from "react";
-import { AnchorButton, AnchorButtonProps } from "@blueprintjs/core";
+import { Play, Square } from "lucide-react";
 import { withTranslation, WithTranslation } from "react-i18next";
+
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type Props = {
   testing_status: string;
@@ -268,70 +271,28 @@ class StartStopButton extends React.Component<Props, State> {
       manualCollectMode = false,
     } = this.props;
     const is_testing: boolean = testing_status == "run";
-    const button_id: string = "start-stop-button";
+    const Icon = is_testing ? Square : Play;
 
-    if (useBigButton) {
-      const bigButtonStyle = {
-        width: "100%",
-        height: "96px",
-        fontSize: "24px",
-        fontWeight: "bold",
-        opacity: manualCollectMode ? 0.5 : 1,
-      };
-
-      const iconStyle = {
-        fontSize: "28px",
-        marginLeft: "12px",
-      };
-
-      const stop_button: AnchorButtonProps = {
-        text: t("button.stop"),
-        intent: "danger",
-        large: true,
-        rightIcon: <span style={iconStyle}>&#9632;</span>,
-        onClick: this.hardpy_stop,
-        id: button_id,
-        fill: true,
-        style: bigButtonStyle,
-        disabled: manualCollectMode || this.state.isStopButtonDisabled,
-      };
-
-      const start_button: AnchorButtonProps = {
-        text: t("button.start"),
-        intent: is_testing ? undefined : "primary",
-        large: true,
-        rightIcon: <span style={iconStyle}>&#9658;</span>,
-        onClick: this.handleButtonClick,
-        id: button_id,
-        disabled: manualCollectMode || this.state.isStopButtonDisabled,
-        fill: true,
-        style: bigButtonStyle,
-      };
-
-      return <AnchorButton {...(is_testing ? stop_button : start_button)} />;
-    } else {
-      const stop_button: AnchorButtonProps = {
-        text: t("button.stop"),
-        intent: "danger",
-        large: true,
-        rightIcon: "stop",
-        onClick: this.hardpy_stop,
-        id: button_id,
-        disabled: manualCollectMode || this.state.isStopButtonDisabled,
-      };
-
-      const start_button: AnchorButtonProps = {
-        text: t("button.start"),
-        intent: is_testing ? undefined : "primary",
-        large: true,
-        rightIcon: "play",
-        onClick: this.handleButtonClick,
-        id: button_id,
-        disabled: manualCollectMode || this.state.isStopButtonDisabled,
-      };
-
-      return <AnchorButton {...(is_testing ? stop_button : start_button)} />;
-    }
+    return (
+      <Button
+        id="start-stop-button"
+        variant={is_testing ? "destructive" : "default"}
+        size="lg"
+        disabled={manualCollectMode || this.state.isStopButtonDisabled}
+        onClick={is_testing ? this.hardpy_stop : this.handleButtonClick}
+        className={cn(
+          "shadow-sm",
+          useBigButton && "h-24 w-full gap-4 text-2xl font-bold"
+        )}
+      >
+        {is_testing ? t("button.stop") : t("button.start")}
+        <Icon
+          aria-hidden="true"
+          className={cn(useBigButton && "size-7")}
+          fill="currentColor"
+        />
+      </Button>
+    );
   }
 }
 

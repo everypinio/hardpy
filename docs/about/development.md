@@ -40,6 +40,25 @@ Activate:
 conda activate hardpy
 ```
 
+### Poetry
+
+If you prefer to work through **Poetry**:
+
+```bash
+poetry install
+```
+
+The environment then holds the project in editable mode, together with the `hardpy`
+and `example` commands:
+
+```bash
+poetry run example full_capabilities
+```
+
+`poetry run example` without a name lists the examples of the `examples` folder.
+Development tools are declared as extras, install them with
+`poetry install --all-extras`.
+
 ### venv
 
 If you prefer to work through **venv**:

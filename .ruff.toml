@@ -86,6 +86,9 @@ indent-width = 4
             "UP007",  # Non PEP 604 annotation
             "BLE001"  # bare except
         ]
+        "hardpy/cli/example.py" = [
+            "T201",   # using print
+        ]
         "hardpy/cli/template.py" = ["D102"]
         "hardpy/common/stand_cloud/registration.py" = [
             "T201",     # using print
