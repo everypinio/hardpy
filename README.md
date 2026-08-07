@@ -1,28 +1,38 @@
-<h1 align="center">
-    <img src="https://raw.githubusercontent.com/everypinio/hardpy/main/docs/img/logo256.png" alt="HardPy" style="width:150px;">
-</h1>
+<h1 align="center">Jig</h1>
 
 <p align="center">
-HardPy is a python library for creating a test bench for devices.
+    <b>Python test benches for hardware, with an operator panel people enjoy using.</b>
 </p>
 
-<div align="center">
+<p align="center">
+Write your tests with <a href="https://docs.pytest.org/">pytest</a>, run them from the browser,
+and let the operator pick exactly the group of tests or features to execute.
+</p>
 
-[![PyPI version](https://img.shields.io/pypi/v/hardpy)](https://pypi.org/project/hardpy/)
-![python versions](https://img.shields.io/pypi/pyversions/hardpy.svg)
-[![pytest versions](https://img.shields.io/badge/pytest-%3E%3D7.0-blue)](https://docs.pytest.org/en/latest/)
-[![Documentation](https://img.shields.io/badge/Documentation%20-Overview%20-%20%23007ec6)](https://everypinio.github.io/hardpy/)
-[![Reddit](https://img.shields.io/badge/-Reddit-FF4500?style=flat&logo=reddit&logoColor=white)](https://www.reddit.com/r/HardPy)
-[![Discord](https://img.shields.io/discord/1304494076799877172?color=7389D8&label&logo=discord&logoColor=ffffff)](https://discord.gg/98bWadmG8J)
-[![Telegram](https://img.shields.io/badge/-Telegram-2CA5E0?style=flat&logo=telegram&logoColor=white)](https://t.me/everypin)
-
-</div>
+<p align="center">
+    <img src="https://img.shields.io/badge/python-%3E%3D3.10-blue" alt="python versions">
+    <img src="https://img.shields.io/badge/pytest-%3E%3D7.0-blue" alt="pytest versions">
+    <img src="https://img.shields.io/badge/license-GPL--3.0--or--later-blue" alt="license">
+    <a href="https://github.com/everypinio/hardpy"><img src="https://img.shields.io/badge/fork%20of-HardPy-ff69b4" alt="fork of HardPy"></a>
+</p>
 
 ---
 
+## About this fork
+
+**Jig** is a fork of [HardPy](https://github.com/everypinio/hardpy) focused on improving the
+user experience of running a test bench.
+
+What the fork aims to add:
+
+* A web GUI that organizes tests into categories, so an operator can run only a chosen
+  group of tests or a set of features instead of the whole suite.
+
+Everything documented below is inherited from HardPy and still applies.
+
 ## Overview
 
-HardPy allows you to:
+Jig allows you to:
 
 * Create test benches for devices using [pytest](https://docs.pytest.org/);
 * Use a browser to view, start, stop, and interact with tests;
@@ -35,9 +45,13 @@ HardPy allows you to:
 
 ## To Install
 
+The fork is not published on PyPI yet, install it from source:
+
 ```bash
-pip install hardpy
+pip install git+https://github.com/samuelint/jig.git
 ```
+
+The package, CLI, and imports are still named `hardpy`, so upstream code and examples work unchanged.
 
 ## Getting Started
 
