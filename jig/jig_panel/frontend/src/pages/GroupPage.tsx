@@ -34,7 +34,6 @@ export function GroupPage(): React.ReactElement {
     manualCollectMode,
     selectedTests,
     onTestsSelectionChange,
-    ultrawide,
     runSection,
   } = usePanel();
 
@@ -107,7 +106,7 @@ export function GroupPage(): React.ReactElement {
             <SectionContents
               node={node}
               startIndex={0}
-              defaultClose={!ultrawide}
+              defaultClose={true}
               commonTestRunStatus={testRunData.status}
               onTestsSelectionChange={onTestsSelectionChange}
               selectedTests={selectedTests}

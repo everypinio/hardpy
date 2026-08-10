@@ -43,7 +43,7 @@ export function TestsPage(): React.ReactElement {
             <CardContent className="px-5">
               <SuiteList
                 db_state={testRunData}
-                defaultClose={!ultrawide}
+                defaultClose={true}
                 onTestsSelectionChange={onTestsSelectionChange}
                 selectedTests={selectedTests}
                 selectionSupported={

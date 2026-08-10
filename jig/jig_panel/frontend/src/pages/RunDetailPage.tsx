@@ -21,7 +21,7 @@ import { usePanel } from "@/panel/PanelContext";
 export function RunDetailPage(): React.ReactElement {
   const { t } = useTranslation();
   const { runId } = useParams();
-  const { rows, appConfig, manualCollectMode, ultrawide } = usePanel();
+  const { rows, appConfig, manualCollectMode } = usePanel();
 
   const selectedHistoryRow = runId
     ? (rows.find((row) => row.id === runId)?.doc as TestRunI | undefined)
@@ -47,7 +47,7 @@ export function RunDetailPage(): React.ReactElement {
       <CardContent className="px-4">
         <SuiteList
           db_state={selectedHistoryRow}
-          defaultClose={!ultrawide}
+          defaultClose={true}
           selectionSupported={false}
           selectedTests={[]}
           currentTestConfig={appConfig?.current_test_config}
