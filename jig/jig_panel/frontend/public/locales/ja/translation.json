@@ -123,6 +123,7 @@
     "title": "テスト履歴",
     "detailTitle": "テスト実行の詳細",
     "columns": {
+      "testName": "テスト名",
       "runName": "実行名",
       "startTime": "開始時刻",
       "result": "結果",

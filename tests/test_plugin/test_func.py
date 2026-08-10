@@ -790,9 +790,17 @@ def test_non_block_operator_message(pytester: Pytester, jig_opts: list[str]):
     pytester.makepyfile(
         f"""
         {func_test_header}
+        from jig.pytest_jig.reporter import RunnerReporter
+
         @pytest.mark.timeout(2)
         def test_non_block_operator_message():
             jig.set_operator_message(msg="a", block=False)
+
+            operator_msg = RunnerReporter().get_field("operator_msg")
+            assert operator_msg["block"] is False, (
+                "The operator panel needs the block flag to notify the message"
+                " instead of opening a dialog box."
+            )
     """,
     )
     result = pytester.runpytest(*jig_opts)

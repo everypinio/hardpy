@@ -25,6 +25,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  initialFoldState,
+  isUnfolded,
+  nextFoldState,
+  operatorFoldState,
+  resetFoldState,
+  type FoldState,
+  type NodeActivity,
+} from "@/lib/foldState";
+import {
   isRunInFlight,
   toDisplayStatus,
   toNodeDisplayStatus,
@@ -227,13 +236,11 @@ type Props = {
 /**
  * State interface for TestSuite component
  * @interface State
- * @property {boolean} isOpen - Whether the test suite is expanded
- * @property {boolean} automaticallyOpened - Whether the suite was opened by auto-expand (not by operator)
+ * @property {FoldState} foldState - Whether the suite is expanded, and who decided it
  * @property {number} dataColumnWidth - Current width of the data column
  */
 type State = {
-  isOpen: boolean;
-  automaticallyOpened: boolean;
+  foldState: FoldState;
   dataColumnWidth: number;
 };
 
@@ -350,12 +357,10 @@ export class TestSuite extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      isOpen: props.defaultOpen ?? false,
-      automaticallyOpened: false,
+      foldState: initialFoldState(props.defaultOpen ?? false),
       dataColumnWidth: 0,
     };
 
-    this.handleClick = this.handleClick.bind(this);
     this.handleTestSelection = this.handleTestSelection.bind(this);
     this.handleSelectAll = this.handleSelectAll.bind(this);
     this.dataColumnRef = React.createRef();
@@ -423,16 +428,14 @@ export class TestSuite extends React.Component<Props, State> {
       this.props.test.status,
       this.props.commonTestRunStatus
     );
+    const isOpen = isUnfolded(this.state.foldState);
 
     return (
       <div ref={this.containerRef} className="test-suite">
         <Collapsible
-          open={this.state.isOpen}
+          open={isOpen}
           onOpenChange={(open) => {
-            this.setState({
-              isOpen: open,
-              automaticallyOpened: false,
-            });
+            this.setState({ foldState: operatorFoldState(open) });
           }}
         >
           <div className={treeRowClassName}>
@@ -440,9 +443,9 @@ export class TestSuite extends React.Component<Props, State> {
               <button
                 type="button"
                 className="inline-flex size-6 shrink-0 items-center justify-center rounded-sm text-muted-foreground hover:bg-muted"
-                aria-label={this.state.isOpen ? "Collapse" : "Expand"}
+                aria-label={isOpen ? "Collapse" : "Expand"}
               >
-                {this.state.isOpen ? (
+                {isOpen ? (
                   <ChevronDown className={treeIconClassName} />
                 ) : (
                   <ChevronRight className={treeIconClassName} />
@@ -460,13 +463,14 @@ export class TestSuite extends React.Component<Props, State> {
               />
             )}
             <span className={treeMetaClassName}>{this.props.index + 1}</span>
-            <button
-              type="button"
-              className={cn(treeLabelClassName, "text-left")}
-              onClick={this.handleClick}
-            >
-              {this.renderName(this.props.test.name)}
-            </button>
+            <CollapsibleTrigger asChild>
+              <button
+                type="button"
+                className={cn(treeLabelClassName, "text-left")}
+              >
+                {this.renderName(this.props.test.name)}
+              </button>
+            </CollapsibleTrigger>
             {this.renderTestSuiteRightPanel(this.props.test)}
           </div>
           <CollapsibleContent className="test-suite-content">
@@ -547,9 +551,10 @@ export class TestSuite extends React.Component<Props, State> {
   componentDidUpdate(prevProps: Props, prevState: State) {
     const statusBecameReady =
       this.props.test.status === "ready" && prevProps.test.status !== "ready";
-    const panelJustOpened = this.state.isOpen && !prevState.isOpen;
+    const isOpen = isUnfolded(this.state.foldState);
+    const justOpened = isOpen && !isUnfolded(prevState.foldState);
 
-    if (statusBecameReady || panelJustOpened) {
+    if (statusBecameReady || justOpened) {
       this.updateDataColumnWidth();
     }
 
@@ -572,47 +577,24 @@ export class TestSuite extends React.Component<Props, State> {
         (c) => c.status && c.status !== "ready"
       );
     if (allCurrentReady && prevHadActivity) {
-      this.setState({ isOpen: false, automaticallyOpened: false });
+      this.setState({ foldState: resetFoldState() });
       return;
     }
 
-    const anyRunningOrFailed = Object.values(this.props.test.cases).some(
-      (test_case) => test_case.status === "run" || test_case.status === "failed"
-    );
-    // "Active" includes "ready" so we don't auto-close in the gap between one
-    // case finishing and the next starting within the same suite.
-    const anyActiveOrFailed = Object.values(this.props.test.cases).some(
-      (test_case) =>
-        test_case.status === "run" ||
-        test_case.status === "failed" ||
-        test_case.status === "ready"
-    );
-
-    if (
-      anyRunningOrFailed &&
-      !this.state.isOpen &&
-      !this.state.automaticallyOpened
-    ) {
-      this.setState({ isOpen: true, automaticallyOpened: true });
-      // Schedule scroll to the running case once the Collapse animation finishes.
-      // The normal scroll block below won't catch this because state.isOpen is
-      // still false synchronously, and on the next prop update justOpened will
-      // be false and runningIndex unchanged.
-      this.scheduleScrollToRunning("center", true);
+    const foldState = nextFoldState(this.state.foldState, this.caseActivity());
+    if (foldState !== this.state.foldState) {
+      this.setState({ foldState });
+      if (foldState === "unfolded-by-run") {
+        // Schedule scroll to the running case once the Collapse animation
+        // finishes. The normal scroll block below won't catch this because the
+        // suite is still folded synchronously, and on the next prop update
+        // justOpened will be false and runningIndex unchanged.
+        this.scheduleScrollToRunning("center", true);
+      }
       return;
     }
 
-    // Only auto-close when the suite is genuinely done (no run/failed/ready left).
-    if (
-      !anyActiveOrFailed &&
-      this.state.isOpen &&
-      this.state.automaticallyOpened
-    ) {
-      this.setState({ isOpen: false, automaticallyOpened: false });
-      return;
-    }
-
-    if (!this.state.isOpen || !this.containerRef.current) return;
+    if (!isOpen || !this.containerRef.current) return;
 
     const caseEntries = Object.entries(this.props.test.cases);
     const runningIndex = caseEntries.findIndex(
@@ -624,8 +606,6 @@ export class TestSuite extends React.Component<Props, State> {
     const prevRunningIndex = prevCaseEntries.findIndex(
       ([, test_case]) => test_case.status === "run"
     );
-
-    const justOpened = !prevState.isOpen && this.state.isOpen;
 
     // Detect when the currently running case appended new measurements / messages
     // (e.g. a long-running test that streams data). The row grows downward and the
@@ -658,6 +638,24 @@ export class TestSuite extends React.Component<Props, State> {
           : "center";
       this.scheduleScrollToRunning(scrollBlock, justOpened);
     }
+  }
+
+  /**
+   * Reads how much of the operator's attention the cases of this suite need.
+   * @returns {NodeActivity} What the run is doing inside the suite.
+   * @private
+   */
+  private caseActivity(): NodeActivity {
+    const statuses = Object.values(this.props.test.cases).map(
+      (test_case) => test_case.status
+    );
+    if (statuses.some((status) => status === "run" || status === "failed")) {
+      return "needs-attention";
+    }
+    if (statuses.some((status) => status === "ready")) {
+      return "between-cases";
+    }
+    return "idle";
   }
 
   /**
@@ -912,7 +910,7 @@ export class TestSuite extends React.Component<Props, State> {
 
     return (
       <div className="ml-auto flex shrink-0 items-center gap-1.5">
-        {!this.state.isOpen &&
+        {!isUnfolded(this.state.foldState) &&
           Object.entries(test_topics.cases || {}).map(([, value]) => {
             if (!value) {
               return null;
@@ -1058,13 +1056,6 @@ export class TestSuite extends React.Component<Props, State> {
       />
     );
   }
-
-  /**
-   * Handles the click event to toggle the collapse state of the test suite
-   * @private
-   */
-  private readonly handleClick = () =>
-    this.setState((state) => ({ isOpen: !state.isOpen }));
 }
 
 TestSuite.defaultProps = {

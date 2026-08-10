@@ -123,6 +123,7 @@
     "title": "测试历史",
     "detailTitle": "测试运行详情",
     "columns": {
+      "testName": "测试名称",
       "runName": "运行名称",
       "startTime": "开始时间",
       "result": "结果",

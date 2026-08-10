@@ -126,17 +126,17 @@ describe("TestSectionGroup", () => {
 
   test(`given a section with nested modules,
  when the Run button is clicked,
- then every descendant module id is emitted and the group route is opened`, async () => {
+ then every descendant module id is emitted with the section path and the group route is opened`, async () => {
     const onRunSection = vi.fn();
     await renderSection({ onRunSection });
 
     await userEvent.click(screen.getByTestId("section-run-autofocus"));
 
     expect(navigateMock).toHaveBeenCalledWith("/group/autofocus");
-    expect(onRunSection).toHaveBeenCalledWith([
-      "autofocus/test_1",
-      "autofocus/fine/test_1",
-    ]);
+    expect(onRunSection).toHaveBeenCalledWith(
+      ["autofocus/test_1", "autofocus/fine/test_1"],
+      "autofocus"
+    );
   });
 
   test(`given a run already in flight,
@@ -206,14 +206,49 @@ describe("TestSectionGroup", () => {
   test(`given a section unfolded by a run,
  when the operator folds it back while the run continues,
  then it stays folded`, async () => {
-    await renderSection({
+    const { rerender } = await renderSection({
       node: sectionWithModuleStatus("run"),
       defaultClose: true,
       commonTestRunStatus: "run",
     });
 
     await userEvent.click(screen.getByRole("button", { name: "Collapse" }));
+    rerender(
+      sectionElement({
+        node: sectionWithModuleStatus("run"),
+        defaultClose: true,
+        commonTestRunStatus: "run",
+      })
+    );
 
     expect(screen.queryByTestId("module-autofocus/test_1")).toBeNull();
+  });
+
+  test(`given a section the operator folded during a run,
+ when a later run reaches it,
+ then it unfolds again`, async () => {
+    const { rerender } = await renderSection({
+      node: sectionWithModuleStatus("run"),
+      defaultClose: true,
+      commonTestRunStatus: "run",
+    });
+    await userEvent.click(screen.getByRole("button", { name: "Collapse" }));
+
+    rerender(
+      sectionElement({
+        node: sectionWithModuleStatus("passed"),
+        defaultClose: true,
+        commonTestRunStatus: "passed",
+      })
+    );
+    rerender(
+      sectionElement({
+        node: sectionWithModuleStatus("run"),
+        defaultClose: true,
+        commonTestRunStatus: "run",
+      })
+    );
+
+    expect(screen.getByTestId("module-autofocus/test_1")).toBeTruthy();
   });
 });

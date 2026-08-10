@@ -139,6 +139,7 @@ def set_test_config(config_name: str) -> dict:
 def start_pytest(
     args: Annotated[list[str] | None, Query()] = None,
     tests: Annotated[list[str] | None, Query()] = None,
+    run_name: Annotated[str | None, Query()] = None,
 ) -> dict:
     """Start pytest subprocess.
 
@@ -147,6 +148,8 @@ def start_pytest(
         tests: Optional list of module ids (or ``module::case`` paths) to run.
             When provided, overrides ``app.state.selected_tests`` for this start
             without mutating the stored selection.
+        run_name: Optional name of what this run executes, a section or a module
+            path. Defaults to the scope of the run.
 
     Returns:
         dict[str, RunStatus]: run status
@@ -164,6 +167,7 @@ def start_pytest(
     if app.state.pytest_wrp.start(
         start_args=args_dict,
         selected_tests=selected_tests,
+        run_name=run_name,
     ):
         logger.info("Start testing process.")
         return {"status": Status.STARTED}

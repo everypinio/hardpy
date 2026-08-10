@@ -21,8 +21,8 @@ artifacts - a report on the current test run.
 The **runstore** database is similar to **statestore** database, but there are differences:
 
 - **runstore** contains the **artifact** field for test run, module, and case.
-- **runstore** does not contain some fields: **progress**, **dialog_box**, **attempt**,
-  **alert**, **operator_data**, **operator_msg**.
+- **runstore** does not contain some fields: **progress**, **run_name**, **dialog_box**,
+  **attempt**, **alert**, **operator_data**, **operator_msg**.
 
 The document of the **statestore** database contains some section.
 
@@ -41,6 +41,11 @@ The document of the **statestore** database contains some section.
 - **name**: the name of the test suite. It is displayed in the header of the operator panel.
   The user can specify the name using the `tests_name` variable in the **jig.toml** file.
   If this variable is not set, the name will be taken from the directory name containing the tests.
+- **run_name**: what the run executes, displayed in the test history of the operator panel.
+  A run of a section is named after the section path (`autofocus/fine`), a run of a
+  single module after its module id (`autofocus/test_1`), and a run of every test
+  `full`. A run started outside the operator panel is named after its scope,
+  `full` or `partial`. The variable is assigned automatically.
 - **dut**: DUT information. See the [dut](#dut) section for more information.
 - **process** information about the testing process. See the [process](#process) section for more information.
 - **modules**: module (pytest files) information. See the [modules](#modules) section for more information.
@@ -153,6 +158,10 @@ The user can close a operator message box by using the [clear_operator_message](
 - **msg**: message for operator.
 - **title**: the title of operator message dialog box.
 - **visible**: should a message be displayed on the operator panel.
+- **block**: does the test wait for the operator to close the message.
+  A message the test waits on is displayed as a dialog box, since closing it lets
+  the run continue. A message the test does not wait on is displayed as a
+  notification, which leaves the operator panel usable.
 - **id**: operator message id.
 - **font_size**: operator message font size.
 - **image**: information about image.
@@ -311,6 +320,7 @@ For example, the firmware version comparison.
         "dialog": ""
       },
       "name": "jig-stand",
+      "run_name": "full",
       "user": null,
       "batch_serial_number": "0613",
       "caused_dut_failure": "test_1_a::test_minute_parity",
@@ -351,6 +361,7 @@ For example, the firmware version comparison.
         "msg": "Operator message",
         "title": "Message",
         "visible": true,
+        "block": true,
         "id": "f45ac1e7-2ce8-4a6b-bb9d-8863e30bcc78"
       },
       "process": {

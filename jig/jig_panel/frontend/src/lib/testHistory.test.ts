@@ -4,7 +4,7 @@
 import { describe, expect, test } from "vitest";
 
 import type { StorageRow } from "@/hooks/useStorageData";
-import { toHistoryEntries } from "./testHistory";
+import { findStoredRunId, toHistoryEntries } from "./testHistory";
 
 function row(
   id: string,
@@ -57,6 +57,32 @@ describe("toHistoryEntries", () => {
     expect(entries.map((entry) => entry.id)).toEqual(["1"]);
   });
 
+  test(`given a run document naming what it executed,
+ when history entries are built,
+ then that name is carried over`, () => {
+    const entries = toHistoryEntries(
+      [
+        row("1", {
+          name: "Full capabilities",
+          run_name: "autofocus/fine",
+          status: "passed",
+          start_time: 2,
+        }),
+        row("2", {
+          name: "Full capabilities",
+          status: "passed",
+          start_time: 1,
+        }),
+      ],
+      "live"
+    );
+
+    expect(entries.map((entry) => entry.run_name)).toEqual([
+      "autofocus/fine",
+      undefined,
+    ]);
+  });
+
   test(`given multiple history runs,
  when history entries are built,
  then they are sorted newest first`, () => {
@@ -70,5 +96,31 @@ describe("toHistoryEntries", () => {
     );
 
     expect(entries.map((entry) => entry.id)).toEqual(["new", "mid", "old"]);
+  });
+});
+
+describe("findStoredRunId", () => {
+  const storedRuns = [
+    row("live", { name: "Live", status: "passed", start_time: 30 }),
+    row("111", { name: "Past", status: "passed", start_time: 10 }),
+    row("222", { name: "Just finished", status: "passed", start_time: 30 }),
+  ];
+
+  test(`given a finished run also kept in the history,
+ when its stored run is looked up by start time,
+ then the stored id is returned instead of the live document`, () => {
+    expect(findStoredRunId(storedRuns, "live", 30)).toBe("222");
+  });
+
+  test(`given a run that is not stored yet,
+ when its stored run is looked up,
+ then nothing is returned`, () => {
+    expect(findStoredRunId(storedRuns, "live", 40)).toBeUndefined();
+  });
+
+  test(`given a run that never started,
+ when its stored run is looked up,
+ then nothing is returned`, () => {
+    expect(findStoredRunId(storedRuns, "live", undefined)).toBeUndefined();
   });
 });

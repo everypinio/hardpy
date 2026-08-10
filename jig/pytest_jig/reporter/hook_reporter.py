@@ -27,16 +27,17 @@ class HookReporter(BaseReporter):
             self.clear_database()
         self._log = getLogger(__name__)
 
-    def init_doc(self, doc_name: str) -> None:
+    def init_doc(self, doc_name: str, run_name: str) -> None:
         """Initialize document for a full test run.
 
         Args:
-            doc_name (str): test run name
+            doc_name (str): test name
+            run_name (str): name of what this run executes
         """
-        self._reset_run_fields(doc_name)
+        self._reset_run_fields(doc_name, run_name)
         self.set_doc_value(DF.MODULES, {})
 
-    def init_partial_run_doc(self, doc_name: str) -> None:
+    def init_partial_run_doc(self, doc_name: str, run_name: str) -> None:
         """Initialize document for a partial test run.
 
         The StateStore keeps the whole test tree so the operator panel still
@@ -44,9 +45,10 @@ class HookReporter(BaseReporter):
         The RunStore report only covers the tests that actually run.
 
         Args:
-            doc_name (str): test run name
+            doc_name (str): test name
+            run_name (str): name of what this run executes
         """
-        self._reset_run_fields(doc_name)
+        self._reset_run_fields(doc_name, run_name)
         self.set_doc_value(DF.MODULES, {}, runstore_only=True)
 
     def start(self) -> None:
@@ -327,13 +329,15 @@ class HookReporter(BaseReporter):
         updated_module_order = self._update_module_order(updated_case_order)
         self.set_doc_value(key, updated_module_order, statestore_only=True)
 
-    def _reset_run_fields(self, doc_name: str) -> None:
+    def _reset_run_fields(self, doc_name: str, run_name: str) -> None:
         """Reset the run level fields, leaving the test tree untouched.
 
         Args:
-            doc_name (str): test run name
+            doc_name (str): test name
+            run_name (str): name of what this run executes
         """
         self.set_doc_value(DF.NAME, doc_name)
+        self.set_doc_value(DF.RUN_NAME, run_name, statestore_only=True)
         self.set_doc_value(DF.STATUS, TestStatus.READY)
         self.set_doc_value(DF.START_TIME, None)
         self.set_doc_value(DF.STOP_TIME, None)

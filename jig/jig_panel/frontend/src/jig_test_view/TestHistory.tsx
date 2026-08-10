@@ -24,7 +24,10 @@ import TestStatus from "./TestStatus";
 
 export interface HistoryEntry {
   id: string;
+  /** Name of the tests, from the Jig configuration. */
   name?: string;
+  /** What the run executed: "full", a section path or a module path. */
+  run_name?: string;
   status?: string;
   start_time?: number;
   serial_number?: string | number;
@@ -64,6 +67,7 @@ const TestHistory: React.FC<Props> = ({
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>{t("history.columns.testName")}</TableHead>
               <TableHead>{t("history.columns.runName")}</TableHead>
               <TableHead>{t("history.columns.startTime")}</TableHead>
               <TableHead>{t("history.columns.result")}</TableHead>
@@ -85,6 +89,9 @@ const TestHistory: React.FC<Props> = ({
                 >
                   <TableCell className="font-medium whitespace-normal">
                     {entry.name || t("history.unknownRun")}
+                  </TableCell>
+                  <TableCell className="whitespace-normal">
+                    {entry.run_name || "-"}
                   </TableCell>
                   <TableCell className="whitespace-normal text-muted-foreground">
                     {formatTime(entry.start_time)}

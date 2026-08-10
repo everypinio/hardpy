@@ -30,6 +30,7 @@ from jig.pytest_jig.utils.exception import (
 from jig.pytest_jig.utils.machineid import machine_id
 from jig.pytest_jig.utils.node_info import NodeInfo
 from jig.pytest_jig.utils.progress_calculator import ProgressCalculator
+from jig.pytest_jig.utils.run_name import resolve_run_name
 
 __all__ = [
     "BaseWidget",
@@ -55,4 +56,5 @@ __all__ = [
     "TextInputWidget",
     "WidgetInfoError",
     "machine_id",
+    "resolve_run_name",
 ]

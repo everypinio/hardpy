@@ -55,6 +55,8 @@ interface OperatorMsgProps {
   msg: string;
   title?: string;
   visible: boolean;
+  /** Whether the test waits for the operator to close the message. */
+  block?: boolean;
   image?: ImageInfo;
   id?: string;
   font_size?: number;
@@ -66,6 +68,8 @@ export interface TestRunI {
   test_stand?: TestStand;
   dut?: Dut;
   name?: string;
+  /** What the run executed: "full", a section path or a module path. */
+  run_name?: string;
   status?: string;
   start_time?: number;
   timezone?: [string, string];
@@ -90,7 +94,7 @@ interface Props extends WithTranslation {
   manualCollectMode?: boolean;
   currentTestConfig?: string;
   autoScroll?: boolean;
-  onRunSection?: (moduleIds: string[]) => void;
+  onRunSection?: (moduleIds: string[], runName: string) => void;
 }
 
 const SECONDS_TO_MILLISECONDS = 1000;
@@ -207,7 +211,8 @@ export class SuiteList extends React.Component<
               onRunSection={this.props.onRunSection}
               onRunModule={
                 this.props.onRunSection
-                  ? (moduleId: string) => this.props.onRunSection!([moduleId])
+                  ? (moduleId: string) =>
+                      this.props.onRunSection!([moduleId], moduleId)
                   : undefined
               }
               openRootModulesWhenFew={true}

@@ -686,6 +686,8 @@ def set_operator_message(  # noqa: PLR0913
         image (ImageComponent | None): operator message image
         html (HTMLComponent | None): operator message html page
         block (bool): if True, the function will block until the message is closed
+            and the operator panel shows the message in a dialog box. If False, the
+            operator panel shows it as a notification that leaves the panel usable.
         font_size (int): font size
     """
     reporter = RunnerReporter()
@@ -704,6 +706,7 @@ def set_operator_message(  # noqa: PLR0913
         DF.MSG: msg,
         DF.TITLE: title,
         DF.VISIBLE: True,
+        DF.BLOCK: block,
         DF.IMAGE: image.to_dict() if image else None,
         DF.HTML: html.to_dict() if html else None,
         DF.ID: str(uuid4()),

@@ -13,6 +13,12 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import {
+  initialFoldState,
+  isUnfolded,
+  nextFoldState,
+  operatorFoldState,
+} from "@/lib/foldState";
+import {
   SectionNode,
   sectionModuleIds,
   sectionStatuses,
@@ -40,7 +46,7 @@ interface Props {
   measurementDisplay?: boolean;
   manualCollectMode?: boolean;
   autoScroll?: boolean;
-  onRunSection?: (moduleIds: string[]) => void;
+  onRunSection?: (moduleIds: string[], runName: string) => void;
   onRunModule?: (moduleId: string) => void;
 }
 
@@ -50,9 +56,10 @@ interface Props {
 export function TestSectionGroup(props: Readonly<Props>): React.ReactElement {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = React.useState(!props.defaultClose);
-  /** Tells whether the section is only open because tests started running. */
-  const isAutoOpened = React.useRef(false);
+  const [foldState, setFoldState] = React.useState(
+    initialFoldState(!props.defaultClose)
+  );
+  const isOpen = isUnfolded(foldState);
 
   const sectionName = props.node.path[props.node.path.length - 1] ?? "";
   const sectionPath = props.node.path.join("/");
@@ -72,16 +79,10 @@ export function TestSectionGroup(props: Readonly<Props>): React.ReactElement {
   // operator has to act on, so it unfolds itself while it runs and folds back
   // once done. A manual fold during the run wins until the section goes idle.
   React.useEffect(() => {
-    if (isSectionRunning && !isOpen && !isAutoOpened.current) {
-      isAutoOpened.current = true;
-      setIsOpen(true);
-      return;
-    }
-    if (!isSectionRunning && isAutoOpened.current) {
-      isAutoOpened.current = false;
-      setIsOpen(false);
-    }
-  }, [isSectionRunning, isOpen]);
+    setFoldState((current) =>
+      nextFoldState(current, isSectionRunning ? "needs-attention" : "idle")
+    );
+  }, [isSectionRunning]);
 
   const handleRun = (event: React.MouseEvent): void => {
     event.stopPropagation();
@@ -89,13 +90,13 @@ export function TestSectionGroup(props: Readonly<Props>): React.ReactElement {
       return;
     }
     navigate(groupHref);
-    props.onRunSection(moduleIds);
+    props.onRunSection(moduleIds, sectionPath);
   };
 
   return (
     <Collapsible
       open={isOpen}
-      onOpenChange={setIsOpen}
+      onOpenChange={(open) => setFoldState(operatorFoldState(open))}
       className="test-section"
       data-section={sectionPath}
     >

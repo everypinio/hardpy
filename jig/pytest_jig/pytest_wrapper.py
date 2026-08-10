@@ -51,12 +51,14 @@ class PyTestWrapper:
         self,
         start_args: dict | None = None,
         selected_tests: list[str] | None = None,
+        run_name: str | None = None,
     ) -> bool:
         """Start pytest subprocess.
 
         Args:
             start_args: Additional start arguments
             selected_tests: List of selected tests
+            run_name: Name of what the run executes, a section or a module path
 
         Returns:
             bool: True if pytest was started
@@ -87,6 +89,9 @@ class PyTestWrapper:
             selected_test_cases = self._select_test_cases(selected_tests)
             cmd.extend(selected_test_cases)
             cmd.append("--jig-partial-run")
+
+        if run_name:
+            cmd.extend(["--jig-run-name", run_name])
 
         self._add_config_file(cmd)
 

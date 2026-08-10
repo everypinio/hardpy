@@ -676,9 +676,12 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
 
   /**
    * Starts a partial run limited to the modules of one section.
+   *
+   * `runName` names what the operator ran, a section path or a module path, and
+   * is reported next to the test name in the results.
    */
   const handleRunSection = React.useCallback(
-    (moduleIds: string[]) => {
+    (moduleIds: string[], runName: string) => {
       if (manualCollectMode || moduleIds.length === 0) {
         return;
       }
@@ -688,6 +691,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       for (const moduleId of moduleIds) {
         params.append("tests", moduleId);
       }
+      params.append("run_name", runName);
       fetch(`/api/start?${params.toString()}`);
     },
     [handleTestRunStart, manualCollectMode]
@@ -832,7 +836,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     <TooltipProvider>
       <div className="App">
         <ReloadAlert reload_timeout_s={3} />
-        <Toaster position="top-center" />
+        <Toaster position="bottom-right" />
 
         {/* Header with navigation and status information */}
         <header

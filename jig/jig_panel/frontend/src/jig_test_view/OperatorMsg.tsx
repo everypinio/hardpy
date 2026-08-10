@@ -19,6 +19,11 @@ import {
 } from "./DialogUtils";
 import { useTranslation } from "react-i18next";
 
+import {
+  getClosedMessages,
+  markMessageAsClosed as storeMessageAsClosed,
+} from "@/lib/closedOperatorMessages";
+
 interface StartOperatorMsgDialogProps {
   title?: string;
   msg: string;
@@ -33,39 +38,6 @@ interface StartOperatorMsgDialogProps {
   html_width?: number;
   html_border?: number;
 }
-
-export const CLOSED_MESSAGES_KEY = "closed_operator_messages";
-
-/**
- * Retrieves IDs of closed operator messages from localStorage.
- * Returns empty set if no data exists or on error.
- *
- * @returns {Set<string>} Set of closed message IDs
- */
-const getClosedMessages = (): Set<string> => {
-  try {
-    const stored = localStorage.getItem(CLOSED_MESSAGES_KEY);
-    return new Set(stored ? JSON.parse(stored) : []);
-  } catch {
-    return new Set();
-  }
-};
-
-/**
- * Saves closed message IDs to localStorage
- * @param {Set<string>} messages - Set of message IDs to save
- * @returns {void}
- */
-const saveClosedMessages = (messages: Set<string>): void => {
-  try {
-    localStorage.setItem(
-      CLOSED_MESSAGES_KEY,
-      JSON.stringify(Array.from(messages))
-    );
-  } catch (error) {
-    console.error("Error saving closed messages to localStorage:", error);
-  }
-};
 
 /**
  * Renders an HTML code iframe.
@@ -149,10 +121,7 @@ export function StartOperatorMsgDialog(
    */
   const markMessageAsClosed = (): void => {
     if (props.id) {
-      const updatedClosedMessages = new Set(closedMessages);
-      updatedClosedMessages.add(props.id);
-      setClosedMessages(updatedClosedMessages);
-      saveClosedMessages(updatedClosedMessages);
+      setClosedMessages(storeMessageAsClosed(props.id));
     }
   };
 

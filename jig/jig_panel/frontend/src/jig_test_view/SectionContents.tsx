@@ -19,7 +19,7 @@ export interface SectionContentsProps {
   measurementDisplay?: boolean;
   manualCollectMode?: boolean;
   autoScroll?: boolean;
-  onRunSection?: (moduleIds: string[]) => void;
+  onRunSection?: (moduleIds: string[], runName: string) => void;
   onRunModule?: (moduleId: string) => void;
   /** When true, root modules open by default only if fewer than 5 modules exist. */
   openRootModulesWhenFew?: boolean;

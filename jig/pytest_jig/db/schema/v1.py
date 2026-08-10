@@ -206,6 +206,7 @@ class ResultStateStore(IBaseResult):
     rev: str = Field(..., alias="_rev")
     id: str = Field(..., alias="_id")
 
+    run_name: str = ""
     progress: int
     test_stand: TestStand
     dut: Dut

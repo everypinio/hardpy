@@ -123,6 +123,7 @@
     "title": "Historie testů",
     "detailTitle": "Detail spuštění testu",
     "columns": {
+      "testName": "Název testu",
       "runName": "Název spuštění",
       "startTime": "Čas spuštění",
       "result": "Výsledek",

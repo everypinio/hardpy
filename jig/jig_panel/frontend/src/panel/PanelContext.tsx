@@ -47,7 +47,8 @@ export interface PanelContextValue {
   onTestsSelectionChange: (tests: string[]) => void;
   ultrawide: boolean;
   useDebugInfo: boolean;
-  runSection: (moduleIds: string[]) => void;
+  /** Starts a partial run of `moduleIds`, named after what the operator ran. */
+  runSection: (moduleIds: string[], runName: string) => void;
   lastRunStatus: string;
 }
 

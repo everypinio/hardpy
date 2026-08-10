@@ -123,6 +123,7 @@
     "title": "Historial de pruebas",
     "detailTitle": "Detalles de la ejecución",
     "columns": {
+      "testName": "Nombre de la prueba",
       "runName": "Nombre de ejecución",
       "startTime": "Hora de inicio",
       "result": "Resultado",

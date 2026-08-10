@@ -95,7 +95,7 @@ export function GroupPage(): React.ReactElement {
               disabled={isRunDisabled}
               data-testid={`group-run-${sectionPath.join("/")}`}
               aria-label={t("section.runAria", { name: sectionName })}
-              onClick={() => runSection(moduleIds)}
+              onClick={() => runSection(moduleIds, sectionPath.join("/"))}
             >
               <Play className="size-3.5" />
               {t("section.run")}
@@ -118,7 +118,7 @@ export function GroupPage(): React.ReactElement {
               manualCollectMode={manualCollectMode}
               autoScroll={appConfig?.frontend?.auto_scroll || false}
               onRunSection={runSection}
-              onRunModule={(moduleId) => runSection([moduleId])}
+              onRunModule={(moduleId) => runSection([moduleId], moduleId)}
             />
           </div>
         </CardContent>

@@ -31,6 +31,7 @@ async function renderResults(initialPath = "/results") {
               title: "Test history",
               detailTitle: "Test run details",
               columns: {
+                testName: "Test name",
                 runName: "Run name",
                 startTime: "Start time",
                 result: "Result",

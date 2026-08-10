@@ -123,6 +123,7 @@
     "title": "Testverlauf",
     "detailTitle": "Testlauf-Details",
     "columns": {
+      "testName": "Testname",
       "runName": "Laufname",
       "startTime": "Startzeit",
       "result": "Ergebnis",

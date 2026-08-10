@@ -46,6 +46,7 @@ class DatabaseField(str, Enum):
     MEASUREMENTS = "measurements"
 
     # statestore
+    RUN_NAME = "run_name"
     PROGRESS = "progress"
     DIALOG_BOX = "dialog_box"
     OPERATOR_MSG = "operator_msg"
@@ -54,6 +55,7 @@ class DatabaseField(str, Enum):
     OPERATOR_DATA = "operator_data"
     DIALOG = "dialog"
     VISIBLE = "visible"
+    BLOCK = "block"
     TITLE = "title"
     IMAGE = "image"
     HTML = "html"

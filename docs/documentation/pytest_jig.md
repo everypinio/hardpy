@@ -578,7 +578,10 @@ Does not provide user interaction unlike the [run_dialog_box](#run_dialog_box) f
 
 - `msg` *(str)*: The message to be displayed.
 - `title` *(str | None)*: The optional title for the message.
-- `block` *(bool=True)*: If True, the function will block until the message is closed.
+- `block` *(bool=True)*: If True, the function will block until the message is closed,
+  and the operator panel shows the message in a dialog box.
+  If False, the operator panel shows the message as a notification,
+  which leaves the panel usable.
 - `image` *([ImageComponent](#imagecomponent) | None)*: Image information.
 - `html` *([HTMLComponent](#htmlcomponent) | None)*: HTML information.
 - `font_size`: *(int=14)*: Text font size.

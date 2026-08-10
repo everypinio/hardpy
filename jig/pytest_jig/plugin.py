@@ -39,7 +39,13 @@ from jig.pytest_jig.reporter import HookReporter
 from jig.pytest_jig.result.report_synchronizer.synchronizer import (
     StandCloudSynchronizer,
 )
-from jig.pytest_jig.utils import NodeInfo, ProgressCalculator, RunScope, TestStatus
+from jig.pytest_jig.utils import (
+    NodeInfo,
+    ProgressCalculator,
+    RunScope,
+    TestStatus,
+    resolve_run_name,
+)
 from jig.pytest_jig.utils.node_info import TestDependencyInfo, module_id_from_nodeid
 
 if __debug__:
@@ -92,6 +98,11 @@ def pytest_addoption(parser: Parser) -> None:
         action="store_true",
         default=False,
         help="run a subset of the tests, keeping the state of the others",
+    )
+    parser.addoption(
+        "--jig-run-name",
+        action="store",
+        help="name of what this run executes, a section or a module path",
     )
     parser.addoption(
         "--sc-address",
@@ -154,6 +165,7 @@ class JigPlugin:
         self._dependencies = {}
         self._tests_name: str = ""
         self._run_scope = RunScope.FULL
+        self._run_name: str = RunScope.FULL.value
         self._is_critical_not_passed = False
         self._start_args = {}
         self._sc_syncronizer = StandCloudSynchronizer()
@@ -199,6 +211,11 @@ class JigPlugin:
 
         if config.getoption("--jig-partial-run"):
             self._run_scope = RunScope.PARTIAL
+
+        self._run_name = resolve_run_name(
+            config.getoption("--jig-run-name"),
+            self._run_scope,
+        )
 
         sc_address = config.getoption("--sc-address")
         if sc_address:
@@ -263,9 +280,9 @@ class JigPlugin:
     ) -> None:
         """Call after collection phase."""
         if self._run_scope is RunScope.PARTIAL:
-            self._reporter.init_partial_run_doc(self._tests_name)
+            self._reporter.init_partial_run_doc(self._tests_name, self._run_name)
         else:
-            self._reporter.init_doc(self._tests_name)
+            self._reporter.init_doc(self._tests_name, self._run_name)
 
         nodes = {}
         modules = set()
