@@ -89,6 +89,7 @@ nav:
       - Pytest logging: examples/logging.md
   - About:
       - Development: about/development.md
+      - Release: about/release.md
       - Frontend data synchronization: about/frontend_sync.md
   - Changelog: changelog.md
 
@@ -150,7 +151,7 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/everypinio/jig
     - icon: fontawesome/brands/python
-      link: https://pypi.org/project/jig/
+      link: https://pypi.org/project/pytest-jig/
     - icon: fontawesome/brands/discord
       link: https://discord.gg/98bWadmG8J
     - icon: fontawesome/brands/reddit

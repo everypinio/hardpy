@@ -72,8 +72,11 @@ from jig.pytest_jig.utils import (
     TextInputWidget,
 )
 
+#: PyPI distribution name, which differs from the `jig` import name.
+DISTRIBUTION_NAME = "pytest-jig"
+
 try:
-    __version__ = version("jig")
+    __version__ = version(DISTRIBUTION_NAME)
 except PackageNotFoundError:
     __version__ = "unknown"
 
@@ -90,9 +93,9 @@ __all__ = [
     "ErrorCode",
     "Group",
     "HTMLComponent",
-    "JigConfig",
     "ImageComponent",
     "Instrument",
+    "JigConfig",
     "JsonLoader",
     "MultistepWidget",
     "NumericInputWidget",

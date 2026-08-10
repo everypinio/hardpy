@@ -11,7 +11,7 @@ The code for this example can be seen inside the jig package [Minimal example](h
 
 1. Install the jig from pypi: 
   ```
-  pip install jig
+  pip install pytest-jig
   ```
 2. Copy the jig.toml file to the tests directory.
 3. Launch **Jig**:

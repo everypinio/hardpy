@@ -2,14 +2,16 @@
 # GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 [project]
-    name = "jig"
-    version = "0.25.2"
+    # Distribution name on PyPI. The import name stays `jig`; `jig.__version__`
+    # resolves this distribution's metadata, so keep both in sync.
+    name = "pytest-jig"
+    version = "1.0.0"
     description = "Jig library for device testing"
     license = "GPL-3.0-or-later"
     authors = [{ name = "Everypin", email = "info@everypin.io" }]
     readme = "README.md"
     classifiers = [
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Framework :: Pytest",
         "Intended Audience :: Developers",
         "Operating System :: OS Independent",
@@ -79,6 +81,12 @@
 [build-system]
     requires = ["hatchling==1.27.0"]
     build-backend = "hatchling.build"
+
+[tool.poetry]
+    # Poetry does not read the hatchling target below, and it cannot infer the
+    # package directory because the distribution name (`pytest-jig`) differs from
+    # the import name (`jig`). Needed for `poetry install` of the root project.
+    packages = [{ include = "jig" }]
 
 [tool.hatch.build]
     # Do not package non python related filed

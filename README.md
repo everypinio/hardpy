@@ -45,7 +45,12 @@ Jig allows you to:
 
 ## To Install
 
-The fork is not published on PyPI yet, install it from source:
+```bash
+pip install pytest-jig
+```
+
+The distribution is named `pytest-jig`; the import name and the CLI stay `jig`.
+To install the unreleased `main` branch instead:
 
 ```bash
 pip install git+https://github.com/samuelint/jig.git

@@ -4,6 +4,11 @@ Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<pa
 
 ## Unreleased
 
+## 1.0.0
+
+* Publish to PyPI as `pytest-jig`: `pip install pytest-jig`. The `jig` name was
+  already taken on PyPI by an unrelated project. The import name and the `jig`
+  command are unchanged.
 * Quiet the panel launch: `jig run` (and `poetry run example <name>`) now print
   only the operator panel address. The startup test collection output is logged
   instead of being written to the console, and a failing collection is reported

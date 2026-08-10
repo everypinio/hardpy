@@ -3,7 +3,9 @@ name: Release
 on:
   push:
     tags:
-      - "*"
+      # Release on version tags only, e.g. `1.0.0` or `1.0.0rc1`. Any other tag
+      # would otherwise start a release and fail the version check below.
+      - "[0-9]+.[0-9]+.[0-9]+*"
 
 jobs:
   git-tag-check:
@@ -17,32 +19,25 @@ jobs:
       with:
         # Semantic version range syntax or exact version of a Python version
         python-version: '3.x'
-        # Optional - x64 or x8
-        architecture: 'x64'
-        cache: 'pip' # caching pip dependencies
-    - name: Install dependencies
-      run: python -m pip install toml
     - name: Check Git Tag
+      env:
+        # Passed through the environment rather than interpolated into the
+        # script, so a tag name can never be injected as code.
+        GIT_TAG: ${{ github.ref_name }}
       run: |
-        python <<HEREDOC
-        from pathlib import Path
-        import toml
+        python - <<'HEREDOC'
+        import os
         import sys
+        import tomllib
+        from pathlib import Path
 
-        if '${{ github.ref_type }}' != 'tag':
-          sys.exit(f"Not on a tag")
+        pyproject = tomllib.loads(Path("pyproject.toml").read_text())
+        version = pyproject["project"]["version"]
+        git_tag = os.environ["GIT_TAG"]
 
-        gitversion = '${{ github.ref_name }}'
-        version = "unknown"
-
-        pyproject_toml_file = Path(__file__).parent / "pyproject.toml"
-        if pyproject_toml_file.exists() and pyproject_toml_file.is_file():
-            data = toml.load(pyproject_toml_file)
-            if "project" in data and "version" in data["project"]:
-                version = data["project"]["version"]
-
-        if version != gitversion:
-          sys.exit(f"Git Tag '{gitversion}' doesn't match package version '{version}'")
+        if version != git_tag:
+            sys.exit(f"Git tag '{git_tag}' doesn't match package version '{version}'")
+        print(f"Git tag '{git_tag}' matches the package version.")
         HEREDOC
 
   test:
@@ -50,13 +45,20 @@ jobs:
     needs: [git-tag-check]
     uses: ./.github/workflows/test.yml
 
+  test-matrix:
+    # A release advertises support for every Python and pytest version in the
+    # classifiers, so validate them before publishing rather than only on PRs.
+    name: Test Matrix
+    needs: [git-tag-check]
+    uses: ./.github/workflows/test-matrix.yml
+
   build:
     name: Build
-    needs: [test]
-    uses: ./.github/workflows/build.yml  # use the callable tests job to run tests
+    needs: [test, test-matrix]
+    uses: ./.github/workflows/build.yml
 
   github-release:
-    needs: [build]  # require tests to pass before deploy runs
+    needs: [build]
     name: GitHub Upload
     runs-on: ubuntu-latest
 
@@ -83,7 +85,7 @@ jobs:
         gh release create
         '${{ github.ref_name }}'
         --repo '${{ github.repository }}'
-        --notes ""
+        --generate-notes
     - name: Upload artifact signatures to GitHub Release
       env:
         GITHUB_TOKEN: ${{ github.token }}
@@ -97,13 +99,12 @@ jobs:
 
   publish-to-testpypi:
     name: Publish to TestPyPi
-    if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
     needs:
     - build
     runs-on: ubuntu-latest
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/jig
+      url: https://test.pypi.org/p/pytest-jig
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
     steps:
@@ -116,16 +117,18 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         repository-url: https://test.pypi.org/legacy/
+        # TestPyPI is a rehearsal target: a version already uploaded there must
+        # not block the release from reaching PyPI.
+        skip-existing: true
 
   publish-to-pypi:
     name: Publish to PyPI
-    if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
     needs:
     - publish-to-testpypi
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/jig
+      url: https://pypi.org/p/pytest-jig
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
     steps:

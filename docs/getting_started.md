@@ -16,8 +16,10 @@ Jig allows you to:
 ## To Install
 
 ```bash
-pip install jig
+pip install pytest-jig
 ```
+
+The distribution is named `pytest-jig`; the import name and the CLI stay `jig`.
 
 ## Launch
 
