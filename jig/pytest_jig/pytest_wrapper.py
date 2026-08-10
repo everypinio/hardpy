@@ -8,11 +8,12 @@ import subprocess
 import sys
 from platform import system
 
+from jig.common import log_config
 from jig.common.config import ConfigManager
+from jig.pytest_jig import quiet_process
 from jig.pytest_jig.db import DatabaseField as DF  # noqa: N817
 from jig.pytest_jig.reporter import RunnerReporter
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -173,9 +174,10 @@ class PyTestWrapper:
             selected_test_cases = self._select_test_cases(selected_tests)
             args.extend(selected_test_cases)
 
-        subprocess.Popen(  # noqa: S603
+        quiet_process.spawn(
             [self.python_executable, *args],
             cwd=self._config_manager.tests_path,
+            is_quiet=not log_config.is_verbose(),
         )
         return True
 
@@ -239,7 +241,7 @@ class PyTestWrapper:
                     break
 
         if test_config_file:
-            logging.info(f"Using test configuration file: {test_config_file}")
+            logger.info(f"Using test configuration file: {test_config_file}")
             cmd.extend(["--config-file", test_config_file])
 
     def _select_test_cases(self, selected_tests: list[str]) -> list[str]:

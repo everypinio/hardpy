@@ -47,6 +47,44 @@ the pytest launcher (in a terminal or from another application).
 The operator panel contains a test start/stop button in the lower right corner of the screen.
 The user can start/stop tests using the space key.
 
+### Panel routes
+
+The operator panel uses client-side routes:
+
+| Route | Page |
+|-------|------|
+| `/` | All collected tests (default) |
+| `/group/<section/path>` | One section and its modules (nested paths supported) |
+| `/results` | Past-run history |
+| `/results/<runId>` | History list with that run's detail open |
+
+The logo and **Tests** nav item return to `/`. **Results** is shown when
+`test_history` is enabled. Deep links and page refresh work because the backend
+serves `index.html` for unknown non-API paths.
+
+### Test sections
+
+Modules can be grouped into **sections** in the test list. A section is created
+automatically from each subdirectory under the tests root (nesting is recursive),
+or explicitly with the [`module_section`](./pytest_jig.md#module_section) marker.
+See also the [full capabilities](https://github.com/everypinio/jig/tree/main/examples/full_capabilities)
+example (`autofocus/` and `test_7_alignment.py`).
+
+Each section header shows an aggregated status, the module count, and a **Run**
+button that opens `/group/<section>` and starts only the modules in that section
+(including nested child sections). The section name is also a link to the same
+page. Each module row also has its own **Run** button to start only that module.
+Going back to **Tests** re-collects the full suite after a partial group or
+module run.
+
+**Run all** / **Stop** live in the top navigation bar (spacebar still toggles
+them). There is no bottom progress footer.
+
+The tests list is a file tree: sections are folders and modules are files,
+using the same row chrome (chevron, icon, status, label, Run). Expanding a
+module still shows case details, charts, and operator dialogs. End-of-run
+PASS / FAIL / STOP is a compact dialog, not a full-screen overlay.
+
 ### Operator panel bar
 
 Operator panel bar displays key system status information in a compact tag-based format.

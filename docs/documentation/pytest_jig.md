@@ -1396,6 +1396,58 @@ def test_cleanup2():
     assert True
 ```
 
+#### module_section
+
+Places a module in a named **section** in the operator panel. Sections are
+distinct from [module_group](#module_group) (the setup/main/teardown lifecycle
+phase).
+
+By default, a module's section is derived from its directory path relative to
+the tests root. Nesting is recursive:
+
+```text
+autofocus/
+  test_1_coarse_search.py       # section ["autofocus"]
+  fine/
+    test_1_dither.py            # section ["autofocus", "fine"]
+test_7_alignment.py             # section [] (root)
+```
+
+The `module_section` marker overrides the directory-derived path. It accepts
+either varargs or a single slash-separated string:
+
+```python
+import pytest
+
+pytestmark = pytest.mark.module_section("Alignment")
+
+def test_offset():
+    assert True
+```
+
+```python
+pytestmark = pytest.mark.module_section("Autofocus", "Fine")
+# equivalent: pytest.mark.module_section("Autofocus/Fine")
+```
+
+When tests live in subdirectories, add `--import-mode=importlib` to
+`pytest.ini` so modules with the same basename in different folders do not
+collide:
+
+```ini
+[pytest]
+addopts = --import-mode=importlib
+```
+
+Module ids become path-based (`autofocus/test_1` instead of `test_1`). Use the
+same form in [dependency](#dependency) markers:
+
+```python
+@pytest.mark.dependency("autofocus/test_1::test_peak")
+def test_follow_up():
+    assert True
+```
+
 #### dependency
 
 Skips the test case/module if the main test fails/skipped/errored.

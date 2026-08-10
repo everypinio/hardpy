@@ -3,6 +3,7 @@
 
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router";
 import { useTranslation } from "react-i18next";
 
 import PouchDB from "pouchdb-browser";
@@ -90,9 +91,11 @@ if (storageType === "json") {
 
   root.render(
     <StrictMode>
-      <Provider pouchdb={dummyDb}>
-        <App syncDocumentId={syncDocumentId} />
-      </Provider>
+      <BrowserRouter>
+        <Provider pouchdb={dummyDb}>
+          <App syncDocumentId={syncDocumentId} />
+        </Provider>
+      </BrowserRouter>
     </StrictMode>
   );
 } else {
@@ -108,9 +111,11 @@ if (storageType === "json") {
      */
     root.render(
       <StrictMode>
-        <Provider pouchdb={db}>
-          <App syncDocumentId={syncDocumentId} />
-        </Provider>
+        <BrowserRouter>
+          <Provider pouchdb={db}>
+            <App syncDocumentId={syncDocumentId} />
+          </Provider>
+        </BrowserRouter>
       </StrictMode>
     );
   } else {

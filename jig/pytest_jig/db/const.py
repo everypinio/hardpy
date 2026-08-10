@@ -13,6 +13,7 @@ class DatabaseField(str, Enum):
     BATCH_SN = "batch_serial_number"
     CAUSED_DUT_FAILURE_ID = "caused_dut_failure_id"
     GROUP = "group"
+    SECTION = "section"
     ERROR_CODE = "error_code"
     STATUS = "status"
     START_TIME = "start_time"

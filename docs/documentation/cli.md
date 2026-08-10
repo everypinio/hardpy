@@ -72,6 +72,12 @@ By default, it starts **Jig** in the current directory.
 You can run the `jig run <tests_directory>` command, where `<tests_directory>`
 is the path to the directory with your tests.
 
+The command prints the operator panel address and nothing else. Test
+collection runs in the background and its output is logged instead of being
+written to the console. Use `--verbose` to see it, together with the **Jig**
+logs. The `JIG_LOG_LEVEL` environment variable sets the level when the flag is
+absent (`warning` by default, `debug` for the most detailed output).
+
 ```bash
  Usage: jig run [OPTIONS] [TESTS_DIR]
 
@@ -81,7 +87,9 @@ is the path to the directory with your tests.
 │   tests_dir      [TESTS_DIR]  [default: None]                                                              │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --help          Show this message and exit.                                                                │
+│ --verbose       --no-verbose   Print test collection output and Jig logs.                                  │
+│                                [default: no-verbose]                                                       │
+│ --help                         Show this message and exit.                                                 │
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 

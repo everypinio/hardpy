@@ -71,6 +71,10 @@ def main(
         str | None,
         typer.Argument(help="Name of a directory in the examples folder."),
     ] = None,
+    verbose: Annotated[
+        bool,
+        typer.Option(help="Print test collection output and Jig logs."),
+    ] = False,
 ) -> None:
     """Run the Jig operator panel for an example.
 
@@ -78,6 +82,7 @@ def main(
 
     Args:
         name (str | None): example name
+        verbose (bool): print test collection output and Jig logs
     """
     catalog = ExampleCatalog(EXAMPLES_DIR)
 
@@ -92,7 +97,7 @@ def main(
         _print_available(exc.available)
         raise typer.Exit(1) from exc
 
-    run_panel(str(example_dir))
+    run_panel(str(example_dir), verbose=verbose)
 
 
 def _print_available(names: list[str]) -> None:

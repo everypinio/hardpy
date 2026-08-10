@@ -6,7 +6,7 @@ import { useAllDocs } from "use-pouchdb";
 
 type StorageState = "loading" | "done" | "error";
 
-interface StorageRow {
+export interface StorageRow {
   id: string;
   key: string;
   value: { rev: string };

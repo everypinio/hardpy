@@ -13,7 +13,7 @@
     "noEntries": "Keine Einträge in der Datenbank 🙅🏽‍♀️🚫",
     "stoppedTestCase": "Angehaltener Testfall",
     "failedTestCases": "Fehlgeschlagene Testfälle",
-    "modalResultDismissHint": "Klicken Sie irgendwo oder drücken Sie eine Taste, um zu schließen",
+    "modalResultDismissHint": "Zum Schließen Escape, außerhalb klicken oder eine Taste drücken",
     "modalResultAutoDismissHint": "Automatisches Schließen in {{seconds}} Sekunden...",
     "manualCollectOn": "Manuelle Sammlung ein",
     "manualCollectOff": "Manuelle Sammlung aus",
@@ -81,7 +81,8 @@
     "stop": "Stoppen",
     "confirm": "Bestätigen",
     "pass": "Bestanden",
-    "fail": "Fehlgeschlagen"
+    "fail": "Fehlgeschlagen",
+    "runAll": "Alle starten"
   },
   "error": {
     "dbConnectionTitle": "Datenbankverbindungsfehler",
@@ -145,5 +146,26 @@
     "connectionError": "Verbindungsfehler",
     "selectionColumn": "Auswählen",
     "skipped": "Übersprungen"
+  },
+  "section": {
+    "run": "Starten",
+    "runAria": "Abschnitt {{name}} starten",
+    "moduleCount": "{{count}} Module",
+    "open": "Abschnitt {{name}} öffnen"
+  },
+  "nav": {
+    "tests": "Tests",
+    "results": "Ergebnisse"
+  },
+  "group": {
+    "back": "Alle Tests",
+    "notFound": "Dieser Abschnitt wurde nicht gefunden."
+  },
+  "results": {
+    "title": "Ergebnisse"
+  },
+  "module": {
+    "run": "Starten",
+    "runAria": "Modul {{name}} starten"
   }
 }

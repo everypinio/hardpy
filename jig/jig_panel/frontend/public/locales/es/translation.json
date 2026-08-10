@@ -13,7 +13,7 @@
     "noEntries": "No hay entradas en la base de datos 🙅🏽‍♀️🚫",
     "stoppedTestCase": "Caso de prueba detenido",
     "failedTestCases": "Casos de prueba fallidos",
-    "modalResultDismissHint": "Haga clic en cualquier lugar o presione cualquier tecla para cerrar",
+    "modalResultDismissHint": "Pulsa Escape, haz clic fuera o pulsa cualquier tecla para cerrar",
     "modalResultAutoDismissHint": "Cierre automático en {{seconds}} segundos...",
     "manualCollectOn": "Recolección manual activada",
     "manualCollectOff": "Recolección manual desactivada",
@@ -81,7 +81,8 @@
     "stop": "Detener",
     "confirm": "Confirmar",
     "pass": "Aprobado",
-    "fail": "Fallado"
+    "fail": "Fallado",
+    "runAll": "Ejecutar todo"
   },
   "error": {
     "dbConnectionTitle": "Error de conexión a la base de datos",
@@ -145,5 +146,26 @@
     "connectionError": "Error de conexión",
     "selectionColumn": "Seleccionar",
     "skipped": "Omitido"
+  },
+  "section": {
+    "run": "Ejecutar",
+    "runAria": "Ejecutar la sección {{name}}",
+    "moduleCount": "{{count}} módulos",
+    "open": "Abrir sección {{name}}"
+  },
+  "nav": {
+    "tests": "Pruebas",
+    "results": "Resultados"
+  },
+  "group": {
+    "back": "Todas las pruebas",
+    "notFound": "No se encontró esta sección."
+  },
+  "results": {
+    "title": "Resultados"
+  },
+  "module": {
+    "run": "Ejecutar",
+    "runAria": "Ejecutar módulo {{name}}"
   }
 }

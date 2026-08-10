@@ -15,9 +15,8 @@ from typing import TYPE_CHECKING, Annotated, Any, Final
 from urllib.parse import unquote
 
 from fastapi import FastAPI, Query, Request
-from fastapi.staticfiles import StaticFiles
-
 from jig.common.config import ConfigManager, StorageType
+from jig.jig_panel.static_files import SpaStaticFiles
 from jig.jig_panel.storage_status import build_storage_status
 from jig.pytest_jig.pytest_wrapper import PyTestWrapper
 from jig.pytest_jig.result.report_synchronizer import StandCloudSynchronizer
@@ -25,11 +24,6 @@ from jig.pytest_jig.result.report_synchronizer import StandCloudSynchronizer
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator
 
-# TODO (xorialexandrov): Move logging to own module
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s:\t %(message)s",
-)
 logger = logging.getLogger(__name__)
 
 
@@ -142,11 +136,17 @@ def set_test_config(config_name: str) -> dict:
 
 
 @app.get("/api/start")
-def start_pytest(args: Annotated[list[str] | None, Query()] = None) -> dict:
+def start_pytest(
+    args: Annotated[list[str] | None, Query()] = None,
+    tests: Annotated[list[str] | None, Query()] = None,
+) -> dict:
     """Start pytest subprocess.
 
     Args:
         args: List of arguments in key=value format
+        tests: Optional list of module ids (or ``module::case`` paths) to run.
+            When provided, overrides ``app.state.selected_tests`` for this start
+            without mutating the stored selection.
 
     Returns:
         dict[str, RunStatus]: run status
@@ -159,9 +159,11 @@ def start_pytest(args: Annotated[list[str] | None, Query()] = None) -> dict:
     else:
         args_dict = dict(arg.split("=", 1) for arg in args if "=" in arg)
 
+    selected_tests = tests if tests is not None else app.state.selected_tests
+
     if app.state.pytest_wrp.start(
         start_args=args_dict,
-        selected_tests=app.state.selected_tests,
+        selected_tests=selected_tests,
     ):
         logger.info("Start testing process.")
         return {"status": Status.STARTED}
@@ -446,7 +448,7 @@ def _read_json_history_file(json_file: Path) -> dict | None:
 if "DEBUG_FRONTEND" not in os.environ:
     app.mount(
         "/",
-        StaticFiles(
+        SpaStaticFiles(
             directory=Path(__file__).parent / "frontend/dist",
             html=True,
         ),

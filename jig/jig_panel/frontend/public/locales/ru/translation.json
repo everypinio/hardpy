@@ -13,7 +13,7 @@
     "noEntries": "Нет записей в базе данных 🙅🏽‍♀️🚫",
     "stoppedTestCase": "Остановленный тестовый случай",
     "failedTestCases": "Проваленные тестовые случаи",
-    "modalResultDismissHint": "Нажмите на любое место на экране или нажмите любую клавишу для закрытия",
+    "modalResultDismissHint": "Нажмите Escape, кликните снаружи или любую клавишу, чтобы закрыть",
     "modalResultAutoDismissHint": "Автоматическое закрытие через {{seconds}} секунд...",
     "manualCollectOn": "Ручной сбор включен",
     "manualCollectOff": "Ручной сбор выключен",
@@ -81,7 +81,8 @@
     "stop": "Стоп",
     "confirm": "Подтвердить",
     "pass": "Успех",
-    "fail": "Провалено"
+    "fail": "Провалено",
+    "runAll": "Запустить все"
   },
   "error": {
     "dbConnectionTitle": "Ошибка подключения к базе данных",
@@ -145,5 +146,26 @@
     "connectionError": "Ошибка соединения",
     "selectionColumn": "Выбрать",
     "skipped": "Пропущен"
+  },
+  "section": {
+    "run": "Запустить",
+    "runAria": "Запустить секцию {{name}}",
+    "moduleCount": "{{count}} модулей",
+    "open": "Открыть раздел {{name}}"
+  },
+  "nav": {
+    "tests": "Тесты",
+    "results": "Результаты"
+  },
+  "group": {
+    "back": "Все тесты",
+    "notFound": "Этот раздел не найден."
+  },
+  "results": {
+    "title": "Результаты"
+  },
+  "module": {
+    "run": "Запуск",
+    "runAria": "Запустить модуль {{name}}"
   }
 }

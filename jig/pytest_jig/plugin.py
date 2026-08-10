@@ -32,6 +32,7 @@ from pytest import (
     skip,
 )
 
+from jig.common import log_config
 from jig.common.config import ConfigManager, JigConfig
 from jig.common.stand_cloud.connector import StandCloudConnector, StandCloudError
 from jig.pytest_jig.reporter import HookReporter
@@ -39,7 +40,7 @@ from jig.pytest_jig.result.report_synchronizer.synchronizer import (
     StandCloudSynchronizer,
 )
 from jig.pytest_jig.utils import NodeInfo, ProgressCalculator, TestStatus
-from jig.pytest_jig.utils.node_info import TestDependencyInfo
+from jig.pytest_jig.utils.node_info import TestDependencyInfo, module_id_from_nodeid
 
 if __debug__:
     from urllib3 import disable_warnings
@@ -160,6 +161,8 @@ class JigPlugin:
 
     def pytest_configure(self, config: Config) -> None:
         """Configure pytest."""
+        log_config.configure(log_config.resolve_level())
+
         config_manager = ConfigManager()
 
         jig_config_path = config.getoption("--jig-config-file")
@@ -210,6 +213,7 @@ class JigPlugin:
         config.addinivalue_line("markers", "critical")
         config.addinivalue_line("markers", "case_group")
         config.addinivalue_line("markers", "module_group")
+        config.addinivalue_line("markers", "module_section")
 
         # must be init after config data is set
         try:
@@ -255,7 +259,7 @@ class JigPlugin:
 
         session.items = natsorted(
             session.items,
-            key=lambda x: x.parent.name if x.parent is not None else x.name,
+            key=lambda x: x.parent.nodeid if x.parent is not None else x.name,
         )
         for item in session.items:
             if item.parent is None:
@@ -423,7 +427,7 @@ class JigPlugin:
             # and teardown failure (fixture exception handler)
             return True
 
-        module_id = Path(report.fspath).stem
+        module_id = module_id_from_nodeid(report.nodeid)
         case_id = report.nodeid.rpartition("::")[2]
 
         self._reporter.set_case_status(module_id, case_id, TestStatus(report.outcome))

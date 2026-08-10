@@ -139,3 +139,42 @@ export function statusLabel(status: DisplayStatus, t: TFunction): string {
 export function isRunInFlight(status: DisplayStatus): boolean {
   return status === "run";
 }
+
+/**
+ * Status priority for aggregating several statuses into one.
+ * Higher index wins. "run" is highest so an in-flight child keeps the
+ * section animated; "failed" beats "passed"/"skipped"/"stopped".
+ */
+const AGGREGATE_PRIORITY: DisplayStatus[] = [
+  "pending",
+  "ready",
+  "passed",
+  "skipped",
+  "stopped",
+  "unknown",
+  "failed",
+  "run",
+];
+
+/**
+ * Aggregates several statuses into a single display status.
+ * Empty input yields "pending".
+ * @param {readonly string[]} statuses - Raw status strings from modules/cases.
+ * @returns {DisplayStatus} The highest-priority status among the inputs.
+ */
+export function aggregateStatus(statuses: readonly string[]): DisplayStatus {
+  if (statuses.length === 0) {
+    return "pending";
+  }
+  let best: DisplayStatus = "pending";
+  let bestRank = -1;
+  for (const raw of statuses) {
+    const display = toDisplayStatus(raw);
+    const rank = AGGREGATE_PRIORITY.indexOf(display);
+    if (rank > bestRank) {
+      best = display;
+      bestRank = rank;
+    }
+  }
+  return best;
+}

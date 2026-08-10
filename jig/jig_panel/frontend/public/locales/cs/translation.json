@@ -13,7 +13,7 @@
     "noEntries": "Žádné záznamy v databázi 🙅🏽‍♀️🚫",
     "stoppedTestCase": "Zastavený test",
     "failedTestCases": "Testy selhaly",
-    "modalResultDismissHint": "Klikněte kamkoliv nebo stiskněte libovolnou klávesu pro zavření",
+    "modalResultDismissHint": "Zavřete klávesou Escape, kliknutím mimo nebo libovolnou klávesou",
     "modalResultAutoDismissHint": "Automaticky zmizí za {{seconds}} sekund...",
     "manualCollectOn": "Zapnout manuální výběr testů",
     "manualCollectOff": "Vypnout manuální výběr testů",
@@ -81,7 +81,8 @@
     "stop": "Zastavit",
     "confirm": "Potvrdit",
     "pass": "OK",
-    "fail": "Zrušit"
+    "fail": "Zrušit",
+    "runAll": "Spustit vše"
   },
   "error": {
     "dbConnectionTitle": "Chyba připojení k databázi",
@@ -145,5 +146,26 @@
     "connectionError": "Chyba připojení",
     "selectionColumn": "Vybrat",
     "skipped": "Přeskočeno"
+  },
+  "section": {
+    "run": "Spustit",
+    "runAria": "Spustit sekci {{name}}",
+    "moduleCount": "{{count}} modulů",
+    "open": "Otevřít sekci {{name}}"
+  },
+  "nav": {
+    "tests": "Testy",
+    "results": "Výsledky"
+  },
+  "group": {
+    "back": "Všechny testy",
+    "notFound": "Tato sekce nebyla nalezena."
+  },
+  "results": {
+    "title": "Výsledky"
+  },
+  "module": {
+    "run": "Spustit",
+    "runAria": "Spustit modul {{name}}"
   }
 }

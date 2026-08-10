@@ -13,7 +13,7 @@
     "noEntries": "データベースにエントリがありません 🙅🏽‍♀️🚫",
     "stoppedTestCase": "停止されたテストケース",
     "failedTestCases": "失敗したテストケース",
-    "modalResultDismissHint": "どこかをクリックするか、任意のキーを押して閉じます",
+    "modalResultDismissHint": "Esc、外側クリック、または任意のキーで閉じます",
     "modalResultAutoDismissHint": "{{seconds}}秒後に自動的に閉じます...",
     "manualCollectOn": "手動収集オン",
     "manualCollectOff": "手動収集オフ",
@@ -81,7 +81,8 @@
     "stop": "停止",
     "confirm": "確認",
     "pass": "合格",
-    "fail": "不合格"
+    "fail": "不合格",
+    "runAll": "すべて実行"
   },
   "error": {
     "dbConnectionTitle": "データベース接続エラー",
@@ -145,5 +146,26 @@
     "connectionError": "接続エラー",
     "selectionColumn": "選択",
     "skipped": "スキップ済み"
+  },
+  "section": {
+    "run": "実行",
+    "runAria": "セクション {{name}} を実行",
+    "moduleCount": "{{count}} モジュール",
+    "open": "セクション {{name}} を開く"
+  },
+  "nav": {
+    "tests": "テスト",
+    "results": "結果"
+  },
+  "group": {
+    "back": "すべてのテスト",
+    "notFound": "このセクションは見つかりませんでした。"
+  },
+  "results": {
+    "title": "結果"
+  },
+  "module": {
+    "run": "実行",
+    "runAria": "モジュール {{name}} を実行"
   }
 }

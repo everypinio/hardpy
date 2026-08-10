@@ -356,6 +356,7 @@ class HookReporter(BaseReporter):
             DF.STATUS: TestStatus.READY,
             DF.NAME: self._get_module_name(node_info),
             DF.GROUP: self._get_module_group(node_info),
+            DF.SECTION: node_info.section,
             DF.START_TIME: None,
             DF.STOP_TIME: None,
             DF.CASES: {},
@@ -375,6 +376,7 @@ class HookReporter(BaseReporter):
             item[node_info.module_id][DF.STATUS] = TestStatus.READY
             item[node_info.module_id][DF.NAME] = self._get_module_name(node_info)
             item[node_info.module_id][DF.GROUP] = self._get_module_group(node_info)
+            item[node_info.module_id][DF.SECTION] = node_info.section
             item[node_info.module_id][DF.START_TIME] = None
             item[node_info.module_id][DF.STOP_TIME] = None
         item[node_info.module_id][DF.NAME] = self._get_module_name(node_info)

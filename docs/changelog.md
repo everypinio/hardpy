@@ -2,6 +2,29 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## Unreleased
+
+* Quiet the panel launch: `jig run` (and `poetry run example <name>`) now print
+  only the operator panel address. The startup test collection output is logged
+  instead of being written to the console, and a failing collection is reported
+  as an error. Pass `--verbose` to restore the previous output, or set
+  `JIG_LOG_LEVEL` (`warning` by default, `debug` for the most detailed output).
+* Add recursive **sections** for grouping test modules in the operator panel.
+  Sections are derived from subdirectories under the tests root, or set
+  explicitly with `@pytest.mark.module_section(...)`. Each section header has
+  its own **Run** button. Module ids are now path-based
+  (`autofocus/test_1` instead of `test_1`) so same-named files in different
+  directories no longer collide; use `--import-mode=importlib` for such
+  layouts. See `examples/full_capabilities`.
+* Add client-side routing in the operator panel: `/` for all tests,
+  `/group/<section>` for a single section run, and `/results` (with
+  `/results/<runId>` detail) for history. The backend falls back to
+  `index.html` for non-API paths so deep links and refresh work.
+* Add a per-module **Run** button and move **Run all** / **Stop** into the
+  top nav (the bottom progress footer is removed). The
+  `full_capabilities` example gains autofocus operator prompts and a
+  `prompts/` section covering every dialog and operator-message type.
+
 ## 0.25.2
 
 * Fix StandCloud api key reading from .env

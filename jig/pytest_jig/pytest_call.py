@@ -28,6 +28,7 @@ from jig.pytest_jig.utils import (
     ImageComponent,
     TestStandNumberError,
 )
+from jig.pytest_jig.utils.node_info import module_id_from_nodeid
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -764,19 +765,10 @@ def _get_current_test() -> CurrentTestInfo:
         reporter.update_db_by_doc()
         raise RuntimeError(msg)
 
-    module_delimiter = ".py::"
-    module_id_end_index = current_node.find(module_delimiter)
-    module_id = current_node[:module_id_end_index]
-
-    folder_delimeter = "/"
-    folder_delimeter_index = current_node.rfind(folder_delimeter)
-    if folder_delimeter_index != -1:
-        module_id = module_id[folder_delimeter_index + 1 :]
-
-    case_with_stage = current_node[module_id_end_index + len(module_delimiter) :]
-    case_delimiter = " "
-    case_id_end_index = case_with_stage.find(case_delimiter)
-    case_id = case_with_stage[:case_id_end_index]
+    # PYTEST_CURRENT_TEST looks like "path/mod.py::case (call)"
+    node_without_stage = current_node.rsplit(" ", 1)[0]
+    module_id = module_id_from_nodeid(node_without_stage)
+    case_id = node_without_stage.rpartition("::")[2]
 
     return CurrentTestInfo(module_id=module_id, case_id=case_id)
 

@@ -11,6 +11,8 @@ import { cn } from "@/lib/utils";
 type Props = {
   testing_status: string;
   useBigButton?: boolean;
+  /** Compact control sized for the top nav bar. */
+  compact?: boolean;
   manualCollectMode?: boolean;
   onTestRunStart?: () => void;
 } & WithTranslation;
@@ -68,7 +70,7 @@ class StartStopButton extends React.Component<Props, State> {
       this.props.onTestRunStart();
     }
 
-    this.jig_call("api/start");
+    this.jig_call("/api/start");
   }
 
   /**
@@ -84,7 +86,7 @@ class StartStopButton extends React.Component<Props, State> {
     if (this.state.isStopButtonDisabled) {
       return;
     }
-    this.jig_call("api/stop");
+    this.jig_call("/api/stop");
 
     // Disable the stop button for some time to prevent multiple rapid clicks
     this.setState({ isStopButtonDisabled: true });
@@ -268,6 +270,7 @@ class StartStopButton extends React.Component<Props, State> {
       t,
       testing_status,
       useBigButton = false,
+      compact = false,
       manualCollectMode = false,
     } = this.props;
     const is_testing: boolean = testing_status == "run";
@@ -277,12 +280,12 @@ class StartStopButton extends React.Component<Props, State> {
       <Button
         id="start-stop-button"
         variant={is_testing ? "destructive" : "default"}
-        size="lg"
+        size={compact ? "sm" : "lg"}
         disabled={manualCollectMode || this.state.isStopButtonDisabled}
         onClick={is_testing ? this.jig_stop : this.handleButtonClick}
         className={cn(useBigButton && "h-24 w-full gap-4 text-2xl font-bold")}
       >
-        {is_testing ? t("button.stop") : t("button.start")}
+        {is_testing ? t("button.stop") : t("button.runAll")}
         <Icon
           aria-hidden="true"
           className={cn(useBigButton && "size-7")}

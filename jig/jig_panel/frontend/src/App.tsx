@@ -5,24 +5,25 @@ import * as React from "react";
 import {
   Ban,
   Bug,
-  ChevronDown,
-  ChevronUp,
   FolderKanban,
   MousePointerClick,
   Settings,
   Volume2,
   VolumeX,
 } from "lucide-react";
+import {
+  Link,
+  NavLink,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router";
 import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,12 +39,19 @@ import {
   toDisplayStatus,
 } from "@/lib/testStatus";
 import { cn } from "@/lib/utils";
+import {
+  AppConfig,
+  PanelProvider,
+  type PanelContextValue,
+} from "@/panel/PanelContext";
+import GroupPage from "@/pages/GroupPage";
+import ResultsPage from "@/pages/ResultsPage";
+import RunDetailPage from "@/pages/RunDetailPage";
+import TestsPage from "@/pages/TestsPage";
 
 import StartStopButton from "./button/StartStop";
 import { TestRunI } from "./jig_test_view/SuiteList";
-import SuiteList from "./jig_test_view/SuiteList";
-import TestHistory from "./jig_test_view/TestHistory";
-import ProgressView from "./progress/ProgressView";
+import OperatorMessageHost from "./jig_test_view/OperatorMessageHost";
 import TestStatus from "./jig_test_view/TestStatus";
 import ReloadAlert from "./restart_alert/RestartAlert";
 import PlaySound from "./jig_test_view/PlaySound";
@@ -60,40 +68,6 @@ const WINDOW_WIDTH_THRESHOLDS = {
   ULTRAWIDE: 490,
   WIDE: 400,
 };
-
-/** How many more history runs are revealed each time "show more" is clicked. */
-const HISTORY_PAGE_SIZE = 5;
-
-interface AppConfig {
-  database?: {
-    host?: string;
-    port?: number;
-    storage_type?: "couchdb" | "json";
-  };
-  frontend?: {
-    full_size_button?: boolean;
-    sound_on?: boolean;
-    manual_collect?: boolean;
-    measurement_display?: boolean;
-    test_history?: boolean;
-    auto_scroll?: boolean;
-    modal_result?: {
-      enable?: boolean;
-      auto_dismiss_pass?: boolean;
-      auto_dismiss_timeout?: number;
-    };
-    reports_storage_menu?: {
-      show_standcloud?: boolean;
-      check_standcloud?: boolean;
-    };
-  };
-  current_test_config?: string;
-  test_configs?: Array<{
-    name: string;
-    description: string;
-    file?: string;
-  }>;
-}
 
 /**
  * Renders a standalone card carrying a connection or database message.
@@ -215,6 +189,8 @@ const findStoppedTestCase = (
  */
 function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [use_end_test_sound, setUseEndTestSound] = React.useState(false);
   const [use_debug_info, setUseDebugInfo] = React.useState(false);
   const [appConfig, setAppConfig] = React.useState<AppConfig | null>(null);
@@ -223,7 +199,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
 
   const [lastRunStatus, setLastRunStatus] =
     React.useState<DisplayStatus>("ready");
-  const [lastProgress, setProgress] = React.useState(0);
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
   const [lastRunDuration, setLastRunDuration] = React.useState<number>(0);
 
@@ -249,18 +224,13 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   } | null>(null);
 
   const startTimeRef = React.useRef<number | null>(null);
+  const pendingRecollectRef = React.useRef(false);
   const [timerIntervalId, setTimerIntervalId] =
     React.useState<NodeJS.Timeout | null>(null);
   const [allTests, setAllTests] = React.useState<string[]>([]);
   const [previousTestStructure, setPreviousTestStructure] =
     React.useState<string>("");
   let [selectedTests, setSelectedTests] = React.useState<string[]>([]);
-  const [selectedHistoryRunId, setSelectedHistoryRunId] =
-    React.useState<string | null>(null);
-  const [showHistoryDetails, setShowHistoryDetails] =
-    React.useState<boolean>(false);
-  const [historyDisplayCount, setHistoryDisplayCount] =
-    React.useState<number>(HISTORY_PAGE_SIZE);
 
   /**
    * Loads Jig configuration from the backend API on component mount
@@ -550,16 +520,10 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     }
     const db_row = rows[index].doc as TestRunI;
     const status = db_row.status || "";
-    const progress = db_row.progress || 0;
 
     // Update run status if changed
     if (status !== lastRunStatus) {
       setLastRunStatus(toDisplayStatus(status));
-    }
-
-    // Update progress if changed
-    if (progress !== lastProgress) {
-      setProgress(progress);
     }
 
     // Update start time and calculate duration
@@ -682,7 +646,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     rows,
     state,
     lastRunStatus,
-    lastProgress,
     lastRunDuration,
     isAuthenticated,
     appConfig,
@@ -709,11 +672,53 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   }, [allTests, filterSelectedTests]);
 
   /**
-   * Renders the database content including test suites and debug information
-   * @returns {JSX.Element} The rendered database content component
+   * Starts a partial run limited to the modules of one section.
+   */
+  const handleRunSection = React.useCallback(
+    (moduleIds: string[]) => {
+      if (manualCollectMode || moduleIds.length === 0) {
+        return;
+      }
+      pendingRecollectRef.current = true;
+      handleTestRunStart();
+      const params = new URLSearchParams();
+      for (const moduleId of moduleIds) {
+        params.append("tests", moduleId);
+      }
+      fetch(`/api/start?${params.toString()}`);
+    },
+    [handleTestRunStart, manualCollectMode]
+  );
+
+  const consumePendingRecollect = React.useCallback((): boolean => {
+    if (!pendingRecollectRef.current) {
+      return false;
+    }
+    pendingRecollectRef.current = false;
+    return true;
+  }, []);
+
+  /**
+   * When a full run starts from a group page (footer Start), leave the group
+   * view so the operator sees the full suite.
+   */
+  React.useEffect(() => {
+    if (
+      lastRunStatus === "run" &&
+      !pendingRecollectRef.current &&
+      location.pathname.startsWith("/group/")
+    ) {
+      navigate("/");
+    }
+  }, [lastRunStatus, location.pathname, navigate]);
+
+  /**
+   * Renders routed panel content once the live document is available.
    */
   const renderDbContent = (): JSX.Element => {
-    const dbErrorMessage = <PanelMessage title={t("app.dbError")} detail={error?.message} />;
+    const dbErrorMessage = (
+      <PanelMessage title={t("app.dbError")} detail={error?.message} />
+    );
 
     if (loading && rows.length === 0) {
       return <PanelMessage title={t("app.connection")} />;
@@ -733,143 +738,44 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     }
 
     const document_row = rows[index];
-    const filteredRows = rows
-      .map((row) => {
-        const doc = row.doc as TestRunI | undefined;
-        if (!doc || !doc.name || !doc.status) {
-          return null;
-        }
-
-        return {
-          id: row.id,
-          name: doc.name,
-          status: doc.status,
-          start_time: doc.start_time,
-          serial_number: doc.dut?.serial_number,
-        };
-      })
-      .filter((entry) => entry && entry.id !== syncDocumentId)
-      .filter((entry): entry is { id: string; name: string; status: string; start_time?: number; serial_number?: string | number } => entry !== null)
-      .sort((a, b) => (b.start_time ?? 0) - (a.start_time ?? 0));
-
-    const historyEntries = filteredRows.slice(0, historyDisplayCount);
-
-    const selectedHistoryRow = selectedHistoryRunId
-      ? (rows.find((row) => row.id === selectedHistoryRunId)?.doc as TestRunI | undefined)
-      : undefined;
-
     if (!document_row) {
       return dbErrorMessage;
     }
 
     const testRunData: TestRunI = document_row.doc as TestRunI;
+    const panelValue: PanelContextValue = {
+      testRunData,
+      rows,
+      syncDocumentId,
+      appConfig,
+      manualCollectMode,
+      selectedTests,
+      onTestsSelectionChange: handleTestsSelectionChange,
+      ultrawide,
+      useDebugInfo: use_debug_info,
+      runSection: handleRunSection,
+      consumePendingRecollect,
+      lastRunStatus,
+    };
+
+    const historyEnabled = appConfig?.frontend?.test_history !== false;
 
     return (
-      <div className="px-4 py-6">
-        <div key={document_row.id} className="flex flex-row gap-5">
-          {(ultrawide || !use_debug_info) && (
-            <div
-              className={cn(
-                "flex min-w-0 flex-1 gap-5",
-                ultrawide ? "flex-row" : "flex-col"
-              )}
-            >
-              <Card className="min-w-0 flex-[3_1_0%] py-5">
-                <CardContent className="px-5">
-                  <SuiteList
-                    db_state={testRunData}
-                    defaultClose={!ultrawide}
-                    onTestsSelectionChange={handleTestsSelectionChange}
-                    selectedTests={selectedTests}
-                    selectionSupported={
-                      (appConfig?.frontend?.manual_collect || false) &&
-                      manualCollectMode
-                    }
-                    currentTestConfig={appConfig?.current_test_config}
-                    measurementDisplay={
-                      appConfig?.frontend?.measurement_display
-                    }
-                    manualCollectMode={manualCollectMode}
-                    autoScroll={appConfig?.frontend?.auto_scroll || false}
-                  />
-                </CardContent>
-              </Card>
-
-              {appConfig?.frontend?.test_history !== false && (
-                <div className="flex min-w-0 flex-[1_1_22rem] flex-col gap-3">
-                  <TestHistory
-                    history={historyEntries}
-                    selectedHistoryId={selectedHistoryRunId}
-                    onSelectHistoryRun={(id) => {
-                      setSelectedHistoryRunId(id);
-                      setShowHistoryDetails(true);
-                    }}
-                  />
-                  {filteredRows.length > historyDisplayCount && (
-                    <Button
-                      variant="ghost"
-                      className="w-full"
-                      onClick={() =>
-                        setHistoryDisplayCount(
-                          historyDisplayCount + HISTORY_PAGE_SIZE
-                        )
-                      }
-                    >
-                      {t("history.showMore")}
-                    </Button>
-                  )}
-                  {selectedHistoryRow && (
-                    <Card className="gap-4 py-4">
-                      <CardHeader className="flex-row items-center justify-between px-4">
-                        <CardTitle className="text-base">
-                          {t("history.detailTitle")}
-                        </CardTitle>
-                        <CardAction>
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            aria-expanded={showHistoryDetails}
-                            onClick={() =>
-                              setShowHistoryDetails(!showHistoryDetails)
-                            }
-                            title={t("history.detailTitle")}
-                          >
-                            {showHistoryDetails ? <ChevronUp /> : <ChevronDown />}
-                          </Button>
-                        </CardAction>
-                      </CardHeader>
-                      {showHistoryDetails && (
-                        <CardContent className="px-4">
-                          <SuiteList
-                            db_state={selectedHistoryRow}
-                            defaultClose={!ultrawide}
-                            selectionSupported={false}
-                            selectedTests={[]}
-                            currentTestConfig={appConfig?.current_test_config}
-                            measurementDisplay={
-                              appConfig?.frontend?.measurement_display
-                            }
-                            manualCollectMode={manualCollectMode}
-                          />
-                        </CardContent>
-                      )}
-                    </Card>
-                  )}
-                </div>
-              )}
-            </div>
+      <PanelProvider value={panelValue}>
+        <Routes>
+          <Route path="/" element={<TestsPage />} />
+          <Route path="/group/*" element={<GroupPage />} />
+          {historyEnabled ? (
+            <Route path="/results" element={<ResultsPage />}>
+              <Route path=":runId" element={<RunDetailPage />} />
+            </Route>
+          ) : (
+            <Route path="/results/*" element={<Navigate to="/" replace />} />
           )}
-          {use_debug_info && (
-            <Card className="min-w-0 flex-1 py-5">
-              <CardContent className="px-5">
-                <pre className="overflow-x-auto text-xs">
-                  {JSON.stringify(testRunData, null, 2)}
-                </pre>
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      </div>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+        <OperatorMessageHost />
+      </PanelProvider>
     );
   };
 
@@ -917,7 +823,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     );
   };
 
-  const useBigButton = appConfig?.frontend?.full_size_button !== false;
   const isTestRunning = lastRunStatus === "run";
 
   /**
@@ -939,14 +844,52 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           id="panel-header"
           className="fixed inset-x-0 top-0 z-20 flex h-[50px] items-center gap-2 border-b bg-card px-4 shadow-sm"
         >
-          <div id="main-heading" className="flex items-center">
+          <Link
+            to="/"
+            id="main-heading"
+            className="flex items-center gap-2 text-inherit no-underline"
+          >
             <div className="logo-smol" />
             {wide && (
               <span className="font-semibold">
                 {ultrawide ? t("app.title") : "Jig"}
               </span>
             )}
-          </div>
+          </Link>
+
+          {wide && <Separator orientation="vertical" className="mx-1 h-6" />}
+
+          <nav className="flex items-center gap-1 text-sm">
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) =>
+                cn(
+                  "rounded-md px-2 py-1 font-medium transition-colors",
+                  isActive
+                    ? "bg-accent text-accent-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                )
+              }
+            >
+              {t("nav.tests")}
+            </NavLink>
+            {appConfig?.frontend?.test_history !== false && (
+              <NavLink
+                to="/results"
+                className={({ isActive }) =>
+                  cn(
+                    "rounded-md px-2 py-1 font-medium transition-colors",
+                    isActive
+                      ? "bg-accent text-accent-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  )
+                }
+              >
+                {t("nav.results")}
+              </NavLink>
+            )}
+          </nav>
 
           {wide && <Separator orientation="vertical" className="mx-1 h-6" />}
 
@@ -979,6 +922,14 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           </div>
 
           <div className="ml-auto flex items-center gap-1">
+            {isConfigLoaded && (
+              <StartStopButton
+                testing_status={lastRunStatus}
+                compact={true}
+                manualCollectMode={manualCollectMode}
+                onTestRunStart={handleTestRunStart}
+              />
+            )}
             {appConfig && appConfig.current_test_config && (
               <Button
                 variant="outline"
@@ -1013,47 +964,9 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
         </header>
 
         {/* Main content area with test suites and results */}
-        <main
-          id="panel-content"
-          className={cn("pt-[50px]", useBigButton ? "pb-[180px]" : "pb-[140px]")}
-        >
+        <main id="panel-content" className="pt-[50px] pb-6">
           {renderDbContent()}
         </main>
-
-        {/* Footer with progress bar and control buttons */}
-        {isConfigLoaded && (
-          <div className="fixed inset-x-0 bottom-0 z-20 flex flex-col border-t bg-card">
-            {useBigButton ? (
-              <div className="flex flex-col gap-2.5 p-4">
-                <ProgressView
-                  percentage={lastProgress}
-                  status={lastRunStatus}
-                />
-                <StartStopButton
-                  testing_status={lastRunStatus}
-                  useBigButton={true}
-                  manualCollectMode={manualCollectMode}
-                  onTestRunStart={handleTestRunStart}
-                />
-              </div>
-            ) : (
-              <div className="flex flex-row items-center gap-5 p-4">
-                <div className="min-w-0 flex-1">
-                  <ProgressView
-                    percentage={lastProgress}
-                    status={lastRunStatus}
-                  />
-                </div>
-                <StartStopButton
-                  testing_status={lastRunStatus}
-                  useBigButton={false}
-                  manualCollectMode={manualCollectMode}
-                  onTestRunStart={handleTestRunStart}
-                />
-              </div>
-            )}
-          </div>
-        )}
 
         {/* Test Config Selection Overlay */}
         {appConfig && (

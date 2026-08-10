@@ -14,6 +14,7 @@ from uvicorn import run as uvicorn_run
 
 from jig import __version__ as jig_version
 from jig.cli.template import TemplateGenerator
+from jig.common import log_config
 from jig.common.config import ConfigManager, JigConfig
 from jig.common.stand_cloud import (
     StandCloudConnector,
@@ -175,12 +176,22 @@ def init(  # noqa: PLR0913
 
 
 @cli.command()
-def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
+def run(
+    tests_dir: Annotated[Optional[str], typer.Argument()] = None,
+    verbose: bool = typer.Option(
+        default=False,
+        help="Print test collection output and Jig logs.",
+    ),
+) -> None:
     """Run Jig server.
 
     Args:
         tests_dir (Optional[str]): Test directory. Current directory by default
+        verbose (bool): Print test collection output and Jig logs
     """
+    log_level = log_config.resolve_level(is_verbose=verbose)
+    log_config.configure(log_level)
+
     config = _get_config(tests_dir)
     _validate_config(config)
 
@@ -191,14 +202,19 @@ def run(tests_dir: Annotated[Optional[str], typer.Argument()] = None) -> None:
             print(f"Error: Specified port {config.frontend.port} is already in use")
             sys.exit(1)
 
-    print(f"http://{config.frontend.host}:{config.frontend.port}\n")
+    url = typer.style(
+        f"http://{config.frontend.host}:{config.frontend.port}",
+        fg=typer.colors.BRIGHT_CYAN,
+        bold=True,
+    )
+    typer.echo(f"🚀 Ready! Open {url} in your browser and let the testing begin.\n")
 
     try:
         uvicorn_run(
             "jig.jig_panel.api:app",
             host=config.frontend.host,
             port=config.frontend.port,
-            log_level="critical",
+            log_level=log_config.uvicorn_level(log_level),
         )
     except RuntimeError as exc:
         print(f"Jig server cannot be started: {exc}")

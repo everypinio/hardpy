@@ -13,7 +13,7 @@
     "noEntries": "数据库中没有条目 🙅🏽‍♀️🚫",
     "stoppedTestCase": "已停止的测试用例",
     "failedTestCases": "失败的测试用例",
-    "modalResultDismissHint": "点击任意位置或按任意键关闭",
+    "modalResultDismissHint": "按 Esc、点击外侧或任意键关闭",
     "modalResultAutoDismissHint": "{{seconds}}秒后自动关闭...",
     "manualCollectOn": "手动收集开启",
     "manualCollectOff": "手动收集关闭",
@@ -81,7 +81,8 @@
     "stop": "停止",
     "confirm": "确认",
     "pass": "通过",
-    "fail": "失败"
+    "fail": "失败",
+    "runAll": "全部运行"
   },
   "error": {
     "dbConnectionTitle": "数据库连接错误",
@@ -145,5 +146,26 @@
     "connectionError": "连接错误",
     "selectionColumn": "选择",
     "skipped": "已跳过"
+  },
+  "section": {
+    "run": "运行",
+    "runAria": "运行分组 {{name}}",
+    "moduleCount": "{{count}} 个模块",
+    "open": "打开分组 {{name}}"
+  },
+  "nav": {
+    "tests": "测试",
+    "results": "结果"
+  },
+  "group": {
+    "back": "全部测试",
+    "notFound": "未找到此分组。"
+  },
+  "results": {
+    "title": "结果"
+  },
+  "module": {
+    "run": "运行",
+    "runAria": "运行模块 {{name}}"
   }
 }

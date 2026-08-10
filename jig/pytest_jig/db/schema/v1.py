@@ -57,6 +57,7 @@ class ModuleStateStore(IBaseResult):
 
     cases: dict[str, CaseStateStore] = {}
     group: Group
+    section: list[str] = []
 
 
 class ModuleRunStore(IBaseResult):
@@ -64,6 +65,7 @@ class ModuleRunStore(IBaseResult):
 
     cases: dict[str, CaseRunStore] = {}
     group: Group
+    section: list[str] = []
     artifact: dict = {}
 
 

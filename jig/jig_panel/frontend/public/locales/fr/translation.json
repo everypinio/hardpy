@@ -13,7 +13,7 @@
     "noEntries": "Aucune entrée dans la base de données 🙅🏽‍♀️🚫",
     "stoppedTestCase": "Cas de test arrêté",
     "failedTestCases": "Cas de test échoués",
-    "modalResultDismissHint": "Cliquez n'importe où ou appuyez sur n'importe quelle touche pour fermer",
+    "modalResultDismissHint": "Appuyez sur Échap, cliquez à l’extérieur ou sur une touche pour fermer",
     "modalResultAutoDismissHint": "Fermeture automatique dans {{seconds}} secondes...",
     "manualCollectOn": "Collecte manuelle activée",
     "manualCollectOff": "Collecte manuelle désactivée",
@@ -81,7 +81,8 @@
     "stop": "Arrêter",
     "confirm": "Confirmer",
     "pass": "Réussi",
-    "fail": "Échoué"
+    "fail": "Échoué",
+    "runAll": "Tout lancer"
   },
   "error": {
     "dbConnectionTitle": "Erreur de connexion à la base de données",
@@ -145,5 +146,26 @@
     "connectionError": "Erreur de connexion",
     "selectionColumn": "Sélectionner",
     "skipped": "Ignoré"
+  },
+  "section": {
+    "run": "Lancer",
+    "runAria": "Lancer la section {{name}}",
+    "moduleCount": "{{count}} modules",
+    "open": "Ouvrir la section {{name}}"
+  },
+  "nav": {
+    "tests": "Tests",
+    "results": "Résultats"
+  },
+  "group": {
+    "back": "Tous les tests",
+    "notFound": "Cette section est introuvable."
+  },
+  "results": {
+    "title": "Résultats"
+  },
+  "module": {
+    "run": "Lancer",
+    "runAria": "Lancer le module {{name}}"
   }
 }

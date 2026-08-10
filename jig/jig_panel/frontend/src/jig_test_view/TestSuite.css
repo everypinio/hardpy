@@ -1,12 +1,4 @@
-.TestSuite__Card {
-  margin-top: 20px;
-}
-
-.TestSuite__Tag {
-  margin: 2px;
-}
-
-.test-suite-content .rdt_TableCell {
-  vertical-align: top !important;
-  align-items: flex-start !important;
+/* Case table cells that hold charts/measurements should top-align. */
+.test-suite-content [data-slot="table-cell"] {
+  vertical-align: top;
 }

@@ -7,6 +7,7 @@ import { describe, expect, test } from "vitest";
 import {
   DisplayStatus,
   RUN_STATUSES,
+  aggregateStatus,
   isRunInFlight,
   statusLabel,
   statusPresentation,
@@ -108,4 +109,24 @@ describe("isRunInFlight", () => {
       expect(isRunInFlight(status)).toBe(false);
     }
   );
+});
+
+describe("aggregateStatus", () => {
+  test(`given no statuses,
+ when they are aggregated,
+ then the result is pending`, () => {
+    expect(aggregateStatus([])).toBe("pending");
+  });
+
+  test(`given a failed module among passed ones,
+ when they are aggregated,
+ then failed wins`, () => {
+    expect(aggregateStatus(["passed", "failed", "skipped"])).toBe("failed");
+  });
+
+  test(`given a running module among others,
+ when they are aggregated,
+ then run wins`, () => {
+    expect(aggregateStatus(["passed", "run", "failed"])).toBe("run");
+  });
 });

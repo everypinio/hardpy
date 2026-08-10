@@ -312,10 +312,12 @@ The device under test section contains information about the DUT.
 
 The **modules** section contains the information about tests.
 Each module contains information from a single test file.
-The module's name is the same as the file's name.
+The module key (module id) is the file path relative to the tests root without
+the `.py` suffix (for example `test_1` at the root, or `autofocus/test_1` in a
+subdirectory).
 
-- **test_{module_name}**: an object containing information about a specific module.
-  The `{module_name}` variable is assigned automatically.
+- **{module_id}**: an object containing information about a specific module.
+  The `{module_id}` variable is assigned automatically.
   Contains the following fields:
   - **status**: module test execution status. The variable is assigned automatically.
   - **name**: module name, by default the same as module_id.
@@ -324,6 +326,11 @@ The module's name is the same as the file's name.
   - **stop_time**: end time of module testing in Unix seconds. The variable is assigned automatically.
   - **group**: the group of module: *Setup*, *Main* or *Teardown* (*Main* by default).
     The user can specify the module group by using [module_group](./pytest_jig.md#module_group) marker.
+  - **section**: ordered list of section names used to group the module in the
+    operator panel (for example `["autofocus"]` or `["autofocus", "fine"]`).
+    Empty (`[]`) when the module is at the tests root. Derived from the module
+    directory by default, or set with the
+    [module_section](./pytest_jig.md#module_section) marker.
   - **artifact**: an object that contains information about the artifacts created during the test module.
     The user can specify the module artifact by using [set_module_artifact](./pytest_jig.md#set_module_artifact) function.
     The artifact contains a dictionary where the user can store any data at the test module level.

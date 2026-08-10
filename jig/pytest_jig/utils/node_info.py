@@ -4,13 +4,45 @@ from __future__ import annotations
 
 import re
 from logging import getLogger
-from pathlib import Path
+from pathlib import PurePosixPath
 from typing import TYPE_CHECKING, NamedTuple
 
 from jig.pytest_jig.utils.const import Group
 
 if TYPE_CHECKING:
     from pytest import Item, Mark
+
+
+def module_id_from_nodeid(nodeid: str) -> str:
+    """Derive the module id from a pytest nodeid.
+
+    The module id is the module path relative to the tests root, without the
+    ``.py`` suffix. Forward slashes are preserved so modules in different
+    directories keep distinct identities.
+
+    Args:
+        nodeid (str): pytest nodeid (module path, optionally followed by ``::``)
+
+    Returns:
+        str: module id
+
+    Raises:
+        ValueError: if a directory or file segment contains a ``.`` other than
+            the ``.py`` suffix (dots collide with nested database key paths)
+    """
+    module_path = nodeid.partition("::")[0].removesuffix(".py")
+    if not module_path:
+        msg = f"Unable to derive module id from nodeid: {nodeid}"
+        raise ValueError(msg)
+    for part in PurePosixPath(module_path).parts:
+        if "." in part:
+            msg = (
+                f"Module path '{module_path}' contains a '.' which is not "
+                "allowed in directory or module names (conflicts with "
+                "database key paths)."
+            )
+            raise ValueError(msg)
+    return module_path
 
 
 class TestDependencyInfo(NamedTuple):
@@ -50,8 +82,9 @@ class NodeInfo:
         self._module_group = self._get_group(item.parent.own_markers, "module_group")
         self._case_group = self._get_group(item.own_markers, "case_group")
 
-        self._module_id = Path(item.parent.nodeid).stem  # type: ignore
+        self._module_id = module_id_from_nodeid(item.parent.nodeid)  # type: ignore
         self._case_id = item.name
+        self._section = self._get_section(item)
 
     @property
     def module_id(self) -> str:
@@ -134,6 +167,16 @@ class NodeInfo:
         """
         return self._case_group
 
+    @property
+    def section(self) -> list[str]:
+        """Get module section path.
+
+        Returns:
+            list[str]: ordered section names; empty when the module is at the
+            tests root and no ``module_section`` marker is set
+        """
+        return self._section
+
     def _get_human_name(self, markers: list[Mark], marker_name: str) -> str:
         """Get human name from markers.
 
@@ -181,10 +224,10 @@ class NodeInfo:
         dependency_value = self._get_human_names(markers, "dependency")
         dependencies = []
         for dependency in dependency_value:
-            dependency_data = re.search(r"(\w+)::(\w+)", dependency)
+            dependency_data = re.search(r"([\w./-]+)::(\w+)", dependency)
             if dependency_data:
                 dependencies.append(TestDependencyInfo(*dependency_data.groups()))
-            elif re.search(r"^\w+$", dependency):
+            elif re.search(r"^[\w./-]+$", dependency):
                 dependencies.append(TestDependencyInfo(dependency, None))
             elif not dependency:
                 continue
@@ -251,3 +294,75 @@ class NodeInfo:
                 raise ValueError(msg)
 
         return Group.MAIN
+
+    def _get_section(self, item: Item) -> list[str]:
+        """Resolve the module section path.
+
+        Precedence: ``module_section`` marker on the module wins; otherwise the
+        directory path of the module relative to the tests root.
+
+        Args:
+            item (Item): pytest test item
+
+        Returns:
+            list[str]: ordered section names
+
+        Raises:
+            ValueError: if the marker arguments are empty or not strings
+        """
+        parent_markers = item.parent.own_markers if item.parent is not None else []
+        for marker in parent_markers:
+            if marker.name != "module_section":
+                continue
+            return self._parse_section_marker_args(marker.args)
+
+        if item.parent is None:
+            return []
+        module_path = PurePosixPath(module_id_from_nodeid(item.parent.nodeid))
+        return list(module_path.parts[:-1])
+
+    def _parse_section_marker_args(self, args: tuple) -> list[str]:
+        """Parse ``module_section`` marker arguments into a section path.
+
+        Accepts either varargs (``"Autofocus", "Fine"``) or a single
+        slash-separated string (``"Autofocus/Fine"``).
+
+        Args:
+            args (tuple): marker arguments
+
+        Returns:
+            list[str]: ordered section names
+
+        Raises:
+            ValueError: if args are empty or contain a non-string / empty part
+        """
+        if not args:
+            msg = "module_section marker requires at least one argument"
+            raise ValueError(msg)
+
+        if len(args) == 1 and isinstance(args[0], str) and "/" in args[0]:
+            parts = [part for part in args[0].split("/") if part != ""]
+        else:
+            parts = list(args)
+
+        if not parts:
+            msg = "module_section marker produced an empty section path"
+            raise ValueError(msg)
+
+        for part in parts:
+            if not isinstance(part, str):
+                msg = (
+                    "module_section marker arguments must be strings, "
+                    f"got {type(part)}"
+                )
+                raise ValueError(msg)
+            if not part:
+                msg = "module_section marker arguments must not be empty"
+                raise ValueError(msg)
+            if "." in part:
+                msg = (
+                    f"module_section part '{part}' must not contain '.' "
+                    "(conflicts with database key paths)"
+                )
+                raise ValueError(msg)
+        return parts

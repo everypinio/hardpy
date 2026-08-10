@@ -691,7 +691,7 @@ export function StartConfirmationDialog(props: Readonly<Props>): JSX.Element {
    */
   const handleClose = () => {
     setDialogOpen(false);
-    fetch("api/stop")
+    fetch("/api/stop")
       .then((response) => {
         if (response.ok) {
           return response.text();

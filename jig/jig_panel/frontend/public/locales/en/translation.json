@@ -13,7 +13,7 @@
     "noEntries": "No entries in the database 🙅🏽‍♀️🚫",
     "stoppedTestCase": "Stopped Test Case",
     "failedTestCases": "Failed Test Cases",
-    "modalResultDismissHint": "Click anywhere or press any key to dismiss",
+    "modalResultDismissHint": "Press Escape, click outside, or press any key to dismiss",
     "modalResultAutoDismissHint": "Auto-dismissing in {{seconds}} seconds...",
     "manualCollectOn": "Manual collect on",
     "manualCollectOff": "Manual collect off",
@@ -81,7 +81,8 @@
     "stop": "Stop",
     "confirm": "Confirm",
     "pass": "Pass",
-    "fail": "Fail"
+    "fail": "Fail",
+    "runAll": "Run all"
   },
   "error": {
     "dbConnectionTitle": "Database Connection Error",
@@ -145,5 +146,26 @@
     "connectionError": "Connection error",
     "selectionColumn": "Select",
     "skipped": "Skipped"
+  },
+  "section": {
+    "run": "Run",
+    "runAria": "Run section {{name}}",
+    "moduleCount": "{{count}} modules",
+    "open": "Open section {{name}}"
+  },
+  "nav": {
+    "tests": "Tests",
+    "results": "Results"
+  },
+  "group": {
+    "back": "All tests",
+    "notFound": "This section was not found."
+  },
+  "results": {
+    "title": "Results"
+  },
+  "module": {
+    "run": "Run",
+    "runAria": "Run module {{name}}"
   }
 }

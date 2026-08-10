@@ -11,6 +11,10 @@ SUPPLY_VOLTAGE_V = 3.31
 IDLE_CURRENT_MA = 12.4
 FIRMWARE_VERSION = "1.4.2"
 CUTOFF_FREQUENCY_HZ = 5000
+AUTOFOCUS_COARSE_PEAK_UM = 120.0
+AUTOFOCUS_FINE_PEAK_UM = 118.5
+AUTOFOCUS_DITHER_AMPLITUDE_UM = 2.0
+ALIGNMENT_OFFSET_UM = 0.4
 
 
 class SimulatedDevice:
@@ -83,3 +87,35 @@ class SimulatedDevice:
             for time in times
         ]
         return times, currents
+
+    def measure_autofocus_coarse_peak(self) -> float:
+        """Measure the coarse autofocus peak position.
+
+        Returns:
+            float: peak position in micrometres
+        """
+        return AUTOFOCUS_COARSE_PEAK_UM
+
+    def measure_autofocus_fine_peak(self) -> float:
+        """Measure the fine autofocus peak position.
+
+        Returns:
+            float: peak position in micrometres
+        """
+        return AUTOFOCUS_FINE_PEAK_UM
+
+    def measure_autofocus_dither(self) -> float:
+        """Measure the autofocus dither amplitude.
+
+        Returns:
+            float: dither amplitude in micrometres
+        """
+        return AUTOFOCUS_DITHER_AMPLITUDE_UM
+
+    def measure_alignment_offset(self) -> float:
+        """Measure the optical alignment offset.
+
+        Returns:
+            float: offset in micrometres
+        """
+        return ALIGNMENT_OFFSET_UM

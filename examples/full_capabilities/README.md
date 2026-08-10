@@ -25,6 +25,19 @@ report of each finished run is written to `reports`.
 | `test_4_operator_interaction.py` | every dialog box widget, images, HTML, pass/fail buttons, error codes |
 | `test_5_flow_control.py` | retried tests with `attempt`, dependencies inside and across modules |
 | `test_6_teardown.py` | `teardown` group, run artifacts, reading the report from a test |
+| `autofocus/` | directory-based **section** grouping (recursive via `autofocus/fine/`), with operator confirms inside the group |
+| `prompts/` | one module per operator prompt type (confirm, pass/fail, inputs, multistep, HTML, operator messages) |
+| `test_7_alignment.py` | `module_section("Alignment")` marker override (section without a directory) |
 
-The `Operator interaction` module waits for the operator, every other module runs
-on its own against the simulated device in `simulated_device.py`.
+The `Operator interaction`, `autofocus`, and `prompts` modules wait for the
+operator; every other module runs on its own against the simulated device in
+`simulated_device.py`.
+
+### Sections
+
+Modules under a subdirectory are automatically placed in a section named after
+that directory. Nesting is recursive: `autofocus/fine/test_1_dither.py` appears
+under **autofocus → fine**. A module at the project root can still join a
+section with `@pytest.mark.module_section("Alignment")`. Each section header and
+each module in the operator panel has its own **Run** button; **Run all** lives
+in the top nav.

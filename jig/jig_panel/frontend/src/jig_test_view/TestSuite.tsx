@@ -2,26 +2,41 @@
 // GNU General Public License v3.0 (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import * as React from "react";
-import {
-  Callout,
-  Collapse,
-  Button,
-  H4,
-  Classes,
-  Icon,
-  Tag,
-} from "@blueprintjs/core";
+import { Classes } from "@blueprintjs/core";
 import _, { Dictionary } from "lodash";
-import DataTable, { TableColumn } from "react-data-table-component";
+import { ChevronDown, ChevronRight, FileCode, Play } from "lucide-react";
 import { LoadingOutlined } from "@ant-design/icons";
 import { StartConfirmationDialog, WidgetType } from "./DialogBox";
 import { withTranslation, WithTranslation } from "react-i18next";
 
-import { TestNumber } from "./TestNumber";
+import { Badge } from "@/components/ui/badge";
+import { Button as UiButton } from "@/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { isRunInFlight, toDisplayStatus } from "@/lib/testStatus";
+import { cn } from "@/lib/utils";
 import { TestName } from "./TestName";
 import { TestStatus } from "./TestStatus";
 import TestData from "./TestData";
 import RunTimer from "./RunTimer";
+import {
+  treeChildrenClassName,
+  treeIconClassName,
+  treeLabelClassName,
+  treeMetaClassName,
+  treeRowClassName,
+} from "./treeStyles";
 
 import "./TestSuite.css";
 import { Spin, Checkbox } from "antd";
@@ -176,6 +191,8 @@ export interface TestItem {
   stop_time: number;
   artifact: Record<string, unknown>;
   cases: Cases;
+  /** Ordered section path; empty or absent when the module is at the tests root. */
+  section?: string[];
 }
 
 /**
@@ -199,6 +216,8 @@ type Props = {
   measurementDisplay?: boolean;
   manualCollectMode?: boolean;
   autoScroll?: boolean;
+  /** Starts a partial run limited to this module. */
+  onRunModule?: (moduleId: string) => void;
 } & WithTranslation;
 
 /**
@@ -373,7 +392,7 @@ export class TestSuite extends React.Component<Props, State> {
 
     this.scrollTimeout = setTimeout(() => {
       const allRows = this.containerRef.current?.querySelectorAll(
-        ".rdt_TableRow"
+        "[data-slot='table-row'].test-case-row"
       );
       if (allRows && allRows[runningIdx]) {
         allRows[runningIdx].scrollIntoView({
@@ -395,71 +414,68 @@ export class TestSuite extends React.Component<Props, State> {
     if (!i18n?.isInitialized) {
       return <div>{t("testSuite.loading")}</div>;
     }
+
+    const displayStatus =
+      this.props.commonTestRunStatus != "run" &&
+      (this.props.test.status == "run" || this.props.test.status == "ready")
+        ? "stucked"
+        : this.props.test.status;
+
     return (
-      <div ref={this.containerRef}>
-      <Callout style={{ padding: 0, borderRadius: 0 }} className="test-suite">
-        <div style={{ display: "flex" }}>
-          <div style={{ flex: "1 1 0%" }}>
-            <Button
-              style={{ margin: "2px" }}
-              minimal={true}
+      <div ref={this.containerRef} className="test-suite">
+        <Collapsible
+          open={this.state.isOpen}
+          onOpenChange={(open) => {
+            this.setState({
+              isOpen: open,
+              automaticallyOpened: false,
+            });
+          }}
+        >
+          <div className={treeRowClassName}>
+            <CollapsibleTrigger asChild>
+              <button
+                type="button"
+                className="inline-flex size-6 shrink-0 items-center justify-center rounded-sm text-muted-foreground hover:bg-muted"
+                aria-label={this.state.isOpen ? "Collapse" : "Expand"}
+              >
+                {this.state.isOpen ? (
+                  <ChevronDown className={treeIconClassName} />
+                ) : (
+                  <ChevronRight className={treeIconClassName} />
+                )}
+              </button>
+            </CollapsibleTrigger>
+            <FileCode className={treeIconClassName} />
+            <TestStatus status={displayStatus} />
+            {this.props.selectionSupported && (
+              <Checkbox
+                checked={this.isAllTestsSelected()}
+                indeterminate={this.isSomeTestsSelected()}
+                onChange={this.handleSelectAll}
+                onClick={(e) => e.stopPropagation()}
+              />
+            )}
+            <span className={treeMetaClassName}>{this.props.index + 1}</span>
+            <button
+              type="button"
+              className={cn(treeLabelClassName, "text-left")}
               onClick={this.handleClick}
             >
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <TestStatus
-                  status={
-                    this.props.commonTestRunStatus != "run" &&
-                    (this.props.test.status == "run" ||
-                      this.props.test.status == "ready")
-                      ? "stucked"
-                      : this.props.test.status
-                  }
-                />
-                <Icon
-                  style={{ marginRight: "10px", marginLeft: "10px" }}
-                  icon={this.state.isOpen ? "chevron-down" : "chevron-right"}
-                ></Icon>
-                {this.props.selectionSupported && (
-                  <Checkbox
-                    style={{ marginRight: "60px" }}
-                    checked={this.isAllTestsSelected()}
-                    indeterminate={this.isSomeTestsSelected()}
-                    onChange={this.handleSelectAll}
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                )}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    minWidth: "65px",
-                  }}
-                >
-                  <span
-                    className={Classes.TEXT_DISABLED}
-                    style={{ marginRight: "20px" }}
-                  >
-                    {this.props.index + 1}
-                  </span>
-                  <span>{this.renderName(this.props.test.name)}</span>
-                </div>
-              </div>
-            </Button>
+              {this.renderName(this.props.test.name)}
+            </button>
+            {this.renderTestSuiteRightPanel(this.props.test)}
           </div>
-          {this.renderTestSuiteRightPanel(this.props.test)}
-        </div>
-        <Collapse
-          isOpen={this.state.isOpen}
-          keepChildrenMounted={true}
-          className="test-suite-content"
-        >
-          {this.props.test.status != "busy" ? (
-            <div>{this.renderTests(this.props.test.cases)}</div>
-          ) : (
-            <Spin indicator={TestSuite.LOADING_ICON} />
-          )}
-        </Collapse>
-      </Callout>
+          <CollapsibleContent className="test-suite-content">
+            <div className={treeChildrenClassName}>
+              {this.props.test.status != "busy" ? (
+                this.renderTests(this.props.test.cases)
+              ) : (
+                <Spin indicator={TestSuite.LOADING_ICON} />
+              )}
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
       </div>
     );
   }
@@ -716,143 +732,96 @@ export class TestSuite extends React.Component<Props, State> {
     const is_loading = _.isEmpty(name);
 
     return (
-      <H4
-        className={`test-suite-name ${is_loading ? Classes.SKELETON : ""}`}
-        style={{ margin: 0 }}
+      <span
+        className={cn(
+          "test-suite-name",
+          is_loading && Classes.SKELETON
+        )}
       >
         {is_loading ? this.props.t("testSuite.stubName") : name}
-      </H4>
+      </span>
     );
   }
 
   /**
-   * Renders the test cases within the test suite as a data table
+   * Renders the test cases within the test suite as a shadcn table.
    * @param {Cases} test_topics - The test cases to render
    * @returns {React.ReactElement} The rendered test cases table
    * @private
    */
   private renderTests(test_topics: Cases): React.ReactElement {
-    let case_names: string[] = [];
-
-    if (test_topics) {
-      case_names = Object.keys(test_topics);
-    }
-
-    // Filter out undefined test cases and create safe arrays
-    const case_names_filtered = case_names.filter((n) => {
-      const testCase = test_topics[n];
+    const { t, selectionSupported } = this.props;
+    const caseIds = Object.keys(test_topics || {}).filter((caseId) => {
+      const testCase = test_topics[caseId];
       return testCase !== undefined && testCase !== null;
     });
-    const case_array: Case[] = case_names_filtered.map((n) => test_topics[n]);
-
-    /**
-     * Column configuration for the test cases data table
-     * @type {TableColumn<string>[]}
-     */
-    const columns: TableColumn<string>[] = [
-      {
-        id: "status",
-        name: "",
-        selector: (row) => row,
-        cell: this.cellRendererStatus.bind(this, case_array),
-        grow: 0.5,
-        width: "10px",
-      },
-      ...(this.props.selectionSupported
-        ? [
-            {
-              id: "selection",
-              name: this.props.t("testSuite.selectionColumn"),
-              selector: (row: any) => row,
-              cell: this.cellRendererSelection.bind(this, case_array),
-              grow: 0.5,
-              width: "80px",
-              center: true,
-            },
-          ]
-        : []),
-      {
-        id: "test_number",
-        name: "",
-        selector: (row) => row,
-        cell: this.cellRendererNumber.bind(this, case_array),
-        grow: 0.5,
-        width: "65px",
-        style: { paddingLeft: "12px" },
-      },
-      {
-        id: "name",
-        name: this.props.t("testSuite.nameColumn"),
-        selector: (row) => row,
-        cell: this.cellRendererName.bind(this, case_array),
-        grow: 4,
-      },
-      {
-        id: "data",
-        name: this.props.t("testSuite.dataColumn"),
-        selector: (row) => row,
-        cell: this.cellRendererData.bind(this, case_array),
-        grow: 18,
-        cellProps: () => ({ "data-column-id": "data" }),
-      },
-    ];
 
     return (
-      // compensation for 1px shadow of Table
-      <div
-        ref={this.dataColumnRef}
-        style={{ margin: "3px", paddingBottom: "4px", borderRadius: "2px" }}
-      >
-        <DataTable
-          noHeader={true}
-          columns={columns}
-          data={case_names_filtered}
-          highlightOnHover={true}
-          dense={true}
-          responsive={true}
-          persistTableHead={false}
-          fixedHeader={false}
-          fixedHeaderScrollHeight="unset"
-        />
+      <div ref={this.dataColumnRef} className="py-1">
+        <Table>
+          <TableHeader>
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="w-8 px-1" />
+              {selectionSupported && <TableHead className="w-8 px-1" />}
+              <TableHead className="w-8 px-1 text-muted-foreground">#</TableHead>
+              <TableHead className="min-w-[8rem]">
+                {t("testSuite.nameColumn")}
+              </TableHead>
+              <TableHead>{t("testSuite.dataColumn")}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {caseIds.map((caseId, rowIndex) => {
+              const testCase = test_topics[caseId];
+              return (
+                <TableRow key={caseId} className="test-case-row">
+                  <TableCell className="w-8 px-1 align-top">
+                    {this.renderCaseStatus(testCase, caseId)}
+                  </TableCell>
+                  {selectionSupported && (
+                    <TableCell className="w-8 px-1 align-top">
+                      {this.renderCaseSelection(caseId)}
+                    </TableCell>
+                  )}
+                  <TableCell className="w-8 px-1 align-top text-muted-foreground">
+                    {rowIndex + 1}
+                  </TableCell>
+                  <TableCell className="align-top whitespace-normal">
+                    {this.renderCaseName(testCase, caseId)}
+                  </TableCell>
+                  <TableCell
+                    className="align-top whitespace-normal"
+                    data-column-id="data"
+                  >
+                    {this.renderCaseData(testCase, rowIndex)}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
       </div>
     );
   }
 
   /**
-   * Renders the selection checkbox in a cell.
-   * @param {Case[]} test_topics - The test cases.
-   * @param {string} row_ - The row data.
-   * @param {number} rowIndex - The index of the row.
-   * @returns {React.ReactElement} The rendered selection cell.
+   * Renders the selection checkbox for one case.
    */
-  private cellRendererSelection(
-    test_topics: Case[],
-    row_: string,
-    rowIndex: number
-  ): React.ReactElement {
+  private renderCaseSelection(caseId: string): React.ReactElement {
     const { selectedTests = [], manualCollectMode = false } = this.props;
-    const testFullPath = `${this.getModuleTechName()}::${row_}`;
+    const testFullPath = `${this.getModuleTechName()}::${caseId}`;
     const isSelected = manualCollectMode
       ? selectedTests.includes(testFullPath)
       : true;
 
-    return this.commonCellRender(
-      <div
-        style={{
-          marginTop: "0.2em",
-          marginBottom: "0.2em",
-          textAlign: "center",
-        }}
-      >
-        <Checkbox
-          checked={isSelected}
-          disabled={!manualCollectMode}
-          onChange={(e) =>
-            this.handleTestSelection(testFullPath, e.target.checked)
-          }
-        />
-      </div>,
-      `selection_${rowIndex}_${row_}`
+    return (
+      <Checkbox
+        checked={isSelected}
+        disabled={!manualCollectMode}
+        onChange={(e) =>
+          this.handleTestSelection(testFullPath, e.target.checked)
+        }
+      />
     );
   }
 
@@ -931,36 +900,57 @@ export class TestSuite extends React.Component<Props, State> {
    * @private
    */
   private renderTestSuiteRightPanel(test_topics: TestItem): React.ReactElement {
-    return (
-      <div
-        className={Classes.ALIGN_RIGHT}
-        style={{ display: "flex", padding: "5px" }}
-      >
-        {!this.state.isOpen && (
-          <>
-            {Object.entries(test_topics.cases || {}).map(([key, value]) => {
-              if (!value) {
-                return null;
-              }
-              return (
-                <span key={value.name} style={{ margin: "2px" }}>
-                  <TestStatus status={value.status} />
-                </span>
-              );
-            })}
-          </>
-        )}
+    const { t, onRunModule, moduleTechName, manualCollectMode } = this.props;
+    const runStatus = toDisplayStatus(this.props.commonTestRunStatus);
+    const isRunDisabled =
+      !onRunModule ||
+      isRunInFlight(runStatus) ||
+      Boolean(manualCollectMode);
 
-        <Tag minimal={true} style={{ margin: "2px", minWidth: "15px" }}>
-          {"ready" != test_topics.status && (
+    return (
+      <div className="ml-auto flex shrink-0 items-center gap-1.5">
+        {!this.state.isOpen &&
+          Object.entries(test_topics.cases || {}).map(([, value]) => {
+            if (!value) {
+              return null;
+            }
+            return (
+              <span key={value.name}>
+                <TestStatus status={value.status} />
+              </span>
+            );
+          })}
+
+        {"ready" != test_topics.status && (
+          <span className={treeMetaClassName}>
             <RunTimer
               status={test_topics.status}
               commonTestRunStatus={this.props.commonTestRunStatus}
               start_time={test_topics.start_time}
               stop_time={test_topics.stop_time}
             />
-          )}
-        </Tag>
+          </span>
+        )}
+
+        {onRunModule && (
+          <UiButton
+            type="button"
+            size="sm"
+            variant="ghost"
+            disabled={isRunDisabled}
+            data-testid={`module-run-${moduleTechName}`}
+            aria-label={t("module.runAria", { name: test_topics.name })}
+            onClick={(event) => {
+              event.stopPropagation();
+              if (!isRunDisabled) {
+                onRunModule(moduleTechName);
+              }
+            }}
+          >
+            <Play className="size-3.5" />
+            {t("module.run")}
+          </UiButton>
+        )}
       </div>
     );
   }
@@ -975,212 +965,73 @@ export class TestSuite extends React.Component<Props, State> {
   }
 
   /**
-   * Common method to render a table cell with optional loading skeleton
-   * @param {React.ReactElement} cell_content - The content to render in the cell
-   * @param {string} key - The unique key for the cell
-   * @param {boolean} is_loading - Whether to show a loading skeleton
-   * @returns {React.ReactElement} The rendered cell
-   * @private
+   * Renders the case name and optional skipped badge.
    */
-  private commonCellRender(
-    cell_content: React.ReactElement,
-    key: string,
-    is_loading: boolean = false
+  private renderCaseName(
+    test: Case | undefined,
+    caseId: string
   ): React.ReactElement {
+    const { selectedTests = [], manualCollectMode = false } = this.props;
+    const testFullPath = `${this.getModuleTechName()}::${caseId}`;
+    const isSelected = manualCollectMode
+      ? selectedTests.includes(testFullPath)
+      : true;
+
     return (
       <div
-        className={is_loading ? Classes.SKELETON : undefined}
-        key={key}
-        style={{ display: "inline-block", verticalAlign: "middle" }}
+        className={cn(
+          "flex flex-wrap items-center gap-2",
+          !isSelected && "opacity-60"
+        )}
       >
-        {cell_content}
+        <TestName name={test?.name ?? ""} />
+        {manualCollectMode && !isSelected && (
+          <Badge variant="secondary">{this.props.t("testSuite.skipped")}</Badge>
+        )}
       </div>
     );
   }
 
   /**
-   * Renders the test number in a table cell
-   * @param {Case[]} test_topics - The test cases array
-   * @param {string} row_ - The row identifier
-   * @param {number} rowIndex - The index of the row
-   * @returns {React.ReactElement} The rendered test number cell
-   * @private
+   * Renders measurements / charts for one case.
    */
-  private cellRendererNumber(
-    test_topics: Case[],
-    row_: string,
+  private renderCaseData(
+    test: Case | undefined,
     rowIndex: number
-  ): React.ReactElement {
-    return this.commonCellRender(
-      <div
-        style={{
-          marginTop: "0.2em",
-          marginBottom: "0.2em",
-          paddingLeft: "12px",
-        }}
-      >
-        <TestNumber val={rowIndex + 1} />
-      </div>,
-      `number_${rowIndex}_${row_}`
+  ): React.ReactElement | null {
+    if (!test) {
+      return null;
+    }
+
+    return (
+      <TestData
+        assertion_msg={test.assertion_msg}
+        msg={test.msg}
+        measurements={test.measurements}
+        testSuiteIndex={this.props.index}
+        testCaseIndex={rowIndex}
+        chart={test.chart}
+        dataColumnWidth={this.state.dataColumnWidth}
+        measurementDisplay={this.props.measurementDisplay}
+      />
     );
   }
 
   /**
-   * Renders the test name in a table cell
-   * @param {Case[]} test_topics - The test cases array
-   * @param {string} row_ - The row identifier
-   * @param {number} rowIndex - The index of the row
-   * @returns {React.ReactElement} The rendered test name cell
-   * @private
+   * Renders status icon and any active operator dialog for one case.
    */
-  private cellRendererName(
-    test_topics: Case[],
-    row_: string,
-    rowIndex: number
+  private renderCaseStatus(
+    test: Case | undefined,
+    caseId: string
   ): React.ReactElement {
-    const test = test_topics[rowIndex];
     const { selectedTests = [], manualCollectMode = false } = this.props;
-    const testFullPath = `${this.getModuleTechName()}::${row_}`;
+    const testFullPath = `${this.getModuleTechName()}::${caseId}`;
     const isSelected = manualCollectMode
       ? selectedTests.includes(testFullPath)
       : true;
 
-    const nameStyle: React.CSSProperties = {
-      marginTop: "0.2em",
-      marginBottom: "0.2em",
-      opacity: isSelected ? 1 : 0.6,
-    };
-
-    // Safe check for test existence
-    if (!test) {
-      return this.commonCellRender(
-        <div style={nameStyle}>
-          <TestName name={""} />
-          {manualCollectMode && !isSelected && (
-            <Tag
-              minimal
-              style={{ marginLeft: "8px" }}
-              title={this.props.t("testSuite.notSelected")}
-            >
-              {this.props.t("testSuite.skipped")}
-            </Tag>
-          )}
-        </div>,
-        `name_${rowIndex}_${row_}`
-      );
-    }
-
-    return this.commonCellRender(
-      <div style={nameStyle}>
-        <TestName name={test.name} />
-        {manualCollectMode && !isSelected && (
-          <Tag
-            minimal
-            style={{ marginLeft: "8px" }}
-            title={this.props.t("testSuite.notSelected")}
-          >
-            {this.props.t("testSuite.skipped")}
-          </Tag>
-        )}
-      </div>,
-      `name_${rowIndex}_${row_}`
-    );
-  }
-
-  /**
-   * Renders the test data in a table cell
-   * @param {Case[]} test_topics - The test cases array
-   * @param {string} row_ - The row identifier
-   * @param {number} rowIndex - The index of the row
-   * @returns {React.ReactElement} The rendered test data cell
-   * @private
-   */
-  private cellRendererData(
-    test_topics: Case[],
-    row_: string,
-    rowIndex: number
-  ): React.ReactElement {
-    const test = test_topics[rowIndex];
-
-    // Safe check for test existence
-    if (!test) {
-      return this.commonCellRender(
-        <div
-          style={{ marginTop: "0.2em", marginBottom: "0.2em" }}
-          data-column-id="data"
-        ></div>,
-        `data_${rowIndex}_${row_}`
-      );
-    }
-
-    return this.commonCellRender(
-      <div
-        style={{ marginTop: "0.2em", marginBottom: "0.2em" }}
-        data-column-id="data"
-      >
-        <TestData
-          assertion_msg={test.assertion_msg}
-          msg={test.msg}
-          measurements={test.measurements}
-          testSuiteIndex={this.props.index}
-          testCaseIndex={rowIndex}
-          chart={test.chart}
-          dataColumnWidth={this.state.dataColumnWidth}
-          measurementDisplay={this.props.measurementDisplay}
-        />
-      </div>,
-      `data_${rowIndex}_${row_}`
-    );
-  }
-
-  /**
-   * Renders the test status and dialog box in a table cell
-   * @param {Case[]} test_topics - The test cases array
-   * @param {string} row_ - The row identifier
-   * @param {number} rowIndex - The index of the row
-   * @returns {React.ReactElement} The rendered test status cell
-   * @private
-   */
-  private cellRendererStatus(
-    test_topics: Case[],
-    row_: string,
-    rowIndex: number
-  ): React.ReactElement {
-    const test = test_topics[rowIndex];
-    const { selectedTests = [], manualCollectMode = false } = this.props;
-    const testFullPath = `${this.getModuleTechName()}::${row_}`;
-    const isSelected = manualCollectMode
-      ? selectedTests.includes(testFullPath)
-      : true;
-
-    // Safe check for test existence
-    if (!test) {
-      let displayStatus = "";
-      if (
-        manualCollectMode &&
-        !isSelected &&
-        this.props.commonTestRunStatus === "run"
-      ) {
-        displayStatus = "skipped";
-      }
-
-      return this.commonCellRender(
-        <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
-          <TestStatus
-            status={
-              this.props.commonTestRunStatus !== "run" &&
-              (displayStatus === "run" || displayStatus === "ready")
-                ? "stucked"
-                : displayStatus
-            }
-          />
-        </div>,
-        `status_${rowIndex}_${row_}`
-      );
-    }
-
-    let displayStatus = test.status;
-    if (test.status === "skipped") {
+    let displayStatus = test?.status ?? "";
+    if (test?.status === "skipped") {
       displayStatus = "skipped";
     } else if (
       manualCollectMode &&
@@ -1191,16 +1042,16 @@ export class TestSuite extends React.Component<Props, State> {
     }
 
     const { info: widget_info, type: widget_type } =
-      test.dialog_box?.widget || {};
+      test?.dialog_box?.widget || {};
     const {
       base64: image_base64,
       width: image_width,
       border: image_border,
-    } = test.dialog_box?.image || {};
+    } = test?.dialog_box?.image || {};
 
-    return this.commonCellRender(
-      <div style={{ marginTop: "0.2em", marginBottom: "0.2em" }}>
-        {test.dialog_box?.dialog_text &&
+    return (
+      <div className="flex items-start">
+        {test?.dialog_box?.dialog_text &&
           test.status === "run" &&
           this.props.commonTestRunStatus === "run" &&
           test.dialog_box?.visible &&
@@ -1240,8 +1091,7 @@ export class TestSuite extends React.Component<Props, State> {
               : displayStatus
           }
         />
-      </div>,
-      `status_${rowIndex}_${row_}`
+      </div>
     );
   }
 
