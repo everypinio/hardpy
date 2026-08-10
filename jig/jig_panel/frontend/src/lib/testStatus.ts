@@ -141,14 +141,40 @@ export function isRunInFlight(status: DisplayStatus): boolean {
 }
 
 /**
+ * Status of a module or a case the run left behind while executing it, which
+ * this frontend does not know and therefore renders as "unknown".
+ */
+const STUCK_STATUS = "stucked";
+
+/**
+ * Narrows the status of a module or a case to what the operator should see.
+ *
+ * A node still marked as running once the run is over never reported its
+ * outcome, so it is shown as stuck. A node left at "ready" simply was not part
+ * of the run, for instance during a partial run, and keeps its status.
+ * @param {string} status - The raw node status from the database.
+ * @param {string | undefined} runStatus - The raw status of the whole run.
+ * @returns {string} The status to render.
+ */
+export function toNodeDisplayStatus(
+  status: string,
+  runStatus: string | undefined,
+): string {
+  const isRunOver = !isRunInFlight(toDisplayStatus(runStatus));
+  return isRunOver && status === "run" ? STUCK_STATUS : status;
+}
+
+/**
  * Status priority for aggregating several statuses into one.
  * Higher index wins. "run" is highest so an in-flight child keeps the
- * section animated; "failed" beats "passed"/"skipped"/"stopped".
+ * section animated; "failed" beats every settled status; "ready" beats
+ * "passed" so a section holding a test that has not run yet stays neutral
+ * instead of claiming success.
  */
 const AGGREGATE_PRIORITY: DisplayStatus[] = [
   "pending",
-  "ready",
   "passed",
+  "ready",
   "skipped",
   "stopped",
   "unknown",

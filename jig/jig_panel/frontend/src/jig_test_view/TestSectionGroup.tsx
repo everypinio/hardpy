@@ -51,18 +51,37 @@ export function TestSectionGroup(props: Readonly<Props>): React.ReactElement {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = React.useState(!props.defaultClose);
+  /** Tells whether the section is only open because tests started running. */
+  const isAutoOpened = React.useRef(false);
 
   const sectionName = props.node.path[props.node.path.length - 1] ?? "";
   const sectionPath = props.node.path.join("/");
   const groupHref = `/group/${sectionPath}`;
   const moduleIds = sectionModuleIds(props.node);
   const status = aggregateStatus(sectionStatuses(props.node));
+  const isSectionRunning = isRunInFlight(status);
   const runStatus = toDisplayStatus(props.commonTestRunStatus);
+
   const isRunDisabled =
     !props.onRunSection ||
     isRunInFlight(runStatus) ||
     Boolean(props.manualCollectMode) ||
     moduleIds.length === 0;
+
+  // A folded section hides the tests it runs, including the row of the case the
+  // operator has to act on, so it unfolds itself while it runs and folds back
+  // once done. A manual fold during the run wins until the section goes idle.
+  React.useEffect(() => {
+    if (isSectionRunning && !isOpen && !isAutoOpened.current) {
+      isAutoOpened.current = true;
+      setIsOpen(true);
+      return;
+    }
+    if (!isSectionRunning && isAutoOpened.current) {
+      isAutoOpened.current = false;
+      setIsOpen(false);
+    }
+  }, [isSectionRunning, isOpen]);
 
   const handleRun = (event: React.MouseEvent): void => {
     event.stopPropagation();

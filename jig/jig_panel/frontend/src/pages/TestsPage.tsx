@@ -5,7 +5,6 @@ import * as React from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import SuiteList from "@/jig_test_view/SuiteList";
-import { isRunInFlight, toDisplayStatus } from "@/lib/testStatus";
 import { usePanel } from "@/panel/PanelContext";
 
 /**
@@ -21,19 +20,7 @@ export function TestsPage(): React.ReactElement {
     ultrawide,
     useDebugInfo,
     runSection,
-    consumePendingRecollect,
-    lastRunStatus,
   } = usePanel();
-
-  React.useEffect(() => {
-    if (isRunInFlight(toDisplayStatus(lastRunStatus))) {
-      return;
-    }
-    if (!consumePendingRecollect()) {
-      return;
-    }
-    fetch("/api/collect");
-  }, [consumePendingRecollect, lastRunStatus]);
 
   return (
     <div className="px-4 py-6">

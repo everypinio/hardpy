@@ -51,6 +51,7 @@ import TestsPage from "@/pages/TestsPage";
 
 import StartStopButton from "./button/StartStop";
 import { TestRunI } from "./jig_test_view/SuiteList";
+import DialogBoxHost from "./jig_test_view/DialogBoxHost";
 import OperatorMessageHost from "./jig_test_view/OperatorMessageHost";
 import TestStatus from "./jig_test_view/TestStatus";
 import ReloadAlert from "./restart_alert/RestartAlert";
@@ -224,7 +225,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   } | null>(null);
 
   const startTimeRef = React.useRef<number | null>(null);
-  const pendingRecollectRef = React.useRef(false);
+  /** Tells whether the run in flight covers a subset of the tests. */
+  const partialRunRef = React.useRef(false);
   const [timerIntervalId, setTimerIntervalId] =
     React.useState<NodeJS.Timeout | null>(null);
   const [allTests, setAllTests] = React.useState<string[]>([]);
@@ -668,6 +670,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
    * Clears selected tests when starting a new test run
    */
   const handleTestRunStart = React.useCallback(() => {
+    partialRunRef.current = false;
     filterSelectedTests(allTests);
   }, [allTests, filterSelectedTests]);
 
@@ -679,8 +682,8 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       if (manualCollectMode || moduleIds.length === 0) {
         return;
       }
-      pendingRecollectRef.current = true;
       handleTestRunStart();
+      partialRunRef.current = true;
       const params = new URLSearchParams();
       for (const moduleId of moduleIds) {
         params.append("tests", moduleId);
@@ -690,14 +693,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     [handleTestRunStart, manualCollectMode]
   );
 
-  const consumePendingRecollect = React.useCallback((): boolean => {
-    if (!pendingRecollectRef.current) {
-      return false;
-    }
-    pendingRecollectRef.current = false;
-    return true;
-  }, []);
-
   /**
    * When a full run starts from a group page (footer Start), leave the group
    * view so the operator sees the full suite.
@@ -705,7 +700,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
   React.useEffect(() => {
     if (
       lastRunStatus === "run" &&
-      !pendingRecollectRef.current &&
+      !partialRunRef.current &&
       location.pathname.startsWith("/group/")
     ) {
       navigate("/");
@@ -754,7 +749,6 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
       ultrawide,
       useDebugInfo: use_debug_info,
       runSection: handleRunSection,
-      consumePendingRecollect,
       lastRunStatus,
     };
 
@@ -774,6 +768,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
           )}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        <DialogBoxHost />
         <OperatorMessageHost />
       </PanelProvider>
     );

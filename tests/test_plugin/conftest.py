@@ -7,6 +7,13 @@ from jig.common.config import ConfigManager
 pytest_plugins = "pytester"
 
 
+@pytest.fixture
+def jig_opts_repeat(jig_opts: list[str]):
+    # The restart should check the uncleaned database
+    assert "--jig-clear-database" not in jig_opts[1:]
+    return jig_opts[1:]
+
+
 @pytest.fixture(params=["couchdb", "json"], autouse=True)
 def jig_opts(request):  # noqa: ANN001
     config_manager = ConfigManager()

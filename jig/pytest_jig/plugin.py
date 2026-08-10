@@ -39,7 +39,7 @@ from jig.pytest_jig.reporter import HookReporter
 from jig.pytest_jig.result.report_synchronizer.synchronizer import (
     StandCloudSynchronizer,
 )
-from jig.pytest_jig.utils import NodeInfo, ProgressCalculator, TestStatus
+from jig.pytest_jig.utils import NodeInfo, ProgressCalculator, RunScope, TestStatus
 from jig.pytest_jig.utils.node_info import TestDependencyInfo, module_id_from_nodeid
 
 if __debug__:
@@ -86,6 +86,12 @@ def pytest_addoption(parser: Parser) -> None:
         action="store_true",
         default=False,
         help="enable pytest-jig plugin",
+    )
+    parser.addoption(
+        "--jig-partial-run",
+        action="store_true",
+        default=False,
+        help="run a subset of the tests, keeping the state of the others",
     )
     parser.addoption(
         "--sc-address",
@@ -147,6 +153,7 @@ class JigPlugin:
         self._post_run_functions: list[Callable] = []
         self._dependencies = {}
         self._tests_name: str = ""
+        self._run_scope = RunScope.FULL
         self._is_critical_not_passed = False
         self._start_args = {}
         self._sc_syncronizer = StandCloudSynchronizer()
@@ -189,6 +196,9 @@ class JigPlugin:
             jig_config.current_test_config = current_test_config
 
         is_clear_database = config.getoption("--jig-clear-database")
+
+        if config.getoption("--jig-partial-run"):
+            self._run_scope = RunScope.PARTIAL
 
         sc_address = config.getoption("--sc-address")
         if sc_address:
@@ -252,7 +262,10 @@ class JigPlugin:
         items: list[Item],  # noqa: ARG002
     ) -> None:
         """Call after collection phase."""
-        self._reporter.init_doc(self._tests_name)
+        if self._run_scope is RunScope.PARTIAL:
+            self._reporter.init_partial_run_doc(self._tests_name)
+        else:
+            self._reporter.init_doc(self._tests_name)
 
         nodes = {}
         modules = set()
@@ -282,7 +295,7 @@ class JigPlugin:
             modules.add(node_info.module_id)
         for module_id in modules:
             self._reporter.set_module_status(module_id, TestStatus.READY)
-        self._reporter.update_node_order(nodes)
+        self._reporter.update_node_order(nodes, self._run_scope)
         self._reporter.update_db_by_doc()
 
     # Test running (runtest) hooks

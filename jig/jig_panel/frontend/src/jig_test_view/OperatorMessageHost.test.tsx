@@ -63,7 +63,6 @@ const basePanelValue = (
   ultrawide: false,
   useDebugInfo: false,
   runSection: () => undefined,
-  consumePendingRecollect: () => false,
   lastRunStatus: "ready",
 });
 

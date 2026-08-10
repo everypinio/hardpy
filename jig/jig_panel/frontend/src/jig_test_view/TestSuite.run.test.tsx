@@ -90,6 +90,17 @@ async function renderModule(
   );
 }
 
+/** Builds a module stub whose module and case share the given status. */
+function moduleWithStatus(status: string): TestItem {
+  return {
+    ...moduleStub,
+    status,
+    cases: {
+      test_coarse_peak: { ...moduleStub.cases.test_coarse_peak, status },
+    },
+  };
+}
+
 describe("TestSuite module Run button", () => {
   afterEach(() => {
     cleanup();
@@ -119,5 +130,51 @@ describe("TestSuite module Run button", () => {
     expect(
       screen.getByTestId("module-run-autofocus/test_1_coarse_search")
     ).toBeDisabled();
+  });
+});
+
+describe("TestSuite status icons", () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  test(`given a module that just passed a partial run,
+ when it is rendered,
+ then the module and its case show the passed mark`, async () => {
+    const { container } = await renderModule({
+      test: moduleWithStatus("passed"),
+      commonTestRunStatus: "passed",
+    });
+
+    expect(container.querySelectorAll('[data-status="passed"]')).toHaveLength(
+      2
+    );
+  });
+
+  test(`given a module left out of a finished partial run,
+ when it is rendered,
+ then the module and its case stay ready instead of looking unknown`, async () => {
+    const { container } = await renderModule({
+      test: moduleWithStatus("ready"),
+      commonTestRunStatus: "passed",
+    });
+
+    expect(container.querySelectorAll('[data-status="ready"]')).toHaveLength(2);
+    expect(container.querySelectorAll('[data-status="unknown"]')).toHaveLength(
+      0
+    );
+  });
+
+  test(`given a module still marked as running once the run is over,
+ when it is rendered,
+ then it is shown as unknown because it never reported an outcome`, async () => {
+    const { container } = await renderModule({
+      test: moduleWithStatus("run"),
+      commonTestRunStatus: "failed",
+    });
+
+    expect(container.querySelectorAll('[data-status="unknown"]')).toHaveLength(
+      2
+    );
   });
 });

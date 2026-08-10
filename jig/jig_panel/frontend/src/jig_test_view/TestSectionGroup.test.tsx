@@ -67,6 +67,33 @@ const sectionNode: SectionNode = {
   ],
 };
 
+const sectionWithModuleStatus = (status: string): SectionNode => ({
+  path: ["autofocus"],
+  modules: [
+    {
+      id: "autofocus/test_1",
+      test: { ...moduleStub("Coarse", ["autofocus"]), status },
+    },
+  ],
+  children: [],
+});
+
+const sectionElement = (
+  props: Partial<ComponentProps<typeof TestSectionGroup>> = {}
+) => (
+  <MemoryRouter>
+    <I18nextProvider i18n={i18n}>
+      <TestSectionGroup
+        node={sectionNode}
+        startIndex={0}
+        defaultClose={false}
+        commonTestRunStatus="ready"
+        {...props}
+      />
+    </I18nextProvider>
+  </MemoryRouter>
+);
+
 async function renderSection(
   props: Partial<ComponentProps<typeof TestSectionGroup>> = {}
 ) {
@@ -88,19 +115,7 @@ async function renderSection(
     });
   }
 
-  return render(
-    <MemoryRouter>
-      <I18nextProvider i18n={i18n}>
-        <TestSectionGroup
-          node={sectionNode}
-          startIndex={0}
-          defaultClose={false}
-          commonTestRunStatus="ready"
-          {...props}
-        />
-      </I18nextProvider>
-    </MemoryRouter>
-  );
+  return render(sectionElement(props));
 }
 
 describe("TestSectionGroup", () => {
@@ -144,5 +159,61 @@ describe("TestSectionGroup", () => {
     expect(
       screen.getByRole("link", { name: "Open section autofocus" })
     ).toHaveAttribute("href", "/group/autofocus");
+  });
+
+  test(`given a folded section,
+ when one of its modules starts running,
+ then the section unfolds so the running test is visible`, async () => {
+    const { rerender } = await renderSection({
+      node: sectionWithModuleStatus("ready"),
+      defaultClose: true,
+      commonTestRunStatus: "run",
+    });
+    expect(screen.queryByTestId("module-autofocus/test_1")).toBeNull();
+
+    rerender(
+      sectionElement({
+        node: sectionWithModuleStatus("run"),
+        defaultClose: true,
+        commonTestRunStatus: "run",
+      })
+    );
+
+    expect(screen.getByTestId("module-autofocus/test_1")).toBeTruthy();
+  });
+
+  test(`given a section unfolded by a run,
+ when its modules are done,
+ then the section folds back`, async () => {
+    const { rerender } = await renderSection({
+      node: sectionWithModuleStatus("run"),
+      defaultClose: true,
+      commonTestRunStatus: "run",
+    });
+    expect(screen.getByTestId("module-autofocus/test_1")).toBeTruthy();
+
+    rerender(
+      sectionElement({
+        node: sectionWithModuleStatus("passed"),
+        defaultClose: true,
+        commonTestRunStatus: "passed",
+      })
+    );
+
+    expect(screen.queryByTestId("module-autofocus/test_1")).toBeNull();
+  });
+
+  test(`given a section unfolded by a run,
+ when the operator folds it back while the run continues,
+ then it stays folded`, async () => {
+    await renderSection({
+      node: sectionWithModuleStatus("run"),
+      defaultClose: true,
+      commonTestRunStatus: "run",
+    });
+
+    await userEvent.click(screen.getByRole("button", { name: "Collapse" }));
+
+    expect(screen.queryByTestId("module-autofocus/test_1")).toBeNull();
   });
 });

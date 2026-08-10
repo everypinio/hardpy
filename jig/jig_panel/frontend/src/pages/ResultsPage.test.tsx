@@ -87,7 +87,6 @@ async function renderResults(initialPath = "/results") {
     ultrawide: true,
     useDebugInfo: false,
     runSection: vi.fn(),
-    consumePendingRecollect: () => false,
     lastRunStatus: "ready",
   };
 

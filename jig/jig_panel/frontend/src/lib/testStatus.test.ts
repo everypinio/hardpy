@@ -12,6 +12,7 @@ import {
   statusLabel,
   statusPresentation,
   toDisplayStatus,
+  toNodeDisplayStatus,
 } from "./testStatus";
 
 const echoKey = ((key: string) => key) as unknown as TFunction;
@@ -128,5 +129,51 @@ describe("aggregateStatus", () => {
  when they are aggregated,
  then run wins`, () => {
     expect(aggregateStatus(["passed", "run", "failed"])).toBe("run");
+  });
+
+  test(`given a passed module next to modules that have not run,
+ when they are aggregated,
+ then ready wins so the section does not claim success`, () => {
+    expect(aggregateStatus(["passed", "ready", "ready"])).toBe("ready");
+  });
+
+  test(`given every module passed,
+ when they are aggregated,
+ then passed wins`, () => {
+    expect(aggregateStatus(["passed", "passed"])).toBe("passed");
+  });
+
+  test(`given a failed module next to modules that have not run,
+ when they are aggregated,
+ then failed still wins`, () => {
+    expect(aggregateStatus(["ready", "failed", "passed"])).toBe("failed");
+  });
+});
+
+describe("toNodeDisplayStatus", () => {
+  test(`given a case left as running once the run is over,
+ when its status is narrowed,
+ then it is reported as stuck`, () => {
+    expect(toDisplayStatus(toNodeDisplayStatus("run", "failed"))).toBe(
+      "unknown"
+    );
+  });
+
+  test(`given a case that was not part of a finished partial run,
+ when its status is narrowed,
+ then it stays ready`, () => {
+    expect(toNodeDisplayStatus("ready", "passed")).toBe("ready");
+  });
+
+  test(`given a case running while the run is in flight,
+ when its status is narrowed,
+ then it stays running`, () => {
+    expect(toNodeDisplayStatus("run", "run")).toBe("run");
+  });
+
+  test(`given a case that reported its outcome,
+ when its status is narrowed,
+ then the outcome is kept`, () => {
+    expect(toNodeDisplayStatus("passed", "passed")).toBe("passed");
   });
 });

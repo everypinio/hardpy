@@ -76,7 +76,6 @@ async function renderGroup(path: string) {
     ultrawide: true,
     useDebugInfo: false,
     runSection: vi.fn(),
-    consumePendingRecollect: () => false,
     lastRunStatus: "ready",
   };
 

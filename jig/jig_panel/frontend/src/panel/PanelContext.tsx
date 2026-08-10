@@ -48,7 +48,6 @@ export interface PanelContextValue {
   ultrawide: boolean;
   useDebugInfo: boolean;
   runSection: (moduleIds: string[]) => void;
-  consumePendingRecollect: () => boolean;
   lastRunStatus: string;
 }
 

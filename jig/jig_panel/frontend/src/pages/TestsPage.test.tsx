@@ -24,7 +24,6 @@ function renderTestsPage(overrides: Partial<PanelContextValue> = {}) {
     ultrawide: true,
     useDebugInfo: false,
     runSection: vi.fn(),
-    consumePendingRecollect: () => false,
     lastRunStatus: "ready",
     ...overrides,
   };
@@ -42,29 +41,15 @@ describe("TestsPage", () => {
     vi.unstubAllGlobals();
   });
 
-  test(`given a pending re-collect and no run in flight,
+  test(`given a run that just finished,
  when the page mounts,
- then /api/collect is fetched`, () => {
+ then no collection is triggered so the results stay on screen`, () => {
     const fetchMock = vi.fn().mockResolvedValue({});
     vi.stubGlobal("fetch", fetchMock);
 
     renderTestsPage({
-      consumePendingRecollect: () => true,
-      lastRunStatus: "ready",
-    });
-
-    expect(fetchMock).toHaveBeenCalledWith("/api/collect");
-  });
-
-  test(`given a pending re-collect while a run is in flight,
- when the page mounts,
- then /api/collect is not fetched`, () => {
-    const fetchMock = vi.fn().mockResolvedValue({});
-    vi.stubGlobal("fetch", fetchMock);
-
-    renderTestsPage({
-      consumePendingRecollect: () => true,
-      lastRunStatus: "run",
+      testRunData: { name: "Demo", status: "passed", modules: {} },
+      lastRunStatus: "passed",
     });
 
     expect(fetchMock).not.toHaveBeenCalled();

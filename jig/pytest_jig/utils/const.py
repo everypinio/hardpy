@@ -27,6 +27,17 @@ class Group(str, Enum):
     TEARDOWN = "teardown"
 
 
+class RunScope(str, Enum):
+    """Scope of a pytest invocation started by the panel.
+
+    A partial run executes a subset of the collected tests, so it must leave
+    the state of the tests it does not run untouched.
+    """
+
+    FULL = "full"
+    PARTIAL = "partial"
+
+
 class MeasurementType(str, Enum):
     """Measurement type."""
 

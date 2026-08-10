@@ -6,7 +6,7 @@ import { Classes } from "@blueprintjs/core";
 import _, { Dictionary } from "lodash";
 import { ChevronDown, ChevronRight, FileCode, Play } from "lucide-react";
 import { LoadingOutlined } from "@ant-design/icons";
-import { StartConfirmationDialog, WidgetType } from "./DialogBox";
+import { WidgetType } from "./DialogBox";
 import { withTranslation, WithTranslation } from "react-i18next";
 
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +24,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { isRunInFlight, toDisplayStatus } from "@/lib/testStatus";
+import {
+  isRunInFlight,
+  toDisplayStatus,
+  toNodeDisplayStatus,
+} from "@/lib/testStatus";
 import { cn } from "@/lib/utils";
 import { TestName } from "./TestName";
 import { TestStatus } from "./TestStatus";
@@ -96,7 +100,7 @@ interface HTMLInfo {
  * @property {boolean} pass_fail - Whether the dialog is a pass/fail dialog
  * @property {string[]} [button_text] - Optional array of button text
  */
-interface DialogBoxProps {
+export interface DialogBoxProps {
   title_bar?: string;
   dialog_text: string;
   widget?: WidgetDescription;
@@ -134,7 +138,7 @@ interface Measurement {
  * @property {DialogBoxProps} dialog_box - Dialog box configuration
  * @property {ChartData} [chart] - Optional chart data for visualization
  */
-interface Case {
+export interface Case {
   status: string;
   name: string;
   start_time: number;
@@ -415,11 +419,10 @@ export class TestSuite extends React.Component<Props, State> {
       return <div>{t("testSuite.loading")}</div>;
     }
 
-    const displayStatus =
-      this.props.commonTestRunStatus != "run" &&
-      (this.props.test.status == "run" || this.props.test.status == "ready")
-        ? "stucked"
-        : this.props.test.status;
+    const displayStatus = toNodeDisplayStatus(
+      this.props.test.status,
+      this.props.commonTestRunStatus
+    );
 
     return (
       <div ref={this.containerRef} className="test-suite">
@@ -916,7 +919,12 @@ export class TestSuite extends React.Component<Props, State> {
             }
             return (
               <span key={value.name}>
-                <TestStatus status={value.status} />
+                <TestStatus
+                  status={toNodeDisplayStatus(
+                    value.status,
+                    this.props.commonTestRunStatus
+                  )}
+                />
               </span>
             );
           })}
@@ -1018,7 +1026,7 @@ export class TestSuite extends React.Component<Props, State> {
   }
 
   /**
-   * Renders status icon and any active operator dialog for one case.
+   * Renders the status icon of one case.
    */
   private renderCaseStatus(
     test: Case | undefined,
@@ -1041,57 +1049,13 @@ export class TestSuite extends React.Component<Props, State> {
       displayStatus = "skipped";
     }
 
-    const { info: widget_info, type: widget_type } =
-      test?.dialog_box?.widget || {};
-    const {
-      base64: image_base64,
-      width: image_width,
-      border: image_border,
-    } = test?.dialog_box?.image || {};
-
     return (
-      <div className="flex items-start">
-        {test?.dialog_box?.dialog_text &&
-          test.status === "run" &&
-          this.props.commonTestRunStatus === "run" &&
-          test.dialog_box?.visible &&
-          isSelected && (
-            <StartConfirmationDialog
-              title_bar={test.dialog_box.title_bar ?? test.name}
-              dialog_text={test.dialog_box.dialog_text}
-              widget_info={widget_info}
-              widget_type={widget_type}
-              image_base64={image_base64}
-              image_width={image_width}
-              image_border={image_border}
-              is_visible={test.dialog_box.visible}
-              id={test.dialog_box.id}
-              font_size={test.dialog_box.font_size}
-              html_code={
-                test.dialog_box.html?.is_raw_html
-                  ? test.dialog_box.html?.code_or_url
-                  : undefined
-              }
-              html_url={
-                !test.dialog_box.html?.is_raw_html
-                  ? test.dialog_box.html?.code_or_url
-                  : undefined
-              }
-              html_width={test.dialog_box.html?.width}
-              html_border={test.dialog_box.html?.border}
-              pass_fail={test.dialog_box.pass_fail}
-              button_text={test.dialog_box.button_text}
-            />
-          )}
-        <TestStatus
-          status={
-            this.props.commonTestRunStatus !== "run" &&
-            (displayStatus === "run" || displayStatus === "ready")
-              ? "stucked"
-              : displayStatus
-          }
-        />
-      </div>
+      <TestStatus
+        status={toNodeDisplayStatus(
+          displayStatus,
+          this.props.commonTestRunStatus
+        )}
+      />
     );
   }
 

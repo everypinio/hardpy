@@ -86,6 +86,7 @@ class PyTestWrapper:
         if selected_tests:
             selected_test_cases = self._select_test_cases(selected_tests)
             cmd.extend(selected_test_cases)
+            cmd.append("--jig-partial-run")
 
         self._add_config_file(cmd)
 

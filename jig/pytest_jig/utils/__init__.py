@@ -6,6 +6,7 @@ from jig.pytest_jig.utils.const import (
     ComparisonOperation,
     Group,
     MeasurementType,
+    RunScope,
     TestStatus,
 )
 from jig.pytest_jig.utils.dialog_box import (
@@ -47,6 +48,7 @@ __all__ = [
     "NumericInputWidget",
     "ProgressCalculator",
     "RadiobuttonWidget",
+    "RunScope",
     "StepWidget",
     "TestStandNumberError",
     "TestStatus",

@@ -15,7 +15,7 @@ from jig.pytest_jig.db.couchdb.statestore import CouchDBStateStore
 from jig.pytest_jig.db.json.runstore import JsonRunStore
 from jig.pytest_jig.db.json.statestore import JsonStateStore
 from jig.pytest_jig.reporter.base import BaseReporter
-from jig.pytest_jig.utils import NodeInfo, TestStatus, machine_id
+from jig.pytest_jig.utils import NodeInfo, RunScope, TestStatus, machine_id
 
 
 class HookReporter(BaseReporter):
@@ -28,46 +28,26 @@ class HookReporter(BaseReporter):
         self._log = getLogger(__name__)
 
     def init_doc(self, doc_name: str) -> None:
-        """Initialize document.
+        """Initialize document for a full test run.
 
         Args:
             doc_name (str): test run name
         """
-        self.set_doc_value(DF.NAME, doc_name)
-        self.set_doc_value(DF.STATUS, TestStatus.READY)
-        self.set_doc_value(DF.START_TIME, None)
-        self.set_doc_value(DF.STOP_TIME, None)
-        self.set_doc_value(DF.PROGRESS, 0, statestore_only=True)
-        self.set_doc_value(DF.OPERATOR_MSG, {}, statestore_only=True)
-        self.set_doc_value(DF.ALERT, "", statestore_only=True)
-        self.set_doc_value(DF.OPERATOR_DATA, {}, statestore_only=True)
+        self._reset_run_fields(doc_name)
+        self.set_doc_value(DF.MODULES, {})
 
-        for field in (
-            DF.USER,
-            DF.CAUSED_DUT_FAILURE_ID,
-            DF.ERROR_CODE,
-            DF.BATCH_SN,
-            DF.ARTIFACT,
-        ):
-            self.clear_doc_value(field)
+    def init_partial_run_doc(self, doc_name: str) -> None:
+        """Initialize document for a partial test run.
 
-        for field in (
-            DF.TEST_STAND,
-            DF.DUT,
-            DF.PROCESS,
-            DF.MODULES,
-        ):
-            key = self.generate_key(field)
-            self.set_doc_value(key, {})
+        The StateStore keeps the whole test tree so the operator panel still
+        shows the tests that are not part of this run, with their last result.
+        The RunStore report only covers the tests that actually run.
 
-        test_stand_tz = self.generate_key(DF.TEST_STAND, DF.TIMEZONE)
-        self.set_doc_value(test_stand_tz, str(get_localzone().key))
-
-        test_stand_id_key = self.generate_key(DF.TEST_STAND, DF.HW_ID)
-        self.set_doc_value(test_stand_id_key, machine_id())
-
-        operator_data_key = self.generate_key(DF.OPERATOR_DATA, DF.DIALOG)
-        self.set_doc_value(operator_data_key, "", statestore_only=True)
+        Args:
+            doc_name (str): test run name
+        """
+        self._reset_run_fields(doc_name)
+        self.set_doc_value(DF.MODULES, {}, runstore_only=True)
 
     def start(self) -> None:
         """Start test."""
@@ -327,20 +307,66 @@ class HookReporter(BaseReporter):
         if self._runstore.get_field(key):
             self.set_doc_value(key, None)
 
-    def update_node_order(self, nodes: dict) -> None:
+    def update_node_order(self, nodes: dict, scope: RunScope) -> None:
         """Update node order.
+
+        A partial run only knows about the nodes it runs, so the nodes missing
+        from it are kept instead of being treated as outdated.
 
         Args:
             nodes (dict): modules and cases.
+            scope (RunScope): scope of the current pytest invocation.
         """
         key = DF.MODULES
         old_modules = self._statestore.get_field(key)
-        modules_copy = deepcopy(old_modules)
+        modules = deepcopy(old_modules)
 
-        rm_outdated_nodes = self._remove_outdate_node(old_modules, modules_copy, nodes)
-        updated_case_order = self._update_case_order(rm_outdated_nodes, nodes)
+        if scope is RunScope.FULL:
+            modules = self._remove_outdate_node(old_modules, modules, nodes)
+        updated_case_order = self._update_case_order(modules, nodes)
         updated_module_order = self._update_module_order(updated_case_order)
         self.set_doc_value(key, updated_module_order, statestore_only=True)
+
+    def _reset_run_fields(self, doc_name: str) -> None:
+        """Reset the run level fields, leaving the test tree untouched.
+
+        Args:
+            doc_name (str): test run name
+        """
+        self.set_doc_value(DF.NAME, doc_name)
+        self.set_doc_value(DF.STATUS, TestStatus.READY)
+        self.set_doc_value(DF.START_TIME, None)
+        self.set_doc_value(DF.STOP_TIME, None)
+        self.set_doc_value(DF.PROGRESS, 0, statestore_only=True)
+        self.set_doc_value(DF.OPERATOR_MSG, {}, statestore_only=True)
+        self.set_doc_value(DF.ALERT, "", statestore_only=True)
+        self.set_doc_value(DF.OPERATOR_DATA, {}, statestore_only=True)
+
+        for field in (
+            DF.USER,
+            DF.CAUSED_DUT_FAILURE_ID,
+            DF.ERROR_CODE,
+            DF.BATCH_SN,
+            DF.ARTIFACT,
+        ):
+            self.clear_doc_value(field)
+
+        for field in (
+            DF.TEST_STAND,
+            DF.DUT,
+            DF.PROCESS,
+        ):
+            key = self.generate_key(field)
+            self.set_doc_value(key, {})
+
+        test_stand_tz = self.generate_key(DF.TEST_STAND, DF.TIMEZONE)
+        self.set_doc_value(test_stand_tz, str(get_localzone().key))
+
+        test_stand_id_key = self.generate_key(DF.TEST_STAND, DF.HW_ID)
+        self.set_doc_value(test_stand_id_key, machine_id())
+
+        operator_data_key = self.generate_key(DF.OPERATOR_DATA, DF.DIALOG)
+        self.set_doc_value(operator_data_key, "", statestore_only=True)
 
     def _set_time(self, key: str) -> None:
         current_time = self._statestore.get_field(key)
@@ -414,6 +440,9 @@ class HookReporter(BaseReporter):
     def _update_case_order(self, modules: dict, nodes: dict) -> dict:
         """Update test order for StateStore database.
 
+        The cases of a module the current pytest invocation did not collect are
+        left as they are, since their order is unknown here.
+
         Args:
             modules (dict): list of modules and cases.
             nodes (dict): modules and cases.
@@ -422,7 +451,9 @@ class HookReporter(BaseReporter):
             dict: list of modules and cases.
         """
         for module_id, module in modules.items():
-            nodes_order = nodes.get(module_id, [])
+            nodes_order = nodes.get(module_id)
+            if nodes_order is None:
+                continue
             modules_order = list(module.get(DF.CASES).keys())
             if nodes_order != modules_order:
                 # sort cases in module
