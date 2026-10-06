@@ -2,6 +2,15 @@
 
 Versions follow [Semantic Versioning](https://semver.org/): `<major>.<minor>.<patch>`.
 
+## Unreleased
+
+* Fix slow operator panel with JSON storage and a long test history.
+  `/api/json_data` accepts an optional `history_limit` parameter and returns
+  the current run plus only the newest history runs. The panel polls only the
+  current run and fetches the history on load, when a run finishes and when
+  more history runs are requested. JSON storage polling no longer overlaps
+  when a response takes longer than the polling interval.
+
 ## 0.25.2
 
 * Fix StandCloud api key reading from .env

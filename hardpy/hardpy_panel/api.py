@@ -18,6 +18,7 @@ from fastapi import FastAPI, Query, Request
 from fastapi.staticfiles import StaticFiles
 
 from hardpy.common.config import ConfigManager, StorageType
+from hardpy.hardpy_panel.json_storage_data import read_json_storage_rows
 from hardpy.hardpy_panel.storage_status import build_storage_status
 from hardpy.pytest_hardpy.pytest_wrapper import PyTestWrapper
 from hardpy.pytest_hardpy.result.report_synchronizer import StandCloudSynchronizer
@@ -390,11 +391,17 @@ def get_storage_status() -> dict:
 
 
 @app.get("/api/json_data")
-def get_json_data() -> dict:
+def get_json_data(
+    history_limit: Annotated[int | None, Query(ge=0)] = None,
+) -> dict:
     """Get test run data from JSON storage.
 
+    Args:
+        history_limit: maximum number of newest history runs to return,
+            all history runs if not set
+
     Returns:
-        dict: Test run data from JSON files
+        dict: current test run and history runs from JSON files
     """
     config_manager = ConfigManager()
     storage_type = config_manager.config.database.storage_type
@@ -414,34 +421,15 @@ def get_json_data() -> dict:
                 / "statestore",
             )
 
-        if not storage_dir.exists():
-            return {"rows": [], "total_rows": 0}
-
-        rows = []
-        for json_file in storage_dir.glob("*.json"):
-            data = _read_json_history_file(json_file)
-            if data is None:
-                continue
-            doc_id = data.get("_id", json_file.stem)
-            rows.append({
-                "id": doc_id,
-                "key": doc_id,
-                "value": {"rev": data.get("_rev", "1-0")},
-                "doc": data,
-            })
-
-        return {"rows": rows, "total_rows": len(rows)}
+        return read_json_storage_rows(
+            storage_dir,
+            config_manager.config.database.doc_id,
+            history_limit,
+        )
     except Exception as exc:
         logger.exception("Error reading JSON storage")
         return {"error": str(exc), "rows": [], "total_rows": 0}
 
-def _read_json_history_file(json_file: Path) -> dict | None:
-    try:
-        with json_file.open("r") as f:
-            return json.load(f)
-    except (OSError, json.JSONDecodeError) as exc:
-        logger.warning(f"Error reading {json_file}: {exc}")
-        return None
 
 if "DEBUG_FRONTEND" not in os.environ:
     app.mount(
