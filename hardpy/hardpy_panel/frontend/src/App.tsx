@@ -499,7 +499,11 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
     return -1;
   }
 
-  const { rows, state, loading, error } = useStorageData();
+  // Fetch only as many history runs as the history panel displays
+  const historyLimit =
+    appConfig?.frontend?.test_history === false ? 0 : historyDisplayCount;
+  const { rows, state, loading, error, historyTotal } =
+    useStorageData(historyLimit);
   const {
     data: storageStatus,
     loading: storageStatusLoading,
@@ -808,7 +812,7 @@ function App({ syncDocumentId }: { syncDocumentId: string }): JSX.Element {
                       setShowHistoryDetails(true);
                     }}
                   />
-                  {filteredRows.length > historyDisplayCount && (
+                  {(historyTotal ?? filteredRows.length) > historyDisplayCount && (
                     <Button
                       minimal
                       fill
